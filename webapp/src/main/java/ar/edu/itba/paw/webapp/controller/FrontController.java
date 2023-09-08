@@ -1,30 +1,30 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
+import ar.edu.itba.paw.interfaces.services.PostService;
+import ar.edu.itba.paw.interfaces.services.NeighborService;
+import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.ViewResolver;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 @Controller
-public class HelloWorldController {
+public class FrontController {
 
-    private final UserService us;
+    private final NeighborService us;
+    private final PostService ps;
+    private final NeighborService ns;
+    private final NeighborhoodService nhs;
 
     @Autowired
-    public HelloWorldController(final UserService us) {
+    public FrontController(final NeighborService us, final PostService ps, NeighborService ns, NeighborhoodService nhs) {
         this.us = us;
+        this.ps = ps;
+        this.ns = ns;
+        this.nhs = nhs;
     }
 
     // Spring permite hacer inyección de otras formas, no solo pasando instancia al constructor.
@@ -97,5 +97,46 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("helloworld/profile");
         mav.addObject("user", us.findById(userId).orElseThrow(UserNotFoundException::new));
         return mav;
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------
+    @RequestMapping(value = "/publish", method = RequestMethod.GET)
+    public ModelAndView publishForm() {
+        ModelAndView mav = new ModelAndView("helloworld/publish");
+        mav.addObject("neighborPostWrapper", new NeighborPostNeighborhoodWrapper());
+
+        return mav;
+    }
+
+    @RequestMapping(value = "/publish", method = RequestMethod.POST)
+    public ModelAndView publish(
+            @RequestParam(value = "neighbor.mail", required = true) final String mail,
+            @RequestParam(value = "neighbor.name", required = true) final String name,
+            @RequestParam(value = "neighbor.surname", required = true) final String surname,
+            @RequestParam(value = "neighborhood.name", required = true) final String neighborhood,
+            @RequestParam(value = "post.title", required = true) final String title,
+            @RequestParam(value = "post.description", required = true) final String description
+    ) {
+        // Los @RequestParam pueden ser int, long, etc. Y nos hace la conversión por nosotros :)
+        // Al @RequestParam también le podemos pasar "required = true", "default = 1234", etc.
+        //final User user = us.createUser(email, password);
+        System.out.println("Information Logged In :\n");
+        System.out.println("Mail : " + mail);
+        System.out.println("Name : " + name);
+        System.out.println("Surname : " + surname);
+        System.out.println("Neighborhood : " + neighborhood);
+        System.out.println("Title : " + title);
+        System.out.println("Description : " + description);
+
+        //Neighborhood nh = nhs.createNeighborhood(neighborhood);
+        //Neighbor n = ns.createNeighbor(mail,name,surname, nh.getNeighborhoodId());
+        //Post p = ps.createPost(title, description, n.getNeighborId());
+
+        ModelAndView mav = new ModelAndView("helloworld/index");
+        return mav;
+        //final ModelAndView mav = new ModelAndView("helloworld/index");
+        //mav.addObject("user", user);
+
+        //return mav;
     }
 }

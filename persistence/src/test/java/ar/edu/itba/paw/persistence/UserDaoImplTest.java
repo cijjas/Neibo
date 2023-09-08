@@ -28,7 +28,7 @@ public class UserDaoImplTest {
     private DataSource ds;
 
     @Autowired
-    private UserDaoImpl userDao;
+    private NeighborDaoImpl userDao;
 
     private JdbcTemplate jdbcTemplate;
 

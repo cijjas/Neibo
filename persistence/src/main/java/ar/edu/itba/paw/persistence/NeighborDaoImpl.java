@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborDao;
+import ar.edu.itba.paw.models.Neighbor;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,21 +10,19 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class UserDaoImpl implements UserDao {
+public class NeighborDaoImpl implements NeighborDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert; // En vez de hacer queries de tipo INSERT, usamos este objeto.
 
     @Autowired // Motor de inyección de dependencias; nos da el DataSource definido en el @Bean de WebConfig.
-    public UserDaoImpl(final DataSource ds) {
+    public NeighborDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
                 .usingGeneratedKeyColumns("id")
@@ -54,6 +53,8 @@ public class UserDaoImpl implements UserDao {
         final Number key = jdbcInsert.executeAndReturnKey(data);
         return new User(key.longValue(), email, password);
     }
+
+
 
     // READ THE COMMENTS IN findById() IF YOU WANT TO UNDERSTAND WHAT THE FUCK THIS IS
     /*private static final RowMapper<User> ROW_MAPPER = new RowMapper<User>() {
@@ -102,5 +103,11 @@ public class UserDaoImpl implements UserDao {
 
         // ÚLTIMA ÚLTIMA NOTA: un postrecito de una línea:
         // return jdbcTemplate.query("SELECT * FROM users WHERE id=?", ROW_MAPPER, id).stream().findFirst();
+    }
+
+    @Override
+    public Neighbor create2(String email, String name, String surname, int neighborhoodId) {
+        // BASE DE DATOS
+        return null;
     }
 }

@@ -1,13 +1,12 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborDao;
 import ar.edu.itba.paw.models.User;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
@@ -15,7 +14,7 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class) // Le decimos a JUnit que corra los tests con el runner de Mockito
-public class UserServiceImplTest {
+public class NeighborServiceImplTest {
 
     private static final long ID = 1;
     private static final String EMAIL = "pedro@mcpedro.com";
@@ -27,9 +26,9 @@ public class UserServiceImplTest {
     // Para esto generamos un mock con Mockito, y le pedimos que nos cree el UserServiceImpl inyectando la clase
     // mock-eada:
     @Mock // Le pedimos que nos genere una clase mock de UserDao
-    private UserDao userDao;
+    private NeighborDao userDao;
     @InjectMocks // Le pedimos que cree un UserServiceImpl, y que en el ctor (que toma un UserDao) inyecte un mock.
-    private UserServiceImpl us;
+    private NeighborServiceImpl us;
 
     @Test
     public void testCreate() {
