@@ -10,15 +10,14 @@ CREATE TABLE IF NOT EXISTS users (
 
     DEJO ESTO COMENTADO PORQUE NO ESTOY SEGURO SI ESTE ARCHIVO ES EJECUTADO INSTANTANEAMENTE
 
-
-
+------------------------------------------ CREATION -----------------------------------------------
 -- The Posts and the Neighbors are the two main entities in this schema
 -- A Neighbor belongs to a Specific Neighborhood, can write comments, can post, and can be subscribed to multiple Posts to receive follow-up information
 
 -- Create Neighborhoods
 create table if not exists neighborhoods(
     neighborhoodId SERIAL NOT NULL PRIMARY KEY, -- Unique identifier for each neighborhood
-    name VARCHAR(128) -- Name of the neighborhood
+    neighborhoodName VARCHAR(128) -- Name of the neighborhood
 );
 
 -- Create Tags
@@ -45,7 +44,7 @@ create table if not exists posts(
     title VARCHAR(128) NOT NULL, -- Title of the post
     description TEXT NOT NULL, -- Description of the post
     -- postPicture BYTEA, -- Only image for the post, nullable
-    date DATE NOT NULL, -- Date when the post was created
+    postDate DATE NOT NULL, -- Date when the post was created
     neighborId INT NOT NULL, -- ID of the neighbor who created the post
     foreign key (neighborId) references neighbors(neighborId) ON DELETE CASCADE -- Reference to the neighbors table
 );
@@ -54,7 +53,7 @@ create table if not exists posts(
 create table if not exists comments(
     commentId SERIAL NOT NULL PRIMARY KEY, -- Unique identifier for each comment
     comment VARCHAR(512) NOT NULL, -- The comment text
-    date DATE NOT NULL, -- Date when the comment was posted
+    commentDate DATE NOT NULL, -- Date when the comment was posted
 
     neighborId INT NOT NULL, -- ID of the neighbor who posted the comment
     postId INT NOT NULL, -- ID of the post to which the comment is associated
@@ -82,6 +81,9 @@ create table if not exists posts_neighbors(
     foreign key (neighborId) references neighbors(neighborId) ON DELETE CASCADE -- Reference to the neighbors table
 );
 
+/*
+
+ */
 
 
 

@@ -30,7 +30,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     @Override
     public Neighborhood create(String name) {
         Map<String, Object> data = new HashMap<>();
-        data.put("name", name);
+        data.put("neighborhoodname", name);
 
         final Number key = jdbcInsert.executeAndReturnKey(data);
         return new Neighborhood.Builder()

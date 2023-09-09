@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 
 @Controller
 public class FrontController {
@@ -50,17 +52,17 @@ public class FrontController {
     // Por default, cualquier pedido sin importar headers o método HTTP es aceptado por el mapping:
     @RequestMapping("/")
     public ModelAndView helloWorld() {
-        final ModelAndView mav = new ModelAndView("helloworld/index");
+        final ModelAndView mav = new ModelAndView("views/index");
         return mav;
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public ModelAndView registerForm() {
-        return new ModelAndView("helloworld/register");
+        return new ModelAndView("views/register");
     }
 
     @RequestMapping("/post")
-    public ModelAndView postPage() {return new ModelAndView("helloworld/post");}
+    public ModelAndView postPage() {return new ModelAndView("views/post");}
     // Una forma de atender requests es tomando un HttpServletRequest, que nos da mucho control sobre el request y
     // cómo respondemos:
     /*@RequestMapping(value = "/register", method = RequestMethod.POST)
@@ -84,7 +86,7 @@ public class FrontController {
         // Al @RequestParam también le podemos pasar "required = true", "default = 1234", etc.
         final User user = us.createUser(email, password);
 
-        final ModelAndView mav = new ModelAndView("helloworld/index");
+        final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("user", user);
 
         return mav;
@@ -94,7 +96,7 @@ public class FrontController {
     @RequestMapping("/{id:\\d+}") // Antes aceptaba negativos, ahora no!
     // NOTAR: Si pones negativo o texto antes te tiraba 400 bad request, ahora te tira 404 not found.
     public ModelAndView profile(@PathVariable("id") final long userId) {
-        final ModelAndView mav = new ModelAndView("helloworld/profile");
+        final ModelAndView mav = new ModelAndView("views/profile");
         mav.addObject("user", us.findById(userId).orElseThrow(UserNotFoundException::new));
         return mav;
     }
@@ -102,7 +104,7 @@ public class FrontController {
     // ----------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/publish", method = RequestMethod.GET)
     public ModelAndView publishForm() {
-        ModelAndView mav = new ModelAndView("helloworld/publish");
+        ModelAndView mav = new ModelAndView("views/publish");
         mav.addObject("neighborPostWrapper", new NeighborPostNeighborhoodWrapper());
 
         return mav;
@@ -138,7 +140,18 @@ public class FrontController {
         System.out.println(n);
         System.out.println(p);
 
-        ModelAndView mav = new ModelAndView("helloworld/index");
+        ModelAndView mav = new ModelAndView("views/index");
+        return mav;
+    }
+
+
+    @RequestMapping("/posts")
+    public ModelAndView posts() {
+        System.out.println("moshi moshi");
+        List<Post> postList = ps.getAllPosts();
+        System.out.println(postList);
+        final ModelAndView mav = new ModelAndView("views/posts");
+        mav.addObject("postList", postList);
         return mav;
     }
 }

@@ -73,4 +73,15 @@ public class Post {
     public Neighbor getNeighbor() {
         return neighbor;
     }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "postId=" + postId +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", date=" + date +
+                ", neighbor=" + neighbor +
+                '}';
+    }
 }

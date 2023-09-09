@@ -7,6 +7,8 @@ import ar.edu.itba.paw.models.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PostServiceImpl implements PostService {
 
@@ -20,4 +22,11 @@ public class PostServiceImpl implements PostService {
     public Post createPost(String title, String description, long neighborId) {
         return postDao.create(title, description, neighborId);
     }
+
+    @Override
+    public List<Post> getAllPosts() {
+        return postDao.getAllPosts();
+    }
+
+
 }
