@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
-import ar.edu.itba.paw.models.Neighbor;
-import ar.edu.itba.paw.models.Neighborhood;
-import ar.edu.itba.paw.models.Post;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,6 +17,8 @@ import java.util.*;
 public class PostDaoImpl implements PostDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert; // En vez de hacer queries de tipo INSERT, usamos este objeto.
+    private final String baseQuery = "select postid, title, description, postdate, n.neighborid, mail, name, surname, n.neighborhoodid,neighborhoodname from\n" +
+            "             posts p join neighbors n on p.neighborid = n.neighborid join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid";
 
     @Autowired // Motor de inyección de dependencias; nos da el DataSource definido en el @Bean de WebConfig.
     public PostDaoImpl(final DataSource ds) {
@@ -68,11 +67,14 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public List<Post> getAllPosts() {
-        String sqlQuery = "select postid, title, description, postdate, n.neighborid, mail, name, surname, n.neighborhoodid,neighborhoodname from\n" +
-                "             posts p join neighbors n on p.neighborid = n.neighborid join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid;";
-
-        final List<Post> postList = jdbcTemplate.query(sqlQuery, ROW_MAPPER);
-
+        final List<Post> postList = jdbcTemplate.query(baseQuery, ROW_MAPPER);
         return postList;
     }
+
+    @Override
+    public Optional<Post> findPostById(long id) {
+        final List<Post> post = jdbcTemplate.query(baseQuery + " where postid=?", ROW_MAPPER, id);
+        return post.isEmpty() ? Optional.empty() : Optional.of(post.get(0));
+    }
+
 }

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.CommentService;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.interfaces.services.NeighborService;
@@ -20,13 +21,14 @@ public class FrontController {
     private final PostService ps;
     private final NeighborService ns;
     private final NeighborhoodService nhs;
-
+    private final CommentService cs;
     @Autowired
-    public FrontController(final NeighborService us, final PostService ps, NeighborService ns, NeighborhoodService nhs) {
+    public FrontController(final NeighborService us, final PostService ps, NeighborService ns, NeighborhoodService nhs, CommentService cs) {
         this.us = us;
         this.ps = ps;
         this.ns = ns;
         this.nhs = nhs;
+        this.cs = cs;
     }
 
     // Spring permite hacer inyección de otras formas, no solo pasando instancia al constructor.
@@ -93,6 +95,7 @@ public class FrontController {
     }
 
     // @RequestMapping("/{id}") // El problema con este es que no pone restricciones al valor de "id"!
+    /*
     @RequestMapping("/{id:\\d+}") // Antes aceptaba negativos, ahora no!
     // NOTAR: Si pones negativo o texto antes te tiraba 400 bad request, ahora te tira 404 not found.
     public ModelAndView profile(@PathVariable("id") final long userId) {
@@ -100,6 +103,7 @@ public class FrontController {
         mav.addObject("user", us.findById(userId).orElseThrow(UserNotFoundException::new));
         return mav;
     }
+    */
 
     // ----------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/publish", method = RequestMethod.GET)
@@ -152,6 +156,19 @@ public class FrontController {
         System.out.println(postList);
         final ModelAndView mav = new ModelAndView("views/posts");
         mav.addObject("postList", postList);
+        return mav;
+    }
+
+    // @RequestMapping("/{id}") // El problema con este es que no pone restricciones al valor de "id"!
+    @RequestMapping("/{id:\\d+}") // Antes aceptaba negativos, ahora no!
+    // NOTAR: Si pones negativo o texto antes te tiraba 400 bad request, ahora te tira 404 not found.
+    public ModelAndView post(@PathVariable("id") final long postId) {
+        final ModelAndView mav = new ModelAndView("views/specifcPost");
+        System.out.println(ps.findPostById(postId));
+        System.out.println(cs.findCommentsByPostId(postId));
+        mav.addObject("post", ps.findPostById(postId));
+        mav.addObject("comments", cs.findCommentsByPostId(postId));
+        // TIENE EL POST Y LOS COMENTARIOS DE LA RUTA ID
         return mav;
     }
 }
