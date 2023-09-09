@@ -3,7 +3,7 @@ package ar.edu.itba.paw.models;
 import java.util.Date;
 
 public class Comment {
-    private final int commentId;
+    private final long commentId;
     private final String comment;
     private final Date date;
     private final Neighbor neighbor; // Represent neighbor as an object
@@ -18,13 +18,13 @@ public class Comment {
     }
 
     public static class Builder {
-        private int commentId;
+        private long commentId;
         private String comment;
         private Date date;
         private Neighbor neighbor;
         private Post post;
 
-        public Builder commentId(int commentId) {
+        public Builder commentId(long commentId) {
             this.commentId = commentId;
             return this;
         }
@@ -54,7 +54,7 @@ public class Comment {
         }
     }
 
-    public int getCommentId() {
+    public long getCommentId() {
         return commentId;
     }
 

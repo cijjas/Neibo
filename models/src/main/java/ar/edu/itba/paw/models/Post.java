@@ -3,7 +3,7 @@ package ar.edu.itba.paw.models;
 import java.util.Date;
 
 public class Post {
-    private final int postId;
+    private final long postId;
     private final String title;
     private final String description;
     private final Date date;
@@ -18,13 +18,13 @@ public class Post {
     }
 
     public static class Builder {
-        private int postId;
+        private long postId;
         private String title;
         private String description;
         private Date date;
         private Neighbor neighbor;
 
-        public Builder postId(int postId) {
+        public Builder postId(long postId) {
             this.postId = postId;
             return this;
         }
@@ -54,7 +54,7 @@ public class Post {
         }
     }
 
-    public int getPostId() {
+    public long getPostId() {
         return postId;
     }
 

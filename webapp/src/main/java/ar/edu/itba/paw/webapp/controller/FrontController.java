@@ -128,15 +128,17 @@ public class FrontController {
         System.out.println("Title : " + title);
         System.out.println("Description : " + description);
 
-        //Neighborhood nh = nhs.createNeighborhood(neighborhood);
-        //Neighbor n = ns.createNeighbor(mail,name,surname, nh.getNeighborhoodId());
-        //Post p = ps.createPost(title, description, n.getNeighborId());
+        Neighborhood nh = nhs.createNeighborhood(neighborhood);
+        Neighbor n = ns.createNeighbor(mail,name,surname, nh.getNeighborhoodId());
+        Post p = ps.createPost(title, description, n.getNeighborId());
+
+        System.out.println("\n -------------------------------------------------- \n");
+
+        System.out.println(nh);
+        System.out.println(n);
+        System.out.println(p);
 
         ModelAndView mav = new ModelAndView("helloworld/index");
         return mav;
-        //final ModelAndView mav = new ModelAndView("helloworld/index");
-        //mav.addObject("user", user);
-
-        //return mav;
     }
 }

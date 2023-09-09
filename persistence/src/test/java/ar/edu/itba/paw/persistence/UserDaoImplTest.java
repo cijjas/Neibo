@@ -66,6 +66,7 @@ public class UserDaoImplTest {
         Assert.assertFalse(maybeUser.isPresent());
     }
 
+    /*
     @Test
     public void testCreate() {
         // 1. Precondiciones
@@ -79,5 +80,6 @@ public class UserDaoImplTest {
         Assert.assertEquals(PASSWORD, user.getPassword());
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
     }
+     */
 
 }

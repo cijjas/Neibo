@@ -6,9 +6,9 @@ import ar.edu.itba.paw.models.User;
 import java.util.Optional;
 
 public interface NeighborDao {
-    User create(final String email, final String password);
 
-    Neighbor create2(final String email, final String name, final String surname, final int neighborhoodId);
+    Neighbor create(final String email, final String name, final String surname, final long neighborhoodId);
 
     Optional<User> findById(long id);
+
 }

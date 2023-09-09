@@ -30,6 +30,7 @@ public class NeighborServiceImplTest {
     @InjectMocks // Le pedimos que cree un UserServiceImpl, y que en el ctor (que toma un UserDao) inyecte un mock.
     private NeighborServiceImpl us;
 
+    /*
     @Test
     public void testCreate() {
         // 1. Precondiciones
@@ -49,7 +50,9 @@ public class NeighborServiceImplTest {
         // NUNCA HAGAN ESTO, PORQUE ESTAS PROBANDO EL UserServiceImpl QUE TE IMPORTA CÓMO EL USA EL UserDao
         // Mockito.verify(userDao, times(1)).create(EMAIL, PASSWORD);
     }
+     */
 
+    /*
     @Test(expected = RuntimeException.class) // "Espero que este test lance y falle con una exception tal"
     public void testCreateAlreadyExists() {
         // 1. Precondiciones
@@ -62,6 +65,7 @@ public class NeighborServiceImplTest {
         // 3. Postcondiciones
         // (Nada, espero que lo anterior tire exception)
     }
+     */
 
     @Test
     public void testFindById() {

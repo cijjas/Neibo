@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models;
 
 public class Neighbor {
-    private final int neighborId;
+    private final long neighborId;
     private final String mail;
     private final String name;
     private final String surname;
@@ -17,13 +17,13 @@ public class Neighbor {
     }
 
     public static class Builder {
-        private int neighborId;
+        private long neighborId;
         private String mail;
         private String name;
         private String surname;
         private Neighborhood neighborhood;
 
-        public Builder neighborId(int neighborId) {
+        public Builder neighborId(long neighborId) {
             this.neighborId = neighborId;
             return this;
         }
@@ -54,7 +54,7 @@ public class Neighbor {
     }
 
     // Getter methods for your fields (no setters as they are final)
-    public int getNeighborId() {
+    public long getNeighborId() {
         return neighborId;
     }
 

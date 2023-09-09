@@ -21,7 +21,8 @@ public class NeighborServiceImpl implements NeighborService {
 
     @Override
     public User createUser(final String email, final String password) {
-        return neighborDao.create(email, password);
+        System.out.println("Deprecated by Joaco!");
+        return null;
     }
 
     @Override
@@ -30,7 +31,7 @@ public class NeighborServiceImpl implements NeighborService {
     }
 
     @Override
-    public Neighbor createNeighbor(String mail, String name, String surname, int neighborhoodId) {
-        return neighborDao.create2(mail, name, surname, neighborhoodId);
+    public Neighbor createNeighbor(String mail, String name, String surname, long neighborhoodId) {
+        return neighborDao.create(mail, name, surname, neighborhoodId);
     }
 }

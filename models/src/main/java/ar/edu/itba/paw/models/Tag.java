@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models;
 
 public class Tag {
-    private final int tagId;
+    private final long tagId;
     private final String tag;
 
     private Tag(Builder builder) {
@@ -10,10 +10,10 @@ public class Tag {
     }
 
     public static class Builder {
-        private int tagId;
+        private long tagId;
         private String tag;
 
-        public Builder tagId(int tagId) {
+        public Builder tagId(long tagId) {
             this.tagId = tagId;
             return this;
         }
@@ -28,7 +28,7 @@ public class Tag {
         }
     }
 
-    public int getTagId() {
+    public long getTagId() {
         return tagId;
     }
 

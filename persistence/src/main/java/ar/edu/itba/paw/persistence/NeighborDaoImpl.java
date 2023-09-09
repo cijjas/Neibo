@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.NeighborDao;
 import ar.edu.itba.paw.models.Neighbor;
+import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,21 +26,22 @@ public class NeighborDaoImpl implements NeighborDao {
     public NeighborDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .usingGeneratedKeyColumns("id")
-                .withTableName("users");
+                .usingGeneratedKeyColumns("neighborid")
+                .withTableName("neighbors");
                 // con .usingColumns(); podemos especificar las columnas a usar y otras cosas
     }
 
+    /*
     @Override
     public User create(final String email, final String password) {
         // El lo hacemos con jdbcInsert.executeAndReturnKey(), que nos retorna la key de la row insertada.
         // A esta función se le especifica una mapa Map<String, ?>, que es un mapa columna -> valor
 
         // NUNCA HAGAN ESTO SOTUYO DICE QUE ESTÁ PROHIBIDÍSIMO:
-        /*Map<String, Object> data = new HashMap<String, Object>() {{
-            put("email", email);
-            put("password", password);
-        }};*/
+        //Map<String, Object> data = new HashMap<String, Object>() {{
+        //    put("email", email);
+        //    put("password", password);
+        //}};
         // ESTO CREA UNA SUBCLASE DE HASHMAP Y LLAMA AL PUT EN EL CONSTRUCTOR O SEA ES HORRIBLE ESTÁ MUY MAL
 
         // Lo que sí está bien hacer es:
@@ -53,6 +55,7 @@ public class NeighborDaoImpl implements NeighborDao {
         final Number key = jdbcInsert.executeAndReturnKey(data);
         return new User(key.longValue(), email, password);
     }
+    */
 
 
 
@@ -106,8 +109,18 @@ public class NeighborDaoImpl implements NeighborDao {
     }
 
     @Override
-    public Neighbor create2(String email, String name, String surname, int neighborhoodId) {
-        // BASE DE DATOS
-        return null;
+    public Neighbor create(final String mail, final String name, final String surname, final long neighborhoodId) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("mail", mail);
+        data.put("name", name);
+        data.put("surname", surname);
+        data.put("neighborhoodid", neighborhoodId);
+
+        final Number key = jdbcInsert.executeAndReturnKey(data);
+        return new Neighbor.Builder()
+                .neighborId(key.longValue())
+                .name(name).mail(mail)
+                .surname(surname)
+                .build();
     }
 }
