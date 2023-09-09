@@ -10,49 +10,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
-    <style>
-        /* Apply the Lexend font to elements */
-        body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
-            font-family: 'Lexend Deca', sans-serif;
-        }
-
-        header {
-            background-color: #77866D;
-            color: #fff;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .card {
-            background-color: #EDECEA;
-        }
-        .custom-navbar {
-            background-color: #77866D;
-        }
-
-        .custom-btn {
-            background-color: #77866D;
-        }
-
-        .navbar-brand {
-            font-size: 32px;
-            color: #FFFEFD;
-        }
-
-        .volver-btn {
-            color: #626561;
-        }
-
-        .notification-icon {
-            font-size: 26px;
-            color: #FFFEFD;
-        }
-        .user-icon {
-            font-size: 30px;
-            color: #FFFEFD;
-        }
-    </style>
+    <link href="/css/home.css" rel="stylesheet"/>
 </head>
 
 <body>

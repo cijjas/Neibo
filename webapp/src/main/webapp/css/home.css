@@ -1,0 +1,135 @@
+/* Apply the Lexend font to elements */
+body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
+    font-family: 'Lexend Deca', sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.card {
+    background-color: #EDECEA;
+}
+.custom-navbar {
+    background-color: #77866D;
+}
+
+.custom-btn {
+    background-color: #77866D;
+}
+
+.navbar-brand {
+    font-size: 32px;
+    color: #FFFEFD;
+}
+
+.volver-btn {
+    color: #626561;
+}
+
+.notification-icon {
+    font-size: 26px;
+    color: #FFFEFD;
+}
+.user-icon {
+    font-size: 30px;
+    color: #FFFEFD;
+}
+
+.home-container {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.column {
+    margin: 0;
+    padding-top: 20px;
+    padding-left: 20px;
+    border: 1px solid #ddd;
+    /*box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);*/
+}
+
+.column-left{
+    flex: 1; /* 20% width each */
+    /*flex: 0 0 20%;*/
+}
+
+.column-right {
+    /*flex: 0 0 20%;*/
+    flex: 1;
+}
+
+.column-middle {
+    /*flex: 0 0 60%;*/
+    flex: 3; /* 60% width */
+}
+
+.menu-button {
+    background-color: transparent;
+    margin-bottom: 10px;
+}
+
+.gray-box {
+    background-color: #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.post-box {
+    background-color: #f2f2f2;
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.post-header {
+    font-size: 16px;
+    color: #333;
+}
+
+.post-header h3 {
+    font-size: 24px;
+    margin-top: 5px;
+}
+
+.post-body p {
+    font-size: 18px;
+    color: #444;
+}
+
+ .filter-bar {
+     background-color: #f2f2f2;
+     padding: 10px;
+     border-bottom: 1px solid #ddd;
+     display: flex;
+     align-items: center;
+ }
+
+.filter-bar span {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.icon-button {
+    text-decoration: none;
+    padding: 5px 10px;
+    margin-right: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+}
+
+.icon-button:hover {
+    background-color: #0056b3;
+}
+
+.icon-button i {
+    font-size: 20px;
+}
+
+

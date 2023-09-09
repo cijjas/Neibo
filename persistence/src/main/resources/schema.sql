@@ -81,10 +81,6 @@ create table if not exists posts_neighbors(
     foreign key (neighborId) references neighbors(neighborId) ON DELETE CASCADE -- Reference to the neighbors table
 );
 
-/*
-
- */
-
 
 
 
