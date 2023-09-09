@@ -20,103 +20,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <title>Your Web Page</title>
+    <title>Neibo</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Lexend Deca', sans-serif;
-        }
-
-        .custom-navbar {
-            background-color: #77866D;
-        }
-
-        .container {
-            display: flex;
-            padding: 20px;
-        }
-
-        .column {
-            margin: 10px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .column-left, .column-right {
-            flex: 1; /* 20% width each */
-        }
-
-        .column-middle {
-            flex: 3; /* 60% width */
-        }
-
-        .menu button {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .gray-box {
-            background-color: #ccc;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-
-        .navbar-brand {
-            font-size: 32px;
-            color: #FFFEFD;
-        }
-    </style>
+    <link href="/css/home.css" rel="stylesheet"/>
 </head>
 <body>
+    <%@ include file="/WEB-INF/jsp/views/navbar.jsp" %>
 
-<nav class="navbar navbar-expand-lg custom-navbar">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">Neibo</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <a href="post">
-                <button type="button" class="btn btn-light mr-2">post</button>
-            </a>
+
+    <div class="card">
+        <h5 class="card-header">Featured</h5>
+        <div class="card-body">
+            <h5 class="card-title">Special title treatment</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div>
+
+    <!-- Main content divided into three columns -->
+    <div class="container home-container">
+        <div class="column column-left" style="flex: 20%;">
+            <div class="btn-group-vertical">
+                <button type="button" class="btn btn-light mb-2 menu-button">
+                    <i class="fas fa-bullhorn"></i> Anuncios
+                </button>
+                <button type="button" class="btn btn-light mb-2 menu-button">
+                    <i class="fas fa-comments"></i> Foro
+                </button>
+                <button type="button" class="btn btn-light mb-2 menu-button">
+                    <i class="fas fa-address-card"></i> Contactos
+                </button>
+            </div>
+        </div>
+        <div class="column column-middle">
+            <div class="filter-bar">
+                <span>Filtrar por: </span>
+            </div>
+            <div class="post-box">
+                <div class="post-header">
+                    <h5>Username/email</h5>
+                    <h3>Titulo</h3>
+                </div>
+                <div class="post-body">
+                    <p>Contenido del post</p>
+                </div>
+            </div>
         </div>
 
-    </div>
-</nav>
 
-<!-- Main content divided into three columns -->
-<div class="container">
-    <div class="column column-left" style="flex: 20%; background-color: transparent;">
-        <div class="btn-group-vertical">
-            <button type="button" class="btn btn-light mb-2" style="background-color: transparent;">
-                <i class="fas fa-bullhorn"></i> Anuncios
-            </button>
-            <button type="button" class="btn btn-light mb-2">
-                <i class="fas fa-comments"></i> Foro
-            </button>
-            <button type="button" class="btn btn-light mb-2">
-                <i class="fas fa-address-card"></i> Contactos
-            </button>
+
+        <div class="column column-right">
+            <h2>Column 3</h2>
+            <div class="gray-box">
+                <p>Gray Box 1</p>
+            </div>
+            <div class="gray-box">
+                <p>Gray Box 2</p>
+            </div>
         </div>
     </div>
-    <div class="column column-middle" style="flex: 60%;">
-        <h2>Main Content</h2>
-        <p>Aca se verian los posts</p>
-        <div class="box">Box in the middle column</div>
-    </div>
-    <div class="column column-right" style="flex: 20%;">
-        <h2>Column 3</h2>
-        <div class="gray-box">
-            <p>Gray Box 1</p>
-        </div>
-        <div class="gray-box">
-            <p>Gray Box 2</p>
-        </div>
-    </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </body>
 </html>

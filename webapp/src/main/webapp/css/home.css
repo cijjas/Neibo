@@ -1,0 +1,150 @@
+/* Apply the Lexend font to elements */
+body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
+    font-family: 'Lexend Deca', sans-serif;
+}
+
+:root {
+    --text: #4f5248;
+    --background: #fffef8;
+    --primary: #9ad379;
+    --secondary: #d8d8c5;
+    --accent: #6696e2;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+/*
+NAVBAR
+*/
+.square-button {
+    width: 40px; /* Adjust the width as needed */
+    height: 40px; /* Set the same height as the width for a square button */
+
+}
+.card {
+    background-color: var(--background);
+}
+.custom-navbar {
+    background-color: var(--primary);
+}
+
+.custom-btn {
+    background-color: var(--primary);
+}
+
+.navbar-brand {
+    font-size: 32px;
+    color: var(--background);
+}
+
+.volver-btn {
+    color: var(--text);
+}
+
+.notification-icon {
+    font-size: 26px;
+    color: var(--background);
+}
+.user-icon {
+    font-size: 30px;
+    color: var(--background);
+}
+
+.home-container {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.column {
+    margin: 0;
+    padding-top: 20px;
+    padding-left: 20px;
+    border: 1px solid #ddd;
+    /*box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);*/
+}
+
+.column-left{
+    flex: 1; /* 20% width each */
+    /*flex: 0 0 20%;*/
+}
+
+.column-right {
+    /*flex: 0 0 20%;*/
+    flex: 1;
+}
+
+.column-middle {
+    /*flex: 0 0 60%;*/
+    flex: 3; /* 60% width */
+}
+
+.menu-button {
+    background-color: transparent;
+    margin-bottom: 10px;
+}
+
+.gray-box {
+    background-color: #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.post-box {
+    background-color: #f2f2f2;
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.post-header {
+    font-size: 16px;
+    color: #333;
+}
+
+.post-header h3 {
+    font-size: 24px;
+    margin-top: 5px;
+}
+
+.post-body p {
+    font-size: 18px;
+    color: #444;
+}
+
+ .filter-bar {
+     background-color: #f2f2f2;
+     padding: 10px;
+     border-bottom: 1px solid #ddd;
+     display: flex;
+     align-items: center;
+ }
+
+.filter-bar span {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.icon-button {
+    text-decoration: none;
+    padding: 5px 10px;
+    margin-right: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #007bff;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+}
+
+.icon-button:hover {
+    background-color: #0056b3;
+}
+
+.icon-button i {
+    font-size: 20px;
+}
+
+
