@@ -63,8 +63,6 @@ public class FrontController {
         return new ModelAndView("views/register");
     }
 
-    @RequestMapping("/post")
-    public ModelAndView postPage() {return new ModelAndView("views/post");}
     // Una forma de atender requests es tomando un HttpServletRequest, que nos da mucho control sobre el request y
     // cómo respondemos:
     /*@RequestMapping(value = "/register", method = RequestMethod.POST)
@@ -163,7 +161,7 @@ public class FrontController {
     @RequestMapping("/{id:\\d+}") // Antes aceptaba negativos, ahora no!
     // NOTAR: Si pones negativo o texto antes te tiraba 400 bad request, ahora te tira 404 not found.
     public ModelAndView post(@PathVariable("id") final long postId) {
-        final ModelAndView mav = new ModelAndView("views/specifcPost");
+        final ModelAndView mav = new ModelAndView("views/index");
         System.out.println(ps.findPostById(postId));
         System.out.println(cs.findCommentsByPostId(postId));
         mav.addObject("post", ps.findPostById(postId));
