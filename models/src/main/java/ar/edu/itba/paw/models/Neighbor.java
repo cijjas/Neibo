@@ -73,4 +73,15 @@ public class Neighbor {
     public Neighborhood getNeighborhood() {
         return neighborhood;
     }
+
+    @Override
+    public String toString() {
+        return "Neighbor{" +
+                "neighborId=" + neighborId +
+                ", mail='" + mail + '\'' +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", neighborhood=" + neighborhood +
+                '}';
+    }
 }

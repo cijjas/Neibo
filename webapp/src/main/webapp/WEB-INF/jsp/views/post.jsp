@@ -26,6 +26,15 @@
             <p>Mensaje: ${post.description}</p>
         </div>
 
+        <!-- Tag section -->
+        <div class="tag">
+            <p><strong> Tags :</br></strong> </p>
+
+            <c:forEach var="tag" items="${tags}">
+                <p><strong> #${tag.tag}</strong> </p>
+            </c:forEach>
+        </div>
+
         <!-- Comments section -->
         <div class="comments">
 
@@ -33,6 +42,10 @@
             <p><strong>User #${comment.neighborId}:</strong> ${comment.comment}</p>
         </c:forEach>
         </div>
+
+
+
+
     </div>
 
 

@@ -34,4 +34,13 @@ public class NeighborPostNeighborhoodWrapper {
     public void setNeighborhood(Neighborhood neighborhood) {
         this.neighborhood = neighborhood;
     }
+
+    @Override
+    public String toString() {
+        return "NeighborPostNeighborhoodWrapper{" +
+                "neighbor=" + neighbor +
+                ", neighborhood=" + neighborhood +
+                ", post=" + post +
+                '}';
+    }
 }

@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.CommentService;
-import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
-import ar.edu.itba.paw.interfaces.services.PostService;
-import ar.edu.itba.paw.interfaces.services.NeighborService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +20,20 @@ public class FrontController {
     private final NeighborService ns;
     private final NeighborhoodService nhs;
     private final CommentService cs;
+    private final TagService ts;
     @Autowired
-    public FrontController(final NeighborService us, final PostService ps, NeighborService ns, NeighborhoodService nhs, CommentService cs) {
+    public FrontController(final NeighborService us, // remove eventually
+                           final PostService ps,
+                           final NeighborService ns,
+                           final NeighborhoodService nhs,
+                           final CommentService cs,
+                           final TagService ts) {
         this.us = us;
         this.ps = ps;
         this.ns = ns;
         this.nhs = nhs;
         this.cs = cs;
+        this.ts = ts;
     }
 
     // Spring permite hacer inyección de otras formas, no solo pasando instancia al constructor.
@@ -179,14 +183,19 @@ public class FrontController {
 //    @RequestMapping("/post")
     public ModelAndView viewPost(@PathVariable(value = "id") int postId) {
         ModelAndView mav = new ModelAndView("views/post");
-//        if (postId != null) {
-            // If postId is provided, fetch the post and comments
-            Optional<Post> optionalpost = ps.findPostById(postId);
-            mav.addObject("post", optionalpost.isPresent()? optionalpost.get() : new RuntimeException());
 
-            Optional<List<Comment>> optionalcomments = cs.findCommentsByPostId(postId);
-            mav.addObject("comments", optionalcomments.isPresent()? optionalcomments.get() : new RuntimeException());
-//        }
+            // TO-DO: add no post exception and better error handling!
+
+            Optional<Post> optionalPost = ps.findPostById(postId);
+            mav.addObject("post", optionalPost.isPresent()? optionalPost.get() : new RuntimeException());
+
+            Optional<List<Comment>> optionalComments = cs.findCommentsByPostId(postId);
+            mav.addObject("comments", optionalComments.isPresent()? optionalComments.get() : new RuntimeException());
+
+            Optional<List<Tag>> optionalTags = ts.findTags(postId);
+            System.out.println(optionalTags);
+            mav.addObject("tags", optionalTags.isPresent()? optionalTags.get() : new RuntimeException());
+
         return mav;
     }
 }

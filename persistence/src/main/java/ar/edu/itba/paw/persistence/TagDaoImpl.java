@@ -1,7 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.CommentDao;
+import ar.edu.itba.paw.interfaces.persistence.TagDao;
 import ar.edu.itba.paw.models.Comment;
+import ar.edu.itba.paw.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,33 +14,30 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class CommentDaoImpl implements CommentDao {
+public class TagDaoImpl implements TagDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert; // En vez de hacer queries de tipo INSERT, usamos este objeto.
 
     @Autowired // Motor de inyección de dependencias; nos da el DataSource definido en el @Bean de WebConfig.
-    public CommentDaoImpl(final DataSource ds) {
+    public TagDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .usingGeneratedKeyColumns("commentid")
-                .withTableName("comments");
+                .usingGeneratedKeyColumns("tagid")
+                .withTableName("tags");
         // con .usingColumns(); podemos especificar las columnas a usar y otras cosas
     }
 
-    private static final RowMapper<Comment> ROW_MAPPER =
-            (rs, rowNum) -> new Comment.Builder()
-                    .commentId(rs.getLong("commentid"))
-                    .comment(rs.getString("comment"))
-                    .date(rs.getDate("commentdate"))
-                    .neighborId(rs.getLong("neighborid"))
-                    .postId(rs.getLong("postid"))
+    private static final RowMapper<Tag> ROW_MAPPER =
+            (rs, rowNum) -> new Tag.Builder()
+                    .tagId(rs.getLong("tagid"))
+                    .tag(rs.getString("tag"))
                     .build();
 
-
     @Override
-    public Optional<List<Comment>> findCommentsByPostId(long id) {
-        final List<Comment> comments = jdbcTemplate.query("SELECT * FROM comments WHERE postid=?;", ROW_MAPPER, id);
-        return comments.isEmpty() ? Optional.empty() : Optional.of(comments);
+    public Optional<List<Tag>> findTags(long id) {
+        final List<Tag> tags = jdbcTemplate.query("select tags.tagid, tag from\n" +
+                "             posts_tags join tags on posts_tags.tagid = tags.tagid WHERE postid=?;", ROW_MAPPER, id);
+        return tags.isEmpty() ? Optional.empty() : Optional.of(tags);
     }
 }

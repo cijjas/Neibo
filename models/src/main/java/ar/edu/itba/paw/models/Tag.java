@@ -35,4 +35,12 @@ public class Tag {
     public String getTag() {
         return tag;
     }
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "tagId=" + tagId +
+                ", tag='" + tag + '\'' +
+                '}';
+    }
 }
