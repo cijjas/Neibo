@@ -17,6 +17,8 @@ public interface PostService {
 
     List<Post> getAllPostsByTag(final String tag);
 
+    List<Post> getAllPostsByChannel(final String channel);
+
     Optional<Post> findPostById(long id);
 
 

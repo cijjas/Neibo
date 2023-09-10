@@ -21,19 +21,22 @@ public class FrontController {
     private final NeighborhoodService nhs;
     private final CommentService cs;
     private final TagService ts;
+    private final ChannelService chs;
     @Autowired
     public FrontController(final NeighborService us, // remove eventually
                            final PostService ps,
                            final NeighborService ns,
                            final NeighborhoodService nhs,
                            final CommentService cs,
-                           final TagService ts) {
+                           final TagService ts,
+                           final ChannelService chs) {
         this.us = us;
         this.ps = ps;
         this.ns = ns;
         this.nhs = nhs;
         this.cs = cs;
         this.ts = ts;
+        this.chs = chs;
     }
 
     // Spring permite hacer inyección de otras formas, no solo pasando instancia al constructor.
@@ -95,6 +98,8 @@ public class FrontController {
         }else {
             postList = ps.getAllPosts(); // Default sorting
         }
+
+        System.out.println(ts.getAllTags());
 
         final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getAllTags());
@@ -237,6 +242,17 @@ public class FrontController {
             mav.addObject("tags", optionalTags.isPresent()? optionalTags.get() : new RuntimeException());
 
         return mav;
+    }
+
+
+
+    // ------------------------------------------------------ TEST
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public ModelAndView test() {
+        System.out.println(chs.getAllChannels());
+        System.out.println(ps.getAllPostsByChannel("Foro"));
+        return new ModelAndView("views/index");
     }
 
 

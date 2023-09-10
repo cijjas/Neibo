@@ -16,5 +16,7 @@ public interface PostDao {
 
     List<Post> getAllPostsByTag(String tag);
 
+    List<Post> getAllPostsByChannel(String channel);
+
     Optional<Post> findPostById(long id);
 }
