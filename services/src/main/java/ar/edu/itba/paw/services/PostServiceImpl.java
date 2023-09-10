@@ -32,7 +32,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Optional<Post> findPostById(long id) {
+    public List<Post> getAllPostsByDate(final String order) {
+        return postDao.getAllPostsByDate(order);
+    }
+
+    @Override
+    public List<Post> getAllPostsByTag(String tag) {
+        return postDao.getAllPostsByTag(tag);
+    }
+
+    @Override
+    public Optional<Post> findPostById(final long id) {
         return postDao.findPostById(id);
     }
 

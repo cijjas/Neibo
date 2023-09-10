@@ -57,9 +57,49 @@ public class FrontController {
     // @RequestMapping(value = {"/", "/index.html"})
 
     // Por default, cualquier pedido sin importar headers o método HTTP es aceptado por el mapping:
+    /*
     @RequestMapping("/")
-    public ModelAndView helloWorld() {
+    public ModelAndView index() {
+        List<Post> postList = ps.getAllPosts();
+
         final ModelAndView mav = new ModelAndView("views/index");
+        mav.addObject("postList", postList);
+
+        return mav;
+    }
+
+     */
+
+    @RequestMapping("/")
+    public ModelAndView index(@RequestParam(value = "sortBy", required = false) String sortBy) {
+        List<Post> postList = null;
+
+        // It would be nice to create an enum of the tags but I cant create an enum dynamically, meaning I cant retrieve the tags and then create an enum
+        // Maybe I can create an Enum for ASC and DESC, but it is kinda overkill just for some performance
+
+
+        if ( sortBy != null ){
+            switch (sortBy) {
+                case "dateasc":
+                    postList = ps.getAllPostsByDate("asc");
+                    break;
+                case "datedesc":
+                    postList = ps.getAllPostsByDate("desc");
+                    break;
+                default:
+                    if (sortBy.startsWith("tag")) {
+                        String tag = sortBy.substring(3); // Extract the tag part
+                        postList = ps.getAllPostsByTag(tag);
+                    }
+            }
+        }else {
+            postList = ps.getAllPosts(); // Default sorting
+        }
+
+        final ModelAndView mav = new ModelAndView("views/index");
+        mav.addObject("tagList", ts.getAllTags());
+        mav.addObject("postList", postList);
+
         return mav;
     }
 
@@ -198,4 +238,6 @@ public class FrontController {
 
         return mav;
     }
+
+
 }

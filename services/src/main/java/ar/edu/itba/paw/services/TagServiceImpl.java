@@ -22,7 +22,13 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public List<Tag> getAllTags() {
+        return tagDao.getAllTags();
+    }
+
+    @Override
     public Optional<List<Tag>> findTags(long id) {
         return tagDao.findTags(id);
     }
+
 }

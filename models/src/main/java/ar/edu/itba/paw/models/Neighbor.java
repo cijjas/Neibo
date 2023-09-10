@@ -5,7 +5,6 @@ public class Neighbor {
     private final String mail;
     private final String name;
     private final String surname;
-    private final Neighborhood neighborhood; // Represent neighborhood as an object
 
     // Private constructor to enforce object creation through the builder
     private Neighbor(Builder builder) {
@@ -13,7 +12,6 @@ public class Neighbor {
         this.mail = builder.mail;
         this.name = builder.name;
         this.surname = builder.surname;
-        this.neighborhood = builder.neighborhood;
     }
 
     public static class Builder {
@@ -21,7 +19,6 @@ public class Neighbor {
         private String mail;
         private String name;
         private String surname;
-        private Neighborhood neighborhood;
 
         public Builder neighborId(long neighborId) {
             this.neighborId = neighborId;
@@ -40,11 +37,6 @@ public class Neighbor {
 
         public Builder surname(String surname) {
             this.surname = surname;
-            return this;
-        }
-
-        public Builder neighborhood(Neighborhood neighborhood) {
-            this.neighborhood = neighborhood;
             return this;
         }
 
@@ -70,10 +62,6 @@ public class Neighbor {
         return surname;
     }
 
-    public Neighborhood getNeighborhood() {
-        return neighborhood;
-    }
-
     @Override
     public String toString() {
         return "Neighbor{" +
@@ -81,7 +69,6 @@ public class Neighbor {
                 ", mail='" + mail + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", neighborhood=" + neighborhood +
                 '}';
     }
 }

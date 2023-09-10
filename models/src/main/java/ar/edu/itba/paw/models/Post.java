@@ -8,6 +8,7 @@ public class Post {
     private final String description;
     private final Date date;
     private final Neighbor neighbor; // Represent neighbor as an object
+    private final Channel channel; // Represent channel as an object
 
     private Post(Builder builder) {
         this.postId = builder.postId;
@@ -15,6 +16,7 @@ public class Post {
         this.description = builder.description;
         this.date = builder.date;
         this.neighbor = builder.neighbor;
+        this.channel = builder.channel;
     }
 
     public static class Builder {
@@ -23,6 +25,7 @@ public class Post {
         private String description;
         private Date date;
         private Neighbor neighbor;
+        private Channel channel;
 
         public Builder postId(long postId) {
             this.postId = postId;
@@ -46,6 +49,11 @@ public class Post {
 
         public Builder neighbor(Neighbor neighbor) {
             this.neighbor = neighbor;
+            return this;
+        }
+
+        public Builder channel(Channel channel) {
+            this.channel = channel;
             return this;
         }
 
@@ -74,6 +82,10 @@ public class Post {
         return neighbor;
     }
 
+    public Channel getChannel() {
+        return channel;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -82,6 +94,7 @@ public class Post {
                 ", description='" + description + '\'' +
                 ", date=" + date +
                 ", neighbor=" + neighbor +
+                ", channel=" + channel +
                 '}';
     }
 }

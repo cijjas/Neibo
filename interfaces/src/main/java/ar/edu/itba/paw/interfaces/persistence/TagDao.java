@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface TagDao {
     Optional<List<Tag>> findTags(long id);
+
+    List<Tag> getAllTags();
 }
