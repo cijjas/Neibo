@@ -8,14 +8,41 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <div class="post" style="word-wrap: break-word;">
-    <div class="post-header">
-        <span class="post-author">${param.postNeighborMail}</span>
-        <span class="post-date">publicado el ${param.postDate}</span>
-        <h1 class="post-title">${param.postTitle}</h1>
-    </div>
-        <p class="post-description">${param.postDescription}</p>
-    <div class="card-footer">
-        <small class="text-muted">Por: ${param.postNeighborMail}</small>
+    <a href="/${param.postID}" style="text-decoration: none;">
+        <div class="post-header">
+            <span class="post-author">${param.postNeighborMail}</span>
+            <span class="post-date">publicado el ${param.postDate}</span>
+            <h1 class="post-title">${param.postTitle}</h1>
+        </div>
+
+    </a>
+    <p class="post-description">${param.postDescription}</p>
+
+</div>
+
+
+<%--
+
+<div class="post" aria-hidden="true">
+    <div class="card-body">
+        <div class="post-header">
+
+            <h6 class="card-title placeholder-glow">
+                <span class="placeholder col-6"></span>
+            </h6>
+            <h3 class="card-title placeholder-glow">
+                <span class="placeholder col-7"></span>
+            </h3>
+        </div>
+
+        <p class="card-text placeholder-glow">
+            <span class="placeholder col-7"></span>
+            <span class="placeholder col-4"></span>
+            <span class="placeholder col-4"></span>
+            <span class="placeholder col-7"></span>
+            <span class="placeholder col-8"></span>
+        </p>
     </div>
 </div>
+--%>
 

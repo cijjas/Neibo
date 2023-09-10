@@ -16,7 +16,7 @@
 
 <body>
 <!-- Navigation Bar -->
-<%@ include file="/WEB-INF/jsp/views/navbar.jsp" %>
+<%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 
 <!-- Post Creation Form -->
 <div class="container mt-4">
@@ -73,6 +73,11 @@
                     <form:textarea path="post.description" id="description" class="form-control rounded" rows="5"/><br/>
                 </div>
 
+
+
+                <div class="mb-3">
+                    <input type="file" class="form-control" aria-label="file example" required>
+                </div>
 
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary custom-btn">Publicar</button>

@@ -59,7 +59,11 @@ public class FrontController {
     // Por default, cualquier pedido sin importar headers o método HTTP es aceptado por el mapping:
     @RequestMapping("/")
     public ModelAndView helloWorld() {
+        List<Post> postList = ps.getAllPosts();
+
         final ModelAndView mav = new ModelAndView("views/index");
+        mav.addObject("postList", postList);
+
         return mav;
     }
 
