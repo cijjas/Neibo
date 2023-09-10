@@ -11,6 +11,8 @@
   <properties>
     <spring.version>4.2.5.RELEASE</spring.version>
     <org.postgresql.version>42.2.5</org.postgresql.version>
+    <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
+    <org.hibernate-validator.version>4.3.1.Final</org.hibernate-validator.version>
     <mockito.version>2.25.1</mockito.version>
     <org.hsqldb.version>2.3.1</org.hsqldb.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -52,6 +54,17 @@
         <groupId>javax.servlet</groupId>
         <artifactId>jstl</artifactId>
         <version>1.2</version>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>${javax.validation-api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${org.hibernate-validator.version}</version>
       </dependency>
 
       <dependency>
