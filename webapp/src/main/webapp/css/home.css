@@ -8,6 +8,7 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
     --lighttext: #83887f;
     --background: #fffef8;
     --onbackground: rgba(245, 245, 244, 0.73);
+    --darkonbackground : rgba(241, 241, 238, 0.73);
     --primary: #9ad379;
     --secondary: #d8d8c5;
     --accent: #6696e2;
@@ -43,6 +44,11 @@ NAVBAR
     font-size: 32px;
     color: var(--background);
 }
+.navbar-brand:hover {
+    color: var(--background);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Adjust the values for the desired glow effect */
+}
+
 
 .volver-btn {
     color: var(--text);
@@ -62,7 +68,6 @@ NAVBAR
     margin: 0;
     padding-top: 20px;
     padding-left: 20px;
-    border: 1px solid #ddd;
     /*box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);*/
 }
 
@@ -179,7 +184,7 @@ NAVBAR
     cursor: pointer;
 }
 
-/* Post CSS*/
+/* Posts CSS*/
 .post {
     width: 100%;
     border: 1px solid var(--secondary);
@@ -188,6 +193,11 @@ NAVBAR
     background-color: var(--onbackground);
     border-radius: 10px;
 }
+
+.post:hover{
+    border-color:var(--primary);
+}
+
 .post-author{
     font-size: 14px;
     color: var(--text);
@@ -229,8 +239,17 @@ NAVBAR
     color: var(--primary);
 }
 
+h2{
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .post-info {
-    font-size: 12px;
+    font-size: 16px;
     color: #888;
 }
 
@@ -239,6 +258,9 @@ NAVBAR
     font-size: 14px;
 }
 
-.post:hover{
-    border-color:var(--primary);
-}
+
+
+/*UPLOAD FILE*/
+
+
+
