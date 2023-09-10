@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Controller
@@ -92,6 +93,9 @@ public class FrontController {
         return mav;
     }
 
+//    @RequestMapping("/post")
+//    public ModelAndView postPage() {return new ModelAndView("views/post");}
+
     // @RequestMapping("/{id}") // El problema con este es que no pone restricciones al valor de "id"!
     /*
     @RequestMapping("/{id:\\d+}") // Antes aceptaba negativos, ahora no!
@@ -157,16 +161,32 @@ public class FrontController {
         return mav;
     }
 
-    // @RequestMapping("/{id}") // El problema con este es que no pone restricciones al valor de "id"!
-    @RequestMapping("/{id:\\d+}") // Antes aceptaba negativos, ahora no!
-    // NOTAR: Si pones negativo o texto antes te tiraba 400 bad request, ahora te tira 404 not found.
-    public ModelAndView post(@PathVariable("id") final long postId) {
-        final ModelAndView mav = new ModelAndView("views/index");
-        System.out.println(ps.findPostById(postId));
-        System.out.println(cs.findCommentsByPostId(postId));
-        mav.addObject("post", ps.findPostById(postId));
-        mav.addObject("comments", cs.findCommentsByPostId(postId));
-        // TIENE EL POST Y LOS COMENTARIOS DE LA RUTA ID
+//    // @RequestMapping("/{id}") // El problema con este es que no pone restricciones al valor de "id"!
+//    @RequestMapping("/{id:\\d+}") // Antes aceptaba negativos, ahora no!
+//    // NOTAR: Si pones negativo o texto antes te tiraba 400 bad request, ahora te tira 404 not found.
+//    public ModelAndView post(@PathVariable("id") final long postId) {
+//        final ModelAndView mav = new ModelAndView("views/index");
+//        System.out.println(ps.findPostById(postId));
+//        System.out.println(cs.findCommentsByPostId(postId));
+//        mav.addObject("post", ps.findPostById(postId));
+//        mav.addObject("comments", cs.findCommentsByPostId(postId));
+//        // TIENE EL POST Y LOS COMENTARIOS DE LA RUTA ID
+//        return mav;
+//    }
+
+    // Handle "/post" and "/post/{id}" URLs
+    @RequestMapping( "/{id:\\d+}")
+//    @RequestMapping("/post")
+    public ModelAndView viewPost(@PathVariable(value = "id") int postId) {
+        ModelAndView mav = new ModelAndView("views/post");
+//        if (postId != null) {
+            // If postId is provided, fetch the post and comments
+            Optional<Post> optionalpost = ps.findPostById(postId);
+            mav.addObject("post", optionalpost.isPresent()? optionalpost.get() : new RuntimeException());
+
+            Optional<List<Comment>> optionalcomments = cs.findCommentsByPostId(postId);
+            mav.addObject("comments", optionalcomments.isPresent()? optionalcomments.get() : new RuntimeException());
+//        }
         return mav;
     }
 }
