@@ -5,15 +5,19 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
 
 :root {
     --text: #4f5248;
+    --lighttext: #83887f;
     --background: #fffef8;
+    --onbackground: rgba(245, 245, 244, 0.73);
     --primary: #9ad379;
     --secondary: #d8d8c5;
     --accent: #6696e2;
+
 }
 
 body {
     margin: 0;
     padding: 0;
+    background-color: var(--background);
 }
 /*
 NAVBAR
@@ -23,6 +27,7 @@ NAVBAR
     height: 40px; /* Set the same height as the width for a square button */
 
 }
+
 .card {
     background-color: var(--background);
 }
@@ -52,12 +57,6 @@ NAVBAR
     color: var(--background);
 }
 
-.home-container {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: space-between;
-}
 
 .column {
     margin: 0;
@@ -78,9 +77,11 @@ NAVBAR
 }
 
 .column-middle {
-    /*flex: 0 0 60%;*/
+
     flex: 3; /* 60% width */
+    overflow-y: auto;
 }
+
 
 .menu-button {
     background-color: transparent;
@@ -93,17 +94,9 @@ NAVBAR
     margin-bottom: 10px;
 }
 
-.post-box {
-    background-color: #f2f2f2;
-    padding: 10px;
-    border: 1px solid #ddd;
-    margin-bottom: 20px;
-}
 
-.post-header {
-    font-size: 16px;
-    color: #333;
-}
+
+
 
 .post-header h3 {
     font-size: 24px;
@@ -115,13 +108,13 @@ NAVBAR
     color: #444;
 }
 
- .filter-bar {
+.filter-bar {
      background-color: #f2f2f2;
      padding: 10px;
      border-bottom: 1px solid #ddd;
      display: flex;
      align-items: center;
- }
+}
 
 .filter-bar span {
     font-weight: bold;
@@ -147,4 +140,105 @@ NAVBAR
     font-size: 20px;
 }
 
+/*Middle column*/
+.filter-options {
+    border: 1px solid var(--secondary);
+    padding: 10px;
+    margin: 10px auto;
+    width: 100%; /* Adjust the width as needed */
+    background-color: var(--onbackground);
+    border-radius: 10px; /* Rounded corners */
+}
+.filter-button {
+    border-radius: 25px;
+    padding: 10px 20px;
+    margin: 5px;
+    border: 1px solid var(--lighttext); /* Add a 1px solid border with your desired color */
+}
+.filter-button:hover{
+    border: 1px solid var(--primary); /* Add a 1px solid border with your desired color */
+}
 
+
+/* Styling for the post input */
+.post-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px; /* Rounded input field */
+}
+
+/* Styling for the post submit button */
+.post-button {
+    background-color: var(--primary);
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px; /* Rounded button */
+    cursor: pointer;
+}
+
+/* Post CSS*/
+.post {
+    width: 100%;
+    border: 1px solid var(--secondary);
+    padding: 10px;
+    margin: 10px auto;
+    background-color: var(--onbackground);
+    border-radius: 10px;
+}
+.post-author{
+    font-size: 14px;
+    color: var(--text);
+}
+
+.post-date{
+    font-size: 12px;
+    color: var(--lighttext);
+}
+.post-description {
+    max-height: calc(1.2em * 10); /* Adjust the line height and number of lines as needed */
+    overflow: hidden;
+    position: relative;
+}
+.post-description::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20px; /* Adjust the height to control the fade-out length */
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), var(--onbackground));
+}
+.post-header {
+    font-size: 16px;
+    font-weight: bold;
+}
+.post-title{
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.post-title:hover{
+    color: var(--primary);
+}
+
+.post-info {
+    font-size: 12px;
+    color: #888;
+}
+
+.post-content {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.post:hover{
+    border-color:var(--primary);
+}
