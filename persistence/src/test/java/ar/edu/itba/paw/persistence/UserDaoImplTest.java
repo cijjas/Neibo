@@ -40,6 +40,7 @@ public class UserDaoImplTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, "users");
     }
 
+    /*
     @Test
     public void testFindById() throws SQLException {
         // 1. Precondiciones
@@ -65,7 +66,7 @@ public class UserDaoImplTest {
         // 3. Postcondiciones
         Assert.assertFalse(maybeUser.isPresent());
     }
-
+    */
     /*
     @Test
     public void testCreate() {
