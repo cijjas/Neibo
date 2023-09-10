@@ -42,6 +42,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> getAllPostsByChannel(String channel) {
+        return postDao.getAllPostsByChannel(channel);
+    }
+
+    @Override
     public Optional<Post> findPostById(final long id) {
         return postDao.findPostById(id);
     }

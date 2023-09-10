@@ -100,6 +100,15 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
+    public List<Post> getAllPostsByChannel(String channel) {
+        // Again, this WILL be vulnerable to SQL Injections if we allow users to create channels/communities
+        return jdbcTemplate.query(
+                "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, n.neighborhoodid, neighborhoodname, c.channelid, channel\n" +
+                        "from posts p join neighbors n on p.neighborid = n.neighborid join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid  join posts_tags on p.postid = posts_tags.postid join tags on posts_tags.tagid = tags.tagid" +
+                        " where channel like '" + channel + "';", ROW_MAPPER);
+    }
+
+    @Override
     public Optional<Post> findPostById(long id) {
         final List<Post> postList = jdbcTemplate.query(baseQuery + " where postid=?", ROW_MAPPER, id);
         return postList.isEmpty() ? Optional.empty() : Optional.of(postList.get(0));

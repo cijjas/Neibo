@@ -9,5 +9,5 @@ import java.util.Optional;
 public interface CommentDao {
     Optional<List<Comment>> findCommentsByPostId(long id);
 
-    //Optional<List<Comment>> findCommentsByUserId(long id);
+    //Optional<List<Comment>> findCommentsByUserId(long id); no me quemees
 }
