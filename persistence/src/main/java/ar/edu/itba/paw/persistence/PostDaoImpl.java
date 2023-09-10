@@ -33,12 +33,13 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public Post create(String title, String description, long neighborId) {
+    public Post create(String title, String description, long neighborId, long channelId) {
         Map<String, Object> data = new HashMap<>();
         data.put("title", title);
         data.put("description", description);
         data.put("postdate", LocalDate.now());
         data.put("neighborid", neighborId);
+        data.put("channelid", channelId);
 
         final Number key = jdbcInsert.executeAndReturnKey(data);
         return new Post.Builder()

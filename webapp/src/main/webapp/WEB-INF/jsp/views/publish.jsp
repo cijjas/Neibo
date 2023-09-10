@@ -91,7 +91,7 @@
 
 
                 <div class="mb-3">
-                    <input type="file" class="form-control" aria-label="file example" required>
+                    <input type="file" class="form-control" aria-label="file example">
                 </div>
 
                 <div class="d-flex justify-content-end">

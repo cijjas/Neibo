@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.webapp.form;
 
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.beans.factory.annotation.Required;
+
 import javax.validation.constraints.Size;
 
 // Para ver ejemplos de todos los constraints que se pueden poner, mirar javax.validation.constraints. Esto incluye
@@ -9,21 +12,27 @@ import javax.validation.constraints.Size;
 // como @Email, @Length, @NotBlank, @NotEmpty, @URL, @SafeHtml, @Range, @CreditCardNumber...
 
 public class PublishForm {
-    @Size(max = 100)
+    @NotBlank
+    @Size(min = 1, max = 100)
     private String name;
 
-    @Size(max = 100)
+    @NotBlank
+    @Size(min = 1, max = 100)
     private String surname;
 
-    @Size(max = 100)
+    @NotBlank
+    @Size(min = 1, max = 100)
     private String neighborhood;
 
-    @Size(max = 100)
+    @NotBlank
+    @Size(min = 1, max = 100)
     private String subject;
 
-    @Size(max = 255)
+    @NotBlank
+    @Size(min = 1, max = 255)
     private String message;
 
+    @NotBlank
     @Size(min = 6, max = 100) // Especifico rango del length del string
     // @Pattern(regexp = "^[a-zA-Z0-9]+$") // Debe validar con tal regex, lo dejo como ejemplo pero mejor usar email
     @Email

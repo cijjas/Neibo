@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostService {
-    Post createPost(final String title, final String description, final long neighborId);
+    Post createPost(final String title, final String description, final long neighborId, final long channelId);
 
     List<Post> getAllPosts();
 
