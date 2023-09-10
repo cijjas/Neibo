@@ -9,6 +9,5 @@ public interface NeighborDao {
 
     Neighbor create(final String email, final String name, final String surname, final long neighborhoodId);
 
-    Optional<User> findById(long id);
 
 }

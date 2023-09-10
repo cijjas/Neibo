@@ -44,7 +44,6 @@
                     </div>
 
 
-                    <!-- Comments section -->
                     <div class="comments-section">
                         <c:forEach var="comment" items="${comments}">
                             <div class="comment">

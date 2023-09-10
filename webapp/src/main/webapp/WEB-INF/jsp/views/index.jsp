@@ -36,20 +36,35 @@
         <div class="row">
             <div class="column column-left">
                 <%@ include file="/WEB-INF/jsp/components/leftcolumn.jsp" %>
-
             </div>
 
-            <div class="column column-middle ">
+            <div class="column column-middle">
                 <div class="filter-options">
-                    <button id="filter-by-date" class="filter-button" onclick="">
-                        <i class="fa-solid fa-newspaper"></i>
-                        <span>Fecha</span>
+                    <a href="${pageContext.request.contextPath}/?sortBy=dateasc" style="text-decoration: none;">
+                        <button id="filter-by-date" class="filter-button" onclick="">
+                            <i class="fa-solid fa-newspaper"></i>
+                                <span>Fecha</span>
+                        </button>
+                    </a>
+
+                    <button id="filter-by-tag" class="filter-button" onclick="">
+                            <a class="dropdown-toggle" href="#" id="dropdown07XL" data-bs-toggle="dropdown" aria-expanded="false">Tag</a>
+                            <ul class="dropdown-menu" aria-labelledby="filter-by-tag">
+                                <c:forEach var="tag" items="${tagList}">
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/?sortBy=tag${tag.tag}" data-tag="${tag.tag}">#${tag.tag}</a></li>
+                                </c:forEach>
+                            </ul>
                     </button>
-                    <button id="filter-by-email" class="filter-button" onclick="">
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                        <span>Mail</span>
-                    </button>
+
+                    <a href="${pageContext.request.contextPath}/publish" style="text-decoration: none;">
+                        <button id="create-post-button" class="filter-button">
+                            Crear publicación
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </a>
                 </div>
+
+
                 <c:forEach var="post" items="${postList}">
                     <jsp:include page="/WEB-INF/jsp/components/blogpost.jsp">
                         <jsp:param name="postID" value="${post.postId}" />
@@ -59,6 +74,7 @@
                         <jsp:param name="postDescription" value="${post.description}" />
                     </jsp:include>
                 </c:forEach>
+
             </div>
 
             <div class="column column-right">
