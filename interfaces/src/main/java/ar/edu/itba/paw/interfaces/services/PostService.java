@@ -13,6 +13,12 @@ public interface PostService {
 
     List<Post> getAllPosts();
 
+    List<Post> getAllPostsByDate(final String order);
+
+    List<Post> getAllPostsByTag(final String tag);
+
+    List<Post> getAllPostsByChannel(final String channel);
+
     Optional<Post> findPostById(long id);
 
 

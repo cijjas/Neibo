@@ -27,7 +27,7 @@
     <link href="/css/home.css" rel="stylesheet"/>
 </head>
 <body class="body">
-    <%@ include file="/WEB-INF/jsp/views/navbar.jsp" %>
+    <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 
 
 
@@ -35,32 +35,39 @@
     <div class="container ">
         <div class="row">
             <div class="column column-left">
-                <div class="btn-group-vertical">
-                    <button type="button" class="btn btn-light mb-2 menu-button">
-                        <i class="fas fa-bullhorn"></i> Anuncios
-                    </button>
-                    <button type="button" class="btn btn-light mb-2 menu-button">
-                        <i class="fas fa-comments"></i> Foro
-                    </button>
-                    <button type="button" class="btn btn-light mb-2 menu-button">
-                        <i class="fas fa-address-card"></i> Contactos
-                    </button>
-                </div>
+                <%@ include file="/WEB-INF/jsp/components/leftcolumn.jsp" %>
             </div>
 
-            <div class="column column-middle ">
+            <div class="column column-middle">
                 <div class="filter-options">
-                    <button id="filter-by-date" class="filter-button" onclick="">
-                        <i class="fa-solid fa-newspaper"></i>
-                        <span>Fecha</span>
+                    <a href="${pageContext.request.contextPath}/?sortBy=dateasc" style="text-decoration: none;">
+                        <button id="filter-by-date" class="filter-button" onclick="">
+                            <i class="fa-solid fa-newspaper"></i>
+                                <span>Fecha</span>
+                        </button>
+                    </a>
+
+                    <button id="filter-by-tag" class="filter-button" onclick="">
+                            <a class="dropdown-toggle" href="#" id="dropdown07XL" data-bs-toggle="dropdown" aria-expanded="false">Tag</a>
+                            <ul class="dropdown-menu" aria-labelledby="filter-by-tag">
+                                <c:forEach var="tag" items="${tagList}">
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/?sortBy=tag${tag.tag}" data-tag="${tag.tag}">#${tag.tag}</a></li>
+                                </c:forEach>
+                            </ul>
                     </button>
-                    <button id="filter-by-email" class="filter-button" onclick="">
-                        <i class="fa-solid fa-arrow-down-a-z"></i>
-                        <span>Mail</span>
-                    </button>
+
+                    <a href="${pageContext.request.contextPath}/publish" style="text-decoration: none;">
+                        <button id="create-post-button" class="filter-button">
+                            Crear publicación
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </a>
                 </div>
+
+
                 <c:forEach var="post" items="${postList}">
                     <jsp:include page="/WEB-INF/jsp/components/blogpost.jsp">
+                        <jsp:param name="postID" value="${post.postId}" />
                         <jsp:param name="postNeighborMail" value="${post.neighbor.mail}" />
                         <jsp:param name="postDate" value="${post.date}" />
                         <jsp:param name="postTitle" value="${post.title}" />
@@ -71,19 +78,12 @@
             </div>
 
             <div class="column column-right">
-                <h2>Column 3</h2>
-                <div class="gray-box">
-                    <p>Gray Box 1</p>
-                </div>
-                <div class="gray-box">
-                    <p>Gray Box 2</p>
-                </div>
+                <%@ include file="/WEB-INF/jsp/components/rightcolumn.jsp" %>
             </div>
         </div>
     </div>
 
-
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
 </body>
 </html>

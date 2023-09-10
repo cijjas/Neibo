@@ -34,10 +34,18 @@ public class TagDaoImpl implements TagDao {
                     .tag(rs.getString("tag"))
                     .build();
 
+
+    // getTags
+
     @Override
     public Optional<List<Tag>> findTags(long id) {
         final List<Tag> tags = jdbcTemplate.query("select tags.tagid, tag from\n" +
                 "             posts_tags join tags on posts_tags.tagid = tags.tagid WHERE postid=?;", ROW_MAPPER, id);
         return tags.isEmpty() ? Optional.empty() : Optional.of(tags);
+    }
+
+    @Override
+    public List<Tag> getAllTags() {
+        return jdbcTemplate.query("select * from tags;", ROW_MAPPER);
     }
 }

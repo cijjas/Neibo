@@ -67,11 +67,12 @@ public class NeighborServiceImplTest {
     }
      */
 
+        /*
     @Test
     public void testFindById() {
         // 1. Precondiciones
         // Defino el comportamiento de la clase mock de UserDao
-        when(userDao.findById(eq(ID))).thenReturn(Optional.of(new User(ID, EMAIL, PASSWORD)));
+        when(userDaop.findById(eq(ID))).thenReturn(Optional.of(new User(ID, EMAIL, PASSWORD)));
 
         // 2. Ejercitar
         Optional<User> newUser = us.findById(ID);
@@ -79,5 +80,5 @@ public class NeighborServiceImplTest {
         // 3. Postcondiciones
         Assert.assertTrue(newUser.isPresent());
         Assert.assertEquals(ID, newUser.get().getId());
-    }
+    }*/
 }

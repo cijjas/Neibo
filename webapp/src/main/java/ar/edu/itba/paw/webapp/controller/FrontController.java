@@ -21,19 +21,22 @@ public class FrontController {
     private final NeighborhoodService nhs;
     private final CommentService cs;
     private final TagService ts;
+    private final ChannelService chs;
     @Autowired
     public FrontController(final NeighborService us, // remove eventually
                            final PostService ps,
                            final NeighborService ns,
                            final NeighborhoodService nhs,
                            final CommentService cs,
-                           final TagService ts) {
+                           final TagService ts,
+                           final ChannelService chs) {
         this.us = us;
         this.ps = ps;
         this.ns = ns;
         this.nhs = nhs;
         this.cs = cs;
         this.ts = ts;
+        this.chs = chs;
     }
 
     // Spring permite hacer inyección de otras formas, no solo pasando instancia al constructor.
@@ -57,9 +60,51 @@ public class FrontController {
     // @RequestMapping(value = {"/", "/index.html"})
 
     // Por default, cualquier pedido sin importar headers o método HTTP es aceptado por el mapping:
+    /*
     @RequestMapping("/")
-    public ModelAndView helloWorld() {
+    public ModelAndView index() {
+        List<Post> postList = ps.getAllPosts();
+
         final ModelAndView mav = new ModelAndView("views/index");
+        mav.addObject("postList", postList);
+
+        return mav;
+    }
+
+     */
+
+    @RequestMapping("/")
+    public ModelAndView index(@RequestParam(value = "sortBy", required = false) String sortBy) {
+        List<Post> postList = null;
+
+        // It would be nice to create an enum of the tags but I cant create an enum dynamically, meaning I cant retrieve the tags and then create an enum
+        // Maybe I can create an Enum for ASC and DESC, but it is kinda overkill just for some performance
+
+
+        if ( sortBy != null ){
+            switch (sortBy) {
+                case "dateasc":
+                    postList = ps.getAllPostsByDate("asc");
+                    break;
+                case "datedesc":
+                    postList = ps.getAllPostsByDate("desc");
+                    break;
+                default:
+                    if (sortBy.startsWith("tag")) {
+                        String tag = sortBy.substring(3); // Extract the tag part
+                        postList = ps.getAllPostsByTag(tag);
+                    }
+            }
+        }else {
+            postList = ps.getAllPosts(); // Default sorting
+        }
+
+        System.out.println(ts.getAllTags());
+
+        final ModelAndView mav = new ModelAndView("views/index");
+        mav.addObject("tagList", ts.getAllTags());
+        mav.addObject("postList", postList);
+
         return mav;
     }
 
@@ -198,4 +243,17 @@ public class FrontController {
 
         return mav;
     }
+
+
+
+    // ------------------------------------------------------ TEST
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public ModelAndView test() {
+        System.out.println(chs.getAllChannels());
+        System.out.println(ps.getAllPostsByChannel("Foro"));
+        return new ModelAndView("views/index");
+    }
+
+
 }

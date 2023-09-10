@@ -15,37 +15,55 @@
 
 <body>
 <!-- Navigation Bar -->
-    <%@ include file="/WEB-INF/jsp/views/navbar.jsp" %>
+    <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 
-<!-- Card container for post and comments -->
-    <div class="card-container">
-        <!-- Post information -->
-        <div class="post-info">
-            <h2>${post.title}</h2>
-            <p>Publicado por: ${post.neighbor.name}</p>
-            <p>Mensaje: ${post.description}</p>
+    <div class="container ">
+        <div class="row">
+            <div class="column column-left">
+                <%@ include file="/WEB-INF/jsp/components/leftcolumn.jsp" %>
+            </div>
+
+            <div class="column column-middle ">
+                <div class="card-container">
+                    <!-- Post information -->
+                    <div class="post-info">
+                        <h2>${post.title}</h2>
+                        <p>Publicado por: ${post.neighbor.name}</p>
+                        <p>Mensaje: ${post.description}</p>
+                    </div>
+
+                    <!-- Tag section -->
+                    <div class="tag">
+                        <p><strong> Tags :</strong> </p>
+
+                        <div class="tag-list">
+                            <c:forEach var="tag" items="${tags}">
+                                <span class="badge badge-primary ">#${tag.tag}</span>
+                            </c:forEach>
+                        </div>
+                    </div>
+
+
+                    <div class="comments-section">
+                        <c:forEach var="comment" items="${comments}">
+                            <div class="comment">
+                                <div class="comment-header">
+                                    <strong>User #${comment.neighborId}</strong>
+                                </div>
+                                <div class="comment-body">
+                                        ${comment.comment}
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="column column-right">
+                <%@ include file="/WEB-INF/jsp/components/rightcolumn.jsp" %>
+            </div>
         </div>
-
-        <!-- Tag section -->
-        <div class="tag">
-            <p><strong> Tags :</br></strong> </p>
-
-            <c:forEach var="tag" items="${tags}">
-                <p><strong> #${tag.tag}</strong> </p>
-            </c:forEach>
-        </div>
-
-        <!-- Comments section -->
-        <div class="comments">
-
-        <c:forEach var="comment" items="${comments}">
-            <p><strong>User #${comment.neighborId}:</strong> ${comment.comment}</p>
-        </c:forEach>
-        </div>
-
-
-
-
     </div>
 
 

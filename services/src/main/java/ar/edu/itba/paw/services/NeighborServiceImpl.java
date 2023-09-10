@@ -25,10 +25,6 @@ public class NeighborServiceImpl implements NeighborService {
         return null;
     }
 
-    @Override
-    public Optional<User> findById(long id) {
-        return neighborDao.findById(id);
-    }
 
     @Override
     public Neighbor createNeighbor(String mail, String name, String surname, long neighborhoodId) {
