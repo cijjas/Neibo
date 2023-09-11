@@ -1,3 +1,4 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%--
   Created by IntelliJ IDEA.
   User: chrij
@@ -52,42 +53,48 @@
             <hr class="divider-line">
         </div>
 
-        <form>
+        <form:form method="post" action="/posts/${post.postId}" modelAttribute="commentForm">
+            <form:errors cssClass="error" element="p"/>
             <!-- Name input -->
             <div class="form-row">
                 <!-- First row -->
                 <div class="form-outline col-md-6 mb-4">
-                    <input type="text" id="nombre-comentario" class="form-control" />
-                    <label class="form-label" for="nombre-comentario">Nombre</label>
+                    <form:input path="name" class="form-control" />
+                    <form:label class="form-label" path="name">Nombre</form:label>
+                    <form:errors path="name" cssClass="error" element="p"/>
                 </div>
                 <div class="form-outline col-md-6 mb-4">
-                    <input type="text" id="apellido-comentario" class="form-control" />
-                    <label class="form-label" for="apellido-comentario">Apellido</label>
+                    <form:input path="surname" class="form-control" />
+                    <form:label class="form-label" path="surname">Apellido</form:label>
+                    <form:errors path="surname" cssClass="error" element="p"/>
                 </div>
             </div>
             <div class="form-row">
                 <!-- Second row -->
                 <div class="form-outline col-md-6 mb-4">
-                    <input type="text" id="mail-comentario" class="form-control" />
-                    <label class="form-label" for="mail-comentario">Mail</label>
+                    <form:input path="email" class="form-control" />
+                    <form:label class="form-label" path="email">Email</form:label>
+                    <form:errors path="email" cssClass="error" element="p"/>
                 </div>
                 <div class="form-outline col-md-6 mb-4">
-                    <input type="text" id="barrio-comentario" class="form-control" />
-                    <label class="form-label" for="barrio-comentario">Barrio</label>
+                    <form:input path="neighborhood" class="form-control" />
+                    <form:label class="form-label" path="neighborhood">Barrio</form:label>
+                    <form:errors path="neighborhood" cssClass="error" element="p"/>
                 </div>
             </div>
 
             <!-- Message input -->
             <div class="form-outline mb-4">
-                <textarea class="form-control" id="mensaje-comentario" rows="4"></textarea>
-                <label class="form-label" for="mensaje-comentario">Comentario</label>
+                <form:textarea path="comment" class="form-control" />
+                <form:label class="form-label" path="comment">Comentario</form:label>
+                <form:errors path="comment" cssClass="error" element="p"/>
             </div>
 
             <!-- Submit button -->
             <button type="submit" class="filter-button">
                 Comentar
             </button>
-        </form>
+        </form:form>
 
         <c:choose>
             <c:when test="${empty comments}">

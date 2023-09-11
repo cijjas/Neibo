@@ -3,24 +3,17 @@ package ar.edu.itba.paw.webapp.form;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-// Para ver ejemplos de todos los constraints que se pueden poner, mirar javax.validation.constraints. Esto incluye
-// @Min, @Max, @NotNull, @Size, @Pattern, y más. Además de los que se definen ahí (los de javax.validation son solo las
-// definiciones, hibernate tiene las implementaciones) podemos ver los que suma hibernate suma otros validadores
-// como @Email, @Length, @NotBlank, @NotEmpty, @URL, @SafeHtml, @Range, @CreditCardNumber...
-
-public class PublishForm {
+public class CommentForm {
     @NotBlank
     @Size(max = 100)
     @Pattern(regexp = "^[a-zA-Z]+")
     private String name;
 
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z]+")
     @Size(max = 100)
     private String surname;
 
@@ -29,19 +22,14 @@ public class PublishForm {
     private String neighborhood;
 
     @NotBlank
-    @Size(max = 100)
-    private String subject;
-
-    @NotBlank
     @Size(max = 255)
-    private String message;
+    private String comment;
 
     @NotBlank
     @Size(min = 6, max = 100)
     @Email
     private String email;
 
-    private String imageFile;
 
     public String getEmail() {
         return email;
@@ -71,27 +59,13 @@ public class PublishForm {
         this.neighborhood = neighborhood;
     }
 
-    public String getSubject() {
-        return subject;
+    public String getComment() {
+        return comment;
     }
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-    public void setMessage(String message) {
-        this.message = message;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
-    public String getImageFile() {
-        return imageFile;
-    }
-
-    public void setImage(String image) {
-        this.imageFile = image;
-    }
 
     @Override
     public String toString() {
@@ -99,10 +73,8 @@ public class PublishForm {
                 "name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", neighborhood='" + neighborhood + '\'' +
-                ", subject='" + subject + '\'' +
-                ", message='" + message + '\'' +
+                ", comment='" + comment + '\'' +
                 ", email='" + email + '\'' +
-                ", imageFile='" + imageFile + '\'' +
                 '}';
     }
 }
