@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.CommentDao;
 import ar.edu.itba.paw.models.Comment;
+import ar.edu.itba.paw.models.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -9,7 +10,10 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -41,5 +45,22 @@ public class CommentDaoImpl implements CommentDao {
     public Optional<List<Comment>> findCommentsByPostId(long id) {
         final List<Comment> comments = jdbcTemplate.query("SELECT * FROM comments WHERE postid=?;", ROW_MAPPER, id);
         return comments.isEmpty() ? Optional.empty() : Optional.of(comments);
+    }
+
+    @Override
+    public Comment create(String comment, long neighborId, long postId) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("comment", comment);
+        data.put("commentdate", LocalDate.now());
+        data.put("neighborid", neighborId);
+        data.put("postid", postId);
+
+        final Number key = jdbcInsert.executeAndReturnKey(data);
+        return new Comment.Builder()
+                .commentId(key.longValue())
+                .comment(comment)
+                .neighborId(neighborId)
+                .postId(postId)
+                .build();
     }
 }

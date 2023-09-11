@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface CommentService {
     Optional<List<Comment>> findCommentsByPostId(long id);
+
+    Comment create(final String comment, final long neighborId, final long postId);
 }

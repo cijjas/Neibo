@@ -23,4 +23,11 @@ public class CommentServiceImpl implements CommentService {
     public Optional<List<Comment>> findCommentsByPostId(long id) {
         return commentDao.findCommentsByPostId(id);
     }
+
+    @Override
+    public Comment create(String comment, long neighborId, long postId) {
+        return commentDao.create(comment, neighborId, postId);
+    }
+
+
 }
