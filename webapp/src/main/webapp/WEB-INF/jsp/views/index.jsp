@@ -39,21 +39,21 @@
             </div>
 
             <div class="column column-middle">
-                <div class="filter-options">
+                <div class="filter-options d-flex justify-content-between">
                     <a href="${pageContext.request.contextPath}/?sortBy=dateasc" style="text-decoration: none;">
                         <button id="filter-by-date" class="filter-button" onclick="">
                             <i class="fa-solid fa-newspaper"></i>
-                                <span>Fecha</span>
+                            <span>Fecha</span>
                         </button>
                     </a>
 
-                    <button id="filter-by-tag" class="filter-button" onclick="">
-                            <a class="dropdown-toggle" href="#" id="dropdown07XL" data-bs-toggle="dropdown" aria-expanded="false">Tag</a>
-                            <ul class="dropdown-menu" aria-labelledby="filter-by-tag">
-                                <c:forEach var="tag" items="${tagList}">
-                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/?sortBy=tag${tag.tag}" data-tag="${tag.tag}">#${tag.tag}</a></li>
-                                </c:forEach>
-                            </ul>
+                    <button id="filter-by-tag" class="filter-button">
+                        <a class="dropdown-toggle" href="#" id="dropdown07XL" data-bs-toggle="dropdown" aria-expanded="false">Tag</a>
+                        <ul class="dropdown-menu" aria-labelledby="filter-by-tag">
+                            <c:forEach var="tag" items="${tagList}">
+                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/?sortBy=tag${tag.tag}" data-tag="${tag.tag}">#${tag.tag}</a></li>
+                            </c:forEach>
+                        </ul>
                     </button>
 
                     <a href="${pageContext.request.contextPath}/publish" style="text-decoration: none;">
@@ -72,14 +72,19 @@
                         <jsp:param name="postDate" value="${post.date}" />
                         <jsp:param name="postTitle" value="${post.title}" />
                         <jsp:param name="postDescription" value="${post.description}" />
+                        <jsp:param name="postImage" value="${post.imageFile}" />
                     </jsp:include>
                 </c:forEach>
+
+
 
             </div>
 
             <div class="column column-right">
                 <%@ include file="/WEB-INF/jsp/components/rightcolumn.jsp" %>
             </div>
+
+
         </div>
     </div>
 

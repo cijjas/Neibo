@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
-    <link href="/css/home.css" rel="stylesheet"/>
-    <link href="/css/post.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/css/home.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/css/post.css" rel="stylesheet"/>
 </head>
 
 <body>
@@ -24,44 +24,7 @@
             </div>
 
             <div class="column column-middle ">
-                <div class="card-container">
-                    <!-- Post information -->
-                    <div class="post-info">
-                        <h2>${post.title}</h2>
-                        <p>Publicado por: ${post.neighbor.name}</p>
-                        <p>Mensaje: ${post.description}</p>
-                    </div>
-
-                    <!-- Tag section -->
-                    <div class="tag">
-                        <p><strong> Tags :</strong> </p>
-
-                        <div class="tag-list">
-                            <c:forEach var="tag" items="${tags}">
-                                <span class="badge badge-primary ">#${tag.tag}</span>
-                            </c:forEach>
-                        </div>
-                    </div>
-
-                    <div>
-                        <img id="imageFile" src="data:image/jpg;base64,<c:out value='${post.imageFile}'/>" >
-                    </div>
-
-
-                    <div class="comments-section">
-                        <c:forEach var="comment" items="${comments}">
-                            <div class="comment">
-                                <div class="comment-header">
-                                    <strong>User #${comment.neighborId}</strong>
-                                </div>
-                                <div class="comment-body">
-                                        ${comment.comment}
-                                </div>
-                            </div>
-                        </c:forEach>
-                    </div>
-
-                </div>
+                <%@ include file="/WEB-INF/jsp/components/postcard.jsp" %>
             </div>
 
             <div class="column column-right">

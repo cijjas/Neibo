@@ -7,6 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+
+
 <div class="post" style="word-wrap: break-word;">
     <a href="/${param.postID}" style="text-decoration: none;">
         <div class="post-header">
@@ -18,6 +20,11 @@
     </a>
     <p class="post-description">${param.postDescription}</p>
 
+    <c:if test="${not empty param.postImage}">
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <img id="imageFile" src="data:image/jpg;base64,<c:out value='${param.postImage}'/>" style="max-width: 100%; max-height: 100vh;" alt="post image">
+        </div>
+    </c:if>
 </div>
 
 

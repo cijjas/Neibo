@@ -8,7 +8,7 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
     --lighttext: #83887f;
     --background: #fffef8;
     --onbackground: rgba(245, 245, 244, 0.73);
-    --darkonbackground : rgba(241, 241, 238, 0.73);
+    --darkonbackground : rgb(235, 236, 233);
     --primary: #9ad379;
     --secondary: #d8d8c5;
     --accent: #6696e2;
@@ -88,10 +88,7 @@ NAVBAR
 }
 
 
-.menu-button {
-    background-color: transparent;
-    margin-bottom: 10px;
-}
+
 
 .gray-box {
     background-color: #ccc;
@@ -251,6 +248,8 @@ h2{
 .post-info {
     font-size: 16px;
     color: #888;
+    margin: 5px;
+    border-radius: 5px;
 }
 
 .post-content {
@@ -264,7 +263,44 @@ h2{
 
 
 
-/*UPLOAD FILE*/
+/* Left Column*/
+.menu-button {
+    text-align: left;
+    padding: 10px;
+    border: none;
+    background-color: #f8f9fa;
+    width: 100%;
+}
+
+.menu-button.active {
+    background-color: #007bff;
+    color: #fff;
+}
 
 
+/*------------------*/
+
+.post-section{
+    width: 100%;
+    padding: 10px;
+    background-color: var(--darkonbackground);
+    border-radius: 10px;
+}
+
+.comments-section-divider {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.divider-title {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.divider-line {
+    border: 0;
+    border-top: 2px solid var(--lighttext);
+    width: 100%;
+}
 

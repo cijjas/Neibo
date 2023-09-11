@@ -13,6 +13,7 @@ import javax.validation.Valid;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -236,17 +237,15 @@ public class FrontController {
     public ModelAndView viewPost(@PathVariable(value = "id") int postId) {
         ModelAndView mav = new ModelAndView("views/post");
 
-            // TO-DO: add no post exception and better error handling!
+        Optional<Post> optionalPost = ps.findPostById(postId);
+        mav.addObject("post", optionalPost.orElseThrow(() -> new RuntimeException("Post not found")));
 
-            Optional<Post> optionalPost = ps.findPostById(postId);
-            mav.addObject("post", optionalPost.isPresent()? optionalPost.get() : new RuntimeException());
+        Optional<List<Comment>> optionalComments = cs.findCommentsByPostId(postId);
+        mav.addObject("comments", optionalComments.orElse(Collections.emptyList()));
 
-            Optional<List<Comment>> optionalComments = cs.findCommentsByPostId(postId);
-            mav.addObject("comments", optionalComments.isPresent()? optionalComments.get() : new RuntimeException());
-
-            Optional<List<Tag>> optionalTags = ts.findTags(postId);
-            System.out.println(optionalTags);
-            mav.addObject("tags", optionalTags.isPresent()? optionalTags.get() : new RuntimeException());
+        Optional<List<Tag>> optionalTags = ts.findTags(postId);
+        List<Tag> tags = optionalTags.orElse(Collections.emptyList());
+        mav.addObject("tags", tags);
 
         return mav;
     }
