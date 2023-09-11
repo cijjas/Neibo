@@ -76,4 +76,10 @@ public class NeighborDaoImpl implements NeighborDao {
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
+    @Override
+    public Optional<Neighbor> findNeighborByMail(String mail) {
+        final List<Neighbor> list = jdbcTemplate.query(baseQuery + "where mail = ?", ROW_MAPPER, mail);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+    }
+
 }

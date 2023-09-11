@@ -110,7 +110,10 @@ public class FrontController {
         }
 
         Neighborhood nh = nhs.createNeighborhood(publishForm.getNeighborhood());
-        Neighbor n = ns.createNeighbor(publishForm.getEmail(),publishForm.getName(), publishForm.getSurname(), nh.getNeighborhoodId());
+        Neighbor n = ns.findNeighborByMail(publishForm.getEmail()).orElse(null);
+        if(n == null){
+            n = ns.createNeighbor(publishForm.getEmail(),publishForm.getName(), publishForm.getSurname(), nh.getNeighborhoodId());
+        }
 
         Post p = null;
         if (imageFile != null && !imageFile.isEmpty()) {
@@ -125,6 +128,8 @@ public class FrontController {
                 System.out.println("Issue uploading the image");
                 // Should go to an error page!
             }
+        } else {
+            p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), 1, null);
         }
 
         System.out.println(nh);

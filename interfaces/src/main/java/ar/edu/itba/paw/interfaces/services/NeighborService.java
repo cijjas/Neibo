@@ -19,5 +19,6 @@ public interface NeighborService {
     //List<Neighbor> getAllNeighborsByCommunity(long communityId);
 
     Optional<Neighbor> findNeighborById(long id);
+    Optional<Neighbor> findNeighborByMail(String mail);
 
-}
+    }

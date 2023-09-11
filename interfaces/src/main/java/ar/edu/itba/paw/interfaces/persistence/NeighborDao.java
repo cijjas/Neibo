@@ -13,4 +13,6 @@ public interface NeighborDao {
     List<Neighbor> getAllNeighborsByNeighborhood(long neighborhoodId);
     //List<Neighbor> getAllNeighborsByCommunity(long communityId);
     Optional<Neighbor> findNeighborById(long id);
-}
+    Optional<Neighbor> findNeighborByMail(String mail);
+
+    }

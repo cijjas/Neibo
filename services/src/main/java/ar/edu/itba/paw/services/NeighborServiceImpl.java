@@ -37,4 +37,6 @@ public class NeighborServiceImpl implements NeighborService {
     @Override
     public Optional<Neighbor> findNeighborById(long id) { return neighborDao.findNeighborById(id); }
 
-}
+    public Optional<Neighbor> findNeighborByMail(String mail) { return neighborDao.findNeighborByMail(mail); }
+
+    }
