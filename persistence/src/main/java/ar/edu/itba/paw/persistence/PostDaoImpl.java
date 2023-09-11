@@ -10,7 +10,9 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Repository
@@ -35,10 +37,11 @@ public class PostDaoImpl implements PostDao {
     @Override
 
     public Post create(String title, String description, long neighborId, long channelId, String imageFile) {
+        System.out.println("CREATING NEW POST");
         Map<String, Object> data = new HashMap<>();
         data.put("title", title);
         data.put("description", description);
-        data.put("postdate", LocalDate.now());
+        data.put("postdate", Timestamp.valueOf(LocalDateTime.now()));
         data.put("neighborid", neighborId);
         data.put("channelid", channelId);
         data.put("postimage", imageFile);

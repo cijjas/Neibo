@@ -11,6 +11,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,7 @@ public class NeighborDaoImpl implements NeighborDao {
         Map<String, Object> data = new HashMap<>();
         data.put("mail", mail);
         data.put("name", name);
+        data.put("creationDate", Timestamp.valueOf(LocalDateTime.now()));
         data.put("surname", surname);
         data.put("neighborhoodid", neighborhoodId);
 

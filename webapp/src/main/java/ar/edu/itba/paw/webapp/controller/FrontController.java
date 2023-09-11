@@ -13,6 +13,7 @@ import javax.validation.Valid;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -132,7 +133,12 @@ public class FrontController {
         System.out.println(n);
         System.out.println(p);
 
-        return new ModelAndView("views/index");
+
+        final ModelAndView mav = new ModelAndView("views/index");
+        mav.addObject("tagList", ts.getAllTags());
+        mav.addObject("postList", ps.getAllPosts());
+
+        return mav;
     }
 
     // ------------------------------------- POSTS --------------------------------------
@@ -148,7 +154,6 @@ public class FrontController {
     }
 
     @RequestMapping( "/{id:\\d+}")
-//    @RequestMapping("/post")
     public ModelAndView viewPost(@PathVariable(value = "id") int postId) {
         ModelAndView mav = new ModelAndView("views/post");
 
@@ -172,9 +177,7 @@ public class FrontController {
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
         System.out.println(cs.create("lovely", 1, 1));
-        System.out.println(LocalDate.now());
+        System.out.println(LocalDateTime.now());
         return new ModelAndView("views/index");
     }
-
-
 }

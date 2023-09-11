@@ -10,7 +10,9 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +53,7 @@ public class CommentDaoImpl implements CommentDao {
     public Comment create(String comment, long neighborId, long postId) {
         Map<String, Object> data = new HashMap<>();
         data.put("comment", comment);
-        data.put("commentdate", LocalDate.now());
+        data.put("commentdate", Timestamp.valueOf(LocalDateTime.now()));
         data.put("neighborid", neighborId);
         data.put("postid", postId);
 
