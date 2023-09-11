@@ -12,6 +12,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
@@ -45,39 +47,7 @@ public class FrontController {
         this.chs = chs;
     }
 
-    // Spring permite hacer inyección de otras formas, no solo pasando instancia al constructor.
-    // Estas otras incluyen:
-
-    // Inyectar directamente a un campo:
-    // @Autowired
-    // private UserService us;
-
-    // Inyectar a travez de un método setter:
-    // @Autowired
-    // public void setUserService(UserService us) { this.us = us; }
-
-
-
-    // El RequestMapping se puede configurar para solo funcionar si el request tiene tal header, o es tal método HTTP,
-    // o qué produce, etc.
-    // @RequestMapping(value = "/", headers = "...", consumes = "...", method = "...", produces = "...")
-
-    // También es posible especificar varias ubicaciones:
-    // @RequestMapping(value = {"/", "/index.html"})
-
-    // Por default, cualquier pedido sin importar headers o método HTTP es aceptado por el mapping:
-    /*
-    @RequestMapping("/")
-    public ModelAndView index() {
-        List<Post> postList = ps.getAllPosts();
-
-        final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("postList", postList);
-
-        return mav;
-    }
-
-     */
+    // ------------------------------------- FEED --------------------------------------
 
     @RequestMapping("/")
     public ModelAndView index(@RequestParam(value = "sortBy", required = false) String sortBy) {
@@ -114,55 +84,17 @@ public class FrontController {
         return mav;
     }
 
+    // ------------------------------------- REGISTER --------------------------------------
+    // ------------------------------------- DEPRECATE --------------------------------------
+
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public ModelAndView registerForm() {
         return new ModelAndView("views/register");
     }
 
-    // Una forma de atender requests es tomando un HttpServletRequest, que nos da mucho control sobre el request y
-    // cómo respondemos:
-    /*@RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ModelAndView register(HttpServletRequest req) {
-        final User user = us.createUser(req.getParameter("email"), req.getParameter("password"));
+    // ------------------------------------- PUBLISH --------------------------------------
 
-        final ModelAndView mav = new ModelAndView("helloworld/index");
-        mav.addObject("user", user);
 
-        return mav;
-    }*/
-
-    // Pero en general pedimos parámetros fijos y respondemos algo claro, entonces podemos hacer las cosas más simples
-    // usando una sintaxis que nos deja especificar los parámetros del http request como parámetros del método:
-//    @RequestMapping(value = "/register", method = RequestMethod.POST)
-//    public ModelAndView register(
-//            @RequestParam(value = "email", required = true) final String email,
-//            @RequestParam(value = "password", required = true) final String password
-//    ) {
-//        // Los @RequestParam pueden ser int, long, etc. Y nos hace la conversión por nosotros :)
-//        // Al @RequestParam también le podemos pasar "required = true", "default = 1234", etc.
-//        final User user = us.createUser(email, password);
-//
-//        final ModelAndView mav = new ModelAndView("views/index");
-//        mav.addObject("user", user);
-//
-//        return mav;
-//    }
-
-//    @RequestMapping("/post")
-//    public ModelAndView postPage() {return new ModelAndView("views/post");}
-
-    // @RequestMapping("/{id}") // El problema con este es que no pone restricciones al valor de "id"!
-    /*
-    @RequestMapping("/{id:\\d+}") // Antes aceptaba negativos, ahora no!
-    // NOTAR: Si pones negativo o texto antes te tiraba 400 bad request, ahora te tira 404 not found.
-    public ModelAndView profile(@PathVariable("id") final long userId) {
-        final ModelAndView mav = new ModelAndView("views/profile");
-        mav.addObject("user", us.findById(userId).orElseThrow(UserNotFoundException::new));
-        return mav;
-    }
-    */
-
-    // ----------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/publish", method = RequestMethod.GET)
     public ModelAndView publishForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
         // En vez de hacer mav = new ModelAndView(...); y mav.addObject("form", userForm), puedo simplemente
@@ -198,15 +130,19 @@ public class FrontController {
             }
         }
 
-
-
         System.out.println(nh);
         System.out.println(n);
         System.out.println(p);
 
-        return new ModelAndView("views/index");
+
+        final ModelAndView mav = new ModelAndView("views/index");
+        mav.addObject("tagList", ts.getAllTags());
+        mav.addObject("postList", ps.getAllPosts());
+
+        return mav;
     }
 
+    // ------------------------------------- POSTS --------------------------------------
 
     @RequestMapping("/posts")
     public ModelAndView posts() {
@@ -218,22 +154,7 @@ public class FrontController {
         return mav;
     }
 
-//    // @RequestMapping("/{id}") // El problema con este es que no pone restricciones al valor de "id"!
-//    @RequestMapping("/{id:\\d+}") // Antes aceptaba negativos, ahora no!
-//    // NOTAR: Si pones negativo o texto antes te tiraba 400 bad request, ahora te tira 404 not found.
-//    public ModelAndView post(@PathVariable("id") final long postId) {
-//        final ModelAndView mav = new ModelAndView("views/index");
-//        System.out.println(ps.findPostById(postId));
-//        System.out.println(cs.findCommentsByPostId(postId));
-//        mav.addObject("post", ps.findPostById(postId));
-//        mav.addObject("comments", cs.findCommentsByPostId(postId));
-//        // TIENE EL POST Y LOS COMENTARIOS DE LA RUTA ID
-//        return mav;
-//    }
-
-    // Handle "/post" and "/post/{id}" URLs
     @RequestMapping( "/{id:\\d+}")
-//    @RequestMapping("/post")
     public ModelAndView viewPost(@PathVariable(value = "id") int postId) {
         ModelAndView mav = new ModelAndView("views/post");
 
@@ -250,16 +171,12 @@ public class FrontController {
         return mav;
     }
 
-
-
-    // ------------------------------------------------------ TEST
+    // ------------------------------------- TEST --------------------------------------
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-        System.out.println(chs.getAllChannels());
-        System.out.println(ps.getAllPostsByChannel("Foro"));
+        System.out.println(cs.create("lovely", 1, 1));
+        System.out.println(LocalDateTime.now());
         return new ModelAndView("views/index");
     }
-
-
 }
