@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.webapp.form.CommentForm;
 import ar.edu.itba.paw.webapp.form.PublishForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -150,8 +151,9 @@ public class FrontController {
         return mav;
     }
 
-    @RequestMapping( "/posts/{id:\\d+}")
-    public ModelAndView viewPost(@PathVariable(value = "id") int postId) {
+
+    @RequestMapping( value ="/posts/{id:\\d+}", method = RequestMethod.GET)
+    public ModelAndView viewPost(@PathVariable(value = "id") int postId, @ModelAttribute("commentForm") final CommentForm commentForm) {
         ModelAndView mav = new ModelAndView("views/post");
 
         Optional<Post> optionalPost = ps.findPostById(postId);
@@ -164,7 +166,28 @@ public class FrontController {
         List<Tag> tags = optionalTags.orElse(Collections.emptyList());
         mav.addObject("tags", tags);
 
+        mav.addObject("commentForm", commentForm);
+
         return mav;
+    }
+
+    @RequestMapping( value = "/posts/{id:\\d+}", method = RequestMethod.POST)
+    public ModelAndView viewPost(@PathVariable(value = "id") int postId, @Valid @ModelAttribute("commentForm") final CommentForm commentForm,
+                                 final BindingResult errors) {
+
+        if (errors.hasErrors()) {
+            System.out.println("comment tiene errores");
+            return viewPost(postId, commentForm);
+        }
+
+        Neighborhood nh = nhs.createNeighborhood(commentForm.getNeighborhood());
+        Neighbor n = ns.createNeighbor(commentForm.getEmail(), commentForm.getName(), commentForm.getSurname(), nh.getNeighborhoodId());
+        Comment c = cs.create(commentForm.getComment(), n.getNeighborId(), postId);
+
+        System.out.println("testing: comment - " + c);
+
+        return new ModelAndView("redirect:/posts/" + postId); // Redirect to the "posts" page
+//        return new ModelAndView("views/posts/" + postId);
     }
 
     // ------------------------------------- TEST --------------------------------------
