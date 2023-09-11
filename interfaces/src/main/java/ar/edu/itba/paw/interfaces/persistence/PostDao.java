@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostDao {
-    Post create(final String title, final String description, final long neighborId);
+    Post create(final String title, final String description, final long neighborId, final long channelId);
 
     List<Post> getAllPosts();
 

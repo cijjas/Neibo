@@ -2,11 +2,13 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.webapp.exceptions.UserNotFoundException;
+import ar.edu.itba.paw.webapp.form.PublishForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import javax.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
@@ -158,45 +160,27 @@ public class FrontController {
 
     // ----------------------------------------------------------------------------------------------------------------
     @RequestMapping(value = "/publish", method = RequestMethod.GET)
-    public ModelAndView publishForm() {
-        ModelAndView mav = new ModelAndView("views/publish");
-        mav.addObject("neighborPostWrapper", new NeighborPostNeighborhoodWrapper());
-
-        return mav;
+    public ModelAndView publishForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
+        // En vez de hacer mav = new ModelAndView(...); y mav.addObject("form", userForm), puedo simplemente
+        // agregar al parámetro userForm el @ModelAttribute() con el nombre de atributo a usar, y cuando retorne va a
+        // automáticamente agregar al ModelAndView retornado ese objeto como atributo con nombre "form".
+        return new ModelAndView("views/publish");
     }
 
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
-    public ModelAndView publish(
-            @RequestParam(value = "neighbor.mail", required = true) final String mail,
-            @RequestParam(value = "neighbor.name", required = true) final String name,
-            @RequestParam(value = "neighbor.surname", required = true) final String surname,
-            @RequestParam(value = "neighborhood.name", required = true) final String neighborhood,
-            @RequestParam(value = "post.title", required = true) final String title,
-            @RequestParam(value = "post.description", required = true) final String description
-    ) {
-        // Los @RequestParam pueden ser int, long, etc. Y nos hace la conversión por nosotros :)
-        // Al @RequestParam también le podemos pasar "required = true", "default = 1234", etc.
-        //final User user = us.createUser(email, password);
-        System.out.println("Information Logged In :\n");
-        System.out.println("Mail : " + mail);
-        System.out.println("Name : " + name);
-        System.out.println("Surname : " + surname);
-        System.out.println("Neighborhood : " + neighborhood);
-        System.out.println("Title : " + title);
-        System.out.println("Description : " + description);
-
-        Neighborhood nh = nhs.createNeighborhood(neighborhood);
-        Neighbor n = ns.createNeighbor(mail,name,surname, nh.getNeighborhoodId());
-        Post p = ps.createPost(title, description, n.getNeighborId());
-
-        System.out.println("\n -------------------------------------------------- \n");
+    public ModelAndView publish(@Valid @ModelAttribute("publishForm") final PublishForm publishForm, final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return publishForm(publishForm);
+        }
+        Neighborhood nh = nhs.createNeighborhood(publishForm.getNeighborhood());
+        Neighbor n = ns.createNeighbor(publishForm.getEmail(),publishForm.getName(), publishForm.getSurname(), nh.getNeighborhoodId());
+        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), 1);
 
         System.out.println(nh);
         System.out.println(n);
         System.out.println(p);
 
-        ModelAndView mav = new ModelAndView("views/index");
-        return mav;
+        return new ModelAndView("views/index");
     }
 
 

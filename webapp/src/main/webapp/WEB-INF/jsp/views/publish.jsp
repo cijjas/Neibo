@@ -23,36 +23,49 @@
     <div class="card">
         <div class="card-body">
             <h4 class="card-title">Crear Publicacion</h4>
-            <form:form method="post" action="/publish" modelAttribute="neighborPostWrapper">
+<%--            <form:errors cssClass="error" element="p"/>--%>
+<%--            <form:label path="email">Email:--%>
+<%--                <form:input path="email"/>--%>
+<%--            </form:label>--%>
+<%--            <form:errors path="email" cssClass="error" element="p"/>--%>
+            <form:form method="post" action="/publish" modelAttribute="publishForm">
+                <form:errors cssClass="error" element="p"/>
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1 mr-2">
-                        <label for="name">Nombre:</label>
-                        <form:input type="text" path="neighbor.name" id="name" class="form-control rounded" />
-<%--                        <form:input type="text" path="neighbor.name" id="name" /><br/>--%>
+                        <form:label path="name">Nombre:
+                            <form:input path="name"/>
+                        </form:label>
+                        <form:errors path="name" cssClass="error" element="p"/>
                     </div>
                     <div class="flex-grow-1">
-                        <label for="surname">Apellido:</label>
-<%--                        <form:input type="text" path="neighbor.surname" id="surname" /><br/>--%>
-                        <form:input type="text" path="neighbor.surname" id="surname" class="form-control rounded" />
-
+                        <form:label path="surname">Apellido:
+                            <form:input path="surname"/>
+                        </form:label>
+                        <form:errors path="surname" cssClass="error" element="p"/>
                     </div>
                 </div>
 
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1 mr-2">
-                        <label for="mail">Email:</label>
-                        <form:input type="text" path="neighbor.mail" id="mail" class="form-control rounded" /><br/>
+                        <form:label path="email">Email:
+                            <form:input path="email"/>
+                        </form:label>
+                        <form:errors path="email" cssClass="error" element="p"/>
                     </div>
                     <div class="flex-grow-1">
-                        <label for="neighborhood">Barrio:</label>
-                        <form:input type="text" path="neighborhood.name" id="neighborhood" class="form-control rounded" /><br/>
+                        <form:label path="neighborhood">Barrio:
+                            <form:input path="neighborhood"/>
+                        </form:label>
+                        <form:errors path="neighborhood" cssClass="error" element="p"/>
                     </div>
                 </div>
 
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1 mr-2" style="width: 70%;">
-                        <label for="title">Sujeto:</label>
-                        <form:input type="text" path="post.title" id="title" class="form-control rounded" /><br/>
+                        <form:label path="subject">Sujeto:
+                            <form:input path="subject"/>
+                        </form:label>
+                        <form:errors path="subject" cssClass="error" element="p"/>
                     </div>
 <%--                    <div class="flex-grow-1" style="width: 20%;">--%>
 <%--                        <label for="tags" class="form-label">--%>
@@ -69,14 +82,16 @@
 <%--                    </div>--%>
                 </div>
                 <div class="form-group">
-                    <label for="description">Mensaje:</label>
-                    <form:textarea path="post.description" id="description" class="form-control rounded" rows="5"/><br/>
+                    <form:label path="message">Mensaje:
+                        <form:input path="message"/>
+                    </form:label>
+                    <form:errors path="message" cssClass="error" element="p"/>
                 </div>
 
 
 
                 <div class="mb-3">
-                    <input type="file" class="form-control" aria-label="file example" required>
+                    <input type="file" class="form-control" aria-label="file example">
                 </div>
 
                 <div class="d-flex justify-content-end">
