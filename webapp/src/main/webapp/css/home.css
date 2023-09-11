@@ -7,7 +7,7 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
     --text: #4f5248;
     --lighttext: #83887f;
     --background: #fffef8;
-    --onbackground: rgba(245, 245, 244, 0.73);
+    --onbackground: rgb(245, 245, 244);
     --darkonbackground : rgb(235, 236, 233);
     --primary: #9ad379;
     --secondary: #d8d8c5;
@@ -263,22 +263,9 @@ h2{
 
 
 
-/* Left Column*/
-.menu-button {
-    text-align: left;
-    padding: 10px;
-    border: none;
-    background-color: #f8f9fa;
-    width: 100%;
-}
-
-.menu-button.active {
-    background-color: #007bff;
-    color: #fff;
-}
 
 
-/*------------------*/
+/*-------------------------POSTCARD ---------------------------*/
 
 .post-section{
     width: 100%;
@@ -304,3 +291,176 @@ h2{
     width: 100%;
 }
 
+/*--------------------------WAVE ------------------------*/
+.wave {
+    position: absolute;
+    top: 85px;
+    width: 100%;
+    overflow: hidden;
+    z-index: 1;
+}
+.blob-motion {
+    position: absolute;
+    top: 200px;
+    right: 500px;
+    width: 100%;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.container {
+    position: relative;
+    z-index: 3;
+    /* Add any other styles you need for the container */
+}
+
+/*--------------------LEFT COLUMN----------------------------*/
+.left-box{
+    width: 100%;
+    text-align: left;
+    border: 1px solid var(--secondary);
+    padding: 10px;
+    margin: 10px auto;
+    background-color: var(--onbackground);
+    border-radius: 10px;
+}
+.left-column-button{
+    width: 100%;
+    text-align: left;
+    border: 1px solid var(--secondary);
+    padding: 10px;
+    margin: 10px auto;
+    background-color: var(--onbackground);
+    border-radius: 10px;
+}
+.left-column-button:hover{
+    width: 100%;
+    text-align: left;
+    border: 2px solid var(--primary);
+    padding: 10px;
+    margin: 10px auto;
+    background-color: var(--onbackground);
+    border-radius: 10px;
+}
+
+.left-column-button.active{
+    width: 100%;
+    text-align: left;
+    border: 3px solid var(--primary);
+    padding: 10px;
+    margin: 10px auto;
+    background-color: var(--darkonbackground);
+    border-radius: 10px;
+}
+.newbutton{
+    color: #090909;
+    padding: 0.7em 1.7em;
+    font-size: 14px;
+    margin: 10px auto;
+    border-radius: 0.5em;
+    background: #e8e8e8;
+    border: 1px solid #e8e8e8;
+    transition: all .3s;
+    box-shadow: 6px 6px 12px #c5c5c5,
+    -6px -6px 12px #ffffff;
+}
+.newbutton:active {
+    color: #666;
+    box-shadow: inset 4px 4px 12px #c5c5c5,
+    inset -4px -4px 12px #ffffff;
+}
+
+/*--------------------------------------------------------------------------*/
+
+.cardContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.weather-card {
+    position: relative;
+    width: 220px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 10px;
+    border-radius: 10px;
+    backdrop-filter: blur(30px);
+    background-color: rgba(58, 57, 56, 0.38);
+    border: 1px solid rgb(184, 227, 121);
+    cursor: pointer;
+}
+
+.city {
+    font-weight: 700;
+    font-size: 0.9em;
+    letter-spacing: 1.2px;
+    color: white;
+}
+
+.weather {
+    font-weight: 500;
+    font-size: 0.7em;
+    letter-spacing: 1.2px;
+    color: rgb(0, 0, 0);
+}
+
+.temp {
+    font-size: 1.8em;
+    color: #b8e379;
+}
+
+.minmaxContainer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.min,.max {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0px 20px;
+    gap: 4px;
+}
+
+.max {
+    align-items: flex-start;
+    border-left: 2px solid white;
+}
+
+.maxHeading,.minHeading {
+    font-size: 0.7em;
+    font-weight: 600;
+    color: white;
+}
+
+.maxTemp,.minTemp {
+    font-size: 0.6em;
+    font-weight: 500;
+    color: rgb(197, 197, 197);
+}
+
+.cardContainer::before {
+    width: 100px;
+    height: 100px;
+    content: "";
+    position: absolute;
+    background-color: rgb(144, 161, 255);
+    z-index: -1;
+    border-radius: 50%;
+    left: 100px;
+    top: 50px;
+    transition: all 1s;
+}
+
+.cardContainer:hover::before {
+    transform: translate(-50px ,50px);
+}
