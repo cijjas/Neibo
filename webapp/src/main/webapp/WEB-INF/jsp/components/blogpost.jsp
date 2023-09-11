@@ -10,7 +10,7 @@
 
 
 <div class="post" style="word-wrap: break-word;">
-    <a href="/${param.postID}" style="text-decoration: none;">
+    <a href="/posts/${param.postID}" style="text-decoration: none;">
         <div class="post-header">
             <span class="post-author">${param.postNeighborMail}</span>
             <span class="post-date">publicado el ${param.postDate}</span>
