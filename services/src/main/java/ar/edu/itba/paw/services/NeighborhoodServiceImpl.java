@@ -7,6 +7,9 @@ import ar.edu.itba.paw.models.Neighborhood;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class NeighborhoodServiceImpl implements NeighborhoodService {
     private final NeighborhoodDao neighborhoodDao;
@@ -19,4 +22,8 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     public Neighborhood createNeighborhood(String name) {
         return neighborhoodDao.create(name);
     }
+    @Override
+    public List<Neighborhood> getAllNeighborhoods() { return neighborhoodDao.getAllNeighborhoods(); }
+    @Override
+    public Optional<Neighborhood> findNeighborhoodById(long id) { return neighborhoodDao.findNeighborhoodById(id); }
 }

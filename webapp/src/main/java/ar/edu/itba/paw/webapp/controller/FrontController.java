@@ -127,20 +127,20 @@ public class FrontController {
 
     // Pero en general pedimos parámetros fijos y respondemos algo claro, entonces podemos hacer las cosas más simples
     // usando una sintaxis que nos deja especificar los parámetros del http request como parámetros del método:
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ModelAndView register(
-            @RequestParam(value = "email", required = true) final String email,
-            @RequestParam(value = "password", required = true) final String password
-    ) {
-        // Los @RequestParam pueden ser int, long, etc. Y nos hace la conversión por nosotros :)
-        // Al @RequestParam también le podemos pasar "required = true", "default = 1234", etc.
-        final User user = us.createUser(email, password);
-
-        final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("user", user);
-
-        return mav;
-    }
+//    @RequestMapping(value = "/register", method = RequestMethod.POST)
+//    public ModelAndView register(
+//            @RequestParam(value = "email", required = true) final String email,
+//            @RequestParam(value = "password", required = true) final String password
+//    ) {
+//        // Los @RequestParam pueden ser int, long, etc. Y nos hace la conversión por nosotros :)
+//        // Al @RequestParam también le podemos pasar "required = true", "default = 1234", etc.
+//        final User user = us.createUser(email, password);
+//
+//        final ModelAndView mav = new ModelAndView("views/index");
+//        mav.addObject("user", user);
+//
+//        return mav;
+//    }
 
 //    @RequestMapping("/post")
 //    public ModelAndView postPage() {return new ModelAndView("views/post");}
