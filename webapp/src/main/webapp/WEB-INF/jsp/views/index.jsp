@@ -17,25 +17,39 @@
             <div class="column column-left">
                 <%@ include file="/WEB-INF/jsp/components/leftcolumn.jsp" %>
             </div>
+            <script>
+                // JavaScript function to toggle button selection
+                function toggleButtonSelection(buttonId) {
+                    var buttons = document.querySelectorAll('.filter-button');
 
+                    buttons.forEach(function (button) {
+                        if (button.id === buttonId) {
+                            button.classList.add('selected');
+                        } else {
+                            button.classList.remove('selected');
+                        }
+                    });
+                }
+            </script>
             <div class="column column-middle">
                 <div class="filter-options d-flex justify-content-between">
-                    <a href="${pageContext.request.contextPath}/?sortBy=dateasc" style="text-decoration: none;">
-                        <button id="filter-by-date" class="filter-button" onclick="">
-                            <i class="fa-solid fa-newspaper"></i>
-                            <span>Fecha</span>
+                    <div class="d-flex">
+                        <a href="${pageContext.request.contextPath}/?sortBy=dateasc" style="text-decoration: none;">
+                            <button id="filter-by-date" class="filter-button selected" onclick="toggleButtonSelection('filter-by-date')">
+                                <i class="fa-solid fa-newspaper"></i>
+                                <span>Fecha</span>
+                            </button>
+                        </a>
+
+                        <button id="filter-by-tag" class="filter-button" onclick="toggleButtonSelection('filter-by-tag')">
+                            <a class="dropdown-toggle" href="#" id="dropdown07XL" data-bs-toggle="dropdown" aria-expanded="false">Tag</a>
+                            <ul class="dropdown-menu" aria-labelledby="filter-by-tag">
+                                <c:forEach var="tag" items="${tagList}">
+                                    <li><a class="dropdown-item" href="${pageContext.request.contextPath}/?sortBy=tag${tag.tag}" data-tag="${tag.tag}">#${tag.tag}</a></li>
+                                </c:forEach>
+                            </ul>
                         </button>
-                    </a>
-
-                    <button id="filter-by-tag" class="filter-button">
-                        <a class="dropdown-toggle" href="#" id="dropdown07XL" data-bs-toggle="dropdown" aria-expanded="false">Tag</a>
-                        <ul class="dropdown-menu" aria-labelledby="filter-by-tag">
-                            <c:forEach var="tag" items="${tagList}">
-                                <li><a class="dropdown-item" href="${pageContext.request.contextPath}/?sortBy=tag${tag.tag}" data-tag="${tag.tag}">#${tag.tag}</a></li>
-                            </c:forEach>
-                        </ul>
-                    </button>
-
+                    </div>
                     <a href="${pageContext.request.contextPath}/publish" style="text-decoration: none;">
                         <button id="create-post-button" class="filter-button">
                             Crear publicación

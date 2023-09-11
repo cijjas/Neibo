@@ -160,7 +160,9 @@ NAVBAR
 .filter-button:hover{
     border: 1px solid var(--primary); /* Add a 1px solid border with your desired color */
 }
-
+.filter-button.selected {
+    border: 2px solid var(--primary);
+}
 
 /* Styling for the post input */
 .post-input {
@@ -336,7 +338,7 @@ h2{
 .left-column-button:hover{
     width: 100%;
     text-align: left;
-    border: 2px solid var(--primary);
+    border: 1px solid var(--primary);
     padding: 10px;
     margin: 10px auto;
     background-color: var(--onbackground);
