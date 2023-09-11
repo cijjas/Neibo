@@ -2,17 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 
 <html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <title>Create a Post - Neibo</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
-    <link href="/css/home.css" rel="stylesheet"/>
-</head>
+<%@ include file="/WEB-INF/jsp/components/head.jsp" %>
 
 <body>
 <!-- Navigation Bar -->
@@ -92,11 +82,25 @@
 
                 <div class="mb-3">
                     <form:label path="imageFile" class="form-label">Imagen:</form:label>
-                    <form:input type="file" path="imageFile" class="form-control"/>
+                    <form:input type="file" path="imageFile" class="form-control" onchange="preview()"/>
                 </div>
 
+                <div class="container col-md-6">
+                    <img id="frame" src="" class="img-fluid"  alt="uploading image"/>
+                </div>
+
+                <script>
+                    function preview() {
+                        frame.src = URL.createObjectURL(event.target.files[0]);
+                    }
+                    function clearImage() {
+                        document.getElementById('frame').value = null;
+                        frame.src = "";
+                    }
+                </script>
+
                 <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn btn-primary custom-btn">Publicar</button>
+                    <button onclick="clearImage()" type="submit" class="btn btn-primary custom-btn">Publicar</button>
                 </div>
 
             </form:form>

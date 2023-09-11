@@ -6,10 +6,11 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
 
-<div class="post" style="word-wrap: break-word;">
+<div class="post" style="word-wrap: break-word;" aria-hidden="true">
     <a href="/${param.postID}" style="text-decoration: none;">
         <div class="post-header">
             <span class="post-author">${param.postNeighborMail}</span>
@@ -25,11 +26,11 @@
             <img id="imageFile" src="data:image/jpg;base64,<c:out value='${param.postImage}'/>" style="max-width: 100%; max-height: 100vh;" alt="post image">
         </div>
     </c:if>
+
 </div>
 
 
 <%--
-
 <div class="post" aria-hidden="true">
     <div class="card-body">
         <div class="post-header">
@@ -52,4 +53,3 @@
     </div>
 </div>
 --%>
-
