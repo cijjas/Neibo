@@ -22,8 +22,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post createPost(String title, String description, long neighborId, long channelId) {
-        return postDao.create(title, description, neighborId, channelId);
+    public Post createPost(String title, String description, long neighborId, long channelId, String imageFile) {
+        return postDao.create(title, description, neighborId, channelId, imageFile);
     }
 
     @Override

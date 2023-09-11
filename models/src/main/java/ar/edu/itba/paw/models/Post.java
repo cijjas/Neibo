@@ -7,8 +7,9 @@ public class Post {
     private final String title;
     private final String description;
     private final Date date;
-    private final Neighbor neighbor; // Represent neighbor as an object
-    private final Channel channel; // Represent channel as an object
+    private final Neighbor neighbor;
+    private final Channel channel;
+    private final String imageFile; // Add the imageFile attribute
 
     private Post(Builder builder) {
         this.postId = builder.postId;
@@ -17,6 +18,7 @@ public class Post {
         this.date = builder.date;
         this.neighbor = builder.neighbor;
         this.channel = builder.channel;
+        this.imageFile = builder.imageFile; // Initialize imageFile in the constructor
     }
 
     public static class Builder {
@@ -26,6 +28,7 @@ public class Post {
         private Date date;
         private Neighbor neighbor;
         private Channel channel;
+        private String imageFile; // Add imageFile attribute in the builder
 
         public Builder postId(long postId) {
             this.postId = postId;
@@ -54,6 +57,11 @@ public class Post {
 
         public Builder channel(Channel channel) {
             this.channel = channel;
+            return this;
+        }
+
+        public Builder imageFile(String imageFile) {
+            this.imageFile = imageFile; // Set the imageFile data
             return this;
         }
 
@@ -86,6 +94,10 @@ public class Post {
         return channel;
     }
 
+    public String getImageFile() {
+        return imageFile; // Add the getter for imageFile
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -95,6 +107,7 @@ public class Post {
                 ", date=" + date +
                 ", neighbor=" + neighbor +
                 ", channel=" + channel +
+                ", imageFile='" + imageFile + '\'' + // Include imageFile in the toString method
                 '}';
     }
 }

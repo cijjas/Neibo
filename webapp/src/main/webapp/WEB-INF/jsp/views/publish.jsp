@@ -28,7 +28,7 @@
 <%--                <form:input path="email"/>--%>
 <%--            </form:label>--%>
 <%--            <form:errors path="email" cssClass="error" element="p"/>--%>
-            <form:form method="post" action="/publish" modelAttribute="publishForm">
+            <form:form method="post" action="/publish" modelAttribute="publishForm" enctype="multipart/form-data">
                 <form:errors cssClass="error" element="p"/>
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1 mr-2">
@@ -91,7 +91,8 @@
 
 
                 <div class="mb-3">
-                    <input type="file" class="form-control" aria-label="file example">
+                    <form:label path="imageFile" class="form-label">Imagen:</form:label>
+                    <form:input type="file" path="imageFile" class="form-control"/>
                 </div>
 
                 <div class="d-flex justify-content-end">

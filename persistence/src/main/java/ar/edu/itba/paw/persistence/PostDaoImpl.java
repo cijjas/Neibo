@@ -18,7 +18,7 @@ public class PostDaoImpl implements PostDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert; // En vez de hacer queries de tipo INSERT, usamos este objeto.
     private final String baseQuery =
-            "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, c.channelid, channel " +
+            "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, c.channelid, channel, postimage " +
             "from posts p join neighbors n on p.neighborid = n.neighborid join channels c on p.channelid = c.channelid ";
 
     // cambiar query, cambiar row mapper
@@ -33,19 +33,22 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public Post create(String title, String description, long neighborId, long channelId) {
+
+    public Post create(String title, String description, long neighborId, long channelId, String imageFile) {
         Map<String, Object> data = new HashMap<>();
         data.put("title", title);
         data.put("description", description);
         data.put("postdate", LocalDate.now());
         data.put("neighborid", neighborId);
         data.put("channelid", channelId);
+        data.put("postimage", imageFile);
 
         final Number key = jdbcInsert.executeAndReturnKey(data);
         return new Post.Builder()
                 .postId(key.longValue())
                 .title(title)
                 .description(description)
+                .imageFile(imageFile)
                 .build();
     }
 
@@ -55,6 +58,7 @@ public class PostDaoImpl implements PostDao {
                     .title(rs.getString("title"))
                     .description(rs.getString("description"))
                     .date(rs.getDate("postdate"))
+                    .imageFile(rs.getString("postimage"))
                     .neighbor(
                             new Neighbor.Builder()
                                     .neighborId(rs.getLong("neighborid"))
@@ -94,7 +98,7 @@ public class PostDaoImpl implements PostDao {
                 "where tag like '?'", ROW_MAPPER, tag);
          */
         return jdbcTemplate.query(
-            "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, n.neighborhoodid, neighborhoodname, c.channelid, channel\n" +
+            "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, n.neighborhoodid, neighborhoodname, c.channelid, channel, postimage\n" +
                 "from posts p join neighbors n on p.neighborid = n.neighborid join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid  join posts_tags on p.postid = posts_tags.postid join tags on posts_tags.tagid = tags.tagid" +
                 " where tag like '" + tag + "';", ROW_MAPPER);
 

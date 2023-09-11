@@ -38,6 +38,7 @@ public class PublishForm {
     @Email
     private String email;
 
+    private String imageFile;
 
     public String getEmail() {
         return email;
@@ -79,5 +80,26 @@ public class PublishForm {
     }
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getImageFile() {
+        return imageFile;
+    }
+
+    public void setImage(String image) {
+        this.imageFile = image;
+    }
+
+    @Override
+    public String toString() {
+        return "PublishForm{" +
+                "name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", neighborhood='" + neighborhood + '\'' +
+                ", subject='" + subject + '\'' +
+                ", message='" + message + '\'' +
+                ", email='" + email + '\'' +
+                ", imageFile='" + imageFile + '\'' +
+                '}';
     }
 }

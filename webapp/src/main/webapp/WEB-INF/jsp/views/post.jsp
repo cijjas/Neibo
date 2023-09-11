@@ -43,6 +43,10 @@
                         </div>
                     </div>
 
+                    <div>
+                        <img id="imageFile" src="data:image/jpg;base64,<c:out value='${post.imageFile}'/>" >
+                    </div>
+
 
                     <div class="comments-section">
                         <c:forEach var="comment" items="${comments}">

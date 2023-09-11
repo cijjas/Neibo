@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,7 +104,7 @@ public class FrontController {
             postList = ps.getAllPosts(); // Default sorting
         }
 
-        System.out.println(ts.getAllTags());
+        System.out.println(postList);
 
         final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getAllTags());
@@ -168,13 +171,33 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
-    public ModelAndView publish(@Valid @ModelAttribute("publishForm") final PublishForm publishForm, final BindingResult errors) {
+    public ModelAndView publish(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
+                                final BindingResult errors,
+                                @RequestParam("imageFile") MultipartFile imageFile) {
         if (errors.hasErrors()) {
+            System.out.println("errors!!!");
             return publishForm(publishForm);
         }
+
         Neighborhood nh = nhs.createNeighborhood(publishForm.getNeighborhood());
         Neighbor n = ns.createNeighbor(publishForm.getEmail(),publishForm.getName(), publishForm.getSurname(), nh.getNeighborhoodId());
-        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), 1);
+
+        System.out.println("ASssssssssssssss");
+        Post p = null;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                // Convert the image to base64
+                byte[] imageBytes = imageFile.getBytes();
+                String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+
+                // Set the base64-encoded image data in the tournamentForm
+                p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), 1, base64Image);
+            } catch (IOException e) {
+                System.out.println("imagen't");
+            }
+        }
+
+
 
         System.out.println(nh);
         System.out.println(n);
