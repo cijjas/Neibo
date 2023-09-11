@@ -9,11 +9,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NeighborService {
-    User createUser(final String email, final String password);
-
-
 
     Neighbor createNeighbor(final String email, final String name, final String surname, final long neighborhoodId);
 
+    List<Neighbor> getAllNeighbors();
+
+    List<Neighbor> getAllNeighborsByNeighborhood(long neighborhoodId);
+
+    //List<Neighbor> getAllNeighborsByCommunity(long communityId);
+
+    Optional<Neighbor> findNeighborById(long id);
 
 }

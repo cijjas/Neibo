@@ -9,7 +9,9 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ChannelDaoImpl implements ChannelDao {
@@ -22,6 +24,18 @@ public class ChannelDaoImpl implements ChannelDao {
         this.jdbcInsert = new SimpleJdbcInsert(ds)
                 .usingGeneratedKeyColumns("channelid")
                 .withTableName("channels");
+    }
+
+    @Override
+    public Channel create(String channel) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("channel", channel);
+
+        final Number key = jdbcInsert.executeAndReturnKey(data);
+        return new Channel.Builder()
+                .channelId(key.longValue())
+                .channel(channel)
+                .build();
     }
 
     private static final RowMapper<Channel> ROW_MAPPER = (rs, rowNum) ->
