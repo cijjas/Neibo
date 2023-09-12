@@ -20,7 +20,7 @@ public class ChannelServiceImpl implements ChannelService {
 
 
     @Override
-    public List<Channel> getAllChannels() {
-        return channelDao.getAllChannels();
+    public List<Channel> getChannels() {
+        return channelDao.getChannels();
     }
 }

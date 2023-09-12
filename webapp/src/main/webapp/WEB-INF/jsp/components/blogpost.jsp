@@ -23,7 +23,7 @@
 
     <c:if test="${not empty param.postImage}">
         <div style="display: flex; justify-content: center; align-items: center;">
-            <img src="/image/${param.postID}" alt="car_image" style="max-width: 100%; max-height: 100vh;"/>
+            <img src="/postImage/${param.postID}" alt="car_image" style="max-width: 100%; max-height: 100vh;"/>
         </div>
     </c:if>
 

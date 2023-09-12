@@ -22,21 +22,20 @@ import java.util.Optional;
 public class NeighborDaoImpl implements NeighborDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert; // En vez de hacer queries de tipo INSERT, usamos este objeto.
+    private final SimpleJdbcInsert jdbcInsert;
 
-    private final String baseQuery = "select neighborid, mail, name, surname from neighbors ";
+    private final String NEIGHBORS = "select neighborid, mail, name, surname from neighbors ";
 
-    @Autowired // Motor de inyección de dependencias; nos da el DataSource definido en el @Bean de WebConfig.
+    @Autowired
     public NeighborDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
                 .usingGeneratedKeyColumns("neighborid")
                 .withTableName("neighbors");
-                // con .usingColumns(); podemos especificar las columnas a usar y otras cosas
     }
 
     @Override
-    public Neighbor create(final String mail, final String name, final String surname, final long neighborhoodId) {
+    public Neighbor createNeighbor(final String mail, final String name, final String surname, final long neighborhoodId) {
         Map<String, Object> data = new HashMap<>();
         data.put("mail", mail);
         data.put("name", name);
@@ -61,25 +60,30 @@ public class NeighborDaoImpl implements NeighborDao {
                     .build();
 
     @Override
-    public List<Neighbor> getAllNeighbors() {
-        return jdbcTemplate.query("select neighborid, mail, name, surname from neighbors", ROW_MAPPER);
+    public List<Neighbor> getNeighbors() {
+        return jdbcTemplate.query(NEIGHBORS, ROW_MAPPER);
     }
 
     @Override
-    public List<Neighbor> getAllNeighborsByNeighborhood(long neighborhoodId) {
-        return jdbcTemplate.query(baseQuery + "where neighborhoodid = ?", ROW_MAPPER, neighborhoodId);
+    public List<Neighbor> getNeighborsByNeighborhood(long neighborhoodId) {
+        return jdbcTemplate.query(NEIGHBORS + " where neighborhoodid = ?", ROW_MAPPER, neighborhoodId);
     }
 
     @Override
     public Optional<Neighbor> findNeighborById(long id) {
-        final List<Neighbor> list = jdbcTemplate.query(baseQuery + "where neighborid = ?", ROW_MAPPER, id);
+        final List<Neighbor> list = jdbcTemplate.query(NEIGHBORS + " where neighborid = ?", ROW_MAPPER, id);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
     public Optional<Neighbor> findNeighborByMail(String mail) {
-        final List<Neighbor> list = jdbcTemplate.query(baseQuery + "where mail = ?", ROW_MAPPER, mail);
+        final List<Neighbor> list = jdbcTemplate.query(NEIGHBORS + " where mail = ?", ROW_MAPPER, mail);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+    }
+
+    @Override
+    public List<Neighbor> getNeighborsSubscribedByPostId(long id) {
+        return null;
     }
 
 }

@@ -22,35 +22,20 @@ import java.util.Optional;
 public class CommentDaoImpl implements CommentDao {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert; // En vez de hacer queries de tipo INSERT, usamos este objeto.
+    private final SimpleJdbcInsert jdbcInsert;
 
-    @Autowired // Motor de inyección de dependencias; nos da el DataSource definido en el @Bean de WebConfig.
+    private final String COMMENTS = "SELECT * FROM comments ";
+
+    @Autowired
     public CommentDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
                 .usingGeneratedKeyColumns("commentid")
                 .withTableName("comments");
-        // con .usingColumns(); podemos especificar las columnas a usar y otras cosas
-    }
-
-    private static final RowMapper<Comment> ROW_MAPPER =
-            (rs, rowNum) -> new Comment.Builder()
-                    .commentId(rs.getLong("commentid"))
-                    .comment(rs.getString("comment"))
-                    .date(rs.getDate("commentdate"))
-                    .neighborId(rs.getLong("neighborid"))
-                    .postId(rs.getLong("postid"))
-                    .build();
-
-
-    @Override
-    public Optional<List<Comment>> findCommentsByPostId(long id) {
-        final List<Comment> comments = jdbcTemplate.query("SELECT * FROM comments WHERE postid=?;", ROW_MAPPER, id);
-        return comments.isEmpty() ? Optional.empty() : Optional.of(comments);
     }
 
     @Override
-    public Comment create(String comment, long neighborId, long postId) {
+    public Comment createComment(String comment, long neighborId, long postId) {
         Map<String, Object> data = new HashMap<>();
         data.put("comment", comment);
         data.put("commentdate", Timestamp.valueOf(LocalDateTime.now()));
@@ -65,4 +50,22 @@ public class CommentDaoImpl implements CommentDao {
                 .postId(postId)
                 .build();
     }
+
+    private static final RowMapper<Comment> ROW_MAPPER =
+            (rs, rowNum) -> new Comment.Builder()
+                    .commentId(rs.getLong("commentid"))
+                    .comment(rs.getString("comment"))
+                    .date(rs.getDate("commentdate"))
+                    .neighborId(rs.getLong("neighborid"))
+                    .postId(rs.getLong("postid"))
+                    .build();
+
+
+    @Override
+    public Optional<List<Comment>> findCommentsByPostId(long id) {
+        final List<Comment> comments = jdbcTemplate.query( COMMENTS + " WHERE postid=?;", ROW_MAPPER, id);
+        return comments.isEmpty() ? Optional.empty() : Optional.of(comments);
+    }
+
+
 }

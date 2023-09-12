@@ -5,6 +5,6 @@ import ar.edu.itba.paw.models.Channel;
 import java.util.List;
 
 public interface ChannelDao {
-    Channel create(final String name);
-    List<Channel> getAllChannels();
+    Channel createChannel(final String name);
+    List<Channel> getChannels();
 }

@@ -16,10 +16,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 
 
 @Controller
@@ -62,25 +60,25 @@ public class FrontController {
         if ( sortBy != null ){
             switch (sortBy) {
                 case "dateasc":
-                    postList = ps.getAllPostsByDate("asc");
+                    postList = ps.getPostsByDate("asc");
                     break;
                 case "datedesc":
-                    postList = ps.getAllPostsByDate("desc");
+                    postList = ps.getPostsByDate("desc");
                     break;
                 default:
                     if (sortBy.startsWith("tag")) {
                         String tag = sortBy.substring(3); // Extract the tag part
-                        postList = ps.getAllPostsByTag(tag);
+                        postList = ps.getPostsByTag(tag);
                     }
             }
         }else {
-            postList = ps.getAllPosts(); // Default sorting
+            postList = ps.getPosts(); // Default sorting
         }
 
         System.out.println(postList);
 
         final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getAllTags());
+        mav.addObject("tagList", ts.getTags());
         mav.addObject("postList", postList);
 
         return mav;
@@ -137,8 +135,8 @@ public class FrontController {
 
 
         final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getAllTags());
-        mav.addObject("postList", ps.getAllPosts());
+        mav.addObject("tagList", ts.getTags());
+        mav.addObject("postList", ps.getPosts());
 
         return mav;
     }
@@ -148,7 +146,7 @@ public class FrontController {
     @RequestMapping("/posts")
     public ModelAndView posts() {
         System.out.println("moshi moshi");
-        List<Post> postList = ps.getAllPosts();
+        List<Post> postList = ps.getPosts();
         System.out.println(postList);
         final ModelAndView mav = new ModelAndView("views/posts");
         mav.addObject("postList", postList);
@@ -166,7 +164,7 @@ public class FrontController {
         Optional<List<Comment>> optionalComments = cs.findCommentsByPostId(postId);
         mav.addObject("comments", optionalComments.orElse(Collections.emptyList()));
 
-        Optional<List<Tag>> optionalTags = ts.findTags(postId);
+        Optional<List<Tag>> optionalTags = ts.findTagsByPostId(postId);
         List<Tag> tags = optionalTags.orElse(Collections.emptyList());
         mav.addObject("tags", tags);
 
@@ -186,7 +184,7 @@ public class FrontController {
 
         Neighborhood nh = nhs.createNeighborhood(commentForm.getNeighborhood());
         Neighbor n = ns.createNeighbor(commentForm.getEmail(), commentForm.getName(), commentForm.getSurname(), nh.getNeighborhoodId());
-        Comment c = cs.create(commentForm.getComment(), n.getNeighborId(), postId);
+        Comment c = cs.createComment(commentForm.getComment(), n.getNeighborId(), postId);
 
         System.out.println("testing: comment - " + c);
 
@@ -198,13 +196,14 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-        System.out.println(ps.getAllPostsByTag("Musica"));
+        System.out.println(ps.getPostsByTag("Musica"));
         return new ModelAndView("views/index");
     }
 
-    @RequestMapping(value = "/image/{imageId}")
+    @RequestMapping(value = "/postImage/{imageId}")
     @ResponseBody
-    public byte[] helloWorld(@PathVariable long imageId)  {
-        return ps.findPostById(imageId).get().getImageFile();
+    public byte[] imageRetriever(@PathVariable long imageId)  {
+        Optional<Post> post = ps.findPostById(imageId);
+        return post.map(Post::getImageFile).orElse(null);
     }
 }

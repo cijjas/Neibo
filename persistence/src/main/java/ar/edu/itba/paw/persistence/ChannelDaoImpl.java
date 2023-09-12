@@ -16,9 +16,11 @@ import java.util.Map;
 @Repository
 public class ChannelDaoImpl implements ChannelDao {
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert; // En vez de hacer queries de tipo INSERT, usamos este objeto.
+    private final SimpleJdbcInsert jdbcInsert;
 
-    @Autowired // Motor de inyección de dependencias; nos da el DataSource definido en el @Bean de WebConfig.
+    private final String CHANNELS = "select * from channels ";
+
+    @Autowired
     public ChannelDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
@@ -27,7 +29,7 @@ public class ChannelDaoImpl implements ChannelDao {
     }
 
     @Override
-    public Channel create(String channel) {
+    public Channel createChannel(String channel) {
         Map<String, Object> data = new HashMap<>();
         data.put("channel", channel);
 
@@ -45,8 +47,7 @@ public class ChannelDaoImpl implements ChannelDao {
                     .build();
 
     @Override
-    public List<Channel> getAllChannels() {
-        return jdbcTemplate.query(
-                "select * from channels", ROW_MAPPER);
+    public List<Channel> getChannels() {
+        return jdbcTemplate.query(CHANNELS, ROW_MAPPER);
     }
 }
