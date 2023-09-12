@@ -41,7 +41,7 @@ public class PublishForm {
     @Email
     private String email;
 
-    private String imageFile;
+    private byte[] imageFile;
 
     public String getEmail() {
         return email;
@@ -85,11 +85,11 @@ public class PublishForm {
         this.message = message;
     }
 
-    public String getImageFile() {
+    public byte[] getImageFile() {
         return imageFile;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.imageFile = image;
     }
 

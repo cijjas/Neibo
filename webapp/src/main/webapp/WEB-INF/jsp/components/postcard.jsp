@@ -20,7 +20,7 @@
     <!-- Image section -->
     <c:if test="${not empty post.imageFile}">
         <div style="display: flex; justify-content: center; align-items: center;">
-            <img id="imageFile" src="data:image/jpg;base64,<c:out value='${post.imageFile}'/>" style="max-width: 100%; max-height: 100vh;">
+            <img src="/image/${post.postId}" style="max-width: 100%; max-height: 100vh;"/>
         </div>
     </c:if>
 

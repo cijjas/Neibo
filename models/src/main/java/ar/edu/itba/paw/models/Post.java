@@ -9,7 +9,7 @@ public class Post {
     private final Date date;
     private final Neighbor neighbor;
     private final Channel channel;
-    private final String imageFile; // Add the imageFile attribute
+    private final byte[] imageFile; // Add the imageFile attribute
 
     private Post(Builder builder) {
         this.postId = builder.postId;
@@ -28,7 +28,7 @@ public class Post {
         private Date date;
         private Neighbor neighbor;
         private Channel channel;
-        private String imageFile; // Add imageFile attribute in the builder
+        private byte[] imageFile; // Add imageFile attribute in the builder
 
         public Builder postId(long postId) {
             this.postId = postId;
@@ -60,7 +60,7 @@ public class Post {
             return this;
         }
 
-        public Builder imageFile(String imageFile) {
+        public Builder imageFile(byte[] imageFile) {
             this.imageFile = imageFile; // Set the imageFile data
             return this;
         }
@@ -94,7 +94,7 @@ public class Post {
         return channel;
     }
 
-    public String getImageFile() {
+    public byte[] getImageFile() {
         return imageFile; // Add the getter for imageFile
     }
 

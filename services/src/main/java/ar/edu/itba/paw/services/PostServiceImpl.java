@@ -22,7 +22,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post createPost(String title, String description, long neighborId, long channelId, String imageFile) {
+    public Post createPost(String title, String description, long neighborId, long channelId, byte[] imageFile) {
         return postDao.create(title, description, neighborId, channelId, imageFile);
     }
 

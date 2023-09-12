@@ -35,8 +35,7 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-
-    public Post create(String title, String description, long neighborId, long channelId, String imageFile) {
+    public Post create(String title, String description, long neighborId, long channelId, byte[] imageFile) {
         System.out.println("CREATING NEW POST");
         Map<String, Object> data = new HashMap<>();
         data.put("title", title);
@@ -61,7 +60,7 @@ public class PostDaoImpl implements PostDao {
                     .title(rs.getString("title"))
                     .description(rs.getString("description"))
                     .date(rs.getDate("postdate"))
-                    .imageFile(rs.getString("postimage"))
+                    .imageFile(rs.getBytes("postimage"))
                     .neighbor(
                             new Neighbor.Builder()
                                     .neighborId(rs.getLong("neighborid"))
@@ -93,17 +92,10 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public List<Post> getAllPostsByTag(String tag) {
-        // This WILL be vulnerable to SQL Injections if we ever allow the user to create their own tags, for as long as they
-        // are created by us there should not be danger
-        /*
-        return jdbcTemplate.query("select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, n.neighborhoodid,neighborhoodname\n" +
-                "from posts p join neighbors n on p.neighborid = n.neighborid join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid join posts_tags on p.postid = posts_tags.postid join tags on posts_tags.tagid = tags.tagid\n" +
-                "where tag like '?'", ROW_MAPPER, tag);
-         */
         return jdbcTemplate.query(
             "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, n.neighborhoodid, neighborhoodname, c.channelid, channel, postimage\n" +
                 "from posts p join neighbors n on p.neighborid = n.neighborid join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid  join posts_tags on p.postid = posts_tags.postid join tags on posts_tags.tagid = tags.tagid" +
-                " where tag like '" + tag + "';", ROW_MAPPER);
+                " where tag like ?;", ROW_MAPPER, tag);
 
     }
 
@@ -113,12 +105,12 @@ public class PostDaoImpl implements PostDao {
         return jdbcTemplate.query(
                 "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, n.neighborhoodid, neighborhoodname, c.channelid, channel\n" +
                         "from posts p join neighbors n on p.neighborid = n.neighborid join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid  join posts_tags on p.postid = posts_tags.postid join tags on posts_tags.tagid = tags.tagid" +
-                        " where channel like '" + channel + "';", ROW_MAPPER);
+                        " where channel like ?;", ROW_MAPPER, channel);
     }
 
     @Override
     public Optional<Post> findPostById(long id) {
-        final List<Post> postList = jdbcTemplate.query(baseQuery + " where postid=?", ROW_MAPPER, id);
+        final List<Post> postList = jdbcTemplate.query(baseQuery + " where postid=?;", ROW_MAPPER, id);
         return postList.isEmpty() ? Optional.empty() : Optional.of(postList.get(0));
     }
 

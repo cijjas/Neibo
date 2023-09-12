@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 
+import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -120,10 +121,8 @@ public class FrontController {
             try {
                 // Convert the image to base64
                 byte[] imageBytes = imageFile.getBytes();
-                String base64Image = Base64.getEncoder().encodeToString(imageBytes);
-
+                p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), 1, imageBytes);
                 // Set the base64-encoded image data in the tournamentForm
-                p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), 1, base64Image);
             } catch (IOException e) {
                 System.out.println("Issue uploading the image");
                 // Should go to an error page!
@@ -199,6 +198,13 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
+        System.out.println(ps.getAllPostsByTag("Musica"));
         return new ModelAndView("views/index");
+    }
+
+    @RequestMapping(value = "/image/{imageId}")
+    @ResponseBody
+    public byte[] helloWorld(@PathVariable long imageId)  {
+        return ps.findPostById(imageId).get().getImageFile();
     }
 }
