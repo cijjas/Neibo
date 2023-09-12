@@ -35,4 +35,4 @@ public interface NeighborService {
     Optional<Neighbor> findNeighborByMail(String mail);
 
     List<Neighbor> getNeighborsSubscribedByPostId(long id);
-    }
+}

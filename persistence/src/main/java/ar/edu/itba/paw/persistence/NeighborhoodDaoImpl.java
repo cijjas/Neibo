@@ -17,9 +17,9 @@ import java.util.Optional;
 
 @Repository
 public class NeighborhoodDaoImpl implements NeighborhoodDao {
-
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+
     private final String NEIGHBORHOODS = "select neighborhoodid, neighborhoodname from neighborhoods ";
 
     @Autowired
@@ -58,5 +58,4 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
         final List<Neighborhood> list = jdbcTemplate.query(NEIGHBORHOODS + " where neighborhoodid = ?", ROW_MAPPER, id);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
-
 }

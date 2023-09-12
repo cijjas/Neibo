@@ -10,12 +10,13 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
 public class TagDaoImpl implements TagDao {
-
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -37,9 +38,6 @@ public class TagDaoImpl implements TagDao {
                     .tagId(rs.getLong("tagid"))
                     .tag(rs.getString("tag"))
                     .build();
-
-
-    // getTags
 
     @Override
     public Optional<List<Tag>> findTagsByPostId(long id) {

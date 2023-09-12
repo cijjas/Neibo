@@ -23,28 +23,32 @@ import java.util.List;
 @Controller
 public class FrontController {
 
-    private final NeighborService us;
     private final PostService ps;
     private final NeighborService ns;
     private final NeighborhoodService nhs;
     private final CommentService cs;
     private final TagService ts;
     private final ChannelService chs;
+    private final SubscriptionService ss;
+    private final CategorizationService cas;
     @Autowired
-    public FrontController(final NeighborService us, // remove eventually
-                           final PostService ps,
+    public FrontController(final PostService ps,
                            final NeighborService ns,
                            final NeighborhoodService nhs,
                            final CommentService cs,
                            final TagService ts,
-                           final ChannelService chs) {
-        this.us = us;
+                           final ChannelService chs,
+                           final SubscriptionService ss,
+                           final CategorizationService cas)
+    {
         this.ps = ps;
         this.ns = ns;
         this.nhs = nhs;
         this.cs = cs;
         this.ts = ts;
         this.chs = chs;
+        this.ss = ss;
+        this.cas = cas;
     }
 
     // ------------------------------------- FEED --------------------------------------
@@ -82,14 +86,6 @@ public class FrontController {
         mav.addObject("postList", postList);
 
         return mav;
-    }
-
-    // ------------------------------------- REGISTER --------------------------------------
-    // ------------------------------------- DEPRECATE --------------------------------------
-
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public ModelAndView registerForm() {
-        return new ModelAndView("views/register");
     }
 
     // ------------------------------------- PUBLISH --------------------------------------
@@ -143,17 +139,6 @@ public class FrontController {
 
     // ------------------------------------- POSTS --------------------------------------
 
-    @RequestMapping("/posts")
-    public ModelAndView posts() {
-        System.out.println("moshi moshi");
-        List<Post> postList = ps.getPosts();
-        System.out.println(postList);
-        final ModelAndView mav = new ModelAndView("views/posts");
-        mav.addObject("postList", postList);
-        return mav;
-    }
-
-
     @RequestMapping( value ="/posts/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView viewPost(@PathVariable(value = "id") int postId, @ModelAttribute("commentForm") final CommentForm commentForm) {
         ModelAndView mav = new ModelAndView("views/post");
@@ -192,13 +177,7 @@ public class FrontController {
 //        return new ModelAndView("views/posts/" + postId);
     }
 
-    // ------------------------------------- TEST --------------------------------------
-
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public ModelAndView test() {
-        System.out.println(ps.getPostsByTag("Musica"));
-        return new ModelAndView("views/index");
-    }
+    // ------------------------------------- RESOURCES --------------------------------------
 
     @RequestMapping(value = "/postImage/{imageId}")
     @ResponseBody
@@ -206,4 +185,17 @@ public class FrontController {
         Optional<Post> post = ps.findPostById(imageId);
         return post.map(Post::getImageFile).orElse(null);
     }
+
+    // ------------------------------------- TEST --------------------------------------
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public ModelAndView test() {
+
+        // ns.getNeighborsSubscribedByPostId(1); // devuelve la lista de vecinos subscriptos a cierto post
+        // ss.createSubscription(1,6); // donde 1 es el neighborId y 6 es el postId, el usuario 1 se subscribio al post 1
+        // cas.createCategory(1,4); // donde 1 es el tagId y 4 es el postId, el post 4 pertenece a la categoria del tag 1
+        return new ModelAndView("views/index");
+    }
+
+
 }

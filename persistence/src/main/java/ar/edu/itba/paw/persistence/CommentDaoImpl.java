@@ -20,7 +20,6 @@ import java.util.Optional;
 
 @Repository
 public class CommentDaoImpl implements CommentDao {
-
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -60,12 +59,9 @@ public class CommentDaoImpl implements CommentDao {
                     .postId(rs.getLong("postid"))
                     .build();
 
-
     @Override
     public Optional<List<Comment>> findCommentsByPostId(long id) {
         final List<Comment> comments = jdbcTemplate.query( COMMENTS + " WHERE postid=?;", ROW_MAPPER, id);
         return comments.isEmpty() ? Optional.empty() : Optional.of(comments);
     }
-
-
 }

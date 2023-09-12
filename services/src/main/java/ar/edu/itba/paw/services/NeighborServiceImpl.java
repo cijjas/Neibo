@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @Service
 public class NeighborServiceImpl implements NeighborService {
-
     private final NeighborDao neighborDao;
 
     @Autowired
@@ -43,5 +42,4 @@ public class NeighborServiceImpl implements NeighborService {
     public List<Neighbor> getNeighborsSubscribedByPostId(long id) {
         return neighborDao.getNeighborsSubscribedByPostId(id);
     }
-
 }

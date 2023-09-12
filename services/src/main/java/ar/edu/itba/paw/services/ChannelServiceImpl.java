@@ -18,7 +18,6 @@ public class ChannelServiceImpl implements ChannelService {
         this.channelDao = channelDao;
     }
 
-
     @Override
     public List<Channel> getChannels() {
         return channelDao.getChannels();

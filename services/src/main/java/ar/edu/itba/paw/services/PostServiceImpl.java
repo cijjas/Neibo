@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService {
-
     private final PostDao postDao;
 
     @Autowired
@@ -50,6 +49,4 @@ public class PostServiceImpl implements PostService {
     public Optional<Post> findPostById(final long id) {
         return postDao.findPostById(id);
     }
-
-
 }

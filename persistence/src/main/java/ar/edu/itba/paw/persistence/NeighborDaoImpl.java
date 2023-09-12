@@ -20,11 +20,13 @@ import java.util.Optional;
 
 @Repository
 public class NeighborDaoImpl implements NeighborDao {
-
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
     private final String NEIGHBORS = "select neighborid, mail, name, surname from neighbors ";
+    private final String NEIGHBORS_JOIN_POSTS_NEIGHBORS_AND_POSTS =
+            "select n.neighborid, mail, name, surname from\n" +
+            "posts p join posts_neighbors on p.postid = posts_neighbors.postid join neighbors n on posts_neighbors.neighborid = n.neighborid ";
 
     @Autowired
     public NeighborDaoImpl(final DataSource ds) {
@@ -70,8 +72,8 @@ public class NeighborDaoImpl implements NeighborDao {
     }
 
     @Override
-    public Optional<Neighbor> findNeighborById(long id) {
-        final List<Neighbor> list = jdbcTemplate.query(NEIGHBORS + " where neighborid = ?", ROW_MAPPER, id);
+    public Optional<Neighbor> findNeighborById(long neighborId) {
+        final List<Neighbor> list = jdbcTemplate.query(NEIGHBORS + " where neighborid = ?", ROW_MAPPER, neighborId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
@@ -82,8 +84,7 @@ public class NeighborDaoImpl implements NeighborDao {
     }
 
     @Override
-    public List<Neighbor> getNeighborsSubscribedByPostId(long id) {
-        return null;
+    public List<Neighbor> getNeighborsSubscribedByPostId(long postId) {
+        return jdbcTemplate.query(NEIGHBORS_JOIN_POSTS_NEIGHBORS_AND_POSTS + " where p.postid = ?", ROW_MAPPER, postId);
     }
-
 }

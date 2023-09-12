@@ -28,6 +28,4 @@ public class CommentServiceImpl implements CommentService {
     public Comment createComment(String comment, long neighborId, long postId) {
         return commentDao.createComment(comment, neighborId, postId);
     }
-
-
 }

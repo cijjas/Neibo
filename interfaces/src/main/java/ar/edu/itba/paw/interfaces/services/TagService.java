@@ -10,5 +10,4 @@ public interface TagService {
     List<Tag> getTags();
 
     Optional<List<Tag>> findTagsByPostId(long id);
-
 }
