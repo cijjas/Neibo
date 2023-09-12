@@ -36,7 +36,7 @@ public class NeighborhoodServiceImplTest {
     public void testCreate() {
         // 1. Precondiciones
         // Defino el comportamiento de la clase mock de UserDao
-        when(neighborhoodDao.create(anyString())).thenReturn(new Neighborhood.Builder()
+        when(neighborhoodDao.createNeighborhood(anyString())).thenReturn(new Neighborhood.Builder()
                 .neighborhoodId(ID)
                 .name(NAME)
                 .build()
@@ -59,7 +59,7 @@ public class NeighborhoodServiceImplTest {
     public void testCreateAlreadyExists() {
         // 1. Precondiciones
         // Defino el comportamiento de la clase mock de UserDao
-        when(neighborhoodDao.create(eq(NAME))).thenThrow(RuntimeException.class);
+        when(neighborhoodDao.createNeighborhood(eq(NAME))).thenThrow(RuntimeException.class);
 
         // 2. Ejercitar
         Neighborhood newNeighborhood = ns.createNeighborhood(NAME);

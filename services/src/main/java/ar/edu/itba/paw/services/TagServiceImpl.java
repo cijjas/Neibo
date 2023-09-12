@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @Service
 public class TagServiceImpl implements TagService {
-
     private final TagDao tagDao;
 
     @Autowired
@@ -22,13 +21,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> getAllTags() {
-        return tagDao.getAllTags();
+    public List<Tag> getTags() {
+        return tagDao.getTags();
     }
 
     @Override
-    public Optional<List<Tag>> findTags(long id) {
-        return tagDao.findTags(id);
+    public Optional<List<Tag>> findTagsByPostId(long id) {
+        return tagDao.findTagsByPostId(id);
     }
-
 }

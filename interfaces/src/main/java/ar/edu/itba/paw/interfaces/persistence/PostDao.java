@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostDao {
-    Post create(final String title, final String description, final long neighborId, final long channelId, final byte[] imageFile);
+    Post createPost(final String title, final String description, final long neighborId, final long channelId, final byte[] imageFile);
 
-    List<Post> getAllPosts();
+    List<Post> getPosts();
 
-    List<Post> getAllPostsByDate(String order);
+    List<Post> getPostsByDate(String order);
 
-    List<Post> getAllPostsByTag(String tag);
+    List<Post> getPostsByTag(String tag);
 
-    List<Post> getAllPostsByChannel(String channel);
+    List<Post> getPostsByChannel(String channel);
 
     Optional<Post> findPostById(long id);
 }

@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @Service
 public class NeighborServiceImpl implements NeighborService {
-
     private final NeighborDao neighborDao;
 
     @Autowired
@@ -22,21 +21,25 @@ public class NeighborServiceImpl implements NeighborService {
 
     @Override
     public Neighbor createNeighbor(String mail, String name, String surname, long neighborhoodId) {
-        return neighborDao.create(mail, name, surname, neighborhoodId);
+        return neighborDao.createNeighbor(mail, name, surname, neighborhoodId);
     }
 
     @Override
-    public List<Neighbor> getAllNeighbors() { return neighborDao.getAllNeighbors(); }
+    public List<Neighbor> getNeighbors() { return neighborDao.getNeighbors(); }
 
     @Override
-    public List<Neighbor> getAllNeighborsByNeighborhood(long neighborhoodId) { return neighborDao.getAllNeighborsByNeighborhood(neighborhoodId); }
+    public List<Neighbor> getNeighborsByNeighborhood(long neighborhoodId) { return neighborDao.getNeighborsByNeighborhood(neighborhoodId); }
 
     //@Override
-    //public List<Neighbor> getAllNeighborsByCommunity(long communityId) { return neighborDao.getAllNeighborsByCommunity(communityId); }
+    //public List<Neighbor> getNeighborsByCommunity(long communityId) { return neighborDao.getAllNeighborsByCommunity(communityId); }
 
     @Override
     public Optional<Neighbor> findNeighborById(long id) { return neighborDao.findNeighborById(id); }
 
     public Optional<Neighbor> findNeighborByMail(String mail) { return neighborDao.findNeighborByMail(mail); }
 
+    @Override
+    public List<Neighbor> getNeighborsSubscribedByPostId(long id) {
+        return neighborDao.getNeighborsSubscribedByPostId(id);
     }
+}

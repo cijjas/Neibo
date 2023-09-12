@@ -16,37 +16,39 @@ import java.awt.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 
 
 @Controller
 public class FrontController {
 
-    private final NeighborService us;
     private final PostService ps;
     private final NeighborService ns;
     private final NeighborhoodService nhs;
     private final CommentService cs;
     private final TagService ts;
     private final ChannelService chs;
+    private final SubscriptionService ss;
+    private final CategorizationService cas;
     @Autowired
-    public FrontController(final NeighborService us, // remove eventually
-                           final PostService ps,
+    public FrontController(final PostService ps,
                            final NeighborService ns,
                            final NeighborhoodService nhs,
                            final CommentService cs,
                            final TagService ts,
-                           final ChannelService chs) {
-        this.us = us;
+                           final ChannelService chs,
+                           final SubscriptionService ss,
+                           final CategorizationService cas)
+    {
         this.ps = ps;
         this.ns = ns;
         this.nhs = nhs;
         this.cs = cs;
         this.ts = ts;
         this.chs = chs;
+        this.ss = ss;
+        this.cas = cas;
     }
 
     // ------------------------------------- FEED --------------------------------------
@@ -62,36 +64,28 @@ public class FrontController {
         if ( sortBy != null ){
             switch (sortBy) {
                 case "dateasc":
-                    postList = ps.getAllPostsByDate("asc");
+                    postList = ps.getPostsByDate("asc");
                     break;
                 case "datedesc":
-                    postList = ps.getAllPostsByDate("desc");
+                    postList = ps.getPostsByDate("desc");
                     break;
                 default:
                     if (sortBy.startsWith("tag")) {
                         String tag = sortBy.substring(3); // Extract the tag part
-                        postList = ps.getAllPostsByTag(tag);
+                        postList = ps.getPostsByTag(tag);
                     }
             }
         }else {
-            postList = ps.getAllPosts(); // Default sorting
+            postList = ps.getPosts(); // Default sorting
         }
 
         System.out.println(postList);
 
         final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getAllTags());
+        mav.addObject("tagList", ts.getTags());
         mav.addObject("postList", postList);
 
         return mav;
-    }
-
-    // ------------------------------------- REGISTER --------------------------------------
-    // ------------------------------------- DEPRECATE --------------------------------------
-
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public ModelAndView registerForm() {
-        return new ModelAndView("views/register");
     }
 
     // ------------------------------------- PUBLISH --------------------------------------
@@ -137,24 +131,13 @@ public class FrontController {
 
 
         final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getAllTags());
-        mav.addObject("postList", ps.getAllPosts());
+        mav.addObject("tagList", ts.getTags());
+        mav.addObject("postList", ps.getPosts());
 
         return mav;
     }
 
     // ------------------------------------- POSTS --------------------------------------
-
-    @RequestMapping("/posts")
-    public ModelAndView posts() {
-        System.out.println("moshi moshi");
-        List<Post> postList = ps.getAllPosts();
-        System.out.println(postList);
-        final ModelAndView mav = new ModelAndView("views/posts");
-        mav.addObject("postList", postList);
-        return mav;
-    }
-
 
     @RequestMapping( value ="/posts/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView viewPost(@PathVariable(value = "id") int postId, @ModelAttribute("commentForm") final CommentForm commentForm) {
@@ -166,7 +149,7 @@ public class FrontController {
         Optional<List<Comment>> optionalComments = cs.findCommentsByPostId(postId);
         mav.addObject("comments", optionalComments.orElse(Collections.emptyList()));
 
-        Optional<List<Tag>> optionalTags = ts.findTags(postId);
+        Optional<List<Tag>> optionalTags = ts.findTagsByPostId(postId);
         List<Tag> tags = optionalTags.orElse(Collections.emptyList());
         mav.addObject("tags", tags);
 
@@ -186,7 +169,7 @@ public class FrontController {
 
         Neighborhood nh = nhs.createNeighborhood(commentForm.getNeighborhood());
         Neighbor n = ns.createNeighbor(commentForm.getEmail(), commentForm.getName(), commentForm.getSurname(), nh.getNeighborhoodId());
-        Comment c = cs.create(commentForm.getComment(), n.getNeighborId(), postId);
+        Comment c = cs.createComment(commentForm.getComment(), n.getNeighborId(), postId);
 
         System.out.println("testing: comment - " + c);
 
@@ -194,17 +177,25 @@ public class FrontController {
 //        return new ModelAndView("views/posts/" + postId);
     }
 
+    // ------------------------------------- RESOURCES --------------------------------------
+
+    @RequestMapping(value = "/postImage/{imageId}")
+    @ResponseBody
+    public byte[] imageRetriever(@PathVariable long imageId)  {
+        Optional<Post> post = ps.findPostById(imageId);
+        return post.map(Post::getImageFile).orElse(null);
+    }
+
     // ------------------------------------- TEST --------------------------------------
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-        System.out.println(ps.getAllPostsByTag("Musica"));
+
+        // ns.getNeighborsSubscribedByPostId(1); // devuelve la lista de vecinos subscriptos a cierto post
+        // ss.createSubscription(1,6); // donde 1 es el neighborId y 6 es el postId, el usuario 1 se subscribio al post 1
+        // cas.createCategory(1,4); // donde 1 es el tagId y 4 es el postId, el post 4 pertenece a la categoria del tag 1
         return new ModelAndView("views/index");
     }
 
-    @RequestMapping(value = "/image/{imageId}")
-    @ResponseBody
-    public byte[] helloWorld(@PathVariable long imageId)  {
-        return ps.findPostById(imageId).get().getImageFile();
-    }
+
 }

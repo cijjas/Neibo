@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface NeighborhoodService {
     Neighborhood createNeighborhood(final String name);
 
-    List<Neighborhood> getAllNeighborhoods();
+    List<Neighborhood> getNeighborhoods();
 
     Optional<Neighborhood> findNeighborhoodById(long id);
 }

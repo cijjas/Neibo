@@ -18,24 +18,25 @@ import java.util.*;
 @Repository
 public class PostDaoImpl implements PostDao {
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert; // En vez de hacer queries de tipo INSERT, usamos este objeto.
-    private final String baseQuery =
-            "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, c.channelid, channel, postimage " +
+    private final SimpleJdbcInsert jdbcInsert;
+
+    private final String POSTS_JOIN_NEIGHBORS_AND_CHANNELS =
+            "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, c.channelid, channel, postimage\n" +
             "from posts p join neighbors n on p.neighborid = n.neighborid join channels c on p.channelid = c.channelid ";
+    private final String POSTS_JOIN_NEIGHBORS_AND_CHANNELS_AND_TAGS =
+            "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, n.neighborhoodid, neighborhoodname, c.channelid, channel, postimage\n" +
+            "from posts p join neighbors n on p.neighborid = n.neighborid join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid  join posts_tags on p.postid = posts_tags.postid join tags on posts_tags.tagid = tags.tagid " ;
 
-    // cambiar query, cambiar row mapper
-
-    @Autowired // Motor de inyección de dependencias; nos da el DataSource definido en el @Bean de WebConfig.
+    @Autowired
     public PostDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
                 .usingGeneratedKeyColumns("postid")
                 .withTableName("posts");
-        // con .usingColumns(); podemos especificar las columnas a usar y otras cosas
     }
 
     @Override
-    public Post create(String title, String description, long neighborId, long channelId, byte[] imageFile) {
+    public Post createPost(String title, String description, long neighborId, long channelId, byte[] imageFile) {
         System.out.println("CREATING NEW POST");
         Map<String, Object> data = new HashMap<>();
         data.put("title", title);
@@ -59,7 +60,7 @@ public class PostDaoImpl implements PostDao {
                     .postId(rs.getLong("postid"))
                     .title(rs.getString("title"))
                     .description(rs.getString("description"))
-                    .date(rs.getDate("postdate"))
+                    .date(rs.getTimestamp("postdate"))
                     .imageFile(rs.getBytes("postimage"))
                     .neighbor(
                             new Neighbor.Builder()
@@ -78,40 +79,33 @@ public class PostDaoImpl implements PostDao {
                     .build();
 
     @Override
-    public List<Post> getAllPosts() {
-        return jdbcTemplate.query(baseQuery, ROW_MAPPER);
+    public List<Post> getPosts() {
+        return jdbcTemplate.query(POSTS_JOIN_NEIGHBORS_AND_CHANNELS, ROW_MAPPER);
     }
 
     @Override
-    public List<Post> getAllPostsByDate(String order) {
+    public List<Post> getPostsByDate(String order) {
         // It is not a dangerous SQL Injection as the user has no access to this variable and is only managed internally
-        // Still I tried using the following line but does not work although im quite sure it should, maybe string issues?
-        // return jdbcTemplate.query(baseQuery + " order by postdate ?", ROW_MAPPER, order);
-        return jdbcTemplate.query(baseQuery + " order by postdate " + order, ROW_MAPPER);
+        // Still I leave this conditional just in case someone makes a change in the future
+        if (!("asc".equalsIgnoreCase(order) || "desc".equalsIgnoreCase(order))) {
+            throw new IllegalArgumentException("Invalid 'order' parameter.");
+        }
+        return jdbcTemplate.query(POSTS_JOIN_NEIGHBORS_AND_CHANNELS + " order by postdate " + order, ROW_MAPPER);
     }
 
     @Override
-    public List<Post> getAllPostsByTag(String tag) {
-        return jdbcTemplate.query(
-            "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, n.neighborhoodid, neighborhoodname, c.channelid, channel, postimage\n" +
-                "from posts p join neighbors n on p.neighborid = n.neighborid join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid  join posts_tags on p.postid = posts_tags.postid join tags on posts_tags.tagid = tags.tagid" +
-                " where tag like ?;", ROW_MAPPER, tag);
-
+    public List<Post> getPostsByTag(String tag) {
+        return jdbcTemplate.query(POSTS_JOIN_NEIGHBORS_AND_CHANNELS_AND_TAGS + " where tag like ?", ROW_MAPPER, tag);
     }
 
     @Override
-    public List<Post> getAllPostsByChannel(String channel) {
-        // Again, this WILL be vulnerable to SQL Injections if we allow users to create channels/communities
-        return jdbcTemplate.query(
-                "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, n.neighborhoodid, neighborhoodname, c.channelid, channel\n" +
-                        "from posts p join neighbors n on p.neighborid = n.neighborid join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid  join posts_tags on p.postid = posts_tags.postid join tags on posts_tags.tagid = tags.tagid" +
-                        " where channel like ?;", ROW_MAPPER, channel);
+    public List<Post> getPostsByChannel(String channel) {
+        return jdbcTemplate.query(POSTS_JOIN_NEIGHBORS_AND_CHANNELS_AND_TAGS + " where channel like ?", ROW_MAPPER, channel);
     }
 
     @Override
     public Optional<Post> findPostById(long id) {
-        final List<Post> postList = jdbcTemplate.query(baseQuery + " where postid=?;", ROW_MAPPER, id);
+        final List<Post> postList = jdbcTemplate.query(POSTS_JOIN_NEIGHBORS_AND_CHANNELS + " where postid=?;", ROW_MAPPER, id);
         return postList.isEmpty() ? Optional.empty() : Optional.of(postList.get(0));
     }
-
 }

@@ -25,9 +25,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment create(String comment, long neighborId, long postId) {
-        return commentDao.create(comment, neighborId, postId);
+    public Comment createComment(String comment, long neighborId, long postId) {
+        return commentDao.createComment(comment, neighborId, postId);
     }
-
-
 }

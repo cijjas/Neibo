@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TagDao {
-    Optional<List<Tag>> findTags(long id);
+    Optional<List<Tag>> findTagsByPostId(long id);
 
-    List<Tag> getAllTags();
+    List<Tag> getTags();
 }

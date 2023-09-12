@@ -18,12 +18,15 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     public NeighborhoodServiceImpl(final NeighborhoodDao neighborhoodDao) {
         this.neighborhoodDao = neighborhoodDao;
     }
+
     @Override
     public Neighborhood createNeighborhood(String name) {
-        return neighborhoodDao.create(name);
+        return neighborhoodDao.createNeighborhood(name);
     }
+
     @Override
-    public List<Neighborhood> getAllNeighborhoods() { return neighborhoodDao.getAllNeighborhoods(); }
+    public List<Neighborhood> getNeighborhoods() { return neighborhoodDao.getNeighborhoods(); }
+
     @Override
     public Optional<Neighborhood> findNeighborhoodById(long id) { return neighborhoodDao.findNeighborhoodById(id); }
 }

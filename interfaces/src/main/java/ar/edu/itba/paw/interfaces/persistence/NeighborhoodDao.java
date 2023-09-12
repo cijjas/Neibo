@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public interface NeighborhoodDao {
 
-    Neighborhood create(final String name);
-    List<Neighborhood> getAllNeighborhoods();
+    Neighborhood createNeighborhood(final String name);
+    List<Neighborhood> getNeighborhoods();
     Optional<Neighborhood> findNeighborhoodById(long id);
 
 }

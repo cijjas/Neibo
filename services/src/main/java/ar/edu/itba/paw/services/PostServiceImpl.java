@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService {
-
     private final PostDao postDao;
 
     @Autowired
@@ -23,33 +22,31 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post createPost(String title, String description, long neighborId, long channelId, byte[] imageFile) {
-        return postDao.create(title, description, neighborId, channelId, imageFile);
+        return postDao.createPost(title, description, neighborId, channelId, imageFile);
     }
 
     @Override
-    public List<Post> getAllPosts() {
-        return postDao.getAllPosts();
+    public List<Post> getPosts() {
+        return postDao.getPosts();
     }
 
     @Override
-    public List<Post> getAllPostsByDate(final String order) {
-        return postDao.getAllPostsByDate(order);
+    public List<Post> getPostsByDate(final String order) {
+        return postDao.getPostsByDate(order);
     }
 
     @Override
-    public List<Post> getAllPostsByTag(String tag) {
-        return postDao.getAllPostsByTag(tag);
+    public List<Post> getPostsByTag(String tag) {
+        return postDao.getPostsByTag(tag);
     }
 
     @Override
-    public List<Post> getAllPostsByChannel(String channel) {
-        return postDao.getAllPostsByChannel(channel);
+    public List<Post> getPostsByChannel(String channel) {
+        return postDao.getPostsByChannel(channel);
     }
 
     @Override
     public Optional<Post> findPostById(final long id) {
         return postDao.findPostById(id);
     }
-
-
 }
