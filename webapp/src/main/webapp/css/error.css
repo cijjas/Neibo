@@ -1,0 +1,80 @@
+
+
+
+.error-card {
+    width: 500px; /* Set a fixed width */
+    height: 600px;
+    border: 3px solid var(--error);
+    padding: 10px;
+    margin: 10px auto;
+    background-color: var(--onbackground);
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+
+.error-card:hover {
+
+}
+
+
+.error-card-title{
+    color: var(--error);
+    font-size: 100px;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    text-align: center;
+    height: 90%;
+
+}
+
+.goback-button{
+    width: 100%;
+    text-align: center;
+    border: 1px solid var(--secondary);
+    padding: 10px;
+    margin: 10px auto;
+    background-color: var(--background);
+    border-radius: 10px;
+}
+
+.goback-button:hover{
+    width: 100%;
+    text-align: center;
+    border: 3px solid var(--primary);
+    padding: 10px;
+    margin: 10px auto;
+    background-color: var(--background);
+    border-radius: 10px;
+}
+
+.error-wave {
+    position: absolute;
+    bottom: -8rem;
+    width: 200%;
+    overflow: hidden;
+    left: 0;
+    animation: error-wave linear 7s infinite;
+    z-index: 0;
+}
+
+@keyframes error-wave {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.options{
+    z-index: 3;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3); /* Adjust the shadow values as needed */
+
+}

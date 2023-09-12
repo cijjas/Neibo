@@ -10,24 +10,23 @@
 
 
 
-<div class="post" style="word-wrap: break-word;" aria-hidden="true">
-    <a href="/posts/${param.postID}" style="text-decoration: none;">
+<div class="blogpost" style="word-wrap: break-word;" aria-hidden="true">
+    <a href="/posts/<c:out value="${param.postID}" />" style="text-decoration: none;">
         <div class="post-header">
-            <span class="post-author">${param.postNeighborMail}</span>
-            <span class="post-date">publicado el ${param.postDate}</span>
-            <h1 class="post-title">${param.postTitle}</h1>
+            <span class="post-author"><c:out value="${param.postNeighborMail}" /></span>
+            <span class="post-date">publicado el <c:out value="${param.postDate}" /></span>
+            <h1 class="post-title"><c:out value="${param.postTitle}" /></h1>
         </div>
-
     </a>
-    <p class="post-description">${param.postDescription}</p>
+    <p class="post-description"><c:out value="${param.postDescription}" /></p>
 
     <c:if test="${not empty param.postImage}">
         <div style="display: flex; justify-content: center; align-items: center;">
-            <img src="/image/${param.postID}" alt="car_image" style="max-width: 100%; max-height: 100vh;"/>
+            <img src="/image/<c:out value="${param.postID}" />" alt="car_image" style="max-width: 100%; max-height: 100vh;"/>
         </div>
     </c:if>
-
 </div>
+
 
 
 <%--

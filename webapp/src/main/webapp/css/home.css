@@ -12,7 +12,17 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
     --primary: #9ad379;
     --secondary: #d8d8c5;
     --accent: #6696e2;
+    --error: #de6f6f;
+}
 
+a {
+    color: inherit; /* Inherit the color from the parent element */
+    text-decoration: none; /* Remove underlines */
+}
+
+a:hover {
+    text-decoration: none; /* Remove underlines */
+    color: inherit;
 }
 
 body {
@@ -184,7 +194,7 @@ NAVBAR
 }
 
 /* Posts CSS*/
-.post {
+.blogpost {
     width: 100%;
     border: 1px solid var(--secondary);
     padding: 10px;
@@ -193,7 +203,7 @@ NAVBAR
     border-radius: 10px;
 }
 
-.post:hover{
+.blogpost:hover{
     border-color:var(--primary);
 }
 
@@ -260,7 +270,7 @@ h2{
 }
 
 .error {
-    color: red;
+    color: var(--error);
 }
 
 
@@ -283,31 +293,28 @@ h2{
 
 .divider-title {
     font-size: 14px;
-    color: #333;
+    color: var(--lighttext);
     margin-bottom: 10px;
 }
 
 .divider-line {
     border: 0;
-    border-top: 2px solid var(--lighttext);
+    border-top: 2px solid var(--darkonbackground);
     width: 100%;
 }
 
 /*--------------------------WAVE ------------------------*/
 .wave {
     position: absolute;
-    top: 85px;
+    top: 100px;
     width: 100%;
     overflow: hidden;
     z-index: 1;
 }
-.blob-motion {
-    position: absolute;
-    top: 200px;
-    right: 500px;
-    width: 100%;
-    overflow: hidden;
-    z-index: 2;
+
+
+.svglogo{
+    margin: 10px;
 }
 
 .container {
@@ -354,23 +361,7 @@ h2{
     background-color: var(--darkonbackground);
     border-radius: 10px;
 }
-.newbutton{
-    color: #090909;
-    padding: 0.7em 1.7em;
-    font-size: 14px;
-    margin: 10px auto;
-    border-radius: 0.5em;
-    background: #e8e8e8;
-    border: 1px solid #e8e8e8;
-    transition: all .3s;
-    box-shadow: 6px 6px 12px #c5c5c5,
-    -6px -6px 12px #ffffff;
-}
-.newbutton:active {
-    color: #666;
-    box-shadow: inset 4px 4px 12px #c5c5c5,
-    inset -4px -4px 12px #ffffff;
-}
+
 
 /*--------------------------------------------------------------------------*/
 
@@ -392,8 +383,8 @@ h2{
     padding: 20px 10px;
     border-radius: 10px;
     backdrop-filter: blur(30px);
-    background-color: rgba(58, 57, 56, 0.38);
-    border: 1px solid rgb(184, 227, 121);
+    background-color: var(--lighttext);
+    border: 1px solid var(--primary);
     cursor: pointer;
 }
 
