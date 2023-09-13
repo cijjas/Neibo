@@ -21,7 +21,11 @@ public class NeighborServiceImpl implements NeighborService {
 
     @Override
     public Neighbor createNeighbor(String mail, String name, String surname, long neighborhoodId) {
-        return neighborDao.createNeighbor(mail, name, surname, neighborhoodId);
+        Neighbor n = findNeighborByMail(mail).orElse(null);
+        if (n == null) {
+            return neighborDao.createNeighbor(mail, name, surname, neighborhoodId);
+        }
+        return n;
     }
 
     @Override

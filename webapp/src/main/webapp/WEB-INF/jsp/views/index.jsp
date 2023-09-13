@@ -7,31 +7,28 @@
 
 <body class="body">
     <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
-
-
-
-
-
     <div class="container " >
         <div class="row">
             <div class="column column-left">
                 <%@ include file="/WEB-INF/jsp/components/leftcolumn.jsp" %>
             </div>
-            <script>
-                // JavaScript function to toggle button selection
-                function toggleButtonSelection(buttonId) {
-                    var buttons = document.querySelectorAll('.filter-button');
 
-                    buttons.forEach(function (button) {
-                        if (button.id === buttonId) {
-                            button.classList.add('selected');
-                        } else {
-                            button.classList.remove('selected');
-                        }
-                    });
-                }
-            </script>
             <div class="column column-middle">
+                <script>
+                    // JavaScript function to toggle button selection
+                    function toggleButtonSelection(buttonId) {
+                        const buttons = document.querySelectorAll('.filter-button');
+
+                        buttons.forEach(function (button) {
+                            if (button.id === buttonId) {
+                                button.classList.add('selected');
+                            } else {
+                                button.classList.remove('selected');
+                            }
+                        });
+                    }
+                </script>
+
                 <div class="filter-options d-flex justify-content-between">
                     <div class="d-flex">
                         <a href="${pageContext.request.contextPath}/?sortBy=dateasc" style="text-decoration: none;">

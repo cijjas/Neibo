@@ -1,4 +1,6 @@
-/* Apply the Lexend font to elements */
+/* --------------- globals----------------------*/
+
+
 body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
     font-family: 'Lexend Deca', sans-serif;
 }
@@ -6,13 +8,30 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
 :root {
     --text: #4f5248;
     --lighttext: #83887f;
-    --background: #fffef8;
+    --background: #fdfaf1;
     --onbackground: rgb(245, 245, 244);
     --darkonbackground : rgb(235, 236, 233);
     --primary: #9ad379;
+    --onprimary: var(--background);
     --secondary: #d8d8c5;
     --accent: #6696e2;
     --error: #de6f6f;
+    --scrollbarthumb: #687e62;
+}
+
+html::-webkit-scrollbar {
+    width: 12px;
+}
+
+html::-webkit-scrollbar-track {
+    background-color: rgba(231, 231, 231, 0);
+    border: 1px solid rgba(202, 202, 202, 0);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+}
+
+html::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: var(--scrollbarthumb);
 }
 
 a {
@@ -30,9 +49,8 @@ body {
     padding: 0;
     background-color: var(--background);
 }
-/*
-NAVBAR
-*/
+
+/*-------------------------------NAVBAR-----------------------------*/
 .square-button {
     width: 40px; /* Adjust the width as needed */
     height: 40px; /* Set the same height as the width for a square button */
@@ -456,4 +474,50 @@ h2{
 
 .cardContainer:hover::before {
     transform: translate(-50px ,50px);
+}
+
+/*-------------------------------------PUBLISH/TAG INPUT------------------------*/
+.tags-input {
+    display: inline-block;
+    position: relative;
+    border: 1px solid var(--darkonbackground);
+    border-radius: 4px;
+    padding: 5px;
+    box-shadow: 2px 2px 5px #00000033;
+    width: 50%;
+}
+
+.tags-input ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tags-input li {
+    display: inline-block;
+    background-color: var(--accent);
+    color: var(--onprimary);
+    border-radius: 20px;
+    padding: 5px 10px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.tags-input input[type="text"] {
+    border: none;
+    outline: none;
+    padding: 5px;
+    font-size: 14px;
+}
+
+.tags-input input[type="text"]:focus {
+    outline: none;
+}
+
+.tags-input .delete-button {
+    background-color: transparent;
+    border: none;
+    color: var(--onprimary);
+    cursor: pointer;
+    margin-left: 5px;
 }
