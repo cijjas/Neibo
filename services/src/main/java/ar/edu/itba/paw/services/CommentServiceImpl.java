@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.CommentDao;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.services.CommentService;
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.models.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +13,12 @@ import java.util.Optional;
 @Service
 public class CommentServiceImpl implements CommentService {
     private final CommentDao commentDao;
+    private final EmailService emailService;
 
     @Autowired
-    public CommentServiceImpl(final CommentDao commentDao) {
+    public CommentServiceImpl(final CommentDao commentDao, EmailService emailService) {
         this.commentDao = commentDao;
+        this.emailService = emailService;
     }
 
     @Override
@@ -26,6 +28,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment createComment(String comment, long neighborId, long postId) {
+
+        emailService.sendSimpleMessage("flopezmenardi@itba.edu.ar", "New comment", "A new comment has been created");
+
         return commentDao.createComment(comment, neighborId, postId);
     }
 }

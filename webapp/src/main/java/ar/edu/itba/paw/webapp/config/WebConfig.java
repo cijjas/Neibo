@@ -11,6 +11,8 @@ import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -22,7 +24,11 @@ import org.springframework.web.servlet.view.JstlView;
 import javax.sql.DataSource;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+
+import javax.mail.internet.MimeMessage;
+
 
 // Con el @ComponentScan(), yo le puedo decir a dónde tiene que ir a buscar componentes, como controllers y services.
 
@@ -103,4 +109,22 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
         return ms;
     }
+    @Bean
+    public JavaMailSender getJavaMailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost("smtp.gmail.com");
+        mailSender.setPort(587);
+
+        mailSender.setUsername("neibonotifs@gmail.com");
+        mailSender.setPassword("syik eiaz utfl fpse");
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
+
+        return mailSender;
+    }
+
 }
