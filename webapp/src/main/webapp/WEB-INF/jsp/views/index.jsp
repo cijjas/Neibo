@@ -8,6 +8,9 @@
 <body class="body">
     <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
     <div class="container " >
+
+
+
         <div class="row">
             <div class="column column-left">
                 <%@ include file="/WEB-INF/jsp/components/leftcolumn.jsp" %>
@@ -29,12 +32,12 @@
                     }
                 </script>
 
-                <div class="filter-options d-flex justify-content-between">
-                    <div class="d-flex">
+                <div class="filter-options d-flex justify-content-between flex-wrap">
+                    <div class="d-flex flex-wrap">
                         <a href="${pageContext.request.contextPath}/?sortBy=dateasc" style="text-decoration: none;">
                             <button id="filter-by-date" class="filter-button selected" onclick="toggleButtonSelection('filter-by-date')">
                                 <i class="fa-solid fa-newspaper"></i>
-                                <span>Fecha</span>
+                                <span><spring:message code="Date"/></span>
                             </button>
                         </a>
 
@@ -49,7 +52,7 @@
                     </div>
                     <a href="${pageContext.request.contextPath}/publish" style="text-decoration: none;">
                         <button id="create-post-button" class="filter-button">
-                            Crear publicación
+                            <spring:message code="CreateNewPost.button"/>
                             <i class="fa-solid fa-plus"></i>
                         </button>
                     </a>

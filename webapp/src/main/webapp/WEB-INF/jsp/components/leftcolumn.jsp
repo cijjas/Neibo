@@ -7,6 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+<div class="left-column-container">
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -30,12 +32,32 @@
 
     <div class="left-box btn-group-vertical">
         <button type="button" class="left-column-button" data-channel="anuncios">
-            <i class="fas fa-bullhorn"></i> Anuncios
+            <i class="fas fa-bullhorn"></i> <spring:message code="Announcements"/>
         </button>
         <button type="button" class="left-column-button " data-channel="foro">
-            <i class="fas fa-comments"></i> Foro
+            <i class="fas fa-comments"></i> <spring:message code="Feed"/>
         </button>
         <button type="button" class="left-column-button " data-channel="contactos">
-            <i class="fas fa-address-card"></i> Contactos
+            <i class="fas fa-address-card"></i> <spring:message code="Contacts"/>
         </button>
     </div>
+
+
+    <button id="dark-mode-toggle" class="left-column-button">click me!</button>
+
+    <script>
+        // JavaScript to toggle dark mode
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const htmlElement = document.documentElement; // Get the HTML element
+
+        // Function to toggle dark mode
+        function toggleDarkMode() {
+            htmlElement.classList.toggle('dark-mode');
+        }
+
+        // Add a click event listener to the toggle button
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+
+    </script>
+
+</div>

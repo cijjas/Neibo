@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/css/home.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/css/common.css" rel="stylesheet"/>
     <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDU1IiBoZWlnaHQ9IjEwNTUiIHZpZXdCb3g9IjAgMCAxMDU1IDEwNTUiIGZpbGw9Im5vbmUiPgo8cGF0aCBkPSJNNDM5IDcxMy41QzMzNS40NzEgNzA3Ljc0OCAyNTAuMzczIDc5OC4xNTQgMjE0LjczMSA4NTAuMDU0QzIxMi43NzkgODUyLjg5NiAyMDguMjY2IDg1MC44ODcgMjA5LjMyMSA4NDcuNjA1QzI0MS4zNDQgNzQ4LjAyNCAzMzkuOTkxIDY2NS4xNDcgMzk5LjUgNjYwQzQ5MiA2NTIgNTExLjc4NiA2ODQuNjk4IDY3MCA2OTJDNzcyLjg5IDY5Ni43NDkgODI5LjU1IDY2NS42NTUgODY0LjgyNCA2MzIuNzk2Qzg2Ny41NDIgNjMwLjI2NSA4NzQuMDAzIDYzNC45MzMgODcyLjAyOCA2MzguMDc5Qzg0Ni4zMDUgNjc5LjA2MyA3OTkuMDI4IDczMiA2OTkgNzMyQzU0NC41NzEgNzMyIDU5MiA3MjIgNDM5IDcxMy41WiIgZmlsbD0iIzlhZDM3OSIvPgo8cGF0aCBkPSJNNDgxIDgwNC42NjNDNDE2LjQ3MyA3OTguOTQxIDM1Mi42MzcgODM3LjUxNyAzMTguMTg4IDg3My4wM0MzMTUuNjE5IDg3NS42NzkgMzA4LjE1MSA4NzEuNDczIDMwOS44MjIgODY4LjE4MkMzNDEuMDM5IDgwNi42ODYgMzk2Ljc1OCA3NzIuNjQ1IDQzNS41IDc2OC4xNjNDNDk2IDc2MS4xNjMgNDk5LjUzIDc3MS41NDcgNjEyLjUgNzkzLjY2M0M2OTQuMDY3IDgwOS42MzEgNzIwLjUwMyA4MDQuNzM4IDc0NS41MDIgNzg1LjczOEM3NDguMTM1IDc4My43MzcgNzUxLjkyNCA3ODYuNjkxIDc1MC4yNzcgNzg5LjU1OEM3MzYuMTQyIDgxNC4xNjkgNzExLjc0OCA4MzcuMjU2IDYzMSA4MjcuMTYzQzUyMC43MjIgODEzLjM3OCA1ODIuNSA4MTMuNjYzIDQ4MSA4MDQuNjYzWiIgZmlsbD0iIzlhZDM3OSIvPgo8cGF0aCBkPSJNNDE4LjUgNjE2LjVDMzExLjQ4OCA1OTkuMzQ4IDIwNi4wMTEgNzEwLjkxMyAxNzAuNTkzIDc1Ni42MzhDMTY4LjcxOCA3NTkuMDU5IDE2NC43NzMgNzU3LjQ5MyAxNjUuMTI4IDc1NC40NTJDMTc5LjQ5IDYzMS40MDUgMjQ3LjQ2IDU3Ni4wMjggMzMxIDU2MEM0MTcgNTQzLjUgNDY1LjEyNCA1ODUuMzQ2IDYyMyA1OThDNzIzLjQ0NSA2MDYuMDUxIDgwNy43MjIgNTk0LjUwNSA4NTUuOTk3IDU3MC41NzRDODU5LjMzNSA1NjguOTE5IDg2Ni43NjQgNTc2LjQ0MSA4NjQuMTgzIDU3OS4xMjdDODMxLjA0MiA2MTMuNjIyIDc3NC41NzMgNjQzLjUgNjczIDY0My41QzUxOC41NzEgNjQzLjUgNTYyIDYzOS41IDQxOC41IDYxNi41WiIgZmlsbD0iIzlhZDM3OSIvPgo8cGF0aCBkPSJNNzE4LjY3MSAzODAuNTA4QzY4Ni4yNzEgNDU0LjEwOCA2OTIuOTQ0IDU0MC41MDggNjk3LjI3NyA1NzQuNTA4QzY4MS4yNzcgNTc0LjUwOCA2NDMuMjc3IDU4MS41MDggNTczLjE3MSA1NjcuNTA4QzQ1MS4yNzcgNTM4LjUwOCA0NDEuNzc3IDUyMS41MDggMzI5LjY3MSA1MjcuMDA4QzMyMi41MiA1MjcuMzU5IDMyNy42NzEgNDg2LjUwOCAzMjkuNjcxIDQ2MS4wMDhDMzMxLjY3MSA0MzUuNTA4IDM1NC4xNzEgNDA2LjUwOCAzNzkuNjcxIDM4MC41MDhDNDA1LjE3MSAzNTQuNTA4IDQ1MC4xNzEgMzM1LjAwOCA0ODAuNjcxIDMzMC41MDhDNTExLjE3MSAzMjYuMDA4IDUyMi4xNzEgMjcxLjAwOCA1MzcuNjcxIDI0MC4wMDhDNTUzLjE3MSAyMDkuMDA4IDY1My4zMjYgMTU3Ljg1MiA3MDcuMTcxIDE4Mi41MDhDNzczLjc3NyAyMTMuMDA4IDgyNS4xNzEgMjUxLjAwOCA4MzkuNjcxIDI2NC41MDhDODU0LjE3MSAyNzguMDA4IDg0OC4xNzEgMjkyLjUwOCA4MzQuNjcxIDMzNS4wMDhDODIzLjg3MSAzNjkuMDA4IDgxMC41MDQgMzc5LjUwOCA4MDUuMTcxIDM4MC41MDhDNzYyLjc3MSAzOTIuMTA4IDcyOS44MzcgMzg1LjM0MSA3MTguNjcxIDM4MC41MDhaIiBmaWxsPSIjOWFkMzc5Ii8+CjxlbGxpcHNlIGN4PSI1OTYuNDI4IiBjeT0iMTk5LjM0MyIgcng9IjM2LjUiIHJ5PSIzMi41IiB0cmFuc2Zvcm09InJvdGF0ZSgzMy45NDcxIDU5Ni40MjggMTk5LjM0MykiIGZpbGw9IiM5YWQzNzkiLz4KPC9zdmc+">
 </head>
 
@@ -47,7 +47,7 @@
                             </svg>
 
                             <h3 class="error-message">
-                                <span class="font-weight-bold">Error:</span> ${errorMsg} <!-- Replace with your error message -->
+                                <span class="font-weight-bold"><spring:message code="Error"/></span> ${errorMsg} <!-- Replace with your error message -->
                             </h3>
 
 
@@ -72,7 +72,7 @@
                             </svg>
 
                             <div class="options">
-                                <a href="${pageContext.request.contextPath}/" class="goback-button">Volver a la página principal</a>
+                                <a href="${pageContext.request.contextPath}/" class="goback-button"><spring:message code="GoBackToMainPage"/></a>
                             </div>
 
 

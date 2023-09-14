@@ -7,14 +7,14 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 
 <div id="blogpost-container" class="blogpost" style="word-wrap: break-word;" aria-hidden="true">
     <a href="/posts/<c:out value="${param.postID}" />" style="text-decoration: none;">
         <div class="post-header">
             <span class="post-author"><c:out value="${param.postNeighborMail}" /></span>
-            <span class="post-date">publicado el <c:out value="${param.postDate}" /></span>
+            <span class="post-date"><spring:message code="posted"/><c:out value="${param.postDate}" /></span>
             <h1 class="post-title"><c:out value="${param.postTitle}" /></h1>
         </div>
     </a>

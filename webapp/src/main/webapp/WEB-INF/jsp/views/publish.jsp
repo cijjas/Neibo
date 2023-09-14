@@ -12,7 +12,7 @@
 <div class="container mt-4">
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Crear Publicacion</h4>
+            <h4 class="card-title"><spring:message code="CreatePost.title"/></h4>
 <%--            <form:errors cssClass="error" element="p"/>--%>
 <%--            <form:label path="email">Email:--%>
 <%--                <form:input path="email"/>--%>
@@ -22,13 +22,13 @@
                 <form:errors cssClass="error" element="p"/>
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1 mr-2">
-                        <form:label path="name">Nombre:
+                        <form:label path="name"> <spring:message code="Name"/>:
                             <form:input path="name"/>
                         </form:label>
                         <form:errors path="name" cssClass="error" element="p"/>
                     </div>
                     <div class="flex-grow-1">
-                        <form:label path="surname">Apellido:
+                        <form:label path="surname"><spring:message code="Surname"/>:
                             <form:input path="surname"/>
                         </form:label>
                         <form:errors path="surname" cssClass="error" element="p"/>
@@ -37,13 +37,13 @@
 
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1 mr-2">
-                        <form:label path="email">Email:
+                        <form:label path="email"><spring:message code="Email"/>:
                             <form:input path="email"/>
                         </form:label>
                         <form:errors path="email" cssClass="error" element="p"/>
                     </div>
                     <div class="flex-grow-1">
-                        <form:label path="neighborhood">Barrio:
+                        <form:label path="neighborhood"><spring:message code="Neighborhood"/>:
                             <form:input path="neighborhood"/>
                         </form:label>
                         <form:errors path="neighborhood" cssClass="error" element="p"/>
@@ -52,7 +52,7 @@
 
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1 mr-2" style="width: 70%;">
-                        <form:label path="subject">Sujeto:
+                        <form:label path="subject"><spring:message code="Subject"/>:
                             <form:input path="subject"/>
                         </form:label>
                         <form:errors path="subject" cssClass="error" element="p"/>
@@ -72,7 +72,7 @@
 <%--                    </div>--%>
                 </div>
                 <div class="form-group">
-                    <form:label path="message">Mensaje:
+                    <form:label path="message"><spring:message code="Message"/>:
                         <form:input path="message"/>
                     </form:label>
                     <form:errors path="message" cssClass="error" element="p"/>
@@ -81,7 +81,7 @@
 
 
                 <div class="mb-3">
-                    <form:label path="imageFile" class="form-label">Imagen:</form:label>
+                    <form:label path="imageFile" class="form-label"><spring:message code="Image"/>:</form:label>
                     <form:input type="file" path="imageFile" class="form-control" onchange="preview()"/>
                 </div>
 
@@ -106,7 +106,7 @@
                 </div>
 
                 <div class="d-flex justify-content-end">
-                    <button onclick="clearImage()" type="submit" class="btn btn-primary custom-btn">Publicar</button>
+                    <button onclick="clearImage()" type="submit" class="btn btn-primary custom-btn"><spring:message code="Post.verb"/></button>
                 </div>
 
             </form:form>
@@ -169,7 +169,7 @@
     </div>
 
     <div class="mt-3">
-        <a href="/" class="btn btn-link volver-btn"><< Volver a Inicio</a>
+        <a href="/" class="btn btn-link volver-btn"><spring:message code="GoBackToMainPage"/></a>
     </div>
 </div>
 
