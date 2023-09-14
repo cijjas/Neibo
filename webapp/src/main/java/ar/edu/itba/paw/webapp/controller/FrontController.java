@@ -2,14 +2,18 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.form.CommentForm;
 import ar.edu.itba.paw.webapp.form.PublishForm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.jws.WebParam;
 import javax.validation.Valid;
 
 import java.awt.*;
@@ -137,7 +141,7 @@ public class FrontController {
         ModelAndView mav = new ModelAndView("views/post");
 
         Optional<Post> optionalPost = ps.findPostById(postId);
-        mav.addObject("post", optionalPost.orElseThrow(() -> new RuntimeException("Post not found")));
+        mav.addObject("post", optionalPost.orElseThrow(PostNotFoundException::new));
 
         Optional<List<Comment>> optionalComments = cs.findCommentsByPostId(postId);
         mav.addObject("comments", optionalComments.orElse(Collections.emptyList()));
@@ -154,7 +158,6 @@ public class FrontController {
     @RequestMapping( value = "/posts/{id:\\d+}", method = RequestMethod.POST)
     public ModelAndView viewPost(@PathVariable(value = "id") int postId, @Valid @ModelAttribute("commentForm") final CommentForm commentForm,
                                  final BindingResult errors) {
-
         if (errors.hasErrors()) {
             System.out.println("comment tiene errores");
             return viewPost(postId, commentForm);
@@ -176,18 +179,43 @@ public class FrontController {
     @ResponseBody
     public byte[] imageRetriever(@PathVariable long imageId)  {
         Optional<Post> post = ps.findPostById(imageId);
-        return post.map(Post::getImageFile).orElse(null);
+        return post.map(Post::getImageFile).orElseThrow(ResourceNotFoundException::new);
+    }
+
+    // ------------------------------------- EXCEPTIONS --------------------------------------
+    @ExceptionHandler({NeighborNotFoundException.class, NeighborhoodNotFoundException.class, PostNotFoundException.class})
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    public ModelAndView notFound(NeiboException ex) {
+        ModelAndView mav = new ModelAndView("errors/errorPage");
+        mav.addObject("errorCode", "404");
+        mav.addObject("errorMsg", ex.getMessage());
+        return mav;
+    }
+
+    @ExceptionHandler({DuplicatedNeighbor.class, DuplicatedNeighborhood.class, DuplicatedChannel.class, DuplicatedCategory.class, DuplicatedSubscription.class})
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    public ModelAndView duplicated(NeiboException ex) {
+        ModelAndView mav = new ModelAndView("errors/errorPage");
+        mav.addObject("errorCode", "409"); // 409 = Conflict
+        mav.addObject("errorMsg", ex.getMessage());
+        return mav;
     }
 
     // ------------------------------------- TEST --------------------------------------
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-
-        // ns.getNeighborsSubscribedByPostId(1); // devuelve la lista de vecinos subscriptos a cierto post
-        // ss.createSubscription(1,6); // donde 1 es el neighborId y 6 es el postId, el usuario 1 se subscribio al post 1
-        // cas.createCategory(1,4); // donde 1 es el tagId y 4 es el postId, el post 4 pertenece a la categoria del tag 1
         return new ModelAndView("views/index");
+    }
+
+    @RequestMapping(value = "/testDuplicatedException", method = RequestMethod.GET)
+    public ModelAndView testDuplicatedException() {
+        throw new DuplicatedNeighbor();
+    }
+
+    @RequestMapping(value = "/testNotFoundException", method = RequestMethod.GET)
+    public ModelAndView testNotFoundException() {
+        throw new NeighborhoodNotFoundException();
     }
 
 
