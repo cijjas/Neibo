@@ -123,11 +123,6 @@ public class FrontController {
             p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), 1, null);
         }
 
-        System.out.println(nh);
-        System.out.println(n);
-        System.out.println(p);
-
-
         final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags());
         mav.addObject("postList", ps.getPosts());
