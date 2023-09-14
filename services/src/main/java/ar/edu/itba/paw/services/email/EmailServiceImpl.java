@@ -36,12 +36,18 @@ public class EmailServiceImpl implements EmailService {
     @Override
     @Async
     //despues agrego tercer argumento -> string con path del template
-    public void sendHtmlMessage(String to, String subject) {
+    public void sendHtmlMessage(String to, String subject, Map<String, Object> variables) {
         try {
             //context.variables -> puedo usar variables de java
             final Context context = new Context();
             //seguro lo usare para nombre de usuario/post etc.
-            //context.setVariables(Map.of("name", "Juan"));
+
+            context.setVariables(variables);
+
+//            context.setVariable("name", "MEGATRON");
+//            String postId = "3"; //recibo
+//            context.setVariable("postPath", "http://localhost:8080/posts/" + postId);
+//            context.setVariable("post", "SUBJECT");
             final String htmlContext = this.thymeleafTemplateEngine.process("template-thymeleaf", context);
 
             MimeMessage message = emailSender.createMimeMessage();
@@ -61,12 +67,12 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel) {
+    public void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel, Map<String, Object> variables) {
 
         Context thymeleafContext = new Context();
         thymeleafContext.setVariables(templateModel);
         String htmlBody = thymeleafTemplateEngine.process("template-thymeleaf.html", thymeleafContext);
 
-        sendHtmlMessage(to, subject);
+        sendHtmlMessage(to, subject, variables);
     }
 }
