@@ -27,7 +27,7 @@
                 <div class="error-card">
                     <div class="card-body ">
                         <div class="flex-container">
-                            <h1 class="error-card-title"><%= request.getAttribute("javax.servlet.error.status_code") %></h1>
+                            <h1 class="error-card-title">${errorCode}</h1>
 
                             <svg width="170" height="170" viewBox="0 0 771 771" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M234.236 390.397C271.466 474.967 235.577 635.287 218.584 673.535C235.577 683.264 349.063 733.237 429.62 717.151C569.682 683.828 623.765 621.363 674.039 553.758C681.274 539.504 673.746 517.645 671.448 488.344C669.149 459.043 653.066 420.272 623.765 390.397C594.464 360.521 542.757 338.115 507.711 332.944C472.665 327.773 460.025 264.575 442.215 228.955C424.404 193.334 309.321 134.553 247.45 162.884C170.916 197.93 111.862 241.594 95.2007 257.107C78.5395 272.619 89.3346 297.914 104.847 346.749C111.41 346.972 117.656 347.204 123.595 347.444C144.194 350.449 174.023 357.86 173.291 363.356C172.217 371.409 116.22 365.369 113.57 366.376C125.052 381.896 128.323 384.122 130.201 385.155L134.843 390.397C183.563 403.726 221.405 395.951 234.236 390.397Z" fill="#DE6F6F"/>
@@ -36,7 +36,7 @@
                             </svg>
 
                             <h3 class="error-message">
-                                <span class="font-weight-bold"><spring:message code="Error"/>: </span> <%= request.getAttribute("javax.servlet.error.message") %> ${errorMsg} <!-- Replace with your error message -->
+                                <span class="font-weight-bold"><spring:message code="Error"/>: </span> ${errorMsg} <!-- Replace with your error message -->
                             </h3>
 
 
