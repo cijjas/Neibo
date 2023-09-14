@@ -1,6 +1,6 @@
 .card-container {
     width: 100%;
-    border: 1px solid var(--secondary);
+    border: 1px solid var(--bordercolor);
     padding: 10px;
     margin: 10px auto;
     background-color: var(--onbackground);
@@ -26,10 +26,12 @@
 
 .comment .comment-header {
     font-weight: bold;
+    color: var(--lighttext);
+
 }
 
 .comment .comment-body {
-    margin-top: 5px;
+    color: var(--text);
 }
 /*--------------------------*/
 

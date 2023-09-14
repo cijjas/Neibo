@@ -31,13 +31,13 @@
     </script>
 
     <div class="left-box btn-group-vertical">
-        <button type="button" class="left-column-button" data-channel="anuncios">
+        <button type="button" class="left-column-button">
             <i class="fas fa-bullhorn"></i> <spring:message code="Announcements"/>
         </button>
-        <button type="button" class="left-column-button " data-channel="foro">
+        <button type="button" class="left-column-button ">
             <i class="fas fa-comments"></i> <spring:message code="Feed"/>
         </button>
-        <button type="button" class="left-column-button " data-channel="contactos">
+        <button type="button" class="left-column-button ">
             <i class="fas fa-address-card"></i> <spring:message code="Contacts"/>
         </button>
     </div>

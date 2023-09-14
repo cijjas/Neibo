@@ -9,7 +9,7 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
     --text: #4f5248;
     --lighttext: #83887f;
     --background: #fdfaf1;
-    --onbackground: rgb(245, 245, 244);
+    --onbackground: rgb(248, 248, 243);
     --onbackgroundfaded: rgb(245, 245, 244, 0.2);
     --darkonbackground : rgb(235, 236, 233);
     --primary: #9ad379;
@@ -18,20 +18,23 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
     --accent: #6696e2;
     --error: #de6f6f;
     --scrollbarthumb: #687e62;
+    --bordercolor: #dadad0;
 }
 .dark-mode {
     --text: #ced3c1;
     --lighttext: #b1bbab;
     --background: #333c41;
-    --onbackground: rgb(49, 58, 63);
+    --onbackground: rgb(59, 64, 70);
     --onbackgroundfaded: rgb(49, 58, 63, 0.2);
-    --darkonbackground : rgb(95, 96, 95);
-    --primary: #819b9b;
+    --darkonbackground : #393d3d;
+    --primary: rgb(163, 180, 163);
     --onprimary: #29333a;
     --secondary: #595953;
     --accent: #6696e2;
     --error: #de6f6f;
     --scrollbarthumb: #687e62;
+    --bordercolor: #70706d;
+
 }
 
 
@@ -192,7 +195,7 @@ body {
 
 /*Middle column*/
 .filter-options {
-    border: 1px solid var(--secondary);
+    border: 2px solid var(--bordercolor);
     padding: 10px;
     margin: 10px auto;
     width: 100%; /* Adjust the width as needed */
@@ -234,7 +237,7 @@ body {
 /* Posts CSS*/
 .blogpost {
     width: 100%;
-    border: 1px solid var(--secondary);
+    border: 2px solid var(--bordercolor);
     padding: 10px;
     margin: 10px auto;
     background-color: var(--onbackground);
@@ -323,6 +326,7 @@ h2{
     padding: 10px;
     background-color: var(--darkonbackground);
     border-radius: 10px;
+    border : 1px solid var(--bordercolor);
 }
 
 .comments-section-divider {
@@ -366,7 +370,7 @@ h2{
 .left-box{
     width: 100%;
     text-align: left;
-    border: 1px solid var(--secondary);
+    border: 2px solid var(--bordercolor);
     padding: 10px;
     margin: 10px auto;
     background-color: var(--onbackground);
@@ -375,7 +379,7 @@ h2{
 .left-column-button{
     width: 100%;
     text-align: left;
-    border: 1px solid var(--secondary);
+    border: 2px solid var(--bordercolor);
     padding: 10px;
     margin: 10px auto;
     background-color: var(--onbackground);
@@ -384,14 +388,7 @@ h2{
 
 }
 .left-column-button:hover{
-    width: 100%;
-    text-align: left;
-    border: 1px solid var(--primary);
-    padding: 10px;
-    margin: 10px auto;
-    background-color: var(--onbackground);
-    border-radius: 10px;
-    color: var(--text);
+    border-color: var(--primary);
 }
 
 .left-column-button.active{

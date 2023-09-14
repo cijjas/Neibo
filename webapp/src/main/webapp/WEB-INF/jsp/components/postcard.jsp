@@ -26,8 +26,6 @@
 
     </div>
 
-
-
     <!-- Tag section -->
     <div class="tag-section">
         <div class="tag-list">
@@ -43,7 +41,6 @@
             </c:choose>
         </div>
     </div>
-
 
     <!-- Comment section -->
     <div class="comments-section">

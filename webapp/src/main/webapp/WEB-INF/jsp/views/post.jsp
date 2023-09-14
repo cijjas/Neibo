@@ -3,7 +3,7 @@
 <html>
 <%@ include file="/WEB-INF/jsp/components/head.jsp" %>
 
-<link href="${pageContext.request.contextPath}/css/post.css" rel="stylesheet"/>
+<link href="${pageContext.request.contextPath}/resources/css/postcard.css" rel="stylesheet"/>
 <body>
 <!-- Navigation Bar -->
     <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
