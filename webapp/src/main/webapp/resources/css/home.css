@@ -2,8 +2,13 @@
 
 
 body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
-    font-family:'Segoe UI', Roboto, Oxygen, Ubuntu,   Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    /*font-family:'Segoe UI', Roboto, Oxygen, Ubuntu,   Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+*/
+    font-family: 'Lexend Deca', sans-serif;
 }
+/* --------------- globals----------------------*/
+
+
 
 :root {
     --text: #4f5248;
@@ -25,7 +30,7 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
     --lighttext: #b1bbab;
     --background: #333c41;
     --onbackground: rgb(59, 64, 70);
-    --onbackgroundfaded: rgb(49, 58, 63, 0.2);
+    --onbackgroundfaded: rgba(49, 58, 63, 0.1);
     --darkonbackground : #393d3d;
     --primary: rgb(163, 180, 163);
     --onprimary: #29333a;
@@ -162,11 +167,11 @@ body {
 }
 
 .filter-bar {
-     background-color: #f2f2f2;
-     padding: 10px;
-     border-bottom: 1px solid #ddd;
-     display: flex;
-     align-items: center;
+    background-color: #f2f2f2;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
 }
 
 .filter-bar span {
@@ -272,6 +277,7 @@ body {
     height: 20px; /* Adjust the height to control the fade-out length */
     background: linear-gradient(to bottom, var(--onbackgroundfaded), var(--onbackground));
 }
+
 .post-header {
     font-size: 16px;
     font-weight: bold;

@@ -99,11 +99,7 @@
                     }
                 </script>
 
-                    <ul id="tags"></ul>
-                    <label for="input-tag">
-                        <input type="text" id="input-tag"
-                               placeholder="<spring:message code="EnterATag"/>" />
-                    </label>
+
 
                 <div class="tags-input">
                     <h2>Tags Input</h2>
@@ -117,15 +113,9 @@
                     <button onclick="clearImage()" type="submit" class="btn btn-primary custom-btn"><spring:message code="Post.verb"/></button>
                 </div>
 
-
-
-
-
-
             </form:form>
 
             <script>
-
                 (function(){
 
                     "use strict"
