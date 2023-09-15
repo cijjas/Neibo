@@ -14,11 +14,11 @@ import javax.validation.constraints.Size;
 public class PublishForm {
     @NotBlank
     @Size(max = 100)
-    @Pattern(regexp = "^[a-zA-Z]+")
+    @Pattern(regexp = "^[a-zA-Z ]+")
     private String name;
 
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z]+")
+    @Pattern(regexp = "^[a-zA-Z ]+")
     @Size(max = 100)
     private String surname;
 
