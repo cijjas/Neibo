@@ -2,8 +2,6 @@ package ar.edu.itba.paw.webapp.form;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -41,7 +39,14 @@ public class PublishForm {
     @Email
     private String email;
 
+    private String tags;
+
     private byte[] imageFile;
+
+
+    public String getTags() {
+        return tags;
+    }
 
     public String getEmail() {
         return email;
@@ -93,6 +98,10 @@ public class PublishForm {
         this.imageFile = image;
     }
 
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "PublishForm{" +
@@ -103,6 +112,7 @@ public class PublishForm {
                 ", message='" + message + '\'' +
                 ", email='" + email + '\'' +
                 ", imageFile='" + imageFile + '\'' +
+                ", tags='" + tags + '\'' +
                 '}';
     }
 }

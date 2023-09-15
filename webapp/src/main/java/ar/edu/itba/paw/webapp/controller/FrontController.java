@@ -83,7 +83,6 @@ public class FrontController {
             postList = ps.getPosts(); // Default sorting
         }
 
-        System.out.println(postList);
 
         final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags());
@@ -97,6 +96,8 @@ public class FrontController {
 
     @RequestMapping(value = "/publish", method = RequestMethod.GET)
     public ModelAndView publishForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
+
+
         return new ModelAndView("views/publish");
     }
 
@@ -167,7 +168,6 @@ public class FrontController {
         Neighbor n = ns.createNeighbor(commentForm.getEmail(), commentForm.getName(), commentForm.getSurname(), nh.getNeighborhoodId());
         Comment c = cs.createComment(commentForm.getComment(), n.getNeighborId(), postId);
 
-        System.out.println("testing: comment - " + c);
 
         return new ModelAndView("redirect:/posts/" + postId); // Redirect to the "posts" page
 //        return new ModelAndView("views/posts/" + postId);
