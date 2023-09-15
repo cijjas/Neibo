@@ -137,6 +137,46 @@ public class FrontController {
         return mav;
     }
 
+    @RequestMapping(value = "/publish_admin", method = RequestMethod.GET)
+    public ModelAndView publishAdminForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
+
+
+        return new ModelAndView("views/publish_admin");
+    }
+    @RequestMapping(value = "/publish_admin", method = RequestMethod.POST)
+    public ModelAndView publishAdmin(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
+                                final BindingResult errors,
+                                @RequestParam("imageFile") MultipartFile imageFile) {
+        if (errors.hasErrors()) {
+            return publishForm(publishForm);
+        }
+
+        Neighborhood nh = nhs.createNeighborhood(publishForm.getNeighborhood());
+        Neighbor n = ns.createNeighbor(publishForm.getEmail(),publishForm.getName(), publishForm.getSurname(), nh.getNeighborhoodId());
+
+
+        Post p = null;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                // Convert the image to base64
+                byte[] imageBytes = imageFile.getBytes();
+                p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), 1, imageBytes);
+                // Set the base64-encoded image data in the tournamentForm
+            } catch (IOException e) {
+                System.out.println("Issue uploading the image");
+                // Should go to an error page!
+            }
+        } else {
+            p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), 1, null);
+        }
+
+        final ModelAndView mav = new ModelAndView("views/index");
+        mav.addObject("tagList", ts.getTags());
+        mav.addObject("postList", ps.getPosts());
+
+        return mav;
+    }
+
     // ------------------------------------- POSTS --------------------------------------
 
     @RequestMapping( value ="/posts/{id:\\d+}", method = RequestMethod.GET)
