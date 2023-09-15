@@ -13,12 +13,12 @@
     <div class="card">
         <div class="card-body">
             <h4 class="card-title"><spring:message code="CreateAdminPost.title"/></h4>
-<%--            <form:errors cssClass="error" element="p"/>--%>
-<%--            <form:label path="email">Email:--%>
-<%--                <form:input path="email"/>--%>
-<%--            </form:label>--%>
-<%--            <form:errors path="email" cssClass="error" element="p"/>--%>
-            <form:form method="post" action="/publish_admin" modelAttribute="publishForm" enctype="multipart/form-data">
+            <%--            <form:errors cssClass="error" element="p"/>--%>
+            <%--            <form:label path="email">Email:--%>
+            <%--                <form:input path="email"/>--%>
+            <%--            </form:label>--%>
+            <%--            <form:errors path="email" cssClass="error" element="p"/>--%>
+            <form:form method="post" action="/publish" modelAttribute="publishForm" enctype="multipart/form-data">
                 <form:errors cssClass="error" element="p"/>
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1 mr-2">
@@ -57,19 +57,19 @@
                         </form:label>
                         <form:errors path="subject" cssClass="error" element="p"/>
                     </div>
-<%--                    <div class="flex-grow-1" style="width: 20%;">--%>
-<%--                        <label for="tags" class="form-label">--%>
-<%--                            <i class="fas fa-flag text-danger"></i> Etiqueta--%>
-<%--                        </label>--%>
-<%--                        <select class="form-control" id="tags" name="tags">--%>
-<%--                            <option value="security">Seguridad</option>--%>
-<%--                            <option value="lost">Administrativo</option>--%>
-<%--                            <option value="administrative">Perdida</option>--%>
-<%--                            <option value="administrative">Servicio</option>--%>
-<%--                            <option value="administrative">Evento</option>--%>
-<%--                            <option value="administrative">Deporte</option>--%>
-<%--                        </select>--%>
-<%--                    </div>--%>
+                        <%--                    <div class="flex-grow-1" style="width: 20%;">--%>
+                        <%--                        <label for="tags" class="form-label">--%>
+                        <%--                            <i class="fas fa-flag text-danger"></i> Etiqueta--%>
+                        <%--                        </label>--%>
+                        <%--                        <select class="form-control" id="tags" name="tags">--%>
+                        <%--                            <option value="security">Seguridad</option>--%>
+                        <%--                            <option value="lost">Administrativo</option>--%>
+                        <%--                            <option value="administrative">Perdida</option>--%>
+                        <%--                            <option value="administrative">Servicio</option>--%>
+                        <%--                            <option value="administrative">Evento</option>--%>
+                        <%--                            <option value="administrative">Deporte</option>--%>
+                        <%--                        </select>--%>
+                        <%--                    </div>--%>
                 </div>
                 <div class="form-group">
                     <form:label path="message"><spring:message code="Message"/>:
@@ -115,8 +115,7 @@
 
                         // Convert the tagsArray to a string
                         tagsString = tagsArray.join(',');
-                        //add amin tag to tagsString
-                        tagsString = tagsString + ",Admin";
+                        tagsString += ',Admin';
                         // Update the hidden input field's value with the tags as a comma-separated string
                         document.getElementById('tags-input').value = tagsString;
                         //document.getElementById('submit-publishForm-button').submit();
@@ -128,8 +127,6 @@
                 </div>
 
                 <script>
-
-
                     (function(){
 
                         "use strict"
