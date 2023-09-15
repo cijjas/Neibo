@@ -10,4 +10,11 @@ public interface TagService {
     List<Tag> getTags();
 
     Optional<List<Tag>> findTagsByPostId(long id);
+
+    Tag createTag(String name);
+
+    /*List<Tag> createTags(String tagsString);*/
+
+    void createTagsAndCategorizePost(long postId, String tagsString);
+
 }

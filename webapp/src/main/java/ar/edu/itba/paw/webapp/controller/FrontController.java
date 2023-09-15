@@ -127,6 +127,8 @@ public class FrontController {
         } else {
             p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), 1, null);
         }
+        assert p != null;
+        ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
 
         final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags());
@@ -205,6 +207,7 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
+
         return new ModelAndView("views/index");
     }
 

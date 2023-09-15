@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.TagDao;
 import ar.edu.itba.paw.models.Comment;
+import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -48,5 +49,17 @@ public class TagDaoImpl implements TagDao {
     @Override
     public List<Tag> getTags() {
         return jdbcTemplate.query(TAGS, ROW_MAPPER);
+    }
+
+    @Override
+    public Tag createTag(String name) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("tag", name);
+
+        final Number key = jdbcInsert.executeAndReturnKey(data);
+        return new Tag.Builder()
+                .tagId(key.longValue())
+                .tag(name)
+                .build();
     }
 }

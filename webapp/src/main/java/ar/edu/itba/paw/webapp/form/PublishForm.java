@@ -39,6 +39,7 @@ public class PublishForm {
     @Email
     private String email;
 
+
     private String tags;
 
     private byte[] imageFile;
