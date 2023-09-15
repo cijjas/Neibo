@@ -55,7 +55,6 @@ public class CommentServiceImpl implements CommentService {
                 vars.put("name", n.getName());
                 vars.put("postTitle", post.getTitle());
                 vars.put("postPath", "http://localhost:8080/posts/" + post.getPostId());
-                System.out.println(vars);
                 emailService.sendMessageUsingThymeleafTemplate(n.getMail(), "New comment", null, vars);
             }
 
