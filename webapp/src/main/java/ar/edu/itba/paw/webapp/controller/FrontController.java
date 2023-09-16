@@ -107,7 +107,7 @@ public class FrontController {
         List<Post> postList = null;
         int offset = (page - 1) * size;
 
-        postList = ps.getPostsByChannel("Administracion", 0, 10);
+        postList = ps.getPostsByChannel("Administracion", offset, size);
         System.out.println(postList);
 
         // Calculate the total count of posts
