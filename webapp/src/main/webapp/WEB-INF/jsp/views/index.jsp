@@ -35,6 +35,12 @@
 
                 <%@ include file="/WEB-INF/jsp/components/upperFeedButtons.jsp" %>
 
+                <!-- Include the page selector -->
+                <jsp:include page="/WEB-INF/jsp/components/pageSelector.jsp">
+                    <jsp:param name="page" value="${page}" />
+                    <jsp:param name="totalPages" value="${totalPages}" />
+                </jsp:include>
+
                 <c:forEach var="post" items="${postList}">
                     <jsp:include page="/WEB-INF/jsp/components/blogpost.jsp">
                         <jsp:param name="postID" value="${post.postId}" />

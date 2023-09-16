@@ -57,6 +57,19 @@
                         </form:label>
                         <form:errors path="subject" cssClass="error" element="p"/>
                     </div>
+
+                    <div>
+                        <form:label path="channel">
+                            <spring:message code="Channel"/>:
+                        </form:label>
+                        <form:select path="channel">
+                            <c:forEach var="entry" items="${channelList}">
+                                <form:option value="${entry.value.getChannelId()}">
+                                    ${entry.key}
+                                </form:option>
+                            </c:forEach>
+                        </form:select>
+                    </div>
 <%--                    <div class="flex-grow-1" style="width: 20%;">--%>
 <%--                        <label for="tags" class="form-label">--%>
 <%--                            <i class="fas fa-flag text-danger"></i> Etiqueta--%>
@@ -83,6 +96,7 @@
                 <div class="mb-3">
                     <form:label path="imageFile" class="form-label"><spring:message code="Image"/>:</form:label>
                     <form:input type="file" path="imageFile" class="form-control" onchange="preview()"/>
+                    <form:errors path="imageFile" cssClass="error" element="p"/>
                 </div>
 
                 <div class="container col-md-6">
@@ -97,12 +111,14 @@
                     <label for="tag-input1">
                         <input type="text" id="tag-input1" >
                     </label>
+                    <form:label path="tags">
+                        <form:input type="hidden"  name="tags" id="tags-input" value="" path="tags"/>
+                        <form:errors path="tags" cssClass="error" element="p"/>
+                    </form:label>
                     <small class="text-muted">You can enter up to 5 tags.</small>
                 </div>
 
-                <form:label path="tags">
-                    <form:input type="hidden"  name="tags" id="tags-input" value="" path="tags"/>
-                </form:label>
+
 
                 <script>
                     let tagsString;
@@ -129,7 +145,6 @@
                     (function(){
 
                         "use strict"
-
 
                         // Plugin Constructor
                         var TagsInput = function(opts){
@@ -164,11 +179,6 @@
                         TagsInput.prototype.addTag = function(string) {
                             if (this.anyErrors(string))
                                 return;
-
-                            if (this.arr.length >= 5) {
-                                console.log('You can only enter up to 5 tags.');
-                                return;
-                            }
 
                             this.arr.push(string);
                             var tagInput = this;
@@ -223,7 +233,7 @@
 
                         // Add tags programmatically
                         TagsInput.prototype.addData = function(array){
-                            var plugin = this;
+                            const plugin = this;
 
                             array.forEach(function(string){
                                 plugin.addTag(string);
@@ -276,7 +286,7 @@
                                 {
                                     e.preventDefault();
                                     tags.input.value = "";
-                                    if(str != "")
+                                    if(str !== "")
                                         tags.addTag(str);
                                 }
 
@@ -300,10 +310,12 @@
                     var tagInput1 = new TagsInput({
                         selector: 'tag-input1',
                         duplicate : false,
-                        max : 10
+                        max : 5
                     });
-                    tagInput1.addData(["pruebas", "sacame"])
+                    tagInput1.addData()
 
+
+                    // Show images preview
                     function preview() {
                         frame.src = URL.createObjectURL(event.target.files[0]);
                     }

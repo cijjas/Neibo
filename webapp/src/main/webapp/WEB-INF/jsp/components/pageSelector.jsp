@@ -13,7 +13,7 @@
                         <li class="page-item">
                             <c:choose>
                                 <c:when test="${page > 1}">
-                                    <a class="page-link" href="?page=${page - 1}&sortBy=${sortBy}" data-abc="true"><i class="fa fa-angle-left"></i></a>
+                                    <a class="page-link" href="${pageContext.request.contextPath}/?page=${page - 1}&sortBy=${sortBy}" data-abc="true"><i class="fa fa-angle-left"></i></a>
                                 </c:when>
                                 <c:otherwise>
                                     <span class="page-link disabled" aria-disabled="true"><i class="fa fa-angle-left"></i></span>
@@ -28,7 +28,7 @@
                                         <span class="page-link">${pageNumber}</span>
                                     </c:when>
                                     <c:otherwise>
-                                        <a class="page-link" href="?page=${pageNumber}&sortBy=${sortBy}" data-abc="true">${pageNumber}</a>
+                                        <a class="page-link" href="${pageContext.request.contextPath}/?page=${pageNumber}&sortBy=${sortBy}" data-abc="true">${pageNumber}</a>
                                     </c:otherwise>
                                 </c:choose>
                             </li>
@@ -37,7 +37,7 @@
                         <li class="page-item">
                             <c:choose>
                                 <c:when test="${page < totalPages}">
-                                    <a class="page-link" href="?page=${page + 1}&sortBy=${sortBy}" data-abc="true"><i class="fa fa-angle-right"></i></a>
+                                    <a class="page-link" href="${pageContext.request.contextPath}/?page=${page + 1}&sortBy=${sortBy}" data-abc="true"><i class="fa fa-angle-right"></i></a>
                                 </c:when>
                                 <c:otherwise>
                                     <span class="page-link disabled" aria-disabled="true"><i class="fa fa-angle-right"></i></span>

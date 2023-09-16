@@ -31,18 +31,22 @@
     </script>
 
     <div class="left-box btn-group-vertical">
-        <a href="${pageContext.request.contextPath}/announcements">
-            <button type="button" class="left-column-button">
-                    <i class="fas fa-bullhorn"></i> <spring:message code="Announcements"/>
-            </button>
-        </a>
-        <a href="${pageContext.request.contextPath}/">
-            <button type="button" class="left-column-button ">
-                    <i class="fas fa-comments"></i> <spring:message code="Feed"/>
-            </button>
-        </a>
+        <button type="button" class="left-column-button">
+            <a href="${pageContext.request.contextPath}/announcements">
+                <i class="fas fa-bullhorn"></i> <spring:message code="Announcements"/>
+            </a>
+        </button>
         <button type="button" class="left-column-button ">
-            <i class="fas fa-address-card"></i> <spring:message code="Contacts"/>
+            <a href="${pageContext.request.contextPath}/">
+                <i class="fas fa-comments"></i> <spring:message code="Feed"/>
+            </a>
+        </button>
+        <button type="button" class="left-column-button">
+            <a href="${pageContext.request.contextPath}/">
+                <a href="${pageContext.request.contextPath}/forum">
+                    <i class="fas fa-envelope"></i> <spring:message code="Forum"/>
+                </a>
+            </a>
         </button>
     </div>
 

@@ -12,9 +12,9 @@
     <!-- Post information -->
     <div class="post-section">
         <div class="post-info">
-            <h2>${post.title}</h2>
-            <p><spring:message code="PostedBy"/> ${post.neighbor.name}</p>
-            <p>${post.description}</p>
+            <h2><c:out value="${post.title}" /></h2>
+            <p><spring:message code="PostedBy"/> <c:out value="${post.neighbor.name}" /></p>
+            <p><c:out value="${post.description}" /></p>
         </div >
 
     <!-- Image section -->
@@ -35,7 +35,7 @@
                 <c:otherwise>
                     <p><strong> <spring:message code="Tags"/></strong> </p>
                     <c:forEach var="tag" items="${tags}">
-                        <span class="badge badge-primary">#${tag.tag}</span>
+                        <span class="badge badge-primary">#<c:out value="${tag.tag}" /></span>
                     </c:forEach>
                 </c:otherwise>
             </c:choose>
@@ -105,10 +105,10 @@
                 <c:forEach var="comment" items="${comments}">
                     <div class="comment">
                         <div class="comment-header">
-                            <strong><spring:message code="User"/> #${comment.neighborId}</strong>
+                            <strong><spring:message code="User"/> #<c:out value="${comment.neighborId}" /></strong>
                         </div>
                         <div class="comment-body">
-                                ${comment.comment}
+                            <c:out value="${comment.comment}" />
                         </div>
                     </div>
                 </c:forEach>
