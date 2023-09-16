@@ -55,7 +55,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public int getTotalPostsCount() { return postDao.getTotalPostsCount(); }
+    public int getTotalPostsCount(String tag) { return postDao.getTotalPostsCount(tag); }
 
     @Override
     public Post createAdminPost(final String title, final String description, final long neighborId, final byte[] imageFile){

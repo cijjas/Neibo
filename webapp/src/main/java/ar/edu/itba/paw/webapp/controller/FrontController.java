@@ -87,7 +87,11 @@ public class FrontController {
         }
 
         // Calculate the total count of posts
-        int totalCount = ps.getTotalPostsCount(); // Implement this method in PostService
+        int totalCount;
+        if(sortBy != null && sortBy.startsWith("tag"))
+            totalCount = ps.getTotalPostsCount(sortBy.substring(3));
+        else
+            totalCount = ps.getTotalPostsCount(null);
 
         // Calculate the total pages
         int totalPages = (int) Math.ceil((double) totalCount / size);
@@ -97,6 +101,7 @@ public class FrontController {
         mav.addObject("postList", postList);
         mav.addObject("page", page); // Add page parameter to the model
         mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
+        mav.addObject("sortBy", sortBy); // Add sortBy parameter to the model
 
         return mav;
     }
@@ -111,7 +116,7 @@ public class FrontController {
         System.out.println(postList);
 
         // Calculate the total count of posts
-        int totalCount = ps.getTotalPostsCount(); // Implement this method in PostService
+        int totalCount = ps.getTotalPostsCount(null); // Implement this method in PostService
 
         // Calculate the total pages
         int totalPages = (int) Math.ceil((double) totalCount / size);

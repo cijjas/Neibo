@@ -33,19 +33,21 @@
     <div class="left-box btn-group-vertical">
         <a href="${pageContext.request.contextPath}/announcements">
             <button type="button" class="left-column-button">
-                <i class="fas fa-bullhorn"></i> <spring:message code="Announcements"/>
+                    <i class="fas fa-bullhorn"></i> <spring:message code="Announcements"/>
             </button>
         </a>
-        <button type="button" class="left-column-button ">
-            <i class="fas fa-comments"></i> <spring:message code="Feed"/>
-        </button>
+        <a href="${pageContext.request.contextPath}/">
+            <button type="button" class="left-column-button ">
+                    <i class="fas fa-comments"></i> <spring:message code="Feed"/>
+            </button>
+        </a>
         <button type="button" class="left-column-button ">
             <i class="fas fa-address-card"></i> <spring:message code="Contacts"/>
         </button>
     </div>
 
 
-    <button id="dark-mode-toggle" class="left-column-button">click me!</button>
+    <button id="dark-mode-toggle" class="left-column-button">Toggle Dark Mode</button>
 
     <script>
         // JavaScript to toggle dark mode
@@ -55,11 +57,25 @@
         // Function to toggle dark mode
         function toggleDarkMode() {
             htmlElement.classList.toggle('dark-mode');
+
+            // Check if dark mode is enabled and update button text
+            if (htmlElement.classList.contains('dark-mode')) {
+                darkModeToggle.textContent = '<spring:message code="LightMode"/>';
+            } else {
+                darkModeToggle.textContent = '<spring:message code="DarkMode"/>';
+            }
         }
 
         // Add a click event listener to the toggle button
         darkModeToggle.addEventListener('click', toggleDarkMode);
 
+        // Check the initial dark mode state and set the button text accordingly
+        if (htmlElement.classList.contains('dark-mode')) {
+            darkModeToggle.textContent = '<spring:message code="LightMode"/>';
+        } else {
+            darkModeToggle.textContent = '<spring:message code="DarkMode"/>';
+        }
     </script>
+
 
 </div>
