@@ -23,9 +23,12 @@ public class PostDaoImpl implements PostDao {
     private final String POSTS_JOIN_NEIGHBORS_AND_CHANNELS =
             "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, c.channelid, channel, postimage\n" +
             "from posts p join neighbors n on p.neighborid = n.neighborid join channels c on p.channelid = c.channelid ";
-    private final String POSTS_JOIN_NEIGHBORS_AND_CHANNELS_AND_TAGS =
+    private final String POSTS_JOIN_NEIGHBORS_AND_NEIGHBORHOODS_AND_CHANNELS_AND_TAGS =
             "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, n.neighborhoodid, neighborhoodname, c.channelid, channel, postimage\n" +
             "from posts p join neighbors n on p.neighborid = n.neighborid join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid  join posts_tags on p.postid = posts_tags.postid join tags on posts_tags.tagid = tags.tagid " ;
+    private final String POSTS_JOIN_NEIGHBORS_AND_NEIGHBORHOODS_AND_CHANNELS =
+            "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, n.neighborhoodid, neighborhoodname, c.channelid, channel, postimage\n" +
+                    "from posts p join neighbors n on p.neighborid = n.neighborid join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid\n ";
 
     @Autowired
     public PostDaoImpl(final DataSource ds) {
@@ -99,13 +102,13 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public List<Post> getPostsByTag(String tag, int offset, int limit) {
-        String query = POSTS_JOIN_NEIGHBORS_AND_CHANNELS_AND_TAGS + " WHERE tag LIKE ? LIMIT ? OFFSET ?";
+        String query = POSTS_JOIN_NEIGHBORS_AND_NEIGHBORHOODS_AND_CHANNELS_AND_TAGS + " WHERE tag LIKE ? LIMIT ? OFFSET ?";
         return jdbcTemplate.query(query, ROW_MAPPER, tag, limit, offset);
     }
 
     @Override
     public List<Post> getPostsByChannel(String channel, int offset, int limit) {
-        String query = POSTS_JOIN_NEIGHBORS_AND_CHANNELS_AND_TAGS + " WHERE channel LIKE ? LIMIT ? OFFSET ?";
+        String query = POSTS_JOIN_NEIGHBORS_AND_NEIGHBORHOODS_AND_CHANNELS + " WHERE channel LIKE ? LIMIT ? OFFSET ?";
         return jdbcTemplate.query(query, ROW_MAPPER, channel, limit, offset);
     }
 
