@@ -46,7 +46,11 @@
                     </jsp:include>
                 </c:forEach>
 
-
+                <!-- Include the page selector -->
+                <jsp:include page="/WEB-INF/jsp/components/pageselector.jsp">
+                    <jsp:param name="page" value="${page}" />
+                    <jsp:param name="totalPages" value="${totalPages}" />
+                </jsp:include>
 
             </div>
 

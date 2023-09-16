@@ -26,27 +26,31 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPosts() {
-        return postDao.getPosts();
+    public List<Post> getPosts(int offset, int limit) {
+        return postDao.getPosts(offset, limit);
     }
 
     @Override
-    public List<Post> getPostsByDate(final String order) {
-        return postDao.getPostsByDate(order);
+    public List<Post> getPostsByDate(final String order, int offset, int limit) {
+        return postDao.getPostsByDate(order, offset, limit);
     }
 
     @Override
-    public List<Post> getPostsByTag(String tag) {
-        return postDao.getPostsByTag(tag);
+    public List<Post> getPostsByTag(String tag, int offset, int limit) {
+        return postDao.getPostsByTag(tag, offset, limit);
     }
 
     @Override
-    public List<Post> getPostsByChannel(String channel) {
-        return postDao.getPostsByChannel(channel);
+    public List<Post> getPostsByChannel(String channel, int offset, int limit) {
+        return postDao.getPostsByChannel(channel, offset, limit);
     }
 
     @Override
     public Optional<Post> findPostById(final long id) {
         return postDao.findPostById(id);
     }
+
+    @Override
+    public int getTotalPostsCount() { return postDao.getTotalPostsCount(); }
+
 }

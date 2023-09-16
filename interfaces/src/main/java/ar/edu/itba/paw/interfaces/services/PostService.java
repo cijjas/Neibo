@@ -11,15 +11,16 @@ import java.util.Optional;
 public interface PostService {
     Post createPost(final String title, final String description, final long neighborId, final long channelId, final byte[] imageFile);
 
-    List<Post> getPosts();
+    List<Post> getPosts(int offset, int limit);
 
-    List<Post> getPostsByDate(final String order);
+    List<Post> getPostsByDate(final String order, int offset, int limit);
 
-    List<Post> getPostsByTag(final String tag);
+    List<Post> getPostsByTag(final String tag, int offset, int limit);
 
-    List<Post> getPostsByChannel(final String channel);
+    List<Post> getPostsByChannel(final String channel, int offset, int limit);
 
     Optional<Post> findPostById(long id);
 
+    int getTotalPostsCount();
 
 }

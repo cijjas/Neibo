@@ -58,38 +58,49 @@ public class FrontController {
     // ------------------------------------- FEED --------------------------------------
 
     @RequestMapping("/")
-    public ModelAndView index(@RequestParam(value = "sortBy", required = false) String sortBy) {
+    public ModelAndView index(
+            @RequestParam(value = "sortBy", required = false) String sortBy,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+
+        // Calculate the offset based on the page and size
+        int offset = (page - 1) * size;
+
         List<Post> postList = null;
 
-        // It would be nice to create an enum of the tags but I cant create an enum dynamically, meaning I cant retrieve the tags and then create an enum
-        // Maybe I can create an Enum for ASC and DESC, but it is kinda overkill just for some performance
-
-
-        if ( sortBy != null ){
+        if (sortBy != null) {
             switch (sortBy) {
                 case "dateasc":
-                    postList = ps.getPostsByDate("asc");
+                    postList = ps.getPostsByDate("asc", offset, size);
                     break;
                 case "datedesc":
-                    postList = ps.getPostsByDate("desc");
+                    postList = ps.getPostsByDate("desc", offset, size);
                     break;
                 default:
                     if (sortBy.startsWith("tag")) {
                         String tag = sortBy.substring(3); // Extract the tag part
-                        postList = ps.getPostsByTag(tag);
+                        postList = ps.getPostsByTag(tag, offset, size);
                     }
             }
-        }else {
-            postList = ps.getPosts(); // Default sorting
+        } else {
+            postList = ps.getPosts(offset, size); // Default sorting with pagination
         }
 
+        // Calculate the total count of posts
+        int totalCount = ps.getTotalPostsCount(); // Implement this method in PostService
+
+        // Calculate the total pages
+        int totalPages = (int) Math.ceil((double) totalCount / size);
 
         final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags());
         mav.addObject("postList", postList);
+        mav.addObject("page", page); // Add page parameter to the model
+        mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
 
         return mav;
     }
+
 
     // ------------------------------------- PUBLISH --------------------------------------
 
@@ -110,8 +121,7 @@ public class FrontController {
         }
 
         Neighborhood nh = nhs.createNeighborhood(publishForm.getNeighborhood());
-        Neighbor n = ns.createNeighbor(publishForm.getEmail(),publishForm.getName(), publishForm.getSurname(), nh.getNeighborhoodId());
-
+        Neighbor n = ns.createNeighbor(publishForm.getEmail(), publishForm.getName(), publishForm.getSurname(), nh.getNeighborhoodId());
 
         Post p = null;
         if (imageFile != null && !imageFile.isEmpty()) {
@@ -130,12 +140,10 @@ public class FrontController {
         assert p != null;
         ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
 
-        final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags());
-        mav.addObject("postList", ps.getPosts());
-
-        return mav;
+        // Redirect to the "index" page with pagination parameters
+        return new ModelAndView("redirect:/?page=1&size=10"); // You can specify the default page and size here
     }
+
 
     @RequestMapping(value = "/publish_admin", method = RequestMethod.GET)
     public ModelAndView publishAdminForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
@@ -145,15 +153,14 @@ public class FrontController {
     }
     @RequestMapping(value = "/publish_admin", method = RequestMethod.POST)
     public ModelAndView publishAdmin(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
-                                final BindingResult errors,
-                                @RequestParam("imageFile") MultipartFile imageFile) {
+                                     final BindingResult errors,
+                                     @RequestParam("imageFile") MultipartFile imageFile) {
         if (errors.hasErrors()) {
             return publishForm(publishForm);
         }
 
         Neighborhood nh = nhs.createNeighborhood(publishForm.getNeighborhood());
-        Neighbor n = ns.createNeighbor(publishForm.getEmail(),publishForm.getName(), publishForm.getSurname(), nh.getNeighborhoodId());
-
+        Neighbor n = ns.createNeighbor(publishForm.getEmail(), publishForm.getName(), publishForm.getSurname(), nh.getNeighborhoodId());
 
         Post p = null;
         if (imageFile != null && !imageFile.isEmpty()) {
@@ -169,13 +176,13 @@ public class FrontController {
         } else {
             p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), 1, null);
         }
+        assert p != null;
+        ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
 
-        final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags());
-        mav.addObject("postList", ps.getPosts());
-
-        return mav;
+        // Redirect to the "index" page with pagination parameters
+        return new ModelAndView("redirect:/?page=1&size=10"); // You can specify the default page and size here
     }
+
 
     // ------------------------------------- POSTS --------------------------------------
 

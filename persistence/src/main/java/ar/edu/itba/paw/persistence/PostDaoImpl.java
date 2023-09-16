@@ -79,33 +79,46 @@ public class PostDaoImpl implements PostDao {
                     .build();
 
     @Override
-    public List<Post> getPosts() {
-        return jdbcTemplate.query(POSTS_JOIN_NEIGHBORS_AND_CHANNELS, ROW_MAPPER);
+    public List<Post> getPosts(int offset, int limit) {
+        String query = POSTS_JOIN_NEIGHBORS_AND_CHANNELS + " LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(query, ROW_MAPPER, limit, offset);
     }
 
+
     @Override
-    public List<Post> getPostsByDate(String order) {
-        // It is not a dangerous SQL Injection as the user has no access to this variable and is only managed internally
-        // Still I leave this conditional just in case someone makes a change in the future
+    public List<Post> getPostsByDate(String order, int offset, int limit) {
+        // Check the validity of the 'order' parameter
         if (!("asc".equalsIgnoreCase(order) || "desc".equalsIgnoreCase(order))) {
             throw new IllegalArgumentException("Invalid 'order' parameter.");
         }
-        return jdbcTemplate.query(POSTS_JOIN_NEIGHBORS_AND_CHANNELS + " order by postdate " + order, ROW_MAPPER);
+
+        String query = POSTS_JOIN_NEIGHBORS_AND_CHANNELS + " ORDER BY postdate " + order + " LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(query, ROW_MAPPER, limit, offset);
+    }
+
+
+    @Override
+    public List<Post> getPostsByTag(String tag, int offset, int limit) {
+        String query = POSTS_JOIN_NEIGHBORS_AND_CHANNELS_AND_TAGS + " WHERE tag LIKE ? LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(query, ROW_MAPPER, tag, limit, offset);
     }
 
     @Override
-    public List<Post> getPostsByTag(String tag) {
-        return jdbcTemplate.query(POSTS_JOIN_NEIGHBORS_AND_CHANNELS_AND_TAGS + " where tag like ?", ROW_MAPPER, tag);
+    public List<Post> getPostsByChannel(String channel, int offset, int limit) {
+        String query = POSTS_JOIN_NEIGHBORS_AND_CHANNELS_AND_TAGS + " WHERE channel LIKE ? LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(query, ROW_MAPPER, channel, limit, offset);
     }
 
-    @Override
-    public List<Post> getPostsByChannel(String channel) {
-        return jdbcTemplate.query(POSTS_JOIN_NEIGHBORS_AND_CHANNELS_AND_TAGS + " where channel like ?", ROW_MAPPER, channel);
-    }
 
     @Override
     public Optional<Post> findPostById(long id) {
         final List<Post> postList = jdbcTemplate.query(POSTS_JOIN_NEIGHBORS_AND_CHANNELS + " where postid=?;", ROW_MAPPER, id);
         return postList.isEmpty() ? Optional.empty() : Optional.of(postList.get(0));
     }
+
+    @Override
+    public int getTotalPostsCount() {
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM posts", Integer.class);
+    }
+
 }
