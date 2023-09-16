@@ -14,7 +14,10 @@
     <a href="/posts/<c:out value="${param.postID}" />" style="text-decoration: none;">
         <div class="post-header">
             <span class="post-author"><c:out value="${param.postNeighborMail}" /></span>
-            <span class="post-date"><spring:message code="posted"/><c:out value="${param.postDate}" /></span>
+            <span class="post-date" data-post-date="<c:out value="${param.postDate}" />">
+                <spring:message code="posted" />
+            </span>
+
             <h1 class="post-title"><c:out value="${param.postTitle}" /></h1>
         </div>
     </a>
@@ -26,28 +29,5 @@
     </c:if>
 </div>
 
+<script src="${pageContext.request.contextPath}/resources/js/blogpost.js"></script>
 
-
-<%--
-<div class="post" aria-hidden="true">
-    <div class="card-body">
-        <div class="post-header">
-
-            <h6 class="card-title placeholder-glow">
-                <span class="placeholder col-6"></span>
-            </h6>
-            <h3 class="card-title placeholder-glow">
-                <span class="placeholder col-7"></span>
-            </h3>
-        </div>
-
-        <p class="card-text placeholder-glow">
-            <span class="placeholder col-7"></span>
-            <span class="placeholder col-4"></span>
-            <span class="placeholder col-4"></span>
-            <span class="placeholder col-7"></span>
-            <span class="placeholder col-8"></span>
-        </p>
-    </div>
-</div>
---%>
