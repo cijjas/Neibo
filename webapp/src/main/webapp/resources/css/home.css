@@ -306,8 +306,6 @@ h2{
 
 .container {
     position: relative;
-    z-index: 3;
-    /* Add any other styles you need for the container */
 }
 
 /*--------------------LEFT COLUMN----------------------------*/
@@ -493,3 +491,9 @@ h2{
 .return-btn {
     color: var(--text);
 }
+
+
+/*-------------------PAGINATION SELECTOR -----------------------------------*/
+
+
+
