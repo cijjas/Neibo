@@ -25,7 +25,7 @@
                 </svg>
                 neibo
             </a>
-            <a href="publish">
+            <a href="${pageContext.request.contextPath}/publish">
                 <button type="button" class="btn btn-light mr-2 square-button" data-bs-toggle="tooltip" data-bs-placement="right" title="<spring:message code="CreateNewPost.tooltip"/>" data-bs-animation="true">
                     <i class="fas fa-plus"></i>
                 </button>
@@ -44,7 +44,20 @@
 
 </div>
 
+<script>
+    // Get the current URL
+    const currentURL = window.location.href;
 
+    // Use the URL API to parse the URL
+    const url = new URL(currentURL);
+
+    // Extract the domain (first segment)
+    const domain = url.hostname;
+
+    // Output the domain
+    console.log(domain);
+
+</script>
 <%--
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Ninth navbar example">
     <div class="container-xl">

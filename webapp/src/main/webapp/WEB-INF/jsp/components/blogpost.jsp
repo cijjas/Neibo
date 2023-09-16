@@ -11,7 +11,7 @@
 
 
 <div id="blogpost-container" class="blogpost" style="word-wrap: break-word;" aria-hidden="true">
-    <a href="/posts/<c:out value="${param.postID}" />" style="text-decoration: none;">
+    <a href="${pageContext.request.contextPath}/posts/<c:out value="${param.postID}" />" style="text-decoration: none;">
         <div class="post-header">
             <span class="post-author"><c:out value="${param.postNeighborMail}" /></span>
             <span class="post-date"><spring:message code="posted"/><c:out value="${param.postDate}" /></span>
@@ -21,7 +21,7 @@
     <p class="post-description"><c:out value="${param.postDescription}" /></p>
     <c:if test="${not empty param.postImage}">
         <div style="display: flex; justify-content: center; align-items: center;">
-            <img src="/postImage/<c:out value="${param.postID}"/>" alt="post_<c:out value="${param.postID}"/>_img " style="max-width: 100%; max-height: 100vh;"/>
+            <img src="${pageContext.request.contextPath}/postImage/<c:out value="${param.postID}"/>" alt="post_<c:out value="${param.postID}"/>_img " style="max-width: 100%; max-height: 100vh;"/>
         </div>
     </c:if>
 </div>

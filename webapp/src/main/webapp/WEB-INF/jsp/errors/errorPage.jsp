@@ -28,7 +28,7 @@
                         <h1 class="error-card-title">
                             <c:choose>
                                 <c:when test="${not empty errorMsg}">
-                                    ${errorCode}
+                                    <c:out value="${errorCode}" />
                                 </c:when>
                                 <c:otherwise>
                                     <%= request.getAttribute("javax.servlet.error.status_code") %>
@@ -46,7 +46,8 @@
                             <span class="font-weight-bold"><spring:message code="Error"/>: </span>
                             <c:choose>
                                 <c:when test="${not empty errorMsg}">
-                                    ${errorMsg}
+                                    <c:out value="${errorMsg}" />
+
                                 </c:when>
                                 <c:otherwise>
                                     <%= request.getAttribute("javax.servlet.error.message") %>
