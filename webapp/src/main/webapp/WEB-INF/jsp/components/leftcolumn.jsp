@@ -31,9 +31,11 @@
     </script>
 
     <div class="left-box btn-group-vertical">
-        <button type="button" class="left-column-button">
-            <i class="fas fa-bullhorn"></i> <spring:message code="Announcements"/>
-        </button>
+        <a href="${pageContext.request.contextPath}/announcements">
+            <button type="button" class="left-column-button">
+                <i class="fas fa-bullhorn"></i> <spring:message code="Announcements"/>
+            </button>
+        </a>
         <button type="button" class="left-column-button ">
             <i class="fas fa-comments"></i> <spring:message code="Feed"/>
         </button>

@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface PostService {
     Post createPost(final String title, final String description, final long neighborId, final long channelId, final byte[] imageFile);
 
+    Post createAdminPost(final String title, final String description, final long neighborId, final byte[] imageFile);
+
     List<Post> getPosts(int offset, int limit);
 
     List<Post> getPostsByDate(final String order, int offset, int limit);

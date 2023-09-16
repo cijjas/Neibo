@@ -101,6 +101,30 @@ public class FrontController {
         return mav;
     }
 
+    @RequestMapping("/announcements")
+    public ModelAndView index(@RequestParam(value = "page", defaultValue = "1") int page,
+                              @RequestParam(value = "size", defaultValue = "10") int size) {
+        List<Post> postList = null;
+        int offset = (page - 1) * size;
+
+        postList = ps.getPostsByChannel("Administracion", 0, 10);
+        System.out.println(postList);
+
+        // Calculate the total count of posts
+        int totalCount = ps.getTotalPostsCount(); // Implement this method in PostService
+
+        // Calculate the total pages
+        int totalPages = (int) Math.ceil((double) totalCount / size);
+
+        final ModelAndView mav = new ModelAndView("views/index");
+        mav.addObject("tagList", ts.getTags());
+        mav.addObject("postList", postList);
+        mav.addObject("page", page); // Add page parameter to the model
+        mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
+
+        return mav;
+    }
+
 
     // ------------------------------------- PUBLISH --------------------------------------
 
@@ -167,14 +191,14 @@ public class FrontController {
             try {
                 // Convert the image to base64
                 byte[] imageBytes = imageFile.getBytes();
-                p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), 1, imageBytes);
+                p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), imageBytes);
                 // Set the base64-encoded image data in the tournamentForm
             } catch (IOException e) {
                 System.out.println("Issue uploading the image");
                 // Should go to an error page!
             }
         } else {
-            p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), 1, null);
+            p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), null);
         }
         assert p != null;
         ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());

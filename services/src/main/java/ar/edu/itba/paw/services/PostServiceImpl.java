@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.PostService;
+import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.Comment;
 import ar.edu.itba.paw.models.Post;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +16,12 @@ import java.util.Optional;
 @Service
 public class PostServiceImpl implements PostService {
     private final PostDao postDao;
+    private final ChannelDao channelDao;
 
     @Autowired
-    public PostServiceImpl(final PostDao postDao) {
+    public PostServiceImpl(final PostDao postDao, final ChannelDao channelDao) {
         this.postDao = postDao;
+        this.channelDao = channelDao;
     }
 
     @Override
@@ -52,5 +56,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public int getTotalPostsCount() { return postDao.getTotalPostsCount(); }
+
+    @Override
+    public Post createAdminPost(final String title, final String description, final long neighborId, final byte[] imageFile){
+//        List<Channel> channelDao.getChannels();
+        return postDao.createPost(title, description, neighborId, 2, imageFile);
+    }
+
 
 }
