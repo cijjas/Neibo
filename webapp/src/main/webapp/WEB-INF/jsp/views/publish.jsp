@@ -321,7 +321,7 @@
     </div>
 
     <div class="mt-3">
-        <a href="${pageContext.request.contextPath}/" class="btn btn-link volver-btn"><spring:message code="GoBackToMainPage"/></a>
+        <a href="${pageContext.request.contextPath}/" class="btn btn-link return-btn"><spring:message code="GoBackToMainPage"/></a>
     </div>
 </div>
 

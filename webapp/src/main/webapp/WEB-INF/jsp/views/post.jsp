@@ -11,7 +11,7 @@
     <div class="container ">
         <div class="row">
             <div class="column column-left">
-                <%@ include file="/WEB-INF/jsp/components/leftcolumn.jsp" %>
+                <%@ include file="/WEB-INF/jsp/components/leftColumn.jsp" %>
             </div>
 
             <div class="column column-middle ">
@@ -19,7 +19,7 @@
             </div>
 
             <div class="column column-right">
-                <%@ include file="/WEB-INF/jsp/components/rightcolumn.jsp" %>
+                <%@ include file="/WEB-INF/jsp/components/rightColumn.jsp" %>
             </div>
         </div>
     </div>
