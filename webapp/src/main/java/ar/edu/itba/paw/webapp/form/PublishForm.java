@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.ImageConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.TagsConstraint;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -40,8 +42,10 @@ public class PublishForm {
     private String email;
 
 
+    @TagsConstraint
     private String tags;
 
+    @ImageConstraint
     private byte[] imageFile;
 
 

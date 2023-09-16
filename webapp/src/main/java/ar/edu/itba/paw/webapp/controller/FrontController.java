@@ -102,18 +102,36 @@ public class FrontController {
     }
 
     @RequestMapping("/announcements")
-    public ModelAndView index(@RequestParam(value = "page", defaultValue = "1") int page,
-                              @RequestParam(value = "size", defaultValue = "10") int size) {
+    public ModelAndView announcements(@RequestParam(value = "sortBy", required = false) String sortBy,
+                                      @RequestParam(value = "page", defaultValue = "1") int page,
+                                      @RequestParam(value = "size", defaultValue = "10") int size) {
         List<Post> postList = null;
         int offset = (page - 1) * size;
 
         postList = ps.getPostsByChannel("Administracion", offset, size);
-        System.out.println(postList);
 
-        // Calculate the total count of posts
         int totalCount = ps.getTotalPostsCount(); // Implement this method in PostService
+        int totalPages = (int) Math.ceil((double) totalCount / size);
 
-        // Calculate the total pages
+        final ModelAndView mav = new ModelAndView("views/index");
+        mav.addObject("tagList", ts.getTags());
+        mav.addObject("postList", postList);
+        mav.addObject("page", page); // Add page parameter to the model
+        mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
+
+        return mav;
+    }
+
+    @RequestMapping("/forum")
+    public ModelAndView forum(@RequestParam(value = "sortBy", required = false) String sortBy,
+                              @RequestParam(value = "page", defaultValue = "1") int page,
+                              @RequestParam(value = "size", defaultValue = "10") int size) {
+        List<Post> postList = null;
+        int offset = (page - 1) * size;
+
+        postList = ps.getPostsByChannel("Foro", offset, size);
+
+        int totalCount = ps.getTotalPostsCount();
         int totalPages = (int) Math.ceil((double) totalCount / size);
 
         final ModelAndView mav = new ModelAndView("views/index");
