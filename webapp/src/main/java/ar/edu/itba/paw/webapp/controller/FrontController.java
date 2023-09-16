@@ -22,6 +22,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -149,9 +151,15 @@ public class FrontController {
 
     @RequestMapping(value = "/publish", method = RequestMethod.GET)
     public ModelAndView publishForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
+        final ModelAndView mav = new ModelAndView("views/publish");
 
+        Map<String, Channel> channelMap = chs.getChannels().stream()
+                .collect(Collectors.toMap(Channel::getChannel, Function.identity()));
+        //no queremos que usuarios puedan publicar en el canal de administracion
+        channelMap.remove("Administracion");
+        mav.addObject("channelList", channelMap);
 
-        return new ModelAndView("views/publish");
+        return mav;
     }
 
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
@@ -170,14 +178,14 @@ public class FrontController {
             try {
                 // Convert the image to base64
                 byte[] imageBytes = imageFile.getBytes();
-                p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), 1, imageBytes);
+                p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), imageBytes);
                 // Set the base64-encoded image data in the tournamentForm
             } catch (IOException e) {
                 System.out.println("Issue uploading the image");
                 // Should go to an error page!
             }
         } else {
-            p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), 1, null);
+            p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), null);
         }
         assert p != null;
         ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
@@ -189,9 +197,13 @@ public class FrontController {
 
     @RequestMapping(value = "/publish_admin", method = RequestMethod.GET)
     public ModelAndView publishAdminForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
+        final ModelAndView mav = new ModelAndView("views/publish_admin");
+        Map<String, Channel> channelMap = chs.getChannels().stream()
+                .collect(Collectors.toMap(Channel::getChannel, Function.identity()));
+        //no queremos que usuarios puedan publicar en el canal de administracion
+        mav.addObject("channelList", channelMap);
 
-
-        return new ModelAndView("views/publish_admin");
+        return mav;
     }
     @RequestMapping(value = "/publish_admin", method = RequestMethod.POST)
     public ModelAndView publishAdmin(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
@@ -209,14 +221,14 @@ public class FrontController {
             try {
                 // Convert the image to base64
                 byte[] imageBytes = imageFile.getBytes();
-                p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), imageBytes);
+                p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), imageBytes);
                 // Set the base64-encoded image data in the tournamentForm
             } catch (IOException e) {
                 System.out.println("Issue uploading the image");
                 // Should go to an error page!
             }
         } else {
-            p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), null);
+            p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), null);
         }
         assert p != null;
         ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
