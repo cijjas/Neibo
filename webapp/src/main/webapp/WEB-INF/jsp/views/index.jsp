@@ -13,7 +13,7 @@
 
         <div class="row">
             <div class="column column-left">
-                <%@ include file="/WEB-INF/jsp/components/leftcolumn.jsp" %>
+                <%@ include file="/WEB-INF/jsp/components/leftColumn.jsp" %>
             </div>
 
             <div class="column column-middle">
@@ -47,7 +47,7 @@
                 </c:forEach>
 
                 <!-- Include the page selector -->
-                <jsp:include page="/WEB-INF/jsp/components/pageselector.jsp">
+                <jsp:include page="/WEB-INF/jsp/components/pageSelector.jsp">
                     <jsp:param name="page" value="${page}" />
                     <jsp:param name="totalPages" value="${totalPages}" />
                 </jsp:include>
@@ -55,7 +55,7 @@
             </div>
 
             <div class="column column-right">
-                <%@ include file="/WEB-INF/jsp/components/rightcolumn.jsp" %>
+                <%@ include file="/WEB-INF/jsp/components/rightColumn.jsp" %>
             </div>
 
 
