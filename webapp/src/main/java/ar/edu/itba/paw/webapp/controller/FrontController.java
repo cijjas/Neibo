@@ -104,6 +104,7 @@ public class FrontController {
         mav.addObject("page", page); // Add page parameter to the model
         mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
         mav.addObject("sortBy", sortBy); // Add sortBy parameter to the model
+        mav.addObject("channel","Feed");
 
         return mav;
     }
@@ -125,6 +126,7 @@ public class FrontController {
         mav.addObject("postList", postList);
         mav.addObject("page", page); // Add page parameter to the model
         mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
+        mav.addObject("channel","Announcements");
 
         return mav;
     }
@@ -146,6 +148,7 @@ public class FrontController {
         mav.addObject("postList", postList);
         mav.addObject("page", page); // Add page parameter to the model
         mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
+        mav.addObject("channel","Forum");
 
         return mav;
     }
