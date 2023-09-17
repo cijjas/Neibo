@@ -23,6 +23,7 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
         this.jdbcInsert = new SimpleJdbcInsert(ds)
                 .withTableName("posts_neighbors");
     }
+
     @Override
     public void createSubscription(long neighborId, long postId) {
         Map<String, Object> data = new HashMap<>();

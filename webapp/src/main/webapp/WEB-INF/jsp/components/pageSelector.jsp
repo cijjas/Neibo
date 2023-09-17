@@ -5,24 +5,23 @@
 <c:set var="currentUrl" value="${pageContext.request.requestURL}"/>
 
 <div class="pagination">
-    <a  href="${pageContext.request.contextPath}/?page=${page - 1}&sortBy=${sortBy}" class="small-a">
+    <c:set var="sortByParam" value="${empty sortBy ? '' : 'sortBy=' + sortBy}" />
+
+    <a  href="${pageContext.request.contextPath}/?page=${page - 1}&${sortByParam}" class="small-a">
         <button type="button" class="pagination-button small-button" ${page <= 1 ? 'disabled' : ''}>
             <i class="fas fa-chevron-left"></i>
         </button>
     </a>
 
     <c:forEach begin="1" end="${totalPages}" var="pageNumber">
-        <a href="${pageContext.request.contextPath}/?page=${pageNumber}&sortBy=${sortBy}" data-abc="true" class="${page == pageNumber ? 'active' : ''}">
+        <a href="${pageContext.request.contextPath}/?page=${pageNumber}&${sortByParam}" data-abc="true" class="${page == pageNumber ? 'active' : ''}">
             <button type="button" class="pagination-button ${page == pageNumber ? 'active' : ''}" >${pageNumber}</button>
         </a>
     </c:forEach>
 
-    <a href="${pageContext.request.contextPath}/?page=${page + 1}&sortBy=${sortBy}" class="small-a">
+    <a href="${pageContext.request.contextPath}/?page=${page + 1}&${sortByParam}" class="small-a">
         <button type="button" class="pagination-button small-button"  ${page >= totalPages ? 'disabled' : ''}>
             <i class="fas fa-chevron-right"></i>
         </button>
     </a>
 </div>
-
-
-

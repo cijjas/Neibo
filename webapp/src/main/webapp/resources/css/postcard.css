@@ -9,7 +9,6 @@
 
 /* Style for the post information */
 
-
 /* Style for comments */
 .comments-section {
     margin-top: 20px;
@@ -33,5 +32,5 @@
 .comment .comment-body {
     color: var(--text);
 }
-/*--------------------------*/
+
 

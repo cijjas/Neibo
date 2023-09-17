@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NeighborService {
-
     /*
         Use descriptive names that indicate the purpose of the method.
         Prefix service layer methods with verbs like "create," "retrieve," "update," or "delete" to indicate their primary action.
@@ -28,11 +27,11 @@ public interface NeighborService {
 
     List<Neighbor> getNeighborsByNeighborhood(long neighborhoodId);
 
-    //List<Neighbor> getNeighborsByCommunity(long communityId);
-
-    Optional<Neighbor> findNeighborById(long id);
-
     Optional<Neighbor> findNeighborByMail(String mail);
 
     List<Neighbor> getNeighborsSubscribedByPostId(long id);
+
+    Optional<Neighbor> findNeighborById(long id);
+
+    //List<Neighbor> getNeighborsByCommunity(long communityId);
 }
