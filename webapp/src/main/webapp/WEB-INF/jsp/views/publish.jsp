@@ -57,6 +57,19 @@
                         </form:label>
                         <form:errors path="subject" cssClass="error" element="p"/>
                     </div>
+
+                    <div>
+                        <form:label path="channel">
+                            <spring:message code="Channel"/>:
+                        </form:label>
+                        <form:select path="channel">
+                            <c:forEach var="entry" items="${channelList}">
+                                <form:option value="${entry.value.getChannelId()}">
+                                    ${entry.key}
+                                </form:option>
+                            </c:forEach>
+                        </form:select>
+                    </div>
 <%--                    <div class="flex-grow-1" style="width: 20%;">--%>
 <%--                        <label for="tags" class="form-label">--%>
 <%--                            <i class="fas fa-flag text-danger"></i> Etiqueta--%>

@@ -20,5 +20,5 @@ public interface PostDao {
 
     Optional<Post> findPostById(long id);
 
-    int getTotalPostsCount();
+    int getTotalPostsCount(String tag);
 }

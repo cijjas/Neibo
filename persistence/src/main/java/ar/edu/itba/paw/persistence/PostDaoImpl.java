@@ -120,8 +120,19 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public int getTotalPostsCount() {
-        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM posts", Integer.class);
+    public int getTotalPostsCount(String tag) {
+        if (tag != null) {
+            // Query the total count of posts with a specific tag
+            String sql = "SELECT COUNT(*) FROM posts " +
+                    "JOIN posts_tags ON posts.postid = posts_tags.postid " +
+                    "JOIN tags ON posts_tags.tagid = tags.tagid " +
+                    "WHERE tag = ?";
+            return jdbcTemplate.queryForObject(sql, Integer.class, tag);
+        } else {
+            // Query the total count of all posts
+            return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM posts", Integer.class);
+        }
     }
+
 
 }

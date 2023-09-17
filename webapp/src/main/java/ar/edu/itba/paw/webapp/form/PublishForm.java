@@ -48,6 +48,14 @@ public class PublishForm {
     @ImageConstraint
     private byte[] imageFile;
 
+    private Integer channel;
+
+    public Integer getChannel() {
+        return channel;
+    }
+    public void setChannel(Integer channel) {
+        this.channel = channel;
+    }
 
     public String getTags() {
         return tags;

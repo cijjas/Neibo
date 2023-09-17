@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface PostService {
     Post createPost(final String title, final String description, final long neighborId, final long channelId, final byte[] imageFile);
 
-    Post createAdminPost(final String title, final String description, final long neighborId, final byte[] imageFile);
+    Post createAdminPost(final String title, final String description, final long neighborId, final int channelId, final byte[] imageFile);
 
     List<Post> getPosts(int offset, int limit);
 
@@ -23,6 +23,6 @@ public interface PostService {
 
     Optional<Post> findPostById(long id);
 
-    int getTotalPostsCount();
+    int getTotalPostsCount(String tag);
 
 }
