@@ -24,13 +24,13 @@
     </script>
 
     <div class="left-box btn-group-vertical">
-        <a href="${pageContext.request.contextPath}/announcements" class="left-column-button">
+        <a href="${pageContext.request.contextPath}/announcements" class="left-column-button ${channel == 'Announcements' ? 'active' : ''}">
             <i class="fas fa-bullhorn"></i> <spring:message code="Announcements"/>
         </a>
-        <a href="${pageContext.request.contextPath}/" class="left-column-button">
+        <a href="${pageContext.request.contextPath}/" class="left-column-button ${channel == 'Feed' ? 'active' : ''}"}>
             <i class="fas fa-comments"></i> <spring:message code="Feed"/>
         </a>
-        <a href="${pageContext.request.contextPath}/forum" class="left-column-button">
+        <a href="${pageContext.request.contextPath}/forum" class="left-column-button ${channel == 'Forum' ? 'active' : ''}">
             <i class="fas fa-envelope"></i> <spring:message code="Forum"/>
         </a>
     </div>
