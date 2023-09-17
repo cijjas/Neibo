@@ -11,42 +11,24 @@
             <c:param name="sortBy" value="${sortBy}" />
         </c:if>
     </c:url>
-    <c:choose>
-        <c:when test="${page > 1}">
-            <a href="${prevUrl}" class="small-a">
-                <button type="button" class="pagination-button small-button">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-            </a>
-        </c:when>
-        <c:otherwise>
-            <button type="button" class="pagination-button small-button" disabled>
-                <i class="fas fa-chevron-left"></i>
-            </button>
-        </c:otherwise>
-    </c:choose>
+    <a class="pagination-button small-a {page <= 1 ? 'disabled' : ''}"
+       href="${prevUrl}" class="small-a" onclick="return ${page <= 1 ? 'false' : 'true'}">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+    </a>
 
-
-    <c:choose>
-        <c:when test="${totalPages >= 1}">
-            <c:forEach begin="1" end="${totalPages}" var="pageNumber">
-                <c:url var="pageUrl" value="${pageContext.request.contextPath}/">
-                    <c:param name="page" value="${pageNumber}" />
-                    <c:if test="${sortBy != null}">
-                        <c:param name="sortBy" value="${sortBy}" />
-                    </c:if>
-                </c:url>
-                <a href="${pageUrl}" data-abc="true" class="${page == pageNumber ? 'active' : ''}">
-                    <button type="button" class="pagination-button ${page == pageNumber ? 'active' : ''}">
-                            ${pageNumber}
-                    </button>
-                </a>
-            </c:forEach>
-        </c:when>
-        <c:otherwise>
-            <!-- Handle the case when totalPages is 1 or 0 -->
-        </c:otherwise>
-    </c:choose>
+    <c:forEach begin="1" end="${totalPages}" var="pageNumber">
+        <c:url var="pageUrl" value="${pageContext.request.contextPath}/">
+            <c:param name="page" value="${pageNumber}" />
+            <c:if test="${sortBy != null}">
+                <c:param name="sortBy" value="${sortBy}" />
+            </c:if>
+        </c:url>
+        <a class="pagination-button ${page == pageNumber ? 'active' : ''}"
+           href="${pageUrl}" data-abc="true" class="${page == pageNumber ? 'active' : ''}">
+                ${pageNumber}
+        </a>
+    </c:forEach>
 
     <c:url var="nextUrl" value="${pageContext.request.contextPath}/">
         <c:param name="page" value="${page + 1}" />
@@ -54,19 +36,10 @@
             <c:param name="sortBy" value="${sortBy}" />
         </c:if>
     </c:url>
-    <c:choose>
-        <c:when test="${page < totalPages}">
-            <a href="${nextUrl}" class="small-a">
-                <button type="button" class="pagination-button small-button">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </a>
-        </c:when>
-        <c:otherwise>
-            <button type="button" class="pagination-button small-button" disabled>
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        </c:otherwise>
-    </c:choose>
+    <a class="pagination-button small-a {page >= totalPages ? 'disabled' : ''}"
+       href="${prevUrl}" class="small-a" onclick="return ${page <= totalPages ? 'false' : 'true'}">
+        <i class="fas fa-chevron-right"></i>
+        </button>
+    </a>
 
 </div>
