@@ -17,7 +17,7 @@
     <p class="post-description"><c:out value="${param.postDescription}" /></p>
     <c:if test="${not empty param.postImage}">
         <div style="display: flex; justify-content: center; align-items: center;">
-            <img src="${pageContext.request.contextPath}/postImage/<c:out value="${param.postID}"/>" alt="post_<c:out value="${param.postID}"/>_img " style="max-width: 100%; max-height: 100vh;"/>
+            <img class="blogpost-image" src="${pageContext.request.contextPath}/postImage/<c:out value="${param.postID}"/>" alt="post_<c:out value="${param.postID}"/>_img " />
         </div>
     </c:if>
 </div>

@@ -241,6 +241,11 @@ h2{
     text-overflow: ellipsis;
 }
 
+.blogpost-image{
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 10px;
+}
 
 .post-title:hover{
     color: var(--primary);
@@ -488,47 +493,43 @@ h2{
 }
 
 /*-------------------PAGINATION SELECTOR -----------------------------------*/
-.pagination-button {
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--bordercolor);
-    border-radius: 5px;
-    margin: 5px;
-}
-
 .pagination {
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
+.pagination-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: var(--onbackground);
+    margin: 5px;
+}
+
+
 .pagination.small-a{
     width: 30px; /* Adjust the width as needed for smaller buttons */
     height: 30px; /* Set the same height as the width for square buttons */
     padding: 4px;
 }
 
-.pagination button {
-    color: black;
-    float: left;
-    padding: 8px 16px;
-    text-decoration: none;
-    border: none; /* Remove the border */
-}
 
-.pagination button.active {
+.pagination-button.active {
     background-color: var(--primary); /* Use the primary color for the active button */
     color: white;
-    border-radius: 5px;
 }
-.pagination-button.small-button {
+.pagination-button.small-a {
     width: 30px; /* Adjust the width as needed for smaller buttons */
     height: 30px; /* Set the same height as the width for square buttons */
     font-size: 16px; /* Adjust the font size for the button content */
     padding: 4px; /* Adjust padding for better visual alignment */
 }
-.pagination button:hover:not(.active) {
+.pagination-button:hover:not(.active) {
     background-color: #ddd;
-    border-radius: 5px;
 }
 
 
