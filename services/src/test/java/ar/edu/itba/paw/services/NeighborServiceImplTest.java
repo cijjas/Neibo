@@ -1,10 +1,8 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.NeighborDao;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.models.Neighbor;
 import ar.edu.itba.paw.models.Neighborhood;
-import ar.edu.itba.paw.models.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

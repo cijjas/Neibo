@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 
-<div class="cardContainer">
+<div class="cardContainer" style="display: none">
     <div class="weather-card">
         <p class="city">Buenos Aires</p>
         <p class="weather">PARTILY CLOUDY</p>

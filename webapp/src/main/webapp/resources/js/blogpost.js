@@ -16,7 +16,7 @@
         let result;
 
         if (timeDifferenceInSeconds < 60) {
-            result = timeDifferenceInSeconds + ' second' + (timeDifferenceInSeconds !== 1 ? 's' : '') + ' ago';
+            result = Math.floor(timeDifferenceInSeconds) + ' second' + (timeDifferenceInSeconds !== 1 ? 's' : '') + ' ago';
         } else if (timeDifferenceInSeconds < 3600) {
             const minutesAgo = Math.floor(timeDifferenceInSeconds / 60);
             result = minutesAgo + ' minute' + (minutesAgo !== 1 ? 's' : '') + ' ago';
