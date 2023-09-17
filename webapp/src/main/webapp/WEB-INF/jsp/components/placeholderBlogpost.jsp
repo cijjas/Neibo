@@ -13,7 +13,7 @@
             </h3>
         </div>
         <p id="random-placeholders" class="card-text placeholder-glow">
-            <span class="placeholder "></span>
+            <span class="placeholder col-<%= Math.round(Math.floor(Math.random() * 12) + 1) %>"></span>
             <span class="placeholder col-<%= Math.round(Math.floor(Math.random() * 12) + 1) %>"></span>
             <span class="placeholder col-<%= Math.round(Math.floor(Math.random() * 12) + 1) %>"></span>
             <span class="placeholder col-<%= Math.round(Math.floor(Math.random() * 12) + 1) %>"></span>

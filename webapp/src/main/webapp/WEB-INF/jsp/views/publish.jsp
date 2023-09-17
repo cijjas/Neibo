@@ -93,15 +93,22 @@
 
 
 
-                <div class="mb-3">
-                    <form:label path="imageFile" class="form-label"><spring:message code="Image"/>:</form:label>
-                    <form:input type="file" path="imageFile" class="form-control" onchange="preview()"/>
-                    <form:errors path="imageFile" cssClass="error" element="p"/>
+                <div >
+                    <form:label path="imageFile" for="images" class="drop-container" id="dropcontainer">
+                        <span class="drop-title">Drop files here</span>
+                        or
+                        <form:input type="file" id="images" accept="image/*" path="imageFile" onchange="preview()"/>
+
+                        <form:errors path="imageFile" cssClass="error" element="p"/>
+                    </form:label>
+
+                    <div class="container col-md-6">
+                        <img id="frame" src="" class="img-fluid"  alt="uploading image"/>
+                    </div>
                 </div>
 
-                <div class="container col-md-6">
-                    <img id="frame" src="" class="img-fluid"  alt="uploading image"/>
-                </div>
+
+
 
 
 
@@ -119,27 +126,10 @@
                 </div>
 
 
-
-                <script>
-                    let tagsString;
-
-                    function submitForm() {
-                        clearImage();
-                        // Get the tags entered by the user into an array (replace this with your logic)
-                        // Get the tags from tagInput1 and convert them to a string
-                        const tagsArray = tagInput1.arr; // Assuming tagInput1 has an 'arr' property with the tags
-
-                        // Convert the tagsArray to a string
-                        tagsString = tagsArray.join(',');
-                        // Update the hidden input field's value with the tags as a comma-separated string
-                        document.getElementById('tags-input').value = tagsString;
-                        //document.getElementById('submit-publishForm-button').submit();
-                    }
-                </script>
-
                 <div class="d-flex justify-content-end">
                     <button onclick="submitForm()" type="submit" class="btn btn-primary custom-btn"><spring:message code="Post.verb"/></button>
                 </div>
+
 
                 <script src="${pageContext.request.contextPath}/resources/js/publish.js"></script>
 
@@ -154,9 +144,12 @@
     </div>
 </div>
 
-<!-- Bootstrap JS and jQuery -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-<%@ include file="/WEB-INF/jsp/components/footer.jsp" %>
+
+
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <%@ include file="/WEB-INF/jsp/components/footer.jsp" %>
 
 </body>
 </html>
