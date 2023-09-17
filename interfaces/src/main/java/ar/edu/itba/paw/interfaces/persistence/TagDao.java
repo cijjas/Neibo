@@ -9,6 +9,6 @@ public interface TagDao {
     Optional<List<Tag>> findTagsByPostId(long id);
 
     List<Tag> getTags();
-    Tag createTag(String name);
 
+    Tag createTag(String name);
 }

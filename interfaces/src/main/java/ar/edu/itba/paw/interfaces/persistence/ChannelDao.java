@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface ChannelDao {
     Channel createChannel(final String name);
+
     List<Channel> getChannels();
 }

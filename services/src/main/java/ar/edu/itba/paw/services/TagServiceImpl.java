@@ -36,24 +36,10 @@ public class TagServiceImpl implements TagService {
         return tagDao.createTag(name);
     }
 
-    /* ---  No checking and should be revised before used ---
-    @Override
-    public List<Tag> createTags(String tagsString) {
-
-        List<Tag> tagList = new ArrayList<>();
-
-        for (String tag : tagsString.split(",")) {
-            tagList.add(tagDao.createTag(tag));
-        }
-        System.out.println(tagList);
-        return tagList;
-    }
-     */
-
     @Override
     public void createTagsAndCategorizePost(long postId, String tagsString) {
         if (tagsString == null || tagsString.isEmpty()) {
-            return; // Don't do anything
+            return;
         }
         String[] tagNames = tagsString.split(",");
 

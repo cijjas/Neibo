@@ -12,7 +12,6 @@ import java.lang.annotation.*;
 @Target( { ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ImageConstraint {
-
     String message() default "Invalid image format";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

@@ -59,7 +59,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post createAdminPost(final String title, final String description, final long neighborId, final int channelId, final byte[] imageFile){
-        //aca va la logica de llenar con la info generica de un administrador (id = 0?)
         return postDao.createPost(title, description, neighborId, channelId, imageFile);
     }
 

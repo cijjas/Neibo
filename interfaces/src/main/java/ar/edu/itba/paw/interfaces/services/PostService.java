@@ -24,5 +24,4 @@ public interface PostService {
     Optional<Post> findPostById(long id);
 
     int getTotalPostsCount(String tag);
-
 }

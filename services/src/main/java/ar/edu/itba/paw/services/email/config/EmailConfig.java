@@ -28,7 +28,7 @@ public class EmailConfig {
         mailSender.setPassword("syik eiaz utfl fpse");
 
         Properties props = mailSender.getJavaMailProperties();
-        //si cambio la version de javaxmail a una mas nueva sacar la linea esta de TLSv1.2
+        //remove the following TLSv line if we upgrade javaxmail version
         props.put("mail.smtp.ssl.protocols", "TLSv1.2");
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");

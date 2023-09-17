@@ -87,7 +87,6 @@ public class PostDaoImpl implements PostDao {
         return jdbcTemplate.query(query, ROW_MAPPER, limit, offset);
     }
 
-
     @Override
     public List<Post> getPostsByDate(String order, int offset, int limit) {
         // Check the validity of the 'order' parameter
@@ -98,7 +97,6 @@ public class PostDaoImpl implements PostDao {
         String query = POSTS_JOIN_NEIGHBORS_AND_CHANNELS + " ORDER BY postdate " + order + " LIMIT ? OFFSET ?";
         return jdbcTemplate.query(query, ROW_MAPPER, limit, offset);
     }
-
 
     @Override
     public List<Post> getPostsByTag(String tag, int offset, int limit) {
@@ -111,7 +109,6 @@ public class PostDaoImpl implements PostDao {
         String query = POSTS_JOIN_NEIGHBORS_AND_NEIGHBORHOODS_AND_CHANNELS + " WHERE channel LIKE ? LIMIT ? OFFSET ?";
         return jdbcTemplate.query(query, ROW_MAPPER, channel, limit, offset);
     }
-
 
     @Override
     public Optional<Post> findPostById(long id) {
@@ -133,6 +130,4 @@ public class PostDaoImpl implements PostDao {
             return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM posts", Integer.class);
         }
     }
-
-
 }

@@ -35,19 +35,13 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    //despues agrego tercer argumento -> string con path del template
+    //Can add a third parameter to receive a specific template
     public void sendHtmlMessage(String to, String subject, Map<String, Object> variables) {
         try {
-            //context.variables -> puedo usar variables de java
             final Context context = new Context();
-            //seguro lo usare para nombre de usuario/post etc.
 
             context.setVariables(variables);
 
-//            context.setVariable("name", "MEGATRON");
-//            String postId = "3"; //recibo
-//            context.setVariable("postPath", "http://localhost:8080/posts/" + postId);
-//            context.setVariable("post", "SUBJECT");
             final String htmlContext = this.thymeleafTemplateEngine.process("template-thymeleaf", context);
 
             MimeMessage message = emailSender.createMimeMessage();

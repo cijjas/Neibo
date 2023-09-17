@@ -25,20 +25,13 @@ import java.sql.*;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-
-// Con el @ComponentScan(), yo le puedo decir a dónde tiene que ir a buscar componentes, como controllers y services.
-
 @EnableWebMvc
 @ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence"})
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
-
     @Value("classpath:schema.sql")
     private Resource schemaSql;
 
-    // Con @Bean, yo básicamente le digo a sprint "Che, si alguien te pide un ViewResolver, en vez de darle el default,
-    // dale este. Por default, genera una sola instancia y siempre se le da a todos esa misma instancia.
-    // Yo no se qué clase va a usar este ViewResolver, y dicha clase tampoco sabe de dónde salió ese ViewResolver.
     @Bean
     public ViewResolver viewResolver() {
         final InternalResourceViewResolver vr = new InternalResourceViewResolver();
@@ -48,12 +41,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return vr;
     }
 
-    // La otra forma es no definiendo un @Bean, sino agregando el nombre de paquete en el @ComponentScan y dejando que
-    // spring detecte solo las clases que tengan @Controller, @Service, @Repository, etc.
-
-
-    // Aca definimos un bean para la persistencia de datos. Este DataSource será inyectado en runtime a la capa de
-    // persistencia.
     @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
@@ -65,7 +52,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return ds;
     }
 
-    // Con esto ubicamos los archivos en WEB-INF/css/* para mapearlos a /css/*, haciéndolos accesibles a clientes
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         super.addResourceHandlers(registry);

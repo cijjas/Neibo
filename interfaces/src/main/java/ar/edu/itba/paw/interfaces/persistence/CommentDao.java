@@ -11,6 +11,5 @@ public interface CommentDao {
 
     Comment createComment(final String comment, final long neighborId, final long postId);
 
-
     //Optional<List<Comment>> findCommentsByUserId(long id); no me quemees
 }

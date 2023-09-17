@@ -54,13 +54,12 @@ public class CommentServiceImpl implements CommentService {
                 Map<String, Object> vars = new HashMap<>();
                 vars.put("name", n.getName());
                 vars.put("postTitle", post.getTitle());
-                vars.put("postPath", "http://localhost:8080/posts/" + post.getPostId());
+                vars.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
                 emailService.sendMessageUsingThymeleafTemplate(n.getMail(), "New comment", null, vars);
             }
 
 
         } catch (MessagingException e) {
-            // Handle the exception, e.g., log it
             e.printStackTrace();
         }
 
