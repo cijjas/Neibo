@@ -19,22 +19,42 @@
             <div class="column column-middle">
                 <%@ include file="/WEB-INF/jsp/components/upperFeedButtons.jsp" %>
 
+                <script>
+                    function showPostsAfterDelay() {
+                        document.getElementById('placeholder-posts-container').style.display = 'none';
+                        document.getElementById('actual-posts-container').style.display = 'block';
+                    }
+
+                    setTimeout(showPostsAfterDelay, 1000);
+
+                </script>
+
+
                 <!-- Include the page selector -->
                 <jsp:include page="/WEB-INF/jsp/components/pageSelector.jsp">
                     <jsp:param name="page" value="${page}" />
                     <jsp:param name="totalPages" value="${totalPages}" />
                 </jsp:include>
 
-                <c:forEach var="post" items="${postList}">
-                    <jsp:include page="/WEB-INF/jsp/components/blogpost.jsp">
-                        <jsp:param name="postID" value="${post.postId}" />
-                        <jsp:param name="postNeighborMail" value="${post.neighbor.mail}" />
-                        <jsp:param name="postDate" value="${post.date}" />
-                        <jsp:param name="postTitle" value="${post.title}" />
-                        <jsp:param name="postDescription" value="${post.description}" />
-                        <jsp:param name="postImage" value="${post.imageFile}" />
-                    </jsp:include>
-                </c:forEach>
+
+                <div id="placeholder-posts-container">
+                    <c:forEach begin="1" end="10" var="index">
+                        <%@ include file="/WEB-INF/jsp/components/placeholderBlogpost.jsp" %>
+                    </c:forEach>
+                </div>
+
+                <div id="actual-posts-container" style="display: none;">
+                    <c:forEach var="post" items="${postList}">
+                        <jsp:include page="/WEB-INF/jsp/components/blogpost.jsp">
+                            <jsp:param name="postID" value="${post.postId}" />
+                            <jsp:param name="postNeighborMail" value="${post.neighbor.mail}" />
+                            <jsp:param name="postDate" value="${post.date}" />
+                            <jsp:param name="postTitle" value="${post.title}" />
+                            <jsp:param name="postDescription" value="${post.description}" />
+                            <jsp:param name="postImage" value="${post.imageFile}" />
+                        </jsp:include>
+                    </c:forEach>
+                </div>
 
                 <!-- Include the page selector -->
                 <jsp:include page="/WEB-INF/jsp/components/pageSelector.jsp">
