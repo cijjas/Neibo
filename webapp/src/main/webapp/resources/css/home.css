@@ -15,12 +15,12 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
     --onbackground: rgb(248, 248, 243);
     --onbackgroundfaded: rgb(245, 245, 244, 0.2);
     --darkonbackground : rgb(235, 236, 233);
-    --primary: #9ad379;
+    --primary: #9bdc83;
     --onprimary: #fdfaf1;
     --secondary: #d8d8c5;
     --accent: #6696e2;
     --error: #de6f6f;
-    --scrollbarthumb: #687e62;
+    --scrollbarthumb: #9bdc83;
     --bordercolor: #dadad0;
 }
 .dark-mode {
@@ -35,7 +35,7 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
     --secondary: #595953;
     --accent: #6696e2;
     --error: #de6f6f;
-    --scrollbarthumb: #687e62;
+    --scrollbarthumb: #9a968c;
     --bordercolor: #646462;
 
 }
@@ -554,5 +554,42 @@ h2{
 }
 
 
+/*-------------------------FOOTER ------------------------------*/
+
+
+
+footer {
+    width:100%;
+    position:relative;
+    bottom:0;
+}
+footer div {
+    background-color:var(--background);
+    margin: -5px 0 0 0;
+    color: #fff;
+    text-align:center;
+}
+
+
+.wave-footer {
+    animation: wave-footer 3s linear;
+    animation-iteration-count:infinite;
+    fill: var(--scrollbarthumb);
+}
+
+
+#wave2 {
+    animation-duration:5s;
+    animation-direction: reverse;
+    opacity: .6
+}
+#wave3 {
+    animation-duration: 7s;
+    opacity:.3;
+}
+
+@keyframes wave-footer {
+    to {transform: translateX(-100%);}
+}
 
 

@@ -147,12 +147,13 @@
     </div>
 
     <div class="mt-3">
-        <a href="${pageContext.request.contextPath}/" class="btn btn-link volver-btn"><spring:message code="GoBackToMainPage"/></a>
+        <a href="${pageContext.request.contextPath}/" class="btn btn-link return-btn"><spring:message code="GoBackToMainPage"/></a>
     </div>
 </div>
 
 <!-- Bootstrap JS and jQuery -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<%@ include file="/WEB-INF/jsp/components/footer.jsp" %>
 
 </body>
 </html>
