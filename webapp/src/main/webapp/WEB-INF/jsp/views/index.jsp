@@ -17,20 +17,6 @@
             </div>
 
             <div class="column column-middle">
-                <script>
-                    // JavaScript function to toggle button selection
-                    function toggleButtonSelection(buttonId) {
-                        const buttons = document.querySelectorAll('.filter-button');
-
-                        buttons.forEach(function (button) {
-                            if (button.id === buttonId) {
-                                button.classList.add('selected');
-                            } else {
-                                button.classList.remove('selected');
-                            }
-                        });
-                    }
-                </script>
 
 
                 <%@ include file="/WEB-INF/jsp/components/upperFeedButtons.jsp" %>

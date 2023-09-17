@@ -151,10 +151,10 @@ h2{
 .filter-options {
     border: 2px solid var(--bordercolor);
     padding: 10px;
-    margin: 10px auto;
-    width: 100%; /* Adjust the width as needed */
+    margin: 6px auto;
+    width: 100%;
     background-color: var(--onbackground);
-    border-radius: 10px; /* Rounded corners */
+    border-radius: 10px;
 }
 .filter-button {
     border-radius: 25px;
@@ -309,7 +309,7 @@ h2{
 }
 
 /*--------------------LEFT COLUMN----------------------------*/
-.left-box{
+.left-box {
     width: 100%;
     text-align: left;
     border: 2px solid var(--bordercolor);
@@ -318,35 +318,28 @@ h2{
     background-color: var(--onbackground);
     border-radius: 10px;
 }
-.left-column-button{
+
+.left-column-button {
     width: 100%;
     text-align: left;
     border: 2px solid var(--bordercolor);
     padding: 10px;
-    margin: 10px auto;
+    margin: 5px auto;
     background-color: var(--onbackground);
     border-radius: 10px;
     color: var(--text);
-
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
-.left-column-button:hover{
+
+.left-column-button:hover {
     border-color: var(--primary);
 }
 
-.left-column-button.active{
-    width: 100%;
-    text-align: left;
+.left-column-button.active {
     border: 3px solid var(--primary);
-    padding: 10px;
-    margin: 10px auto;
     background-color: var(--darkonbackground);
-    border-radius: 10px;
-}
-.left-column-container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+    /* Other styles for the active state */
 }
 
 /*----------------------------WEATHER ------------------------------------*/

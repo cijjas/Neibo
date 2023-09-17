@@ -31,26 +31,17 @@
     </script>
 
     <div class="left-box btn-group-vertical">
-        <button type="button" class="left-column-button">
-            <a href="${pageContext.request.contextPath}/announcements">
-                <i class="fas fa-bullhorn"></i> <spring:message code="Announcements"/>
-            </a>
-        </button>
-        <button type="button" class="left-column-button ">
-            <a href="${pageContext.request.contextPath}/">
-                <i class="fas fa-comments"></i> <spring:message code="Feed"/>
-            </a>
-        </button>
-        <button type="button" class="left-column-button">
-            <a href="${pageContext.request.contextPath}/">
-                <a href="${pageContext.request.contextPath}/forum">
-                    <i class="fas fa-envelope"></i> <spring:message code="Forum"/>
-                </a>
-            </a>
-        </button>
+        <a href="${pageContext.request.contextPath}/announcements" class="left-column-button">
+            <i class="fas fa-bullhorn"></i> <spring:message code="Announcements"/>
+        </a>
+        <a href="${pageContext.request.contextPath}/" class="left-column-button">
+            <i class="fas fa-comments"></i> <spring:message code="Feed"/>
+        </a>
+        <a href="${pageContext.request.contextPath}/forum" class="left-column-button">
+            <i class="fas fa-envelope"></i> <spring:message code="Forum"/>
+        </a>
     </div>
-
-
+    <%-- Dark mode toggle button
     <button id="dark-mode-toggle" class="left-column-button">Toggle Dark Mode</button>
 
     <script>
@@ -80,6 +71,7 @@
             darkModeToggle.textContent = '<spring:message code="DarkMode"/>';
         }
     </script>
+    --%>
 
 
 </div>
