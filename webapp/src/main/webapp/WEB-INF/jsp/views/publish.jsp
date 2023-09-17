@@ -95,8 +95,8 @@
 
                 <div >
                     <form:label path="imageFile" for="images" class="drop-container" id="dropcontainer">
-                        <span class="drop-title">Drop files here</span>
-                        or
+                        <span class="drop-title"> <spring:message code="Drop.files"/> </span>
+                        <spring:message code="Or"/>
                         <form:input type="file" id="images" accept="image/*" path="imageFile" onchange="preview()"/>
 
                         <form:errors path="imageFile" cssClass="error" element="p"/>
