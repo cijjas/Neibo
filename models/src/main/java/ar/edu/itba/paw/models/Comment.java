@@ -6,14 +6,13 @@ public class Comment {
     private final long commentId;
     private final String comment;
     private final Date date;
-    private final long neighborId; // Represent neighbor as a long
+    private final Neighbor neighbor; // Represent neighbor as a long
     private final long postId; // Represent postId as a long
-
     private Comment(Builder builder) {
         this.commentId = builder.commentId;
         this.comment = builder.comment;
         this.date = builder.date;
-        this.neighborId = builder.neighborId; // Change the type to long
+        this.neighbor = builder.neighbor; // Change the type to long
         this.postId = builder.postId; // Change the type to long
     }
 
@@ -21,7 +20,7 @@ public class Comment {
         private long commentId;
         private String comment;
         private Date date;
-        private long neighborId; // Change the type to long
+        private Neighbor neighbor; // Change the type to long
         private long postId; // Change the type to long
 
         public Builder commentId(long commentId) {
@@ -39,8 +38,8 @@ public class Comment {
             return this;
         }
 
-        public Builder neighborId(long neighborId) { // New method to set neighborId
-            this.neighborId = neighborId;
+        public Builder neighbor(Neighbor neighbor) { // New method to set neighborId
+            this.neighbor = neighbor;
             return this;
         }
 
@@ -66,8 +65,8 @@ public class Comment {
         return date;
     }
 
-    public long getNeighborId() { // New getter for neighborId
-        return neighborId;
+    public Neighbor getNeighbor() { // New getter for neighborId
+        return neighbor;
     }
 
     public long getPostId() { // New getter for postId
@@ -80,7 +79,7 @@ public class Comment {
                 "commentId=" + commentId +
                 ", comment='" + comment + '\'' +
                 ", date=" + date +
-                ", neighborId=" + neighborId +
+                ", neighborId=" + neighbor +
                 ", postId=" + postId +
                 '}';
     }

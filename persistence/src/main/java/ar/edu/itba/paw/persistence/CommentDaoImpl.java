@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.CommentDao;
 import ar.edu.itba.paw.models.Comment;
+import ar.edu.itba.paw.models.Neighbor;
 import ar.edu.itba.paw.models.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,7 +24,8 @@ public class CommentDaoImpl implements CommentDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private final String COMMENTS = "SELECT * FROM comments ";
+    private final String COMMENTS_JOIN_NEIGHBORS = "select postid, commentid, comment, commentdate, n.neighborid, name, surname, mail  " +
+                                    "from comments join public.neighbors n on comments.neighborid = n.neighborid ";
 
     @Autowired
     public CommentDaoImpl(final DataSource ds) {
@@ -45,7 +47,6 @@ public class CommentDaoImpl implements CommentDao {
         return new Comment.Builder()
                 .commentId(key.longValue())
                 .comment(comment)
-                .neighborId(neighborId)
                 .postId(postId)
                 .build();
     }
@@ -55,13 +56,20 @@ public class CommentDaoImpl implements CommentDao {
                     .commentId(rs.getLong("commentid"))
                     .comment(rs.getString("comment"))
                     .date(rs.getDate("commentdate"))
-                    .neighborId(rs.getLong("neighborid"))
                     .postId(rs.getLong("postid"))
+                    .neighbor(
+                            new Neighbor.Builder()
+                                    .neighborId(rs.getLong("neighborid"))
+                                    .mail(rs.getString("mail"))
+                                    .name(rs.getString("name"))
+                                    .surname(rs.getString("surname"))
+                                    .build()
+                    )
                     .build();
 
     @Override
     public Optional<List<Comment>> findCommentsByPostId(long id) {
-        final List<Comment> comments = jdbcTemplate.query( COMMENTS + " WHERE postid=?;", ROW_MAPPER, id);
+        final List<Comment> comments = jdbcTemplate.query( COMMENTS_JOIN_NEIGHBORS + " WHERE postid=?;", ROW_MAPPER, id);
         return comments.isEmpty() ? Optional.empty() : Optional.of(comments);
     }
 }
