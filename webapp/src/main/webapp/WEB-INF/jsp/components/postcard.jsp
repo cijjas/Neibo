@@ -13,7 +13,9 @@
     <!-- Image section -->
     <c:if test="${not empty post.imageFile}">
         <div style="display: flex; justify-content: center; align-items: center;">
-            <img src="/postImage/${post.postId}" style="max-width: 100%; max-height: 100vh;"/>
+            <img src="/postImage/${post.postId}"
+                 style="max-width: 100%; max-height: 100vh; border-radius: 5px;"
+                 alt="post_${post.postId}_img"/>
         </div>
     </c:if>
 

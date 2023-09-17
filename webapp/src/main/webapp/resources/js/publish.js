@@ -161,15 +161,15 @@
 
     window.TagsInput = TagsInput;
 
-    var tagInput1 = new TagsInput({
-        selector: 'tag-input1',
-        duplicate : false,
-        max : 5
-    });
+
 })();
 
 
-
+var tagInput1 = new TagsInput({
+    selector: 'tag-input1',
+    duplicate : false,
+    max : 5
+});
 
 
 // Show images preview

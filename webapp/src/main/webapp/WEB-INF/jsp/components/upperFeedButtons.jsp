@@ -19,9 +19,9 @@
 
 <div class="filter-options d-flex justify-content-between flex-wrap">
     <div class="d-flex flex-wrap">
-        <a href="${pageContext.request.contextPath}/?sortBy=dateasc" class="filter-button selected">
+        <a href="${pageContext.request.contextPath}/?sortBy=datedesc" class="filter-button selected">
                 <i class="fa-solid fa-newspaper"></i>
-                <span><spring:message code="Date"/></span>
+                <span><spring:message code="Latest"/></span>
         </a>
 
         <a class="dropdown-toggle filter-button" href="#" id="dropdown07XL" data-bs-toggle="dropdown" aria-expanded="false">Tag</a>

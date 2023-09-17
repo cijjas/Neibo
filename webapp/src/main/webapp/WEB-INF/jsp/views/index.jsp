@@ -17,8 +17,6 @@
             </div>
 
             <div class="column column-middle">
-
-
                 <%@ include file="/WEB-INF/jsp/components/upperFeedButtons.jsp" %>
 
                 <!-- Include the page selector -->

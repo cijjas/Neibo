@@ -6,10 +6,17 @@
 <div id="blogpost-container" class="blogpost" style="word-wrap: break-word;" aria-hidden="true">
     <a href="${pageContext.request.contextPath}/posts/<c:out value="${param.postID}" />" style="text-decoration: none;">
         <div class="post-header">
-            <span class="post-author"><c:out value="${param.postNeighborMail}" /></span>
-            <span class="post-date" data-post-date="<c:out value="${param.postDate}" />">
-                <spring:message code="posted" />
-            </span>
+            <div class="blogpost-author-and-date">
+                <span class="post-author"><c:out value="${param.postNeighborMail}" /></span>
+
+                <div style="font-size: 12px;color: var(--lighttext);">
+                    <spring:message code="posted"/>
+                    <span class="post-date" data-post-date="<c:out value="${param.postDate}"/>">
+                    </span>
+                </div>
+
+            </div>
+
 
             <h1 class="post-title"><c:out value="${param.postTitle}" /></h1>
         </div>
