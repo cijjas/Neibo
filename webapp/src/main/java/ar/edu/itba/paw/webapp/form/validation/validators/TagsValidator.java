@@ -1,12 +1,18 @@
 package ar.edu.itba.paw.webapp.form.validation.validators;
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.TagsConstraint;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.Locale;
 
 public class TagsValidator implements
         ConstraintValidator<TagsConstraint, String> {
+
+    @Autowired
+    private MessageSource messageSource;
 
     private static final String TAG_PATTERN = "^[A-Za-z0-9_]+$";
 
@@ -26,7 +32,10 @@ public class TagsValidator implements
         String[] tagArray = tags.split(",");
         for (String tag : tagArray) {
             if (!tag.matches(TAG_PATTERN)) {
-                String errorMessage = "Tag: <" + tag + "> is not valid. Tags should only contain letters, numbers, and underscores.";
+                String tagError1 = messageSource.getMessage("TagError1", null, Locale.getDefault());
+                String tagError2 = messageSource.getMessage("TagError2", null, Locale.getDefault());
+
+                String errorMessage = tagError1 + tag + tagError2;
                 context.buildConstraintViolationWithTemplate(errorMessage)
                         .addConstraintViolation()
                         .disableDefaultConstraintViolation();

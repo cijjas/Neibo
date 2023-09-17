@@ -100,7 +100,7 @@
                 <c:forEach var="comment" items="${comments}">
                     <div class="comment">
                         <div class="comment-header">
-                            <strong><spring:message code="User"/> #<c:out value="${comment.neighborId}" /></strong>
+                            <strong><c:out value="${comment.neighbor.name} ${comment.neighbor.surname}" /></strong>
                         </div>
                         <div class="comment-body">
                             <c:out value="${comment.comment}" />

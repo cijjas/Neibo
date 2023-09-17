@@ -85,7 +85,7 @@ public class FrontController {
                     }
             }
         } else {
-            postList = ps.getPosts(offset, size); // Default sorting with pagination
+            postList = ps.getPostsByDate("desc",offset, size); // Default sorting with pagination
         }
 
         // Calculate the total count of posts
@@ -257,6 +257,7 @@ public class FrontController {
 
         Optional<List<Tag>> optionalTags = ts.findTagsByPostId(postId);
         List<Tag> tags = optionalTags.orElse(Collections.emptyList());
+
         mav.addObject("tags", tags);
 
         mav.addObject("commentForm", commentForm);
