@@ -18,7 +18,18 @@ public interface PostService {
 
     List<Post> getPostsByChannel(final String channel, int offset, int limit);
 
+    List<Post> getPostsByChannelAndDate(final String channel, final String order, int offset, int limit);
+
+    List<Post> getPostsByChannelAndDateAndTag(final String channel, final String order, final String tag, int offset, int limit);
+
     Optional<Post> findPostById(long id);
 
-    int getTotalPostsCount(String tag);
+    int getTotalPostsCount();
+
+    int getTotalPostsCountInChannel(String channel);
+
+    int getTotalPostsCountWithTag(String tag);
+
+    int getTotalPostsCountInChannelWithTag(String channel, String tag);
+
 }
