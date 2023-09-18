@@ -30,11 +30,7 @@
                 </script>
 
 
-                <!-- Include the page selector -->
-                <jsp:include page="/WEB-INF/jsp/components/pageSelector.jsp">
-                    <jsp:param name="page" value="${page}" />
-                    <jsp:param name="totalPages" value="${totalPages}" />
-                </jsp:include>
+
 
 
                 <div id="placeholder-posts-container">
@@ -44,23 +40,39 @@
                 </div>
 
                 <div id="actual-posts-container">
-                    <c:forEach var="post" items="${postList}">
-                        <jsp:include page="/WEB-INF/jsp/components/blogpost.jsp">
-                            <jsp:param name="postID" value="${post.postId}" />
-                            <jsp:param name="postNeighborMail" value="${post.neighbor.mail}" />
-                            <jsp:param name="postDate" value="${post.date}" />
-                            <jsp:param name="postTitle" value="${post.title}" />
-                            <jsp:param name="postDescription" value="${post.description}" />
-                            <jsp:param name="postImage" value="${post.imageFile}" />
-                        </jsp:include>
-                    </c:forEach>
+                    <c:choose>
+                        <c:when test="${empty postList}">
+                            <div class="no-posts-found">
+                                <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+                                <spring:message code="Posts.notFound"/>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <!-- Include the page selector -->
+                            <jsp:include page="/WEB-INF/jsp/components/pageSelector.jsp">
+                                <jsp:param name="page" value="${page}" />
+                                <jsp:param name="totalPages" value="${totalPages}" />
+                            </jsp:include>
+                            <c:forEach var="post" items="${postList}" >
+                                <jsp:include page="/WEB-INF/jsp/components/blogpost.jsp" >
+                                    <jsp:param name="postID" value="${post.postId}" />
+                                    <jsp:param name="postNeighborMail" value="${post.neighbor.mail}" />
+                                    <jsp:param name="postDate" value="${post.date}" />
+                                    <jsp:param name="postTitle" value="${post.title}" />
+                                    <jsp:param name="postDescription" value="${post.description}" />
+                                    <jsp:param name="postImage" value="${post.imageFile}" />
+                                </jsp:include>
+                            </c:forEach>
+                            <!-- Include the page selector -->
+                            <jsp:include page="/WEB-INF/jsp/components/pageSelector.jsp">
+                                <jsp:param name="page" value="${page}" />
+                                <jsp:param name="totalPages" value="${totalPages}" />
+                            </jsp:include>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
 
-                <!-- Include the page selector -->
-                <jsp:include page="/WEB-INF/jsp/components/pageSelector.jsp">
-                    <jsp:param name="page" value="${page}" />
-                    <jsp:param name="totalPages" value="${totalPages}" />
-                </jsp:include>
+
 
             </div>
 
