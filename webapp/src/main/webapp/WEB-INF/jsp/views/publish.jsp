@@ -13,116 +13,89 @@
     <div class="card">
         <div class="card-body">
             <h4 class="card-title"><spring:message code="CreatePost.title"/></h4>
-<%--            <form:errors cssClass="error" element="p"/>--%>
-<%--            <form:label path="email">Email:--%>
-<%--                <form:input path="email"/>--%>
-<%--            </form:label>--%>
-<%--            <form:errors path="email" cssClass="error" element="p"/>--%>
+
             <form:form method="post" action="publish" modelAttribute="publishForm" enctype="multipart/form-data">
                 <form:errors cssClass="error" element="p"/>
-                <div class="d-flex mb-3">
-                    <div class="flex-grow-1 mr-2">
-                        <form:label path="name"> <spring:message code="Name"/>:
-                            <form:input path="name"/>
-                        </form:label>
-                        <form:errors path="name" cssClass="error" element="p"/>
-                    </div>
-                    <div class="flex-grow-1">
-                        <form:label path="surname"><spring:message code="Surname"/>:
-                            <form:input path="surname"/>
-                        </form:label>
-                        <form:errors path="surname" cssClass="error" element="p"/>
-                    </div>
-                </div>
 
-                <div class="d-flex mb-3">
-                    <div class="flex-grow-1 mr-2">
-                        <form:label path="email"><spring:message code="Email"/>:
-                            <form:input path="email"/>
-                        </form:label>
-                        <form:errors path="email" cssClass="error" element="p"/>
-                    </div>
-                    <div class="flex-grow-1">
-                        <form:label path="neighborhood"><spring:message code="Neighborhood"/>:
-                            <form:input path="neighborhood"/>
-                        </form:label>
-                        <form:errors path="neighborhood" cssClass="error" element="p"/>
-                    </div>
-                </div>
+                <div class="form-column">
 
-                <div class="d-flex mb-3">
-                    <div class="flex-grow-1 mr-2" style="width: 70%;">
-                        <form:label path="subject"><spring:message code="Subject"/>:
-                            <form:input path="subject"/>
-                        </form:label>
-                        <form:errors path="subject" cssClass="error" element="p"/>
+                    <div class="form-group">
+                        <div class="form-input">
+                            <form:label path="name"><spring:message code="Name"/>:</form:label>
+                            <form:input path="name" class="form-control"/>
+                            <form:errors path="name" cssClass="error" element="p"/>
+                        </div>
+
+                        <div class="form-input">
+                            <form:label path="surname"><spring:message code="Surname"/>:</form:label>
+                            <form:input path="surname" class="form-control"/>
+                            <form:errors path="surname" cssClass="error" element="p"/>
+                        </div>
                     </div>
 
-                    <div>
-                        <form:label path="channel">
-                            <spring:message code="Channel"/>:
-                        </form:label>
-                        <form:select path="channel">
-                            <c:forEach var="entry" items="${channelList}">
-                                <form:option value="${entry.value.getChannelId()}">
-                                    ${entry.key}
-                                </form:option>
-                            </c:forEach>
-                        </form:select>
+                    <div class="form-group">
+                        <div class="form-input">
+                            <form:label path="email"><spring:message code="Email"/>:</form:label>
+                            <form:input path="email" class="form-control"/>
+                            <form:errors path="email" cssClass="error" element="p"/>
+                        </div>
+
+                        <div class="form-input">
+                            <form:label path="neighborhood"><spring:message code="Neighborhood"/>:</form:label>
+                            <form:input path="neighborhood" class="form-control"/>
+                            <form:errors path="neighborhood" cssClass="error" element="p"/>
+                        </div>
                     </div>
-<%--                    <div class="flex-grow-1" style="width: 20%;">--%>
-<%--                        <label for="tags" class="form-label">--%>
-<%--                            <i class="fas fa-flag text-danger"></i> Etiqueta--%>
-<%--                        </label>--%>
-<%--                        <select class="form-control" id="tags" name="tags">--%>
-<%--                            <option value="security">Seguridad</option>--%>
-<%--                            <option value="lost">Administrativo</option>--%>
-<%--                            <option value="administrative">Perdida</option>--%>
-<%--                            <option value="administrative">Servicio</option>--%>
-<%--                            <option value="administrative">Evento</option>--%>
-<%--                            <option value="administrative">Deporte</option>--%>
-<%--                        </select>--%>
-<%--                    </div>--%>
-                </div>
-                <div class="form-group">
-                    <form:label path="message"><spring:message code="Message"/>:
-                        <form:input path="message"/>
-                    </form:label>
-                    <form:errors path="message" cssClass="error" element="p"/>
-                </div>
 
+                    <div class="form-group">
+                        <div class="form-input">
+                            <form:label path="subject"><spring:message code="Subject"/>:</form:label>
+                            <form:input path="subject" class="form-control"/>
+                            <form:errors path="subject" cssClass="error" element="p"/>
+                        </div>
 
+                        <div class="form-input">
+                            <form:label path="channel"><spring:message code="Channel"/>:</form:label>
+                            <form:select path="channel" class="form-control">
+                                <c:forEach var="entry" items="${channelList}">
+                                    <form:option value="${entry.value.getChannelId()}">${entry.key}</form:option>
+                                </c:forEach>
+                            </form:select>
+                        </div>
+                    </div>
 
-                <div >
-                    <form:label path="imageFile" for="images" class="drop-container" id="dropcontainer">
-                        <span class="drop-title"> <spring:message code="Drop.files"/> </span>
-                        <spring:message code="Or"/>
-                        <form:input type="file" id="images" accept="image/*" path="imageFile" onchange="preview()"/>
+                    <div class="form-group">
+                        <form:label path="message"><spring:message code="Message"/>:</form:label>
+                        <form:textarea path="message" class="form-control" rows="5" />
+                        <form:errors path="message" cssClass="error" element="p"/>
+                    </div>
 
-                        <form:errors path="imageFile" cssClass="error" element="p"/>
-                    </form:label>
+                    <div class="form-group">
+                        <form:label path="imageFile" for="images" class="drop-container" id="dropcontainer">
+                            <span class="drop-title"> <spring:message code="Drop.files"/> </span>
+                            <spring:message code="Or"/>
+                            <form:input type="file" id="images" accept="image/*" path="imageFile" onchange="preview()"/>
 
-                    <div class="container col-md-6">
+                            <form:errors path="imageFile" cssClass="error" element="p"/>
+                        </form:label>
+                    </div>
+
+                    <div class="container col-md-6" display="none">
                         <img id="frame" src="" class="img-fluid"  alt="uploading image"/>
                     </div>
-                </div>
 
 
-
-
-
-
-
-                <div class="tags-input">
-                    <h2>Tags Input</h2>
-                    <label for="tag-input1">
-                        <input type="text" id="tag-input1" >
-                    </label>
-                    <form:label path="tags">
-                        <form:input type="hidden"  name="tags" id="tags-input" value="" path="tags"/>
-                        <form:errors path="tags" cssClass="error" element="p"/>
-                    </form:label>
-                    <small class="text-muted">You can enter up to 5 tags.</small>
+                    <div class="tags-input">
+                        <h2>Tags Input</h2>
+                        <label for="tag-input1">
+                            <input type="text" id="tag-input1" >
+                        </label>
+                        <form:label path="tags">
+                            <form:input type="hidden"  name="tags" id="tags-input" value="" path="tags"/>
+                            <form:errors path="tags" cssClass="error" element="p"/>
+                        </form:label>
+                        <small class="text-muted">You can enter up to 5 tags.</small>
+                    </div>
                 </div>
 
 
