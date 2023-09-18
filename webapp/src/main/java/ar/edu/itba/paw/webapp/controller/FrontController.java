@@ -88,9 +88,9 @@ public class FrontController {
         // Calculate the total count of posts
         int totalCount;
         if(sortBy != null && sortBy.startsWith("tag"))
-            totalCount = ps.getTotalPostsCount(sortBy.substring(3));
+            totalCount = ps.getTotalPostsCountWithTag(sortBy.substring(3));
         else
-            totalCount = ps.getTotalPostsCount(null);
+            totalCount = ps.getTotalPostsCount();
 
         // Calculate the total pages
         int totalPages = (int) Math.ceil((double) totalCount / size);
@@ -113,9 +113,32 @@ public class FrontController {
         List<Post> postList = null;
         int offset = (page - 1) * size;
 
-        postList = ps.getPostsByChannel("Administracion", offset, size);
+        if (sortBy != null) {
+            switch (sortBy) {
+                case "dateasc":
+                    postList = ps.getPostsByChannelAndDate("Administracion", "asc", offset, size);
+                    break;
+                case "datedesc":
+                    postList = ps.getPostsByChannelAndDate("Administracion", "desc", offset, size);
+                    break;
+                default:
+                    if (sortBy.startsWith("tag")) {
+                        String tag = sortBy.substring(3); // Extract the tag part
+                        postList = ps.getPostsByChannelAndDateAndTag("Administracion", "desc", tag, offset, size);
+                    }
+            }
+        } else {
+            postList = ps.getPostsByChannelAndDate("Administracion", "desc", offset, size);
+        }
 
-        int totalCount = ps.getTotalPostsCount(null); // Implement this method in PostService
+//        postList = ps.getPostsByChannel("Administracion", offset, size);
+
+        int totalCount;
+        if(sortBy != null && sortBy.startsWith("tag"))
+            totalCount = ps.getTotalPostsCountInChannelWithTag("Administracion", sortBy.substring(3));
+        else
+            totalCount = ps.getTotalPostsCountInChannel("Administracion");
+
         int totalPages = (int) Math.ceil((double) totalCount / size);
 
         final ModelAndView mav = new ModelAndView("views/index");
@@ -135,9 +158,32 @@ public class FrontController {
         List<Post> postList = null;
         int offset = (page - 1) * size;
 
-        postList = ps.getPostsByChannel("Foro", offset, size);
+        if (sortBy != null) {
+            switch (sortBy) {
+                case "dateasc":
+                    postList = ps.getPostsByChannelAndDate("Foro", "asc", offset, size);
+                    break;
+                case "datedesc":
+                    postList = ps.getPostsByChannelAndDate("Foro", "desc", offset, size);
+                    break;
+                default:
+                    if (sortBy.startsWith("tag")) {
+                        String tag = sortBy.substring(3); // Extract the tag part
+                        postList = ps.getPostsByChannelAndDateAndTag("Foro", "desc", tag, offset, size);
+                    }
+            }
+        } else {
+            postList = ps.getPostsByChannelAndDate("Foro", "desc", offset, size);
+        }
 
-        int totalCount = ps.getTotalPostsCount(null);
+//        postList = ps.getPostsByChannel("Foro", offset, size);
+
+        int totalCount;
+        if(sortBy != null && sortBy.startsWith("tag"))
+            totalCount = ps.getTotalPostsCountInChannelWithTag("Foro", sortBy.substring(3));
+        else
+            totalCount = ps.getTotalPostsCountInChannel("Foro");
+
         int totalPages = (int) Math.ceil((double) totalCount / size);
 
         final ModelAndView mav = new ModelAndView("views/index");
@@ -314,7 +360,10 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-
+        System.out.println(ps.getTotalPostsCount());
+        System.out.println(ps.getTotalPostsCountWithTag("Comunidad"));
+        System.out.println(ps.getTotalPostsCountInChannel("Administracion"));
+        System.out.println(ps.getTotalPostsCountInChannelWithTag("Administracion", "Comunidad"));
         return new ModelAndView("views/index");
     }
 

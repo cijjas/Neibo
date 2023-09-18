@@ -31,7 +31,20 @@ public class PostDaoImpl implements PostDao {
             "from posts p join neighbors n on p.neighborid = n.neighborid join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid  join posts_tags on p.postid = posts_tags.postid join tags on posts_tags.tagid = tags.tagid " ;
     private final String POSTS_JOIN_NEIGHBORS_AND_NEIGHBORHOODS_AND_CHANNELS =
             "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, n.neighborhoodid, neighborhoodname, c.channelid, channel, postimage\n" +
-                    "from posts p join neighbors n on p.neighborid = n.neighborid join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid\n ";
+                    "from posts p join neighbors n on p.neighborid = n.neighborid join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid ";
+    private final String COUNT_POSTS =
+            "SELECT COUNT(*)\n " +
+            "FROM posts";
+    private final String COUNT_POSTS_JOIN_CHANNELS =
+            "SELECT COUNT(*)\n " +
+            "FROM posts JOIN public.channels c on c.channelid = posts.channelid";
+    private final String COUNT_POSTS_JOIN_TAGS =
+            "SELECT COUNT(*)\n " +
+            "FROM posts JOIN posts_tags ON posts.postid = posts_tags.postid JOIN tags ON posts_tags.tagid = tags.tagid";
+    private final String COUNT_POSTS_JOIN_TAGS_AND_CHANNELS =
+            "SELECT COUNT(*)\n" +
+            "FROM posts JOIN posts_tags ON posts.postid = posts_tags.postid JOIN tags ON posts_tags.tagid = tags.tagid  JOIN public.channels c on c.channelid = posts.channelid ";
+
 
     @Autowired
     public PostDaoImpl(final DataSource ds) {
@@ -114,23 +127,44 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
+    public List<Post> getPostsByChannelAndDate(final String channel, final String order, int offset, int limit){
+        String query = POSTS_JOIN_NEIGHBORS_AND_CHANNELS + "WHERE channel LIKE ? ORDER BY postdate " + order + " LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(query, ROW_MAPPER, channel, limit, offset);
+    }
+
+    @Override
+    public List<Post> getPostsByChannelAndDateAndTag(final String channel, final String order, final String tag, int offset, int limit) {
+        String query = POSTS_JOIN_NEIGHBORS_AND_NEIGHBORHOODS_AND_CHANNELS_AND_TAGS + "WHERE channel LIKE ? AND tag like ? ORDER BY postdate " + order + " LIMIT ? OFFSET ?";
+        return jdbcTemplate.query(query, ROW_MAPPER, channel, tag, limit, offset);
+    }
+
+
+    @Override
     public Optional<Post> findPostById(long id) {
         final List<Post> postList = jdbcTemplate.query(POSTS_JOIN_NEIGHBORS_AND_CHANNELS + " where postid=?;", ROW_MAPPER, id);
         return postList.isEmpty() ? Optional.empty() : Optional.of(postList.get(0));
     }
 
     @Override
-    public int getTotalPostsCount(String tag) {
-        if (tag != null) {
-            // Query the total count of posts with a specific tag
-            String sql = "SELECT COUNT(*) FROM posts " +
-                    "JOIN posts_tags ON posts.postid = posts_tags.postid " +
-                    "JOIN tags ON posts_tags.tagid = tags.tagid " +
-                    "WHERE tag = ?";
-            return jdbcTemplate.queryForObject(sql, Integer.class, tag);
-        } else {
-            // Query the total count of all posts
-            return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM posts", Integer.class);
-        }
+    public int getTotalPostsCount() {
+        return jdbcTemplate.queryForObject(COUNT_POSTS, Integer.class);
+    }
+
+    @Override
+    public int getTotalPostsCountInChannel(String channel){
+        String query = COUNT_POSTS_JOIN_CHANNELS + " WHERE channel LIKE ?";
+        return jdbcTemplate.queryForObject(query, Integer.class, channel);
+    }
+
+    @Override
+    public int getTotalPostsCountWithTag(String tag) {
+        String query = COUNT_POSTS_JOIN_TAGS + " WHERE tag LIKE ?";
+        return jdbcTemplate.queryForObject(query, Integer.class, tag);
+    }
+
+    @Override
+    public int getTotalPostsCountInChannelWithTag(String channel, String tag ){
+        String query = COUNT_POSTS_JOIN_TAGS_AND_CHANNELS + " WHERE channel LIKE ? AND tag like ?";
+        return jdbcTemplate.queryForObject(query, Integer.class, channel, tag);
     }
 }

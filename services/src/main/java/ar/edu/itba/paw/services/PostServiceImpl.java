@@ -47,17 +47,40 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> getPostsByChannelAndDate(final String channel, final String order, int offset, int limit){
+        return postDao.getPostsByChannelAndDate(channel, order, offset, limit);
+    }
+
+    @Override
     public Optional<Post> findPostById(final long id) {
         return postDao.findPostById(id);
     }
 
     @Override
-    public int getTotalPostsCount(String tag) { return postDao.getTotalPostsCount(tag); }
+    public int getTotalPostsCount(){
+        return postDao.getTotalPostsCount();
+    }
+
+    @Override
+    public int getTotalPostsCountInChannel(String channel){
+        return postDao.getTotalPostsCountInChannel(channel);
+    }
+
+    @Override
+    public int getTotalPostsCountWithTag(String tag) { return postDao.getTotalPostsCountWithTag(tag); }
+
+    @Override
+    public int getTotalPostsCountInChannelWithTag(String channel, String tag ){
+        return postDao.getTotalPostsCountInChannelWithTag(channel, tag);
+    }
+
+    @Override
+    public List<Post> getPostsByChannelAndDateAndTag(final String channel, final String order, final String tag, int offset, int limit){
+        return postDao.getPostsByChannelAndDateAndTag(channel, order, tag, offset, limit);
+    }
 
     @Override
     public Post createAdminPost(final String title, final String description, final long neighborId, final int channelId, final byte[] imageFile){
         return postDao.createPost(title, description, neighborId, channelId, imageFile);
     }
-
-
 }
