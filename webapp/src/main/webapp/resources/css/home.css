@@ -11,16 +11,16 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
 :root {
     --text: #4f5248;
     --lighttext: #83887f;
-    --background: #fdfaf1;
+    --background: #faf6e8;
     --onbackground: rgb(248, 248, 243);
     --onbackgroundfaded: rgb(245, 245, 244, 0.2);
     --darkonbackground : rgb(235, 236, 233);
-    --primary: #9bd375;
+    --primary: #328d3d;
     --onprimary: #fdfaf1;
     --secondary: #d8d8c5;
     --accent: #6696e2;
     --error: #de6f6f;
-    --scrollbarthumb: #809d60;
+    --scrollbarthumb: #004F2D;
     --bordercolor: #dadad0;
 }
 .dark-mode {
