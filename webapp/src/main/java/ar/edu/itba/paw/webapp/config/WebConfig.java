@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 @EnableWebMvc
-@ComponentScan({"ar.edu.itba.paw.interfaces","ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence"})
+@ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence"})
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter {
     @Value("classpath:schema.sql")
@@ -45,14 +45,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         ds.setDriverClass(org.postgresql.Driver.class);
 
 
-//        ds.setUrl("jdbc:postgresql://localhost/paw-2023b-02");
-//        ds.setUsername("paw-2023b-02");
-//        ds.setPassword("Totw34tOi");
+       ds.setUrl("jdbc:postgresql://localhost/paw-2023b-02");
+       ds.setUsername("paw-2023b-02");
+        ds.setPassword("Totw34tOi");
 
-
+/*
         ds.setUrl("jdbc:postgresql://localhost/paw"); // We set the address and database to connect to
         ds.setUsername("postgres"); // We set the username and password for the database
-        ds.setPassword("postgres");
+        ds.setPassword("postgres");*/
 
         return ds;
     }
