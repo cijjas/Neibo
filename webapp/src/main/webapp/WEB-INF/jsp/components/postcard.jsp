@@ -13,7 +13,7 @@
     <!-- Image section -->
     <c:if test="${not empty post.imageFile}">
         <div style="display: flex; justify-content: center; align-items: center;">
-            <img src="/postImage/${post.postId}"
+            <img src="${pageContext.request.contextPath}/postImage/<c:out value="${post.postId}"/>"
                  style="max-width: 100%; max-height: 100vh; border-radius: 5px;"
                  alt="post_${post.postId}_img"/>
         </div>
@@ -45,7 +45,7 @@
             <hr class="divider-line">
         </div>
 
-        <form:form method="post" action="/posts/${post.postId}" modelAttribute="commentForm">
+        <form:form method="post" action="${post.postId}" modelAttribute="commentForm">
             <form:errors cssClass="error" element="p"/>
             <!-- Name input -->
             <div class="form-row">

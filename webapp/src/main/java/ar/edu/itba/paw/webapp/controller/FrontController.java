@@ -196,7 +196,7 @@ public class FrontController {
         ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
 
         // Redirect to the "index" page with pagination parameters
-        return new ModelAndView("redirect:/?page=1&size=10"); // You can specify the default page and size here
+        return new ModelAndView("redirect:?page=1&size=10"); // You can specify the default page and size here
     }
 
 
@@ -239,7 +239,7 @@ public class FrontController {
         ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
 
         // Redirect to the "index" page with pagination parameters
-        return new ModelAndView("redirect:/?page=1&size=10"); // You can specify the default page and size here
+        return new ModelAndView("redirect:?page=1&size=10"); // You can specify the default page and size here
     }
 
 

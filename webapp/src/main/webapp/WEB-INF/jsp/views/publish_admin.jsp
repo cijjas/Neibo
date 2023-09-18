@@ -18,7 +18,7 @@
             <%--                <form:input path="email"/>--%>
             <%--            </form:label>--%>
             <%--            <form:errors path="email" cssClass="error" element="p"/>--%>
-            <form:form method="post" action="/publish" modelAttribute="publishForm" enctype="multipart/form-data">
+            <form:form method="post" action="publish" modelAttribute="publishForm" enctype="multipart/form-data">
                 <form:errors cssClass="error" element="p"/>
                 <div class="d-flex mb-3">
                     <div class="flex-grow-1 mr-2">
