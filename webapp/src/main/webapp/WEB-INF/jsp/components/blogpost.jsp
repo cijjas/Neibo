@@ -4,30 +4,39 @@
 
 
 <div id="blogpost-container" class="blogpost" style="word-wrap: break-word;" aria-hidden="true">
-    <a href="${pageContext.request.contextPath}/posts/<c:out value="${param.postID}" />" style="text-decoration: none;">
-        <div class="post-header">
-            <div class="blogpost-author-and-date">
-                <span class="post-author"><c:out value="${param.postNeighborMail}" /></span>
+    <c:choose>
+        <c:when test="${empty param.postID}">
+            <div class="no-posts-found">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                POST NOT FOUND
+            </div>
+        </c:when>
+        <c:otherwise>
+            <a href="${pageContext.request.contextPath}/posts/<c:out value="${param.postID}" />" style="text-decoration: none;">
+                <div class="post-header">
+                    <div class="blogpost-author-and-date">
+                        <span class="post-author"><c:out value="${param.postNeighborMail}" /></span>
 
-                <div style="font-size: 12px;color: var(--lighttext);">
-                    <spring:message code="posted"/>
-                    <span class="post-date" data-post-date="<c:out value="${param.postDate}"/>">
-                    </span>
+                        <div style="font-size: 12px;color: var(--lighttext);">
+                            <spring:message code="posted"/>
+                            <span class="post-date" data-post-date="<c:out value="${param.postDate}"/>">
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <h1 class="post-title"><c:out value="${param.postTitle}" /></h1>
                 </div>
-
-            </div>
-
-
-            <h1 class="post-title"><c:out value="${param.postTitle}" /></h1>
-        </div>
-        <p class="post-description"><c:out value="${param.postDescription}" /></p>
-        <c:if test="${not empty param.postImage}">
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <img class="blogpost-image" src="${pageContext.request.contextPath}/postImage/<c:out value="${param.postID}"/>" alt="post_<c:out value="${param.postID}"/>_img " />
-            </div>
-        </c:if>
-    </a>
-
+                <p class="post-description"><c:out value="${param.postDescription}" /></p>
+                <c:if test="${not empty param.postImage}">
+                    <div style="display: flex; justify-content: center; align-items: center;">
+                        <img class="blogpost-image" src="${pageContext.request.contextPath}/postImage/<c:out value="${param.postID}"/>" alt="post_<c:out value="${param.postID}"/>_img " />
+                    </div>
+                </c:if>
+            </a>
+        </c:otherwise>
+    </c:choose>
 </div>
 
 <script src="${pageContext.request.contextPath}/resources/js/blogpost.js"></script>

@@ -284,6 +284,13 @@ h2{
     font-size: 14px;
 }
 
+.no-posts-found{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
 .error {
     color: var(--error);
 }

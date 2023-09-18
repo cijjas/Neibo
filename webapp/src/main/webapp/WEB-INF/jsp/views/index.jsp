@@ -43,7 +43,7 @@
                     </c:forEach>
                 </div>
 
-                <div id="actual-posts-container" style="display: none;">
+                <div id="actual-posts-container">
                     <c:forEach var="post" items="${postList}">
                         <jsp:include page="/WEB-INF/jsp/components/blogpost.jsp">
                             <jsp:param name="postID" value="${post.postId}" />
