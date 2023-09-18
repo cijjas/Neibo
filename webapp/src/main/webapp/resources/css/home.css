@@ -87,7 +87,10 @@ h2{
 
 /*----------------------- GRID DISPLAY ------------------------------------*/
 
-
+.row{
+    display: flex;
+    justify-content: center;
+}
 .column {
     display: flex;
     flex-direction: column;
@@ -95,6 +98,8 @@ h2{
 }
 
 .column-left{
+    max-width: 650px;
+
     flex: 1;
 }
 
@@ -104,6 +109,7 @@ h2{
 
 .column-middle {
     flex: 3;
+    max-width: 650px;
 }
 @media (max-width: 984px) {
     .column-right {
@@ -370,7 +376,7 @@ h2{
 
 .cardContainer {
     position: relative;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
 }
