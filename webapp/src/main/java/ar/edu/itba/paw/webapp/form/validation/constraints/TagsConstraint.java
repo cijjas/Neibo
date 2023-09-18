@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.form.validation.constraints;
 
-import ar.edu.itba.paw.webapp.form.validation.validators.ImageValidator;
 import ar.edu.itba.paw.webapp.form.validation.validators.TagsValidator;
 
 import javax.validation.Constraint;

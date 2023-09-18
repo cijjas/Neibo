@@ -2,14 +2,8 @@ package ar.edu.itba.paw.webapp.form.validation.validators;
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.ImageConstraint;
 
-import javax.imageio.ImageIO;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
 
 
 // https://www.baeldung.com/spring-mvc-custom-validator

@@ -8,7 +8,6 @@ import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.Comment;
 import ar.edu.itba.paw.models.Neighbor;
 import ar.edu.itba.paw.models.Post;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,28 +39,26 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment createComment(String comment, long neighborId, long postId) {
 
-        try {
-            //busco al dueno del post:
-            Post post = ps.findPostById(postId).orElse(null);
-            Neighbor neighbor = post.getNeighbor();
-            Map<String, Object> variables = new HashMap<>();
-            variables.put("name", neighbor.getName());
-            variables.put("postTitle", post.getTitle());
-            variables.put("postPath", "http://localhost:8080/posts/" + post.getPostId());
-            emailService.sendMessageUsingThymeleafTemplate(neighbor.getMail(), "New comment", null, variables);
 
-            for(Neighbor n : ns.getNeighborsSubscribedByPostId(postId)) {
-                Map<String, Object> vars = new HashMap<>();
-                vars.put("name", n.getName());
-                vars.put("postTitle", post.getTitle());
-                vars.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
-                emailService.sendMessageUsingThymeleafTemplate(n.getMail(), "New comment", null, vars);
-            }
+        //busco al dueno del post:
+        Post post = ps.findPostById(postId).orElse(null);
+        assert post != null;
+        Neighbor neighbor = post.getNeighbor();
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("name", neighbor.getName());
+        variables.put("postTitle", post.getTitle());
+        variables.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
+        emailService.sendMessageUsingThymeleafTemplate(neighbor.getMail(), "New comment", null, variables);
 
-
-        } catch (MessagingException e) {
-            e.printStackTrace();
+        for(Neighbor n : ns.getNeighborsSubscribedByPostId(postId)) {
+            Map<String, Object> vars = new HashMap<>();
+            vars.put("name", n.getName());
+            vars.put("postTitle", post.getTitle());
+            vars.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
+            emailService.sendMessageUsingThymeleafTemplate(n.getMail(), "New comment", null, vars);
         }
+
+
 
         return commentDao.createComment(comment, neighborId, postId);
     }

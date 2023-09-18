@@ -1,8 +1,5 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.Comment;
-import ar.edu.itba.paw.models.Neighbor;
-import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.models.Post;
 
 import java.util.List;

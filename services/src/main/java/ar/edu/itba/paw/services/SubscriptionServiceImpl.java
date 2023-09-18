@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.interfaces.persistence.SubscriptionDao;
 import ar.edu.itba.paw.interfaces.services.SubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
