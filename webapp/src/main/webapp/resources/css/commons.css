@@ -1,0 +1,99 @@
+/*
+GLOBAL CSS VARIABLES AND STYLES THAT SHOULD BE USED IN ALL PAGES
+*/
+
+
+body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
+    font-family: 'Lexend Deca', sans-serif;
+}
+
+
+
+
+:root {
+    --text: #4f5248;
+    --lighttext: #83887f;
+    --background: #faf6e8;
+    --onbackground: rgb(248, 248, 243);
+    --onbackgroundfaded: rgb(245, 245, 244, 0.2);
+    --darkonbackground : rgb(235, 236, 233);
+    --primary: #328d3d;
+    --old-primary: #9ad379;
+    --onprimary: #fdfaf1;
+    --secondary: #d8d8c5;
+    --accent: #6696e2;
+    --error: #de6f6f;
+    --scrollbarthumb: #004F2D;
+    --bordercolor: #dadad0;
+}
+.dark-mode {
+    --text: #ced3c1;
+    --lighttext: #b1bbab;
+    --background: #333c41;
+    --onbackground: rgb(59, 64, 70);
+    --onbackgroundfaded: rgba(49, 58, 63, 0.1);
+    --darkonbackground : #393d3d;
+    --primary: rgb(163, 180, 163);
+    --onprimary: #29333a;
+    --secondary: #595953;
+    --accent: #6696e2;
+    --error: #de6f6f;
+    --scrollbarthumb: #9a968c;
+    --bordercolor: #646462;
+    --old-primary: #789368;
+
+}
+
+
+html::-webkit-scrollbar {
+    width: 12px;
+}
+
+html::-webkit-scrollbar-track {
+    background-color: rgba(231, 231, 231, 0);
+    border: 1px solid rgba(202, 202, 202, 0);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+}
+
+html::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: var(--scrollbarthumb);
+}
+
+a {
+    color: inherit;/* Inherit the color from the parent element */
+    text-decoration: none;/* Remove underlines */
+}
+
+a:hover {
+    text-decoration: none;/* Remove underlines */
+    color: inherit;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--background);
+}
+
+i {
+    color: var(--text);
+}
+
+h2{
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+h3{
+    font-size: 16px;
+    font-weight: bolder;
+    color: var(--primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

@@ -106,6 +106,12 @@ public class FrontController {
         return mav;
     }
 
+    @RequestMapping("/hey")
+    public ModelAndView hey() {
+        return new ModelAndView("views/landingPage");
+    }
+
+
     @RequestMapping("/announcements")
     public ModelAndView announcements(@RequestParam(value = "sortBy", required = false) String sortBy,
                                       @RequestParam(value = "page", defaultValue = "1") int page,

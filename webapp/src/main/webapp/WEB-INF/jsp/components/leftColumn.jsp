@@ -1,29 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+
+
 <div class="left-column-container">
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $(".left-column-button").click(function () {
-                // Check if the clicked button already has the 'active' class
-                if (!$(this).hasClass("active")) {
-                    // Remove the 'active' class from all buttons
-                    $(".left-column-button").removeClass("active");
 
-                    // Add the 'active' class to the clicked button
-                    $(this).addClass("active");
-
-                    // Get the data-channel attribute value to determine the selected channel
-                    const selectedChannel = $(this).data("channel");
-
-                    // You can perform actions based on the selected channel here
-                }
-            });
-        });
-    </script>
-
-    <div class="left-box btn-group-vertical">
+    <div class="left-box" >
         <a href="${pageContext.request.contextPath}/announcements" class="left-column-button ${channel == 'Announcements' ? 'active' : ''}">
             <i class="fas fa-bullhorn"></i> <spring:message code="Announcements"/>
         </a>
@@ -34,37 +16,48 @@
             <i class="fas fa-envelope"></i> <spring:message code="Forum"/>
         </a>
     </div>
-    <%-- Dark mode toggle button
-    <button id="dark-mode-toggle" class="left-column-button">Toggle Dark Mode</button>
 
-    <script>
-        // JavaScript to toggle dark mode
-        const darkModeToggle = document.getElementById('dark-mode-toggle');
-        const htmlElement = document.documentElement; // Get the HTML element
+    <div class="sticky-bottom-button">
+        <button id="language-toggle" class="left-column-button " >Language</button>
+        <button id="dark-mode-toggle" class="left-column-button " >Toggle Dark Mode</button>
 
-        // Function to toggle dark mode
-        function toggleDarkMode() {
-            htmlElement.classList.toggle('dark-mode');
+    </div>
 
-            // Check if dark mode is enabled and update button text
-            if (htmlElement.classList.contains('dark-mode')) {
-                darkModeToggle.textContent = '<spring:message code="LightMode"/>';
-            } else {
-                darkModeToggle.textContent = '<spring:message code="DarkMode"/>';
-            }
-        }
 
-        // Add a click event listener to the toggle button
-        darkModeToggle.addEventListener('click', toggleDarkMode);
+</div>
 
-        // Check the initial dark mode state and set the button text accordingly
+
+
+<script>
+    // JavaScript to toggle dark mode
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const htmlElement = document.documentElement; // Get the HTML element
+
+    // Function to toggle dark mode
+    function toggleDarkMode() {
+        htmlElement.classList.toggle('dark-mode');
+
+        // Check if dark mode is enabled and update button text
         if (htmlElement.classList.contains('dark-mode')) {
             darkModeToggle.textContent = '<spring:message code="LightMode"/>';
         } else {
             darkModeToggle.textContent = '<spring:message code="DarkMode"/>';
         }
-    </script>
-    --%>
+    }
+
+    // Add a click event listener to the toggle button
+    darkModeToggle.addEventListener('click', toggleDarkMode);
+
+    // Check the initial dark mode state and set the button text accordingly
+    if (htmlElement.classList.contains('dark-mode')) {
+        darkModeToggle.textContent = '<spring:message code="LightMode"/>';
+    } else {
+        darkModeToggle.textContent = '<spring:message code="DarkMode"/>';
+    }
+
+    const container = document.querySelector(".left-column-container");
+    const stickyItem = document.querySelector(".left-box");
 
 
-</div>
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
