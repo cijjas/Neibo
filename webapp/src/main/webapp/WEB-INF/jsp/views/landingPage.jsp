@@ -28,44 +28,85 @@
         </div>
         <p class="landing-description">Lorem ipsum en el culo te pellizco aguante boca la puta madre Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
 
-        <a class="action-button"  onclick="openForm()">
+        <a class="action-button"  onclick="openLoginDialog()">
             Log In
         </a>
         <span style="color:var(--lighttext); font-size: 14px;">Not a member?
-            <a onclick="openRegister()" class="a-link">Signup now</a>
+            <a onclick="openSignupDialog()" class="a-link">Signup now</a>
         </span>
 
-
-        <div class="fixed-middle" id="myForm" style="display: none">
-
-            <form class="login-form" >
-                <a class="close-button" onclick="closeForm()">
+        <div class="dialog" id="loginDialog" style="display: none">
+            <div class="dialog-content">
+                <div class="close-button" onclick="closeLoginDialog()">
                     <i class="fas fa-close"></i>
-                </a>
-                <div class="title">Welcome to neibo
+                </div>
+                <div class="title">
+                    Welcome to neibo
                     <br>
                     <span>Log in to continue</span>
                 </div>
-                <label>
-                    <input type="email" placeholder="Email" name="email" class="input">
-                </label>
-                <label>
-                    <input type="password" placeholder="Password" name="password" class="input">
-                </label>
 
-                <button class="action-button">Login</button>
-            </form>
+                <form class="login-form">
+                    <label>
+                        <input type="email" placeholder="Email" name="email" class="input">
+                    </label>
+                    <label>
+                        <input type="password" placeholder="Password" name="password" class="input">
+                    </label>
+                    <button class="action-button">Login</button>
+                    <span style="color:var(--lighttext); font-size: 14px;">Not a member?
+                        <a onclick="closeLoginDialog();openSignupDialog()" class="a-link">Signup now</a>
+                    </span>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="dialog" id="signupDialog" style="display: none">
+            <div class="dialog-content">
+                <div class="close-button" onclick="closeSignupDialog()">
+                    <i class="fas fa-close"></i>
+                </div>
+                <div class="title">
+                    Welcome to neibo
+                    <br>
+                    <span>Sign up to get started</span>
+                </div>
+
+                <form class="signup-form">
+                    <label>
+                        <input type="text" placeholder="Full Name" name="fullname" class="input">
+                    </label>
+                    <label>
+                        <input type="email" placeholder="Email" name="email" class="input">
+                    </label>
+                    <label>
+                        <input type="password" placeholder="Password" name="password" class="input">
+                    </label>
+                    <button class="action-button">Sign Up</button>
+                </form>
+            </div>
         </div>
 
     </div>
 
+
+
      <script>
-         function openForm() {
-             document.getElementById("myForm").style.display = "block";
+         function openLoginDialog() {
+             document.getElementById("loginDialog").style.display = "flex";
          }
 
-         function closeForm() {
-             document.getElementById("myForm").style.display = "none";
+         function closeLoginDialog() {
+             document.getElementById("loginDialog").style.display = "none";
+         }
+
+
+         function openSignupDialog(){
+             document.getElementById("signupDialog").style.display = "flex";
+         }
+         function closeSignupDialog(){
+             document.getElementById("signupDialog").style.display = "none";
          }
      </script>
 

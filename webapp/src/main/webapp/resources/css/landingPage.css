@@ -99,24 +99,21 @@
 }
 
 /*----------------------------------- LOGIN POPUP --------------------*/
-.close-button{
-    position:absolute;
-    top: 30px;
-    right: 30px;
-    font-size: 24px;
-}
-.close-button:hover{
-    cursor: pointer;
-}
-
-.fixed-middle{
+.dialog {
     position: fixed;
-    top: 20%;
-    transition: all 300ms ease-in-out;
-    transform: scale(1.15);
-
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
 }
-.login-form {
+
+.dialog-content {
+    position: relative; /* Add position relative to create a positioning context */
     width: 400px;
     height: 500px;
     padding: 20px;
@@ -125,11 +122,18 @@
     border: 2px solid var(--primary);
     box-shadow: 4px 4px var(--primary);
     display: flex;
-    gap:20px;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    text-align: center;
+}
 
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
 }
 
 
@@ -137,14 +141,14 @@
     color: var(--primary);
     font-weight: 900;
     font-size: 20px;
-    margin-bottom: 25px;
-    text-align: center;
+    margin-bottom: 10px;
 }
 
-.title span {
-    color: var(--text);
-    font-weight: 600;
-    font-size: 17px;
+.login-form {
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .input {
@@ -164,18 +168,41 @@
     color: var(--lighttext);
     opacity: 0.8;
 }
+
+.input:active,
+.input:hover,
+.input:focus {
+    transform: translateY(-4px);
+    box-shadow: 4px 4px var(--primary);
+}
+
+
+
+.title {
+    color: var(--primary);
+    font-weight: 900;
+    font-size: 20px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.title span {
+    color: var(--lighttext);
+    font-weight: 600;
+    font-size: 17px;
+}
+
+
+.input::placeholder {
+    color: var(--lighttext);
+    opacity: 0.8;
+}
 .input:active,
 .input:hover,
 .input:focus {
     transform: translateY(-4px) ;
     box-shadow: 4px 4px var(--primary);
 }
-
-.login-with {
-    display: flex;
-    gap: 20px;
-}
-
 
 .a-link{
     color: var(--old-primary);
@@ -186,3 +213,5 @@
     color: var(--primary);
     cursor: pointer;
 }
+
+/**/

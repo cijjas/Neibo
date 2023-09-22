@@ -252,9 +252,9 @@ public class FrontController {
     }
 
 
-    @RequestMapping(value = "/publish_admin", method = RequestMethod.GET)
+    @RequestMapping(value = "/publishAdmin", method = RequestMethod.GET)
     public ModelAndView publishAdminForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
-        final ModelAndView mav = new ModelAndView("views/publish_admin");
+        final ModelAndView mav = new ModelAndView("views/publishAdmin");
         Map<String, Channel> channelMap = chs.getChannels().stream()
                 .collect(Collectors.toMap(Channel::getChannel, Function.identity()));
         //no queremos que usuarios puedan publicar en el canal de administracion
@@ -262,7 +262,7 @@ public class FrontController {
 
         return mav;
     }
-    @RequestMapping(value = "/publish_admin", method = RequestMethod.POST)
+    @RequestMapping(value = "/publishAdmin", method = RequestMethod.POST)
     public ModelAndView publishAdmin(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
                                      final BindingResult errors,
                                      @RequestParam("imageFile") MultipartFile imageFile) {
