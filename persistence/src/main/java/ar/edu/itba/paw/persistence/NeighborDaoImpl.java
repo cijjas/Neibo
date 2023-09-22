@@ -115,4 +115,14 @@ public class NeighborDaoImpl implements NeighborDao {
     public void updateLanguage(long id, String language) {
         jdbcTemplate.update("UPDATE neighbors SET language = ? WHERE neighborid = ?", language, id);
     }
+
+    @Override
+    public void setDefaultValues(long id) {
+        jdbcTemplate.update("UPDATE neighbors SET language = 'English', darkmode = false, verified = false  WHERE neighborid = ?", id);
+    }
+
+    @Override
+    public void setNewPassword(long id, String newPassword){
+        jdbcTemplate.update("UPDATE neighbors SET password = ?  WHERE neighborid = ?", newPassword, id);
+    }
 }

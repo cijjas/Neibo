@@ -36,5 +36,9 @@ public interface NeighborDao {
 
     void updateLanguage(long id, String language);
 
+    void setDefaultValues(long id);
+
+    void setNewPassword(long id, String newPassword);
+
     //List<Neighbor> getNeighborsByCommunity(long communityId);
 }

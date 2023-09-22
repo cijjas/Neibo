@@ -38,4 +38,8 @@ public interface NeighborService {
     void unverifyNeighbor(final long id);
 
     void updateLanguage(final long id, final String language);
+
+    void setDefaultValues(final long id);
+
+    void setNewPassword(long id, String newPassword);
 }

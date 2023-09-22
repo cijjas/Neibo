@@ -66,6 +66,12 @@ public class NeighborServiceImpl implements NeighborService {
         neighborDao.updateLanguage(id, language);
     }
 
+    @Override
+    public void setDefaultValues(long id) {
+        neighborDao.setDefaultValues(id);
+    }
+
+    @Override
     public Optional<Neighbor> findNeighborByMail(String mail) { return neighborDao.findNeighborByMail(mail); }
 
     @Override
@@ -73,5 +79,8 @@ public class NeighborServiceImpl implements NeighborService {
         return neighborDao.getNeighborsSubscribedByPostId(id);
     }
 
-
+    @Override
+    public void setNewPassword(long id, String newPassword){
+        neighborDao.setNewPassword(id, newPassword);
+    }
 }
