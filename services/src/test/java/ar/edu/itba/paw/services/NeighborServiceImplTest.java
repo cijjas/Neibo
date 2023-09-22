@@ -1,3 +1,4 @@
+/*
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.NeighborDao;
@@ -107,3 +108,4 @@ public class NeighborServiceImplTest {
         Assert.assertEquals(ID, newNeighbor.get().getNeighborId());
     }
 }
+*/

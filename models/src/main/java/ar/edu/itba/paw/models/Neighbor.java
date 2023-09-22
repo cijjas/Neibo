@@ -5,15 +5,22 @@ public class Neighbor {
     private final String mail;
     private final String name;
     private final String surname;
+    private final String password;
     private final long neighborhoodId;
+    private final boolean darkMode;
+    private final boolean verification;
+    private final String language;
 
-    // Private constructor to enforce object creation through the builder
     private Neighbor(Builder builder) {
         this.neighborId = builder.neighborId;
         this.mail = builder.mail;
         this.name = builder.name;
         this.surname = builder.surname;
+        this.password = builder.password;
         this.neighborhoodId = builder.neighborhoodId;
+        this.darkMode = builder.darkMode;
+        this.verification = builder.verification;
+        this.language = builder.language;
     }
 
     public static class Builder {
@@ -21,7 +28,11 @@ public class Neighbor {
         private String mail;
         private String name;
         private String surname;
+        private String password;
         private long neighborhoodId;
+        private boolean darkMode;
+        private boolean verification;
+        private String language;
 
         public Builder neighborId(long neighborId) {
             this.neighborId = neighborId;
@@ -43,8 +54,28 @@ public class Neighbor {
             return this;
         }
 
-        public Builder neighborhoodId(long neighborhoodId) {
+        public Builder password(String password){
+            this.password = password;
+            return this;
+        }
+
+        public Builder neighborhoodId(long neighborhoodId){
             this.neighborhoodId = neighborhoodId;
+            return this;
+        }
+
+        public Builder darkMode(boolean darkMode){
+            this.darkMode = darkMode;
+            return this;
+        }
+
+        public Builder verification(boolean verification){
+            this.verification = verification;
+            return this;
+        }
+
+        public Builder language(String language){
+            this.language = language;
             return this;
         }
 
@@ -53,7 +84,6 @@ public class Neighbor {
         }
     }
 
-    // Getter methods for your fields (no setters as they are final)
     public long getNeighborId() {
         return neighborId;
     }
@@ -70,7 +100,25 @@ public class Neighbor {
         return surname;
     }
 
-    public long getNeighborhoodId() {return neighborhoodId;}
+    public String getPassword(){
+        return password;
+    }
+
+    public long getNeighborhoodId(){
+        return neighborhoodId;
+    }
+
+    public boolean isDarkMode() {
+        return darkMode;
+    }
+
+    public boolean isVerification() {
+        return verification;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
 
     @Override
     public String toString() {
@@ -79,6 +127,11 @@ public class Neighbor {
                 ", mail='" + mail + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
+                ", password='" + password + '\'' +
+                ", neighborhoodId=" + neighborhoodId +
+                ", darkMode=" + darkMode +
+                ", verification=" + verification +
+                ", language='" + language + '\'' +
                 '}';
     }
 }

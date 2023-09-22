@@ -5,14 +5,20 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.form.CommentForm;
 import ar.edu.itba.paw.webapp.form.PublishForm;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.jws.WebParam;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Collections;
@@ -34,6 +40,7 @@ public class FrontController {
     private final ChannelService chs;
     private final SubscriptionService ss;
     private final CategorizationService cas;
+
     @Autowired
     public FrontController(final PostService ps,
                            final NeighborService ns,
@@ -42,8 +49,7 @@ public class FrontController {
                            final TagService ts,
                            final ChannelService chs,
                            final SubscriptionService ss,
-                           final CategorizationService cas)
-    {
+                           final CategorizationService cas) {
         this.ps = ps;
         this.ns = ns;
         this.nhs = nhs;
@@ -82,12 +88,12 @@ public class FrontController {
                     }
             }
         } else {
-            postList = ps.getPostsByDate("desc",offset, size); // Default sorting with pagination
+            postList = ps.getPostsByDate("desc", offset, size); // Default sorting with pagination
         }
 
         // Calculate the total count of posts
         int totalCount;
-        if(sortBy != null && sortBy.startsWith("tag"))
+        if (sortBy != null && sortBy.startsWith("tag"))
             totalCount = ps.getTotalPostsCountWithTag(sortBy.substring(3));
         else
             totalCount = ps.getTotalPostsCount();
@@ -101,7 +107,7 @@ public class FrontController {
         mav.addObject("page", page); // Add page parameter to the model
         mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
         mav.addObject("sortBy", sortBy); // Add sortBy parameter to the model
-        mav.addObject("channel","Feed");
+        mav.addObject("channel", "Feed");
 
         return mav;
     }
@@ -140,7 +146,7 @@ public class FrontController {
 //        postList = ps.getPostsByChannel("Administracion", offset, size);
 
         int totalCount;
-        if(sortBy != null && sortBy.startsWith("tag"))
+        if (sortBy != null && sortBy.startsWith("tag"))
             totalCount = ps.getTotalPostsCountInChannelWithTag("Administracion", sortBy.substring(3));
         else
             totalCount = ps.getTotalPostsCountInChannel("Administracion");
@@ -152,7 +158,7 @@ public class FrontController {
         mav.addObject("postList", postList);
         mav.addObject("page", page); // Add page parameter to the model
         mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
-        mav.addObject("channel","Announcements");
+        mav.addObject("channel", "Announcements");
 
         return mav;
     }
@@ -185,7 +191,7 @@ public class FrontController {
 //        postList = ps.getPostsByChannel("Foro", offset, size);
 
         int totalCount;
-        if(sortBy != null && sortBy.startsWith("tag"))
+        if (sortBy != null && sortBy.startsWith("tag"))
             totalCount = ps.getTotalPostsCountInChannelWithTag("Foro", sortBy.substring(3));
         else
             totalCount = ps.getTotalPostsCountInChannel("Foro");
@@ -197,7 +203,7 @@ public class FrontController {
         mav.addObject("postList", postList);
         mav.addObject("page", page); // Add page parameter to the model
         mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
-        mav.addObject("channel","Forum");
+        mav.addObject("channel", "Forum");
 
         return mav;
     }
@@ -227,22 +233,22 @@ public class FrontController {
             return publishForm(publishForm);
         }
 
-        Neighborhood nh = nhs.createNeighborhood(publishForm.getNeighborhood());
-        Neighbor n = ns.createNeighbor(publishForm.getEmail(), publishForm.getName(), publishForm.getSurname(), nh.getNeighborhoodId());
+        // Neighborhood nh = nhs.createNeighborhood(publishForm.getNeighborhood());
+        // Neighbor n = ns.createNeighbor(publishForm.getEmail(), publishForm.getName(), publishForm.getSurname(), nh.getNeighborhoodId());
 
         Post p = null;
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
                 // Convert the image to base64
                 byte[] imageBytes = imageFile.getBytes();
-                p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), imageBytes);
+                // p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), imageBytes);
                 // Set the base64-encoded image data in the tournamentForm
             } catch (IOException e) {
                 System.out.println("Issue uploading the image");
                 // Should go to an error page!
             }
         } else {
-            p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), null);
+            // p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), null);
         }
         assert p != null;
         ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
@@ -252,9 +258,9 @@ public class FrontController {
     }
 
 
-    @RequestMapping(value = "/publish_admin", method = RequestMethod.GET)
+    @RequestMapping(value = "/publishAdmin", method = RequestMethod.GET)
     public ModelAndView publishAdminForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
-        final ModelAndView mav = new ModelAndView("views/publish_admin");
+        final ModelAndView mav = new ModelAndView("views/publishAdmin");
         Map<String, Channel> channelMap = chs.getChannels().stream()
                 .collect(Collectors.toMap(Channel::getChannel, Function.identity()));
         //no queremos que usuarios puedan publicar en el canal de administracion
@@ -262,7 +268,8 @@ public class FrontController {
 
         return mav;
     }
-    @RequestMapping(value = "/publish_admin", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/publishAdmin", method = RequestMethod.POST)
     public ModelAndView publishAdmin(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
                                      final BindingResult errors,
                                      @RequestParam("imageFile") MultipartFile imageFile) {
@@ -270,22 +277,23 @@ public class FrontController {
             return publishForm(publishForm);
         }
 
-        Neighborhood nh = nhs.createNeighborhood(publishForm.getNeighborhood());
-        Neighbor n = ns.createNeighbor(publishForm.getEmail(), publishForm.getName(), publishForm.getSurname(), nh.getNeighborhoodId());
+        // deprecado por el login
+        // Neighborhood nh = nhs.createNeighborhood(publishForm.getNeighborhood());
+        // Neighbor n = ns.createNeighbor(publishForm.getEmail(), publishForm.getName(), publishForm.getSurname(), nh.getNeighborhoodId());
 
         Post p = null;
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
                 // Convert the image to base64
                 byte[] imageBytes = imageFile.getBytes();
-                p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), imageBytes);
+                // p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), imageBytes);
                 // Set the base64-encoded image data in the tournamentForm
             } catch (IOException e) {
                 System.out.println("Issue uploading the image");
                 // Should go to an error page!
             }
         } else {
-            p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), null);
+            // p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), null);
         }
         assert p != null;
         ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
@@ -297,7 +305,7 @@ public class FrontController {
 
     // ------------------------------------- POSTS --------------------------------------
 
-    @RequestMapping( value ="/posts/{id:\\d+}", method = RequestMethod.GET)
+    @RequestMapping(value = "/posts/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView viewPost(@PathVariable(value = "id") int postId, @ModelAttribute("commentForm") final CommentForm commentForm) {
         ModelAndView mav = new ModelAndView("views/post");
 
@@ -317,7 +325,7 @@ public class FrontController {
         return mav;
     }
 
-    @RequestMapping( value = "/posts/{id:\\d+}", method = RequestMethod.POST)
+    @RequestMapping(value = "/posts/{id:\\d+}", method = RequestMethod.POST)
     public ModelAndView viewPost(@PathVariable(value = "id") int postId, @Valid @ModelAttribute("commentForm") final CommentForm commentForm,
                                  final BindingResult errors) {
         if (errors.hasErrors()) {
@@ -325,9 +333,10 @@ public class FrontController {
             return viewPost(postId, commentForm);
         }
 
-        Neighborhood nh = nhs.createNeighborhood(commentForm.getNeighborhood());
-        Neighbor n = ns.createNeighbor(commentForm.getEmail(), commentForm.getName(), commentForm.getSurname(), nh.getNeighborhoodId());
-        Comment c = cs.createComment(commentForm.getComment(), n.getNeighborId(), postId);
+        // deprecado por el login
+        // Neighborhood nh = nhs.createNeighborhood(commentForm.getNeighborhood());
+        // Neighbor n = ns.createNeighbor(commentForm.getEmail(), "poponeta123", commentForm.getName(), commentForm.getSurname(), nh.getNeighborhoodId());
+        // Comment c = cs.createComment(commentForm.getComment(), n.getNeighborId(), postId);
 
 
         return new ModelAndView("redirect:/posts/" + postId); // Redirect to the "posts" page
@@ -338,7 +347,7 @@ public class FrontController {
 
     @RequestMapping(value = "/postImage/{imageId}")
     @ResponseBody
-    public byte[] imageRetriever(@PathVariable long imageId)  {
+    public byte[] imageRetriever(@PathVariable long imageId) {
         Optional<Post> post = ps.findPostById(imageId);
         return post.map(Post::getImageFile).orElseThrow(ResourceNotFoundException::new);
     }
@@ -361,6 +370,68 @@ public class FrontController {
         mav.addObject("errorMsg", ex.getMessage());
         return mav;
     }
+
+    // ---------------------------------- LOGIN BETA -----------------------------------
+
+    @RequestMapping(value = "/signup", method = RequestMethod.GET)
+    public ModelAndView signUp() {
+        ModelAndView mav = new ModelAndView("views/testSignUp");
+        mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
+        return mav;
+    }
+
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public ModelAndView signUp(@RequestParam("name") String name,
+                               @RequestParam("surname") String surname,
+                               @RequestParam("mail") String mail,
+                               @RequestParam("password") String password,
+                               @RequestParam("neighborhoodId") long neighborhoodId
+                               ) {
+
+        Neighbor n = new Neighbor.Builder()
+                .name(name)
+                .surname(surname)
+                .mail(mail)
+                .password(password)
+                .neighborhoodId(neighborhoodId)
+                .build();
+
+        ns.createNeighbor(mail, password, name, surname, neighborhoodId, "English", false, false );
+        // ns.createNeighbor(mail, password, name, surname, neighborhoodId, language, darkMode, verification);
+        System.out.println("New Neighbor Signed Up");
+        System.out.println(n);
+
+        return new ModelAndView("redirect:/");
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public ModelAndView logIn(Model model) {
+        model.addAttribute("neighbor", new Neighbor.Builder());
+        return new ModelAndView("views/landingPage");
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ModelAndView logIn(@RequestParam("mail") String mail,
+                              @RequestParam("password") String password
+    ) {
+        return new ModelAndView("views/index");
+    }
+
+    @ModelAttribute("loggedUser")
+    public Neighbor getLoggedNeighbor() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken)
+            return null;
+
+        String email = authentication.getName();
+
+        Optional<Neighbor> neighborOptional = ns.findNeighborByMail(email);
+
+        return neighborOptional.orElseThrow(NeighborhoodNotFoundException::new);
+    }
+
+
 
     // ------------------------------------- TEST --------------------------------------
 

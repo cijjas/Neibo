@@ -23,6 +23,7 @@
     flex-direction: column;
     justify-content: start;
     align-items: center;
+    gap: 10px;
 }
 
 .landing-navbar {
@@ -50,7 +51,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-top: 100px;
+    margin-top: 3rem;
     text-align: center;
 }
 
@@ -82,78 +83,77 @@
     background-color: var(--background);
     color: var(--primary);
     border: 1px solid var(--primary);
-    border-radius: 50px;
+    border-radius: var(--border-hard);
     padding: 1em 2em;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
     box-shadow: 0 0 0 0 var(--primary);
 }
 
-.action-button:hover {
-    transform: translateY(-4px) ;
-    box-shadow: 0 5px 0 0 var(--primary);
-    color: var(--primary);
-}
-
-.action-button:active {
-    transform: translateY(-4px) ;
-    box-shadow: 0 5px 0 0 var(--primary);
-    color: var(--primary);
-}
-
+.action-button:hover ,
+.action-button:active ,
 .action-button:focus {
-    border: 1px solid var(--primary);
     transform: translateY(-4px) ;
     box-shadow: 0 5px 0 0 var(--primary);
     color: var(--primary);
 }
 
 /*----------------------------------- LOGIN POPUP --------------------*/
-.close-button{
-    position:absolute;
-    top: 30px;
-    right: 30px;
-    font-size: 24px;
-}
-.close-button:hover{
-    cursor: pointer;
+.dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
 }
 
-.fixed-middle{
-    position: fixed;
-    top: 20%;
-}
-.login-form {
+.dialog-content {
+    position: relative; /* Add position relative to create a positioning context */
     width: 400px;
     height: 500px;
     padding: 20px;
     background: var(--background);
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     border: 2px solid var(--primary);
     box-shadow: 4px 4px var(--primary);
     display: flex;
-    gap:20px;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    text-align: center;
 }
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
 
 .title {
     color: var(--primary);
     font-weight: 900;
     font-size: 20px;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
 }
 
-.title span {
-    color: var(--text);
-    font-weight: 600;
-    font-size: 17px;
+.login-form {
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .input {
     height: 40px;
-    border-radius: 20px;
+    border-radius: var(--border-hard);
     border: 1px solid var(--primary);
     background-color: var(--background);
     font-size: 15px;
@@ -169,13 +169,49 @@
     opacity: 0.8;
 }
 
+.input:active,
+.input:hover,
 .input:focus {
-    border: 2px solid var(--old-primary);
+    transform: translateY(-4px);
+    box-shadow: 4px 4px var(--primary);
+}
+
+
+
+.title {
+    color: var(--primary);
+    font-weight: 900;
+    font-size: 20px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.title span {
+    color: var(--lighttext);
+    font-weight: 600;
+    font-size: 17px;
+}
+
+
+.input::placeholder {
+    color: var(--lighttext);
+    opacity: 0.8;
+}
+.input:active,
+.input:hover,
+.input:focus {
     transform: translateY(-4px) ;
     box-shadow: 4px 4px var(--primary);
 }
 
-.login-with {
-    display: flex;
-    gap: 20px;
+.a-link{
+    color: var(--old-primary);
+    font-weight: bold;
 }
+
+.a-link:hover{
+    color: var(--primary);
+    cursor: pointer;
+}
+
+/**/
