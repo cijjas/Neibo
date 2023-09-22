@@ -435,7 +435,8 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-        System.out.println(getLoggedNeighbor());
+        System.out.println(ns.getUnverifiedNeighborsByNeighborhood(1));
+        System.out.println(ns.getVerifiedNeighborsByNeighborhood(1));
         return new ModelAndView("views/index");
     }
 

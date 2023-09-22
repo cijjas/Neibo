@@ -29,6 +29,10 @@ public interface NeighborService {
 
     List<Neighbor> getNeighborsSubscribedByPostId(long id);
 
+    List<Neighbor> getVerifiedNeighborsByNeighborhood(long neighborhoodId);
+
+    List<Neighbor> getUnverifiedNeighborsByNeighborhood(long neighborhoodId);
+
     Optional<Neighbor> findNeighborById(long id);
 
     void toggleDarkMode(final long id);
