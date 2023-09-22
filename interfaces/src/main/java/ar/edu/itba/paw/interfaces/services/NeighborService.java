@@ -18,7 +18,8 @@ public interface NeighborService {
             deleteOrder
      */
 
-    Neighbor createNeighbor(final String email, final String name, final String surname, final long neighborhoodId);
+    Neighbor createNeighbor(final String mail, final String password, final String name, final String surname,
+                            final long neighborhoodId, String language, boolean darkMode, boolean verification);
 
     List<Neighbor> getNeighbors();
 
@@ -31,4 +32,6 @@ public interface NeighborService {
     Optional<Neighbor> findNeighborById(long id);
 
     //List<Neighbor> getNeighborsByCommunity(long communityId);
+
+    //verifyUser
 }

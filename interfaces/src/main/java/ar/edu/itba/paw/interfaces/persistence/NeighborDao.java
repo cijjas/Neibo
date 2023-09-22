@@ -16,7 +16,8 @@ public interface NeighborDao {
         updateOrderStatus
         deleteCustomer
      */
-    Neighbor createNeighbor(final String email, final String name, final String surname, final long neighborhoodId);
+    Neighbor createNeighbor(final String mail, final String password, final String name, final String surname,
+                            final long neighborhoodId, String language, boolean darkMode, boolean verification);
 
     List<Neighbor> getNeighbors();
 

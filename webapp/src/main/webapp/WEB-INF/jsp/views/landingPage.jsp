@@ -1,4 +1,4 @@
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 
@@ -75,7 +75,10 @@
 
                 <form class="signup-form">
                     <label>
-                        <input type="text" placeholder="Full Name" name="fullname" class="input">
+                        <input type="text" placeholder="First Name" name="firstName" class="input">
+                    </label>
+                    <label>
+                        <input type="text" placeholder="First Name" name="firstName" class="input">
                     </label>
                     <label>
                         <input type="email" placeholder="Email" name="email" class="input">
@@ -83,6 +86,18 @@
                     <label>
                         <input type="password" placeholder="Password" name="password" class="input">
                     </label>
+
+                    <div class="form-input">
+                        <label>Neighborhoods</label>
+                        <label>
+                            <select name="neighborhoodId" class="form-control">
+                                <c:forEach var="entry" items="${neighborhoodsList}">
+                                    <option value="${entry.neighborhoodId}">${entry.getName()}</option>
+                                </c:forEach>
+                            </select>
+                        </label>
+                    </div>
+
                     <button class="action-button">Sign Up</button>
                 </form>
             </div>
