@@ -5,7 +5,7 @@
     overflow: hidden;
 }
 .drawings {
-    position: absolute;
+    position: fixed;
     width: 100%;
     overflow: hidden;
     z-index: 0;
@@ -96,6 +96,86 @@
 }
 
 .action-button:active {
-    transform: translateY(2px) translateX(1px);
-    box-shadow: 0 0 0 0 var(--primary);
+    transform: translateY(-4px) ;
+    box-shadow: 0 5px 0 0 var(--primary);
+    color: var(--primary);
+}
+
+.action-button:focus {
+    border: 1px solid var(--primary);
+    transform: translateY(-4px) ;
+    box-shadow: 0 5px 0 0 var(--primary);
+    color: var(--primary);
+}
+
+/*----------------------------------- LOGIN POPUP --------------------*/
+.close-button{
+    position:absolute;
+    top: 30px;
+    right: 30px;
+    font-size: 24px;
+}
+.close-button:hover{
+    cursor: pointer;
+}
+
+.fixed-middle{
+    position: fixed;
+    top: 20%;
+}
+.login-form {
+    width: 400px;
+    height: 500px;
+    padding: 20px;
+    background: var(--background);
+    border-radius: 5px;
+    border: 2px solid var(--primary);
+    box-shadow: 4px 4px var(--primary);
+    display: flex;
+    gap:20px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    color: var(--primary);
+    font-weight: 900;
+    font-size: 20px;
+    margin-bottom: 25px;
+}
+
+.title span {
+    color: var(--text);
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.input {
+    height: 40px;
+    border-radius: 20px;
+    border: 1px solid var(--primary);
+    background-color: var(--background);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    padding: 5px 10px;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.input::placeholder {
+    color: var(--lighttext);
+    opacity: 0.8;
+}
+
+.input:focus {
+    border: 2px solid var(--old-primary);
+    transform: translateY(-4px) ;
+    box-shadow: 4px 4px var(--primary);
+}
+
+.login-with {
+    display: flex;
+    gap: 20px;
 }

@@ -1,4 +1,9 @@
 
+.error-body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
 
 
 .error-card {
@@ -11,11 +16,6 @@
     border-radius: 10px;
     position: relative;
     overflow: hidden;
-}
-
-
-.error-card:hover {
-
 }
 
 
@@ -34,25 +34,6 @@
 
 }
 
-.goback-button{
-    width: 100%;
-    text-align: center;
-    border: 1px solid var(--secondary);
-    padding: 10px;
-    margin: 10px auto;
-    background-color: var(--background);
-    border-radius: 10px;
-}
-
-.goback-button:hover{
-    width: 100%;
-    text-align: center;
-    border: 3px solid var(--primary);
-    padding: 10px;
-    margin: 10px auto;
-    background-color: var(--background);
-    border-radius: 10px;
-}
 
 .error-wave {
     position: absolute;
@@ -73,8 +54,70 @@
     }
 }
 
-.options{
-    z-index: 3;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 
+
+.drawings {
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+    z-index: 0;
+    bottom: 0;
+}
+
+
+.error-content-container {
+    position: absolute;
+    margin-top: 250px;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+
+
+.goback-button {
+    text-align: center;
+    font-weight: normal;
+    overflow: hidden;
+    background-color: var(--background);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    border-radius: 50px;
+    padding: 1em 2em;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 0 0 var(--primary);
+}
+
+.goback-button:hover {
+    transform: translateY(-4px) ;
+    box-shadow: 0 5px 0 0 var(--primary);
+    color: var(--primary);
+}
+
+.goback-button:active {
+    transform: translateY(2px) translateX(1px);
+    box-shadow: 0 0 0 0 var(--primary);
+}
+
+
+.error-code{
+    font-size: 80px;
+    font-weight: bold;
+    color: var(--primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+.error-message{
+    color: var(--lighttext);
+    max-width: 400px;
+    text-align: center;
+    text-overflow: clip;
 }

@@ -25,6 +25,8 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
     --error: #de6f6f;
     --scrollbarthumb: #004F2D;
     --bordercolor: #dadad0;
+
+    --border-radius: 10px;
 }
 .dark-mode {
     --text: #ced3c1;
