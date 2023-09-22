@@ -437,10 +437,7 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-        System.out.println(ps.getTotalPostsCount());
-        System.out.println(ps.getTotalPostsCountWithTag("Comunidad"));
-        System.out.println(ps.getTotalPostsCountInChannel("Administracion"));
-        System.out.println(ps.getTotalPostsCountInChannelWithTag("Administracion", "Comunidad"));
+        System.out.println(getLoggedNeighbor());
         return new ModelAndView("views/index");
     }
 

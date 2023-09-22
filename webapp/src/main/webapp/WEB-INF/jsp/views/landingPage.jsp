@@ -47,16 +47,26 @@
                 </div>
 
                 <form method="post" class="login-form">
-                    <label>
-                        <input type="email" placeholder="Email" name="mail" class="input">
+                    <div class="centered-column">
+                        <label>
+                            <input type="email" placeholder="Email" name="mail" class="input">
+                        </label>
+                        <label>
+                            <input type="password" placeholder="Password" name="password" class="input">
+                        </label>
+
+                    </div>
+                    <label class="centered-row light-text">
+                        <input  name="rememberMe" type="checkbox">
+                        Remember Me!
                     </label>
-                    <label>
-                        <input type="password" placeholder="Password" name="password" class="input">
-                    </label>
-                    <button class="action-button">Login</button>
-                    <span style="color:var(--lighttext); font-size: 14px;">Not a member?
-                        <a onclick="closeLoginDialog();openSignupDialog()" class="a-link">Signup now</a>
-                    </span>
+                    <div class="centered-column">
+                        <button class="action-button">Login</button>
+                        <span style="color:var(--lighttext); font-size: 14px;">Not a member?
+                            <a onclick="closeLoginDialog();openSignupDialog()" class="a-link">Signup now</a>
+                        </span>
+                    </div>
+
                 </form>
             </div>
         </div>

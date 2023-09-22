@@ -21,9 +21,7 @@
 
 <body class="body">
     <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
-    <div class="container " >
-
-
+    <div class="container" >
 
         <div class="row">
             <div class="column-left">
