@@ -17,7 +17,7 @@
 
 
 
-<div class="filter-options d-flex justify-content-between flex-wrap">
+<div class="upper-feed-buttons-box ">
     <div class="d-flex flex-wrap">
         <a href="?sortBy=datedesc" class="filter-button selected">
                 <i class="fa-solid fa-newspaper"></i>

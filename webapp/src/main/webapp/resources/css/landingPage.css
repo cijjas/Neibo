@@ -126,6 +126,7 @@
     justify-content: center;
     align-items: center;
     text-align: center;
+    gap: 1.5rem;
 }
 
 .close-button {
@@ -137,18 +138,12 @@
 }
 
 
-.title {
-    color: var(--primary);
-    font-weight: 900;
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-
 .login-form {
     gap: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
 
 .input {
@@ -162,18 +157,6 @@
     padding: 5px 10px;
     outline: none;
     transition: all 0.3s ease-in-out;
-}
-
-.input::placeholder {
-    color: var(--lighttext);
-    opacity: 0.8;
-}
-
-.input:active,
-.input:hover,
-.input:focus {
-    transform: translateY(-4px);
-    box-shadow: 4px 4px var(--primary);
 }
 
 
@@ -214,4 +197,25 @@
     cursor: pointer;
 }
 
+
+.centered-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.centered-row.light-text{
+    color: var(--lighttext);
+}
+
+.centered-column{
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
 /**/
