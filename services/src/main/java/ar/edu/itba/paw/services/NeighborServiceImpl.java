@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.persistence.NeighborDao;
 import ar.edu.itba.paw.interfaces.services.NeighborService;
 import ar.edu.itba.paw.models.Neighbor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,16 +14,20 @@ import java.util.Optional;
 public class NeighborServiceImpl implements NeighborService {
     private final NeighborDao neighborDao;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    public NeighborServiceImpl(final NeighborDao neighborDao) {
+    public NeighborServiceImpl(final NeighborDao neighborDao, final PasswordEncoder passwordEncoder) {
         this.neighborDao = neighborDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public Neighbor createNeighbor(String mail, String name, String surname, long neighborhoodId) {
+    public Neighbor createNeighbor(final String mail, final String password, final String name, final String surname,
+                                   final long neighborhoodId, String language, boolean darkMode, boolean verification) {
         Neighbor n = findNeighborByMail(mail).orElse(null);
         if (n == null) {
-            return neighborDao.createNeighbor(mail, name, surname, neighborhoodId);
+            return neighborDao.createNeighbor(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, darkMode, verification);
         }
         return n;
     }
@@ -45,4 +50,6 @@ public class NeighborServiceImpl implements NeighborService {
     public List<Neighbor> getNeighborsSubscribedByPostId(long id) {
         return neighborDao.getNeighborsSubscribedByPostId(id);
     }
+
+
 }

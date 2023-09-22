@@ -21,9 +21,9 @@ public class NeighborDaoImpl implements NeighborDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private final String NEIGHBORS = "select neighborid, mail, name, surname from neighbors ";
+    private final String NEIGHBORS = "select neighborid, mail, password, name, surname, darkmode, language, verification, neighborhoodid from neighbors ";
     private final String NEIGHBORS_JOIN_POSTS_NEIGHBORS_AND_POSTS =
-            "select n.neighborid, mail, name, surname from\n" +
+            "select n.neighborid, mail, password, name, surname, darkmode, language, verification, neighborhoodid from\n" +
             "posts p join posts_neighbors on p.postid = posts_neighbors.postid join neighbors n on posts_neighbors.neighborid = n.neighborid ";
 
     @Autowired
@@ -35,19 +35,29 @@ public class NeighborDaoImpl implements NeighborDao {
     }
 
     @Override
-    public Neighbor createNeighbor(final String mail, final String name, final String surname, final long neighborhoodId) {
+    public Neighbor createNeighbor(final String mail, final String password, final String name, final String surname,
+                                   final long neighborhoodId, String language, boolean darkMode, boolean verification) {
         Map<String, Object> data = new HashMap<>();
         data.put("mail", mail);
+        data.put("password", password);
         data.put("name", name);
         data.put("creationDate", Timestamp.valueOf(LocalDateTime.now()));
         data.put("surname", surname);
         data.put("neighborhoodid", neighborhoodId);
+        data.put("darkmode", darkMode);
+        data.put("language", language);
+        data.put("verification", verification);
 
         final Number key = jdbcInsert.executeAndReturnKey(data);
         return new Neighbor.Builder()
                 .neighborId(key.longValue())
                 .name(name).mail(mail)
                 .surname(surname)
+                .password(password)
+                .neighborhoodId(neighborhoodId)
+                .darkMode(darkMode)
+                .language(language)
+                .verification(verification)
                 .build();
     }
 
@@ -57,6 +67,11 @@ public class NeighborDaoImpl implements NeighborDao {
                     .mail(rs.getString("mail"))
                     .name(rs.getString("name"))
                     .surname(rs.getString("surname"))
+                    .password(rs.getString("password"))
+                    .neighborhoodId(rs.getLong("neighborhoodid"))
+                    .darkMode(rs.getBoolean("darkmode"))
+                    .language(rs.getString("language"))
+                    .verification(rs.getBoolean("verification"))
                     .build();
 
     @Override
