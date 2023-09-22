@@ -8,7 +8,7 @@ public class Neighbor {
     private final String password;
     private final long neighborhoodId;
     private final boolean darkMode;
-    private final boolean verification;
+    private final boolean verified;
     private final String language;
 
     private Neighbor(Builder builder) {
@@ -19,7 +19,7 @@ public class Neighbor {
         this.password = builder.password;
         this.neighborhoodId = builder.neighborhoodId;
         this.darkMode = builder.darkMode;
-        this.verification = builder.verification;
+        this.verified = builder.verified;
         this.language = builder.language;
     }
 
@@ -31,7 +31,7 @@ public class Neighbor {
         private String password;
         private long neighborhoodId;
         private boolean darkMode;
-        private boolean verification;
+        private boolean verified;
         private String language;
 
         public Builder neighborId(long neighborId) {
@@ -69,8 +69,8 @@ public class Neighbor {
             return this;
         }
 
-        public Builder verification(boolean verification){
-            this.verification = verification;
+        public Builder verified(boolean verified){
+            this.verified = verified;
             return this;
         }
 
@@ -112,8 +112,8 @@ public class Neighbor {
         return darkMode;
     }
 
-    public boolean isVerification() {
-        return verification;
+    public boolean isVerified() {
+        return verified;
     }
 
     public String getLanguage() {
@@ -130,7 +130,7 @@ public class Neighbor {
                 ", password='" + password + '\'' +
                 ", neighborhoodId=" + neighborhoodId +
                 ", darkMode=" + darkMode +
-                ", verification=" + verification +
+                ", verification=" + verified +
                 ", language='" + language + '\'' +
                 '}';
     }

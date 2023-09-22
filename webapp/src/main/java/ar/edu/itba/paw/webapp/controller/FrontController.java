@@ -235,7 +235,6 @@ public class FrontController {
 
         // Neighborhood nh = nhs.createNeighborhood(publishForm.getNeighborhood());
         // Neighbor n = ns.createNeighbor(publishForm.getEmail(), publishForm.getName(), publishForm.getSurname(), nh.getNeighborhoodId());
-
         Post p = null;
         if (imageFile != null && !imageFile.isEmpty()) {
             try {

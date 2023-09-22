@@ -21,10 +21,11 @@ public class NeighborDaoImpl implements NeighborDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private final String NEIGHBORS = "select neighborid, mail, password, name, surname, darkmode, language, verification, neighborhoodid from neighbors ";
+    private final String NEIGHBORS = "select neighborid, mail, password, name, surname, darkmode, language, verified, neighborhoodid from neighbors ";
     private final String NEIGHBORS_JOIN_POSTS_NEIGHBORS_AND_POSTS =
-            "select n.neighborid, mail, password, name, surname, darkmode, language, verification, neighborhoodid from\n" +
+            "select n.neighborid, mail, password, name, surname, darkmode, language, verified, neighborhoodid from\n" +
             "posts p join posts_neighbors on p.postid = posts_neighbors.postid join neighbors n on posts_neighbors.neighborid = n.neighborid ";
+    private final String UPDATE_NEIGHBOR ="UPDATE neighbors ";
 
     @Autowired
     public NeighborDaoImpl(final DataSource ds) {
@@ -36,7 +37,7 @@ public class NeighborDaoImpl implements NeighborDao {
 
     @Override
     public Neighbor createNeighbor(final String mail, final String password, final String name, final String surname,
-                                   final long neighborhoodId, String language, boolean darkMode, boolean verification) {
+                                   final long neighborhoodId, String language, boolean darkMode, boolean verified) {
         Map<String, Object> data = new HashMap<>();
         data.put("mail", mail);
         data.put("password", password);
@@ -46,7 +47,7 @@ public class NeighborDaoImpl implements NeighborDao {
         data.put("neighborhoodid", neighborhoodId);
         data.put("darkmode", darkMode);
         data.put("language", language);
-        data.put("verification", verification);
+        data.put("verified", verified);
 
         final Number key = jdbcInsert.executeAndReturnKey(data);
         return new Neighbor.Builder()
@@ -57,7 +58,7 @@ public class NeighborDaoImpl implements NeighborDao {
                 .neighborhoodId(neighborhoodId)
                 .darkMode(darkMode)
                 .language(language)
-                .verification(verification)
+                .verified(verified)
                 .build();
     }
 
@@ -71,7 +72,7 @@ public class NeighborDaoImpl implements NeighborDao {
                     .neighborhoodId(rs.getLong("neighborhoodid"))
                     .darkMode(rs.getBoolean("darkmode"))
                     .language(rs.getString("language"))
-                    .verification(rs.getBoolean("verification"))
+                    .verified(rs.getBoolean("verified"))
                     .build();
 
     @Override
@@ -85,6 +86,10 @@ public class NeighborDaoImpl implements NeighborDao {
     }
 
     @Override
+    public List<Neighbor> getNeighborsSubscribedByPostId(long postId) {
+        return jdbcTemplate.query(NEIGHBORS_JOIN_POSTS_NEIGHBORS_AND_POSTS + " where p.postid = ?", ROW_MAPPER, postId);
+    }
+    @Override
     public Optional<Neighbor> findNeighborById(long neighborId) {
         final List<Neighbor> list = jdbcTemplate.query(NEIGHBORS + " where neighborid = ?", ROW_MAPPER, neighborId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
@@ -97,7 +102,27 @@ public class NeighborDaoImpl implements NeighborDao {
     }
 
     @Override
-    public List<Neighbor> getNeighborsSubscribedByPostId(long postId) {
-        return jdbcTemplate.query(NEIGHBORS_JOIN_POSTS_NEIGHBORS_AND_POSTS + " where p.postid = ?", ROW_MAPPER, postId);
+    public void updateDarkMode(long id, boolean isDarkMode) {
+        jdbcTemplate.update("UPDATE neighbors SET darkmode = ? WHERE neighborid = ?", isDarkMode, id);
+    }
+
+    @Override
+    public void updateNeighborVerification(long id, boolean isVerified) {
+        jdbcTemplate.update("UPDATE neighbors SET verified = ? WHERE neighborid = ?", isVerified, id);
+    }
+
+    @Override
+    public void updateLanguage(long id, String language) {
+        jdbcTemplate.update("UPDATE neighbors SET language = ? WHERE neighborid = ?", language, id);
+    }
+
+    @Override
+    public void setDefaultValues(long id) {
+        jdbcTemplate.update("UPDATE neighbors SET language = 'English', darkmode = false, verified = false  WHERE neighborid = ?", id);
+    }
+
+    @Override
+    public void setNewPassword(long id, String newPassword){
+        jdbcTemplate.update("UPDATE neighbors SET password = ?  WHERE neighborid = ?", newPassword, id);
     }
 }

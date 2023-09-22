@@ -30,5 +30,15 @@ public interface NeighborDao {
 
     Optional<Neighbor> findNeighborById(long id);
 
+    void updateDarkMode(long id, boolean isDarkMode);
+
+    void updateNeighborVerification(long id, boolean isVerified);
+
+    void updateLanguage(long id, String language);
+
+    void setDefaultValues(long id);
+
+    void setNewPassword(long id, String newPassword);
+
     //List<Neighbor> getNeighborsByCommunity(long communityId);
 }

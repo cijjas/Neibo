@@ -138,13 +138,6 @@ public class PostDaoImpl implements PostDao {
         return jdbcTemplate.query(query, ROW_MAPPER, channel, tag, limit, offset);
     }
 
-
-    @Override
-    public Optional<Post> findPostById(long id) {
-        final List<Post> postList = jdbcTemplate.query(POSTS_JOIN_NEIGHBORS_AND_CHANNELS + " where postid=?;", ROW_MAPPER, id);
-        return postList.isEmpty() ? Optional.empty() : Optional.of(postList.get(0));
-    }
-
     @Override
     public int getTotalPostsCount() {
         return jdbcTemplate.queryForObject(COUNT_POSTS, Integer.class);
@@ -167,4 +160,11 @@ public class PostDaoImpl implements PostDao {
         String query = COUNT_POSTS_JOIN_TAGS_AND_CHANNELS + " WHERE channel LIKE ? AND tag like ?";
         return jdbcTemplate.queryForObject(query, Integer.class, channel, tag);
     }
+
+    @Override
+    public Optional<Post> findPostById(long id) {
+        final List<Post> postList = jdbcTemplate.query(POSTS_JOIN_NEIGHBORS_AND_CHANNELS + " where postid=?;", ROW_MAPPER, id);
+        return postList.isEmpty() ? Optional.empty() : Optional.of(postList.get(0));
+    }
+
 }

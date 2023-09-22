@@ -19,7 +19,7 @@ public interface NeighborService {
      */
 
     Neighbor createNeighbor(final String mail, final String password, final String name, final String surname,
-                            final long neighborhoodId, String language, boolean darkMode, boolean verification);
+                            final long neighborhoodId, String language, boolean darkMode, boolean verified);
 
     List<Neighbor> getNeighbors();
 
@@ -31,7 +31,15 @@ public interface NeighborService {
 
     Optional<Neighbor> findNeighborById(long id);
 
-    //List<Neighbor> getNeighborsByCommunity(long communityId);
+    void toggleDarkMode(final long id);
 
-    //verifyUser
+    void verifyNeighbor(final long id);
+
+    void unverifyNeighbor(final long id);
+
+    void updateLanguage(final long id, final String language);
+
+    void setDefaultValues(final long id);
+
+    void setNewPassword(long id, String newPassword);
 }

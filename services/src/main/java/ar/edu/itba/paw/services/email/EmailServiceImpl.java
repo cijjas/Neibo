@@ -36,13 +36,13 @@ public class EmailServiceImpl implements EmailService {
     @Override
     @Async
     //Can add a third parameter to receive a specific template
-    public void sendHtmlMessage(String to, String subject, Map<String, Object> variables) {
+    public void sendHtmlMessage(String to, String subject, Map<String, Object> variables, String templateModel) {
         try {
             final Context context = new Context();
 
             context.setVariables(variables);
 
-            final String htmlContext = this.thymeleafTemplateEngine.process("template-thymeleaf", context);
+            final String htmlContext = this.thymeleafTemplateEngine.process(templateModel, context);
 
             MimeMessage message = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -61,12 +61,12 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
-    public void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel, Map<String, Object> variables) {
+    public void sendMessageUsingThymeleafTemplate(String to, String subject, String templateModel, Map<String, Object> variables) {
 
         Context thymeleafContext = new Context();
-        thymeleafContext.setVariables(templateModel);
-        String htmlBody = thymeleafTemplateEngine.process("template-thymeleaf.html", thymeleafContext);
+        thymeleafContext.setVariables(null);
+        String htmlBody = thymeleafTemplateEngine.process(templateModel, thymeleafContext);
 
-        sendHtmlMessage(to, subject, variables);
+        sendHtmlMessage(to, subject, variables, templateModel);
     }
 }
