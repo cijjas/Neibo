@@ -28,7 +28,7 @@ public class PublishForm {
     private String subject;
 
     @NotBlank
-    @Size(max = 255)
+    @Size(max = 2000)
     private String message;
 
     @NotBlank

@@ -28,7 +28,7 @@
         <div class="card-body">
             <h4 class="card-title"><spring:message code="CreateAdminPost.title"/></h4>
 
-            <form:form method="post" action="publish" modelAttribute="publishForm" enctype="multipart/form-data">
+            <form:form method="post" action="publish_admin" modelAttribute="publishForm" enctype="multipart/form-data">
                 <form:errors cssClass="error" element="p"/>
 
                 <div class="form-column">

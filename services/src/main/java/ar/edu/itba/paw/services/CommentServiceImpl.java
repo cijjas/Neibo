@@ -48,14 +48,14 @@ public class CommentServiceImpl implements CommentService {
         variables.put("name", neighbor.getName());
         variables.put("postTitle", post.getTitle());
         variables.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
-        emailService.sendMessageUsingThymeleafTemplate(neighbor.getMail(), "New comment", null, variables);
+        emailService.sendMessageUsingThymeleafTemplate(neighbor.getMail(), "New comment", "template-thymeleaf.html", variables);
 
         for(Neighbor n : ns.getNeighborsSubscribedByPostId(postId)) {
             Map<String, Object> vars = new HashMap<>();
             vars.put("name", n.getName());
             vars.put("postTitle", post.getTitle());
             vars.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
-            emailService.sendMessageUsingThymeleafTemplate(n.getMail(), "New comment", null, vars);
+            emailService.sendMessageUsingThymeleafTemplate(n.getMail(), "New comment", "template-thymeleaf.html", vars);
         }
 
 
