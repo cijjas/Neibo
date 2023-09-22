@@ -38,6 +38,21 @@ public class NeighborServiceImpl implements NeighborService {
     @Override
     public List<Neighbor> getNeighborsByNeighborhood(long neighborhoodId) { return neighborDao.getNeighborsByNeighborhood(neighborhoodId); }
 
+    @Override
+    public List<Neighbor> getNeighborsSubscribedByPostId(long id) {
+        return neighborDao.getNeighborsSubscribedByPostId(id);
+    }
+
+    @Override
+    public List<Neighbor> getVerifiedNeighborsByNeighborhood(long neighborhoodId){
+        return neighborDao.getVerifiedNeighborsByNeighborhood(neighborhoodId);
+    }
+
+    @Override
+    public List<Neighbor> getUnverifiedNeighborsByNeighborhood(long neighborhoodId){
+        return neighborDao.getUnverifiedNeighborsByNeighborhood(neighborhoodId);
+    }
+
     //@Override
     //public List<Neighbor> getNeighborsByCommunity(long communityId) { return neighborDao.getAllNeighborsByCommunity(communityId); }
 
@@ -73,11 +88,6 @@ public class NeighborServiceImpl implements NeighborService {
 
     @Override
     public Optional<Neighbor> findNeighborByMail(String mail) { return neighborDao.findNeighborByMail(mail); }
-
-    @Override
-    public List<Neighbor> getNeighborsSubscribedByPostId(long id) {
-        return neighborDao.getNeighborsSubscribedByPostId(id);
-    }
 
     @Override
     public void setNewPassword(long id, String newPassword){

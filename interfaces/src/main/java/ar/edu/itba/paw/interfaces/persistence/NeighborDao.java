@@ -28,6 +28,10 @@ public interface NeighborDao {
 
     List<Neighbor> getNeighborsSubscribedByPostId(long id);
 
+    List<Neighbor> getVerifiedNeighborsByNeighborhood(long neighborhoodId);
+
+    List<Neighbor> getUnverifiedNeighborsByNeighborhood(long neighborhoodId);
+
     Optional<Neighbor> findNeighborById(long id);
 
     void updateDarkMode(long id, boolean isDarkMode);
