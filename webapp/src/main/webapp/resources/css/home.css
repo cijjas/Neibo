@@ -621,7 +621,6 @@ input[type=file]::file-selector-button:hover {
     padding: 4px; /* Adjust padding for better visual alignment */
 }
 .pagination-button:hover:not(.active) {
-    background-color: var(--darkonbackground);
     transform: translateY(-2px);
     box-shadow: 0 5px 0 0 var(--primary);
     color: var(--primary);

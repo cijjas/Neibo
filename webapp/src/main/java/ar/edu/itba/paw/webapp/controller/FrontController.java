@@ -5,7 +5,6 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.form.CommentForm;
 import ar.edu.itba.paw.webapp.form.PublishForm;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.jws.WebParam;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Collections;
@@ -112,11 +110,12 @@ public class FrontController {
         return mav;
     }
 
+
+
     @RequestMapping("/hey")
     public ModelAndView hey() {
-        return new ModelAndView("views/landingPage");
+        return new ModelAndView("admin/requestManager");
     }
-
 
     @RequestMapping("/announcements")
     public ModelAndView announcements(@RequestParam(value = "sortBy", required = false) String sortBy,
@@ -259,7 +258,7 @@ public class FrontController {
 
     @RequestMapping(value = "/publishAdmin", method = RequestMethod.GET)
     public ModelAndView publishAdminForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
-        final ModelAndView mav = new ModelAndView("views/publishAdmin");
+        final ModelAndView mav = new ModelAndView("admin/publishAdmin");
         Map<String, Channel> channelMap = chs.getChannels().stream()
                 .collect(Collectors.toMap(Channel::getChannel, Function.identity()));
         //no queremos que usuarios puedan publicar en el canal de administracion
