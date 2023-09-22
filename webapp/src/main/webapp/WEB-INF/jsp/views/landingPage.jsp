@@ -46,9 +46,9 @@
                     <span>Log in to continue</span>
                 </div>
 
-                <form class="login-form">
+                <form method="post" class="login-form">
                     <label>
-                        <input type="email" placeholder="Email" name="email" class="input">
+                        <input type="email" placeholder="Email" name="mail" class="input">
                     </label>
                     <label>
                         <input type="password" placeholder="Password" name="password" class="input">
@@ -81,7 +81,7 @@
                         <input type="text" placeholder="First Name" name="firstName" class="input">
                     </label>
                     <label>
-                        <input type="email" placeholder="Email" name="email" class="input">
+                        <input type="email" placeholder="Email" name="mail" class="input">
                     </label>
                     <label>
                         <input type="password" placeholder="Password" name="password" class="input">
