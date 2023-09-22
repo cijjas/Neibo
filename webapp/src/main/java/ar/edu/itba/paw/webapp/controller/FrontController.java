@@ -235,7 +235,6 @@ public class FrontController {
 
         // Neighborhood nh = nhs.createNeighborhood(publishForm.getNeighborhood());
         // Neighbor n = ns.createNeighbor(publishForm.getEmail(), publishForm.getName(), publishForm.getSurname(), nh.getNeighborhoodId());
-
         Post p = null;
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
@@ -437,10 +436,6 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-        System.out.println(ps.getTotalPostsCount());
-        System.out.println(ps.getTotalPostsCountWithTag("Comunidad"));
-        System.out.println(ps.getTotalPostsCountInChannel("Administracion"));
-        System.out.println(ps.getTotalPostsCountInChannelWithTag("Administracion", "Comunidad"));
         return new ModelAndView("views/index");
     }
 

@@ -44,6 +44,28 @@ public class NeighborServiceImpl implements NeighborService {
     @Override
     public Optional<Neighbor> findNeighborById(long id) { return neighborDao.findNeighborById(id); }
 
+    @Override
+    public void toggleDarkMode(long id) {
+        Neighbor n = findNeighborById(id).orElse(null);
+        if (n != null)
+            neighborDao.updateDarkMode(id, !n.isDarkMode());
+    }
+
+    @Override
+    public void verifyNeighbor(long id) {
+        neighborDao.updateNeighborVerification(id, true);
+    }
+
+    @Override
+    public void unverifyNeighbor(long id) {
+        neighborDao.updateNeighborVerification(id, false);
+    }
+
+    @Override
+    public void updateLanguage(long id, String language) {
+        neighborDao.updateLanguage(id, language);
+    }
+
     public Optional<Neighbor> findNeighborByMail(String mail) { return neighborDao.findNeighborByMail(mail); }
 
     @Override
