@@ -57,7 +57,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
                 .and().logout()
                     .logoutUrl("/logout")
-                    .logoutSuccessUrl("/login")
+                    .logoutSuccessUrl("/landingPage")
                     .and().exceptionHandling()
                     .accessDeniedPage("/errors/errorPage")
                     .and().csrf().disable();

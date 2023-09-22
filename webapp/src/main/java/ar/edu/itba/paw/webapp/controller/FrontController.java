@@ -268,12 +268,8 @@ public class FrontController {
 
         return mav;
     }
-<<<<<<< HEAD
-    @RequestMapping(value = "/publishAdmin", method = RequestMethod.POST)
-=======
 
-    @RequestMapping(value = "/publish_admin", method = RequestMethod.POST)
->>>>>>> 9632cdca29b20f433580d3d64e5588b6f5021518
+    @RequestMapping(value = "/publishAdmin", method = RequestMethod.POST)
     public ModelAndView publishAdmin(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
                                      final BindingResult errors,
                                      @RequestParam("imageFile") MultipartFile imageFile) {
@@ -405,13 +401,13 @@ public class FrontController {
         System.out.println("New Neighbor Signed Up");
         System.out.println(n);
 
-        return new ModelAndView("redirect:/login");
+        return new ModelAndView("redirect:/");
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView logIn(Model model) {
         model.addAttribute("neighbor", new Neighbor.Builder());
-        return new ModelAndView("views/testLogIn");
+        return new ModelAndView("views/landingPage");
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
