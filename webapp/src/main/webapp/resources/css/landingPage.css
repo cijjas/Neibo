@@ -23,6 +23,7 @@
     flex-direction: column;
     justify-content: start;
     align-items: center;
+    gap: 10px;
 }
 
 .landing-navbar {
@@ -50,7 +51,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-top: 100px;
+    margin-top: 3rem;
     text-align: center;
 }
 
@@ -82,27 +83,16 @@
     background-color: var(--background);
     color: var(--primary);
     border: 1px solid var(--primary);
-    border-radius: 50px;
+    border-radius: var(--border-hard);
     padding: 1em 2em;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
     box-shadow: 0 0 0 0 var(--primary);
 }
 
-.action-button:hover {
-    transform: translateY(-4px) ;
-    box-shadow: 0 5px 0 0 var(--primary);
-    color: var(--primary);
-}
-
-.action-button:active {
-    transform: translateY(-4px) ;
-    box-shadow: 0 5px 0 0 var(--primary);
-    color: var(--primary);
-}
-
+.action-button:hover ,
+.action-button:active ,
 .action-button:focus {
-    border: 1px solid var(--primary);
     transform: translateY(-4px) ;
     box-shadow: 0 5px 0 0 var(--primary);
     color: var(--primary);
@@ -122,13 +112,16 @@
 .fixed-middle{
     position: fixed;
     top: 20%;
+    transition: all 300ms ease-in-out;
+    transform: scale(1.15);
+
 }
 .login-form {
     width: 400px;
     height: 500px;
     padding: 20px;
     background: var(--background);
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     border: 2px solid var(--primary);
     box-shadow: 4px 4px var(--primary);
     display: flex;
@@ -136,13 +129,16 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
 }
+
 
 .title {
     color: var(--primary);
     font-weight: 900;
     font-size: 20px;
     margin-bottom: 25px;
+    text-align: center;
 }
 
 .title span {
@@ -153,7 +149,7 @@
 
 .input {
     height: 40px;
-    border-radius: 20px;
+    border-radius: var(--border-hard);
     border: 1px solid var(--primary);
     background-color: var(--background);
     font-size: 15px;
@@ -168,9 +164,9 @@
     color: var(--lighttext);
     opacity: 0.8;
 }
-
+.input:active,
+.input:hover,
 .input:focus {
-    border: 2px solid var(--old-primary);
     transform: translateY(-4px) ;
     box-shadow: 4px 4px var(--primary);
 }
@@ -178,4 +174,15 @@
 .login-with {
     display: flex;
     gap: 20px;
+}
+
+
+.a-link{
+    color: var(--old-primary);
+    font-weight: bold;
+}
+
+.a-link:hover{
+    color: var(--primary);
+    cursor: pointer;
 }

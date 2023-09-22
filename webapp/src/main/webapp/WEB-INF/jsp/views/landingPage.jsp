@@ -31,36 +31,21 @@
         <a class="action-button"  onclick="openForm()">
             Log In
         </a>
+        <span style="color:var(--lighttext); font-size: 14px;">Not a member?
+            <a onclick="openRegister()" class="a-link">Signup now</a>
+        </span>
 
-<%--        <!-- The form -->--%>
-<%--        <div class="form-popup" id="myForm">--%>
-<%--            <form action="/login" class="form-container">--%>
-<%--                <h1>Login</h1>--%>
 
-<%--                <label for="email"><b>Email</b></label>--%>
-<%--                <label>--%>
-<%--                    <input type="text" placeholder="Enter Email" name="email" required>--%>
-<%--                </label>--%>
-
-<%--                <label for="psw"><b>Password</b></label>--%>
-<%--                <label>--%>
-<%--                    <input type="password" placeholder="Enter Password" name="psw" required>--%>
-<%--                </label>--%>
-
-<%--                <div class="">--%>
-<%--                    <button type="submit" class="btn">Login</button>--%>
-<%--                    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>--%>
-<%--                </div>--%>
-<%--            </form>--%>
-<%--        </div>--%>
-
-        <div class="fixed-middle" id="myForm">
+        <div class="fixed-middle" id="myForm" style="display: none">
 
             <form class="login-form" >
                 <a class="close-button" onclick="closeForm()">
                     <i class="fas fa-close"></i>
                 </a>
-                <div class="title">Welcome to neibo<br><span>Log in to continue</span></div>
+                <div class="title">Welcome to neibo
+                    <br>
+                    <span>Log in to continue</span>
+                </div>
                 <label>
                     <input type="email" placeholder="Email" name="email" class="input">
                 </label>
@@ -68,7 +53,7 @@
                     <input type="password" placeholder="Password" name="password" class="input">
                 </label>
 
-                <button class="action-button">Log in →</button>
+                <button class="action-button">Login</button>
             </form>
         </div>
 
