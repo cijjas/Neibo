@@ -27,9 +27,9 @@ public class CommentDaoImpl implements CommentDao {
 
     private UserDao userDao;
 
-    private final String COMMENTS_JOIN_NEIGHBORS =
-            "select postid, commentid, comment, commentdate, u.userid, name, surname, mail \n" +
-            "from comments join public.users u on comments.userid = u.userid ";
+    private final String COMMENTS_JOIN_USERS =
+            "SELECT postid, commentid, comment, commentdate, u.userid, name, surname, mail \n" +
+            "FROM comments JOIN public.users u ON comments.userid = u.userid ";
 
     @Autowired
     public CommentDaoImpl(final DataSource ds, UserDao userDao) {
@@ -70,7 +70,7 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public Optional<List<Comment>> findCommentsByPostId(long id) {
-        final List<Comment> comments = jdbcTemplate.query( COMMENTS_JOIN_NEIGHBORS + " WHERE postid=?;", ROW_MAPPER, id);
+        final List<Comment> comments = jdbcTemplate.query( COMMENTS_JOIN_USERS + " WHERE postid=?;", ROW_MAPPER, id);
         return comments.isEmpty() ? Optional.empty() : Optional.of(comments);
     }
 }

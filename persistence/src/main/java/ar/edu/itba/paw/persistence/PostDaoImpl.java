@@ -25,27 +25,12 @@ public class PostDaoImpl implements PostDao {
     private ChannelDao channelDao;
     private UserDao userDao;
 
-    private final String POSTS_JOIN_NEIGHBORS_AND_CHANNELS =
-            "select p.postid as postid, title, description, postdate, u.userid, mail, name, surname, c.channelid, channel, postimage\n" +
-            "from posts p join users u on p.userid = u.userid join channels c on p.channelid = c.channelid ";
-    private final String POSTS_JOIN_NEIGHBORS_AND_NEIGHBORHOODS_AND_CHANNELS_AND_TAGS =
-            "select p.postid as postid, title, description, postdate, u.userid, mail, name, surname, u.neighborhoodid, neighborhoodname, c.channelid, channel, postimage\n" +
-            "from posts p join users u on p.userid = u.userid join neighborhoods nh on u.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid  join posts_tags on p.postid = posts_tags.postid join tags on posts_tags.tagid = tags.tagid " ;
-    private final String POSTS_JOIN_NEIGHBORS_AND_NEIGHBORHOODS_AND_CHANNELS =
-            "select p.postid as postid, title, description, postdate, u.userid, mail, name, surname, u.neighborhoodid, neighborhoodname, c.channelid, channel, postimage\n" +
-            "from posts p join users u on p.userid = u.userid join neighborhoods nh on u.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid ";
-    private final String COUNT_POSTS =
-            "SELECT COUNT(*)\n " +
-            "FROM posts";
-    private final String COUNT_POSTS_JOIN_CHANNELS =
-            "SELECT COUNT(*)\n " +
-            "FROM posts JOIN public.channels c on c.channelid = posts.channelid";
-    private final String COUNT_POSTS_JOIN_TAGS =
-            "SELECT COUNT(*)\n " +
-            "FROM posts JOIN posts_tags ON posts.postid = posts_tags.postid JOIN tags ON posts_tags.tagid = tags.tagid";
+    private final String POSTS_JOIN_USERS_AND_CHANNELS =
+        "SELECT DISTINCT p.* " +
+        "FROM posts p  JOIN users u ON p.userid = u.userid  JOIN channels c ON p.channelid = c.channelid  LEFT JOIN posts_tags pt ON p.postid = pt.postid  LEFT JOIN tags t ON pt.tagid = t.tagid ";
     private final String COUNT_POSTS_JOIN_TAGS_AND_CHANNELS =
-            "SELECT COUNT(*)\n" +
-            "FROM posts JOIN posts_tags ON posts.postid = posts_tags.postid JOIN tags ON posts_tags.tagid = tags.tagid  JOIN public.channels c on c.channelid = posts.channelid ";
+        "SELECT COUNT(*) \n" +
+        "FROM posts JOIN posts_tags ON posts.postid = posts_tags.postid JOIN tags ON posts_tags.tagid = tags.tagid  JOIN public.channels c on c.channelid = posts.channelid ";
 
 
     @Autowired
@@ -103,13 +88,8 @@ public class PostDaoImpl implements PostDao {
             int offset,      // Offset for pagination
             int limit        // Limit for pagination
     ) {
-        StringBuilder query = new StringBuilder("SELECT DISTINCT p.* FROM posts p ");
+        StringBuilder query = new StringBuilder(POSTS_JOIN_USERS_AND_CHANNELS);
         List<Object> queryParams = new ArrayList<>();
-
-        query.append(" JOIN users u ON p.userid = u.userid ");
-        query.append(" JOIN channels c ON p.channelid = c.channelid ");
-        query.append(" LEFT JOIN posts_tags pt ON p.postid = pt.postid ");
-        query.append(" LEFT JOIN tags t ON pt.tagid = t.tagid ");
 
         query.append(" WHERE 1 = 1");  // Initial condition to start the WHERE clause
 
@@ -134,9 +114,6 @@ public class PostDaoImpl implements PostDao {
         return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
     }
 
-
-
-
     public int getTotalPostsCountByCriteria(String channel, String tag) {
         StringBuilder query = new StringBuilder(COUNT_POSTS_JOIN_TAGS_AND_CHANNELS);
         List<Object> queryParams = new ArrayList<>();
@@ -158,7 +135,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public Optional<Post> findPostById(long id) {
-        final List<Post> postList = jdbcTemplate.query(POSTS_JOIN_NEIGHBORS_AND_CHANNELS + " where postid=?;", ROW_MAPPER, id);
+        final List<Post> postList = jdbcTemplate.query(POSTS_JOIN_USERS_AND_CHANNELS + " where postid=?;", ROW_MAPPER, id);
         return postList.isEmpty() ? Optional.empty() : Optional.of(postList.get(0));
     }
 

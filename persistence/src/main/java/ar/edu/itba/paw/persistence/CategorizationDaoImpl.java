@@ -22,7 +22,7 @@ public class CategorizationDaoImpl implements CategorizationDao {
                 .withTableName("posts_tags");
     }
     @Override
-    public void createCategory(long tagId, long postId) {
+    public void createCategory(final long tagId, final long postId) {
         Map<String, Object> data = new HashMap<>();
         data.put("tagid", tagId);
         data.put("postid", postId);

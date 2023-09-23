@@ -20,7 +20,7 @@ public class ChannelDaoImpl implements ChannelDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private final String CHANNELS = "select * from channels ";
+    private final String CHANNELS = "SELECT * FROM channels ";
 
     @Autowired
     public ChannelDaoImpl(final DataSource ds) {

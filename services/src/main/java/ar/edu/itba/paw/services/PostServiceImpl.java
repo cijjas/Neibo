@@ -52,19 +52,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getPostsByChannel(String channel, int offset, int limit) {
-        System.out.println(postDao.getPostsByCriteria(channel, null, null, offset, limit));
         return postDao.getPostsByCriteria(channel, null, null, offset, limit);
     }
 
     @Override
     public List<Post> getPostsByChannelAndDate(final String channel, final String order, int offset, int limit){
-        System.out.println(postDao.getPostsByCriteria(channel, null, order, offset, limit));
         return postDao.getPostsByCriteria(channel, null, order, offset, limit);
     }
 
     @Override
     public List<Post> getPostsByChannelAndDateAndTag(final String channel, final String tag, final String order, int offset, int limit){
-        System.out.println(postDao.getPostsByCriteria(channel, tag, order, offset, limit));
         return postDao.getPostsByCriteria(channel, tag, order, offset, limit);
     }
 

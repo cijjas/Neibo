@@ -27,6 +27,8 @@ public interface UserDao {
 
     void setUserValues(final long id, final String name, final String surname, final String password, final boolean darkMode, final String language, final boolean verified, final String role);
 
+
+
     // ----------------------- Neighbor Methods
     User createNeighbor(final String mail, final String password, final String name, final String surname,
                         final long neighborhoodId, final String language, final boolean darkMode, final boolean verification);

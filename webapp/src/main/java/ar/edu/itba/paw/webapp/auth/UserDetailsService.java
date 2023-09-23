@@ -27,29 +27,15 @@ public class UserDetailsService implements org.springframework.security.core.use
     public UserDetails loadUserByUsername(String mail) throws NeighborNotFoundException {
         final User n = us.findUserByMail(mail).orElseThrow(NeighborNotFoundException::new);
 
-        // Neighbor belongs to an early version where password was not required
-        if ( n.getPassword() == null ) {
-            // ns.setDefaultValues(n.getNeighborId());
-            String newPassword = passwordEncoder.encode(n.getName()+n.getSurname());
-            // ns.setNewPassword(n.getNeighborId(), newPassword);
-
-            final Set<GrantedAuthority> authorities = new HashSet<>();
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-
-            return new UserAuth(n.getMail(), newPassword, authorities);
-        }
-
         final Set<GrantedAuthority> authorities = new HashSet<>();
 
-
-        /*
-        * if (inAdminMais)
-        *   give ADMIN USER
-        *   return
-        * */
+        if (n.getRole().equals("Administrator")){
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
 
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-
+        System.out.println("Granting the following powers");
+        System.out.println(authorities);
         return new UserAuth(n.getMail(), n.getPassword(), authorities); // which information is stored in the session
     }
 }

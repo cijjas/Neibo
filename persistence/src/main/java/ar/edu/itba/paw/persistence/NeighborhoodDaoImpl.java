@@ -19,7 +19,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private final String NEIGHBORHOODS = "select neighborhoodid, neighborhoodname from neighborhoods ";
+    private final String NEIGHBORHOODS = "SELECT * FROM neighborhoods ";
 
     @Autowired
     public NeighborhoodDaoImpl(final DataSource ds) {
@@ -54,7 +54,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
 
     @Override
     public Optional<Neighborhood> findNeighborhoodById(long id) {
-        final List<Neighborhood> list = jdbcTemplate.query(NEIGHBORHOODS + " where neighborhoodid = ?", ROW_MAPPER, id);
+        final List<Neighborhood> list = jdbcTemplate.query(NEIGHBORHOODS + " WHERE neighborhoodid = ?", ROW_MAPPER, id);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 }

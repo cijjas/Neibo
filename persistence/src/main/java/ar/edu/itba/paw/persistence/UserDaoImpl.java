@@ -27,7 +27,7 @@ public class UserDaoImpl implements UserDao {
     private final String USERS_JOIN_NEIGHBORHOODS =
             "select userid, mail, password, name, surname, darkmode, language, verified, u.neighborhoodid, role\n" +
                     "from users u join neighborhoods nh on u.neighborhoodid = nh.neighborhoodid ";
-    private final String USERS_JOIN_POSTS_NEIGHBORS_AND_POSTS =
+    private final String USERS_JOIN_POSTS_USERS_AND_POSTS =
             "select u.userid, mail, password, name, surname, darkmode, language, verified, neighborhoodid, role\n" +
             "from posts p join posts_users on p.postid = posts_users.postid join users u on posts_users.userid = u.userid ";
 
@@ -101,7 +101,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void setUserValues(final long id, final String name, final String surname, final String password, final boolean darkMode, final String language, final boolean verified, final String role) {
-        jdbcTemplate.update("UPDATE neighbors SET name = ?, surname = ?, password = ?, darkmode = ?, language = ?, verified = ?, role = ?  WHERE userid = ?", name, surname, password, darkMode, language, verified, role, id);
+        jdbcTemplate.update("UPDATE users SET name = ?, surname = ?, password = ?, darkmode = ?, language = ?, verified = ?, role = ?  WHERE userid = ?", name, surname, password, darkMode, language, verified, role, id);
     }
 
 
@@ -125,7 +125,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getNeighborsSubscribedByPostId(long postId) {
-        return jdbcTemplate.query(USERS_JOIN_POSTS_NEIGHBORS_AND_POSTS + " WHERE p.postid = ? AND role LIKE 'Neighbor'", ROW_MAPPER, postId);
+        return jdbcTemplate.query(USERS_JOIN_POSTS_USERS_AND_POSTS + " WHERE p.postid = ? AND role LIKE 'Neighbor'", ROW_MAPPER, postId);
     }
 
     @Override

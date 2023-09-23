@@ -40,9 +40,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createNeighbor(final String mail, final String password, final String name, final String surname,
                                final long neighborhoodId, String language, boolean darkMode, boolean verification) {
-        User n = findNeighborByMail(mail).orElse(null);
+        User n = findUserByMail(mail).orElse(null);
         if (n == null) {
             return userDao.createNeighbor(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, darkMode, verification);
+        }else if (n.getPassword() == null){
+            // n is a user from an early version where signing up was not a requirement
+            userDao.setUserValues(n.getUserId(), n.getName(), n.getSurname(), passwordEncoder.encode(password), false, "English", false, "Neighbor");
         }
         return n;
     }

@@ -398,17 +398,12 @@ public class FrontController {
     public ModelAndView signupForm(@Valid @ModelAttribute("signupForm") final SignupForm signupForm,
                               final BindingResult errors) {
         if (errors.hasErrors()) {
-            System.out.println("HAS ERRORS!");
             ModelAndView mav = signupForm(signupForm);
             mav.addObject("openSignupDialog", true);
             return mav;
         }
-        System.out.println("CREANDO UN NEIGHBOR");
-        System.out.println(signupForm);
 
-        User neighbor = ns.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), "English", false, false );
-        System.out.println("neighbor:\n");
-        System.out.println(neighbor);
+        ns.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), "English", false, false );
         return new ModelAndView("redirect:/");
     }
 
@@ -422,7 +417,7 @@ public class FrontController {
 
         String email = authentication.getName();
 
-        Optional<User> neighborOptional = ns.findNeighborByMail(email);
+        Optional<User> neighborOptional = ns.findUserByMail(email);
 
         return neighborOptional.orElseThrow(NeighborhoodNotFoundException::new);
     }
@@ -434,6 +429,11 @@ public class FrontController {
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
         return new ModelAndView("views/index");
+    }
+
+    @RequestMapping(value = "/admin/test", method = RequestMethod.GET)
+    public ModelAndView adminTest() {
+        return new ModelAndView("admin/requestManager");
     }
 
     @RequestMapping(value = "/testDuplicatedException", method = RequestMethod.GET)
