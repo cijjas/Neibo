@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <html>
 
 <head>
@@ -83,38 +84,48 @@
                     <span>Sign up to get started</span>
                 </div>
 
-                <form class="signup-form">
-                    <label>
-                        <input type="text" placeholder="First Name" name="firstName" class="input">
-                    </label>
-                    <label>
-                        <input type="text" placeholder="First Name" name="firstName" class="input">
-                    </label>
-                    <label>
-                        <input type="email" placeholder="Email" name="mail" class="input">
-                    </label>
-                    <label>
-                        <input type="password" placeholder="Password" name="password" class="input">
-                    </label>
-
+                <form:form method="post" action="signup" modelAttribute="signupForm">
+                    <form:errors cssClass="error" element="p"/>
                     <div class="form-input">
-                        <label>Neighborhoods</label>
-                        <label>
-                            <select name="neighborhoodId" class="form-control">
-                                <c:forEach var="entry" items="${neighborhoodsList}">
-                                    <option value="${entry.neighborhoodId}">${entry.getName()}</option>
-                                </c:forEach>
-                            </select>
-                        </label>
+                        <form:label path="name">
+                            <form:input path="name" placeholder="First Name" class="input"/>
+                        </form:label>
+                        <form:errors path="name" cssClass="error" element="p"/>
+                    </div>
+                    <div class="form-input">
+                        <form:label path="surname">
+                            <form:input path="surname" placeholder="Surname" class="input"/>
+                        </form:label>
+                        <form:errors path="surname" cssClass="error" element="p"/>
+                    </div>
+                    <div class="form-input">
+                        <form:label path="mail">
+                            <form:input path="mail" placeholder="Email" class="input"/>
+                        </form:label>
+                        <form:errors path="mail" cssClass="error" element="p"/>
+                    </div>
+                    <div class="form-input">
+                        <form:label path="password">
+                            <form:input path="password" placeholder="Password" class="input"/>
+                        </form:label>
+                        <form:errors path="password" cssClass="error" element="p"/>
                     </div>
 
-                    <button class="action-button">Sign Up</button>
-                </form>
+                    <div class="form-input">
+                        <form:label path="neighborhoodId"> Neighborhoods </form:label>
+                        <form:select path="neighborhoodId" class="form-control">
+                                <c:forEach var="entry" items="${neighborhoodsList}">
+                                    <form:option value="${entry.getNeighborhoodId()}">${entry.getName()}</form:option>
+                                </c:forEach>
+                        </form:select>
+                    </div>
+
+                    <button type="submit" class="action-button">Sign Up</button>
+                </form:form>
             </div>
         </div>
 
     </div>
-
 
 
      <script>
@@ -134,6 +145,17 @@
              document.getElementById("signupDialog").style.display = "none";
          }
      </script>
+
+<%--  para que se abra el dialogo de signup al cargar la pagina (no funca)--%>
+<%--    <script>--%>
+<%--        window.onload = function () {--%>
+<%--            var openSignupDialog = ${openSignupDialog}; // Get the variable value--%>
+
+<%--            if (openSignupDialog) {--%>
+<%--                openSignupDialog(); // Open the signup dialog if the variable is true--%>
+<%--            }--%>
+<%--        }--%>
+<%--    </script>--%>
 
 
 <%----%>

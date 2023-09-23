@@ -356,6 +356,31 @@
     border-color: var(--primary);
 }
 
+
+.cool-left-button {
+    text-align: left;
+    font-weight: bolder;
+    overflow: hidden;
+    cursor: pointer;
+    padding: 1em 1em;
+    width: 200px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 0 0 var(--primary);
+    background-color: var(--onbackground);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    border-radius: var(--border-radius);
+}
+
+.cool-left-button:hover ,
+.cool-left-button:active ,
+.cool-left-button:focus-visible {
+    transform: translateY(-4px) ;
+    box-shadow: 0 5px 0 0 var(--primary);
+    color: var(--primary);
+}
+
+
 /*----------------------------WEATHER ------------------------------------*/
 
 .cardContainer {
@@ -621,7 +646,6 @@ input[type=file]::file-selector-button:hover {
     padding: 4px; /* Adjust padding for better visual alignment */
 }
 .pagination-button:hover:not(.active) {
-    background-color: var(--darkonbackground);
     transform: translateY(-2px);
     box-shadow: 0 5px 0 0 var(--primary);
     color: var(--primary);
@@ -666,7 +690,67 @@ footer div {
     to {transform: translateX(-100%);}
 }
 
-/*-------------------------------------------------Landing page , login, log in, home --------------------*/
+/*------------------------------------------------- requestmanager request manager --------------------*/
+
+.req-acc-users-list {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    background-color: var(--onbackground);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    border-radius: var(--border-radius);
+    transform: translateY(-4px) ;
+    box-shadow: -3px 5px 0 0 var(--primary);
+}
+.user-row{
+    padding: 1rem;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.information{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+.divider {
+    height: 2px;
+    width: 100%;
+    background-color: var(--bordercolor);
+}
+.acceptance{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+.ignore-button{
+    font-size: 12px;
+    padding: 10px;
+    color: var(--text);
+    background-color: var(--background);
+    border: 1px solid var(--bordercolor);
+    border-radius: var(--border-hard);
+    transition: all 0.3s ease-in-out;
+}
+.ignore-button:hover{
+    border: 1px solid var(--error);
+    transform: translateY(-4px) ;
+    box-shadow: 0 5px 0 0 var(--error);
+    color: var(--error);
+}
+
+/*-------------------------------------------------cool buttons --------------------*/
 
 .cool-button {
     text-align: center;
@@ -686,32 +770,15 @@ footer div {
 
 .cool-button:hover ,
 .cool-button:active ,
-.cool-button:focus {
+.cool-button:focus-visible {
     transform: translateY(-4px) ;
     box-shadow: 0 5px 0 0 var(--primary);
     color: var(--primary);
 }
 
+.cool-button.cool-small{
+    width: 120px;
 
-.cool-left-button {
-    text-align: left;
-    font-weight: bolder;
-    overflow: hidden;
-    cursor: pointer;
-    padding: 1em 1em;
-    width: 200px;
-    transition: all 0.3s ease-in-out;
-    box-shadow: 0 0 0 0 var(--primary);
-    background-color: var(--onbackground);
-    color: var(--primary);
-    border: 1px solid var(--primary);
-    border-radius: var(--border-radius);
 }
 
-.cool-left-button:hover ,
-.cool-left-button:active ,
-.cool-left-button:focus-visible {
-    transform: translateY(-4px) ;
-    box-shadow: 0 5px 0 0 var(--primary);
-    color: var(--primary);
-}
+
