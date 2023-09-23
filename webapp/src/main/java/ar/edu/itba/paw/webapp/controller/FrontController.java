@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.form.CommentForm;
 import ar.edu.itba.paw.webapp.form.PublishForm;
+import ar.edu.itba.paw.webapp.form.SignupForm;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -233,21 +234,21 @@ public class FrontController {
             return publishForm(publishForm);
         }
 
-        // Neighborhood nh = nhs.createNeighborhood(publishForm.getNeighborhood());
-        // Neighbor n = ns.createNeighbor(publishForm.getEmail(), publishForm.getName(), publishForm.getSurname(), nh.getNeighborhoodId());
+        Neighbor n = getLoggedNeighbor();
+
         Post p = null;
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
                 // Convert the image to base64
                 byte[] imageBytes = imageFile.getBytes();
-                // p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), imageBytes);
+                 p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), imageBytes);
                 // Set the base64-encoded image data in the tournamentForm
             } catch (IOException e) {
                 System.out.println("Issue uploading the image");
                 // Should go to an error page!
             }
         } else {
-            // p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), null);
+             p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), null);
         }
         assert p != null;
         ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
@@ -276,23 +277,21 @@ public class FrontController {
             return publishForm(publishForm);
         }
 
-        // deprecado por el login
-        // Neighborhood nh = nhs.createNeighborhood(publishForm.getNeighborhood());
-        // Neighbor n = ns.createNeighbor(publishForm.getEmail(), publishForm.getName(), publishForm.getSurname(), nh.getNeighborhoodId());
+        Neighbor n = getLoggedNeighbor();
 
         Post p = null;
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
                 // Convert the image to base64
                 byte[] imageBytes = imageFile.getBytes();
-                // p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), imageBytes);
+                 p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), imageBytes);
                 // Set the base64-encoded image data in the tournamentForm
             } catch (IOException e) {
                 System.out.println("Issue uploading the image");
                 // Should go to an error page!
             }
         } else {
-            // p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), null);
+             p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getNeighborId(), publishForm.getChannel(), null);
         }
         assert p != null;
         ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
@@ -372,41 +371,14 @@ public class FrontController {
 
     // ---------------------------------- LOGIN BETA -----------------------------------
 
-    @RequestMapping(value = "/signup", method = RequestMethod.GET)
-    public ModelAndView signUp() {
-        ModelAndView mav = new ModelAndView("views/testSignUp");
-        mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
-        return mav;
-    }
-
-    @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public ModelAndView signUp(@RequestParam("name") String name,
-                               @RequestParam("surname") String surname,
-                               @RequestParam("mail") String mail,
-                               @RequestParam("password") String password,
-                               @RequestParam("neighborhoodId") long neighborhoodId
-                               ) {
-
-        Neighbor n = new Neighbor.Builder()
-                .name(name)
-                .surname(surname)
-                .mail(mail)
-                .password(password)
-                .neighborhoodId(neighborhoodId)
-                .build();
-
-        ns.createNeighbor(mail, password, name, surname, neighborhoodId, "English", false, false );
-        // ns.createNeighbor(mail, password, name, surname, neighborhoodId, language, darkMode, verification);
-        System.out.println("New Neighbor Signed Up");
-        System.out.println(n);
-
-        return new ModelAndView("redirect:/");
-    }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ModelAndView logIn(Model model) {
+    public ModelAndView logIn(Model model, @ModelAttribute("signupForm") final SignupForm signupform) {
         model.addAttribute("neighbor", new Neighbor.Builder());
-        return new ModelAndView("views/landingPage");
+        ModelAndView mav = new ModelAndView("views/landingPage");
+        mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
+        mav.addObject("openSignupDialog", false);
+        return mav;
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -415,6 +387,32 @@ public class FrontController {
     ) {
         return new ModelAndView("views/index");
     }
+
+    @RequestMapping(value = "/signup", method = RequestMethod.GET)
+    public ModelAndView signupForm(@ModelAttribute("signupForm") final SignupForm signupform) {
+        ModelAndView mav = new ModelAndView("views/landingPage");
+        mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
+        return mav;
+    }
+
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public ModelAndView signupForm(@Valid @ModelAttribute("signupForm") final SignupForm signupForm,
+                              final BindingResult errors) {
+        if (errors.hasErrors()) {
+            System.out.println("HAS ERRORS!");
+            ModelAndView mav = signupForm(signupForm);
+            mav.addObject("openSignupDialog", true);
+            return mav;
+        }
+        System.out.println("CREANDO UN NEIGHBOR");
+        System.out.println(signupForm);
+
+        Neighbor neighbor = ns.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), "English", false, false );
+        System.out.println("neighbor:\n");
+        System.out.println(neighbor);
+        return new ModelAndView("redirect:/");
+    }
+
 
     @ModelAttribute("loggedUser")
     public Neighbor getLoggedNeighbor() {
