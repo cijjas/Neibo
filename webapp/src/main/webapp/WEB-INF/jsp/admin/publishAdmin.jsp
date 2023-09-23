@@ -28,38 +28,10 @@
         <div class="card-body">
             <h4 class="card-title"><spring:message code="CreateAdminPost.title"/></h4>
 
-            <form:form method="post" action="publish_admin" modelAttribute="publishForm" enctype="multipart/form-data">
+            <form:form method="post" action="publishAdmin" modelAttribute="publishForm" enctype="multipart/form-data">
                 <form:errors cssClass="error" element="p"/>
 
                 <div class="form-column">
-
-                    <div class="form-group">
-                        <div class="form-input">
-                            <form:label path="name"><spring:message code="Name"/>:</form:label>
-                            <form:input path="name" class="form-control"/>
-                            <form:errors path="name" cssClass="error" element="p"/>
-                        </div>
-
-                        <div class="form-input">
-                            <form:label path="surname"><spring:message code="Surname"/>:</form:label>
-                            <form:input path="surname" class="form-control"/>
-                            <form:errors path="surname" cssClass="error" element="p"/>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="form-input">
-                            <form:label path="email"><spring:message code="Email"/>:</form:label>
-                            <form:input path="email" class="form-control"/>
-                            <form:errors path="email" cssClass="error" element="p"/>
-                        </div>
-
-                        <div class="form-input">
-                            <form:label path="neighborhood"><spring:message code="Neighborhood"/>:</form:label>
-                            <form:input path="neighborhood" class="form-control"/>
-                            <form:errors path="neighborhood" cssClass="error" element="p"/>
-                        </div>
-                    </div>
 
                     <div class="form-group">
                         <div class="form-input">

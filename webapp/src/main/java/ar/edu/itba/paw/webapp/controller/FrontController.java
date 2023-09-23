@@ -76,27 +76,27 @@ public class FrontController {
         if (sortBy != null) {
             switch (sortBy) {
                 case "dateasc":
-                    postList = ps.getPostsByDate("asc", offset, size);
+                    postList = ps.getPostsByChannelAndDate("Feed", "asc", offset, size);
                     break;
                 case "datedesc":
-                    postList = ps.getPostsByDate("desc", offset, size);
+                    postList = ps.getPostsByChannelAndDate("Feed", "desc", offset, size);
                     break;
                 default:
                     if (sortBy.startsWith("tag")) {
                         String tag = sortBy.substring(3); // Extract the tag part
-                        postList = ps.getPostsByTag(tag, offset, size);
+                        postList = ps.getPostsByChannelAndDateAndTag("Feed", "desc",tag, offset, size);
                     }
             }
         } else {
-            postList = ps.getPostsByDate("desc", offset, size); // Default sorting with pagination
+            postList = ps.getPostsByChannelAndDate("Feed", "desc", offset, size); // Default sorting with pagination
         }
 
         // Calculate the total count of posts
         int totalCount;
         if (sortBy != null && sortBy.startsWith("tag"))
-            totalCount = ps.getTotalPostsCountWithTag(sortBy.substring(3));
+            totalCount = ps.getTotalPostsCountInChannelWithTag("Feed", sortBy.substring(3));
         else
-            totalCount = ps.getTotalPostsCount();
+            totalCount = ps.getTotalPostsCountInChannel("Feed");
 
         // Calculate the total pages
         int totalPages = (int) Math.ceil((double) totalCount / size);
@@ -262,6 +262,8 @@ public class FrontController {
         final ModelAndView mav = new ModelAndView("admin/publishAdmin");
         Map<String, Channel> channelMap = chs.getChannels().stream()
                 .collect(Collectors.toMap(Channel::getChannel, Function.identity()));
+        channelMap.remove("Foro");
+        channelMap.remove("Feed");
         //no queremos que usuarios puedan publicar en el canal de administracion
         mav.addObject("channelList", channelMap);
 
