@@ -6,7 +6,7 @@
     <div class="post-section">
         <div class="post-info">
             <h2><c:out value="${post.title}" /></h2>
-            <p><spring:message code="PostedBy"/> <c:out value="${post.neighbor.name}" /></p>
+            <p><spring:message code="PostedBy"/> <c:out value="${post.user.name}" /></p>
             <p><c:out value="${post.description}" /></p>
         </div >
 
@@ -100,7 +100,7 @@
                 <c:forEach var="comment" items="${comments}">
                     <div class="comment">
                         <div class="comment-header">
-                            <strong><c:out value="${comment.neighbor.name} ${comment.neighbor.surname}" /></strong>
+                            <strong><c:out value="${comment.user.name} ${comment.user.surname}" /></strong>
                         </div>
                         <div class="comment-body">
                             <c:out value="${comment.comment}" />

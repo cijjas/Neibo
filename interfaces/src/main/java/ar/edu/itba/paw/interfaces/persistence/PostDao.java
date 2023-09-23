@@ -8,26 +8,10 @@ import java.util.Optional;
 public interface PostDao {
     Post createPost(final String title, final String description, final long neighborId, final long channelId, final byte[] imageFile);
 
-    List<Post> getPosts(int offset, int limit);
+    List<Post> getPostsByCriteria(String channel, String tag, String order, int offset, int limit);
 
-    List<Post> getPostsByDate(String order, int offset, int limit);
-
-    List<Post> getPostsByTag(String tag, int offset, int limit);
-
-    List<Post> getPostsByChannel(String channel, int offset, int limit);
-
-    List<Post> getPostsByChannelAndDate(final String channel, final String order, int offset, int limit);
-
-    List<Post> getPostsByChannelAndDateAndTag(final String channel, final String order, final String tag, int offset, int limit);
+    int getTotalPostsCountByCriteria(String channel, String tag);
 
     Optional<Post> findPostById(long id);
-
-    int getTotalPostsCount();
-
-    int getTotalPostsCountInChannel(String channel);
-
-    int getTotalPostsCountWithTag(String tag);
-
-    int getTotalPostsCountInChannelWithTag(String channel, String tag);
 
 }

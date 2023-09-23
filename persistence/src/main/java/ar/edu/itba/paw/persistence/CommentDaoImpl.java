@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.CommentDao;
+import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.Comment;
-import ar.edu.itba.paw.models.Neighbor;
+import ar.edu.itba.paw.models.Post;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -22,11 +25,15 @@ public class CommentDaoImpl implements CommentDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private final String COMMENTS_JOIN_NEIGHBORS = "select postid, commentid, comment, commentdate, n.neighborid, name, surname, mail  " +
-                                    "from comments join public.neighbors n on comments.neighborid = n.neighborid ";
+    private UserDao userDao;
+
+    private final String COMMENTS_JOIN_NEIGHBORS =
+            "select postid, commentid, comment, commentdate, u.userid, name, surname, mail \n" +
+            "from comments join public.users u on comments.userid = u.userid ";
 
     @Autowired
-    public CommentDaoImpl(final DataSource ds) {
+    public CommentDaoImpl(final DataSource ds, UserDao userDao) {
+        this.userDao = userDao;
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
                 .usingGeneratedKeyColumns("commentid")
@@ -34,11 +41,11 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override
-    public Comment createComment(String comment, long neighborId, long postId) {
+    public Comment createComment(String comment, long userId, long postId) {
         Map<String, Object> data = new HashMap<>();
         data.put("comment", comment);
         data.put("commentdate", Timestamp.valueOf(LocalDateTime.now()));
-        data.put("neighborid", neighborId);
+        data.put("userid", userId);
         data.put("postid", postId);
 
         final Number key = jdbcInsert.executeAndReturnKey(data);
@@ -49,21 +56,17 @@ public class CommentDaoImpl implements CommentDao {
                 .build();
     }
 
-    private static final RowMapper<Comment> ROW_MAPPER =
-            (rs, rowNum) -> new Comment.Builder()
-                    .commentId(rs.getLong("commentid"))
-                    .comment(rs.getString("comment"))
-                    .date(rs.getDate("commentdate"))
-                    .postId(rs.getLong("postid"))
-                    .neighbor(
-                            new Neighbor.Builder()
-                                    .neighborId(rs.getLong("neighborid"))
-                                    .mail(rs.getString("mail"))
-                                    .name(rs.getString("name"))
-                                    .surname(rs.getString("surname"))
-                                    .build()
-                    )
-                    .build();
+    private final RowMapper<Comment> ROW_MAPPER = (rs, rowNum) -> {
+        User user = userDao.findUserById(rs.getLong("userid")).orElse(null);
+
+        return new Comment.Builder()
+                .commentId(rs.getLong("commentid"))
+                .comment(rs.getString("comment"))
+                .date(rs.getDate("commentdate"))
+                .postId(rs.getLong("postid"))
+                .user(user)
+                .build();
+    };
 
     @Override
     public Optional<List<Comment>> findCommentsByPostId(long id) {

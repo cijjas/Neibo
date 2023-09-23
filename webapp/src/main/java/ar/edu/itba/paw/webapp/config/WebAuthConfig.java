@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
-import ar.edu.itba.paw.webapp.auth.NeighborDetailsService;
+import ar.edu.itba.paw.webapp.auth.UserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +26,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Value("classpath:rememberme.key")
     private Resource rememberMeKey;
     @Autowired
-    private NeighborDetailsService neighborDetails;
+    private UserDetailsService userDetails;
 
     // this defines that whenever spring has to compare passwords the strategy is to use the following encoder
     @Bean
@@ -35,7 +35,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(neighborDetails).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userDetails).passwordEncoder(passwordEncoder());
     }
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
@@ -52,7 +52,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                     .loginPage("/login")
                 .and().rememberMe()
                     .rememberMeParameter("rememberMe")
-                    .userDetailsService(neighborDetails)
+                    .userDetailsService(userDetails)
                     .key(StreamUtils.copyToString(rememberMeKey.getInputStream(), StandardCharsets.UTF_8))
                     .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
                 .and().logout()

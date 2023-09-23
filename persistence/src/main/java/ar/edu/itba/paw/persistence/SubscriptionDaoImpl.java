@@ -19,13 +19,13 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
     public SubscriptionDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName("posts_neighbors");
+                .withTableName("posts_users");
     }
 
     @Override
-    public void createSubscription(long neighborId, long postId) {
+    public void createSubscription(long userId, long postId) {
         Map<String, Object> data = new HashMap<>();
-        data.put("neighborid", neighborId);
+        data.put("userid", userId);
         data.put("postid", postId);
         jdbcInsert.execute(data);
     }

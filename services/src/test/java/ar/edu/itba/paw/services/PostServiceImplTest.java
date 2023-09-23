@@ -1,8 +1,9 @@
+/*
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.models.Channel;
-import ar.edu.itba.paw.models.Neighbor;
+import ar.edu.itba.paw.models.User;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -17,7 +18,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class) // Le decimos a JUnit que corra los tests con el runner de Mockito
 public class PostServiceImplTest {
 
-    private Neighbor mockNeighbor;
+    private User mockUser;
     private Channel mockChannel;
     private static final long ID = 1;
     private static final String TITLE = "LOBO RONDANDO";
@@ -41,11 +42,12 @@ public class PostServiceImplTest {
     @Before
     public void setUp() {
         // Create and set up the mock Neighborhood object
-        mockNeighbor = mock(Neighbor.class);
-        when(mockNeighbor.getNeighborId()).thenReturn(NEIGHBOR_ID);
+        mockUser = mock(User.class);
+        when(mockUser.getNeighborId()).thenReturn(NEIGHBOR_ID);
         mockChannel = mock(Channel.class);
         when(mockChannel.getChannelId()).thenReturn(CHANNEL_ID);
     }
+*/
 /*
     @Test
     public void testCreate() {
@@ -115,5 +117,7 @@ public class PostServiceImplTest {
         Assert.assertEquals(ID, newPost.get().getPostId());
     }
 
- */
+ *//*
+
 }
+*/

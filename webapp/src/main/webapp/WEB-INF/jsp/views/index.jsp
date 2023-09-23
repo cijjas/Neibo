@@ -68,7 +68,7 @@
                             <c:forEach var="post" items="${postList}" >
                                 <jsp:include page="/WEB-INF/jsp/components/blogpost.jsp" >
                                     <jsp:param name="postID" value="${post.postId}" />
-                                    <jsp:param name="postNeighborMail" value="${post.neighbor.mail}" />
+                                    <jsp:param name="postNeighborMail" value="${post.user.mail}" />
                                     <jsp:param name="postDate" value="${post.date}" />
                                     <jsp:param name="postTitle" value="${post.title}" />
                                     <jsp:param name="postDescription" value="${post.description}" />

@@ -1,22 +1,22 @@
 package ar.edu.itba.paw.models;
 
 public class NeighborPostNeighborhoodWrapper {
-    private Neighbor neighbor;
+    private User user;
     private Neighborhood neighborhood;
     private Post post;
 
     public NeighborPostNeighborhoodWrapper() {
-        this.neighbor = new Neighbor.Builder().build(); // Initialize Neighbor object
+        this.user = new User.Builder().build(); // Initialize Neighbor object
         this.post = new Post.Builder().build(); // Initialize Post object
         this.neighborhood = new Neighborhood.Builder().build(); // Initialize Neighborhood object
     }
 
-    public Neighbor getNeighbor() {
-        return neighbor;
+    public User getNeighbor() {
+        return user;
     }
 
-    public void setNeighbor(Neighbor neighbor) {
-        this.neighbor = neighbor;
+    public void setNeighbor(User user) {
+        this.user = user;
     }
 
     public Post getPost() {
@@ -38,7 +38,7 @@ public class NeighborPostNeighborhoodWrapper {
     @Override
     public String toString() {
         return "NeighborPostNeighborhoodWrapper{" +
-                "neighbor=" + neighbor +
+                "neighbor=" + user +
                 ", neighborhood=" + neighborhood +
                 ", post=" + post +
                 '}';

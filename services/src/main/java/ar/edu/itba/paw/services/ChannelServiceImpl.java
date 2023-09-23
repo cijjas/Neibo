@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ChannelServiceImpl implements ChannelService {
@@ -20,5 +21,15 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     public List<Channel> getChannels() {
         return channelDao.getChannels();
+    }
+
+    @Override
+    public Channel createChannel(String name) {
+        return channelDao.createChannel(name);
+    }
+
+    @Override
+    public Optional<Channel> findChannelById(long id) {
+        return channelDao.findChannelById(id);
     }
 }

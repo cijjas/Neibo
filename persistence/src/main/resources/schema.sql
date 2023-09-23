@@ -33,13 +33,13 @@ create table if not exists channels(
 
 -- Create Neighbors
 create table if not exists neighbors(
-    neighborId SERIAL PRIMARY KEY, -- Unique identifier for each neighbor
-    mail VARCHAR(128) NOT NULL UNIQUE, -- Email address of the neighbor (must be unique)
-    name VARCHAR(64) NOT NULL, -- First name of the neighbor
-    surname VARCHAR(64) NOT NULL, -- Last name of the neighbor
+    neighborId SERIAL PRIMARY KEY, -- Unique identifier for each user
+    mail VARCHAR(128) NOT NULL UNIQUE, -- Email address of the user (must be unique)
+    name VARCHAR(64) NOT NULL, -- First name of the user
+    surname VARCHAR(64) NOT NULL, -- Last name of the user
     creationDate TIMESTAMP NOT NULL, -- Date when the post was created
     -- profilePicture VARCHAR(1048576), -- Only image for the profile, nullable
-    neighborhoodId INT NOT NULL, -- ID of the neighborhood to which the neighbor belongs
+    neighborhoodId INT NOT NULL, -- ID of the neighborhood to which the user belongs
     foreign key (neighborhoodId) references neighborhoods(neighborhoodId) ON DELETE CASCADE -- Reference to the neighborhoods table
 );
 
@@ -50,7 +50,7 @@ create table if not exists posts(
     description TEXT NOT NULL, -- Description of the post
     postImage VARCHAR(1048576), -- Only image for the post, nullable
     postDate TIMESTAMP NOT NULL, -- Date when the post was created
-    neighborId INT NOT NULL, -- ID of the neighbor who created the post
+    neighborId INT NOT NULL, -- ID of the user who created the post
     channelId INT NOT NULL, -- ID of the channel the post is being posted in
     foreign key (neighborId) references neighbors(neighborId) ON DELETE CASCADE, -- Reference to the neighbors table
     foreign key (channelId) references channels(channelId) ON DELETE CASCADE -- Reference to the channels table
@@ -62,7 +62,7 @@ create table if not exists comments(
     comment VARCHAR(512) NOT NULL, -- The comment text
     commentDate DATE NOT NULL, -- Date when the comment was posted
 
-    neighborId INT NOT NULL, -- ID of the neighbor who posted the comment
+    neighborId INT NOT NULL, -- ID of the user who posted the comment
     postId INT NOT NULL, -- ID of the post to which the comment is associated
     foreign key (neighborId) references neighbors(neighborId) ON DELETE CASCADE, -- Reference to the neighbors table
     foreign key (postId) references posts(postId) ON DELETE CASCADE -- Reference to the posts table
@@ -109,7 +109,7 @@ INSERT INTO tags (tag) VALUES ('Musica');
 INSERT INTO tags (tag) VALUES ('Deporte');
 INSERT INTO tags (tag) VALUES ('Ocio');
 
--- Insert a neighbor
+-- Insert a user
 INSERT INTO neighbors (mail, name, creationdate, surname, neighborhoodid) VALUES ('daddyyankee@test.com', 'Daddy', CURRENT_TIMESTAMP, 'Yankee', 1);
 INSERT INTO neighbors (mail, name, creationdate, surname, neighborhoodid) VALUES ('cocochannel@test.com', 'Coco', CURRENT_TIMESTAMP, 'Channel', 2);
 INSERT INTO neighbors (mail, name, creationdate, surname, neighborhoodid) VALUES ('patriciorey@test.com', 'Patricio', CURRENT_TIMESTAMP, 'Rey', 3);

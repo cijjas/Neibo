@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models;
 
-public class Neighbor {
-    private final long neighborId;
+public class User {
+    private final long userId;
     private final String mail;
     private final String name;
     private final String surname;
@@ -10,9 +10,10 @@ public class Neighbor {
     private final boolean darkMode;
     private final boolean verified;
     private final String language;
+    private final String role;
 
-    private Neighbor(Builder builder) {
-        this.neighborId = builder.neighborId;
+    private User(Builder builder) {
+        this.userId = builder.userId;
         this.mail = builder.mail;
         this.name = builder.name;
         this.surname = builder.surname;
@@ -21,10 +22,11 @@ public class Neighbor {
         this.darkMode = builder.darkMode;
         this.verified = builder.verified;
         this.language = builder.language;
+        this.role = builder.role;
     }
 
     public static class Builder {
-        private long neighborId;
+        private long userId;
         private String mail;
         private String name;
         private String surname;
@@ -33,9 +35,10 @@ public class Neighbor {
         private boolean darkMode;
         private boolean verified;
         private String language;
+        private String role;
 
-        public Builder neighborId(long neighborId) {
-            this.neighborId = neighborId;
+        public Builder userId(long userId) {
+            this.userId = userId;
             return this;
         }
 
@@ -74,18 +77,23 @@ public class Neighbor {
             return this;
         }
 
+        public Builder role(String role){
+            this.role = role;
+            return this;
+        }
+
         public Builder language(String language){
             this.language = language;
             return this;
         }
 
-        public Neighbor build() {
-            return new Neighbor(this);
+        public User build() {
+            return new User(this);
         }
     }
 
-    public long getNeighborId() {
-        return neighborId;
+    public long getUserId() {
+        return userId;
     }
 
     public String getMail() {
@@ -116,6 +124,10 @@ public class Neighbor {
         return verified;
     }
 
+    public String getRole() {
+        return role;
+    }
+
     public String getLanguage() {
         return language;
     }
@@ -123,15 +135,16 @@ public class Neighbor {
     @Override
     public String toString() {
         return "Neighbor{" +
-                "neighborId=" + neighborId +
+                "userId=" + userId +
                 ", mail='" + mail + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", password='" + password + '\'' +
                 ", neighborhoodId=" + neighborhoodId +
                 ", darkMode=" + darkMode +
-                ", verification=" + verified +
+                ", verified=" + verified +
                 ", language='" + language + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

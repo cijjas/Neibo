@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.models.Channel;
+import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -12,6 +13,7 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class ChannelDaoImpl implements ChannelDao {
@@ -49,5 +51,11 @@ public class ChannelDaoImpl implements ChannelDao {
     @Override
     public List<Channel> getChannels() {
         return jdbcTemplate.query(CHANNELS, ROW_MAPPER);
+    }
+
+    @Override
+    public Optional<Channel> findChannelById(long channelId) {
+        final List<Channel> list = jdbcTemplate.query(CHANNELS + " WHERE channelid = ?", ROW_MAPPER, channelId);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 }

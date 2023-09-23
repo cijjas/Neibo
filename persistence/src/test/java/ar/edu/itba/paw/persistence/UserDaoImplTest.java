@@ -23,7 +23,7 @@ public class UserDaoImplTest {
     private DataSource ds;
 
     @Autowired
-    private NeighborDaoImpl userDao;
+    private UserDaoImpl userDao;
 
     private JdbcTemplate jdbcTemplate;
 

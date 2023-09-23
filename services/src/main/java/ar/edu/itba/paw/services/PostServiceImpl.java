@@ -3,9 +3,9 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.interfaces.services.NeighborService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.PostService;
-import ar.edu.itba.paw.models.Neighbor;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +19,11 @@ import java.util.Optional;
 public class PostServiceImpl implements PostService {
     private final PostDao postDao;
     private final ChannelDao channelDao;
-    private final NeighborService ns;
+    private final UserService ns;
     private final EmailService emailService;
 
     @Autowired
-    public PostServiceImpl(final PostDao postDao, final ChannelDao channelDao, NeighborService ns, EmailService emailService) {
+    public PostServiceImpl(final PostDao postDao, final ChannelDao channelDao, UserService ns, EmailService emailService) {
         this.postDao = postDao;
         this.channelDao = channelDao;
         this.ns = ns;
@@ -37,27 +37,35 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getPosts(int offset, int limit) {
-        return postDao.getPosts(offset, limit);
+        return postDao.getPostsByCriteria(null, null, null, offset, limit);
     }
 
     @Override
     public List<Post> getPostsByDate(final String order, int offset, int limit) {
-        return postDao.getPostsByDate(order, offset, limit);
+        return postDao.getPostsByCriteria(null, null, order, offset, limit);
     }
 
     @Override
     public List<Post> getPostsByTag(String tag, int offset, int limit) {
-        return postDao.getPostsByTag(tag, offset, limit);
+        return postDao.getPostsByCriteria(null, tag, null, offset, limit);
     }
 
     @Override
     public List<Post> getPostsByChannel(String channel, int offset, int limit) {
-        return postDao.getPostsByChannel(channel, offset, limit);
+        System.out.println(postDao.getPostsByCriteria(channel, null, null, offset, limit));
+        return postDao.getPostsByCriteria(channel, null, null, offset, limit);
     }
 
     @Override
     public List<Post> getPostsByChannelAndDate(final String channel, final String order, int offset, int limit){
-        return postDao.getPostsByChannelAndDate(channel, order, offset, limit);
+        System.out.println(postDao.getPostsByCriteria(channel, null, order, offset, limit));
+        return postDao.getPostsByCriteria(channel, null, order, offset, limit);
+    }
+
+    @Override
+    public List<Post> getPostsByChannelAndDateAndTag(final String channel, final String tag, final String order, int offset, int limit){
+        System.out.println(postDao.getPostsByCriteria(channel, tag, order, offset, limit));
+        return postDao.getPostsByCriteria(channel, tag, order, offset, limit);
     }
 
     @Override
@@ -67,25 +75,22 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public int getTotalPostsCount(){
-        return postDao.getTotalPostsCount();
+        return postDao.getTotalPostsCountByCriteria(null, null);
     }
 
     @Override
     public int getTotalPostsCountInChannel(String channel){
-        return postDao.getTotalPostsCountInChannel(channel);
+        return postDao.getTotalPostsCountByCriteria(channel, null);
     }
 
     @Override
-    public int getTotalPostsCountWithTag(String tag) { return postDao.getTotalPostsCountWithTag(tag); }
+    public int getTotalPostsCountWithTag(String tag) {
+        return postDao.getTotalPostsCountByCriteria(null, tag);
+    }
 
     @Override
     public int getTotalPostsCountInChannelWithTag(String channel, String tag ){
-        return postDao.getTotalPostsCountInChannelWithTag(channel, tag);
-    }
-
-    @Override
-    public List<Post> getPostsByChannelAndDateAndTag(final String channel, final String order, final String tag, int offset, int limit){
-        return postDao.getPostsByChannelAndDateAndTag(channel, order, tag, offset, limit);
+        return postDao.getTotalPostsCountByCriteria(channel, tag);
     }
 
     @Override
@@ -93,7 +98,7 @@ public class PostServiceImpl implements PostService {
         Post post = postDao.createPost(title, description, neighborId, channelId, imageFile);
         assert post != null;
         try {
-            for(Neighbor n : ns.getNeighbors()) {
+            for(User n : ns.getNeighbors()) {
                 System.out.println(n);
                 Map<String, Object> vars = new HashMap<>();
                 vars.put("name", n.getName());

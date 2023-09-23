@@ -5,7 +5,6 @@ import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.form.CommentForm;
 import ar.edu.itba.paw.webapp.form.PublishForm;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.jws.WebParam;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Collections;
@@ -33,7 +31,7 @@ import java.util.stream.Collectors;
 public class FrontController {
 
     private final PostService ps;
-    private final NeighborService ns;
+    private final UserService ns;
     private final NeighborhoodService nhs;
     private final CommentService cs;
     private final TagService ts;
@@ -43,7 +41,7 @@ public class FrontController {
 
     @Autowired
     public FrontController(final PostService ps,
-                           final NeighborService ns,
+                           final UserService ns,
                            final NeighborhoodService nhs,
                            final CommentService cs,
                            final TagService ts,
@@ -124,6 +122,7 @@ public class FrontController {
                                       @RequestParam(value = "size", defaultValue = "10") int size) {
         List<Post> postList = null;
         int offset = (page - 1) * size;
+
 
         if (sortBy != null) {
             switch (sortBy) {
@@ -387,7 +386,7 @@ public class FrontController {
                                @RequestParam("neighborhoodId") long neighborhoodId
                                ) {
 
-        Neighbor n = new Neighbor.Builder()
+        User n = new User.Builder()
                 .name(name)
                 .surname(surname)
                 .mail(mail)
@@ -405,7 +404,7 @@ public class FrontController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView logIn(Model model) {
-        model.addAttribute("neighbor", new Neighbor.Builder());
+        model.addAttribute("neighbor", new User.Builder());
         return new ModelAndView("views/landingPage");
     }
 
@@ -417,7 +416,7 @@ public class FrontController {
     }
 
     @ModelAttribute("loggedUser")
-    public Neighbor getLoggedNeighbor() {
+    public User getLoggedNeighbor() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken)
@@ -425,7 +424,7 @@ public class FrontController {
 
         String email = authentication.getName();
 
-        Optional<Neighbor> neighborOptional = ns.findNeighborByMail(email);
+        Optional<User> neighborOptional = ns.findNeighborByMail(email);
 
         return neighborOptional.orElseThrow(NeighborhoodNotFoundException::new);
     }

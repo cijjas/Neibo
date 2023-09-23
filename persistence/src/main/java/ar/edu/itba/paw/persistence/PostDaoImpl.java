@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
+import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Channel;
-import ar.edu.itba.paw.models.Neighbor;
+import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,25 +15,25 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class PostDaoImpl implements PostDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
+    private ChannelDao channelDao;
+    private UserDao userDao;
+
     private final String POSTS_JOIN_NEIGHBORS_AND_CHANNELS =
-            "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, c.channelid, channel, postimage\n" +
-            "from posts p join neighbors n on p.neighborid = n.neighborid join channels c on p.channelid = c.channelid ";
+            "select p.postid as postid, title, description, postdate, u.userid, mail, name, surname, c.channelid, channel, postimage\n" +
+            "from posts p join users u on p.userid = u.userid join channels c on p.channelid = c.channelid ";
     private final String POSTS_JOIN_NEIGHBORS_AND_NEIGHBORHOODS_AND_CHANNELS_AND_TAGS =
-            "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, n.neighborhoodid, neighborhoodname, c.channelid, channel, postimage\n" +
-            "from posts p join neighbors n on p.neighborid = n.neighborid join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid  join posts_tags on p.postid = posts_tags.postid join tags on posts_tags.tagid = tags.tagid " ;
+            "select p.postid as postid, title, description, postdate, u.userid, mail, name, surname, u.neighborhoodid, neighborhoodname, c.channelid, channel, postimage\n" +
+            "from posts p join users u on p.userid = u.userid join neighborhoods nh on u.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid  join posts_tags on p.postid = posts_tags.postid join tags on posts_tags.tagid = tags.tagid " ;
     private final String POSTS_JOIN_NEIGHBORS_AND_NEIGHBORHOODS_AND_CHANNELS =
-            "select p.postid as postid, title, description, postdate, n.neighborid, mail, name, surname, n.neighborhoodid, neighborhoodname, c.channelid, channel, postimage\n" +
-                    "from posts p join neighbors n on p.neighborid = n.neighborid join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid ";
+            "select p.postid as postid, title, description, postdate, u.userid, mail, name, surname, u.neighborhoodid, neighborhoodname, c.channelid, channel, postimage\n" +
+            "from posts p join users u on p.userid = u.userid join neighborhoods nh on u.neighborhoodid = nh.neighborhoodid join channels c on c.channelid = p.channelid ";
     private final String COUNT_POSTS =
             "SELECT COUNT(*)\n " +
             "FROM posts";
@@ -47,7 +49,12 @@ public class PostDaoImpl implements PostDao {
 
 
     @Autowired
-    public PostDaoImpl(final DataSource ds) {
+    public PostDaoImpl(final DataSource ds,
+                       ChannelDao channelDao,
+                       UserDao userDao
+                       ) {
+        this.userDao = userDao;
+        this.channelDao = channelDao;
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
                 .usingGeneratedKeyColumns("postid")
@@ -55,13 +62,13 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public Post createPost(String title, String description, long neighborId, long channelId, byte[] imageFile) {
+    public Post createPost(String title, String description, long userid, long channelId, byte[] imageFile) {
         System.out.println("CREATING NEW POST");
         Map<String, Object> data = new HashMap<>();
         data.put("title", title);
         data.put("description", description);
         data.put("postdate", Timestamp.valueOf(LocalDateTime.now()));
-        data.put("neighborid", neighborId);
+        data.put("userid", userid);
         data.put("channelid", channelId);
         data.put("postimage", imageFile);
 
@@ -74,91 +81,79 @@ public class PostDaoImpl implements PostDao {
                 .build();
     }
 
-    private static final RowMapper<Post> ROW_MAPPER = (rs, rowNum) ->
-            new Post.Builder()
-                    .postId(rs.getLong("postid"))
-                    .title(rs.getString("title"))
-                    .description(rs.getString("description"))
-                    .date(rs.getTimestamp("postdate"))
-                    .imageFile(rs.getBytes("postimage"))
-                    .neighbor(
-                            new Neighbor.Builder()
-                                    .neighborId(rs.getLong("neighborid"))
-                                    .mail(rs.getString("mail"))
-                                    .name(rs.getString("name"))
-                                    .surname(rs.getString("surname"))
-                                    .build()
-                    )
-                    .channel(
-                            new Channel.Builder()
-                                    .channelId(rs.getLong("channelid"))
-                                    .channel(rs.getString("channel"))
-                                    .build()
-                    )
-                    .build();
+    private final RowMapper<Post> ROW_MAPPER = (rs, rowNum) -> {
+        User user = userDao.findUserById(rs.getLong("userid")).orElse(null);
+        Channel channel = channelDao.findChannelById(rs.getLong("channelid")).orElse(null);
 
-    @Override
-    public List<Post> getPosts(int offset, int limit) {
-        String query = POSTS_JOIN_NEIGHBORS_AND_CHANNELS + " LIMIT ? OFFSET ?";
-        return jdbcTemplate.query(query, ROW_MAPPER, limit, offset);
-    }
+        return new Post.Builder()
+                .postId(rs.getLong("postid"))
+                .title(rs.getString("title"))
+                .description(rs.getString("description"))
+                .date(rs.getTimestamp("postdate"))
+                .imageFile(rs.getBytes("postimage"))
+                .user(user)
+                .channel(channel)
+                .build();
+    };
 
-    @Override
-    public List<Post> getPostsByDate(String order, int offset, int limit) {
-        // Check the validity of the 'order' parameter
-        if (!("asc".equalsIgnoreCase(order) || "desc".equalsIgnoreCase(order))) {
-            throw new IllegalArgumentException("Invalid 'order' parameter.");
+    public List<Post> getPostsByCriteria(
+            String channel,  // Channel filter
+            String tag,      // Tag filter
+            String order,    // Sorting order (e.g., "asc" or "desc")
+            int offset,      // Offset for pagination
+            int limit        // Limit for pagination
+    ) {
+        StringBuilder query = new StringBuilder("SELECT DISTINCT p.* FROM posts p ");
+        List<Object> queryParams = new ArrayList<>();
+
+        query.append(" JOIN users u ON p.userid = u.userid ");
+        query.append(" JOIN channels c ON p.channelid = c.channelid ");
+        query.append(" LEFT JOIN posts_tags pt ON p.postid = pt.postid ");
+        query.append(" LEFT JOIN tags t ON pt.tagid = t.tagid ");
+
+        query.append(" WHERE 1 = 1");  // Initial condition to start the WHERE clause
+
+        if (channel != null && !channel.isEmpty()) {
+            query.append(" AND c.channel LIKE ?");
+            queryParams.add(channel);
         }
 
-        String query = POSTS_JOIN_NEIGHBORS_AND_CHANNELS + " ORDER BY postdate " + order + " LIMIT ? OFFSET ?";
-        return jdbcTemplate.query(query, ROW_MAPPER, limit, offset);
+        if (tag != null && !tag.isEmpty()) {
+            query.append(" AND t.tag LIKE ?");
+            queryParams.add(tag);
+        }
+
+        if ("asc".equalsIgnoreCase(order) || "desc".equalsIgnoreCase(order)) {
+            query.append(" ORDER BY p.postdate ").append(order);
+        }
+
+        query.append(" LIMIT ? OFFSET ?");
+        queryParams.add(limit);
+        queryParams.add(offset);
+
+        return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
     }
 
-    @Override
-    public List<Post> getPostsByTag(String tag, int offset, int limit) {
-        String query = POSTS_JOIN_NEIGHBORS_AND_NEIGHBORHOODS_AND_CHANNELS_AND_TAGS + " WHERE tag LIKE ? LIMIT ? OFFSET ?";
-        return jdbcTemplate.query(query, ROW_MAPPER, tag, limit, offset);
-    }
 
-    @Override
-    public List<Post> getPostsByChannel(String channel, int offset, int limit) {
-        String query = POSTS_JOIN_NEIGHBORS_AND_NEIGHBORHOODS_AND_CHANNELS + " WHERE channel LIKE ? LIMIT ? OFFSET ?";
-        return jdbcTemplate.query(query, ROW_MAPPER, channel, limit, offset);
-    }
 
-    @Override
-    public List<Post> getPostsByChannelAndDate(final String channel, final String order, int offset, int limit){
-        String query = POSTS_JOIN_NEIGHBORS_AND_CHANNELS + "WHERE channel LIKE ? ORDER BY postdate " + order + " LIMIT ? OFFSET ?";
-        return jdbcTemplate.query(query, ROW_MAPPER, channel, limit, offset);
-    }
 
-    @Override
-    public List<Post> getPostsByChannelAndDateAndTag(final String channel, final String order, final String tag, int offset, int limit) {
-        String query = POSTS_JOIN_NEIGHBORS_AND_NEIGHBORHOODS_AND_CHANNELS_AND_TAGS + "WHERE channel LIKE ? AND tag like ? ORDER BY postdate " + order + " LIMIT ? OFFSET ?";
-        return jdbcTemplate.query(query, ROW_MAPPER, channel, tag, limit, offset);
-    }
+    public int getTotalPostsCountByCriteria(String channel, String tag) {
+        StringBuilder query = new StringBuilder(COUNT_POSTS_JOIN_TAGS_AND_CHANNELS);
+        List<Object> queryParams = new ArrayList<>();
 
-    @Override
-    public int getTotalPostsCount() {
-        return jdbcTemplate.queryForObject(COUNT_POSTS, Integer.class);
-    }
+        query.append(" WHERE 1 = 1");  // Initial condition to start the WHERE clause
 
-    @Override
-    public int getTotalPostsCountInChannel(String channel){
-        String query = COUNT_POSTS_JOIN_CHANNELS + " WHERE channel LIKE ?";
-        return jdbcTemplate.queryForObject(query, Integer.class, channel);
-    }
+        if (channel != null && !channel.isEmpty()) {
+            query.append(" AND channel LIKE ?");
+            queryParams.add(channel);
+        }
 
-    @Override
-    public int getTotalPostsCountWithTag(String tag) {
-        String query = COUNT_POSTS_JOIN_TAGS + " WHERE tag LIKE ?";
-        return jdbcTemplate.queryForObject(query, Integer.class, tag);
-    }
+        if (tag != null && !tag.isEmpty()) {
+            query.append(" AND tag LIKE ?");
+            queryParams.add(tag);
+        }
 
-    @Override
-    public int getTotalPostsCountInChannelWithTag(String channel, String tag ){
-        String query = COUNT_POSTS_JOIN_TAGS_AND_CHANNELS + " WHERE channel LIKE ? AND tag like ?";
-        return jdbcTemplate.queryForObject(query, Integer.class, channel, tag);
+        return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());
     }
 
     @Override
