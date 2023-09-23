@@ -113,11 +113,18 @@ public class FrontController {
         return mav;
     }
 
+
+
     @RequestMapping("/hey")
     public ModelAndView hey() {
-        return new ModelAndView("views/landingPage");
-    }
+        System.out.println(ns.getVerifiedNeighborsByNeighborhood(1));
+        System.out.println(ns.getUnverifiedNeighborsByNeighborhood(1));
 
+        final ModelAndView mav = new ModelAndView("admin/requestManager");
+        mav.addObject("requestingUsers", ns.getUnverifiedNeighborsByNeighborhood(1));
+        mav.addObject("verifiedUsers", ns.getVerifiedNeighborsByNeighborhood(1));
+        return mav;
+    }
 
     @RequestMapping("/announcements")
     public ModelAndView announcements(@RequestParam(value = "sortBy", required = false) String sortBy,
@@ -260,7 +267,7 @@ public class FrontController {
 
     @RequestMapping(value = "/publishAdmin", method = RequestMethod.GET)
     public ModelAndView publishAdminForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
-        final ModelAndView mav = new ModelAndView("views/publishAdmin");
+        final ModelAndView mav = new ModelAndView("admin/publishAdmin");
         Map<String, Channel> channelMap = chs.getChannels().stream()
                 .collect(Collectors.toMap(Channel::getChannel, Function.identity()));
         //no queremos que usuarios puedan publicar en el canal de administracion

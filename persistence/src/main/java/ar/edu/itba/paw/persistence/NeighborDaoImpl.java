@@ -21,10 +21,15 @@ public class NeighborDaoImpl implements NeighborDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private final String NEIGHBORS = "select neighborid, mail, password, name, surname, darkmode, language, verified, neighborhoodid from neighbors ";
+    private final String NEIGHBORS =
+            "select neighborid, mail, password, name, surname, darkmode, language, verified, neighborhoodid \n" +
+            "from neighbors ";
+    private final String NEIGHBORS_JOIN_NEIGHBORHOODS =
+            "select neighborid, mail, password, name, surname, darkmode, language, verified, n.neighborhoodid\n" +
+            "from neighbors n join neighborhoods nh on n.neighborhoodid = nh.neighborhoodid ";
     private final String NEIGHBORS_JOIN_POSTS_NEIGHBORS_AND_POSTS =
-            "select n.neighborid, mail, password, name, surname, darkmode, language, verified, neighborhoodid from\n" +
-            "posts p join posts_neighbors on p.postid = posts_neighbors.postid join neighbors n on posts_neighbors.neighborid = n.neighborid ";
+            "select n.neighborid, mail, password, name, surname, darkmode, language, verified, neighborhoodid \n" +
+            "from posts p join posts_neighbors on p.postid = posts_neighbors.postid join neighbors n on posts_neighbors.neighborid = n.neighborid ";
     private final String UPDATE_NEIGHBOR ="UPDATE neighbors ";
 
     @Autowired
@@ -82,22 +87,33 @@ public class NeighborDaoImpl implements NeighborDao {
 
     @Override
     public List<Neighbor> getNeighborsByNeighborhood(long neighborhoodId) {
-        return jdbcTemplate.query(NEIGHBORS + " where neighborhoodid = ?", ROW_MAPPER, neighborhoodId);
+        return jdbcTemplate.query(NEIGHBORS + " WHERE neighborhoodid = ?", ROW_MAPPER, neighborhoodId);
     }
 
     @Override
     public List<Neighbor> getNeighborsSubscribedByPostId(long postId) {
-        return jdbcTemplate.query(NEIGHBORS_JOIN_POSTS_NEIGHBORS_AND_POSTS + " where p.postid = ?", ROW_MAPPER, postId);
+        return jdbcTemplate.query(NEIGHBORS_JOIN_POSTS_NEIGHBORS_AND_POSTS + " WHERE p.postid = ?", ROW_MAPPER, postId);
     }
+
+    @Override
+    public List<Neighbor> getVerifiedNeighborsByNeighborhood(long neighborhoodId){
+        return jdbcTemplate.query(NEIGHBORS_JOIN_NEIGHBORHOODS + " WHERE n.neighborhoodid = ? AND n.verified = TRUE", ROW_MAPPER, neighborhoodId);
+    }
+
+    @Override
+    public List<Neighbor> getUnverifiedNeighborsByNeighborhood(long neighborhoodId){
+        return jdbcTemplate.query(NEIGHBORS_JOIN_NEIGHBORHOODS + " WHERE n.neighborhoodid = ? AND n.verified = FALSE", ROW_MAPPER, neighborhoodId);
+    }
+
     @Override
     public Optional<Neighbor> findNeighborById(long neighborId) {
-        final List<Neighbor> list = jdbcTemplate.query(NEIGHBORS + " where neighborid = ?", ROW_MAPPER, neighborId);
+        final List<Neighbor> list = jdbcTemplate.query(NEIGHBORS + " WHERE neighborid = ?", ROW_MAPPER, neighborId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
     public Optional<Neighbor> findNeighborByMail(String mail) {
-        final List<Neighbor> list = jdbcTemplate.query(NEIGHBORS + " where mail = ?", ROW_MAPPER, mail);
+        final List<Neighbor> list = jdbcTemplate.query(NEIGHBORS + " WHERE mail = ?", ROW_MAPPER, mail);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
@@ -114,5 +130,15 @@ public class NeighborDaoImpl implements NeighborDao {
     @Override
     public void updateLanguage(long id, String language) {
         jdbcTemplate.update("UPDATE neighbors SET language = ? WHERE neighborid = ?", language, id);
+    }
+
+    @Override
+    public void setDefaultValues(long id) {
+        jdbcTemplate.update("UPDATE neighbors SET language = 'English', darkmode = false, verified = false  WHERE neighborid = ?", id);
+    }
+
+    @Override
+    public void setNewPassword(long id, String newPassword){
+        jdbcTemplate.update("UPDATE neighbors SET password = ?  WHERE neighborid = ?", newPassword, id);
     }
 }

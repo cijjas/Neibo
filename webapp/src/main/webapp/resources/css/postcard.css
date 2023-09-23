@@ -1,10 +1,13 @@
 .card-container {
     width: 100%;
-    border: 1px solid var(--bordercolor);
-    padding: 10px;
-    margin: 10px auto;
+    padding: 20px;
+
+    transform: translateY(-4px) ;
+    box-shadow: -3px 5px 0 0 var(--primary);
     background-color: var(--onbackground);
-    border-radius: 10px;
+    color: var(--text);
+    border: var(--border);
+    border-radius: var(--border-radius);
 }
 
 /* Style for the post information */
