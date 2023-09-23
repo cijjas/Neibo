@@ -114,7 +114,13 @@ public class FrontController {
 
     @RequestMapping("/hey")
     public ModelAndView hey() {
-        return new ModelAndView("admin/requestManager");
+        System.out.println(ns.getVerifiedNeighborsByNeighborhood(1));
+        System.out.println(ns.getUnverifiedNeighborsByNeighborhood(1));
+
+        final ModelAndView mav = new ModelAndView("admin/requestManager");
+        mav.addObject("requestingUsers", ns.getUnverifiedNeighborsByNeighborhood(1));
+        mav.addObject("verifiedUsers", ns.getVerifiedNeighborsByNeighborhood(1));
+        return mav;
     }
 
     @RequestMapping("/announcements")
@@ -435,8 +441,6 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-        System.out.println(ns.getUnverifiedNeighborsByNeighborhood(1));
-        System.out.println(ns.getVerifiedNeighborsByNeighborhood(1));
         return new ModelAndView("views/index");
     }
 

@@ -14,7 +14,7 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
     --text: #4f5248;
     --lighttext: #83887f;
     --background: #faf6e8;
-    --onbackground: rgb(248, 248, 243);
+    --onbackground: rgb(243, 243, 235);
     --onbackgroundfaded: rgb(245, 245, 244, 0.2);
     --darkonbackground : rgb(235, 236, 233);
     --primary: #328d3d;

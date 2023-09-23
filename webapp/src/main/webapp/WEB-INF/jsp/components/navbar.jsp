@@ -6,7 +6,7 @@
     <nav class="navbar navbar-expand-lg custom-navbar">
         <div class="container-xl">
 
-            <%@include file="tooltips.jsp"%>
+            <%@ include file="/WEB-INF/jsp/components/tooltips.jsp" %>
 
             <div class="d-flex justify-content-between align-items-center w-100">
                 <a class="navbar-brand" href="${pageContext.request.contextPath}/">

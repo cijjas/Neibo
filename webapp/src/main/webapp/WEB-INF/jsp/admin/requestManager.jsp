@@ -1,11 +1,8 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: chrij
-  Date: 9/22/2023
-  Time: 6:20 PM
-  To change this template use File | Settings | File Templates.
---%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 <html>
 
 
@@ -26,7 +23,6 @@
 <%----%>
 
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
-<%@ include file="/WEB-INF/jsp/components/tooltips.jsp" %>
 
 
 <div class="container" >
@@ -38,6 +34,70 @@
 
         <div class="column-middle">
             <%@ include file="/WEB-INF/jsp/components/upperFeedButtons.jsp" %>
+
+            <div class="req-acc-users-list">
+                <c:choose>
+                    <c:when test="${empty requestingUsers}">
+                        <div class="user-row">
+                            <div class="information">
+                                <spring:message code="No.new.requests"/>
+                            </div>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach var="user" items="${requestingUsers}" varStatus="loopStatus">
+                            <div class="user-row">
+                                <div class="information">
+                                    <span><spring:message code="Name"/>: <c:out value="${user.name}"/></span>
+                                    <span><spring:message code="Surname"/>: <c:out value="${user.surname}"/></span>
+                                    <span><spring:message code="Email"/>: <c:out value="${user.mail}"/></span>
+                                </div>
+
+                                <div class="acceptance">
+                                    <button class="ignore-button" onclick=""><spring:message code="Ignore"/></button>
+                                    <button class="cool-button cool-small" onclick=""><spring:message code="Accept"/></button>
+                                </div>
+                            </div>
+                            <c:if test="${not loopStatus.last}">
+                                <div class="divider"></div>
+                            </c:if>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
+
+            </div>
+
+            <div class="req-acc-users-list">
+                <c:choose>
+                    <c:when test="${empty verifiedUsers}">
+                        <div class="user-row">
+                            <div class="information">
+                                <spring:message code="No.verified.Users"/>
+                            </div>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach var="user" items="${verifiedUsers}" varStatus="loopStatus">
+                            <div class="user-row">
+                                <div class="information">
+                                    <span><spring:message code="Name"/>: <c:out value="${user.name}"/></span>
+                                    <span><spring:message code="Surname"/>: <c:out value="${user.surname}"/></span>
+                                    <span><spring:message code="Email"/>: <c:out value="${user.mail}"/></span>
+                                </div>
+
+                                <div class="acceptance">
+                                    <button class="ignore-button" onclick=""><spring:message code="Unverify"/></button>
+                                </div>
+                            </div>
+                            <c:if test="${not loopStatus.last}">
+                                <div class="divider"></div>
+                            </c:if>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
+
+            </div>
+
 
         </div>
 
