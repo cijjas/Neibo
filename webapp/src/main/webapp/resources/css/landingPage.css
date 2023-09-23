@@ -159,6 +159,16 @@
     transition: all 0.3s ease-in-out;
 }
 
+.input::placeholder {
+    color: var(--lighttext);
+    opacity: 0.8;
+}
+.input:active,
+.input:hover,
+.input:focus-visible {
+    transform: translateY(-4px) ;
+    box-shadow: 4px 4px var(--primary);
+}
 
 
 .title {
@@ -176,16 +186,6 @@
 }
 
 
-.input::placeholder {
-    color: var(--lighttext);
-    opacity: 0.8;
-}
-.input:active,
-.input:hover,
-.input:focus {
-    transform: translateY(-4px) ;
-    box-shadow: 4px 4px var(--primary);
-}
 
 .a-link{
     color: var(--old-primary);

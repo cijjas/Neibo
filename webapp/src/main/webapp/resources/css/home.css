@@ -292,7 +292,6 @@
 .container {
     position: relative;
     top: 20px;
-
 }
 
 /*--------------------LEFT COLUMN----------------------------*/
@@ -477,52 +476,105 @@
 }
 
 /*-------------------------------------PUBLISH/TAG INPUT------------------------*/
+
+.column-publish{
+    flex:3;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+}
+.column-info{
+    flex:1;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+
+
+.cool-static-container {
+    padding: 2em 2em;
+    width: 100%;
+    background-color: var(--onbackground);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    border-radius: var(--border-radius);
+    transform: translateY(-4px) ;
+    box-shadow: 0 5px 0 0 var(--primary);
+}
+
+
+.form-row{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+}
+.form-row.form-error{
+    align-items: start;
+    gap: 0;
+}
+
+.form-group{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+}
+
+
 .form-column{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 10px;
-}
-.form-group{
+    gap: 1rem;
     width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
 }
-.form-input{
-    width: 50%;
-    margin: 5px;
-}
+
+
 
 .tags-input {
     display: flex;
     flex-direction: column;
-    position: relative;
-    width: 100%;
-    border: 2px solid var(--bordercolor);
-    padding: 10px;
-    margin: 10px auto;
-    background-color: var(--onbackground);
-    border-radius: 10px;
-
+    justify-content: center;
+    align-items: center;
+    margin:20px 0 20px 0 ;
 }
 
 .tags-input-wrapper{
-    background: transparent;
-    padding: 10px;
-    border-radius: 4px;
-    max-width: 400px;
-    border: 1px solid #ccc
+    width: 400px;
 }
 .tags-input-wrapper input{
-    border: none;
-    background: transparent;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--accent);
+    background-color: var(--darkonbackground);
+    color: var(--text);
+    width: 100%;
+    padding: 5px 10px;
     outline: none;
-    width: 140px;
-    margin-left: 8px;
+    transition: all 0.3s ease-in-out;
 }
+
+.tags-input-wrapper input::placeholder {
+    color: var(--lighttext);
+    opacity: 0.8;
+}
+.tags-input-wrapper input:active,
+.tags-input-wrapper input:hover,
+.tags-input-wrapper input:focus-visible {
+    transform: translateY(-4px) ;
+    box-shadow: 4px 4px var(--accent);
+}
+
 .tags-input-wrapper .tag{
     display: inline-block;
     background-color: var(--accent);
@@ -679,11 +731,11 @@ footer div {
 #wave2 {
     animation-duration:5s;
     animation-direction: reverse;
-    opacity: .6
+    opacity: .9
 }
 #wave3 {
     animation-duration: 7s;
-    opacity:.3;
+    opacity:.6;
 }
 
 @keyframes wave-footer {
@@ -778,7 +830,36 @@ footer div {
 
 .cool-button.cool-small{
     width: 120px;
+}
+
+.cool-button.cool-small.on-bg{
+    background-color: var(--onbackground);
+    padding: 0 0;
 
 }
 
 
+
+.cool-input {
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--primary);
+    background-color: var(--darkonbackground);
+    color: var(--text);
+    width: 100%;
+    padding: 5px 10px;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.cool-input::placeholder {
+    color: var(--lighttext);
+    opacity: 0.8;
+}
+.cool-input:active,
+.cool-input:hover,
+.cool-input:focus-visible {
+    transform: translateY(-4px) ;
+    box-shadow: 4px 4px var(--primary);
+}

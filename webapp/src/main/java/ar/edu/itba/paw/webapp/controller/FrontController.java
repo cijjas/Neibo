@@ -114,7 +114,10 @@ public class FrontController {
 
     @RequestMapping("/hey")
     public ModelAndView hey() {
-        return new ModelAndView("views/landingPage");
+        final ModelAndView mav = new ModelAndView("admin/requestManager");
+        mav.addObject("unverifiedList", ns.getUnverifiedNeighborsByNeighborhood(1));
+        mav.addObject("verifiedList", ns.getVerifiedNeighborsByNeighborhood(1));
+        return mav;
     }
 
 

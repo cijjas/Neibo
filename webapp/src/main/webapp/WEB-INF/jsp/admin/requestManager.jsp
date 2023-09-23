@@ -37,7 +37,7 @@
 
             <div class="req-acc-users-list">
                 <c:choose>
-                    <c:when test="${empty requestingUsers}">
+                    <c:when test="${empty unverifiedList}">
                         <div class="user-row">
                             <div class="information">
                                 <spring:message code="No.new.requests"/>
@@ -45,7 +45,7 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <c:forEach var="user" items="${requestingUsers}" varStatus="loopStatus">
+                        <c:forEach var="user" items="${unverifiedList}" varStatus="loopStatus">
                             <div class="user-row">
                                 <div class="information">
                                     <span><spring:message code="Name"/>: <c:out value="${user.name}"/></span>
@@ -69,7 +69,7 @@
 
             <div class="req-acc-users-list">
                 <c:choose>
-                    <c:when test="${empty verifiedUsers}">
+                    <c:when test="${empty verifiedList}">
                         <div class="user-row">
                             <div class="information">
                                 <spring:message code="No.verified.Users"/>
@@ -77,7 +77,7 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <c:forEach var="user" items="${verifiedUsers}" varStatus="loopStatus">
+                        <c:forEach var="user" items="${verifiedList}" varStatus="loopStatus">
                             <div class="user-row">
                                 <div class="information">
                                     <span><spring:message code="Name"/>: <c:out value="${user.name}"/></span>

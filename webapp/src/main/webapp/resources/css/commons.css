@@ -3,7 +3,7 @@ GLOBAL CSS VARIABLES AND STYLES THAT SHOULD BE USED IN ALL PAGES
 */
 
 
-body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button {
+body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button, span{
     font-family: 'Lexend Deca', sans-serif;
 }
 
@@ -108,7 +108,24 @@ form{
     margin-block-end: 0;
 }
 
+.form-group{
+    margin-bottom: 0;
+}
 
+select,
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+input[type="select"]
+{
+    height: 40px;
+}
 input[type="checkbox"] {
     position: relative;
     width: 1.5em;
@@ -153,5 +170,15 @@ input[type="checkbox"] {
 }
 
 label{
+    margin-bottom:0;
+}
+
+button:focus-visible,
+button:focus-within
+button:focus{
+    outline: 0;
+}
+
+p{
     margin-bottom:0;
 }

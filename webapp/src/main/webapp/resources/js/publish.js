@@ -3,10 +3,10 @@
     "use strict"
 
     // Plugin Constructor
-    var TagsInput = function(opts){
-        this.options = Object.assign(TagsInput.defaults , opts);
+    const TagsInput = function (opts) {
+        this.options = Object.assign(TagsInput.defaults, opts);
         this.init();
-    }
+    };
 
     // Initialize the plugin
     TagsInput.prototype.init = function(opts){
@@ -130,21 +130,33 @@
 
     // initialize the Events
     function initEvents(tags){
+
+
+        tags.input.placeholder = document.getElementById('niakaniaka').value;
+
         tags.wrapper.addEventListener('click' ,function(){
             tags.input.focus();
         });
 
-
         tags.input.addEventListener('keydown' , function(e){
-            var str = tags.input.value.trim();
+            const str = tags.input.value.trim();
 
-            if( !!(~[9 , 13 , 188].indexOf( e.keyCode ))  )
+            if( !!(~[ 13 , 188, 32].indexOf( e.keyCode ))  )
             {
                 e.preventDefault();
                 tags.input.value = "";
                 if(str !== "")
                     tags.addTag(str);
             }
+
+        });
+        tags.input.addEventListener('blur', function(e){
+            const str = tags.input.value.trim();
+            if (str !== "") {
+                tags.addTag(str);
+                tags.input.value = ""; // Clear the input field
+            }
+
 
         });
     }
@@ -165,13 +177,12 @@
 })();
 
 
-var tagInput1 = new TagsInput({
+const tagInput1 = new TagsInput({
     selector: 'tag-input1',
-    duplicate : false,
-    max : 5
+    wrapperClass: 'tags-input-wrapper',
+    duplicate: false,
+    max: 5
 });
-
-
 
 
 let tagsString;
@@ -213,8 +224,14 @@ dropContainer.addEventListener("drop", (e) => {
 
 // Show images preview
 function preview() {
+
     let frame = document.getElementById('frame');
-    frame.src = URL.createObjectURL(event.target.files[0]);
+    if(!frame.src || frame.src === "") {
+        frame.style.display = "none";
+    } else {
+        frame.src = URL.createObjectURL(event.target.files[0]);
+        frame.style.display = "block";
+    }
 }
 function clearImage() {
     document.getElementById('frame').value = null;
