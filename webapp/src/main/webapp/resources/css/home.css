@@ -205,7 +205,7 @@
 
 .post-info {
     font-size: 16px;
-    color: #888;
+    color: var(--lighttext);
     margin: 5px;
     border-radius: 5px;
 }

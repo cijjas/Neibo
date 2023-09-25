@@ -73,6 +73,8 @@
         </div>
 
 
+
+
         <div class="dialog" id="signupDialog" style="display: none">
             <div class="dialog-content">
                 <div class="close-button" onclick="closeSignupDialog()">
@@ -124,6 +126,11 @@
                 </form:form>
             </div>
         </div>
+        <c:if test="${openSignupDialog == true}">
+            <script>
+                document.getElementById("signupDialog").style.display = "flex";
+            </script>
+        </c:if>
 
     </div>
 

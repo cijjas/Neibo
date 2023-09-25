@@ -21,10 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -33,7 +30,7 @@ import java.util.stream.Collectors;
 public class FrontController {
 
     private final PostService ps;
-    private final UserService ns;
+    private final UserService us;
     private final NeighborhoodService nhs;
     private final CommentService cs;
     private final TagService ts;
@@ -43,7 +40,7 @@ public class FrontController {
 
     @Autowired
     public FrontController(final PostService ps,
-                           final UserService ns,
+                           final UserService us,
                            final NeighborhoodService nhs,
                            final CommentService cs,
                            final TagService ts,
@@ -51,7 +48,7 @@ public class FrontController {
                            final SubscriptionService ss,
                            final CategorizationService cas) {
         this.ps = ps;
-        this.ns = ns;
+        this.us = us;
         this.nhs = nhs;
         this.cs = cs;
         this.ts = ts;
@@ -114,9 +111,13 @@ public class FrontController {
 
     @RequestMapping("/hey")
     public ModelAndView hey() {
+        System.out.println("hey");
+        System.out.println(us.getUnverifiedNeighborsByNeighborhood(1));
+
         final ModelAndView mav = new ModelAndView("admin/requestManager");
-        mav.addObject("unverifiedList", ns.getUnverifiedNeighborsByNeighborhood(1));
-        mav.addObject("verifiedList", ns.getVerifiedNeighborsByNeighborhood(1));
+
+        mav.addObject("unverifiedList", us.getUnverifiedNeighborsByNeighborhood(1));
+        mav.addObject("verifiedList", us.getVerifiedNeighborsByNeighborhood(1));
         return mav;
     }
 
@@ -240,14 +241,17 @@ public class FrontController {
 
         Post p = null;
         if (imageFile != null && !imageFile.isEmpty()) {
+            if (!imageFile.getContentType().startsWith("image/")) {
+
+                errors.rejectValue("imageFile", "error.file.notAnImage", "The file is not an image");
+                return publishForm(publishForm);
+            }
             try {
                 // Convert the image to base64
                 byte[] imageBytes = imageFile.getBytes();
                  p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), imageBytes);
-                // Set the base64-encoded image data in the tournamentForm
             } catch (IOException e) {
                 System.out.println("Issue uploading the image");
-                // Should go to an error page!
             }
         } else {
              p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), null);
@@ -255,8 +259,7 @@ public class FrontController {
         assert p != null;
         ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
 
-        // Redirect to the "index" page with pagination parameters
-        return new ModelAndView("redirect:?page=1&size=10"); // You can specify the default page and size here
+        return new ModelAndView("redirect:?page=1&size=10");
     }
 
 
@@ -335,14 +338,8 @@ public class FrontController {
             return viewPost(postId, commentForm);
         }
 
-        // deprecado por el login
-        // Neighborhood nh = nhs.createNeighborhood(commentForm.getNeighborhood());
-        // Neighbor n = ns.createNeighbor(commentForm.getEmail(), "poponeta123", commentForm.getName(), commentForm.getSurname(), nh.getNeighborhoodId());
-        // Comment c = cs.createComment(commentForm.getComment(), n.getNeighborId(), postId);
-
-
+        cs.createComment(commentForm.getComment(), getLoggedNeighbor().getUserId(), postId);
         return new ModelAndView("redirect:/posts/" + postId); // Redirect to the "posts" page
-//        return new ModelAndView("views/posts/" + postId);
     }
 
     // ------------------------------------- RESOURCES --------------------------------------
@@ -380,6 +377,7 @@ public class FrontController {
     public ModelAndView logIn(Model model, @ModelAttribute("signupForm") final SignupForm signupform) {
         model.addAttribute("neighbor", new User.Builder());
         ModelAndView mav = new ModelAndView("views/landingPage");
+
         mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
         mav.addObject("openSignupDialog", false);
         return mav;
@@ -408,7 +406,7 @@ public class FrontController {
             return mav;
         }
 
-        ns.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), "English", false, false );
+        us.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), "English", false, false );
         return new ModelAndView("redirect:/");
     }
 
@@ -422,7 +420,7 @@ public class FrontController {
 
         String email = authentication.getName();
 
-        Optional<User> neighborOptional = ns.findUserByMail(email);
+        Optional<User> neighborOptional = us.findUserByMail(email);
 
         return neighborOptional.orElseThrow(NeighborhoodNotFoundException::new);
     }

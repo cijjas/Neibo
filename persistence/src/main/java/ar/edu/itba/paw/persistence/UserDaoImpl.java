@@ -130,7 +130,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> getNeighborsByNeighborhoodByVerification(long neighborhoodId, boolean verification){
-        return jdbcTemplate.query(USERS_JOIN_NEIGHBORHOODS + " WHERE n.neighborhoodid = ? AND n.verified = ? AND role LIKE 'Neighbor'", ROW_MAPPER, neighborhoodId, verification);
+        return jdbcTemplate.query(USERS_JOIN_NEIGHBORHOODS + " WHERE u.neighborhoodid = ? AND u.verified = ? AND role LIKE 'Neighbor'", ROW_MAPPER, neighborhoodId, verification);
     }
 
     @Override

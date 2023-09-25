@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 
 <script>
     // JavaScript function to toggle button selection
@@ -30,6 +31,17 @@
                 <li><a class="dropdown-item" href="?page=1&sortBy=tag${tag.tag}" data-tag="${tag.tag}">#${tag.tag}</a></li>
             </c:forEach>
         </ul>
+<%--
+        <div class="form-row">
+            <label>
+                <select  class="cool-input"  >
+                    <c:forEach var="entry" items="${tagList}">
+                        <option>${entry.tag}</option>
+                    </c:forEach>
+                </select>
+            </label>
+        </div>
+--%>
     </div>
     <a href="${pageContext.request.contextPath}/publish" class="filter-button" >
         <spring:message code="CreateNewPost.button"/>

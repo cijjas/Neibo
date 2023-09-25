@@ -36,4 +36,24 @@
     color: var(--text);
 }
 
+.postcard-description {
+    overflow: hidden;
+    position: relative;
+    color: var(--text);
+    white-space: normal; /* Allow text to wrap within the container */
+}
 
+
+.cool-comment {
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--lighttext);
+    background-color: var(--darkonbackground);
+    color: var(--text);
+    width: 100%;
+    padding: 5px 10px;
+    outline: none;
+    transform: translateY(-4px) ;
+    box-shadow: 2px 2px var(--lighttext);
+}
