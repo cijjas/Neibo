@@ -22,13 +22,13 @@ public class UserDaoImpl implements UserDao {
     private final SimpleJdbcInsert jdbcInsert;
 
     private final String USERS =
-            "select userid, mail, password, name, surname, darkmode, language, verified, neighborhoodid, role \n" +
+            "select userid, mail, password, name, surname, darkmode, language, neighborhoodid, role \n" +
             "from users" ;
     private final String USERS_JOIN_NEIGHBORHOODS =
-            "select userid, mail, password, name, surname, darkmode, language, verified, u.neighborhoodid, role\n" +
+            "select userid, mail, password, name, surname, darkmode, language, u.neighborhoodid, role\n" +
                     "from users u join neighborhoods nh on u.neighborhoodid = nh.neighborhoodid ";
     private final String USERS_JOIN_POSTS_USERS_AND_POSTS =
-            "select u.userid, mail, password, name, surname, darkmode, language, verified, neighborhoodid, role\n" +
+            "select u.userid, mail, password, name, surname, darkmode, language, neighborhoodid, role\n" +
             "from posts p join posts_users on p.postid = posts_users.postid join users u on posts_users.userid = u.userid ";
 
     @Autowired
@@ -41,7 +41,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User createUser(final String mail, final String password, final String name, final String surname,
-                           final long neighborhoodId, final String language, final boolean darkMode, final boolean verified, final String role) {
+                           final long neighborhoodId, final String language, final boolean darkMode, final String role) {
         Map<String, Object> data = new HashMap<>();
         data.put("mail", mail);
         data.put("password", password);
@@ -51,7 +51,6 @@ public class UserDaoImpl implements UserDao {
         data.put("neighborhoodid", neighborhoodId);
         data.put("darkmode", darkMode);
         data.put("language", language);
-        data.put("verified", verified);
         data.put("role", role);
 
         final Number key = jdbcInsert.executeAndReturnKey(data);
@@ -63,7 +62,6 @@ public class UserDaoImpl implements UserDao {
                 .neighborhoodId(neighborhoodId)
                 .darkMode(darkMode)
                 .language(language)
-                .verified(verified)
                 .role(role)
                 .build();
     }
@@ -78,7 +76,6 @@ public class UserDaoImpl implements UserDao {
                     .neighborhoodId(rs.getLong("neighborhoodid"))
                     .darkMode(rs.getBoolean("darkmode"))
                     .language(rs.getString("language"))
-                    .verified(rs.getBoolean("verified"))
                     .role(rs.getString("role"))
                     .build();
 
@@ -100,8 +97,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void setUserValues(final long id, final String name, final String surname, final String password, final boolean darkMode, final String language, final boolean verified, final String role) {
-        jdbcTemplate.update("UPDATE users SET name = ?, surname = ?, password = ?, darkmode = ?, language = ?, verified = ?, role = ?  WHERE userid = ?", name, surname, password, darkMode, language, verified, role, id);
+    public void setUserValues(final long id, final String password, final String name, final String surname, final String language, final boolean darkMode, final String role) {
+        jdbcTemplate.update("UPDATE users SET name = ?, surname = ?, password = ?, darkmode = ?, language = ?, role = ?  WHERE userid = ?", name, surname, password, darkMode, language, role, id);
     }
 
 
@@ -109,8 +106,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User createNeighbor(final String mail, final String password, final String name, final String surname,
-                               final long neighborhoodId, final String language, final boolean darkMode, final boolean verified) {
-        return createUser(mail, password, name, surname, neighborhoodId ,language ,darkMode ,verified , "Neighbor");
+                               final long neighborhoodId, final String language, final boolean darkMode) {
+        return createUser(mail, password, name, surname, neighborhoodId ,language ,darkMode, "Neighbor");
     }
 
     @Override
@@ -129,8 +126,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> getNeighborsByNeighborhoodByVerification(long neighborhoodId, boolean verification){
-        return jdbcTemplate.query(USERS_JOIN_NEIGHBORHOODS + " WHERE u.neighborhoodid = ? AND u.verified = ? AND role LIKE 'Neighbor'", ROW_MAPPER, neighborhoodId, verification);
+    public List<User> getUnverifiedNeighborsByNeighborhood(long neighborhoodId){
+        return jdbcTemplate.query(USERS_JOIN_NEIGHBORHOODS + " WHERE u.neighborhoodid = ? AND role LIKE 'Unverified Neighbor'", ROW_MAPPER, neighborhoodId);
     }
 
     @Override
