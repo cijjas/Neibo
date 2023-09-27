@@ -1,20 +1,36 @@
 package ar.edu.itba.paw.webapp.form.validation.validators;
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.ImageConstraint;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 
 // https://www.baeldung.com/spring-mvc-custom-validator
-public class ImageValidator implements ConstraintValidator<ImageConstraint, byte[]> {
+public class ImageValidator implements ConstraintValidator<ImageConstraint, MultipartFile> {
     private static final long MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
 
     @Override
     public void initialize(ImageConstraint imageConstraint) {}
 
     @Override
-    public boolean isValid(byte[] imageData, ConstraintValidatorContext constraintValidatorContext) {
-        return true;
+    public boolean isValid(MultipartFile multipartFile, ConstraintValidatorContext constraintValidatorContext) {
+        return true ;
+//        System.out.println("ImageValidator: " + multipartFile);
+//        if (multipartFile.isEmpty() ) {
+//            return true ;
+//        }
+//
+//
+//        if(multipartFile.getContentType().startsWith("image/")){
+//            return true;
+//        }
+//        constraintValidatorContext.disableDefaultConstraintViolation();
+//        constraintValidatorContext.buildConstraintViolationWithTemplate("Invalid imageddddd format")
+//                .addConstraintViolation();
+//        return false;
     }
+
+
 }

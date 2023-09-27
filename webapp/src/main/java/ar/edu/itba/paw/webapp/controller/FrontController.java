@@ -238,29 +238,25 @@ public class FrontController {
         }
 
         User n = getLoggedNeighbor();
-
         Post p = null;
         if (imageFile != null && !imageFile.isEmpty()) {
-            if (!imageFile.getContentType().startsWith("image/")) {
-
-                errors.rejectValue("imageFile", "error.file.notAnImage", "The file is not an image");
-                return publishForm(publishForm);
-            }
             try {
                 // Convert the image to base64
                 byte[] imageBytes = imageFile.getBytes();
-                 p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), imageBytes);
+                p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), imageBytes);
             } catch (IOException e) {
                 System.out.println("Issue uploading the image");
             }
         } else {
-             p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), null);
+            p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), null);
         }
         assert p != null;
         ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
+        ModelAndView mav = new ModelAndView("redirect:/posts/" + p.getPostId() + "?success=true");
 
-        return new ModelAndView("redirect:?page=1&size=10");
+        return mav;
     }
+
 
 
     @RequestMapping(value = "/publishAdmin", method = RequestMethod.GET)
@@ -311,7 +307,9 @@ public class FrontController {
     // ------------------------------------- POSTS --------------------------------------
 
     @RequestMapping(value = "/posts/{id:\\d+}", method = RequestMethod.GET)
-    public ModelAndView viewPost(@PathVariable(value = "id") int postId, @ModelAttribute("commentForm") final CommentForm commentForm) {
+    public ModelAndView viewPost(@PathVariable(value = "id") int postId,
+                                 @ModelAttribute("commentForm") final CommentForm commentForm,
+                                 @RequestParam(value = "success", required = false) boolean success) {
         ModelAndView mav = new ModelAndView("views/post");
 
         Optional<Post> optionalPost = ps.findPostById(postId);
@@ -324,18 +322,25 @@ public class FrontController {
         List<Tag> tags = optionalTags.orElse(Collections.emptyList());
 
         mav.addObject("tags", tags);
-
         mav.addObject("commentForm", commentForm);
+
+        mav.addObject("showSuccessMessage", success);
 
         return mav;
     }
 
     @RequestMapping(value = "/posts/{id:\\d+}", method = RequestMethod.POST)
-    public ModelAndView viewPost(@PathVariable(value = "id") int postId, @Valid @ModelAttribute("commentForm") final CommentForm commentForm,
+    public ModelAndView viewPost(@PathVariable(value = "id") int postId,
+                                 @Valid @ModelAttribute("commentForm") final CommentForm commentForm,
                                  final BindingResult errors) {
         if (errors.hasErrors()) {
-            System.out.println("comment tiene errores");
-            return viewPost(postId, commentForm);
+            ModelAndView mav = new ModelAndView("views/post"); // Specify the view name
+            mav.addObject("post", ps.findPostById(postId).orElseThrow(PostNotFoundException::new));
+            mav.addObject("comments", cs.findCommentsByPostId(postId).orElse(Collections.emptyList()));
+            mav.addObject("tags", ts.findTagsByPostId(postId).orElse(Collections.emptyList()));
+            mav.addObject("commentForm", commentForm);
+            mav.addObject("showSuccessMessage", false); // Set showSuccessMessage to false
+            return mav;
         }
 
         cs.createComment(commentForm.getComment(), getLoggedNeighbor().getUserId(), postId);

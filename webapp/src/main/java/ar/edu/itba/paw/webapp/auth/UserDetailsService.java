@@ -34,8 +34,6 @@ public class UserDetailsService implements org.springframework.security.core.use
         }
 
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        System.out.println("Granting the following powers");
-        System.out.println(authorities);
         return new UserAuth(n.getMail(), n.getPassword(), authorities); // which information is stored in the session
     }
 }

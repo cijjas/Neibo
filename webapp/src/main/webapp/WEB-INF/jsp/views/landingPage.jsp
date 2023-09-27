@@ -36,6 +36,7 @@
             <a onclick="openSignupDialog()" class="a-link">Signup now</a>
         </span>
 
+<%--        Login dialog--%>
         <div class="dialog" id="loginDialog" style="display: none">
             <div class="dialog-content">
                 <div class="close-button" onclick="closeLoginDialog()">
@@ -72,11 +73,8 @@
             </div>
         </div>
 
-
-
-
         <div class="dialog" id="signupDialog" style="display: none">
-            <div class="dialog-content">
+            <div class="dialog-content signup-content">
                 <div class="close-button" onclick="closeSignupDialog()">
                     <i class="fas fa-close"></i>
                 </div>
@@ -86,46 +84,51 @@
                     <span>Sign up to get started</span>
                 </div>
 
+
                 <form:form method="post" action="signup" modelAttribute="signupForm">
                     <form:errors cssClass="error" element="p"/>
-                    <div class="form-input">
-                        <form:label path="name">
-                            <form:input path="name" placeholder="First Name" class="input"/>
-                        </form:label>
-                        <form:errors path="name" cssClass="error" element="p"/>
-                    </div>
-                    <div class="form-input">
-                        <form:label path="surname">
-                            <form:input path="surname" placeholder="Surname" class="input"/>
-                        </form:label>
-                        <form:errors path="surname" cssClass="error" element="p"/>
-                    </div>
-                    <div class="form-input">
-                        <form:label path="mail">
-                            <form:input path="mail" placeholder="Email" class="input"/>
-                        </form:label>
-                        <form:errors path="mail" cssClass="error" element="p"/>
-                    </div>
-                    <div class="form-input">
-                        <form:label path="password">
-                            <form:input path="password" placeholder="Password" class="input"/>
-                        </form:label>
-                        <form:errors path="password" cssClass="error" element="p"/>
-                    </div>
+                    <div class="centered-column">
 
-                    <div class="form-input">
-                        <form:label path="neighborhoodId"> Neighborhoods </form:label>
-                        <form:select path="neighborhoodId" class="form-control">
+                        <div class="form-input">
+                            <form:label path="name">
+                                <form:input path="name" placeholder="First Name" class="input"/>
+                            </form:label>
+                            <form:errors path="name" cssClass="landing-error" element="p"/>
+                        </div>
+                        <div class="form-input">
+                            <form:label path="surname">
+                                <form:input path="surname" placeholder="Surname" class="input"/>
+                            </form:label>
+                            <form:errors path="surname" cssClass="landing-error" element="p"/>
+                        </div>
+                        <div class="form-input">
+                            <form:label path="mail">
+                                <form:input path="mail" placeholder="Email" class="input"/>
+                            </form:label>
+                            <form:errors path="mail" cssClass="landing-error" element="p"/>
+                        </div>
+                        <div class="form-input">
+                            <form:label path="password">
+                                <form:input path="password" placeholder="Password" class="input"/>
+                            </form:label>
+                            <form:errors path="password" cssClass="landing-error" element="p"/>
+                        </div>
+                        <div class="form-input">
+                            <form:select path="neighborhoodId" class="cool-select">
                                 <c:forEach var="entry" items="${neighborhoodsList}">
                                     <form:option value="${entry.getNeighborhoodId()}">${entry.getName()}</form:option>
                                 </c:forEach>
-                        </form:select>
+                            </form:select>
+                        </div>
                     </div>
 
                     <button type="submit" class="action-button">Sign Up</button>
                 </form:form>
+
             </div>
         </div>
+
+<%--        Signup dialog--%>
         <c:if test="${openSignupDialog == true}">
             <script>
                 document.getElementById("signupDialog").style.display = "flex";
@@ -144,7 +147,6 @@
              document.getElementById("loginDialog").style.display = "none";
          }
 
-
          function openSignupDialog(){
              document.getElementById("signupDialog").style.display = "flex";
          }
@@ -153,16 +155,7 @@
          }
      </script>
 
-<%--  para que se abra el dialogo de signup al cargar la pagina (no funca)--%>
-<%--    <script>--%>
-<%--        window.onload = function () {--%>
-<%--            var openSignupDialog = ${openSignupDialog}; // Get the variable value--%>
 
-<%--            if (openSignupDialog) {--%>
-<%--                openSignupDialog(); // Open the signup dialog if the variable is true--%>
-<%--            }--%>
-<%--        }--%>
-<%--    </script>--%>
 
 
 <%----%>

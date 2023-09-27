@@ -48,7 +48,6 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public Post createPost(String title, String description, long userid, long channelId, byte[] imageFile) {
-        System.out.println("CREATING NEW POST");
         Map<String, Object> data = new HashMap<>();
         data.put("title", title);
         data.put("description", description);

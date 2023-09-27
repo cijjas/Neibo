@@ -1,5 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 
 <html>
@@ -13,97 +12,113 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/resources/css/home.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
-
-    <title>Create admin post</title>
-
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
+    <title>Create a post</title>
 </head>
-<body>
-<!-- Navigation Bar -->
+
+<body class="body">
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
+<div class="container">
+    <div class="row">
 
-<!-- Post Creation Form -->
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title"><spring:message code="CreateAdminPost.title"/></h4>
+        <div class="column-publish" >
+            <div class="cool-static-container" >
+                <h2 class="card-title"><spring:message code="CreatePost.title"/></h2>
+                <div class="divider"></div>
+                <!-- Post Creation Form -->
+                <form:form method="post" action="publishAdmin" modelAttribute="publishForm" enctype="multipart/form-data">
+                    <form:errors cssClass="error" element="p"/>
 
-            <form:form method="post" action="publishAdmin" modelAttribute="publishForm" enctype="multipart/form-data">
-                <form:errors cssClass="error" element="p"/>
+                    <div class="form-column" style="margin-top:1rem;">
+                        <div class="form-group">
+                            <div class="form-row">
+                                <spring:message code="Channel" var="channelPlaceholder"/>
+                                <form:select path="channel" class="cool-input"  placeholder="${channelPlaceholder}">
+                                    <c:forEach var="entry" items="${channelList}">
+                                        <form:option value="${entry.value.channelId}">${entry.key}</form:option>
+                                    </c:forEach>
+                                </form:select>
+                            </div>
 
-                <div class="form-column">
+                            <div class="form-row">
 
-                    <div class="form-group">
-                        <div class="form-input">
-                            <form:label path="subject"><spring:message code="Subject"/>:</form:label>
-                            <form:input path="subject" class="form-control"/>
-                            <form:errors path="subject" cssClass="error" element="p"/>
+                                <spring:message code="Subject" var="subjectPlaceholder"/>
+                                <form:input path="subject" class="cool-input" placeholder="${subjectPlaceholder}"/>
+                                <div class="form-row form-error">
+                                    <form:errors path="subject" cssClass="error" element="p"/>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-input">
-                            <form:label path="channel"><spring:message code="Channel"/>:</form:label>
-                            <form:select path="channel" class="form-control">
-                                <c:forEach var="entry" items="${channelList}">
-                                    <form:option value="${entry.value.getChannelId()}">${entry.key}</form:option>
-                                </c:forEach>
-                            </form:select>
+                        <div class="form-group">
+                            <spring:message code="Message" var="messagePlaceholder"/>
+                            <form:textarea path="message" class="cool-input" rows="5" placeholder="${messagePlaceholder}"/>
+                            <div class="form-row form-error">
+                                <form:errors path="message" cssClass="error" element="p"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <form:label path="imageFile" for="images" class="drop-container" id="dropcontainer">
+                                <span class="drop-title"> <spring:message code="Drop.files"/> </span>
+                                <spring:message code="Or"/>
+                                <form:input type="file" id="images" accept="image/*" path="imageFile" name="imageFile" onchange="preview()"/>
+                            </form:label>
+                            <div style="text-align: center">
+                                <form:errors path="imageFile" cssClass="error" element="p"/>
+                            </div>
+                        </div>
+
+
+                        <div>
+                            <img id="frame" class="blogpost-image" src=""  alt="uploading image" style="display: none"/>
+                        </div>
+
+
+                        <div class="tags-input" style="display:flex;flex-direction:column;align-items:center;">
+                            <c:set var="val"><spring:message code="EnterATag"/></c:set>
+                            <input id="niakaniaka" type="hidden" value="${val}"/>
+                            <label for="tag-input1">
+                                <input type="text" id="tag-input1">
+                            </label>
+                            <form:label path="tags" >
+                                <form:input type="hidden" name="tags" id="tags-input" value="" path="tags"/>
+                                <div style="text-align: center">
+                                    <form:errors path="tags" cssClass="error" element="p"/>
+                                </div>
+                            </form:label>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <form:label path="message"><spring:message code="Message"/>:</form:label>
-                        <form:textarea path="message" class="form-control" rows="5" />
-                        <form:errors path="message" cssClass="error" element="p"/>
+                    <%--Submit button --%>
+                    <div class="d-flex justify-content-end">
+                        <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg" style="height:40px;" ><spring:message code="Post.verb"/></button>
                     </div>
 
-                    <div class="form-group">
-                        <form:label path="imageFile" for="images" class="drop-container" id="dropcontainer">
-                            <span class="drop-title"> <spring:message code="Drop.files"/> </span>
-                            <spring:message code="Or"/>
-                            <form:input type="file" id="images" accept="image/*" path="imageFile" onchange="preview()"/>
+                    <%--Tags javascript logic--%>
+                    <script src="${pageContext.request.contextPath}/resources/js/publish.js"></script>
 
-                            <form:errors path="imageFile" cssClass="error" element="p"/>
-                        </form:label>
-                    </div>
+                </form:form>
+            </div>
+        </div>
 
-                    <div class="container col-md-6" display="none">
-                        <img id="frame" src="" class="img-fluid"  alt="uploading image"/>
-                    </div>
-
-
-                    <div class="tags-input">
-                        <h2>Tags Input</h2>
-                        <label for="tag-input1">
-                            <input type="text" id="tag-input1" >
-                        </label>
-                        <form:label path="tags">
-                            <form:input type="hidden"  name="tags" id="tags-input" value="" path="tags"/>
-                            <form:errors path="tags" cssClass="error" element="p"/>
-                        </form:label>
-                        <small class="text-muted">You can enter up to 5 tags.</small>
-                    </div>
-                </div>
-
-
-                <div class="d-flex justify-content-end">
-                    <button onclick="submitForm()" type="submit" class="btn btn-primary custom-btn"><spring:message code="Post.verb"/></button>
-                </div>
-
-
-                <script src="${pageContext.request.contextPath}/resources/js/publish.js"></script>
-
-
-            </form:form>
+        <div class="column-info" >
+            <div class="cool-static-container" >
+                Eventualmente algo tipo puede ser el perfil, o un par de indicaciones de como crear el posteo (reddit tira esa) o el clima o el calendario
+            </div>
 
         </div>
     </div>
-
-    <div class="mt-3">
-        <a href="${pageContext.request.contextPath}/" class="btn btn-link return-btn"><spring:message code="GoBackToMainPage"/></a>
-    </div>
 </div>
 
+<div id="loader-container" class="loader-container ">
+    <div class="cool-static-container medium-size-container" >
+        <%@ include file="/WEB-INF/jsp/components/placeholderBlogpost.jsp" %>
 
+        <div style="font-weight: bold; font-size: 16px"><spring:message code="Creating.your.post"/>...</div>
+        <div class="loader" style="margin-top: 20px"></div>
+    </div>
+</div>
 
 
 <!-- Bootstrap JS and jQuery -->

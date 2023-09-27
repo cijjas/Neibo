@@ -18,6 +18,7 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button, span{
     --onbackgroundfaded: rgb(245, 245, 244, 0.2);
     --darkonbackground : rgb(235, 236, 233);
     --primary: #328d3d;
+    --between-primary: #709a58;
     --old-primary: #9ad379;
     --onprimary: #fdfaf1;
     --secondary: #d8d8c5;

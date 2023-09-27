@@ -33,9 +33,8 @@
         </div>
 
         <div class="column-middle">
-            <%@ include file="/WEB-INF/jsp/components/upperFeedButtons.jsp" %>
 
-            <div class="req-acc-users-list">
+            <div class="req-acc-users-list" >
                 <c:choose>
                     <c:when test="${empty unverifiedList}">
                         <div class="user-row">
@@ -67,7 +66,10 @@
 
             </div>
 
-            <div class="req-acc-users-list">
+        </div>
+
+        <div class="column-right">
+            <div class="req-acc-users-list" >
                 <c:choose>
                     <c:when test="${empty verifiedList}">
                         <div class="user-row">
@@ -97,12 +99,6 @@
                 </c:choose>
 
             </div>
-
-
-        </div>
-
-        <div class="column-right">
-            <%@ include file="/WEB-INF/jsp/components/rightColumn.jsp" %>
         </div>
 
 

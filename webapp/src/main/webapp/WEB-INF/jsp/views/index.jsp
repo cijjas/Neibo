@@ -41,15 +41,12 @@
 
                 </script>
 
-
-
-
-
                 <div id="placeholder-posts-container">
                     <c:forEach begin="1" end="10" var="index">
                         <%@ include file="/WEB-INF/jsp/components/placeholderBlogpost.jsp" %>
                     </c:forEach>
                 </div>
+
 
                 <div id="actual-posts-container">
                     <c:choose>
