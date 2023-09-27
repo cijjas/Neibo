@@ -30,7 +30,7 @@ public class PostDaoImpl implements PostDao {
         "FROM posts p  JOIN users u ON p.userid = u.userid  JOIN channels c ON p.channelid = c.channelid  LEFT JOIN posts_tags pt ON p.postid = pt.postid  LEFT JOIN tags t ON pt.tagid = t.tagid ";
     private final String COUNT_POSTS_JOIN_TAGS_AND_CHANNELS =
         "SELECT COUNT(*) \n" +
-        "FROM posts JOIN posts_tags ON posts.postid = posts_tags.postid JOIN tags ON posts_tags.tagid = tags.tagid  JOIN public.channels c on c.channelid = posts.channelid ";
+        "FROM posts p JOIN posts_tags pt ON p.postid = pt.postid JOIN tags t ON pt.tagid = t.tagid  JOIN channels c on c.channelid = p.channelid ";
 
 
     @Autowired
@@ -81,62 +81,104 @@ public class PostDaoImpl implements PostDao {
                 .build();
     };
 
-    public List<Post> getPostsByCriteria(
-            String channel,  // Channel filter
-            String tag,      // Tag filter
-            String order,    // Sorting order (e.g., "asc" or "desc")
-            int offset,      // Offset for pagination
-            int limit        // Limit for pagination
-    ) {
-        StringBuilder query = new StringBuilder(POSTS_JOIN_USERS_AND_CHANNELS);
-        List<Object> queryParams = new ArrayList<>();
-
-        query.append(" WHERE 1 = 1");  // Initial condition to start the WHERE clause
-
-        if (channel != null && !channel.isEmpty()) {
-            query.append(" AND c.channel LIKE ?");
-            queryParams.add(channel);
-        }
-
-        if (tag != null && !tag.isEmpty()) {
-            query.append(" AND t.tag LIKE ?");
-            queryParams.add(tag);
-        }
-
-        if ("asc".equalsIgnoreCase(order) || "desc".equalsIgnoreCase(order)) {
-            query.append(" ORDER BY p.postdate ").append(order);
-        }
-
-        query.append(" LIMIT ? OFFSET ?");
-        queryParams.add(limit);
-        queryParams.add(offset);
-
-        return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
+    @Override
+    public Optional<Post> findPostById(long id) {
+        final List<Post> postList = jdbcTemplate.query(POSTS_JOIN_USERS_AND_CHANNELS + " where p.postid=?;", ROW_MAPPER, id);
+        return postList.isEmpty() ? Optional.empty() : Optional.of(postList.get(0));
     }
 
-    public int getTotalPostsCountByCriteria(String channel, String tag) {
-        StringBuilder query = new StringBuilder(COUNT_POSTS_JOIN_TAGS_AND_CHANNELS);
+    @Override
+    public List<Post> getPostsByCriteria(String channel, int page, int size, String date, List<String> tags) {
+        if ( page < 1 )
+            return null;
+
+        // Calculate the offset based on the page and size
+        int offset = (page - 1) * size;
+
+        // Create the base SQL query string
+        StringBuilder query = new StringBuilder(POSTS_JOIN_USERS_AND_CHANNELS);
+
+        // Create a list to hold query parameters
         List<Object> queryParams = new ArrayList<>();
 
-        query.append(" WHERE 1 = 1");  // Initial condition to start the WHERE clause
+        // Append the WHERE clause to start building the query
+        query.append(" WHERE 1 = 1");
 
+        // Append conditions based on the provided parameters
         if (channel != null && !channel.isEmpty()) {
             query.append(" AND channel LIKE ?");
             queryParams.add(channel);
         }
 
-        if (tag != null && !tag.isEmpty()) {
-            query.append(" AND tag LIKE ?");
-            queryParams.add(tag);
+        if (tags != null && !tags.isEmpty()) {
+            query.append(" AND EXISTS (");
+            query.append("SELECT 1 FROM posts_tags pt JOIN tags t ON pt.tagid = t.tagid");
+            query.append(" WHERE pt.postid = p.postid AND t.tag IN (");
+            for (int i = 0; i < tags.size(); i++) {
+                query.append("?");
+                queryParams.add(tags.get(i)); // Use the tag name as a string
+                if (i < tags.size() - 1) {
+                    query.append(", ");
+                }
+            }
+            query.append(")");
+            query.append(" HAVING COUNT(DISTINCT pt.tagid) = ?)"); // Ensure all specified tags exist
+            queryParams.add(tags.size());
         }
 
-        return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());
+        if ("asc".equalsIgnoreCase(date) || "desc".equalsIgnoreCase(date)) {
+            query.append(" ORDER BY postdate ").append(date);
+        }
+
+        // Append the LIMIT and OFFSET clauses for pagination
+        query.append(" LIMIT ? OFFSET ?");
+        queryParams.add(size);
+        queryParams.add(offset);
+
+        System.out.println(query);
+        System.out.println(queryParams);
+
+        return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
     }
 
+
     @Override
-    public Optional<Post> findPostById(long id) {
-        final List<Post> postList = jdbcTemplate.query(POSTS_JOIN_USERS_AND_CHANNELS + " where p.postid=?;", ROW_MAPPER, id);
-        return postList.isEmpty() ? Optional.empty() : Optional.of(postList.get(0));
+    public int getPostsCountByCriteria(String channel, List<String> tags) {
+        // Create the base SQL query string for counting
+        StringBuilder query = new StringBuilder(COUNT_POSTS_JOIN_TAGS_AND_CHANNELS);
+
+        // Create a list to hold query parameters
+        List<Object> queryParams = new ArrayList<>();
+
+        // Append conditions based on the provided parameters
+        query.append(" WHERE 1 = 1");
+
+        if (channel != null && !channel.isEmpty()) {
+            query.append(" AND c.channel LIKE ?");
+            queryParams.add("%" + channel + "%");
+        }
+
+        if (tags != null && !tags.isEmpty()) {
+            query.append(" AND EXISTS (");
+            query.append("SELECT 1 FROM posts_tags pt JOIN tags t ON pt.tagid = t.tagid");
+            query.append(" WHERE pt.postid = p.postid AND t.tag IN (");
+            for (int i = 0; i < tags.size(); i++) {
+                query.append("?");
+                queryParams.add(tags.get(i)); // Use the tag name as a string
+                if (i < tags.size() - 1) {
+                    query.append(", ");
+                }
+            }
+            query.append(")");
+            query.append(" HAVING COUNT(DISTINCT pt.tagid) = ?)"); // Ensure all specified tags exist
+            queryParams.add(tags.size());
+        }
+
+        System.out.println(query);
+        System.out.println(queryParams);
+
+        // Execute the query and retrieve the result
+        return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());
     }
 
 }

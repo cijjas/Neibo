@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -57,57 +58,6 @@ public class FrontController {
         this.cas = cas;
     }
 
-    // ------------------------------------- FEED --------------------------------------
-
-    @RequestMapping("/")
-    public ModelAndView index(
-            @RequestParam(value = "sortBy", required = false) String sortBy,
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
-
-        // Calculate the offset based on the page and size
-        int offset = (page - 1) * size;
-
-        List<Post> postList = null;
-
-        if (sortBy != null) {
-            switch (sortBy) {
-                case "dateasc":
-                    postList = ps.getPostsByChannelAndDate("Feed", "asc", offset, size);
-                    break;
-                case "datedesc":
-                    postList = ps.getPostsByChannelAndDate("Feed", "desc", offset, size);
-                    break;
-                default:
-                    if (sortBy.startsWith("tag")) {
-                        String tag = sortBy.substring(3); // Extract the tag part
-                        postList = ps.getPostsByChannelAndDateAndTag("Feed", "desc",tag, offset, size);
-                    }
-            }
-        } else {
-            postList = ps.getPostsByChannelAndDate("Feed", "desc", offset, size); // Default sorting with pagination
-        }
-
-        // Calculate the total count of posts
-        int totalCount;
-        if (sortBy != null && sortBy.startsWith("tag"))
-            totalCount = ps.getTotalPostsCountInChannelWithTag("Feed", sortBy.substring(3));
-        else
-            totalCount = ps.getTotalPostsCountInChannel("Feed");
-
-        // Calculate the total pages
-        int totalPages = (int) Math.ceil((double) totalCount / size);
-
-        final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags());
-        mav.addObject("postList", postList);
-        mav.addObject("page", page); // Add page parameter to the model
-        mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
-        mav.addObject("sortBy", sortBy); // Add sortBy parameter to the model
-        mav.addObject("channel", "Feed");
-
-        return mav;
-    }
 
     @RequestMapping("/hey")
     public ModelAndView hey() {
@@ -121,41 +71,40 @@ public class FrontController {
         return mav;
     }
 
+    // ------------------------------------- FEED --------------------------------------
+
+    @RequestMapping("/")
+    public ModelAndView index(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "date", defaultValue = "desc", required = false) String date,
+            @RequestParam(value = "tag", required = false) List<String> tags
+    ) {
+
+        List<Post> postList = ps.getPostsByCriteria("Feed", page, size, date, tags);
+        int totalPages = ps.getTotalPages("Feed", size, tags);
+
+        final ModelAndView mav = new ModelAndView("views/index");
+        mav.addObject("tagList", ts.getTags());
+        mav.addObject("postList", postList);
+        mav.addObject("page", page); // Add page parameter to the model
+        mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
+        mav.addObject("channel", "Feed");
+
+        return mav;
+    }
+
+    // ------------------------------------- ANUNCIOS --------------------------------------
 
     @RequestMapping("/announcements")
-    public ModelAndView announcements(@RequestParam(value = "sortBy", required = false) String sortBy,
-                                      @RequestParam(value = "page", defaultValue = "1") int page,
-                                      @RequestParam(value = "size", defaultValue = "10") int size) {
-        List<Post> postList = null;
-        int offset = (page - 1) * size;
-
-        if (sortBy != null) {
-            switch (sortBy) {
-                case "dateasc":
-                    postList = ps.getPostsByChannelAndDate("Administracion", "asc", offset, size);
-                    break;
-                case "datedesc":
-                    postList = ps.getPostsByChannelAndDate("Administracion", "desc", offset, size);
-                    break;
-                default:
-                    if (sortBy.startsWith("tag")) {
-                        String tag = sortBy.substring(3); // Extract the tag part
-                        postList = ps.getPostsByChannelAndDateAndTag("Administracion", "desc", tag, offset, size);
-                    }
-            }
-        } else {
-            postList = ps.getPostsByChannelAndDate("Administracion", "desc", offset, size);
-        }
-
-//        postList = ps.getPostsByChannel("Administracion", offset, size);
-
-        int totalCount;
-        if (sortBy != null && sortBy.startsWith("tag"))
-            totalCount = ps.getTotalPostsCountInChannelWithTag("Administracion", sortBy.substring(3));
-        else
-            totalCount = ps.getTotalPostsCountInChannel("Administracion");
-
-        int totalPages = (int) Math.ceil((double) totalCount / size);
+    public ModelAndView announcements(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "date", defaultValue = "desc", required = false) String date,
+            @RequestParam(value = "tag", required = false) List<String> tags
+    ) {
+        List<Post> postList = ps.getPostsByCriteria("Administracion", page, size, date, tags);
+        int totalPages = ps.getTotalPages("Administracion", size, tags);
 
         final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags());
@@ -167,40 +116,17 @@ public class FrontController {
         return mav;
     }
 
+    // ------------------------------------- FORO --------------------------------------
+
     @RequestMapping("/forum")
-    public ModelAndView forum(@RequestParam(value = "sortBy", required = false) String sortBy,
-                              @RequestParam(value = "page", defaultValue = "1") int page,
-                              @RequestParam(value = "size", defaultValue = "10") int size) {
-        List<Post> postList = null;
-        int offset = (page - 1) * size;
-
-        if (sortBy != null) {
-            switch (sortBy) {
-                case "dateasc":
-                    postList = ps.getPostsByChannelAndDate("Foro", "asc", offset, size);
-                    break;
-                case "datedesc":
-                    postList = ps.getPostsByChannelAndDate("Foro", "desc", offset, size);
-                    break;
-                default:
-                    if (sortBy.startsWith("tag")) {
-                        String tag = sortBy.substring(3); // Extract the tag part
-                        postList = ps.getPostsByChannelAndDateAndTag("Foro", "desc", tag, offset, size);
-                    }
-            }
-        } else {
-            postList = ps.getPostsByChannelAndDate("Foro", "desc", offset, size);
-        }
-
-//        postList = ps.getPostsByChannel("Foro", offset, size);
-
-        int totalCount;
-        if (sortBy != null && sortBy.startsWith("tag"))
-            totalCount = ps.getTotalPostsCountInChannelWithTag("Foro", sortBy.substring(3));
-        else
-            totalCount = ps.getTotalPostsCountInChannel("Foro");
-
-        int totalPages = (int) Math.ceil((double) totalCount / size);
+    public ModelAndView forum(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "date", defaultValue = "desc", required = false) String date,
+            @RequestParam(value = "tag", required = false) List<String> tags
+    ){
+        List<Post> postList = ps.getPostsByCriteria("Foro", page, size, date, tags);
+        int totalPages = ps.getTotalPages("Foro", size, tags);
 
         final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags());
@@ -430,8 +356,31 @@ public class FrontController {
     // ------------------------------------- TEST --------------------------------------
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public ModelAndView test() {
-        return new ModelAndView("views/index");
+    public ModelAndView test(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "date", defaultValue = "desc", required = false) String date,
+            @RequestParam(value = "tag", required = false) List<String> tags
+    )
+    {
+        System.out.println("page = " + page);
+        System.out.println("size = " + size);
+        System.out.println("date = " + date);
+        System.out.println("tag = " + tags);
+
+
+        List<Post> postList = ps.getPostsByCriteria("Feed", page, size, date, tags);
+        int totalPages = ps.getPostsCountByCriteria("Feed", tags)/size;
+        System.out.println(totalPages);
+        // GET TOTAL PAGES
+        final ModelAndView mav = new ModelAndView("views/index");
+        mav.addObject("tagList", ts.getTags());
+        mav.addObject("postList", postList);
+        mav.addObject("page", page); // Add page parameter to the model
+        mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
+        mav.addObject("channel", "Forum");
+
+        return mav;
     }
 
     @RequestMapping(value = "/admin/test", method = RequestMethod.GET)

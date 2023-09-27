@@ -36,10 +36,28 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPosts(int offset, int limit) {
-        return postDao.getPostsByCriteria(null, null, null, offset, limit);
+    public List<Post> getPostsByCriteria(String channel, int page, int size, String date, List<String> tags) {
+        return postDao.getPostsByCriteria(channel, page, size, date, tags);
     }
 
+    @Override
+    public int getPostsCountByCriteria(String channel, List<String> tags) {
+        return postDao.getPostsCountByCriteria(channel, tags);
+    }
+
+    @Override
+    public int getTotalPages(String channel, int size, List<String> tags) {
+        return (int) Math.ceil((double) getPostsCountByCriteria(channel, tags) / size);
+    }
+
+    @Override
+    public Optional<Post> findPostById(final long id) {
+        return postDao.findPostById(id);
+    }
+
+    // -----------------------------------------------------------------------
+
+/*
     @Override
     public List<Post> getPostsByDate(final String order, int offset, int limit) {
         return postDao.getPostsByCriteria(null, null, order, offset, limit);
@@ -65,10 +83,6 @@ public class PostServiceImpl implements PostService {
         return postDao.getPostsByCriteria(channel, tag, order, offset, limit);
     }
 
-    @Override
-    public Optional<Post> findPostById(final long id) {
-        return postDao.findPostById(id);
-    }
 
     @Override
     public int getTotalPostsCount(){
@@ -88,7 +102,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public int getTotalPostsCountInChannelWithTag(String channel, String tag ){
         return postDao.getTotalPostsCountByCriteria(channel, tag);
-    }
+    }*/
+
+    // -----------------------------------------------------------------------
 
     @Override
     public Post createAdminPost(final String title, final String description, final long neighborId, final int channelId, final byte[] imageFile){
