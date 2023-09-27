@@ -17,7 +17,7 @@ public interface UserDao {
         deleteCustomer
      */
     User createUser(final String mail, final String password, final String name, final String surname,
-                    final long neighborhoodId, final String language, final boolean darkMode, final boolean verification, final String role);
+                    final long neighborhoodId, final String language, final boolean darkMode, final String role);
 
     List<User> getUsers();
 
@@ -25,13 +25,13 @@ public interface UserDao {
 
     public Optional<User> findUserByMail(final String mail);
 
-    void setUserValues(final long id, final String name, final String surname, final String password, final boolean darkMode, final String language, final boolean verified, final String role);
+    void setUserValues(final long id, final String password, final String name, final String surname,  final String language, final boolean darkMode, final String role);
 
 
 
     // ----------------------- Neighbor Methods
     User createNeighbor(final String mail, final String password, final String name, final String surname,
-                        final long neighborhoodId, final String language, final boolean darkMode, final boolean verification);
+                        final long neighborhoodId, final String language, final boolean darkMode);
 
     List<User> getNeighbors();
 
@@ -42,7 +42,7 @@ public interface UserDao {
 
     List<User> getNeighborsSubscribedByPostId(long id);
 
-    List<User> getNeighborsByNeighborhoodByVerification(long neighborhoodId, boolean verification);
+    List<User> getUnverifiedNeighborsByNeighborhood(long neighborhoodId);
 
     Optional<User> findNeighborById(long id);
 

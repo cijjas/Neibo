@@ -25,7 +25,7 @@ public interface UserService {
     public Optional<User> findUserByMail(final String mail);
 
     User createNeighbor(final String mail, final String password, final String name, final String surname,
-                        final long neighborhoodId, String language, boolean darkMode, boolean verified);
+                        final long neighborhoodId, String language);
 
     List<User> getNeighbors();
 
@@ -34,8 +34,6 @@ public interface UserService {
     Optional<User> findNeighborByMail(String mail);
 
     List<User> getNeighborsSubscribedByPostId(long id);
-
-    List<User> getVerifiedNeighborsByNeighborhood(long neighborhoodId);
 
     List<User> getUnverifiedNeighborsByNeighborhood(long neighborhoodId);
 

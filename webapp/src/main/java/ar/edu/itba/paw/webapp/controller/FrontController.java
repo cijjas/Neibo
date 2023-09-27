@@ -117,7 +117,7 @@ public class FrontController {
         final ModelAndView mav = new ModelAndView("admin/requestManager");
 
         mav.addObject("unverifiedList", us.getUnverifiedNeighborsByNeighborhood(1));
-        mav.addObject("verifiedList", us.getVerifiedNeighborsByNeighborhood(1));
+        mav.addObject("verifiedList", us.getNeighborsByNeighborhood(1));
         return mav;
     }
 
@@ -411,7 +411,7 @@ public class FrontController {
             return mav;
         }
 
-        us.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), "English", false, false );
+        us.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), "English");
         return new ModelAndView("redirect:/");
     }
 
