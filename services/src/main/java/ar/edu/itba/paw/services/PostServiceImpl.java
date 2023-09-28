@@ -2,15 +2,17 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
-import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.interfaces.services.PostService;
+import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.Image;
+import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Post;
 import enums.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +24,13 @@ public class PostServiceImpl implements PostService {
     private final ChannelDao channelDao;
     private final UserService ns;
     private final EmailService emailService;
+    private final TagService ts;
+    private final ImageService is;
 
     @Autowired
-    public PostServiceImpl(final PostDao postDao, final ChannelDao channelDao, UserService ns, EmailService emailService) {
+    public PostServiceImpl(final PostDao postDao, final ChannelDao channelDao, UserService ns, EmailService emailService, TagService ts, ImageService is) {
+        this.is = is;
+        this.ts = ts;
         this.postDao = postDao;
         this.channelDao = channelDao;
         this.ns = ns;
@@ -32,8 +38,18 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post createPost(String title, String description, long neighborId, long channelId, byte[] imageFile) {
-        return postDao.createPost(title, description, neighborId, channelId, imageFile);
+    public Post createPost(String title, String description, long neighborId, long channelId, String tags, MultipartFile imageFile) {
+        Image i = null;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                i = is.storeImage(imageFile.getBytes());
+            } catch (IOException e) {
+                System.out.println("Issue uploading the image");
+            }
+        }
+        Post p = postDao.createPost(title, description, neighborId, channelId, i == null ? 0 : i.getImageId());
+        ts.createTagsAndCategorizePost(p.getPostId(), tags);
+        return p;
     }
 
     @Override
@@ -108,8 +124,8 @@ public class PostServiceImpl implements PostService {
     // -----------------------------------------------------------------------
 
     @Override
-    public Post createAdminPost(final String title, final String description, final long neighborId, final int channelId, final byte[] imageFile){
-        Post post = postDao.createPost(title, description, neighborId, channelId, imageFile);
+    public Post createAdminPost(final String title, final String description, final long neighborId, final int channelId, final String tags, final MultipartFile imageFile){
+        Post post = createPost(title, description, neighborId, channelId, tags,  imageFile);
         assert post != null;
         try {
             for(User n : ns.getNeighbors()) {

@@ -177,27 +177,10 @@ public class FrontController {
     public ModelAndView publish(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
                                 final BindingResult errors,
                                 @RequestParam("imageFile") MultipartFile imageFile) {
-        if (errors.hasErrors()) {
+        if (errors.hasErrors())
             return publishForm(publishForm);
-        }
-
-        User n = getLoggedNeighbor();
-        Post p = null;
-        if (imageFile != null && !imageFile.isEmpty()) {
-            try {
-                // Convert the image to base64
-                byte[] imageBytes = imageFile.getBytes();
-                p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), imageBytes);
-            } catch (IOException e) {
-                System.out.println("Issue uploading the image");
-            }
-        } else {
-            p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), null);
-        }
-        assert p != null;
-        ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
+        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
         ModelAndView mav = new ModelAndView("redirect:/posts/" + p.getPostId() + "?success=true");
-
         return mav;
     }
 
@@ -220,31 +203,12 @@ public class FrontController {
     public ModelAndView publishAdmin(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
                                      final BindingResult errors,
                                      @RequestParam("imageFile") MultipartFile imageFile) {
-        if (errors.hasErrors()) {
+        if (errors.hasErrors())
             return publishForm(publishForm);
-        }
 
-        User n = getLoggedNeighbor();
+        ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
 
-        Post p = null;
-        if (imageFile != null && !imageFile.isEmpty()) {
-            try {
-                // Convert the image to base64
-                byte[] imageBytes = imageFile.getBytes();
-                 p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), imageBytes);
-                // Set the base64-encoded image data in the tournamentForm
-            } catch (IOException e) {
-                System.out.println("Issue uploading the image");
-                // Should go to an error page!
-            }
-        } else {
-             p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), null);
-        }
-        assert p != null;
-        ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
-
-        // Redirect to the "index" page with pagination parameters
-        return new ModelAndView("admin/publishAdmin"); // You can specify the default page and size here
+        return new ModelAndView("admin/publishAdmin");
     }
 
 
