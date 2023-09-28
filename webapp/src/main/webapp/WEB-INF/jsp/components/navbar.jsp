@@ -1,13 +1,10 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8"%>
+<%@ include file="/WEB-INF/jsp/components/tooltips.jsp" %>
 
 <div class="nav-container">
-
     <nav class="navbar navbar-expand-lg custom-navbar">
         <div class="container-xl">
-
-            <%@ include file="/WEB-INF/jsp/components/tooltips.jsp" %>
-
             <div class="d-flex justify-content-between align-items-center w-100">
                 <a class="navbar-brand" href="${pageContext.request.contextPath}/">
                     <svg class="svg-logo" width="55" height="54" viewBox="0 0 711 676" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -19,11 +16,7 @@
                     </svg>
                     neibo
                 </a>
-                <a href="${pageContext.request.contextPath}/publish">
-                    <button type="button" class="square-button" data-bs-toggle="tooltip" data-bs-placement="right" title="<spring:message code="CreateNewPost.tooltip"/>" data-bs-animation="true">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </a>
+                <%@ include file="/WEB-INF/jsp/components/userProfileBox.jsp" %>
             </div>
         </div>
     </nav>

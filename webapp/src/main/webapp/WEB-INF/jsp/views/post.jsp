@@ -16,7 +16,7 @@
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
 </head>
 
-<body>
+<body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
 <!-- Navigation Bar -->
     <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 

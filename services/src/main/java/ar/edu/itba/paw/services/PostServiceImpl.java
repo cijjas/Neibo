@@ -113,7 +113,6 @@ public class PostServiceImpl implements PostService {
         assert post != null;
         try {
             for(User n : ns.getNeighbors()) {
-                System.out.println(n);
                 Map<String, Object> vars = new HashMap<>();
                 vars.put("name", n.getName());
                 vars.put("postTitle", post.getTitle());

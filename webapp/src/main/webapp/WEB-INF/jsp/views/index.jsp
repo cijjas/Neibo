@@ -19,7 +19,7 @@
 </head>
 
 
-<body class="body">
+<body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
     <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
     <div class="container" >
 

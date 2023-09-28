@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.sql.SQLOutput;
@@ -85,8 +86,6 @@ public class FrontController {
 
     @RequestMapping("/hey")
     public ModelAndView hey() {
-        System.out.println("hey");
-        System.out.println(us.getUnverifiedNeighborsByNeighborhood(1));
 
         final ModelAndView mav = new ModelAndView("admin/requestManager");
 
@@ -104,12 +103,9 @@ public class FrontController {
     }
     @RequestMapping (value = "/updateDarkModePreference", method = RequestMethod.POST)
     public String updateDarkModePreference() {
-        // Get the currently logged-in user (you need to implement this)
         User user = getLoggedNeighbor();
-        // Update the user's dark mode preference in the database
         us.toggleDarkMode(user.getUserId());
 
-        // Redirect back to the user profile page
         return "redirect:/user";
     }
 
@@ -245,7 +241,7 @@ public class FrontController {
         ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
 
         // Redirect to the "index" page with pagination parameters
-        return new ModelAndView("redirect:?page=1&size=10"); // You can specify the default page and size here
+        return new ModelAndView("admin/publishAdmin"); // You can specify the default page and size here
     }
 
 
@@ -279,16 +275,10 @@ public class FrontController {
                                  @Valid @ModelAttribute("commentForm") final CommentForm commentForm,
                                  final BindingResult errors) {
         if (errors.hasErrors()) {
-            ModelAndView mav = new ModelAndView("views/post"); // Specify the view name
-            mav.addObject("post", ps.findPostById(postId).orElseThrow(PostNotFoundException::new));
-            mav.addObject("comments", cs.findCommentsByPostId(postId).orElse(Collections.emptyList()));
-            mav.addObject("tags", ts.findTagsByPostId(postId).orElse(Collections.emptyList()));
-            mav.addObject("commentForm", commentForm);
-            mav.addObject("showSuccessMessage", false); // Set showSuccessMessage to false
-            return mav;
+            return viewPost(postId, commentForm, false);
         }
-
         cs.createComment(commentForm.getComment(), getLoggedNeighbor().getUserId(), postId);
+
         return new ModelAndView("redirect:/posts/" + postId); // Redirect to the "posts" page
     }
 
@@ -395,7 +385,6 @@ public class FrontController {
 
         List<Post> postList = ps.getPostsByCriteria("Feed", page, size, date, tags);
         int totalPages = ps.getPostsCountByCriteria("Feed", tags)/size;
-        System.out.println(totalPages);
         // GET TOTAL PAGES
         final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags());
