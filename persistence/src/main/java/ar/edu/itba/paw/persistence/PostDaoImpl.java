@@ -134,8 +134,6 @@ public class PostDaoImpl implements PostDao {
         queryParams.add(size);
         queryParams.add(offset);
 
-        System.out.println(query);
-        System.out.println(queryParams);
 
         return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
     }
@@ -173,8 +171,6 @@ public class PostDaoImpl implements PostDao {
             queryParams.add(tags.size());
         }
 
-        System.out.println(query);
-        System.out.println(queryParams);
 
         // Execute the query and retrieve the result
         return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());

@@ -17,7 +17,7 @@
     <title><spring:message code="CreatePost.title"/></title>
 </head>
 
-<body class="body">
+<body  class=" body ${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 <div class="container">
     <div class="row">

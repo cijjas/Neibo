@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void toggleDarkMode(long id) {
-        findNeighborById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), !n.isDarkMode(), n.getRole()));
+        findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), !n.isDarkMode(), n.getRole()));
     }
 
     @Override
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateLanguage(long id, Language language) {
-        findNeighborById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), language, n.isDarkMode(), n.getRole()));
+        findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), language, n.isDarkMode(), n.getRole()));
     }
 
     @Override
