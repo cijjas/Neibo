@@ -7,6 +7,8 @@ import ar.edu.itba.paw.webapp.form.CommentForm;
 import ar.edu.itba.paw.webapp.form.PublishForm;
 import ar.edu.itba.paw.webapp.form.SignupForm;
 import com.sun.org.apache.xpath.internal.operations.Mod;
+import enums.Language;
+import enums.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -77,7 +79,7 @@ public class FrontController {
     public ModelAndView index(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "date", defaultValue = "desc", required = false) String date,
+            @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ) {
 
@@ -100,7 +102,7 @@ public class FrontController {
     public ModelAndView announcements(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "date", defaultValue = "desc", required = false) String date,
+            @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ) {
         List<Post> postList = ps.getPostsByCriteria("Administracion", page, size, date, tags);
@@ -122,7 +124,7 @@ public class FrontController {
     public ModelAndView forum(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "date", defaultValue = "desc", required = false) String date,
+            @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ){
         List<Post> postList = ps.getPostsByCriteria("Foro", page, size, date, tags);
@@ -332,7 +334,7 @@ public class FrontController {
             return mav;
         }
 
-        us.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), "English");
+        us.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), Language.ENGLISH);
         return new ModelAndView("redirect:/");
     }
 
@@ -359,7 +361,7 @@ public class FrontController {
     public ModelAndView test(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "date", defaultValue = "desc", required = false) String date,
+            @RequestParam(value = "date", defaultValue = "desc", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     )
     {

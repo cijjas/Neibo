@@ -7,6 +7,7 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Post;
+import enums.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPostsByCriteria(String channel, int page, int size, String date, List<String> tags) {
+    public List<Post> getPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags) {
         return postDao.getPostsByCriteria(channel, page, size, date, tags);
     }
 

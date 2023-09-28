@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Post;
+import enums.SortOrder;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +13,7 @@ public interface PostService {
 
     Optional<Post> findPostById(long id);
 
-    List<Post> getPostsByCriteria(String channel, int page, int size, String date, List<String> tags);
+    List<Post> getPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags);
 
     int getPostsCountByCriteria(String channel, List<String> tags);
 

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Post;
+import enums.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -88,7 +89,7 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public List<Post> getPostsByCriteria(String channel, int page, int size, String date, List<String> tags) {
+    public List<Post> getPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags) {
         if ( page < 1 )
             return null;
 
@@ -126,9 +127,9 @@ public class PostDaoImpl implements PostDao {
             queryParams.add(tags.size());
         }
 
-        if ("asc".equalsIgnoreCase(date) || "desc".equalsIgnoreCase(date)) {
-            query.append(" ORDER BY postdate ").append(date);
-        }
+        // Append the ORDER BY clause
+        query.append(" ORDER BY postdate ").append(date);
+
 
         // Append the LIMIT and OFFSET clauses for pagination
         query.append(" LIMIT ? OFFSET ?");
