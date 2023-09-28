@@ -62,7 +62,6 @@ public class PostDaoImpl implements PostDao {
                 .postId(key.longValue())
                 .title(title)
                 .description(description)
-                .imageFile(imageFile)
                 .build();
     }
 
@@ -75,7 +74,7 @@ public class PostDaoImpl implements PostDao {
                 .title(rs.getString("title"))
                 .description(rs.getString("description"))
                 .date(rs.getTimestamp("postdate"))
-                .imageFile(rs.getBytes("postimage"))
+                .postPictureId(rs.getLong("postpictureid"))
                 .user(user)
                 .channel(channel)
                 .build();

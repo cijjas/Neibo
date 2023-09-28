@@ -69,7 +69,7 @@
                                     <jsp:param name="postDate" value="${post.date}" />
                                     <jsp:param name="postTitle" value="${post.title}" />
                                     <jsp:param name="postDescription" value="${post.description}" />
-                                    <jsp:param name="postImage" value="${post.imageFile}" />
+                                    <jsp:param name="postImage" value="${post.postPictureId}" />
                                 </jsp:include>
                             </c:forEach>
                             <!-- Include the page selector -->

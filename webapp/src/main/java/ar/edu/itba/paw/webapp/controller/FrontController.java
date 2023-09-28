@@ -40,6 +40,7 @@ public class FrontController {
     private final ChannelService chs;
     private final SubscriptionService ss;
     private final CategorizationService cas;
+    private final ImageService is;
 
     @Autowired
     public FrontController(final PostService ps,
@@ -49,7 +50,10 @@ public class FrontController {
                            final TagService ts,
                            final ChannelService chs,
                            final SubscriptionService ss,
-                           final CategorizationService cas) {
+                           final CategorizationService cas,
+                           final ImageService is
+    ) {
+        this.is = is;
         this.ps = ps;
         this.us = us;
         this.nhs = nhs;
@@ -294,11 +298,10 @@ public class FrontController {
 
     // ------------------------------------- RESOURCES --------------------------------------
 
-    @RequestMapping(value = "/postImage/{imageId}")
+    @RequestMapping(value = "/images/{imageId}")
     @ResponseBody
     public byte[] imageRetriever(@PathVariable long imageId) {
-        Optional<Post> post = ps.findPostById(imageId);
-        return post.map(Post::getImageFile).orElseThrow(ResourceNotFoundException::new);
+        return is.getImage(imageId).map(Image::getImage).orElse(null);
     }
 
     // ------------------------------------- EXCEPTIONS --------------------------------------
@@ -381,30 +384,15 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test(
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "date", defaultValue = "desc", required = false) SortOrder date,
-            @RequestParam(value = "tag", required = false) List<String> tags
     )
     {
-        System.out.println("page = " + page);
-        System.out.println("size = " + size);
-        System.out.println("date = " + date);
-        System.out.println("tag = " + tags);
 
 
-        List<Post> postList = ps.getPostsByCriteria("Feed", page, size, date, tags);
-        int totalPages = ps.getPostsCountByCriteria("Feed", tags)/size;
-        System.out.println(totalPages);
-        // GET TOTAL PAGES
-        final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags());
-        mav.addObject("postList", postList);
-        mav.addObject("page", page); // Add page parameter to the model
-        mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
-        mav.addObject("channel", "Forum");
+        System.out.println(ps.getPostsByCriteria("Feed", 1, 10, SortOrder.ASC,null));
 
-        return mav;
+
+
+        return new ModelAndView("views/index");
     }
 
     @RequestMapping(value = "/admin/test", method = RequestMethod.GET)
