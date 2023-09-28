@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
                                final long neighborhoodId, Language language) {
         User n = findUserByMail(mail).orElse(null);
         if (n == null) {
-            return userDao.createNeighbor(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, false);
+            return userDao.createUser(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, false, UserRole.UNVERIFIED_NEIGHBOR);
         }else if (n.getPassword() == null){
             // n is a user from an early version where signing up was not a requirement
             userDao.setUserValues(n.getUserId(), passwordEncoder.encode(password), n.getName(), n.getSurname(), language, false, UserRole.UNVERIFIED_NEIGHBOR);
