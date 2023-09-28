@@ -4,6 +4,7 @@ import ar.edu.itba.paw.webapp.form.validation.constraints.ImageConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.TagsConstraint;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -22,7 +23,7 @@ public class PublishForm {
     private String tags;
 
     @ImageConstraint
-    private byte[] imageFile;
+    private MultipartFile imageFile;
 
     private Integer channel;
 
@@ -51,11 +52,11 @@ public class PublishForm {
         this.message = message;
     }
 
-    public byte[] getImageFile() {
+    public MultipartFile getImageFile() {
         return imageFile;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(MultipartFile image) {
         this.imageFile = image;
     }
 

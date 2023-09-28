@@ -112,6 +112,9 @@
     align-items: center; /* Center vertically */
 }
 
+
+
+
 .dialog-content {
     position: relative; /* Add position relative to create a positioning context */
     width: 400px;
@@ -129,6 +132,11 @@
     gap: 1.5rem;
 }
 
+.signup-content{
+    height: 700px;
+    width: 500px;
+
+}
 .close-button {
     position: absolute;
     top: 10px;
@@ -219,3 +227,35 @@
     gap: 10px;
 }
 /**/
+
+.cool-select {
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: var(--border-hard);
+    border: 1px solid var(--primary);
+    background-color: var(--background);
+    color: var(--text);
+    width: 100%;
+    padding: 5px 10px;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+}
+
+.cool-select::placeholder {
+    color: var(--lighttext);
+    opacity: 0.8;
+}
+.cool-select:active,
+.cool-select:hover,
+.cool-select:focus-within,
+.cool-select:focus,
+.cool-select:focus-visible {
+    transform: translateY(-4px) ;
+    box-shadow: 4px 4px var(--primary);
+}
+
+.landing-error{
+    color: var(--error);
+    font-size: 14px;
+}
+

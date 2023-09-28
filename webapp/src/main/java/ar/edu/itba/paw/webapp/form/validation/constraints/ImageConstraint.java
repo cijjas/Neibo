@@ -9,7 +9,6 @@ import java.lang.annotation.*;
 
 @Documented
 @Constraint(validatedBy = ImageValidator.class)
-@Target( { ElementType.METHOD, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ImageConstraint {
     String message() default "Invalid image format";

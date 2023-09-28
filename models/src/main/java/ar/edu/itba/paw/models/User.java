@@ -1,5 +1,9 @@
 package ar.edu.itba.paw.models;
 
+import enums.Language;
+import enums.UserRole;
+import java.util.Date;
+
 public class User {
     private final long userId;
     private final String mail;
@@ -8,9 +12,10 @@ public class User {
     private final String password;
     private final long neighborhoodId;
     private final boolean darkMode;
-    private final boolean verified;
-    private final String language;
-    private final String role;
+    private final Language language;
+    private final UserRole role;
+    private final Date creationDate;
+    private final long profilePictureId; // Add the profilePictureId field
 
     private User(Builder builder) {
         this.userId = builder.userId;
@@ -20,9 +25,10 @@ public class User {
         this.password = builder.password;
         this.neighborhoodId = builder.neighborhoodId;
         this.darkMode = builder.darkMode;
-        this.verified = builder.verified;
         this.language = builder.language;
         this.role = builder.role;
+        this.creationDate = builder.creationDate;
+        this.profilePictureId = builder.profilePictureId; // Initialize profilePictureId in the constructor
     }
 
     public static class Builder {
@@ -33,9 +39,10 @@ public class User {
         private String password;
         private long neighborhoodId;
         private boolean darkMode;
-        private boolean verified;
-        private String language;
-        private String role;
+        private Language language;
+        private UserRole role;
+        private Date creationDate;
+        private long profilePictureId; // Add the profilePictureId field in the builder
 
         public Builder userId(long userId) {
             this.userId = userId;
@@ -72,18 +79,23 @@ public class User {
             return this;
         }
 
-        public Builder verified(boolean verified){
-            this.verified = verified;
+        public Builder language(Language language){
+            this.language = language;
             return this;
         }
 
-        public Builder role(String role){
+        public Builder role(UserRole role){
             this.role = role;
             return this;
         }
 
-        public Builder language(String language){
-            this.language = language;
+        public Builder creationDate(Date creationDate){
+            this.creationDate = creationDate;
+            return this;
+        }
+
+        public Builder profilePictureId(long profilePictureId) {
+            this.profilePictureId = profilePictureId; // Set the profilePictureId data
             return this;
         }
 
@@ -120,21 +132,25 @@ public class User {
         return darkMode;
     }
 
-    public boolean isVerified() {
-        return verified;
+    public Language getLanguage() {
+        return language;
     }
 
-    public String getRole() {
+    public UserRole getRole() {
         return role;
     }
 
-    public String getLanguage() {
-        return language;
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public long getProfilePictureId() {
+        return profilePictureId; // Add the getter for profilePictureId
     }
 
     @Override
     public String toString() {
-        return "Neighbor{" +
+        return "User{" +
                 "userId=" + userId +
                 ", mail='" + mail + '\'' +
                 ", name='" + name + '\'' +
@@ -142,9 +158,10 @@ public class User {
                 ", password='" + password + '\'' +
                 ", neighborhoodId=" + neighborhoodId +
                 ", darkMode=" + darkMode +
-                ", verified=" + verified +
-                ", language='" + language + '\'' +
-                ", role='" + role + '\'' +
+                ", language=" + language +
+                ", role=" + role +
+                ", creationDate=" + creationDate +
+                ", profilePictureId=" + profilePictureId + // Include profilePictureId in the toString method
                 '}';
     }
 }

@@ -3,6 +3,8 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
+import enums.Language;
+import enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,13 +41,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createNeighbor(final String mail, final String password, final String name, final String surname,
-                               final long neighborhoodId, String language, boolean darkMode, boolean verification) {
+                               final long neighborhoodId, Language language) {
         User n = findUserByMail(mail).orElse(null);
         if (n == null) {
-            return userDao.createNeighbor(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, darkMode, verification);
+            return userDao.createUser(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, false, UserRole.UNVERIFIED_NEIGHBOR);
         }else if (n.getPassword() == null){
             // n is a user from an early version where signing up was not a requirement
-            userDao.setUserValues(n.getUserId(), n.getName(), n.getSurname(), passwordEncoder.encode(password), false, "English", false, "Neighbor");
+            userDao.setUserValues(n.getUserId(), passwordEncoder.encode(password), n.getName(), n.getSurname(), language, false, UserRole.UNVERIFIED_NEIGHBOR);
         }
         return n;
     }
@@ -61,14 +63,11 @@ public class UserServiceImpl implements UserService {
         return userDao.getNeighborsSubscribedByPostId(id);
     }
 
-    @Override
-    public List<User> getVerifiedNeighborsByNeighborhood(long neighborhoodId){
-        return userDao.getNeighborsByNeighborhoodByVerification(neighborhoodId, true);
-    }
+
 
     @Override
     public List<User> getUnverifiedNeighborsByNeighborhood(long neighborhoodId){
-        return userDao.getNeighborsByNeighborhoodByVerification(neighborhoodId, false);
+        return userDao.getUnverifiedNeighborsByNeighborhood(neighborhoodId);
     }
 
     //@Override
@@ -79,46 +78,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void toggleDarkMode(long id) {
-        User n = findNeighborById(id).orElse(null);
-        if (n != null)
-            userDao.setUserValues(id, n.getName(), n.getSurname(), n.getPassword(), !n.isDarkMode(), n.getLanguage(), n.isVerified(), n.getRole());
+        findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), !n.isDarkMode(), n.getRole()));
     }
 
     @Override
     public void verifyNeighbor(long id) {
-        User n = findNeighborById(id).orElse(null);
-        if (n != null)
-            userDao.setUserValues(id, n.getName(), n.getSurname(), n.getPassword(), n.isDarkMode(), n.getLanguage(), true, n.getRole());
+        findNeighborById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), UserRole.NEIGHBOR));
     }
 
     @Override
     public void unverifyNeighbor(long id) {
-        User n = findNeighborById(id).orElse(null);
-        if (n != null)
-            userDao.setUserValues(id, n.getName(), n.getSurname(), n.getPassword(), n.isDarkMode(), n.getLanguage(), false, n.getRole());
+        findNeighborById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), UserRole.UNVERIFIED_NEIGHBOR));
     }
 
     @Override
-    public void updateLanguage(long id, String language) {
-        User n = findNeighborById(id).orElse(null);
-        if (n != null)
-            userDao.setUserValues(id, n.getName(), n.getSurname(), n.getPassword(), n.isDarkMode(), language, n.isVerified(), n.getRole());
+    public void updateLanguage(long id, Language language) {
+        findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), language, n.isDarkMode(), n.getRole()));
     }
 
     @Override
     public void resetPreferenceValues(long id) {
-        User n = findNeighborById(id).orElse(null);
-        if (n != null)
-            userDao.setUserValues(id, n.getName(), n.getSurname(), n.getPassword(), false, "English", n.isVerified(), n.getRole());
+        findNeighborById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), Language.ENGLISH, false, n.getRole()));
+    }
+
+    @Override
+    public void setNewPassword(long id, String newPassword){
+        findNeighborById(id).ifPresent(n -> userDao.setUserValues(id, passwordEncoder.encode(newPassword), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), n.getRole()));
     }
 
     @Override
     public Optional<User> findNeighborByMail(String mail) { return userDao.findNeighborByMail(mail); }
-
-    @Override
-    public void setNewPassword(long id, String newPassword){
-        User n = findNeighborById(id).orElse(null);
-        if (n != null)
-            userDao.setUserValues(id, n.getName(), n.getSurname(), newPassword, n.isDarkMode(), n.getLanguage(), n.isVerified(), n.getRole());
-    }
 }

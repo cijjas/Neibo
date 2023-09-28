@@ -6,16 +6,17 @@
     <div class="post-section">
         <div class="post-info">
             <h2><c:out value="${post.title}" /></h2>
-            <p><spring:message code="PostedBy"/> <c:out value="${post.user.name}" /></p>
+            <p style="font-size: 12px; font-weight: normal"><spring:message code="PostedBy"/> <c:out value="${post.user.name}" /></p>
+            <div class="divider"></div>
             <div class="postcard-description">
                 <c:out value="${post.description}" />
             </div>
         </div >
 
     <!-- Image section -->
-    <c:if test="${not empty post.imageFile}">
+    <c:if test="${post.postPictureId != 0}">
         <div style="display: flex; justify-content: center; align-items: center;">
-            <img src="${pageContext.request.contextPath}/postImage/<c:out value="${post.postId}"/>"
+            <img src="${pageContext.request.contextPath}/images/<c:out value="${post.postPictureId}"/>"
                  style="max-width: 100%; max-height: 100vh; border-radius: 5px;"
                  alt="post_${post.postId}_img"/>
         </div>
@@ -44,34 +45,50 @@
     <!-- Comment section -->
     <div class="comments-section">
         <!-- Input box for adding a new comment -->
-        <div class="comments-section-divider">
-            <h5 class="divider-title"><spring:message code="CommentSection"/></h5>
-            <hr class="divider-line">
-        </div>
 
-        <div style="margin: 10px;">
+        <div style="margin: 10px 0 10px 0;">
 
             <form:form method="post" action="${post.postId}" modelAttribute="commentForm">
                 <form:errors cssClass="error" element="p"/>
 
                 <!-- Message input -->
                 <div class="form-group">
-                    <spring:message code="Comment" var="commentPlaceholder"/>
-                    <form:textarea path="comment" class="cool-input" rows="3" placeholder="${commentPlaceholder}"/>
-                    <div class="form-row form-error">
-                        <form:errors path="comment" cssClass="error" element="p"/>
+                    <div style="width: 100%">
+
+                    <div style="width: 100%">
+                        <spring:message code="Comment" var="commentPlaceholder"/>
+                        <form:textarea id="commentInput" path="comment" class="cool-input grey-input"  rows="3" placeholder="${commentPlaceholder}"/>
+                        <div class="form-row form-error" style="font-size: 12px; margin-left:0.5rem">
+                            <form:errors path="comment" cssClass="error" element="p"/>
+                        </div>
                     </div>
+                    <!-- Submit button -->
+                    <div class="justify-content-end">
+                        <button id="submitButton" type="submit" class="cool-button cool-small on-bg" style="margin-top:5px; font-size: 12px;" disabled>
+                            <spring:message code="Comment.verb"/>
+                        </button>
+
+                    </div>
+                    </div>
+
                 </div>
 
-                <!-- Submit button -->
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="cool-button cool-small on-bg">
-                        <spring:message code="Comment.verb"/>
-                    </button>
-                </div>
+
+                <script>
+                    // Get references to the textarea and submit button
+                    const commentInput = document.getElementById('commentInput');
+                    const submitButton = document.getElementById('submitButton');
+
+                    // Add an event listener to the textarea to check its content
+                    commentInput.addEventListener('input', function () {
+                        // Check if the textarea is empty
+                        submitButton.disabled = commentInput.value.trim() === '';
+                    });
+                </script>
 
             </form:form>
         </div>
+        <div class="divider"></div>
 
         <c:choose>
             <c:when test="${empty comments}">

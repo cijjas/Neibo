@@ -1,6 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
 <html>
 
 <head>
@@ -16,7 +18,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/landingPage.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
 </head>
-<body class="landing-body">
+<body class="landing-body ${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%----%>
 
     <%@ include file="/WEB-INF/jsp/components/backgroundDrawing.jsp" %>
@@ -27,24 +29,25 @@
         <div class="landing-neibo">
             neibo
         </div>
-        <p class="landing-description">Lorem ipsum en el culo te pellizco aguante boca la puta madre Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+        <p class="landing-description"><spring:message code="Landing.page.desc"/></p>
 
         <a class="action-button"  onclick="openLoginDialog()">
-            Log In
+            <spring:message code="Login"/>
         </a>
         <span style="color:var(--lighttext); font-size: 14px;">Not a member?
             <a onclick="openSignupDialog()" class="a-link">Signup now</a>
         </span>
 
+<%--        Login dialog--%>
         <div class="dialog" id="loginDialog" style="display: none">
             <div class="dialog-content">
                 <div class="close-button" onclick="closeLoginDialog()">
                     <i class="fas fa-close"></i>
                 </div>
                 <div class="title">
-                    Welcome to neibo
+                    <spring:message code="Welcome.to.neibo"/>
                     <br>
-                    <span>Log in to continue</span>
+                    <span><spring:message code="Login.to.continue"/> </span>
                 </div>
 
                 <form method="post" class="login-form">
@@ -59,12 +62,12 @@
                     </div>
                     <label class="centered-row light-text">
                         <input  name="rememberMe" type="checkbox">
-                        Remember Me!
+                        <spring:message code="Remember.me"/>
                     </label>
                     <div class="centered-column">
                         <button class="action-button">Login</button>
-                        <span style="color:var(--lighttext); font-size: 14px;">Not a member?
-                            <a onclick="closeLoginDialog();openSignupDialog()" class="a-link">Signup now</a>
+                        <span style="color:var(--lighttext); font-size: 14px;"><spring:message code="Not.a.member.question"/>
+                            <a onclick="closeLoginDialog();openSignupDialog()" class="a-link"><spring:message code="Signup.now"/></a>
                         </span>
                     </div>
 
@@ -72,60 +75,62 @@
             </div>
         </div>
 
-
-
-
         <div class="dialog" id="signupDialog" style="display: none">
-            <div class="dialog-content">
+            <div class="dialog-content signup-content">
                 <div class="close-button" onclick="closeSignupDialog()">
                     <i class="fas fa-close"></i>
                 </div>
                 <div class="title">
-                    Welcome to neibo
+                    <spring:message code="Welcome.to.neibo"/>
                     <br>
-                    <span>Sign up to get started</span>
+                    <span><spring:message code="Signup.to.get.started"/></span>
                 </div>
+
 
                 <form:form method="post" action="signup" modelAttribute="signupForm">
                     <form:errors cssClass="error" element="p"/>
-                    <div class="form-input">
-                        <form:label path="name">
-                            <form:input path="name" placeholder="First Name" class="input"/>
-                        </form:label>
-                        <form:errors path="name" cssClass="error" element="p"/>
-                    </div>
-                    <div class="form-input">
-                        <form:label path="surname">
-                            <form:input path="surname" placeholder="Surname" class="input"/>
-                        </form:label>
-                        <form:errors path="surname" cssClass="error" element="p"/>
-                    </div>
-                    <div class="form-input">
-                        <form:label path="mail">
-                            <form:input path="mail" placeholder="Email" class="input"/>
-                        </form:label>
-                        <form:errors path="mail" cssClass="error" element="p"/>
-                    </div>
-                    <div class="form-input">
-                        <form:label path="password">
-                            <form:input path="password" placeholder="Password" class="input"/>
-                        </form:label>
-                        <form:errors path="password" cssClass="error" element="p"/>
-                    </div>
+                    <div class="centered-column">
 
-                    <div class="form-input">
-                        <form:label path="neighborhoodId"> Neighborhoods </form:label>
-                        <form:select path="neighborhoodId" class="form-control">
+                        <div class="form-input">
+                            <form:label path="name">
+                                <form:input path="name" placeholder="First Name" class="input"/>
+                            </form:label>
+                            <form:errors path="name" cssClass="landing-error" element="p"/>
+                        </div>
+                        <div class="form-input">
+                            <form:label path="surname">
+                                <form:input path="surname" placeholder="Surname" class="input"/>
+                            </form:label>
+                            <form:errors path="surname" cssClass="landing-error" element="p"/>
+                        </div>
+                        <div class="form-input">
+                            <form:label path="mail">
+                                <form:input path="mail" placeholder="Email" class="input"/>
+                            </form:label>
+                            <form:errors path="mail" cssClass="landing-error" element="p"/>
+                        </div>
+                        <div class="form-input">
+                            <form:label path="password">
+                                <form:input type="password" path="password" placeholder="Password" class="input"/>
+                            </form:label>
+                            <form:errors path="password" cssClass="landing-error" element="p"/>
+                        </div>
+                        <div class="form-input">
+                            <form:select path="neighborhoodId" class="cool-select">
                                 <c:forEach var="entry" items="${neighborhoodsList}">
                                     <form:option value="${entry.getNeighborhoodId()}">${entry.getName()}</form:option>
                                 </c:forEach>
-                        </form:select>
+                            </form:select>
+                        </div>
                     </div>
 
-                    <button type="submit" class="action-button">Sign Up</button>
+                    <button type="submit" class="action-button"><spring:message code="Signup"/></button>
                 </form:form>
+
             </div>
         </div>
+
+<%--        Signup dialog--%>
         <c:if test="${openSignupDialog == true}">
             <script>
                 document.getElementById("signupDialog").style.display = "flex";
@@ -144,7 +149,6 @@
              document.getElementById("loginDialog").style.display = "none";
          }
 
-
          function openSignupDialog(){
              document.getElementById("signupDialog").style.display = "flex";
          }
@@ -153,16 +157,7 @@
          }
      </script>
 
-<%--  para que se abra el dialogo de signup al cargar la pagina (no funca)--%>
-<%--    <script>--%>
-<%--        window.onload = function () {--%>
-<%--            var openSignupDialog = ${openSignupDialog}; // Get the variable value--%>
 
-<%--            if (openSignupDialog) {--%>
-<%--                openSignupDialog(); // Open the signup dialog if the variable is true--%>
-<%--            }--%>
-<%--        }--%>
-<%--    </script>--%>
 
 
 <%----%>

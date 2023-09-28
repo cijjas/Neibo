@@ -190,6 +190,8 @@ let tagsString;
 function submitForm() {
     clearImage();
     const tagsArray = tagInput1.arr; // Assuming tagInput1 has an 'arr' property with the tags
+        // Show the loader container
+    document.getElementById("loader-container").style.display = "flex";
 
     tagsString = tagsArray.join(',');
     document.getElementById('tags-input').value = tagsString;

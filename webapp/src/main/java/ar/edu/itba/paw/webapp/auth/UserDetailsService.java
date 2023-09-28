@@ -1,5 +1,4 @@
 package ar.edu.itba.paw.webapp.auth;
-
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.webapp.exceptions.NeighborNotFoundException;
@@ -9,7 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
+import enums.UserRole;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,13 +28,11 @@ public class UserDetailsService implements org.springframework.security.core.use
 
         final Set<GrantedAuthority> authorities = new HashSet<>();
 
-        if (n.getRole().equals("Administrator")){
+        if (n.getRole() == UserRole.ADMINISTRATOR){
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
 
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        System.out.println("Granting the following powers");
-        System.out.println(authorities);
         return new UserAuth(n.getMail(), n.getPassword(), authorities); // which information is stored in the session
     }
 }

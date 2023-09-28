@@ -45,15 +45,14 @@
 
 
 .cool-comment {
-    font-size: 15px;
-    font-weight: 600;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-weight: normal;
     border-radius: var(--border-radius);
-    border: 1px solid var(--lighttext);
     background-color: var(--darkonbackground);
     color: var(--text);
     width: 100%;
     padding: 5px 10px;
     outline: none;
-    transform: translateY(-4px) ;
-    box-shadow: 2px 2px var(--lighttext);
 }

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.User;
+import enums.Language;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +26,7 @@ public interface UserService {
     public Optional<User> findUserByMail(final String mail);
 
     User createNeighbor(final String mail, final String password, final String name, final String surname,
-                        final long neighborhoodId, String language, boolean darkMode, boolean verified);
+                        final long neighborhoodId, Language language);
 
     List<User> getNeighbors();
 
@@ -34,8 +35,6 @@ public interface UserService {
     Optional<User> findNeighborByMail(String mail);
 
     List<User> getNeighborsSubscribedByPostId(long id);
-
-    List<User> getVerifiedNeighborsByNeighborhood(long neighborhoodId);
 
     List<User> getUnverifiedNeighborsByNeighborhood(long neighborhoodId);
 
@@ -47,7 +46,7 @@ public interface UserService {
 
     void unverifyNeighbor(final long id);
 
-    void updateLanguage(final long id, final String language);
+    void updateLanguage(final long id, final Language language);
 
     void resetPreferenceValues(final long id);
 

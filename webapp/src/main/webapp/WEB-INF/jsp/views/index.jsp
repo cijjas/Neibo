@@ -19,7 +19,7 @@
 </head>
 
 
-<body class="body">
+<body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
     <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
     <div class="container" >
 
@@ -41,15 +41,12 @@
 
                 </script>
 
-
-
-
-
                 <div id="placeholder-posts-container">
                     <c:forEach begin="1" end="10" var="index">
                         <%@ include file="/WEB-INF/jsp/components/placeholderBlogpost.jsp" %>
                     </c:forEach>
                 </div>
+
 
                 <div id="actual-posts-container">
                     <c:choose>
@@ -72,7 +69,7 @@
                                     <jsp:param name="postDate" value="${post.date}" />
                                     <jsp:param name="postTitle" value="${post.title}" />
                                     <jsp:param name="postDescription" value="${post.description}" />
-                                    <jsp:param name="postImage" value="${post.imageFile}" />
+                                    <jsp:param name="postImage" value="${post.postPictureId}" />
                                 </jsp:include>
                             </c:forEach>
                             <!-- Include the page selector -->
