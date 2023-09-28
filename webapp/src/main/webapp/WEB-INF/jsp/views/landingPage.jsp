@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 <html>
 
 <head>
@@ -27,10 +28,10 @@
         <div class="landing-neibo">
             neibo
         </div>
-        <p class="landing-description">Lorem ipsum en el culo te pellizco aguante boca la puta madre Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+        <p class="landing-description"><spring:message code="Landing.page.desc"/></p>
 
         <a class="action-button"  onclick="openLoginDialog()">
-            Log In
+            <spring:message code="Login"/>
         </a>
         <span style="color:var(--lighttext); font-size: 14px;">Not a member?
             <a onclick="openSignupDialog()" class="a-link">Signup now</a>
@@ -43,9 +44,9 @@
                     <i class="fas fa-close"></i>
                 </div>
                 <div class="title">
-                    Welcome to neibo
+                    <spring:message code="Welcome.to.neibo"/>
                     <br>
-                    <span>Log in to continue</span>
+                    <span><spring:message code="Login.to.continue"/> </span>
                 </div>
 
                 <form method="post" class="login-form">
@@ -60,12 +61,12 @@
                     </div>
                     <label class="centered-row light-text">
                         <input  name="rememberMe" type="checkbox">
-                        Remember Me!
+                        <spring:message code="Remember.me"/>
                     </label>
                     <div class="centered-column">
                         <button class="action-button">Login</button>
-                        <span style="color:var(--lighttext); font-size: 14px;">Not a member?
-                            <a onclick="closeLoginDialog();openSignupDialog()" class="a-link">Signup now</a>
+                        <span style="color:var(--lighttext); font-size: 14px;"><spring:message code="Not.a.member.question"/>
+                            <a onclick="closeLoginDialog();openSignupDialog()" class="a-link"><spring:message code="Signup.now"/></a>
                         </span>
                     </div>
 
@@ -79,9 +80,9 @@
                     <i class="fas fa-close"></i>
                 </div>
                 <div class="title">
-                    Welcome to neibo
+                    <spring:message code="Welcome.to.neibo"/>
                     <br>
-                    <span>Sign up to get started</span>
+                    <span><spring:message code="Signup.to.get.started"/></span>
                 </div>
 
 
@@ -109,7 +110,7 @@
                         </div>
                         <div class="form-input">
                             <form:label path="password">
-                                <form:input path="password" placeholder="Password" class="input"/>
+                                <form:input type="password" path="password" placeholder="Password" class="input"/>
                             </form:label>
                             <form:errors path="password" cssClass="landing-error" element="p"/>
                         </div>
@@ -122,7 +123,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="action-button">Sign Up</button>
+                    <button type="submit" class="action-button"><spring:message code="Signup"/></button>
                 </form:form>
 
             </div>

@@ -7,7 +7,11 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button, span{
     font-family: 'Lexend Deca', sans-serif;
 }
 
-
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--background);
+}
 
 
 :root {
@@ -40,14 +44,14 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button, span{
     --onbackground: rgb(59, 64, 70);
     --onbackgroundfaded: rgba(49, 58, 63, 0.1);
     --darkonbackground : #4b4f4f;
-    --primary: rgb(163, 180, 163);
+    --primary: #8fbd79;
     --onprimary: #29333a;
     --secondary: #595953;
     --accent: #6696e2;
     --error: #de6f6f;
     --scrollbarthumb: #9a968c;
     --bordercolor: #646462;
-    --old-primary: #789368;
+    --old-primary: #025933;
 
 }
 
@@ -77,11 +81,7 @@ a:hover {
     color: inherit;
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    background-color: var(--background);
-}
+
 
 i {
     color: var(--primary);

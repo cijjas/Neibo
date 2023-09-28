@@ -27,36 +27,3 @@
 </div>
 
 
-
-<script>
-    // JavaScript to toggle dark mode
-    const darkModeToggle = document.getElementById('dark-mode-toggle');
-    const htmlElement = document.documentElement; // Get the HTML element
-
-    // Function to toggle dark mode
-    function toggleDarkMode() {
-        htmlElement.classList.toggle('dark-mode');
-
-        // Check if dark mode is enabled and update button text
-        if (htmlElement.classList.contains('dark-mode')) {
-            darkModeToggle.textContent = '<spring:message code="LightMode"/>';
-        } else {
-            darkModeToggle.textContent = '<spring:message code="DarkMode"/>';
-        }
-    }
-
-    // Add a click event listener to the toggle button
-    darkModeToggle.addEventListener('click', toggleDarkMode);
-
-    // Check the initial dark mode state and set the button text accordingly
-    if (htmlElement.classList.contains('dark-mode')) {
-        darkModeToggle.textContent = '<spring:message code="LightMode"/>';
-    } else {
-        darkModeToggle.textContent = '<spring:message code="DarkMode"/>';
-    }
-
-    const container = document.querySelector(".left-column-container");
-    const stickyItem = document.querySelector(".left-box");
-
-
-</script>

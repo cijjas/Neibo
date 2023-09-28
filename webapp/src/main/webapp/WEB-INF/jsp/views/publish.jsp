@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
 <head>
@@ -13,7 +14,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/home.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title>Create a post</title>
+    <title><spring:message code="CreatePost.title"/></title>
 </head>
 
 <body class="body">

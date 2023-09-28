@@ -107,7 +107,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User createNeighbor(final String mail, final String password, final String name, final String surname,
                                final long neighborhoodId, final String language, final boolean darkMode) {
-        return createUser(mail, password, name, surname, neighborhoodId ,language ,darkMode, "Neighbor");
+        return createUser(mail, password, name, surname, neighborhoodId ,language ,darkMode, "Unverified Neighbor");
     }
 
     @Override

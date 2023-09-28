@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.form.SignupForm;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -120,6 +121,25 @@ public class FrontController {
         mav.addObject("verifiedList", us.getNeighborsByNeighborhood(1));
         return mav;
     }
+
+    @RequestMapping("/user")
+    public ModelAndView user() {
+        ModelAndView mav = new ModelAndView("views/userProfile");
+        mav.addObject("neighbor", getLoggedNeighbor());
+        //us.updateLanguage(getLoggedNeighbor().getUserId(), "Spanish");
+        return mav;
+    }
+    @RequestMapping (value = "/updateDarkModePreference", method = RequestMethod.POST)
+    public String updateDarkModePreference() {
+        // Get the currently logged-in user (you need to implement this)
+        User user = getLoggedNeighbor();
+        // Update the user's dark mode preference in the database
+        us.toggleDarkMode(user.getUserId());
+
+        // Redirect back to the user profile page
+        return "redirect:/user";
+    }
+
 
 
     @RequestMapping("/announcements")
