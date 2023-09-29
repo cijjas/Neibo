@@ -31,10 +31,10 @@
                 <c:when test="${empty tags}">
                 </c:when>
                 <c:otherwise>
-                    <p><strong> <spring:message code="Tags"/></strong> </p>
+                    <p class="m-b-10"> <spring:message code="Tags"/> </p>
                     <c:forEach var="tag" items="${tags}">
-                        <a href="${pageContext.request.contextPath}/?page=1&sortBy=tag${tag.tag}">
-                            <span class="badge badge-primary" >#<c:out value="${tag.tag}" /></span>
+                        <a href="${pageContext.request.contextPath}/?tag=${tag.tag}">
+                            <span class="tag-option" ><c:out value="${tag.tag}" /></span>
                         </a>
                     </c:forEach>
                 </c:otherwise>
@@ -63,11 +63,10 @@
                         </div>
                     </div>
                     <!-- Submit button -->
-                    <div class="justify-content-end">
+                    <div class="d-flex flex-column justify-content-center align-items-end">
                         <button id="submitButton" type="submit" class="cool-button cool-small on-bg" style="margin-top:5px; font-size: 12px;" disabled>
                             <spring:message code="Comment.verb"/>
                         </button>
-
                     </div>
                     </div>
 

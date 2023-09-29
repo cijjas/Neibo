@@ -20,10 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.sql.SQLOutput;
@@ -114,28 +111,11 @@ public class FrontController {
 
         return "redirect:/user";
     }
+
     @RequestMapping(value = "/applyTagsFilter", method = RequestMethod.POST)
-    public String applyTagsFilter(@RequestParam("tags") String tags) {
-        String[] tagArray = tags.split(",");
-
-        StringBuilder queryString = new StringBuilder();
-
-        for (String tag : tagArray) {
-            if (!tag.trim().isEmpty()) { // Skip empty tags
-                if (queryString.length() > 0) {
-                    queryString.append("&"); // Add '&' between tags
-                }
-                queryString.append("tag=").append(tag.trim()); // Append each tag
-            }
-        }
-
-        String formattedQueryString = queryString.toString();
-
-
-        return "redirect:?page=1&" + formattedQueryString;
+    public String applyTagsFilter(@RequestParam("tags") String tags, @RequestParam("currentUrl") String currentUrl) {
+        return "redirect:" + ts.createURLForTagFilter(tags, currentUrl);
     }
-
-
 
     @RequestMapping("/announcements")
     public ModelAndView announcements(
@@ -212,7 +192,12 @@ public class FrontController {
     @RequestMapping(value = "/redirectToChannel", method = RequestMethod.POST)
     public ModelAndView redirectToChannel(@RequestParam("channelId") int channelId) {
         String channelName= chs.findChannelById(channelId).get().getChannel().toLowerCase();
-        return new ModelAndView("redirect:/" + channelName);
+        if(channelName.equals("feed")){
+            return new ModelAndView("redirect:/");
+        }
+        else{
+            return new ModelAndView("redirect:/" + channelName);
+        }
     }
     // ------------------------------------- PUBLISH ADMIN --------------------------------------
 
@@ -263,6 +248,7 @@ public class FrontController {
         mav.addObject("tags", tags);
         mav.addObject("commentForm", commentForm);
 
+        mav.addObject("showSuccessMessage", success);
 
         return mav;
     }

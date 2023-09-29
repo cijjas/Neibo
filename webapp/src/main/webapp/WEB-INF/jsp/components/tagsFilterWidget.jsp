@@ -63,7 +63,7 @@
         tagInput2.addTag(tagText); // Assuming tagInput2 is your TagsInput instance
     }
 
-    function applyTagsAsFilter(){
+    function applyTagsAsFilter() {
         const tagsArray = tagInput2.arr;
         const tagsString = tagsArray.join(',');
 
@@ -72,13 +72,20 @@
         tagsFilterForm.setAttribute('method', 'POST');
         tagsFilterForm.setAttribute('action', '/applyTagsFilter'); // Set your form action URL
 
-        // Create a hidden input field
+        // Create a hidden input field for the current URL
+        const currentUrlInput = document.createElement('input');
+        currentUrlInput.setAttribute('type', 'hidden');
+        currentUrlInput.setAttribute('name', 'currentUrl');
+        currentUrlInput.setAttribute('value', window.location.href); // Get the current URL
+
+        // Create a hidden input field for tags
         const tagsFilterInput = document.createElement('input');
         tagsFilterInput.setAttribute('type', 'hidden');
         tagsFilterInput.setAttribute('name', 'tags');
         tagsFilterInput.setAttribute('value', tagsString);
 
-        // Append the input field to the form
+        // Append the input fields to the form
+        tagsFilterForm.appendChild(currentUrlInput);
         tagsFilterForm.appendChild(tagsFilterInput);
 
         // Append the form to the document body (or any other suitable container)
@@ -87,5 +94,6 @@
         // Submit the form
         tagsFilterForm.submit();
     }
+
 
 </script>
