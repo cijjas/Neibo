@@ -99,7 +99,7 @@ h2{
 h3{
     font-size: 16px;
     font-weight: bolder;
-    color: var(--primary);
+    color: inherit;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

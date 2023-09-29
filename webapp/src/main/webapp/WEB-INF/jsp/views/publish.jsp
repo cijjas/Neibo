@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
@@ -97,8 +98,9 @@
                         </div>
 
                         <%--Tags javascript logic--%>
-                        <script src="${pageContext.request.contextPath}/resources/js/publish.js"></script>
 
+                        <script src="${pageContext.request.contextPath}/resources/js/tagsPublishHandler.js"></script>
+                        <script src="${pageContext.request.contextPath}/resources/js/publish.js"></script>
                     </form:form>
                 </div>
             </div>
@@ -123,6 +125,7 @@
 
 
     <!-- Bootstrap JS and jQuery -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
     <%@ include file="/WEB-INF/jsp/components/footer.jsp" %>
 

@@ -16,7 +16,7 @@
                     </svg>
                     neibo
                 </a>
-                <%@ include file="/WEB-INF/jsp/components/userProfileBox.jsp" %>
+                <%@ include file="/WEB-INF/jsp/components/userProfileWidget.jsp" %>
             </div>
         </div>
     </nav>
