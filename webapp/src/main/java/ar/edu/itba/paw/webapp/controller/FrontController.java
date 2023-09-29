@@ -159,7 +159,10 @@ public class FrontController {
         return mav;
     }
 
-
+    @RequestMapping(value = "/unverified", method = RequestMethod.GET)
+    public ModelAndView publishForm() {
+        return  new ModelAndView("views/publish");
+    }
     // ------------------------------------- PUBLISH --------------------------------------
 
 
