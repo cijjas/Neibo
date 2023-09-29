@@ -9,7 +9,6 @@ const tagInput1 = new TagsInput({
 });
 
 
-
 let tagsString;
 
 function submitForm() {
@@ -18,6 +17,7 @@ function submitForm() {
     const tagsArray = tagInput1.arr;
     tagsString = tagsArray.join(',');
     document.getElementById('tags-input').value = tagsString;
+
 }
 
 

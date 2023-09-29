@@ -60,7 +60,6 @@
     });
     // Add a tag from the dropdown
     function addTagFromDropdown(tagText) {
-        console.log(tagText);
         tagInput2.addTag(tagText); // Assuming tagInput2 is your TagsInput instance
     }
 

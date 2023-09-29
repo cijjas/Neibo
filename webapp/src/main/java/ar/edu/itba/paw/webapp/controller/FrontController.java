@@ -20,7 +20,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.sql.SQLOutput;
@@ -129,7 +132,7 @@ public class FrontController {
         String formattedQueryString = queryString.toString();
 
 
-        return "redirect:/page=0&size=10&date=ASC&" + formattedQueryString;
+        return "redirect:?page=1&" + formattedQueryString;
     }
 
 
@@ -156,8 +159,8 @@ public class FrontController {
 
     // ------------------------------------- FORO --------------------------------------
 
-    @RequestMapping("/forum")
-    public ModelAndView forum(
+    @RequestMapping("/complaints")
+    public ModelAndView complaints(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
@@ -171,7 +174,7 @@ public class FrontController {
         mav.addObject("postList", postList);
         mav.addObject("page", page); // Add page parameter to the model
         mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
-        mav.addObject("channel", "Forum");
+        mav.addObject("channel", "Complaints");
 
         return mav;
     }
@@ -184,51 +187,59 @@ public class FrontController {
     public ModelAndView publishForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
         final ModelAndView mav = new ModelAndView("views/publish");
 
-        Map<String, Channel> channelMap = chs.getChannels().stream()
-                .collect(Collectors.toMap(Channel::getChannel, Function.identity()));
-        //no queremos que usuarios puedan publicar en el canal de administracion
-        channelMap.remove("Administracion");
-        mav.addObject("channelList", channelMap);
+        mav.addObject("channelList", chs.getNeighborChannels(getLoggedNeighbor().getUserId()));
 
         return mav;
     }
+
 
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
     public ModelAndView publish(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
                                 final BindingResult errors,
-                                @RequestParam("imageFile") MultipartFile imageFile) {
-        if (errors.hasErrors())
+                                @RequestParam("imageFile") MultipartFile imageFile
+                                ){
+        if (errors.hasErrors()){
             return publishForm(publishForm);
-        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
-        ModelAndView mav = new ModelAndView("redirect:/posts/" + p.getPostId() + "?success=true");
+        }
+        Integer channel = publishForm.getChannel();
+        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), channel, publishForm.getTags(), imageFile);
+        ModelAndView mav = new ModelAndView("views/publish");
+        mav.addObject("channelId", channel);
+        mav.addObject("showSuccessMessage", true);
         return mav;
     }
 
+    @RequestMapping(value = "/redirectToChannel", method = RequestMethod.POST)
+    public ModelAndView redirectToChannel(@RequestParam("channelId") int channelId) {
+        String channelName= chs.findChannelById(channelId).get().getChannel().toLowerCase();
+        return new ModelAndView("redirect:/" + channelName);
+    }
+    // ------------------------------------- PUBLISH ADMIN --------------------------------------
 
-
-    @RequestMapping(value = "/publishAdmin", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/publish", method = RequestMethod.GET)
     public ModelAndView publishAdminForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
         final ModelAndView mav = new ModelAndView("admin/publishAdmin");
-        Map<String, Channel> channelMap = chs.getChannels().stream()
-                .collect(Collectors.toMap(Channel::getChannel, Function.identity()));
-        channelMap.remove("Foro");
-        channelMap.remove("Feed");
-        //no queremos que usuarios puedan publicar en el canal de administracion
-        mav.addObject("channelList", channelMap);
-
+        mav.addObject("channelList", chs.getAdminChannels());
         return mav;
     }
 
-    @RequestMapping(value = "/publishAdmin", method = RequestMethod.POST)
+    @RequestMapping(value = "/admin/publish", method = RequestMethod.POST)
     public ModelAndView publishAdmin(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
                                      final BindingResult errors,
                                      @RequestParam("imageFile") MultipartFile imageFile) {
-        if (errors.hasErrors())
+        if (errors.hasErrors()){
             return publishForm(publishForm);
+        }
 
         ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
+        PublishForm clearedForm = new PublishForm();
 
-        return new ModelAndView("admin/publishAdmin");
+        ModelAndView mav = new ModelAndView("admin/publishAdmin");
+        mav.addObject("showSuccessMessage", true);
+        mav.addObject("channelList", chs.getAdminChannels());
+        mav.addObject("publishForm", clearedForm);
+
+        return mav;
     }
 
 
@@ -252,7 +263,6 @@ public class FrontController {
         mav.addObject("tags", tags);
         mav.addObject("commentForm", commentForm);
 
-        mav.addObject("showSuccessMessage", success);
 
         return mav;
     }
