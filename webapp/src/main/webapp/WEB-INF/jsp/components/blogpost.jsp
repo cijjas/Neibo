@@ -21,9 +21,9 @@
             <h1 class="post-title"><c:out value="${param.postTitle}" /></h1>
         </div>
         <p class="post-description"><c:out value="${param.postDescription}" /></p>
-        <c:if test="${not empty param.postImage}">
+        <c:if test="${ param.postImage != 0}">
             <div style="display: flex; justify-content: center; align-items: center;">
-                <img class="blogpost-image" src="${pageContext.request.contextPath}/postImage/<c:out value="${param.postID}"/>" alt="post_<c:out value="${param.postID}"/>_img " />
+                <img class="blogpost-image" src="${pageContext.request.contextPath}/images/<c:out value="${param.postImage}"/>" alt="post_<c:out value="${param.postID}"/>_img " />
             </div>
         </c:if>
     </a>

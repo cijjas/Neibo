@@ -14,9 +14,9 @@
         </div >
 
     <!-- Image section -->
-    <c:if test="${not empty post.imageFile}">
+    <c:if test="${post.postPictureId != 0}">
         <div style="display: flex; justify-content: center; align-items: center;">
-            <img src="${pageContext.request.contextPath}/postImage/<c:out value="${post.postId}"/>"
+            <img src="${pageContext.request.contextPath}/images/<c:out value="${post.postPictureId}"/>"
                  style="max-width: 100%; max-height: 100vh; border-radius: 5px;"
                  alt="post_${post.postId}_img"/>
         </div>

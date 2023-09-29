@@ -1138,7 +1138,6 @@ h6 {
 }
 
 /*---------------------------user profile box--------------------------------*/
-.grey-static-container,
 .grey-container {
     overflow: hidden;
     padding: 1em 1em;
@@ -1148,7 +1147,21 @@ h6 {
     border: 1px solid var(--text);
     border-radius: var(--border-radius);
     transition: all 0.3s ease-in-out;
+
 }
+.grey-static-container{
+    overflow: hidden;
+    padding: 1em 1em;
+    width: 100%;
+    background-color: var(--onbackground);
+    color: var(--text);
+    border: 1px solid var(--lighttext);
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease-in-out;
+    transform: translateY(-4px) ;
+    box-shadow: -3px 5px 0 0 var(--lighttext);
+}
+
 
 .grey-container:hover{
     transform: translateY(-3px);

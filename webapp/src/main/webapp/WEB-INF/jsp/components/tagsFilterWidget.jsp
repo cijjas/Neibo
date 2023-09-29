@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<div class="grey-static-container static">
+<div class="grey-static-container ">
     <div class="column d-flex justify-content-center align-items-start">
         <h3 class="m-b-10"><spring:message code="Filter.by.tags"/></h3>
 

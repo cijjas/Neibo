@@ -17,6 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/resources/css/home.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
 </head>
 
@@ -71,7 +72,7 @@
                                     <jsp:param name="postDate" value="${post.date}" />
                                     <jsp:param name="postTitle" value="${post.title}" />
                                     <jsp:param name="postDescription" value="${post.description}" />
-                                    <jsp:param name="postImage" value="${post.imageFile}" />
+                                    <jsp:param name="postImage" value="${post.postPictureId}" />
                                 </jsp:include>
                             </c:forEach>
                             <!-- Include the page selector -->

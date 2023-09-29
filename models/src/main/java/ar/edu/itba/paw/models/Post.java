@@ -9,7 +9,7 @@ public class Post {
     private final Date date;
     private final User user;
     private final Channel channel;
-    private final byte[] imageFile; // Add the imageFile attribute
+    private final long postPictureId;
 
     private Post(Builder builder) {
         this.postId = builder.postId;
@@ -18,7 +18,7 @@ public class Post {
         this.date = builder.date;
         this.user = builder.user;
         this.channel = builder.channel;
-        this.imageFile = builder.imageFile; // Initialize imageFile in the constructor
+        this.postPictureId = builder.postPictureId;
     }
 
     public static class Builder {
@@ -28,7 +28,7 @@ public class Post {
         private Date date;
         private User user;
         private Channel channel;
-        private byte[] imageFile; // Add imageFile attribute in the builder
+        private long postPictureId;
 
         public Builder postId(long postId) {
             this.postId = postId;
@@ -60,8 +60,8 @@ public class Post {
             return this;
         }
 
-        public Builder imageFile(byte[] imageFile) {
-            this.imageFile = imageFile; // Set the imageFile data
+        public Builder postPictureId(long postPictureId) {
+            this.postPictureId = postPictureId;
             return this;
         }
 
@@ -94,8 +94,8 @@ public class Post {
         return channel;
     }
 
-    public byte[] getImageFile() {
-        return imageFile; // Add the getter for imageFile
+    public long getPostPictureId() {
+        return postPictureId;
     }
 
     @Override
@@ -107,7 +107,7 @@ public class Post {
                 ", date=" + date +
                 ", user=" + user +
                 ", channel=" + channel +
-                ", imageFile='" + imageFile + '\'' + // Include imageFile in the toString method
+                ", postPictureId=" + postPictureId + // Include postPictureId in the toString method
                 '}';
     }
 }

@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.sql.SQLOutput;
@@ -41,6 +40,7 @@ public class FrontController {
     private final ChannelService chs;
     private final SubscriptionService ss;
     private final CategorizationService cas;
+    private final ImageService is;
 
     @Autowired
     public FrontController(final PostService ps,
@@ -50,7 +50,10 @@ public class FrontController {
                            final TagService ts,
                            final ChannelService chs,
                            final SubscriptionService ss,
-                           final CategorizationService cas) {
+                           final CategorizationService cas,
+                           final ImageService is
+    ) {
+        this.is = is;
         this.ps = ps;
         this.us = us;
         this.nhs = nhs;
@@ -194,27 +197,10 @@ public class FrontController {
     public ModelAndView publish(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
                                 final BindingResult errors,
                                 @RequestParam("imageFile") MultipartFile imageFile) {
-        if (errors.hasErrors()) {
+        if (errors.hasErrors())
             return publishForm(publishForm);
-        }
-
-        User n = getLoggedNeighbor();
-        Post p = null;
-        if (imageFile != null && !imageFile.isEmpty()) {
-            try {
-                // Convert the image to base64
-                byte[] imageBytes = imageFile.getBytes();
-                p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), imageBytes);
-            } catch (IOException e) {
-                System.out.println("Issue uploading the image");
-            }
-        } else {
-            p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), null);
-        }
-        assert p != null;
-        ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
+        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
         ModelAndView mav = new ModelAndView("redirect:/posts/" + p.getPostId() + "?success=true");
-
         return mav;
     }
 
@@ -237,31 +223,12 @@ public class FrontController {
     public ModelAndView publishAdmin(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
                                      final BindingResult errors,
                                      @RequestParam("imageFile") MultipartFile imageFile) {
-        if (errors.hasErrors()) {
+        if (errors.hasErrors())
             return publishForm(publishForm);
-        }
 
-        User n = getLoggedNeighbor();
+        ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
 
-        Post p = null;
-        if (imageFile != null && !imageFile.isEmpty()) {
-            try {
-                // Convert the image to base64
-                byte[] imageBytes = imageFile.getBytes();
-                 p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), imageBytes);
-                // Set the base64-encoded image data in the tournamentForm
-            } catch (IOException e) {
-                System.out.println("Issue uploading the image");
-                // Should go to an error page!
-            }
-        } else {
-             p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), null);
-        }
-        assert p != null;
-        ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
-
-        // Redirect to the "index" page with pagination parameters
-        return new ModelAndView("admin/publishAdmin"); // You can specify the default page and size here
+        return new ModelAndView("admin/publishAdmin");
     }
 
 
@@ -304,11 +271,10 @@ public class FrontController {
 
     // ------------------------------------- RESOURCES --------------------------------------
 
-    @RequestMapping(value = "/postImage/{imageId}")
+    @RequestMapping(value = "/images/{imageId}")
     @ResponseBody
     public byte[] imageRetriever(@PathVariable long imageId) {
-        Optional<Post> post = ps.findPostById(imageId);
-        return post.map(Post::getImageFile).orElseThrow(ResourceNotFoundException::new);
+        return is.getImage(imageId).map(Image::getImage).orElse(null);
     }
 
     // ------------------------------------- EXCEPTIONS --------------------------------------
@@ -391,29 +357,15 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test(
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "date", defaultValue = "desc", required = false) SortOrder date,
-            @RequestParam(value = "tag", required = false) List<String> tags
     )
     {
-        System.out.println("page = " + page);
-        System.out.println("size = " + size);
-        System.out.println("date = " + date);
-        System.out.println("tag = " + tags);
 
 
-        List<Post> postList = ps.getPostsByCriteria("Feed", page, size, date, tags);
-        int totalPages = ps.getPostsCountByCriteria("Feed", tags)/size;
-        // GET TOTAL PAGES
-        final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags());
-        mav.addObject("postList", postList);
-        mav.addObject("page", page); // Add page parameter to the model
-        mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
-        mav.addObject("channel", "Forum");
+        System.out.println(ps.getPostsByCriteria("Feed", 1, 10, SortOrder.ASC,null));
 
-        return mav;
+
+
+        return new ModelAndView("views/index");
     }
 
     @RequestMapping(value = "/admin/test", method = RequestMethod.GET)
