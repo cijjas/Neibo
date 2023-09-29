@@ -42,6 +42,7 @@ public class FrontController {
     private final ChannelService chs;
     private final SubscriptionService ss;
     private final CategorizationService cas;
+    private final ImageService is;
     private final AmenityService as;
     private final ReservationService rs;
 
@@ -53,7 +54,12 @@ public class FrontController {
                            final TagService ts,
                            final ChannelService chs,
                            final SubscriptionService ss,
-                           final CategorizationService cas, AmenityService as, ReservationService rs) {
+                           final CategorizationService cas,
+                           final ImageService is,
+                           final ReservationService rs,
+                           final AmenityService as
+    ) {
+        this.is = is;
         this.ps = ps;
         this.us = us;
         this.nhs = nhs;
@@ -91,8 +97,6 @@ public class FrontController {
 
     @RequestMapping("/hey")
     public ModelAndView hey() {
-        System.out.println("hey");
-        System.out.println(us.getUnverifiedNeighborsByNeighborhood(1));
 
         final ModelAndView mav = new ModelAndView("admin/requestManager");
 
@@ -110,16 +114,16 @@ public class FrontController {
     }
     @RequestMapping (value = "/updateDarkModePreference", method = RequestMethod.POST)
     public String updateDarkModePreference() {
-        // Get the currently logged-in user (you need to implement this)
         User user = getLoggedNeighbor();
-        // Update the user's dark mode preference in the database
         us.toggleDarkMode(user.getUserId());
 
-        // Redirect back to the user profile page
         return "redirect:/user";
     }
 
-
+    @RequestMapping(value = "/applyTagsFilter", method = RequestMethod.POST)
+    public String applyTagsFilter(@RequestParam("tags") String tags, @RequestParam("currentUrl") String currentUrl) {
+        return "redirect:" + ts.createURLForTagFilter(tags, currentUrl);
+    }
 
     @RequestMapping("/announcements")
     public ModelAndView announcements(
@@ -143,8 +147,8 @@ public class FrontController {
 
     // ------------------------------------- FORO --------------------------------------
 
-    @RequestMapping("/forum")
-    public ModelAndView forum(
+    @RequestMapping("/complaints")
+    public ModelAndView complaints(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
@@ -158,12 +162,15 @@ public class FrontController {
         mav.addObject("postList", postList);
         mav.addObject("page", page); // Add page parameter to the model
         mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
-        mav.addObject("channel", "Forum");
+        mav.addObject("channel", "Complaints");
 
         return mav;
     }
 
-
+    @RequestMapping(value = "/unverified", method = RequestMethod.GET)
+    public ModelAndView publishForm() {
+        return  new ModelAndView("views/publish");
+    }
     // ------------------------------------- PUBLISH --------------------------------------
 
 
@@ -171,87 +178,64 @@ public class FrontController {
     public ModelAndView publishForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
         final ModelAndView mav = new ModelAndView("views/publish");
 
-        Map<String, Channel> channelMap = chs.getChannels().stream()
-                .collect(Collectors.toMap(Channel::getChannel, Function.identity()));
-        //no queremos que usuarios puedan publicar en el canal de administracion
-        channelMap.remove("Administracion");
-        mav.addObject("channelList", channelMap);
+        mav.addObject("channelList", chs.getNeighborChannels(getLoggedNeighbor().getUserId()));
 
         return mav;
     }
+
 
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
     public ModelAndView publish(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
                                 final BindingResult errors,
-                                @RequestParam("imageFile") MultipartFile imageFile) {
-        if (errors.hasErrors()) {
+                                @RequestParam("imageFile") MultipartFile imageFile
+                                ){
+        if (errors.hasErrors()){
             return publishForm(publishForm);
         }
-
-        User n = getLoggedNeighbor();
-        Post p = null;
-        if (imageFile != null && !imageFile.isEmpty()) {
-            try {
-                // Convert the image to base64
-                byte[] imageBytes = imageFile.getBytes();
-                p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), imageBytes);
-            } catch (IOException e) {
-                System.out.println("Issue uploading the image");
-            }
-        } else {
-            p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), null);
-        }
-        assert p != null;
-        ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
-        ModelAndView mav = new ModelAndView("redirect:/posts/" + p.getPostId() + "?success=true");
-
+        Integer channel = publishForm.getChannel();
+        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), channel, publishForm.getTags(), imageFile);
+        ModelAndView mav = new ModelAndView("views/publish");
+        mav.addObject("channelId", channel);
+        mav.addObject("showSuccessMessage", true);
         return mav;
     }
 
+    @RequestMapping(value = "/redirectToChannel", method = RequestMethod.POST)
+    public ModelAndView redirectToChannel(@RequestParam("channelId") int channelId) {
+        String channelName= chs.findChannelById(channelId).get().getChannel().toLowerCase();
+        if(channelName.equals("feed")){
+            return new ModelAndView("redirect:/");
+        }
+        else{
+            return new ModelAndView("redirect:/" + channelName);
+        }
+    }
+    // ------------------------------------- PUBLISH ADMIN --------------------------------------
 
-
-    @RequestMapping(value = "/publishAdmin", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/publish", method = RequestMethod.GET)
     public ModelAndView publishAdminForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
         final ModelAndView mav = new ModelAndView("admin/publishAdmin");
-        Map<String, Channel> channelMap = chs.getChannels().stream()
-                .collect(Collectors.toMap(Channel::getChannel, Function.identity()));
-        channelMap.remove("Foro");
-        channelMap.remove("Feed");
-        //no queremos que usuarios puedan publicar en el canal de administracion
-        mav.addObject("channelList", channelMap);
-
+        mav.addObject("channelList", chs.getAdminChannels());
         return mav;
     }
 
-    @RequestMapping(value = "/publishAdmin", method = RequestMethod.POST)
+    @RequestMapping(value = "/admin/publish", method = RequestMethod.POST)
     public ModelAndView publishAdmin(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
                                      final BindingResult errors,
                                      @RequestParam("imageFile") MultipartFile imageFile) {
-        if (errors.hasErrors()) {
+        if (errors.hasErrors()){
             return publishForm(publishForm);
         }
 
-        User n = getLoggedNeighbor();
+        ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
+        PublishForm clearedForm = new PublishForm();
 
-        Post p = null;
-        if (imageFile != null && !imageFile.isEmpty()) {
-            try {
-                // Convert the image to base64
-                byte[] imageBytes = imageFile.getBytes();
-                 p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), imageBytes);
-                // Set the base64-encoded image data in the tournamentForm
-            } catch (IOException e) {
-                System.out.println("Issue uploading the image");
-                // Should go to an error page!
-            }
-        } else {
-             p = ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), n.getUserId(), publishForm.getChannel(), null);
-        }
-        assert p != null;
-        ts.createTagsAndCategorizePost(p.getPostId(), publishForm.getTags());
+        ModelAndView mav = new ModelAndView("admin/publishAdmin");
+        mav.addObject("showSuccessMessage", true);
+        mav.addObject("channelList", chs.getAdminChannels());
+        mav.addObject("publishForm", clearedForm);
 
-        // Redirect to the "index" page with pagination parameters
-        return new ModelAndView("redirect:?page=1&size=10"); // You can specify the default page and size here
+        return mav;
     }
 
 
@@ -285,26 +269,19 @@ public class FrontController {
                                  @Valid @ModelAttribute("commentForm") final CommentForm commentForm,
                                  final BindingResult errors) {
         if (errors.hasErrors()) {
-            ModelAndView mav = new ModelAndView("views/post"); // Specify the view name
-            mav.addObject("post", ps.findPostById(postId).orElseThrow(PostNotFoundException::new));
-            mav.addObject("comments", cs.findCommentsByPostId(postId).orElse(Collections.emptyList()));
-            mav.addObject("tags", ts.findTagsByPostId(postId).orElse(Collections.emptyList()));
-            mav.addObject("commentForm", commentForm);
-            mav.addObject("showSuccessMessage", false); // Set showSuccessMessage to false
-            return mav;
+            return viewPost(postId, commentForm, false);
         }
-
         cs.createComment(commentForm.getComment(), getLoggedNeighbor().getUserId(), postId);
+
         return new ModelAndView("redirect:/posts/" + postId); // Redirect to the "posts" page
     }
 
     // ------------------------------------- RESOURCES --------------------------------------
 
-    @RequestMapping(value = "/postImage/{imageId}")
+    @RequestMapping(value = "/images/{imageId}")
     @ResponseBody
     public byte[] imageRetriever(@PathVariable long imageId) {
-        Optional<Post> post = ps.findPostById(imageId);
-        return post.map(Post::getImageFile).orElseThrow(ResourceNotFoundException::new);
+        return is.getImage(imageId).map(Image::getImage).orElse(null);
     }
 
     // ------------------------------------- EXCEPTIONS --------------------------------------
@@ -387,30 +364,15 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test(
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "date", defaultValue = "desc", required = false) SortOrder date,
-            @RequestParam(value = "tag", required = false) List<String> tags
     )
     {
-        System.out.println("page = " + page);
-        System.out.println("size = " + size);
-        System.out.println("date = " + date);
-        System.out.println("tag = " + tags);
 
 
-        List<Post> postList = ps.getPostsByCriteria("Feed", page, size, date, tags);
-        int totalPages = ps.getPostsCountByCriteria("Feed", tags)/size;
-        System.out.println(totalPages);
-        // GET TOTAL PAGES
-        final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags());
-        mav.addObject("postList", postList);
-        mav.addObject("page", page); // Add page parameter to the model
-        mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
-        mav.addObject("channel", "Forum");
+        System.out.println(ps.getPostsByCriteria("Feed", 1, 10, SortOrder.ASC,null));
 
-        return mav;
+
+
+        return new ModelAndView("views/index");
     }
 
     @RequestMapping(value = "/admin/test", method = RequestMethod.GET)

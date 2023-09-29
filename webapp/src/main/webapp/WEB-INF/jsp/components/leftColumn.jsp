@@ -13,8 +13,8 @@
         <a id="feedButton" href="${pageContext.request.contextPath}/" class="cool-left-button  ${channel == 'Feed' ? 'active' : ''}">
             <i class="fas fa-comments"></i> <spring:message code="Feed"/>
         </a>
-        <a id="Forum" href="${pageContext.request.contextPath}/forum" class="cool-left-button ${channel == 'Forum' ? 'active' : ''}" >
-            <i class="fas fa-envelope"></i> <spring:message code="Forum"/>
+        <a id="complaintsButton" href="${pageContext.request.contextPath}/complaints" class="cool-left-button ${channel == 'Complaints' ? 'active' : ''}" >
+            <i class="fas fa-envelope"></i> <spring:message code="Complaints"/>
         </a>
     </div>
 

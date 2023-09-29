@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostDao {
-    Post createPost(final String title, final String description, final long neighborId, final long channelId, final byte[] imageFile);
+    Post createPost(final String title, final String description, final long neighborId, final long channelId, final long imageId);
 
     List<Post> getPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags);
 

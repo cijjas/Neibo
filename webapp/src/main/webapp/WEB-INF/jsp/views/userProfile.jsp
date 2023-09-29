@@ -1,7 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <html>
 <head>
@@ -18,74 +18,78 @@
     <title><spring:message code="Profile"/></title>
 
 </head>
-<body>
+<body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%----%>
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 <div class="container"> <!-- Wrap card content in a container -->
-        <div class="cool-static-container p-0">
-            <div class="page-content page-container" id="page-content">
-                <div class="row m-l-0 m-r-0">
-                    <div class="col-sm-4 bg-c-lite-green user-profile">
-                        <div class="card-block text-center text-white">
-                            <div class="m-b-25">
-                                <img src="https://img.icons8.com/bubbles/100/000000/user.png" class="img-radius" alt="User-Profile-Image">
-                            </div>
-                            <h6 class="f-w-600"><c:out value="${neighbor.name}"/></h6>
-                            <p><c:out value="${neighbor.role}"/></p>
-                            <i class=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
+    <div class="cool-static-container p-0">
+        <div class="page-content page-container" id="page-content">
+            <div class="row m-l-0 m-r-0">
+                <div class="col-sm-4 bg-c-lite-green user-profile">
+                    <div class="card-block text-center text-white">
+                        <div class="m-b-25">
+                            <img src="https://img.icons8.com/bubbles/100/000000/user.png" class="img-radius" alt="User-Profile-Image">
                         </div>
+                        <h6 class="f-w-600"><c:out value="${neighbor.name}"/></h6>
+                        <p><c:out value="${neighbor.role}"/></p>
+                        <i class=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
                     </div>
-                    <div class="col-sm-8">
-                        <div class="card-block">
-                            <h6 class="m-b-20 p-b-5 b-b-default f-w-600"><spring:message code="Information"/></h6>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <p class="m-b-10 f-w-600"><spring:message code="Email"/></p>
-                                    <h6 class="text-muted f-w-400"><c:out value="${neighbor.mail}"/></h6>
-                                </div>
-                                <div class="col-sm-6">
-                                    <p class="m-b-10 f-w-600"><spring:message code="User"/></p>
-                                    <h6 class="text-muted f-w-400"><c:out value="${neighbor.userId}" /></h6>
+                </div>
+                <div class="col-sm-8">
+                    <div class="card-block">
+                        <h6 class="m-b-20 p-b-5 b-b-default f-w-600"><spring:message code="Information"/></h6>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p class="m-b-10 f-w-600"><spring:message code="Email"/></p>
+                                <h6 class="text-muted f-w-400"><c:out value="${neighbor.mail}"/></h6>
+                            </div>
+                            <div class="col-sm-6">
+                                <p class="m-b-10 f-w-600"><spring:message code="User"/></p>
+                                <h6 class="text-muted f-w-400"><c:out value="${neighbor.userId}" /></h6>
+                            </div>
+                        </div>
+                        <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600"><spring:message code="Preferences"/></h6>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p class="m-b-10 f-w-600"><spring:message code="DarkMode"/></p>
+                                <div class="controlled" >
+                                    <h6 class="text-muted f-w-400"><spring:message code="Off"/></h6>
+
+                                    <form id="dark-mode-form" action="${pageContext.request.contextPath}/updateDarkModePreference" method="POST">
+                                        <label class="switch">
+                                            <input class="toggle" type="checkbox" id="dark-mode-toggle" name="darkMode">
+                                            <span class="slider"></span>
+                                            <span class="card-side"></span>
+                                        </label>
+                                    </form>
+                                    <h6 class="text-muted f-w-400"><spring:message code="On"/></h6>
                                 </div>
                             </div>
-                            <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600"><spring:message code="Preferences"/></h6>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <p class="m-b-10 f-w-600"><spring:message code="DarkMode"/></p>
-                                    <div class="controlled" >
-                                        <h6 class="text-muted f-w-400"><spring:message code="Off"/></h6>
-
-                                        <form id="dark-mode-form" action="${pageContext.request.contextPath}/updateDarkModePreference" method="POST">
-                                            <label class="switch">
-                                                <input class="toggle" type="checkbox" id="dark-mode-toggle" name="darkMode">
-                                                <span class="slider"></span>
-                                                <span class="card-side"></span>
-                                            </label>
-                                        </form>
-
-
-                                        <h6 class="text-muted f-w-400"><spring:message code="On"/></h6>
-
+                            <div class="col-sm-6">
+                                <p class="m-b-10 f-w-600"><spring:message code="Language"/></p>
+                                <div class="controlled" >
+                                    <h6 class="text-muted f-w-400"><spring:message code="English"/></h6>
+                                    <div >
+                                        <label class="switch ">
+                                            <input class="toggle" type="checkbox" id="language-toggle">
+                                            <span class="slider"></span>
+                                            <span class="card-side"></span>
+                                        </label>
                                     </div>
-                                </div>
-                                <div class="col-sm-6">
-                                    <p class="m-b-10 f-w-600"><spring:message code="Language"/></p>
-                                    <div class="controlled" >
-                                        <h6 class="text-muted f-w-400"><spring:message code="English"/></h6>
-                                        <div >
-                                            <label class="switch ">
-                                                <input class="toggle" type="checkbox" id="language-toggle">
-                                                <span class="slider"></span>
-                                                <span class="card-side"></span>
-                                            </label>
-                                        </div>
-                                            <h6 class="text-muted f-w-400"><spring:message code="Spanish"/></h6>
-                                    </div>
+                                        <h6 class="text-muted f-w-400"><spring:message code="Spanish"/></h6>
                                 </div>
                             </div>
+                        </div>
+                        <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600"><spring:message code="Preferences"/></h6>
+                        <div class="row justify-content-end">
+                            <a href="${pageContext.request.contextPath}/logout" class=" cool-button cool-small on-bg">
+                                    <spring:message code="Logout"/>
+                            </a>
+
                         </div>
                     </div>
                 </div>
+            </div>
         </div>
     </div>
 </div>
@@ -98,11 +102,14 @@
 
         // Add an event listener to the checkbox
         darkModeToggle.addEventListener("change", function() {
+
             // Automatically submit the form when the checkbox changes
             darkModeForm.submit();
         });
     });
     document.getElementById("dark-mode-toggle").checked = document.getElementById("dark-mode-toggle-var").value === "true";
+
+
 
 </script>
 

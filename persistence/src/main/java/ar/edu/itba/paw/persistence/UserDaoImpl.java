@@ -78,6 +78,7 @@ public class UserDaoImpl implements UserDao {
                     .neighborhoodId(rs.getLong("neighborhoodid"))
                     .creationDate(rs.getDate("creationdate"))
                     .darkMode(rs.getBoolean("darkmode"))
+                    .profilePictureId(rs.getLong("profilepictureid"))
                     .language(rs.getString("language") != null ? Language.valueOf(rs.getString("language")) : null)
                     .role(rs.getString("role") != null ? UserRole.valueOf(rs.getString("role")) : null)
                     .build();

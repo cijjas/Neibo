@@ -18,7 +18,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/landingPage.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
 </head>
-<body class="landing-body">
+<body class="landing-body ${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%----%>
 
     <%@ include file="/WEB-INF/jsp/components/backgroundDrawing.jsp" %>

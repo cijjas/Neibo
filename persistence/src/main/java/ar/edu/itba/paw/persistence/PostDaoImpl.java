@@ -48,21 +48,21 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public Post createPost(String title, String description, long userid, long channelId, byte[] imageFile) {
+    public Post createPost(String title, String description, long userid, long channelId, long imageId) {
         Map<String, Object> data = new HashMap<>();
         data.put("title", title);
         data.put("description", description);
         data.put("postdate", Timestamp.valueOf(LocalDateTime.now()));
         data.put("userid", userid);
+        data.put("postPictureId", imageId == 0 ? null : imageId);
         data.put("channelid", channelId);
-        data.put("postimage", imageFile);
 
         final Number key = jdbcInsert.executeAndReturnKey(data);
         return new Post.Builder()
                 .postId(key.longValue())
                 .title(title)
+                .postPictureId(imageId)
                 .description(description)
-                .imageFile(imageFile)
                 .build();
     }
 
@@ -75,7 +75,7 @@ public class PostDaoImpl implements PostDao {
                 .title(rs.getString("title"))
                 .description(rs.getString("description"))
                 .date(rs.getTimestamp("postdate"))
-                .imageFile(rs.getBytes("postimage"))
+                .postPictureId(rs.getLong("postpictureid"))
                 .user(user)
                 .channel(channel)
                 .build();
@@ -135,8 +135,6 @@ public class PostDaoImpl implements PostDao {
         queryParams.add(size);
         queryParams.add(offset);
 
-        System.out.println(query);
-        System.out.println(queryParams);
 
         return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
     }
@@ -174,8 +172,6 @@ public class PostDaoImpl implements PostDao {
             queryParams.add(tags.size());
         }
 
-        System.out.println(query);
-        System.out.println(queryParams);
 
         // Execute the query and retrieve the result
         return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());

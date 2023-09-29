@@ -14,9 +14,9 @@
         </div >
 
     <!-- Image section -->
-    <c:if test="${not empty post.imageFile}">
+    <c:if test="${post.postPictureId != 0}">
         <div style="display: flex; justify-content: center; align-items: center;">
-            <img src="${pageContext.request.contextPath}/postImage/<c:out value="${post.postId}"/>"
+            <img src="${pageContext.request.contextPath}/images/<c:out value="${post.postPictureId}"/>"
                  style="max-width: 100%; max-height: 100vh; border-radius: 5px;"
                  alt="post_${post.postId}_img"/>
         </div>
@@ -31,10 +31,10 @@
                 <c:when test="${empty tags}">
                 </c:when>
                 <c:otherwise>
-                    <p><strong> <spring:message code="Tags"/></strong> </p>
+                    <p class="m-b-10"> <spring:message code="Tags"/> </p>
                     <c:forEach var="tag" items="${tags}">
-                        <a href="${pageContext.request.contextPath}/?page=1&sortBy=tag${tag.tag}">
-                            <span class="badge badge-primary" >#<c:out value="${tag.tag}" /></span>
+                        <a href="${pageContext.request.contextPath}/?tag=${tag.tag}">
+                            <span class="tag-option" ><c:out value="${tag.tag}" /></span>
                         </a>
                     </c:forEach>
                 </c:otherwise>
@@ -63,11 +63,10 @@
                         </div>
                     </div>
                     <!-- Submit button -->
-                    <div class="justify-content-end">
+                    <div class="d-flex flex-column justify-content-center align-items-end">
                         <button id="submitButton" type="submit" class="cool-button cool-small on-bg" style="margin-top:5px; font-size: 12px;" disabled>
                             <spring:message code="Comment.verb"/>
                         </button>
-
                     </div>
                     </div>
 

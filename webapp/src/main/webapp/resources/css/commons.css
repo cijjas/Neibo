@@ -40,7 +40,7 @@ body {
 .dark-mode {
     --text: #ced3c1;
     --lighttext: #b1bbab;
-    --background: #333c41;
+    --background: #454c52;
     --onbackground: rgb(59, 64, 70);
     --onbackgroundfaded: rgba(49, 58, 63, 0.1);
     --darkonbackground : #4b4f4f;
@@ -51,7 +51,7 @@ body {
     --error: #de6f6f;
     --scrollbarthumb: #9a968c;
     --bordercolor: #646462;
-    --old-primary: #025933;
+    --old-primary: #1ba446;
 
 }
 
@@ -84,7 +84,7 @@ a:hover {
 
 
 i {
-    color: var(--primary);
+    color: inherit;
 }
 
 h2{
@@ -99,7 +99,7 @@ h2{
 h3{
     font-size: 16px;
     font-weight: bolder;
-    color: var(--primary);
+    color: inherit;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

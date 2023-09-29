@@ -1,5 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html lang="en">
 
@@ -15,11 +17,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/resources/css/home.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
 </head>
 
 
-<body class="body">
+<body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
     <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
     <div class="container" >
 
@@ -69,7 +72,7 @@
                                     <jsp:param name="postDate" value="${post.date}" />
                                     <jsp:param name="postTitle" value="${post.title}" />
                                     <jsp:param name="postDescription" value="${post.description}" />
-                                    <jsp:param name="postImage" value="${post.imageFile}" />
+                                    <jsp:param name="postImage" value="${post.postPictureId}" />
                                 </jsp:include>
                             </c:forEach>
                             <!-- Include the page selector -->
