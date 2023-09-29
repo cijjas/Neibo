@@ -3,10 +3,10 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.exceptions.*;
+import ar.edu.itba.paw.webapp.form.AmenityForm;
 import ar.edu.itba.paw.webapp.form.CommentForm;
 import ar.edu.itba.paw.webapp.form.PublishForm;
 import ar.edu.itba.paw.webapp.form.SignupForm;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import enums.Language;
 import enums.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.sql.SQLOutput;
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -40,6 +42,8 @@ public class FrontController {
     private final ChannelService chs;
     private final SubscriptionService ss;
     private final CategorizationService cas;
+    private final AmenityService as;
+    private final ReservationService rs;
 
     @Autowired
     public FrontController(final PostService ps,
@@ -49,7 +53,7 @@ public class FrontController {
                            final TagService ts,
                            final ChannelService chs,
                            final SubscriptionService ss,
-                           final CategorizationService cas) {
+                           final CategorizationService cas, AmenityService as, ReservationService rs) {
         this.ps = ps;
         this.us = us;
         this.nhs = nhs;
@@ -58,6 +62,8 @@ public class FrontController {
         this.chs = chs;
         this.ss = ss;
         this.cas = cas;
+        this.as = as;
+        this.rs = rs;
     }
 
     // ------------------------------------- FEED --------------------------------------
@@ -422,5 +428,72 @@ public class FrontController {
         throw new NeighborhoodNotFoundException();
     }
 
+    @RequestMapping(value = "/admin/amenities", method = RequestMethod.GET)
+    public ModelAndView adminAmenities() {
+        ModelAndView mav = new ModelAndView("admin/amenities");
 
-}
+        List<Amenity> amenities = as.getAmenities();
+        List<AmenityHours> amenityHoursList = new ArrayList<>();
+
+        for (Amenity amenity : amenities) {
+            Map<String, DayTime> amenityTimes = as.getAmenityHoursByAmenityId(amenity.getAmenityId());
+
+            AmenityHours amenityHours = new AmenityHours.Builder().amenity(amenity).amenityHours(amenityTimes).build();
+
+            amenityHoursList.add(amenityHours);
+        }
+        System.out.println("PRINTING THE AMENITIES HOURS LIST: ");
+        System.out.println(amenityHoursList);
+        mav.addObject("amenitiesHours", amenityHoursList);
+        return mav;
+    }
+
+    @RequestMapping(value = "/createAmenity", method = RequestMethod.GET)
+    public ModelAndView createAmenityForm(@ModelAttribute("amenityForm") final AmenityForm amenityForm) {
+        ModelAndView mav = new ModelAndView("admin/createAmenity");
+
+        List<Time> timeList = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
+        try {
+            Date startTime = sdf.parse("00:00");
+            Date endTime = sdf.parse("23:30");
+
+            long currentTime = startTime.getTime();
+            long endTimeMillis = endTime.getTime();
+
+            while (currentTime <= endTimeMillis) {
+                timeList.add(new Time(currentTime));
+                currentTime += 30 * 60 * 1000; // Add 30 minutes in milliseconds
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        mav.addObject("timeList", timeList);
+
+        List<String> daysOfWeek = new ArrayList<>();
+        daysOfWeek.add("Monday");
+        daysOfWeek.add("Tuesday");
+        daysOfWeek.add("Wednesday");
+        daysOfWeek.add("Thursday");
+        daysOfWeek.add("Friday");
+        daysOfWeek.add("Saturday");
+        daysOfWeek.add("Sunday");
+        mav.addObject("daysOfWeek", daysOfWeek);
+        return mav;
+    }
+
+    @RequestMapping(value = "/createAmenity", method = RequestMethod.POST)
+    public ModelAndView createAmenity(@Valid @ModelAttribute("amenityForm") final AmenityForm amenityForm,
+                                      final BindingResult errors) {
+        if (errors.hasErrors()) {
+            System.out.println("ERRORS: " + errors);
+            return createAmenityForm(amenityForm);
+        }
+
+        as.createAmenityWrapper(amenityForm.getName(), amenityForm.getDescription(), amenityForm.getMondayOpenTime(), amenityForm.getMondayCloseTime(), amenityForm.getTuesdayOpenTime(), amenityForm.getTuesdayCloseTime(), amenityForm.getWednesdayOpenTime(), amenityForm.getWednesdayCloseTime(), amenityForm.getThursdayOpenTime(), amenityForm.getThursdayCloseTime(), amenityForm.getFridayOpenTime(), amenityForm.getFridayCloseTime(), amenityForm.getSaturdayOpenTime(), amenityForm.getSaturdayCloseTime(), amenityForm.getSundayOpenTime(), amenityForm.getSundayCloseTime());
+        return new ModelAndView("redirect:/admin/amenities");
+    }
+
+    }
