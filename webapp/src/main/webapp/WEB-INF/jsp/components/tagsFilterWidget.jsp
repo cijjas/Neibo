@@ -14,9 +14,35 @@
         </div>
         <div class="m-b-10 tags-row tags" >
             <c:forEach var="tag" items="${tagList}" >
-                <a class="tag-option"  onclick="addTagFromDropdown('${tag.tag}')" >${tag.tag}</a>
+                <a class="tag-option"  onclick="addTagToApply('${tag.tag}')" >${tag.tag}</a>
             </c:forEach>
         </div>
+        <div hidden="hidden" id="applied-tags" data-tags="${appliedTags}"></div>
+
+        <script>
+            // Function to initialize applied tags from the data attribute
+            function initializeAppliedTags() {
+                const appliedTagsDiv = document.getElementById('applied-tags');
+                const tagsString = appliedTagsDiv.getAttribute('data-tags');
+
+                if (tagsString) {
+                    // Use a regular expression to match alphanumeric tags
+                    const tagRegex = /\w+/g; // This regex matches one or more word characters
+
+                    // Extract alphanumeric tags from the string
+                    const tagsArray = tagsString.match(tagRegex);
+
+                    if (tagsArray) {
+                        // Loop through the tags and add them
+                        tagsArray.forEach(function (tagText) {
+                            addTagToApply(tagText);
+                        });
+                    }
+                }
+            }
+            // Call the function to initialize applied tags when the page loads
+            window.addEventListener('load', initializeAppliedTags);
+        </script>
         <div class=" tags-row submit-tags ">
             <a class="w-100 cool-button cool-small on-bg grey" onclick="applyTagsAsFilter()">
                 <spring:message code="Apply"/>
@@ -30,6 +56,7 @@
 <script src="${pageContext.request.contextPath}/resources/js/tagsWidgetHandler.js"></script>
 
 <script>
+
     function filterTags(tags, query) {
         const tagList = document.querySelectorAll('.tag-option');
 
@@ -59,7 +86,7 @@
         max: 5
     });
     // Add a tag from the dropdown
-    function addTagFromDropdown(tagText) {
+    function addTagToApply(tagText) {
         tagInput2.addTag(tagText); // Assuming tagInput2 is your TagsInput instance
     }
 

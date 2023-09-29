@@ -79,6 +79,7 @@ public class FrontController {
 
         final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags());
+        mav.addObject("appliedTags", tags);
         mav.addObject("postList", postList);
         mav.addObject("page", page); // Add page parameter to the model
         mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
@@ -97,8 +98,8 @@ public class FrontController {
         return mav;
     }
 
-    @RequestMapping("/user")
-    public ModelAndView user() {
+    @RequestMapping("/profile")
+    public ModelAndView profile() {
         ModelAndView mav = new ModelAndView("views/userProfile");
         mav.addObject("neighbor", getLoggedNeighbor());
         //us.updateLanguage(getLoggedNeighbor().getUserId(), "Spanish");
@@ -108,13 +109,13 @@ public class FrontController {
     public String updateDarkModePreference() {
         User user = getLoggedNeighbor();
         us.toggleDarkMode(user.getUserId());
-
-        return "redirect:/user";
+        return "redirect:/profile";
     }
 
     @RequestMapping(value = "/applyTagsFilter", method = RequestMethod.POST)
-    public String applyTagsFilter(@RequestParam("tags") String tags, @RequestParam("currentUrl") String currentUrl) {
-        return "redirect:" + ts.createURLForTagFilter(tags, currentUrl);
+    public ModelAndView applyTagsFilter(@RequestParam("tags") String tags, @RequestParam("currentUrl") String currentUrl) {
+        ModelAndView mav = new ModelAndView("redirect:" + ts.createURLForTagFilter(tags, currentUrl));
+        return mav;
     }
 
     @RequestMapping("/announcements")
@@ -129,6 +130,7 @@ public class FrontController {
 
         final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags());
+        mav.addObject("appliedTags", tags);
         mav.addObject("postList", postList);
         mav.addObject("page", page); // Add page parameter to the model
         mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
@@ -151,6 +153,7 @@ public class FrontController {
 
         final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags());
+        mav.addObject("appliedTags", tags);
         mav.addObject("postList", postList);
         mav.addObject("page", page); // Add page parameter to the model
         mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
@@ -264,8 +267,9 @@ public class FrontController {
             return viewPost(postId, commentForm, false);
         }
         cs.createComment(commentForm.getComment(), getLoggedNeighbor().getUserId(), postId);
-
-        return new ModelAndView("redirect:/posts/" + postId); // Redirect to the "posts" page
+        ModelAndView mav = new ModelAndView("redirect:/posts/" + postId);
+        mav.addObject("commentForm", new CommentForm());
+        return mav;
     }
 
     // ------------------------------------- RESOURCES --------------------------------------

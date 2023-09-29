@@ -36,7 +36,7 @@
             </div>
 
             <div class="column column-right">
-                <%@ include file="/WEB-INF/jsp/components/rightColumn.jsp" %>
+                <%@ include file="/WEB-INF/jsp/components/calendarWidget.jsp" %>
             </div>
         </div>
     </div>

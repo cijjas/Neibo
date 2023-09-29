@@ -33,8 +33,8 @@
                 <c:otherwise>
                     <p class="m-b-10"> <spring:message code="Tags"/> </p>
                     <c:forEach var="tag" items="${tags}">
-                        <a href="${pageContext.request.contextPath}/?tag=${tag.tag}">
-                            <span class="tag-option" ><c:out value="${tag.tag}" /></span>
+                        <a class="tag-option" href="${pageContext.request.contextPath}/?tag=${tag.tag}">
+                            <c:out value="${tag.tag}" />
                         </a>
                     </c:forEach>
                 </c:otherwise>
