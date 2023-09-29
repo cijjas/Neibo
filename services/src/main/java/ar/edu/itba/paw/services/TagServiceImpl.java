@@ -66,4 +66,27 @@ public class TagServiceImpl implements TagService {
     }
 
 
+    public String createURLForTagFilter(String tags, String currentUrl) {
+        String[] tagArray = tags.split(",");
+
+        StringBuilder queryString = new StringBuilder();
+
+        for (String tag : tagArray) {
+            if (!tag.trim().isEmpty()) { // Skip empty tags
+                if (queryString.length() > 0) {
+                    queryString.append("&"); // Add '&' between tags
+                }
+                queryString.append("tag=").append(tag.trim()); // Append each tag
+            }
+        }
+
+        String formattedQueryString = queryString.toString();
+
+        // Check if the current URL contains specific words and append accordingly
+        if (currentUrl.contains("announcements") || currentUrl.contains("forum")) {
+            return currentUrl + "?" + formattedQueryString;
+        } else {
+            return "/?" + formattedQueryString;
+        }
+    }
 }

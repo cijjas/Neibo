@@ -111,28 +111,11 @@ public class FrontController {
 
         return "redirect:/user";
     }
+
     @RequestMapping(value = "/applyTagsFilter", method = RequestMethod.POST)
-    public String applyTagsFilter(@RequestParam("tags") String tags) {
-        String[] tagArray = tags.split(",");
-
-        StringBuilder queryString = new StringBuilder();
-
-        for (String tag : tagArray) {
-            if (!tag.trim().isEmpty()) { // Skip empty tags
-                if (queryString.length() > 0) {
-                    queryString.append("&"); // Add '&' between tags
-                }
-                queryString.append("tag=").append(tag.trim()); // Append each tag
-            }
-        }
-
-        String formattedQueryString = queryString.toString();
-
-
-        return "redirect:/page=0&size=10&date=ASC&" + formattedQueryString;
+    public String applyTagsFilter(@RequestParam("tags") String tags, @RequestParam("currentUrl") String currentUrl) {
+        return "redirect:" + ts.createURLForTagFilter(tags, currentUrl);
     }
-
-
 
     @RequestMapping("/announcements")
     public ModelAndView announcements(

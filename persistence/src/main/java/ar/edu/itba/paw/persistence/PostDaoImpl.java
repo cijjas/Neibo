@@ -54,7 +54,7 @@ public class PostDaoImpl implements PostDao {
         data.put("description", description);
         data.put("postdate", Timestamp.valueOf(LocalDateTime.now()));
         data.put("userid", userid);
-        data.put("postPictureId", imageId);
+        data.put("postPictureId", imageId == 0 ? null : imageId);
         data.put("channelid", channelId);
 
         final Number key = jdbcInsert.executeAndReturnKey(data);

@@ -14,5 +14,7 @@ public interface TagService {
 
     void createTagsAndCategorizePost(long postId, String tagsString);
 
+    String createURLForTagFilter(String tags, String currentUrl);
+
     /*List<Tag> createTags(String tagsString);*/
 }
