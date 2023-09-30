@@ -8,15 +8,20 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface AmenityDao {
+
+    // ---------------------------------------------- AMENITY INSERT ---------------------------------------------------
+
     Amenity createAmenity(String name, String description, Map<String, Map<Time, Time>> dayHourData);
 
-    List<Amenity> getAmenities();
+    // ---------------------------------------------- AMENITY SELECT ---------------------------------------------------
 
     Optional<Amenity> findAmenityById(long amenityId);
 
-    boolean deleteAmenity(long amenityId);
+    List<Amenity> getAmenities();
 
     Map<Time, Time> getAmenityHoursByDay(long amenityId, String dayOfWeek);
 
-    //boolean updateAmenity(long amenityId, String name, String description);
+    // ---------------------------------------------- AMENITY DELETE ---------------------------------------------------
+
+    boolean deleteAmenity(long amenityId);
 }

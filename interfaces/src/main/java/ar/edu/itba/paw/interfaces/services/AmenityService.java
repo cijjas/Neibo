@@ -8,16 +8,20 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface AmenityService {
-    //mostrarle a admin dos timeboxes por cada dia de la semana, start and end -> ver como transformar eso en creacion de amenity
+
+    // -----------------------------------------------------------------------------------------------------------------
+
     Amenity createAmenity(String name, String description, Map<String, Map<Time, Time>> dayHourData);
 
-    List<Amenity> getAmenities();
+    // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Amenity> findAmenityById(long amenityId);
 
-    boolean deleteAmenity(long amenityId);
+    List<Amenity> getAmenities();
 
     Map<Time, Time> getAmenityHoursByDay(long amenityId, String dayOfWeek);
 
-    //boolean updateAmenity(long amenityId, String name, String description);
+    // -----------------------------------------------------------------------------------------------------------------
+
+    boolean deleteAmenity(long amenityId);
 }

@@ -33,13 +33,7 @@ public class AmenityDaoImpl implements AmenityDao {
                 .withTableName("hours");
     }
 
-    private final RowMapper<Amenity> ROW_MAPPER = (rs, rowNum) -> {
-        return new Amenity.Builder()
-                .amenityId(rs.getLong("amenityid"))
-                .name(rs.getString("name"))
-                .description(rs.getString("description"))
-                .build();
-    };
+    // ---------------------------------------------- AMENITY INSERT ---------------------------------------------------
 
     @Override
     public Amenity createAmenity(String name, String description, Map<String, Map<Time, Time>> dayHourData) {
@@ -77,25 +71,25 @@ public class AmenityDaoImpl implements AmenityDao {
                 .build();
     }
 
-    @Override
-    public boolean deleteAmenity(long amenityId) {
-        return jdbcTemplate.update("DELETE FROM amenity WHERE amenityid = ?", amenityId) > 0;
-    }
+    // ---------------------------------------------- AMENITY SELECT ---------------------------------------------------
 
-//    @Override
-//    public boolean updateAmenity(long amenityId, String name, String description) {
-//        return jdbcTemplate.update("UPDATE amenities SET name = ?, description = ? WHERE amenityid = ?", name, description, amenityId) > 0;
-//    }
-
-    @Override
-    public List<Amenity> getAmenities() {
-        return jdbcTemplate.query("SELECT * FROM amenity", ROW_MAPPER);
-    }
+    private final RowMapper<Amenity> ROW_MAPPER = (rs, rowNum) -> {
+        return new Amenity.Builder()
+                .amenityId(rs.getLong("amenityid"))
+                .name(rs.getString("name"))
+                .description(rs.getString("description"))
+                .build();
+    };
 
     @Override
     public Optional<Amenity> findAmenityById(long amenityId) {
         List<Amenity> amenities = jdbcTemplate.query("SELECT * FROM amenity WHERE amenityid = ?", ROW_MAPPER, amenityId);
         return amenities.isEmpty() ? Optional.empty() : Optional.of(amenities.get(0));
+    }
+
+    @Override
+    public List<Amenity> getAmenities() {
+        return jdbcTemplate.query("SELECT * FROM amenity", ROW_MAPPER);
     }
 
     @Override
@@ -117,6 +111,10 @@ public class AmenityDaoImpl implements AmenityDao {
         return openingClosingHours;
     }
 
+    // ---------------------------------------------- AMENITY DELETE ---------------------------------------------------
 
-
+    @Override
+    public boolean deleteAmenity(long amenityId) {
+        return jdbcTemplate.update("DELETE FROM amenity WHERE amenityid = ?", amenityId) > 0;
+    }
 }

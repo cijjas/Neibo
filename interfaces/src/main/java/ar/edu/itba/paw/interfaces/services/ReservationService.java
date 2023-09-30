@@ -7,7 +7,14 @@ import java.sql.Time;
 import java.util.List;
 
 public interface ReservationService {
+
+    // -----------------------------------------------------------------------------------------------------------------
+
     Reservation createReservation(long amenityId, long userId, Date date, Time startTime, Time endTime);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    Reservation findReservationById(long reservationId);
 
     List<Reservation> getReservations();
 
@@ -17,8 +24,7 @@ public interface ReservationService {
 
     List<Reservation> getReservationsByDay(long amenityId, Date date);
 
-    Reservation findReservationById(long reservationId);
+    // -----------------------------------------------------------------------------------------------------------------
 
     boolean deleteReservation(long reservationId);
-
 }

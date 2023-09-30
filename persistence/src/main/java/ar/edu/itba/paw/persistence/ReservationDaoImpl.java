@@ -37,6 +37,8 @@ public class ReservationDaoImpl implements ReservationDao {
                 .withTableName("reservation");
     }
 
+    // ---------------------------------------------- RESERVATIONS INSERT ----------------------------------------------
+
     @Override
     public Reservation createReservation(long amenityId, long userId, Date date, Time startTime, Time endTime) {
         Map<String, Object> data = new HashMap<>();
@@ -55,6 +57,8 @@ public class ReservationDaoImpl implements ReservationDao {
                 .build();
     }
 
+    // ---------------------------------------------- RESERVATIONS SELECT ----------------------------------------------
+
     private final RowMapper<Reservation> ROW_MAPPER = (rs, rowNum) -> {
         User user = userDao.findUserById(rs.getLong("userid")).orElse(null);
         Amenity amenity = amenityDao.findAmenityById(rs.getLong("amenityid")).orElse(null);
@@ -70,13 +74,13 @@ public class ReservationDaoImpl implements ReservationDao {
     };
 
     @Override
-    public List<Reservation> getReservations() {
-        return jdbcTemplate.query("SELECT * FROM reservation", ROW_MAPPER);
+    public Reservation findReservationById(long reservationId) {
+        return jdbcTemplate.queryForObject("SELECT * FROM reservation WHERE reservationid = ?", ROW_MAPPER, reservationId);
     }
 
     @Override
-    public Reservation findReservationById(long reservationId) {
-        return jdbcTemplate.queryForObject("SELECT * FROM reservation WHERE reservationid = ?", ROW_MAPPER, reservationId);
+    public List<Reservation> getReservations() {
+        return jdbcTemplate.query("SELECT * FROM reservation", ROW_MAPPER);
     }
 
     @Override
@@ -93,6 +97,8 @@ public class ReservationDaoImpl implements ReservationDao {
     public List<Reservation> getReservationsByDay(long amenityId, Date date) {
         return jdbcTemplate.query("SELECT * FROM reservation WHERE amenityid = ? AND date = ?", ROW_MAPPER, amenityId, date);
     }
+
+    // ---------------------------------------------- RESERVATIONS DELETE ----------------------------------------------
 
     @Override
     public boolean deleteReservation(long reservationId) {

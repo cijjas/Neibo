@@ -18,35 +18,25 @@ public interface UserDao {
         updateOrderStatus
         deleteCustomer
      */
+
+    // ---------------------------------------------- USERS INSERT -----------------------------------------------------
+
     User createUser(final String mail, final String password, final String name, final String surname,
                     final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role);
 
-    List<User> getUsers();
+    // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
     Optional<User> findUserById(final long neighborId);
 
     public Optional<User> findUserByMail(final String mail);
 
-    void setUserValues(final long id, final String password, final String name, final String surname, final Language language, final boolean darkMode, final UserRole role);
+    List<User> getUsersByCriteria(UserRole role, long neighborhoodId);
 
-
-
-    // ----------------------- Neighbor Methods
-    User createNeighbor(final String mail, final String password, final String name, final String surname,
-                        final long neighborhoodId, final Language language, final boolean darkMode);
-
-    List<User> getNeighbors();
-
-    List<User> getNeighborsByNeighborhood(long neighborhoodId);
-
-
-    Optional<User> findNeighborByMail(String mail);
 
     List<User> getNeighborsSubscribedByPostId(long id);
 
-    List<User> getUnverifiedNeighborsByNeighborhood(long neighborhoodId);
+    // ---------------------------------------------- USERS UPDATE -----------------------------------------------------
 
-    Optional<User> findNeighborById(long id);
-
-    //List<Neighbor> getNeighborsByCommunity(long communityId);
+    void setUserValues(final long id, final String password, final String name, final String surname,
+                       final Language language, final boolean darkMode, final long profilePictureId,final UserRole role);
 }

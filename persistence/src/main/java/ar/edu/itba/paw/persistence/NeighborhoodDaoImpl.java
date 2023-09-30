@@ -29,6 +29,8 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
                 .withTableName("neighborhoods");
     }
 
+    // ----------------------------------------- NEIGHBORHOODS INSERT --------------------------------------------------
+
     @Override
     public Neighborhood createNeighborhood(String name) {
         Map<String, Object> data = new HashMap<>();
@@ -41,6 +43,8 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
                 .build();
     }
 
+    // ----------------------------------------- NEIGHBORHOODS SELECT --------------------------------------------------
+
     private static final RowMapper<Neighborhood> ROW_MAPPER = (rs, rowNum) ->
             new Neighborhood.Builder()
                     .neighborhoodId(rs.getLong("neighborhoodid"))
@@ -48,13 +52,15 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
                     .build();
 
     @Override
-    public List<Neighborhood> getNeighborhoods() {
-        return jdbcTemplate.query(NEIGHBORHOODS, ROW_MAPPER);
-    }
-
-    @Override
     public Optional<Neighborhood> findNeighborhoodById(long id) {
         final List<Neighborhood> list = jdbcTemplate.query(NEIGHBORHOODS + " WHERE neighborhoodid = ?", ROW_MAPPER, id);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
+    
+    @Override
+    public List<Neighborhood> getNeighborhoods() {
+        return jdbcTemplate.query(NEIGHBORHOODS, ROW_MAPPER);
+    }
+
+
 }

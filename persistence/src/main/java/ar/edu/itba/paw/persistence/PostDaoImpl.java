@@ -47,6 +47,8 @@ public class PostDaoImpl implements PostDao {
                 .withTableName("posts");
     }
 
+    // ------------------------------------------------ POSTS INSERT ---------------------------------------------------
+
     @Override
     public Post createPost(String title, String description, long userid, long channelId, long imageId) {
         Map<String, Object> data = new HashMap<>();
@@ -65,6 +67,8 @@ public class PostDaoImpl implements PostDao {
                 .description(description)
                 .build();
     }
+
+    // ------------------------------------------------ POSTS SELECT ---------------------------------------------------
 
     private final RowMapper<Post> ROW_MAPPER = (rs, rowNum) -> {
         User user = userDao.findUserById(rs.getLong("userid")).orElse(null);
@@ -139,6 +143,7 @@ public class PostDaoImpl implements PostDao {
         return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
     }
 
+    // ------------------------------------------------- POSTS COUNT ---------------------------------------------------
 
     @Override
     public int getPostsCountByCriteria(String channel, List<String> tags) {

@@ -41,11 +41,7 @@ public class PostServiceImpl implements PostService {
     public Post createPost(String title, String description, long neighborId, long channelId, String tags, MultipartFile imageFile) {
         Image i = null;
         if (imageFile != null && !imageFile.isEmpty()) {
-            try {
-                i = is.storeImage(imageFile.getBytes());
-            } catch (IOException e) {
-                System.out.println("Issue uploading the image");
-            }
+            i = is.storeImage(imageFile);
         }
         Post p = postDao.createPost(title, description, neighborId, channelId, i == null ? 0 : i.getImageId());
         ts.createTagsAndCategorizePost(p.getPostId(), tags);
@@ -124,11 +120,11 @@ public class PostServiceImpl implements PostService {
     // -----------------------------------------------------------------------
 
     @Override
-    public Post createAdminPost(final String title, final String description, final long neighborId, final int channelId, final String tags, final MultipartFile imageFile){
+    public Post createAdminPost(final long neighborhoodId, final String title, final String description, final long neighborId, final int channelId, final String tags, final MultipartFile imageFile){
         Post post = createPost(title, description, neighborId, channelId, tags,  imageFile);
         assert post != null;
         try {
-            for(User n : ns.getNeighbors()) {
+            for(User n : ns.getNeighbors(neighborhoodId)) {
                 Map<String, Object> vars = new HashMap<>();
                 vars.put("name", n.getName());
                 vars.put("postTitle", post.getTitle());

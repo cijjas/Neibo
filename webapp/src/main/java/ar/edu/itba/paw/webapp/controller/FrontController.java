@@ -92,8 +92,8 @@ public class FrontController {
 
         final ModelAndView mav = new ModelAndView("admin/requestManager");
 
-        mav.addObject("unverifiedList", us.getUnverifiedNeighborsByNeighborhood(1));
-        mav.addObject("verifiedList", us.getNeighborsByNeighborhood(1));
+        mav.addObject("unverifiedList", us.getUnverifiedNeighbors(1));
+        mav.addObject("verifiedList", us.getNeighbors(1));
         return mav;
     }
 
@@ -161,7 +161,7 @@ public class FrontController {
 
     @RequestMapping(value = "/unverified", method = RequestMethod.GET)
     public ModelAndView publishForm() {
-        return  new ModelAndView("views/publish");
+        return  new ModelAndView("views/unverified");
     }
     // ------------------------------------- PUBLISH --------------------------------------
 
@@ -212,7 +212,7 @@ public class FrontController {
         if (errors.hasErrors())
             return publishForm(publishForm);
 
-        ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
+        ps.createAdminPost(getLoggedNeighbor().getNeighborhoodId(), publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
 
         return new ModelAndView("admin/publishAdmin");
     }
@@ -345,12 +345,7 @@ public class FrontController {
     public ModelAndView test(
     )
     {
-
-
-        System.out.println(ps.getPostsByCriteria("Feed", 1, 10, SortOrder.ASC,null));
-
-
-
+        System.out.println(us.getUnverifiedNeighbors(1));
         return new ModelAndView("views/index");
     }
 

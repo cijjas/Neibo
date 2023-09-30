@@ -6,9 +6,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CommentDao {
+
+    // -------------------------------------------- COMMENTS INSERT ----------------------------------------------------
+
     Optional<List<Comment>> findCommentsByPostId(long id);
+
+    // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
 
     Comment createComment(final String comment, final long neighborId, final long postId);
 
-    //Optional<List<Comment>> findCommentsByUserId(long id); no me quemees
+    //Optional<List<Comment>> findCommentsByUserId(long id);
 }

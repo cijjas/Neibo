@@ -10,8 +10,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -34,17 +36,26 @@ public class ImageDaoImpl implements ImageDao {
                 .withTableName("images");
     }
 
-    @Override
-    public Image storeImage(byte[] image) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("image", image);
+    // --------------------------------------------- IMAGES INSERT -----------------------------------------------------
 
+    @Override
+    public Image storeImage(MultipartFile image) {
+        Map<String, Object> data = new HashMap<>();
+        byte[] imageBytes = null;
+        try {
+            imageBytes = image.getBytes();
+        } catch (IOException e) {
+            System.out.println("Issue uploading the image");
+        }
+        data.put("image", imageBytes);
         final Number key = jdbcInsert.executeAndReturnKey(data);
         return new Image.Builder()
                 .imageId(key.longValue())
-                .image(image)
+                .image(imageBytes)
                 .build();
     }
+
+    // --------------------------------------------- IMAGES SELECT -----------------------------------------------------
 
     private static final RowMapper<Image> ROW_MAPPER = (rs, rowNum) ->
             new Image.Builder()
@@ -57,6 +68,4 @@ public class ImageDaoImpl implements ImageDao {
         final List<Image> list = jdbcTemplate.query(IMAGES + " WHERE imageid = ?", ROW_MAPPER, imageId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
-
-
 }

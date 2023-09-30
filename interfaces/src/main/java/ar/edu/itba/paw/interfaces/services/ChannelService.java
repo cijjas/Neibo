@@ -7,9 +7,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ChannelService {
-    List<Channel> getChannels();
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     Channel createChannel(final String name);
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     Optional<Channel> findChannelById(long id);
+
+    List<Channel> getChannels();
 }
