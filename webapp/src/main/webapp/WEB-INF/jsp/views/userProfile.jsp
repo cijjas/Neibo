@@ -128,17 +128,7 @@
         const languageToggle = document.getElementById("language-toggle");
 
         languageToggle.addEventListener("change", function() {
-            const url = "${pageContext.request.contextPath}/changeLanguage";
-            const params = "language=" + (languageToggle.checked ? "es" : "en");
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", url, true);
-            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            xhr.send(params);
-            xhr.onload = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    location.reload();
-                }
-            }
+
         });
     });
 

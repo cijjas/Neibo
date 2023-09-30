@@ -11,7 +11,6 @@ import enums.Language;
 import enums.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,15 +22,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Controller
 public class FrontController {
@@ -61,8 +56,8 @@ public class FrontController {
                            final ImageService is,
                            final ReservationService rs,
                            final AmenityService as,
-                           final EventService es
-    ) {
+                           final EventService es,
+                           EventService es1) {
         this.is = is;
         this.ps = ps;
         this.us = us;
@@ -74,6 +69,7 @@ public class FrontController {
         this.cas = cas;
         this.as = as;
         this.rs = rs;
+        this.es = es1;
     }
 
     // ------------------------------------- FEED --------------------------------------
@@ -330,8 +326,12 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
-    public ModelAndView signupForm(@ModelAttribute("signupForm") final SignupForm signupform) {
+    public ModelAndView signupForm(
+            @ModelAttribute("signupForm") final SignupForm signupform,
+            @RequestParam(value = "successfullySignup", required = false) boolean successfullySignup
+    ) {
         ModelAndView mav = new ModelAndView("views/landingPage");
+        mav.addObject("successfullySignup", successfullySignup);
         mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
         return mav;
     }
@@ -340,13 +340,14 @@ public class FrontController {
     public ModelAndView signupForm(@Valid @ModelAttribute("signupForm") final SignupForm signupForm,
                               final BindingResult errors) {
         if (errors.hasErrors()) {
-            ModelAndView mav = signupForm(signupForm);
+            ModelAndView mav = signupForm(signupForm, false);
             mav.addObject("openSignupDialog", true);
             return mav;
         }
-
         us.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), Language.ENGLISH);
-        return new ModelAndView("redirect:/");
+        ModelAndView mav = new ModelAndView("redirect:/signup");
+        mav.addObject("successfullySignup", true);
+        return mav;
     }
 
 
