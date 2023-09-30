@@ -38,30 +38,33 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetails).passwordEncoder(passwordEncoder());
     }
     @Override
-    protected void configure(final HttpSecurity http) throws Exception {
+    protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement()
-                    .invalidSessionUrl("/login")
+                .invalidSessionUrl("/login")
                 .and().authorizeRequests()
-                    .antMatchers("/signup","/login").anonymous()
-                    .antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/**").authenticated()
+                .antMatchers("/signup", "/login").anonymous()
+                .antMatchers("/unverified", "/user").hasRole("UNVERIFIED_NEIGHBOR")
+                .antMatchers("/admin/**").hasRole("ADMINISTRATOR")
+                .antMatchers("/**").hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
                 .and().formLogin()
-                    .usernameParameter("mail")
-                    .passwordParameter("password")
-                    .defaultSuccessUrl("/", false)
-                    .loginPage("/login")
+                .usernameParameter("mail")
+                .passwordParameter("password")
+                .defaultSuccessUrl("/", false)
+                .loginPage("/login")
                 .and().rememberMe()
-                    .rememberMeParameter("rememberMe")
-                    .userDetailsService(userDetails)
-                    .key(StreamUtils.copyToString(rememberMeKey.getInputStream(), StandardCharsets.UTF_8))
-                    .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
+                .rememberMeParameter("rememberMe")
+                .userDetailsService(userDetails)
+                .key(StreamUtils.copyToString(rememberMeKey.getInputStream(), StandardCharsets.UTF_8))
+                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
                 .and().logout()
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("/landingPage")
-                    .and().exceptionHandling()
-                    .accessDeniedPage("/errors/errorPage")
-                    .and().csrf().disable();
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/landingPage")
+                .and().exceptionHandling()
+                .accessDeniedPage("/errors/errorPage")
+                .and().csrf().disable();
     }
+
+
     @Override
     public void configure(final WebSecurity web) throws Exception {
         web.ignoring()

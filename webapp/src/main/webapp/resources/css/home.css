@@ -257,7 +257,7 @@
     border : 1px solid var(--lighttext);
 
     transform: translateY(-4px) ;
-    box-shadow: -3px 5px 0 0 var(--lighttext);
+    box-shadow: 0 5px 0 0 var(--lighttext);
 }
 
 .comments-section-divider {
@@ -416,102 +416,51 @@
     color: var(--primary);
     border: var(--border);
 }
-
-
-/*----------------------------WEATHER ------------------------------------*/
-
-.cardContainer {
-    position: relative;
-    display: none;
-    align-items: center;
-    justify-content: center;
-}
-
-.weather-card {
-    position: relative;
-    width: 220px;
-    height: 250px;
+.filtered-tags{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: start;
     align-items: center;
-    justify-content: space-between;
-    padding: 20px 10px;
-    border-radius: 10px;
-    backdrop-filter: blur(30px);
-    background-color: var(--lighttext);
-    border: 1px solid var(--primary);
-    cursor: pointer;
-}
-
-.city {
-    font-weight: 700;
-    font-size: 0.9em;
-    letter-spacing: 1.2px;
-    color: white;
-}
-
-.weather {
-    font-weight: 500;
-    font-size: 0.7em;
-    letter-spacing: 1.2px;
-    color: rgb(0, 0, 0);
-}
-
-.temp {
-    font-size: 1.8em;
-    color: #b8e379;
-}
-
-.minmaxContainer {
+    gap: 3px;
+    flex-wrap: wrap;
     width: 100%;
+}
+
+/*---------------------------- Tag selector filter ------------------------------------*/
+.tags-row{
     display: flex;
+    flex-direction: row;
+    justify-content: start;
     align-items: center;
-    justify-content: space-between;
+    gap: 3px;
+    flex-wrap: wrap;
+    width: 100%;
 }
-
-.min,.max {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+.tags-row.tags{
+    justify-content: start;
+}
+.tags-row.submit-tags{
     justify-content: center;
-    padding: 0px 20px;
-    gap: 4px;
+}
+.filtered-tag,
+.tag-option{
+    font-size: 14px;
+    padding: 2px 5px 2px 5px;
+    color: var(--accent);
+    background-color: var(--background);
+    border: 1px solid var(--accent);
+    border-radius: var(--border-hard);
+    transition: all 0.3s ease-in-out;
+}
+.filtered-tag:hover,
+.tag-option:hover{
+    cursor: pointer;
+    color: var(--accent);
+    transform: translateY(-4px) ;
+    box-shadow: 0 4px 0 0 var(--accent);
 }
 
-.max {
-    align-items: flex-start;
-    border-left: 2px solid white;
-}
 
-.maxHeading,.minHeading {
-    font-size: 0.7em;
-    font-weight: 600;
-    color: white;
-}
-
-.maxTemp,.minTemp {
-    font-size: 0.6em;
-    font-weight: 500;
-    color: rgb(197, 197, 197);
-}
-
-.cardContainer::before {
-    width: 100px;
-    height: 100px;
-    content: "";
-    position: absolute;
-    background-color: rgb(144, 161, 255);
-    z-index: -1;
-    border-radius: 50%;
-    left: 100px;
-    top: 50px;
-    transition: all 1s;
-}
-
-.cardContainer:hover::before {
-    transform: translate(-50px ,50px);
-}
 
 /*-------------------------------------PUBLISH/TAG INPUT------------------------*/
 
@@ -536,11 +485,11 @@
     padding: 2em 2em;
     width: 100%;
     background-color: var(--onbackground);
-    color: var(--primary);
-    border: 1px solid var(--primary);
+    color: var(--text);
+    border: 1px solid var(--lighttext);
     border-radius: var(--border-radius);
     transform: translateY(-4px) ;
-    box-shadow: 0 5px 0 0 var(--primary);
+    box-shadow: 0 5px 0 0 var(--lighttext);
 }
 
 
@@ -587,11 +536,14 @@
 }
 
 .tags-input-wrapper{
-    width: 400px;
+    width: 100%;
+    margin-top´:5px;
+
 }
+
 .tags-input-wrapper input{
-    font-size: 15px;
-    font-weight: 600;
+    font-size: 14px;
+    font-weight: normal;
     border-radius: var(--border-radius);
     border: 1px solid var(--accent);
     background-color: var(--darkonbackground);
@@ -610,7 +562,7 @@
 .tags-input-wrapper input:hover,
 .tags-input-wrapper input:focus-visible {
     transform: translateY(-4px) ;
-    box-shadow: 4px 4px var(--accent);
+    box-shadow: -3px 4px var(--accent);
 }
 
 .tags-input-wrapper .tag{
@@ -958,6 +910,7 @@ footer div {
 }
 
 
+
 .cool-input {
     font-size: 15px;
     font-weight: normal;
@@ -1189,12 +1142,26 @@ h6 {
     overflow: hidden;
     padding: 1em 1em;
     width: 100%;
-    background-color: var(--background);
+    background-color: var(--onbackground);
     color: var(--text);
     border: 1px solid var(--text);
     border-radius: var(--border-radius);
     transition: all 0.3s ease-in-out;
+
 }
+.grey-static-container{
+    overflow: hidden;
+    padding: 1em 1em;
+    width: 100%;
+    background-color: var(--onbackground);
+    color: var(--text);
+    border: 1px solid var(--lighttext);
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease-in-out;
+    transform: translateY(-4px) ;
+    box-shadow: -3px 5px 0 0 var(--lighttext);
+}
+
 
 .grey-container:hover{
     transform: translateY(-3px);

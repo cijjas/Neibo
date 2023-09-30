@@ -25,12 +25,6 @@
                 <span><spring:message code="Latest"/></span>
         </a>
 
-        <a class="dropdown-toggle filter-button" href="#" id="dropdown07XL" data-bs-toggle="dropdown" aria-expanded="false">Tag</a>
-        <ul class="dropdown-menu" aria-labelledby="filter-by-tag">
-            <c:forEach var="tag" items="${tagList}">
-                <li><a class="dropdown-item" href="?page=1&sortBy=tag${tag.tag}" data-tag="${tag.tag}">#${tag.tag}</a></li>
-            </c:forEach>
-        </ul>
 <%--
         <div class="form-row">
             <label>

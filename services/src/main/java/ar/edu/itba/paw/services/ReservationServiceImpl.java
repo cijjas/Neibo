@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.ReservationDao;
 import ar.edu.itba.paw.interfaces.services.ReservationService;
+import ar.edu.itba.paw.models.DayTime;
 import ar.edu.itba.paw.models.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,17 +38,16 @@ public class ReservationServiceImpl implements ReservationService {
     private boolean isAmenityOpen(Date date, Time startTime, Time endTime, long amenityId) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
         String dayOfWeek = dateFormat.format(date);
-        Map<Time, Time> amenityHours = amenityDao.getAmenityHoursByDay(amenityId, dayOfWeek);
-        for (Map.Entry<Time, Time> entry : amenityHours.entrySet()) {
-            Time openTime = entry.getKey();
-            Time closeTime = entry.getValue();
+        DayTime amenityHours = amenityDao.getAmenityHoursByDay(amenityId, dayOfWeek);
 
-            // Check if the requested time range is within this time slot
-            if (startTime.compareTo(openTime) >= 0 && endTime.compareTo(closeTime) <= 0) {
-                return true; // Amenity is open at the requested time
-            }
+        if (amenityHours != null) {
+            Time openTime = amenityHours.getOpenTime();
+            Time closeTime = amenityHours.getCloseTime();
+
+            return startTime.compareTo(openTime) >= 0 && endTime.compareTo(closeTime) <= 0; // true if Amenity is open at the requested time
         }
-        return false;
+
+        return false; // Amenity is not open at the requested time
     }
 
     private boolean reservationOverlap(Date date, Time startTime, Time endTime, List<Reservation> reservations) {

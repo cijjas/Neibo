@@ -3,10 +3,14 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.models.Amenity;
+import ar.edu.itba.paw.models.DayTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -21,7 +25,7 @@ public class AmenityServiceImpl implements AmenityService {
     }
 
     @Override
-    public Amenity createAmenity(String name, String description, Map<String, Map<Time, Time>> dayHourData){
+    public Amenity createAmenity(String name, String description, Map<String, DayTime> dayHourData){
         return amenityDao.createAmenity(name, description, dayHourData);
     }
 
@@ -41,9 +45,40 @@ public class AmenityServiceImpl implements AmenityService {
     }
 
     @Override
-    public Map<Time, Time> getAmenityHoursByDay(long amenityId, String dayOfWeek) {
+    public DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek) {
         return amenityDao.getAmenityHoursByDay(amenityId, dayOfWeek);
     }
+
+    @Override
+    public Map<String, DayTime> getAmenityHoursByAmenityId(long amenityId) {
+        return amenityDao.getAmenityHoursByAmenityId(amenityId);
+    }
+
+    @Override
+    public Amenity createAmenityWrapper(String name, String description, Time mondayOpenTime, Time mondayCloseTime, Time tuesdayOpenTime, Time tuesdayCloseTime, Time wednesdayOpenTime, Time wednesdayCloseTime, Time thursdayOpenTime, Time thursdayCloseTime, Time fridayOpenTime, Time fridayCloseTime, Time saturdayOpenTime, Time saturdayCloseTime, Time sundayOpenTime, Time sundayCloseTime) {
+        Map<String, DayTime> timeMap = new HashMap<>();
+
+        timeMap.put("Monday", createDayTime(mondayOpenTime, mondayCloseTime));
+        timeMap.put("Tuesday", createDayTime(tuesdayOpenTime, tuesdayCloseTime));
+        timeMap.put("Wednesday", createDayTime(wednesdayOpenTime, wednesdayCloseTime));
+        timeMap.put("Thursday", createDayTime(thursdayOpenTime, thursdayCloseTime));
+        timeMap.put("Friday", createDayTime(fridayOpenTime, fridayCloseTime));
+        timeMap.put("Saturday", createDayTime(saturdayOpenTime, saturdayCloseTime));
+        timeMap.put("Sunday", createDayTime(sundayOpenTime, sundayCloseTime));
+
+        System.out.println("Finished filling the map: " + timeMap);
+
+        return createAmenity(name, description, timeMap);
+    }
+
+
+    private DayTime createDayTime(Time openTime, Time closeTime) {
+        DayTime dayTime = new DayTime();
+        dayTime.setOpenTime(openTime);
+        dayTime.setCloseTime(closeTime);
+        return dayTime;
+    }
+
 
     /*
     Se usa asi:

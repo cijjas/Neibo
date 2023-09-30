@@ -1,36 +1,25 @@
-<html lang="en" dir="ltr">
-<head>
-  <meta charset="utf-8">
-  <title>Dynamic Calendar JavaScript</title>
-  <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Google Font Link for Icons -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
-</head>
-
-  <div class="wrapper">
-    <header>
-      <p class="current-date"></p>
-      <div class="icons">
-        <span id="prev" class="material-symbols-rounded">chevron_left</span>
-        <span id="next" class="material-symbols-rounded">chevron_right</span>
-      </div>
-    </header>
-    <div class="calendar">
-      <ul class="weeks">
-        <li>S</li>
-        <li>M</li>
-        <li>T</li>
-        <li>W</li>
-        <li>T</li>
-        <li>F</li>
-        <li>S</li>
-      </ul>
-      <ul class="days"></ul>
+<div class="wrapper">
+  <header class="header-content">
+    <p class="current-date"></p>
+    <div class="icons">
+      <span id="prev" ><i class="fa-solid fa-angle-left"></i></span>
+      <span id="next" ><i  class="fa-solid fa-angle-right"></i></span>
     </div>
+  </header>
+  <div class="divider"></div>
+  <div class="calendar">
+    <ul class="weeks">
+      <li>S</li>
+      <li>M</li>
+      <li>T</li>
+      <li>W</li>
+      <li>T</li>
+      <li>F</li>
+      <li>S</li>
+    </ul>
+    <ul class="days"></ul>
   </div>
-
-</html>
+</div>
 
 <script>
   const daysTag = document.querySelector(".days"),
@@ -51,17 +40,14 @@
     let liTag = "";
     for (let i = firstDayOfMonth; i > 0; i--) { // creating li of previous month last days
       liTag += `<li class="inactive">\${lastDateOfLastMonth - i + 1}</li>`;
-      console.log(lastDateOfLastMonth - i + 1)
     }
     for (let i = 1; i <= lastDateOfMonth; i++) { // creating li of all days of current month
       // adding active class to li if the current day, month, and year matched
       let isToday = i === date.getDate() && currMonth === new Date().getMonth() && currYear === new Date().getFullYear() ? "active" : "";
       liTag += `<li class="\${isToday}">\${i}</li>`;
-      console.log(i);
     }
     for (let i = lastDayOfMonth; i < 6; i++) { // creating li of next month first days
       liTag += `<li class="inactive">\${i - lastDayOfMonth + 1}</li>`;
-      console.log(i - lastDayOfMonth + 1);
     }
     currentDate.innerText = `\${months[currMonth]} \n \${currYear}`; // passing current mon and yr as currentDate text
     daysTag.innerHTML = liTag;

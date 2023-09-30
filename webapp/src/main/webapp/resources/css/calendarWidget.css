@@ -1,14 +1,13 @@
-@import url("https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap");
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Lexend', sans-serif;
-}
 
+.header-content{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 10px;
+    width: 100%;
+}
 .wrapper{
-    position: sticky;
-    padding: 20px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -17,6 +16,7 @@
     width: 100%;
     height: auto;
     background-color: var(--onbackground);
+    color: var(--primary);
     border: 1px solid var(--lighttext);
     border-radius: var(--border-radius);
     transform: translateY(-4px) ;
