@@ -84,19 +84,30 @@
     border-radius: var(--border-radius);
     transform: translateY(-3px) ;
     box-shadow: -3px 4px 0 0 var(--lighttext);
+    & .cool-feed-button{
+        text-align: center;
+        font-weight: bold;
+        overflow: hidden;
+        cursor: pointer;
+        padding: 1em 1em;
+        width: 100%;
+        transition: all 0.3s ease-in-out;
+        background-color: var(--onbackground);
+        color: var(--text);
+        border: 1px solid var(--text);
+        border-radius: var(--border-radius);
+        &:hover ,
+        &:active ,
+        &:focus-visible {
+            transform: translateY(-4px) ;
+            box-shadow: 0 5px 0 0 var(--primary);
+            color: var(--primary);
+            border: var(--border);
+        }
+    }
 }
-.filter-button {
-    border-radius: 25px;
-    padding: 10px 20px;
-    margin: 5px;
-    border: 1px solid var(--lighttext); /* Add a 1px solid border with your desired color */
-}
-.filter-button:hover{
-    border: 1px solid var(--primary); /* Add a 1px solid border with your desired color */
-}
-.filter-button.selected {
-    border: 2px solid var(--primary);
-}
+
+
 
 /* Styling for the post input */
 .post-input {

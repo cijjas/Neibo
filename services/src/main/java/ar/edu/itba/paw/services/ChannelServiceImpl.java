@@ -38,6 +38,12 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
+    public Optional<Channel> findChannelByName(String name) {
+        return channelDao.findChannelByName(name);
+    }
+
+
+    @Override
     public Map<String, Channel> getNeighborChannels(long neighborId) {
         Map<String, Channel> channelMap = channelDao.getChannels().stream()
                 .collect(Collectors.toMap(Channel::getChannel, Function.identity()));

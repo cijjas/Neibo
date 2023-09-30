@@ -59,6 +59,12 @@ public class ChannelDaoImpl implements ChannelDao {
     }
 
     @Override
+    public Optional<Channel> findChannelByName(String channelName) {
+        final List<Channel> list = jdbcTemplate.query(CHANNELS + " WHERE channel = ?", ROW_MAPPER, channelName);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+    }
+
+    @Override
     public List<Channel> getChannels() {
         return jdbcTemplate.query(CHANNELS, ROW_MAPPER);
     }

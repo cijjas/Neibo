@@ -176,46 +176,65 @@ public class FrontController {
     }
     // ------------------------------------- PUBLISH --------------------------------------
 
-
     @RequestMapping(value = "/publish", method = RequestMethod.GET)
-    public ModelAndView publishForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
+    public ModelAndView publishForm(
+            @ModelAttribute("publishForm") final PublishForm publishForm,
+            @RequestParam(value = "onChannelId", required = false) Long onChannelId
+    ) {
+        System.out.println("CHANNEL: " + onChannelId);
         final ModelAndView mav = new ModelAndView("views/publish");
-
+        mav.addObject("channel", onChannelId);
         mav.addObject("channelList", chs.getNeighborChannels(getLoggedNeighbor().getUserId()));
-
         return mav;
     }
 
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
-    public ModelAndView publish(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
-                                final BindingResult errors,
-                                @RequestParam("imageFile") MultipartFile imageFile
-                                ){
-        if (errors.hasErrors()){
-            return publishForm(publishForm);
+    public ModelAndView publish(
+            @Valid @ModelAttribute("publishForm") final PublishForm publishForm,
+            final BindingResult errors,
+            @RequestParam("imageFile") MultipartFile imageFile,
+            @RequestParam(value = "onChannelId", required = false) Long onChannelId
+    ) {
+        if (errors.hasErrors()) {
+            return publishForm(publishForm, onChannelId);
         }
-        Integer channel = publishForm.getChannel();
-        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), channel, publishForm.getTags(), imageFile);
+        Integer channelId = publishForm.getChannel();
+
+        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), channelId, publishForm.getTags(), imageFile);
         ModelAndView mav = new ModelAndView("views/publish");
-        mav.addObject("channelId", channel);
+        mav.addObject("channelId", channelId);
         mav.addObject("showSuccessMessage", true);
         return mav;
     }
 
+
     @RequestMapping(value = "/redirectToChannel", method = RequestMethod.POST)
-    public ModelAndView redirectToChannel(@RequestParam("channelId") int channelId) {
+    public ModelAndView redirectToChannel(
+            @RequestParam("channelId") int channelId
+    ) {
         String channelName= chs.findChannelById(channelId).get().getChannel().toLowerCase();
         if(channelName.equals("feed")){
             return new ModelAndView("redirect:/");
         }
-        else{
+        else {
             return new ModelAndView("redirect:/" + channelName);
         }
     }
+    @RequestMapping(value = "/publishToChannel", method = RequestMethod.POST)
+    public ModelAndView publishToChannel(
+            @RequestParam("channel") String channelString
+    ) {
+        long channelId = chs.findChannelByName(channelString).get().getChannelId();
+        return new ModelAndView("redirect:/publish?onChannelId=" + channelId);
+    }
+
     // ------------------------------------- PUBLISH ADMIN --------------------------------------
 
     @RequestMapping(value = "/admin/publish", method = RequestMethod.GET)
-    public ModelAndView publishAdminForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
+    public ModelAndView publishAdminForm(
+            @ModelAttribute("publishForm") final PublishForm publishForm,
+            @RequestParam (value = "onChannelId", required = false) Long onChannelId
+    ) {
         final ModelAndView mav = new ModelAndView("admin/publishAdmin");
         mav.addObject("channelList", chs.getAdminChannels());
         return mav;
@@ -224,9 +243,11 @@ public class FrontController {
     @RequestMapping(value = "/admin/publish", method = RequestMethod.POST)
     public ModelAndView publishAdmin(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
                                      final BindingResult errors,
-                                     @RequestParam("imageFile") MultipartFile imageFile) {
+                                     @RequestParam("imageFile") MultipartFile imageFile,
+                                     @RequestParam (value = "onChannelId", required = false) Long onChannelId
+                                     ) {
         if (errors.hasErrors()){
-            return publishForm(publishForm);
+            return publishForm(publishForm, onChannelId);
         }
 
         ps.createAdminPost(getLoggedNeighbor().getNeighborhoodId(), publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
@@ -309,10 +330,13 @@ public class FrontController {
 
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ModelAndView logIn(Model model, @ModelAttribute("signupForm") final SignupForm signupform) {
+    public ModelAndView logIn(Model model,
+                            @ModelAttribute("signupForm") final SignupForm signupform,
+                            @RequestParam(value = "error", required = false, defaultValue = "false") boolean error
+    ) {
         model.addAttribute("neighbor", new User.Builder());
         ModelAndView mav = new ModelAndView("views/landingPage");
-
+        mav.addObject("error", error);
         mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
         mav.addObject("openSignupDialog", false);
         return mav;

@@ -24,6 +24,20 @@
 
 <%@ include file="/WEB-INF/jsp/components/backgroundDrawing.jsp" %>
 <%--Successfull signup popup--%>
+
+<%-- show error if parameter error is in url --%>
+
+
+<c:if test="${error == true}">
+    <c:set var="errorMessage">
+        <spring:message code="Login.error.message"/>
+    </c:set>
+
+    <jsp:include page="/WEB-INF/jsp/errors/errorDialog.jsp" >
+        <jsp:param name="errorMessage" value="${errorMessage}" />
+    </jsp:include>
+</c:if>
+
 <c:if test="${successfullySignup == true}">
     <c:set var="successMessage">
         <spring:message code="Successfully.signup"/>

@@ -50,6 +50,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/unverified").hasRole("UNVERIFIED_NEIGHBOR")
                 .antMatchers("/**").hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
                 .and().formLogin()
+                .failureUrl("/login?error=true")
                 .usernameParameter("mail")
                 .passwordParameter("password")
                 .loginPage("/login")
