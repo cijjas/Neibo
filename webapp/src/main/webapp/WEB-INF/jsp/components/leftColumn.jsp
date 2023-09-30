@@ -16,6 +16,12 @@
         <a id="complaintsButton" href="${pageContext.request.contextPath}/complaints" class="cool-left-button ${channel == 'Complaints' ? 'active' : ''}" >
             <i class="fas fa-envelope"></i> <spring:message code="Complaints"/>
         </a>
+        <a id="reservationsButton" href="${pageContext.request.contextPath}/amenities" class="cool-left-button ${channel == 'Reservations' ? 'active' : ''}" >
+            <i class="fas fa-calendar-days"></i> <spring:message code="Reservations"/>
+        </a>
+        <a id="informationButton" href="${pageContext.request.contextPath}/information" class="cool-left-button ${channel == 'Information' ? 'active' : ''}" >
+            <i class="fas fa-address-card"></i> <spring:message code="Information"/>
+        </a>
     </div>
 
 

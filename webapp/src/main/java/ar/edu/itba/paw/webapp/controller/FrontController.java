@@ -42,6 +42,9 @@ public class FrontController {
     private final AmenityService as;
     private final ReservationService rs;
     private final EventService es;
+    private final ResourceService rs1;
+    private final ContactService cs1;
+
 
     @Autowired
     public FrontController(final PostService ps,
@@ -56,7 +59,9 @@ public class FrontController {
                            final ReservationService rs,
                            final AmenityService as,
                            final EventService es,
-                           EventService es1) {
+                           EventService es1,
+                           final ResourceService rs1,
+                           final ContactService cs1) {
         this.is = is;
         this.ps = ps;
         this.us = us;
@@ -69,6 +74,8 @@ public class FrontController {
         this.as = as;
         this.rs = rs;
         this.es = es1;
+        this.rs1 = rs1;
+        this.cs1 = cs1;
     }
 
     // ------------------------------------- FEED --------------------------------------
@@ -570,6 +577,14 @@ public class FrontController {
         return mav;
     }
 
+    // ------------------------------------- INFORMATION --------------------------------
+    @RequestMapping(value = "/information", method = RequestMethod.GET)
+    public ModelAndView information() {
+        ModelAndView mav = new ModelAndView("views/information");
+        mav.addObject("resourceMap", rs1.getResources(getLoggedNeighbor().getNeighborhoodId()));
+        mav.addObject("phoneNumbersMap", cs1.getContacts(getLoggedNeighbor().getNeighborhoodId()));
+        return mav;
+    }
 
 
     // ------------------------------------- TEST --------------------------------------
