@@ -147,6 +147,11 @@ public class FrontController {
         List<Post> postList = ps.getPostsByCriteria("Administracion", page, size, date, tags);
         int totalPages = ps.getTotalPages("Administracion", size, tags);
 
+        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Long> eventTimestamps = eventDates.stream()
+                .map(d -> d.getTime())
+                .collect(Collectors.toList());
+
         final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags());
         mav.addObject("appliedTags", tags);
@@ -154,6 +159,7 @@ public class FrontController {
         mav.addObject("page", page); // Add page parameter to the model
         mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
         mav.addObject("channel", "Announcements");
+        mav.addObject("eventDates", eventTimestamps);
 
         return mav;
     }
@@ -170,6 +176,11 @@ public class FrontController {
         List<Post> postList = ps.getPostsByCriteria("Foro", page, size, date, tags);
         int totalPages = ps.getTotalPages("Foro", size, tags);
 
+        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Long> eventTimestamps = eventDates.stream()
+                .map(d -> d.getTime())
+                .collect(Collectors.toList());
+
         final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags());
         mav.addObject("appliedTags", tags);
@@ -177,6 +188,7 @@ public class FrontController {
         mav.addObject("page", page); // Add page parameter to the model
         mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
         mav.addObject("channel", "Complaints");
+        mav.addObject("eventDates", eventTimestamps);
 
         return mav;
     }

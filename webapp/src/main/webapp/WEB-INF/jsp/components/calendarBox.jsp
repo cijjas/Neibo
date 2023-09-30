@@ -21,13 +21,13 @@
   <div class="divider"></div>
   <div class="calendar">
     <ul class="weeks">
-      <li>Sunday</li>
-      <li>Monday</li>
-      <li>Tuesday</li>
-      <li>Wednesday</li>
-      <li>Thursday</li>
-      <li>Friday</li>
-      <li>Saturday</li>
+      <li><spring:message code="days.sunday"/></li>
+      <li><spring:message code="days.monday"/></li>
+      <li><spring:message code="days.tuesday"/></li>
+      <li><spring:message code="days.wednesday"/></li>
+      <li><spring:message code="days.thursday"/></li>
+      <li><spring:message code="days.friday"/></li>
+      <li><spring:message code="days.saturday"/></li>
     </ul>
     <ul class="days"></ul>
   </div>
@@ -49,8 +49,20 @@
   let currMonth = date.getMonth();
 
   // storing full name of all months in array
-  const months = ["January", "February", "March", "April", "May", "June", "July",
-    "August", "September", "October", "November", "December"];
+  const months = [
+    "<spring:message code='month.january' />",
+    "<spring:message code='month.february' />",
+    "<spring:message code='month.march' />",
+    "<spring:message code='month.april' />",
+    "<spring:message code='month.may' />",
+    "<spring:message code='month.june' />",
+    "<spring:message code='month.july' />",
+    "<spring:message code='month.august' />",
+    "<spring:message code='month.september' />",
+    "<spring:message code='month.october' />",
+    "<spring:message code='month.november' />",
+    "<spring:message code='month.december' />"
+  ];
 
   const renderCalendar = () => {
     let firstDayOfMonth = new Date(currYear, currMonth, 1).getDay();
