@@ -34,13 +34,7 @@ public class AmenityDaoImpl implements AmenityDao {
                 .withTableName("hours");
     }
 
-    private final RowMapper<Amenity> ROW_MAPPER = (rs, rowNum) -> {
-        return new Amenity.Builder()
-                .amenityId(rs.getLong("amenityid"))
-                .name(rs.getString("name"))
-                .description(rs.getString("description"))
-                .build();
-    };
+    // ---------------------------------------------- AMENITY INSERT ---------------------------------------------------
 
     @Override
     public Amenity createAmenity(String name, String description, Map<String, DayTime> dayHourData) {
@@ -78,20 +72,20 @@ public class AmenityDaoImpl implements AmenityDao {
     }
 
 
-    @Override
-    public boolean deleteAmenity(long amenityId) {
-        return jdbcTemplate.update("DELETE FROM amenities WHERE amenityid = ?", amenityId) > 0;
-    }
+    // ---------------------------------------------- AMENITY SELECT ---------------------------------------------------
 
-//    @Override
-//    public boolean updateAmenity(long amenityId, String name, String description) {
-//        return jdbcTemplate.update("UPDATE amenities SET name = ?, description = ? WHERE amenityid = ?", name, description, amenityId) > 0;
-//    }
+    private final RowMapper<Amenity> ROW_MAPPER = (rs, rowNum) -> {
+        return new Amenity.Builder()
+                .amenityId(rs.getLong("amenityid"))
+                .name(rs.getString("name"))
+                .description(rs.getString("description"))
+                .build();
+    };
 
-    @Override
-    public List<Amenity> getAmenities() {
-        return jdbcTemplate.query("SELECT * FROM amenities", ROW_MAPPER);
-    }
+    //    @Override
+    //    public boolean updateAmenity(long amenityId, String name, String description) {
+    //        return jdbcTemplate.update("UPDATE amenities SET name = ?, description = ? WHERE amenityid = ?", name, description, amenityId) > 0;
+    //    }
 
     @Override
     public Optional<Amenity> findAmenityById(long amenityId) {
@@ -100,29 +94,9 @@ public class AmenityDaoImpl implements AmenityDao {
     }
 
     @Override
-    public DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek) {
-        Time openTime = null;
-        Time closeTime = null;
-
-        List<Map<String, Object>> results = jdbcTemplate.queryForList(
-                "SELECT opentime, closetime FROM hours WHERE amenityId = ? AND weekday = ?",
-                amenityId,
-                dayOfWeek
-        );
-
-        if (!results.isEmpty()) {
-            Map<String, Object> firstResult = results.get(0);
-            openTime = (Time) firstResult.get("opentime");
-            closeTime = (Time) firstResult.get("closetime");
-        }
-
-//        return new DayTime.Builder().openTime(openTime).closeTime(closeTime).build();
-        DayTime dayTime = new DayTime();
-        dayTime.setOpenTime(openTime);
-        dayTime.setCloseTime(closeTime);
-        return dayTime;
+    public List<Amenity> getAmenities() {
+        return jdbcTemplate.query("SELECT * FROM amenities", ROW_MAPPER);
     }
-
 
     @Override
     public Map<String, DayTime> getAmenityHoursByAmenityId(long amenityId) {
@@ -152,8 +126,34 @@ public class AmenityDaoImpl implements AmenityDao {
         return amenityHoursMap;
     }
 
+    @Override
+    public DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek) {
+        Time openTime = null;
+        Time closeTime = null;
 
+        List<Map<String, Object>> results = jdbcTemplate.queryForList(
+                "SELECT opentime, closetime FROM hours WHERE amenityId = ? AND weekday = ?",
+                amenityId,
+                dayOfWeek
+        );
 
+        if (!results.isEmpty()) {
+            Map<String, Object> firstResult = results.get(0);
+            openTime = (Time) firstResult.get("opentime");
+            closeTime = (Time) firstResult.get("closetime");
+        }
 
+//        return new DayTime.Builder().openTime(openTime).closeTime(closeTime).build();
+        DayTime dayTime = new DayTime();
+        dayTime.setOpenTime(openTime);
+        dayTime.setCloseTime(closeTime);
+        return dayTime;
+    }
 
+    // ---------------------------------------------- AMENITY DELETE ---------------------------------------------------
+
+    @Override
+    public boolean deleteAmenity(long amenityId) {
+        return jdbcTemplate.update("DELETE FROM amenities WHERE amenityid = ?", amenityId) > 0;
+    }
 }

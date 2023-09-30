@@ -394,7 +394,7 @@ public class FrontController {
             mav.addObject("openSignupDialog", true);
             return mav;
         }
-        us.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), Language.ENGLISH);
+        us.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), Language.ENGLISH, signupForm.getIdentification());
         ModelAndView mav = new ModelAndView("redirect:/signup");
         mav.addObject("successfullySignup", true);
         return mav;
