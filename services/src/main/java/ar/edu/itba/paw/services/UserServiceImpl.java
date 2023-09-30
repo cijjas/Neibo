@@ -63,12 +63,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getNeighbors(long neighborhoodId) {
-        return userDao.getUsersByCriteria(UserRole.NEIGHBOR, neighborhoodId);
+        return userDao.getUsersByCriteria(UserRole.NEIGHBOR, neighborhoodId, 0, 0);
     }
 
     @Override
-    public List<User> getUnverifiedNeighbors(long neighborhoodId){
-        return userDao.getUsersByCriteria(UserRole.UNVERIFIED_NEIGHBOR, neighborhoodId);
+    public List<User> getUsersPage(UserRole role, long neighborhoodId, int page, int size){
+        return userDao.getUsersByCriteria(role, neighborhoodId, page, size);
+    }
+
+    public int getTotalPages(UserRole role, long neighborhoodId, int size ){
+        return userDao.getTotalUsers(role, neighborhoodId)/size;
     }
 
     // ---------------------------------------------- USER SETTERS -----------------------------------------------------
@@ -99,6 +103,19 @@ public class UserServiceImpl implements UserService {
     public void updateLanguage(long id, Language language) {
         userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), language, n.isDarkMode(),  n.getProfilePictureId(), n.getRole()));
     }
+
+    // Will be deprecated if more languages are included
+    @Override
+    public void toggleLanguage(long id) {
+        User user = userDao.findUserById(id).orElse(null);
+        if (user == null) {
+            return;
+        }
+
+        Language newLanguage = (user.getLanguage() == Language.ENGLISH) ? Language.SPANISH : Language.ENGLISH;
+        updateLanguage(user.getUserId(), newLanguage);
+    }
+
 
     @Override
     public void resetPreferenceValues(long id) {

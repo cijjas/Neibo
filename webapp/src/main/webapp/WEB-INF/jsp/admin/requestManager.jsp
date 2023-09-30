@@ -34,6 +34,11 @@
 
         <div class="column-middle">
 
+            <jsp:include page="/WEB-INF/jsp/components/pageSelector.jsp">
+                <jsp:param name="page" value="${page}" />
+                <jsp:param name="totalPages" value="${totalPages}" />
+            </jsp:include>
+
             <div class="req-acc-users-list" >
                 <c:choose>
                     <c:when test="${empty unverifiedList}">

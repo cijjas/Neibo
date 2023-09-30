@@ -19,9 +19,9 @@ public interface PostService {
 
     Optional<Post> findPostById(long id);
 
-    List<Post> getPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags);
+    List<Post> getPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags, long neighborhoodId);
 
-    int getPostsCountByCriteria(String channel, List<String> tags);
+    int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId);
 
-    int getTotalPages(String channel, int size, List<String> tags);
+    int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId);
 }

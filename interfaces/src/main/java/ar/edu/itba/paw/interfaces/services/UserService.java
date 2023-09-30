@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.User;
 import enums.Language;
+import enums.UserRole;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -35,7 +36,10 @@ public interface UserService {
 
     List<User> getNeighborsSubscribedByPostId(long id);
 
-    List<User> getUnverifiedNeighbors(long neighborhoodId);
+    List<User> getUsersPage(UserRole role, long neighborhoodId, int page, int size);
+
+    int getTotalPages(UserRole role, long neighborhoodId, int size );
+
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -46,6 +50,8 @@ public interface UserService {
     void verifyNeighbor(final long id);
 
     void unverifyNeighbor(final long id);
+
+    public void toggleLanguage(long id);
 
     void updateLanguage(final long id, final Language language);
 
