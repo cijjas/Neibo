@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Image;
@@ -12,19 +13,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
-    private final ImageService is;
-
+    private final ImageService imageService;
+    private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(final UserDao userDao, final ImageService is,final PasswordEncoder passwordEncoder) {
-        this.is = is;
+    public UserServiceImpl(final UserDao userDao, final ImageService imageService, final PasswordEncoder passwordEncoder, final EmailService emailService) {
+        this.emailService = emailService;
+        this.imageService = imageService;
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
     }
@@ -79,7 +83,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void storeProfilePicture(long userId, MultipartFile image){
-        Image i = is.storeImage(image);
+        Image i = imageService.storeImage(image);
         findUserById(userId).ifPresent(n -> userDao.setUserValues(userId, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), i.getImageId(), n.getRole()));
     }
 
@@ -91,7 +95,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void verifyNeighbor(long id) {
-        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), n.getProfilePictureId(), UserRole.NEIGHBOR));
+        User user = userDao.findUserById(id).orElse(null);
+        if ( user == null )
+            return;
+        userDao.setUserValues(id, user.getPassword(), user.getName(), user.getSurname(), user.getLanguage(), user.isDarkMode(), user.getProfilePictureId(), UserRole.NEIGHBOR);
+        Map<String, Object> vars = new HashMap<>();
+        vars.put("name", user.getName());
+        vars.put("postTitle", "Verification");
+        vars.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/");
+        emailService.sendMessageUsingThymeleafTemplate(user.getMail(), "New comment", "template-thymeleaf.html", vars);
     }
 
     @Override

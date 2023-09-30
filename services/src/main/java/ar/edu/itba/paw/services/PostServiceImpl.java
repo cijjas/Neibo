@@ -22,18 +22,18 @@ import java.util.Optional;
 public class PostServiceImpl implements PostService {
     private final PostDao postDao;
     private final ChannelDao channelDao;
-    private final UserService ns;
+    private final UserService userService;
     private final EmailService emailService;
-    private final TagService ts;
-    private final ImageService is;
+    private final TagService tagService;
+    private final ImageService imageService;
 
     @Autowired
-    public PostServiceImpl(final PostDao postDao, final ChannelDao channelDao, UserService ns, EmailService emailService, TagService ts, ImageService is) {
-        this.is = is;
-        this.ts = ts;
+    public PostServiceImpl(final PostDao postDao, final ChannelDao channelDao, UserService userService, EmailService emailService, TagService tagService, ImageService imageService) {
+        this.imageService = imageService;
+        this.tagService = tagService;
         this.postDao = postDao;
         this.channelDao = channelDao;
-        this.ns = ns;
+        this.userService = userService;
         this.emailService = emailService;
     }
 
@@ -41,10 +41,10 @@ public class PostServiceImpl implements PostService {
     public Post createPost(String title, String description, long neighborId, long channelId, String tags, MultipartFile imageFile) {
         Image i = null;
         if (imageFile != null && !imageFile.isEmpty()) {
-            i = is.storeImage(imageFile);
+            i = imageService.storeImage(imageFile);
         }
         Post p = postDao.createPost(title, description, neighborId, channelId, i == null ? 0 : i.getImageId());
-        ts.createTagsAndCategorizePost(p.getPostId(), tags);
+        tagService.createTagsAndCategorizePost(p.getPostId(), tags);
         return p;
     }
 
@@ -68,63 +68,12 @@ public class PostServiceImpl implements PostService {
         return postDao.findPostById(id);
     }
 
-    // -----------------------------------------------------------------------
-
-/*
-    @Override
-    public List<Post> getPostsByDate(final String order, int offset, int limit) {
-        return postDao.getPostsByCriteria(null, null, order, offset, limit);
-    }
-
-    @Override
-    public List<Post> getPostsByTag(String tag, int offset, int limit) {
-        return postDao.getPostsByCriteria(null, tag, null, offset, limit);
-    }
-
-    @Override
-    public List<Post> getPostsByChannel(String channel, int offset, int limit) {
-        return postDao.getPostsByCriteria(channel, null, null, offset, limit);
-    }
-
-    @Override
-    public List<Post> getPostsByChannelAndDate(final String channel, final String order, int offset, int limit){
-        return postDao.getPostsByCriteria(channel, null, order, offset, limit);
-    }
-
-    @Override
-    public List<Post> getPostsByChannelAndDateAndTag(final String channel, final String tag, final String order, int offset, int limit){
-        return postDao.getPostsByCriteria(channel, tag, order, offset, limit);
-    }
-
-
-    @Override
-    public int getTotalPostsCount(){
-        return postDao.getTotalPostsCountByCriteria(null, null);
-    }
-
-    @Override
-    public int getTotalPostsCountInChannel(String channel){
-        return postDao.getTotalPostsCountByCriteria(channel, null);
-    }
-
-    @Override
-    public int getTotalPostsCountWithTag(String tag) {
-        return postDao.getTotalPostsCountByCriteria(null, tag);
-    }
-
-    @Override
-    public int getTotalPostsCountInChannelWithTag(String channel, String tag ){
-        return postDao.getTotalPostsCountByCriteria(channel, tag);
-    }*/
-
-    // -----------------------------------------------------------------------
-
     @Override
     public Post createAdminPost(final long neighborhoodId, final String title, final String description, final long neighborId, final int channelId, final String tags, final MultipartFile imageFile){
         Post post = createPost(title, description, neighborId, channelId, tags,  imageFile);
         assert post != null;
         try {
-            for(User n : ns.getNeighbors(neighborhoodId)) {
+            for(User n : userService.getNeighbors(neighborhoodId)) {
                 Map<String, Object> vars = new HashMap<>();
                 vars.put("name", n.getName());
                 vars.put("postTitle", post.getTitle());

@@ -7,6 +7,7 @@ import ar.edu.itba.paw.webapp.form.AmenityForm;
 import ar.edu.itba.paw.webapp.form.CommentForm;
 import ar.edu.itba.paw.webapp.form.PublishForm;
 import ar.edu.itba.paw.webapp.form.SignupForm;
+import enums.BaseChannel;
 import enums.Language;
 import enums.SortOrder;
 import enums.UserRole;
@@ -110,7 +111,7 @@ public class FrontController {
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ) {
-        return handleChannelRequest("Feed", page, size, date, tags);
+        return handleChannelRequest(BaseChannel.FEED.toString(), page, size, date, tags);
     }
 
     @RequestMapping("/admin/neighbors")
@@ -174,7 +175,7 @@ public class FrontController {
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ) {
-        return handleChannelRequest("Announcements", page, size, date, tags);
+        return handleChannelRequest(BaseChannel.ANNOUNCEMENTS.toString(), page, size, date, tags);
     }
 
     // ------------------------------------- FORUM --------------------------------------
@@ -186,13 +187,14 @@ public class FrontController {
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ){
-        return handleChannelRequest("Complaints", page, size, date, tags);
+        return handleChannelRequest(BaseChannel.COMPLAINTS.toString(), page, size, date, tags);
     }
 
     @RequestMapping(value = "/unverified", method = RequestMethod.GET)
     public ModelAndView publishForm() {
         return  new ModelAndView("views/unverified");
     }
+
     // ------------------------------------- PUBLISH --------------------------------------
 
 
@@ -200,7 +202,7 @@ public class FrontController {
     public ModelAndView publishForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
         final ModelAndView mav = new ModelAndView("views/publish");
 
-        mav.addObject("channelList", chs.getNeighborChannels(getLoggedNeighbor().getUserId()));
+        mav.addObject("channelList", chs.getNeighborChannels(getLoggedNeighbor().getNeighborhoodId(), getLoggedNeighbor().getUserId()));
 
         return mav;
     }
@@ -224,7 +226,7 @@ public class FrontController {
     @RequestMapping(value = "/redirectToChannel", method = RequestMethod.POST)
     public ModelAndView redirectToChannel(@RequestParam("channelId") int channelId) {
         String channelName= chs.findChannelById(channelId).get().getChannel().toLowerCase();
-        if(channelName.equals("feed")){
+        if(channelName.equals(BaseChannel.FEED.toString())){
             return new ModelAndView("redirect:/");
         }
         else{
@@ -236,7 +238,7 @@ public class FrontController {
     @RequestMapping(value = "/admin/publish", method = RequestMethod.GET)
     public ModelAndView publishAdminForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
         final ModelAndView mav = new ModelAndView("admin/publishAdmin");
-        mav.addObject("channelList", chs.getAdminChannels());
+        mav.addObject("channelList", chs.getAdminChannels(getLoggedNeighbor().getNeighborhoodId()));
         return mav;
     }
 
@@ -252,7 +254,7 @@ public class FrontController {
         PublishForm clearedForm = new PublishForm();
         ModelAndView mav = new ModelAndView("admin/publishAdmin");
         mav.addObject("showSuccessMessage", true);
-        mav.addObject("channelList", chs.getAdminChannels());
+        mav.addObject("channelList", chs.getAdminChannels(getLoggedNeighbor().getNeighborhoodId()));
         mav.addObject("publishForm", clearedForm);
 
         return mav;
@@ -470,12 +472,12 @@ public class FrontController {
     public ModelAndView test(
     )
     {
-        System.out.println(us.findUserById(14).get().getLanguage());
-        us.toggleLanguage(14);
-        System.out.println(us.findUserById(14).get().getLanguage());
-        us.toggleLanguage(14);
-        System.out.println(us.findUserById(14).get().getLanguage());
-        us.toggleLanguage(14);
+        System.out.println(chs.getChannels(1));
+        System.out.println(chs.createChannel(1,"Poker"));
+        System.out.println(chs.getChannels(1));
+
+        // rs.createReservation(1,14, java.sql.Date.valueOf("2023-09-25"), Time.valueOf("12:00:00"), Time.valueOf("16:00:00"));
+
         return new ModelAndView("views/index");
     }
 
