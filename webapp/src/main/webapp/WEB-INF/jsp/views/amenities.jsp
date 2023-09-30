@@ -15,10 +15,10 @@
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title><spring:message code="CreatePost.title"/></title>
+    <title>Neibo - Reservation FELIX!!!!!!</title>
 </head>
 
-<body class="body">
+<body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 <div class="container">
     <div class="row">
