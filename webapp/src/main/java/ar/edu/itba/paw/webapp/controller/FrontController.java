@@ -3,10 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.exceptions.*;
-import ar.edu.itba.paw.webapp.form.AmenityForm;
-import ar.edu.itba.paw.webapp.form.CommentForm;
-import ar.edu.itba.paw.webapp.form.PublishForm;
-import ar.edu.itba.paw.webapp.form.SignupForm;
+import ar.edu.itba.paw.webapp.form.*;
 import enums.BaseChannel;
 import enums.Language;
 import enums.SortOrder;
@@ -473,6 +470,66 @@ public class FrontController {
 
         as.createAmenityWrapper(amenityForm.getName(), amenityForm.getDescription(), amenityForm.getMondayOpenTime(), amenityForm.getMondayCloseTime(), amenityForm.getTuesdayOpenTime(), amenityForm.getTuesdayCloseTime(), amenityForm.getWednesdayOpenTime(), amenityForm.getWednesdayCloseTime(), amenityForm.getThursdayOpenTime(), amenityForm.getThursdayCloseTime(), amenityForm.getFridayOpenTime(), amenityForm.getFridayCloseTime(), amenityForm.getSaturdayOpenTime(), amenityForm.getSaturdayCloseTime(), amenityForm.getSundayOpenTime(), amenityForm.getSundayCloseTime());
         return new ModelAndView("redirect:/admin/amenities");
+    }
+
+    //------------------------------------- USER AMENITIES & RESERVATIONS --------------------------------------
+    @RequestMapping(value = "/amenities", method = RequestMethod.GET)
+    public ModelAndView amenities(@ModelAttribute("reservationForm") final ReservationForm reservationForm) {
+        ModelAndView mav = new ModelAndView("views/amenities");
+
+        List<Amenity> amenities = as.getAmenities();
+        List<AmenityHours> amenityHoursList = new ArrayList<>();
+
+        for (Amenity amenity : amenities) {
+            Map<String, DayTime> amenityTimes = as.getAmenityHoursByAmenityId(amenity.getAmenityId());
+
+            AmenityHours amenityHours = new AmenityHours.Builder().amenity(amenity).amenityHours(amenityTimes).build();
+
+            amenityHoursList.add(amenityHours);
+        }
+        mav.addObject("amenitiesHours", amenityHoursList);
+        List<String> daysOfWeek = new ArrayList<>();
+        daysOfWeek.add("Monday");
+        daysOfWeek.add("Tuesday");
+        daysOfWeek.add("Wednesday");
+        daysOfWeek.add("Thursday");
+        daysOfWeek.add("Friday");
+        daysOfWeek.add("Saturday");
+        daysOfWeek.add("Sunday");
+        mav.addObject("daysOfWeek", daysOfWeek);
+
+        List<Time> timeList = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
+        try {
+            Date startTime = sdf.parse("00:00");
+            Date endTime = sdf.parse("23:30");
+
+            long currentTime = startTime.getTime();
+            long endTimeMillis = endTime.getTime();
+
+            while (currentTime <= endTimeMillis) {
+                timeList.add(new Time(currentTime));
+                currentTime += 30 * 60 * 1000; // Add 30 minutes in milliseconds
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        mav.addObject("timeList", timeList);
+        return mav;
+    }
+
+    @RequestMapping(value = "/amenities", method = RequestMethod.POST)
+    public ModelAndView amenities(@Valid @ModelAttribute("reservationForm") final ReservationForm reservationForm,
+                                  final BindingResult errors) {
+        if (errors.hasErrors()) {
+            System.out.println("ERRORS: " + errors);
+            return amenities(reservationForm);
+        }
+
+        Reservation res = rs.createReservation(reservationForm.getAmenityId(), getLoggedNeighbor().getUserId(), reservationForm.getDate(), reservationForm.getStartTime(), reservationForm.getEndTime());
+        System.out.println("RESERVATION: " + res);
+        return new ModelAndView("redirect:/amenities");
     }
 
     // ------------------------------------- CALENDAR --------------------------------------
