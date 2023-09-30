@@ -247,6 +247,12 @@ public class FrontController {
                                  @RequestParam(value = "success", required = false) boolean success) {
         ModelAndView mav = new ModelAndView("views/post");
 
+        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Long> eventTimestamps = eventDates.stream()
+                .map(date -> date.getTime())
+                .collect(Collectors.toList());
+
+
         Optional<Post> optionalPost = ps.findPostById(postId);
         mav.addObject("post", optionalPost.orElseThrow(PostNotFoundException::new));
 
@@ -260,6 +266,8 @@ public class FrontController {
         mav.addObject("commentForm", commentForm);
 
         mav.addObject("showSuccessMessage", success);
+        mav.addObject("eventDates", eventTimestamps);
+
 
         return mav;
     }
@@ -465,15 +473,22 @@ public class FrontController {
     }
     // ------------------------------------- CALENDAR --------------------------------------
     @RequestMapping("/calendar")
-    public ModelAndView calendar() {
+    public ModelAndView calendar(@RequestParam(required = false, defaultValue = "0") long timestamp) {
+        Date selectedDate = new Date(timestamp != 0 ? timestamp : System.currentTimeMillis());
+
         List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
 
+        List<Event> eventList = es.getEventsByDate(selectedDate, getLoggedNeighbor().getNeighborhoodId());
+
         ModelAndView mav = new ModelAndView("views/calendar");
         mav.addObject("eventDates", eventTimestamps);
+        mav.addObject("selectedTimestamp", selectedDate.getTime()); // Pass the selected timestamp
+        mav.addObject("eventList", eventList);
         return mav;
     }
+
 
 }

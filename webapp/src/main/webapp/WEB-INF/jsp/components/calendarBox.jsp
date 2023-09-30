@@ -43,12 +43,20 @@
   // Access the event timestamps array passed from the Java controller
   let eventTimestamps = ${eventDates}; // Assuming eventDates is an array of timestamps
 
-  // getting new date, current year, and month
-  let date = new Date();
-  let currYear = date.getFullYear();
-  let currMonth = date.getMonth();
+  // Access the selected timestamp passed from the Java controller
+  const selectedTimestamp = ${selectedTimestamp}; // Assuming selectedTimestamp is a valid timestamp in milliseconds
 
-  // storing full name of all months in array
+  // Create a Date object from the selected timestamp
+  let selectedDate = new Date(selectedTimestamp);
+
+  // Get the year and month from the selected date
+  let selectedYear = selectedDate.getFullYear();
+  let selectedMonth = selectedDate.getMonth();
+
+  // Create a Date object for the current date
+  let date = new Date(); // This gets the current date
+
+  // Storing the full name of all months in an array
   const months = [
     "<spring:message code='month.january' />",
     "<spring:message code='month.february' />",
@@ -65,10 +73,10 @@
   ];
 
   const renderCalendar = () => {
-    let firstDayOfMonth = new Date(currYear, currMonth, 1).getDay();
-    let lastDateOfMonth = new Date(currYear, currMonth + 1, 0).getDate();
-    let lastDayOfMonth = new Date(currYear, currMonth, lastDateOfMonth).getDay();
-    let lastDateOfLastMonth = new Date(currYear, currMonth, 0).getDate();
+    let firstDayOfMonth = new Date(selectedYear, selectedMonth, 1).getDay();
+    let lastDateOfMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
+    let lastDayOfMonth = new Date(selectedYear, selectedMonth, lastDateOfMonth).getDay();
+    let lastDateOfLastMonth = new Date(selectedYear, selectedMonth, 0).getDate();
     let liTag = "";
 
     for (let i = firstDayOfMonth; i > 0; i--) {
@@ -76,22 +84,49 @@
     }
 
     for (let i = 1; i <= lastDateOfMonth; i++) {
-      let isToday = i === date.getDate() && currMonth === new Date().getMonth() && currYear === new Date().getFullYear() ? "active" : "";
-      let dayDate = new Date(currYear, currMonth, i); // Create a Date object for the current day
+      let dayDate = new Date(selectedYear, selectedMonth, i); // Create a Date object for the current day
       let isEventDate = eventTimestamps.some(eventTimestamp => {
         const eventDate = new Date(eventTimestamp);
         return dayDate.getDate() === eventDate.getDate() &&
                 dayDate.getMonth() === eventDate.getMonth() &&
                 dayDate.getFullYear() === eventDate.getFullYear();
       });
-      liTag += `<li class="\${isToday} \${isEventDate ? 'event' : ''}">\${i}</li>`;
+
+      let classNames = "";
+
+      // Check if the day is active (selected)
+      if (
+              i === selectedDate.getDate() &&
+              selectedMonth === selectedDate.getMonth() &&
+              selectedYear === selectedDate.getFullYear()
+      ) {
+        classNames = "active";
+      }
+      // Check if the day is today
+      else if (
+              i === date.getDate() &&
+              selectedMonth === date.getMonth() &&
+              selectedYear === date.getFullYear()
+      ) {
+        classNames = "today";
+      }
+      // Check if the day has events
+      else if (isEventDate) {
+        classNames = "event";
+      }
+
+      // Create a link with the timestamp as a query parameter
+      let timestampLink = `<a href="?timestamp=\${dayDate.getTime()}">\${i}</a>`;
+
+      liTag += `<li class="\${classNames}">\${timestampLink}</li>`;
     }
+
 
     for (let i = lastDayOfMonth; i < 6; i++) {
       liTag += `<li class="inactive">\${i - lastDayOfMonth + 1}</li>`;
     }
 
-    currentDate.innerText = `\${months[currMonth]} \${currYear}`;
+    currentDate.innerText = `\${months[selectedMonth]} \${selectedYear}`;
     daysTag.innerHTML = liTag;
   };
 
@@ -99,15 +134,16 @@
 
   prevNextIcon.forEach(icon => {
     icon.addEventListener("click", () => {
-      currMonth = icon.id === "prev" ? currMonth - 1 : currMonth + 1;
-      if (currMonth < 0 || currMonth > 11) {
-        date = new Date(currYear, currMonth, new Date().getDate());
-        currYear = date.getFullYear();
-        currMonth = date.getMonth();
+      selectedMonth = icon.id === "prev" ? selectedMonth - 1 : selectedMonth + 1;
+      if (selectedMonth < 0 || selectedMonth > 11) {
+        selectedDate.setMonth(selectedMonth);
+        selectedYear = selectedDate.getFullYear();
+        selectedMonth = selectedDate.getMonth();
       } else {
-        date = new Date();
+        selectedDate = new Date();
       }
       renderCalendar();
     });
   });
 </script>
+

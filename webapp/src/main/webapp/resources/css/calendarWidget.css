@@ -143,3 +143,24 @@ header .current-date{
     transform: translate(-50%, -50%);
     background: var(--accent); /* Use the --accent color for the circle */
 }
+
+.calendar .days li.today {
+    z-index: 1;
+    cursor: pointer;
+    position: relative;
+    margin-top: 15px;
+    color: var(--onbackground); /* Set the text color to white */
+}
+
+.calendar .days li.today::before {
+    position: absolute;
+    content: "";
+    left: 50%;
+    top: 50%;
+    height: 22px;
+    width: 22px;
+    z-index: -1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--error); /* Use the --accent color for the circle */
+}

@@ -62,7 +62,7 @@
     }
 
     for (let i = 1; i <= lastDateOfMonth; i++) {
-      let isToday = i === date.getDate() && currMonth === new Date().getMonth() && currYear === new Date().getFullYear() ? "active" : "";
+      let isToday = i === date.getDate() && currMonth === date.getMonth() && currYear === date.getFullYear();
       let dayDate = new Date(currYear, currMonth, i); // Create a Date object for the current day
       let isEventDate = eventTimestamps.some(eventTimestamp => {
         const eventDate = new Date(eventTimestamp);
@@ -70,8 +70,19 @@
                 dayDate.getMonth() === eventDate.getMonth() &&
                 dayDate.getFullYear() === eventDate.getFullYear();
       });
-      liTag += `<li class="\${isToday} \${isEventDate ? 'event' : ''}">\${i}</li>`;
+
+      let classNames = isToday ? "today" : "";
+
+      if (isEventDate && !isToday) {
+        classNames = "event";
+      }
+
+      // Create a link with the timestamp as a query parameter
+      let timestampLink = `<a href="/calendar?timestamp=\${dayDate.getTime()}">\${i}</a>`;
+
+      liTag += `<li class="\${classNames}">\${timestampLink}</li>`;
     }
+
 
     for (let i = lastDayOfMonth; i < 6; i++) {
       liTag += `<li class="inactive">\${i - lastDayOfMonth + 1}</li>`;

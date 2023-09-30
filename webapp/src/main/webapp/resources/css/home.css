@@ -256,6 +256,7 @@
 
     transform: translateY(-4px) ;
     box-shadow: 0 5px 0 0 var(--lighttext);
+    margin-bottom: 20px;
 }
 
 .comments-section-divider {
