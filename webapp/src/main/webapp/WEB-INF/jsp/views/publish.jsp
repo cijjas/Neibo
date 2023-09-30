@@ -24,9 +24,7 @@
     <div class="container">
         <div class="row">
 
-            <div>
-                ${channel}
-            </div>
+
             <div class="column-publish" >
                 <div class="cool-static-container" >
                     <h2 class="card-title"><spring:message code="CreatePost.title"/></h2>
@@ -39,11 +37,19 @@
                             <div class="form-group">
                                 <div class="form-row">
                                     <spring:message code="Channel" var="channelPlaceholder"/>
-                                    <form:select id="channel-select" path="channel" class="cool-input"  placeholder="${channelPlaceholder}">
+                                    <form:select id="channel-select" path="channel" class="cool-input" placeholder="${channelPlaceholder}">
                                         <c:forEach var="entry" items="${channelList}">
-                                            <form:option value="${entry.value.channelId}">${entry.key}</form:option>
+                                            <c:choose>
+                                                <c:when test="${entry.value.channelId == channel}">
+                                                    <form:option value="${entry.value.channelId}" selected="selected">${entry.key}</form:option>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <form:option value="${entry.value.channelId}">${entry.key}</form:option>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </c:forEach>
                                     </form:select>
+
                                 </div>
 
                                 <div class="form-row">

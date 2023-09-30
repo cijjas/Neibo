@@ -202,7 +202,6 @@ public class FrontController {
             @ModelAttribute("publishForm") final PublishForm publishForm,
             @RequestParam(value = "onChannelId", required = false) Long onChannelId
     ) {
-        System.out.println("CHANNEL: " + onChannelId);
         final ModelAndView mav = new ModelAndView("views/publish");
         mav.addObject("channel", onChannelId);
         mav.addObject("channelList", chs.getNeighborChannels(getLoggedNeighbor().getNeighborhoodId(), getLoggedNeighbor().getUserId()));
