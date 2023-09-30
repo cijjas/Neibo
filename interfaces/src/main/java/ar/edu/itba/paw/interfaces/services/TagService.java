@@ -6,9 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TagService {
-    List<Tag> getTags();
 
-    Optional<List<Tag>> findTagsByPostId(long id);
+    // -----------------------------------------------------------------------------------------------------------------
 
     Tag createTag(String name);
 
@@ -16,5 +15,9 @@ public interface TagService {
 
     String createURLForTagFilter(String tags, String currentUrl);
 
-    /*List<Tag> createTags(String tagsString);*/
+    // -----------------------------------------------------------------------------------------------------------------
+
+    Optional<List<Tag>> findTagsByPostId(long id);
+
+    List<Tag> getTags();
 }

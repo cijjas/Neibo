@@ -28,7 +28,7 @@ public class AmenityDaoImpl implements AmenityDao {
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
                 .usingGeneratedKeyColumns("amenityid")
-                .withTableName("amenity");
+                .withTableName("amenities");
         this.jdbcInsertHours = new SimpleJdbcInsert(ds)
                 .usingGeneratedKeyColumns("hoursid")
                 .withTableName("hours");
@@ -80,7 +80,7 @@ public class AmenityDaoImpl implements AmenityDao {
 
     @Override
     public boolean deleteAmenity(long amenityId) {
-        return jdbcTemplate.update("DELETE FROM amenity WHERE amenityid = ?", amenityId) > 0;
+        return jdbcTemplate.update("DELETE FROM amenities WHERE amenityid = ?", amenityId) > 0;
     }
 
 //    @Override
@@ -90,12 +90,12 @@ public class AmenityDaoImpl implements AmenityDao {
 
     @Override
     public List<Amenity> getAmenities() {
-        return jdbcTemplate.query("SELECT * FROM amenity", ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM amenities", ROW_MAPPER);
     }
 
     @Override
     public Optional<Amenity> findAmenityById(long amenityId) {
-        List<Amenity> amenities = jdbcTemplate.query("SELECT * FROM amenity WHERE amenityid = ?", ROW_MAPPER, amenityId);
+        List<Amenity> amenities = jdbcTemplate.query("SELECT * FROM amenities WHERE amenityid = ?", ROW_MAPPER, amenityId);
         return amenities.isEmpty() ? Optional.empty() : Optional.of(amenities.get(0));
     }
 

@@ -112,8 +112,8 @@ public class FrontController {
 
         final ModelAndView mav = new ModelAndView("admin/requestManager");
 
-        mav.addObject("unverifiedList", us.getUnverifiedNeighborsByNeighborhood(1));
-        mav.addObject("verifiedList", us.getNeighborsByNeighborhood(1));
+        mav.addObject("unverifiedList", us.getUnverifiedNeighbors(1));
+        mav.addObject("verifiedList", us.getNeighbors(1));
         return mav;
     }
 
@@ -183,7 +183,7 @@ public class FrontController {
 
     @RequestMapping(value = "/unverified", method = RequestMethod.GET)
     public ModelAndView publishForm() {
-        return  new ModelAndView("views/publish");
+        return  new ModelAndView("views/unverified");
     }
     // ------------------------------------- PUBLISH --------------------------------------
 
@@ -196,7 +196,6 @@ public class FrontController {
 
         return mav;
     }
-
 
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
     public ModelAndView publish(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
@@ -241,9 +240,8 @@ public class FrontController {
             return publishForm(publishForm);
         }
 
-        ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
+        ps.createAdminPost(getLoggedNeighbor().getNeighborhoodId(), publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
         PublishForm clearedForm = new PublishForm();
-
         ModelAndView mav = new ModelAndView("admin/publishAdmin");
         mav.addObject("showSuccessMessage", true);
         mav.addObject("channelList", chs.getAdminChannels());

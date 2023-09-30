@@ -6,9 +6,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TagDao {
+
+    // ---------------------------------------------- TAGS INSERT ------------------------------------------------------
+
+    Tag createTag(String name);
+
+    // ---------------------------------------------- TAGS SELECT ------------------------------------------------------
+
     Optional<List<Tag>> findTagsByPostId(long id);
 
     List<Tag> getTags();
-
-    Tag createTag(String name);
 }

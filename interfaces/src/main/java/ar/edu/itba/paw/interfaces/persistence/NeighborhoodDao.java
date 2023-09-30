@@ -6,9 +6,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NeighborhoodDao {
+
+    // ----------------------------------------- NEIGHBORHOODS INSERT --------------------------------------------------
+
     Neighborhood createNeighborhood(final String name);
 
-    List<Neighborhood> getNeighborhoods();
+    // ----------------------------------------- NEIGHBORHOODS SELECT --------------------------------------------------
 
     Optional<Neighborhood> findNeighborhoodById(long id);
+
+    List<Neighborhood> getNeighborhoods();
 }

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Image;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -19,7 +20,7 @@ public class ImageServiceImpl implements ImageService {
         this.imageDao = imageDao;
     }
     @Override
-    public Image storeImage(byte[] image) {
+    public Image storeImage(MultipartFile image) {
         return imageDao.storeImage(image);
     }
 

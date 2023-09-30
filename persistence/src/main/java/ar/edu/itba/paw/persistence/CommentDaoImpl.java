@@ -40,6 +40,8 @@ public class CommentDaoImpl implements CommentDao {
                 .withTableName("comments");
     }
 
+    // -------------------------------------------- COMMENTS INSERT ----------------------------------------------------
+
     @Override
     public Comment createComment(String comment, long userId, long postId) {
         Map<String, Object> data = new HashMap<>();
@@ -67,6 +69,8 @@ public class CommentDaoImpl implements CommentDao {
                 .user(user)
                 .build();
     };
+
+    // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
 
     @Override
     public Optional<List<Comment>> findCommentsByPostId(long id) {

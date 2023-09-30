@@ -34,8 +34,10 @@ public class ReservationDaoImpl implements ReservationDao {
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
                 .usingGeneratedKeyColumns("reservationid")
-                .withTableName("reservation");
+                .withTableName("reservations");
     }
+
+    // ---------------------------------------------- RESERVATIONS INSERT ----------------------------------------------
 
     @Override
     public Reservation createReservation(long amenityId, long userId, Date date, Time startTime, Time endTime) {
@@ -55,6 +57,8 @@ public class ReservationDaoImpl implements ReservationDao {
                 .build();
     }
 
+    // ---------------------------------------------- RESERVATIONS SELECT ----------------------------------------------
+
     private final RowMapper<Reservation> ROW_MAPPER = (rs, rowNum) -> {
         User user = userDao.findUserById(rs.getLong("userid")).orElse(null);
         Amenity amenity = amenityDao.findAmenityById(rs.getLong("amenityid")).orElse(null);
@@ -70,33 +74,35 @@ public class ReservationDaoImpl implements ReservationDao {
     };
 
     @Override
-    public List<Reservation> getReservations() {
-        return jdbcTemplate.query("SELECT * FROM reservation", ROW_MAPPER);
+    public Reservation findReservationById(long reservationId) {
+        return jdbcTemplate.queryForObject("SELECT * FROM reservations WHERE reservationid = ?", ROW_MAPPER, reservationId);
     }
 
     @Override
-    public Reservation findReservationById(long reservationId) {
-        return jdbcTemplate.queryForObject("SELECT * FROM reservation WHERE reservationid = ?", ROW_MAPPER, reservationId);
+    public List<Reservation> getReservations() {
+        return jdbcTemplate.query("SELECT * FROM reservations", ROW_MAPPER);
     }
 
     @Override
     public List<Reservation> getReservationsByAmenityId(long amenityId) {
-        return jdbcTemplate.query("SELECT * FROM reservation WHERE amenityid = ?", ROW_MAPPER, amenityId);
+        return jdbcTemplate.query("SELECT * FROM reservations WHERE amenityid = ?", ROW_MAPPER, amenityId);
     }
 
     @Override
     public List<Reservation> getReservationsByUserId(long userId) {
-        return jdbcTemplate.query("SELECT * FROM reservation WHERE userid = ?", ROW_MAPPER, userId);
+        return jdbcTemplate.query("SELECT * FROM reservations WHERE userid = ?", ROW_MAPPER, userId);
     }
 
     @Override
     public List<Reservation> getReservationsByDay(long amenityId, Date date) {
-        return jdbcTemplate.query("SELECT * FROM reservation WHERE amenityid = ? AND date = ?", ROW_MAPPER, amenityId, date);
+        return jdbcTemplate.query("SELECT * FROM reservations WHERE amenityid = ? AND date = ?", ROW_MAPPER, amenityId, date);
     }
+
+    // ---------------------------------------------- RESERVATIONS DELETE ----------------------------------------------
 
     @Override
     public boolean deleteReservation(long reservationId) {
-        return jdbcTemplate.update("DELETE FROM reservation WHERE reservationid = ?", reservationId) > 0;
+        return jdbcTemplate.update("DELETE FROM reservations WHERE reservationid = ?", reservationId) > 0;
     }
 
 }

@@ -7,12 +7,16 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostDao {
+
+    // ------------------------------------------------ POSTS INSERT ---------------------------------------------------
+
     Post createPost(final String title, final String description, final long neighborId, final long channelId, final long imageId);
 
-    List<Post> getPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags);
-
-    public int getPostsCountByCriteria(String channel, List<String> tags);
+    // ------------------------------------------------ POSTS SELECT ---------------------------------------------------
 
     Optional<Post> findPostById(long id);
 
+    List<Post> getPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags);
+
+    int getPostsCountByCriteria(String channel, List<String> tags);
 }

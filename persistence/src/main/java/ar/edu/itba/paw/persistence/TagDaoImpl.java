@@ -32,6 +32,23 @@ public class TagDaoImpl implements TagDao {
                 .withTableName("tags");
     }
 
+    // ---------------------------------------------- TAGS INSERT ------------------------------------------------------
+
+    @Override
+    public Tag createTag(String name) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("tag", name);
+
+        final Number key = jdbcInsert.executeAndReturnKey(data);
+        return new Tag.Builder()
+                .tagId(key.longValue())
+                .tag(name)
+                .build();
+    }
+
+
+    // ---------------------------------------------- TAGS SELECT ------------------------------------------------------
+
     private static final RowMapper<Tag> ROW_MAPPER =
             (rs, rowNum) -> new Tag.Builder()
                     .tagId(rs.getLong("tagid"))
@@ -49,15 +66,5 @@ public class TagDaoImpl implements TagDao {
         return jdbcTemplate.query(TAGS, ROW_MAPPER);
     }
 
-    @Override
-    public Tag createTag(String name) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("tag", name);
 
-        final Number key = jdbcInsert.executeAndReturnKey(data);
-        return new Tag.Builder()
-                .tagId(key.longValue())
-                .tag(name)
-                .build();
-    }
 }
