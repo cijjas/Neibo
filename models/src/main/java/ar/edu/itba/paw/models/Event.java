@@ -6,7 +6,6 @@ public class Event {
     private final String name;
     private final String description;
     private final Date date;
-
     private final long duration;
     private final long neighborhoodId;
 

@@ -54,10 +54,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         ds.setUsername("postgres"); // We set the username and password for the database
         ds.setPassword("postgres");
 */
-
-
-
-
         return ds;
     }
 
