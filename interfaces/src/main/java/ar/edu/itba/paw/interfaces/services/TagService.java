@@ -13,7 +13,7 @@ public interface TagService {
 
     void createTagsAndCategorizePost(long postId, String tagsString);
 
-    String createURLForTagFilter(String tags, String currentUrl);
+    String createURLForTagFilter(String tags, String currentUrl, long neighborhoodId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

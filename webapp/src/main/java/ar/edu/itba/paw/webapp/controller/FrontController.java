@@ -133,9 +133,10 @@ public class FrontController {
 
     @RequestMapping(value = "/applyTagsFilter", method = RequestMethod.POST)
     public ModelAndView applyTagsFilter(@RequestParam("tags") String tags, @RequestParam("currentUrl") String currentUrl) {
-        ModelAndView mav = new ModelAndView("redirect:" + ts.createURLForTagFilter(tags, currentUrl));
-        return mav;
+        String redirectUrl = ts.createURLForTagFilter(tags, currentUrl, getLoggedNeighbor().getNeighborhoodId());
+        return new ModelAndView("redirect:" + redirectUrl);
     }
+
 
     @RequestMapping("/announcements")
     public ModelAndView announcements(
@@ -173,8 +174,8 @@ public class FrontController {
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ){
-        List<Post> postList = ps.getPostsByCriteria("Foro", page, size, date, tags);
-        int totalPages = ps.getTotalPages("Foro", size, tags);
+        List<Post> postList = ps.getPostsByCriteria("Complaints", page, size, date, tags);
+        int totalPages = ps.getTotalPages("Complaints", size, tags);
 
         List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()

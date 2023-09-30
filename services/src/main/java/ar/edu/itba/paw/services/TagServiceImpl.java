@@ -2,7 +2,9 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.CategorizationDao;
 import ar.edu.itba.paw.interfaces.persistence.TagDao;
+import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.interfaces.services.TagService;
+import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,8 +19,10 @@ import java.util.stream.Collectors;
 public class TagServiceImpl implements TagService {
     private final TagDao tagDao;
     private final CategorizationDao categorizationDao;
+    private final ChannelService channelService;
     @Autowired
-    public TagServiceImpl(final TagDao tagDao, CategorizationDao categorizationDao) {
+    public TagServiceImpl(final TagDao tagDao, final CategorizationDao categorizationDao, final ChannelService channelService) {
+        this.channelService = channelService;
         this.tagDao = tagDao;
         this.categorizationDao = categorizationDao;
     }
@@ -66,7 +70,16 @@ public class TagServiceImpl implements TagService {
     }
 
 
-    public String createURLForTagFilter(String tags, String currentUrl) {
+    public String createURLForTagFilter(String tags, String currentUrl, long neighborhoodId) {
+        // Extract the base URL (path) without query parameters
+        String baseUrl;
+        int queryIndex = currentUrl.indexOf('?');
+        if (queryIndex != -1) {
+            baseUrl = currentUrl.substring(0, queryIndex);
+        } else {
+            baseUrl = currentUrl;
+        }
+
         String[] tagArray = tags.split(",");
 
         StringBuilder queryString = new StringBuilder();
@@ -82,11 +95,14 @@ public class TagServiceImpl implements TagService {
 
         String formattedQueryString = queryString.toString();
 
-        // Check if the current URL contains specific words and append accordingly
-        if (currentUrl.contains("announcements") || currentUrl.contains("forum")) {
-            return currentUrl + "?" + formattedQueryString;
+        if (!formattedQueryString.isEmpty()) {
+            // If there are tags to add, append them using '?' or '&' as separator
+            char separator = baseUrl.contains("?") ? '&' : '?';
+            return baseUrl + separator + formattedQueryString;
         } else {
-            return "/?" + formattedQueryString;
+            return baseUrl;
         }
     }
+
+
 }
