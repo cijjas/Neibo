@@ -7,8 +7,10 @@ import ar.edu.itba.paw.webapp.form.AmenityForm;
 import ar.edu.itba.paw.webapp.form.CommentForm;
 import ar.edu.itba.paw.webapp.form.PublishForm;
 import ar.edu.itba.paw.webapp.form.SignupForm;
+import enums.BaseChannel;
 import enums.Language;
 import enums.SortOrder;
+import enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -82,8 +84,8 @@ public class FrontController {
             SortOrder date,
             List<String> tags
     ) {
-        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags);
-        int totalPages = ps.getTotalPages(channelName, size, tags);
+        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags, getLoggedNeighbor().getNeighborhoodId());
+        int totalPages = ps.getTotalPages(channelName, size, tags, getLoggedNeighbor().getNeighborhoodId());
 
         List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
@@ -109,18 +111,35 @@ public class FrontController {
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ) {
-        return handleChannelRequest("Feed", page, size, date, tags);
+        return handleChannelRequest(BaseChannel.FEED.toString(), page, size, date, tags);
     }
 
-    @RequestMapping("/hey")
-    public ModelAndView hey() {
+    @RequestMapping("/admin/neighbors")
+    public ModelAndView neighbors(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "3") int size
+    ) {
 
         final ModelAndView mav = new ModelAndView("admin/requestManager");
-
-        mav.addObject("unverifiedList", us.getUnverifiedNeighbors(1));
-        mav.addObject("verifiedList", us.getNeighbors(1));
+        mav.addObject("totalPages", us.getTotalPages(UserRole.NEIGHBOR, getLoggedNeighbor().getNeighborhoodId(), size ));
+        mav.addObject("verifiedList", us.getUsersPage(UserRole.NEIGHBOR,getLoggedNeighbor().getNeighborhoodId(), page, size));
         return mav;
     }
+
+    @RequestMapping("/admin/unverified")
+    public ModelAndView unverified(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "3") int size
+    ) {
+
+        final ModelAndView mav = new ModelAndView("admin/requestManager");
+        mav.addObject("totalPages", us.getTotalPages(UserRole.UNVERIFIED_NEIGHBOR, getLoggedNeighbor().getNeighborhoodId(), size ));
+        mav.addObject("unverifiedList", us.getUsersPage(UserRole.UNVERIFIED_NEIGHBOR,getLoggedNeighbor().getNeighborhoodId(), page, size));
+        return mav;
+    }
+
+
+    // ------------------------------------- PROFILE --------------------------------------
 
     @RequestMapping("/profile")
     public ModelAndView profile() {
@@ -144,9 +163,10 @@ public class FrontController {
 
     @RequestMapping(value = "/applyTagsFilter", method = RequestMethod.POST)
     public ModelAndView applyTagsFilter(@RequestParam("tags") String tags, @RequestParam("currentUrl") String currentUrl) {
-        ModelAndView mav = new ModelAndView("redirect:" + ts.createURLForTagFilter(tags, currentUrl));
-        return mav;
+        return new ModelAndView("redirect:" + ts.createURLForTagFilter(tags, currentUrl, getLoggedNeighbor().getNeighborhoodId()));
     }
+
+    // ------------------------------------- ANNOUNCEMENTS --------------------------------------
 
     @RequestMapping("/announcements")
     public ModelAndView announcements(
@@ -155,10 +175,10 @@ public class FrontController {
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ) {
-        return handleChannelRequest("Announcements", page, size, date, tags);
+        return handleChannelRequest(BaseChannel.ANNOUNCEMENTS.toString(), page, size, date, tags);
     }
 
-    // ------------------------------------- FORO --------------------------------------
+    // ------------------------------------- FORUM --------------------------------------
 
     @RequestMapping("/complaints")
     public ModelAndView complaints(
@@ -167,13 +187,14 @@ public class FrontController {
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ){
-        return handleChannelRequest("Complaints", page, size, date, tags);
+        return handleChannelRequest(BaseChannel.COMPLAINTS.toString(), page, size, date, tags);
     }
 
     @RequestMapping(value = "/unverified", method = RequestMethod.GET)
     public ModelAndView publishForm() {
         return  new ModelAndView("views/unverified");
     }
+
     // ------------------------------------- PUBLISH --------------------------------------
 
     @RequestMapping(value = "/publish", method = RequestMethod.GET)
@@ -184,7 +205,7 @@ public class FrontController {
         System.out.println("CHANNEL: " + onChannelId);
         final ModelAndView mav = new ModelAndView("views/publish");
         mav.addObject("channel", onChannelId);
-        mav.addObject("channelList", chs.getNeighborChannels(getLoggedNeighbor().getUserId()));
+        mav.addObject("channelList", chs.getNeighborChannels(getLoggedNeighbor().getNeighborhoodId(), getLoggedNeighbor().getUserId()));
         return mav;
     }
 
@@ -213,7 +234,7 @@ public class FrontController {
             @RequestParam("channelId") int channelId
     ) {
         String channelName= chs.findChannelById(channelId).get().getChannel().toLowerCase();
-        if(channelName.equals("feed")){
+        if(channelName.equals(BaseChannel.FEED.toString())){
             return new ModelAndView("redirect:/");
         }
         else {
@@ -236,7 +257,7 @@ public class FrontController {
             @RequestParam (value = "onChannelId", required = false) Long onChannelId
     ) {
         final ModelAndView mav = new ModelAndView("admin/publishAdmin");
-        mav.addObject("channelList", chs.getAdminChannels());
+        mav.addObject("channelList", chs.getAdminChannels(getLoggedNeighbor().getNeighborhoodId()));
         return mav;
     }
 
@@ -254,7 +275,7 @@ public class FrontController {
         PublishForm clearedForm = new PublishForm();
         ModelAndView mav = new ModelAndView("admin/publishAdmin");
         mav.addObject("showSuccessMessage", true);
-        mav.addObject("channelList", chs.getAdminChannels());
+        mav.addObject("channelList", chs.getAdminChannels(getLoggedNeighbor().getNeighborhoodId()));
         mav.addObject("publishForm", clearedForm);
 
         return mav;
@@ -326,7 +347,7 @@ public class FrontController {
         return mav;
     }
 
-    // ---------------------------------- LOGIN BETA -----------------------------------
+    // ---------------------------------- LOGIN SIGNUP AND SESSION  -----------------------------------
 
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -374,52 +395,17 @@ public class FrontController {
         return mav;
     }
 
-
     @ModelAttribute("loggedUser")
     public User getLoggedNeighbor() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         if (!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken)
             return null;
-
         String email = authentication.getName();
-
         Optional<User> neighborOptional = us.findUserByMail(email);
-
         return neighborOptional.orElseThrow(NeighborhoodNotFoundException::new);
     }
 
-
-
-    // ------------------------------------- TEST --------------------------------------
-
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public ModelAndView test(
-    )
-    {
-
-
-        System.out.println(ps.getPostsByCriteria("Feed", 1, 10, SortOrder.ASC,null));
-
-
-
-        return new ModelAndView("views/index");
-    }
-
-    @RequestMapping(value = "/admin/test", method = RequestMethod.GET)
-    public ModelAndView adminTest() {
-        return new ModelAndView("admin/requestManager");
-    }
-
-    @RequestMapping(value = "/testDuplicatedException", method = RequestMethod.GET)
-    public ModelAndView testDuplicatedException() {
-        throw new DuplicatedNeighbor();
-    }
-
-    @RequestMapping(value = "/testNotFoundException", method = RequestMethod.GET)
-    public ModelAndView testNotFoundException() {
-        throw new NeighborhoodNotFoundException();
-    }
+    // ------------------------------------- AMENITIES --------------------------------------
 
     @RequestMapping(value = "/admin/amenities", method = RequestMethod.GET)
     public ModelAndView adminAmenities() {
@@ -488,7 +474,9 @@ public class FrontController {
         as.createAmenityWrapper(amenityForm.getName(), amenityForm.getDescription(), amenityForm.getMondayOpenTime(), amenityForm.getMondayCloseTime(), amenityForm.getTuesdayOpenTime(), amenityForm.getTuesdayCloseTime(), amenityForm.getWednesdayOpenTime(), amenityForm.getWednesdayCloseTime(), amenityForm.getThursdayOpenTime(), amenityForm.getThursdayCloseTime(), amenityForm.getFridayOpenTime(), amenityForm.getFridayCloseTime(), amenityForm.getSaturdayOpenTime(), amenityForm.getSaturdayCloseTime(), amenityForm.getSundayOpenTime(), amenityForm.getSundayCloseTime());
         return new ModelAndView("redirect:/admin/amenities");
     }
+
     // ------------------------------------- CALENDAR --------------------------------------
+
     @RequestMapping("/calendar")
     public ModelAndView calendar() {
         List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
@@ -501,4 +489,34 @@ public class FrontController {
         return mav;
     }
 
+
+    // ------------------------------------- TEST --------------------------------------
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public ModelAndView test(
+    )
+    {
+        System.out.println(chs.getChannels(1));
+        System.out.println(chs.createChannel(1,"Poker"));
+        System.out.println(chs.getChannels(1));
+
+        // rs.createReservation(1,14, java.sql.Date.valueOf("2023-09-25"), Time.valueOf("12:00:00"), Time.valueOf("16:00:00"));
+
+        return new ModelAndView("views/index");
+    }
+
+    @RequestMapping(value = "/admin/test", method = RequestMethod.GET)
+    public ModelAndView adminTest() {
+        return new ModelAndView("admin/requestManager");
+    }
+
+    @RequestMapping(value = "/testDuplicatedException", method = RequestMethod.GET)
+    public ModelAndView testDuplicatedException() {
+        throw new DuplicatedNeighbor();
+    }
+
+    @RequestMapping(value = "/testNotFoundException", method = RequestMethod.GET)
+    public ModelAndView testNotFoundException() {
+        throw new NeighborhoodNotFoundException();
+    }
 }

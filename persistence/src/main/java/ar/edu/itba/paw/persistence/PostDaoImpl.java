@@ -29,12 +29,12 @@ public class PostDaoImpl implements PostDao {
     private TagDao tagDao;
     private UserDao userDao;
 
-    private final String POSTS_JOIN_USERS_AND_CHANNELS =
+    private final String POSTS_JOIN_USERS_JOIN_CHANNELS =
         "SELECT DISTINCT p.* " +
         "FROM posts p  JOIN users u ON p.userid = u.userid  JOIN channels c ON p.channelid = c.channelid  LEFT JOIN posts_tags pt ON p.postid = pt.postid  LEFT JOIN tags t ON pt.tagid = t.tagid ";
-    private final String COUNT_POSTS_JOIN_TAGS_AND_CHANNELS =
-        "SELECT COUNT(*) \n" +
-        "FROM posts p JOIN posts_tags pt ON p.postid = pt.postid JOIN tags t ON pt.tagid = t.tagid  JOIN channels c on c.channelid = p.channelid ";
+    private final String COUNT_POSTS_JOIN_USERS_JOIN_CHANNELS =
+        "SELECT COUNT(DISTINCT p.*) " +
+        "FROM posts p  JOIN users u ON p.userid = u.userid  JOIN channels c ON p.channelid = c.channelid  LEFT JOIN posts_tags pt ON p.postid = pt.postid  LEFT JOIN tags t ON pt.tagid = t.tagid ";
 
 
     @Autowired
@@ -94,20 +94,14 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public Optional<Post> findPostById(long id) {
-        final List<Post> postList = jdbcTemplate.query(POSTS_JOIN_USERS_AND_CHANNELS + " where p.postid=?;", ROW_MAPPER, id);
+        final List<Post> postList = jdbcTemplate.query(POSTS_JOIN_USERS_JOIN_CHANNELS + " where p.postid=?;", ROW_MAPPER, id);
         return postList.isEmpty() ? Optional.empty() : Optional.of(postList.get(0));
     }
 
     @Override
-    public List<Post> getPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags) {
-        if ( page < 1 )
-            return null;
-
-        // Calculate the offset based on the page and size
-        int offset = (page - 1) * size;
-
+    public List<Post> getPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags, long neighborhoodId) {
         // Create the base SQL query string
-        StringBuilder query = new StringBuilder(POSTS_JOIN_USERS_AND_CHANNELS);
+        StringBuilder query = new StringBuilder(POSTS_JOIN_USERS_JOIN_CHANNELS);
 
         // Create a list to hold query parameters
         List<Object> queryParams = new ArrayList<>();
@@ -120,6 +114,10 @@ public class PostDaoImpl implements PostDao {
             query.append(" AND channel LIKE ?");
             queryParams.add(channel);
         }
+
+        // Append the neighborhoodId condition
+        query.append(" AND u.neighborhoodid = ?");
+        queryParams.add(neighborhoodId);
 
         if (tags != null && !tags.isEmpty()) {
             query.append(" AND EXISTS (");
@@ -140,22 +138,24 @@ public class PostDaoImpl implements PostDao {
         // Append the ORDER BY clause
         query.append(" ORDER BY postdate ").append(date);
 
-
-        // Append the LIMIT and OFFSET clauses for pagination
-        query.append(" LIMIT ? OFFSET ?");
-        queryParams.add(size);
-        queryParams.add(offset);
-
+        if (page != 0) {
+            // Calculate the offset based on the page and size
+            int offset = (page - 1) * size;
+            // Append the LIMIT and OFFSET clauses for pagination
+            query.append(" LIMIT ? OFFSET ?");
+            queryParams.add(size);
+            queryParams.add(offset);
+        }
 
         return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
     }
 
-    // ------------------------------------------------- POSTS COUNT ---------------------------------------------------
+// ------------------------------------------------- POSTS COUNT ---------------------------------------------------
 
     @Override
-    public int getPostsCountByCriteria(String channel, List<String> tags) {
+    public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId) {
         // Create the base SQL query string for counting
-        StringBuilder query = new StringBuilder(COUNT_POSTS_JOIN_TAGS_AND_CHANNELS);
+        StringBuilder query = new StringBuilder(COUNT_POSTS_JOIN_USERS_JOIN_CHANNELS);
 
         // Create a list to hold query parameters
         List<Object> queryParams = new ArrayList<>();
@@ -167,6 +167,11 @@ public class PostDaoImpl implements PostDao {
             query.append(" AND c.channel LIKE ?");
             queryParams.add("%" + channel + "%");
         }
+
+        // Append the neighborhoodId condition
+        query.append(" AND u.neighborhoodid = ?");
+        queryParams.add(neighborhoodId);
+
 
         if (tags != null && !tags.isEmpty()) {
             query.append(" AND EXISTS (");
@@ -184,9 +189,9 @@ public class PostDaoImpl implements PostDao {
             queryParams.add(tags.size());
         }
 
-
         // Execute the query and retrieve the result
         return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());
     }
+
 
 }

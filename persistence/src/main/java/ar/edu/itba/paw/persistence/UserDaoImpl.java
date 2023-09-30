@@ -100,7 +100,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> getUsersByCriteria(UserRole role, long neighborhoodId) {
+    public List<User> getUsersByCriteria(UserRole role, long neighborhoodId, int page, int size) {
+
         StringBuilder query = new StringBuilder("SELECT * FROM users WHERE 1 = 1");
         List<Object> queryParams = new ArrayList<>();
 
@@ -114,13 +115,43 @@ public class UserDaoImpl implements UserDao {
             queryParams.add(neighborhoodId);
         }
 
+        if ( page != 0 ){
+            int offset = (page - 1) * size;
+
+            query.append(" LIMIT ? OFFSET ?");
+            queryParams.add(size);
+            queryParams.add(offset);
+        }
+
+
         return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
     }
+
+
+    public int getTotalUsers(UserRole role, long neighborhoodId) {
+        StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM users WHERE 1 = 1");
+        List<Object> queryParams = new ArrayList<>();
+
+        if (role != null) {
+            query.append(" AND role = ?");
+            queryParams.add(role.toString());
+        }
+
+        if (neighborhoodId > 0) {
+            query.append(" AND neighborhoodid = ?");
+            queryParams.add(neighborhoodId);
+        }
+
+        // Use queryForObject to retrieve the count as an integer
+        return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());
+    }
+
 
     // ---------------------------------------------- USERS UPDATE -----------------------------------------------------
 
     @Override
     public void setUserValues(final long id, final String password, final String name, final String surname, final Language language, final boolean darkMode, final long profilePictureId,final UserRole role) {
-        jdbcTemplate.update("UPDATE users SET name = ?, surname = ?, password = ?, darkmode = ?, language = ?, role = ?, profilepictureid = ?  WHERE userid = ?", name, surname, password, darkMode, language != null ? language.toString() : null, role != null ? role.toString() : null, profilePictureId, id);
+        jdbcTemplate.update("UPDATE users SET name = ?, surname = ?, password = ?, darkmode = ?, language = ?, role = ?, profilepictureid = ?  WHERE userid = ?",
+                name, surname, password, darkMode, language != null ? language.toString() : null, role != null ? role.toString() : null, profilePictureId == 0 ? null : profilePictureId, id);
     }
 }
