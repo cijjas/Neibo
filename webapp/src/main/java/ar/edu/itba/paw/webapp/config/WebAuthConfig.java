@@ -12,11 +12,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.util.StreamUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
@@ -43,14 +46,14 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .invalidSessionUrl("/login")
                 .and().authorizeRequests()
                 .antMatchers("/signup", "/login").anonymous()
-                .antMatchers("/unverified", "/user").hasRole("UNVERIFIED_NEIGHBOR")
                 .antMatchers("/admin/**").hasRole("ADMINISTRATOR")
+                .antMatchers("/unverified").hasRole("UNVERIFIED_NEIGHBOR")
                 .antMatchers("/**").hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
                 .and().formLogin()
                 .usernameParameter("mail")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/", false)
                 .loginPage("/login")
+                .successHandler(customAuthenticationSuccessHandler()) // Use a custom success handler
                 .and().rememberMe()
                 .rememberMeParameter("rememberMe")
                 .userDetailsService(userDetails)
@@ -63,6 +66,24 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedPage("/errors/errorPage")
                 .and().csrf().disable();
     }
+
+    @Bean
+    public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+        return (request, response, authentication) -> {
+            // Get the authorities of the authenticated user
+            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
+            // Check if the user has the role "UNVERIFIED_NEIGHBOR"
+            if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_UNVERIFIED_NEIGHBOR"))) {
+                // Redirect to the "/unverified" page for unverified neighbors
+                response.sendRedirect("/unverified");
+            } else {
+                // Redirect to the default page for other roles
+                response.sendRedirect("/");
+            }
+        };
+    }
+
 
 
     @Override

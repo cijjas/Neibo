@@ -11,6 +11,7 @@ import enums.Language;
 import enums.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,6 +31,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Controller
 public class FrontController {
@@ -45,6 +47,7 @@ public class FrontController {
     private final ImageService is;
     private final AmenityService as;
     private final ReservationService rs;
+    private final EventService es;
 
     @Autowired
     public FrontController(final PostService ps,
@@ -57,7 +60,8 @@ public class FrontController {
                            final CategorizationService cas,
                            final ImageService is,
                            final ReservationService rs,
-                           final AmenityService as
+                           final AmenityService as,
+                           final EventService es
     ) {
         this.is = is;
         this.ps = ps;
@@ -85,6 +89,11 @@ public class FrontController {
         List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags);
         int totalPages = ps.getTotalPages(channelName, size, tags);
 
+        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Long> eventTimestamps = eventDates.stream()
+                .map(d -> d.getTime())
+                .collect(Collectors.toList());
+
         ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags());
         mav.addObject("appliedTags", tags);
@@ -92,6 +101,7 @@ public class FrontController {
         mav.addObject("page", page);
         mav.addObject("totalPages", totalPages);
         mav.addObject("channel", channelName);
+        mav.addObject("eventDates", eventTimestamps);
 
         return mav;
     }
@@ -111,8 +121,8 @@ public class FrontController {
 
         final ModelAndView mav = new ModelAndView("admin/requestManager");
 
-        mav.addObject("unverifiedList", us.getUnverifiedNeighborsByNeighborhood(1));
-        mav.addObject("verifiedList", us.getNeighborsByNeighborhood(1));
+        mav.addObject("unverifiedList", us.getUnverifiedNeighbors(1));
+        mav.addObject("verifiedList", us.getNeighbors(1));
         return mav;
     }
 
@@ -166,7 +176,7 @@ public class FrontController {
 
     @RequestMapping(value = "/unverified", method = RequestMethod.GET)
     public ModelAndView publishForm() {
-        return  new ModelAndView("views/publish");
+        return  new ModelAndView("views/unverified");
     }
     // ------------------------------------- PUBLISH --------------------------------------
 
@@ -179,7 +189,6 @@ public class FrontController {
 
         return mav;
     }
-
 
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
     public ModelAndView publish(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
@@ -224,9 +233,8 @@ public class FrontController {
             return publishForm(publishForm);
         }
 
-        ps.createAdminPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
+        ps.createAdminPost(getLoggedNeighbor().getNeighborhoodId(), publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
         PublishForm clearedForm = new PublishForm();
-
         ModelAndView mav = new ModelAndView("admin/publishAdmin");
         mav.addObject("showSuccessMessage", true);
         mav.addObject("channelList", chs.getAdminChannels());
@@ -455,5 +463,17 @@ public class FrontController {
         as.createAmenityWrapper(amenityForm.getName(), amenityForm.getDescription(), amenityForm.getMondayOpenTime(), amenityForm.getMondayCloseTime(), amenityForm.getTuesdayOpenTime(), amenityForm.getTuesdayCloseTime(), amenityForm.getWednesdayOpenTime(), amenityForm.getWednesdayCloseTime(), amenityForm.getThursdayOpenTime(), amenityForm.getThursdayCloseTime(), amenityForm.getFridayOpenTime(), amenityForm.getFridayCloseTime(), amenityForm.getSaturdayOpenTime(), amenityForm.getSaturdayCloseTime(), amenityForm.getSundayOpenTime(), amenityForm.getSundayCloseTime());
         return new ModelAndView("redirect:/admin/amenities");
     }
+    // ------------------------------------- CALENDAR --------------------------------------
+    @RequestMapping("/calendar")
+    public ModelAndView calendar() {
+        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Long> eventTimestamps = eventDates.stream()
+                .map(date -> date.getTime())
+                .collect(Collectors.toList());
 
+        ModelAndView mav = new ModelAndView("views/calendar");
+        mav.addObject("eventDates", eventTimestamps);
+        return mav;
     }
+
+}

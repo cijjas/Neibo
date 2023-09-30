@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.User;
 import enums.Language;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,26 +20,26 @@ public interface UserService {
             deleteOrder
      */
 
-    List<User> getUsers();
-
-    Optional<User> findUserById(final long neighborId);
-
-    public Optional<User> findUserByMail(final String mail);
+    // -----------------------------------------------------------------------------------------------------------------
 
     User createNeighbor(final String mail, final String password, final String name, final String surname,
                         final long neighborhoodId, Language language);
 
-    List<User> getNeighbors();
+    // -----------------------------------------------------------------------------------------------------------------
 
-    List<User> getNeighborsByNeighborhood(long neighborhoodId);
+    Optional<User> findUserById(final long neighborId);
 
-    Optional<User> findNeighborByMail(String mail);
+    Optional<User> findUserByMail(final String mail);
+
+    List<User> getNeighbors(long neighborhoodId);
 
     List<User> getNeighborsSubscribedByPostId(long id);
 
-    List<User> getUnverifiedNeighborsByNeighborhood(long neighborhoodId);
+    List<User> getUnverifiedNeighbors(long neighborhoodId);
 
-    Optional<User> findNeighborById(long id);
+    // -----------------------------------------------------------------------------------------------------------------
+
+    void storeProfilePicture(long userId, MultipartFile image);
 
     void toggleDarkMode(final long id);
 

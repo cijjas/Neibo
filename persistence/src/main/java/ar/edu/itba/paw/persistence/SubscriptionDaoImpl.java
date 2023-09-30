@@ -22,6 +22,8 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
                 .withTableName("posts_users");
     }
 
+    // ---------------------------------------------- POST_USERS INSERT ------------------------------------------------
+
     @Override
     public void createSubscription(long userId, long postId) {
         Map<String, Object> data = new HashMap<>();

@@ -30,6 +30,8 @@ public class ChannelDaoImpl implements ChannelDao {
                 .withTableName("channels");
     }
 
+    // -------------------------------------------- CHANNELS INSERT ----------------------------------------------------
+
     @Override
     public Channel createChannel(String channel) {
         Map<String, Object> data = new HashMap<>();
@@ -42,6 +44,8 @@ public class ChannelDaoImpl implements ChannelDao {
                 .build();
     }
 
+    // -------------------------------------------- CHANNELS SELECT ----------------------------------------------------
+
     private static final RowMapper<Channel> ROW_MAPPER = (rs, rowNum) ->
             new Channel.Builder()
                     .channelId(rs.getLong("channelid"))
@@ -49,13 +53,15 @@ public class ChannelDaoImpl implements ChannelDao {
                     .build();
 
     @Override
-    public List<Channel> getChannels() {
-        return jdbcTemplate.query(CHANNELS, ROW_MAPPER);
-    }
-
-    @Override
     public Optional<Channel> findChannelById(long channelId) {
         final List<Channel> list = jdbcTemplate.query(CHANNELS + " WHERE channelid = ?", ROW_MAPPER, channelId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
+
+    @Override
+    public List<Channel> getChannels() {
+        return jdbcTemplate.query(CHANNELS, ROW_MAPPER);
+    }
+
+
 }

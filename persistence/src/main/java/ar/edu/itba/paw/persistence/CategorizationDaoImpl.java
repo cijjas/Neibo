@@ -21,6 +21,9 @@ public class CategorizationDaoImpl implements CategorizationDao {
         this.jdbcInsert = new SimpleJdbcInsert(ds)
                 .withTableName("posts_tags");
     }
+
+    // -------------------------------------------- POSTS_TAGS INSERT --------------------------------------------------
+
     @Override
     public void createCategory(final long tagId, final long postId) {
         Map<String, Object> data = new HashMap<>();

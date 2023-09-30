@@ -2,8 +2,10 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
+import ar.edu.itba.paw.interfaces.persistence.TagDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Channel;
+import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Post;
 import enums.SortOrder;
@@ -24,6 +26,7 @@ public class PostDaoImpl implements PostDao {
     private final SimpleJdbcInsert jdbcInsert;
 
     private ChannelDao channelDao;
+    private TagDao tagDao;
     private UserDao userDao;
 
     private final String POSTS_JOIN_USERS_AND_CHANNELS =
@@ -37,15 +40,19 @@ public class PostDaoImpl implements PostDao {
     @Autowired
     public PostDaoImpl(final DataSource ds,
                        ChannelDao channelDao,
-                       UserDao userDao
+                       UserDao userDao,
+                       TagDao tagDao
                        ) {
         this.userDao = userDao;
         this.channelDao = channelDao;
+        this.tagDao = tagDao;
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
                 .usingGeneratedKeyColumns("postid")
                 .withTableName("posts");
     }
+
+    // ------------------------------------------------ POSTS INSERT ---------------------------------------------------
 
     @Override
     public Post createPost(String title, String description, long userid, long channelId, long imageId) {
@@ -66,9 +73,12 @@ public class PostDaoImpl implements PostDao {
                 .build();
     }
 
+    // ------------------------------------------------ POSTS SELECT ---------------------------------------------------
+
     private final RowMapper<Post> ROW_MAPPER = (rs, rowNum) -> {
         User user = userDao.findUserById(rs.getLong("userid")).orElse(null);
         Channel channel = channelDao.findChannelById(rs.getLong("channelid")).orElse(null);
+        List<Tag> tags = tagDao.findTagsByPostId(rs.getLong("userid")).orElse(null);
 
         return new Post.Builder()
                 .postId(rs.getLong("postid"))
@@ -76,6 +86,7 @@ public class PostDaoImpl implements PostDao {
                 .description(rs.getString("description"))
                 .date(rs.getTimestamp("postdate"))
                 .postPictureId(rs.getLong("postpictureid"))
+                .tags(tags)
                 .user(user)
                 .channel(channel)
                 .build();
@@ -139,6 +150,7 @@ public class PostDaoImpl implements PostDao {
         return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
     }
 
+    // ------------------------------------------------- POSTS COUNT ---------------------------------------------------
 
     @Override
     public int getPostsCountByCriteria(String channel, List<String> tags) {

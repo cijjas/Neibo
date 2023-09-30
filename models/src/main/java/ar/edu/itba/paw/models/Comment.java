@@ -6,22 +6,22 @@ public class Comment {
     private final long commentId;
     private final String comment;
     private final Date date;
-    private final User user; // Represent neighbor as a long
-    private final long postId; // Represent postId as a long
+    private final User user;
+    private final long postId;
     private Comment(Builder builder) {
         this.commentId = builder.commentId;
         this.comment = builder.comment;
         this.date = builder.date;
-        this.user = builder.user; // Change the type to long
-        this.postId = builder.postId; // Change the type to long
+        this.user = builder.user;
+        this.postId = builder.postId;
     }
 
     public static class Builder {
         private long commentId;
         private String comment;
         private Date date;
-        private User user; // Change the type to long
-        private long postId; // Change the type to long
+        private User user;
+        private long postId;
 
         public Builder commentId(long commentId) {
             this.commentId = commentId;
@@ -38,12 +38,12 @@ public class Comment {
             return this;
         }
 
-        public Builder user(User user) { // New method to set neighborId
+        public Builder user(User user) {
             this.user = user;
             return this;
         }
 
-        public Builder postId(long postId) { // New method to set postId
+        public Builder postId(long postId) {
             this.postId = postId;
             return this;
         }

@@ -1,25 +1,39 @@
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>Dynamic Calendar JavaScript</title>
+  <link href="${pageContext.request.contextPath}/resources/css/calendarBox.css" rel="stylesheet"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google Font Link for Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+</head>
+
 <div class="wrapper">
-  <header class="header-content">
-    <a class="current-date" href="${pageContext.request.contextPath}/calendar"></a>
+  <header>
     <div class="icons">
-      <span id="prev" ><i class="fa-solid fa-angle-left"></i></span>
-      <span id="next" ><i  class="fa-solid fa-angle-right"></i></span>
+      <span id="prev" class="material-symbols-rounded">chevron_left</span>
+    </div>
+    <p class="current-date"></p>
+    <div class="icons">
+      <span id="next" class="material-symbols-rounded">chevron_right</span>
     </div>
   </header>
   <div class="divider"></div>
   <div class="calendar">
     <ul class="weeks">
-      <li><spring:message code="dayInitials.sunday"/></li>
-      <li><spring:message code="dayInitials.monday"/></li>
-      <li><spring:message code="dayInitials.tuesday"/></li>
-      <li><spring:message code="dayInitials.wednesday"/></li>
-      <li><spring:message code="dayInitials.thursday"/></li>
-      <li><spring:message code="dayInitials.friday"/></li>
-      <li><spring:message code="dayInitials.saturday"/></li>
+      <li><spring:message code="days.sunday"/></li>
+      <li><spring:message code="days.monday"/></li>
+      <li><spring:message code="days.tuesday"/></li>
+      <li><spring:message code="days.wednesday"/></li>
+      <li><spring:message code="days.thursday"/></li>
+      <li><spring:message code="days.friday"/></li>
+      <li><spring:message code="days.saturday"/></li>
     </ul>
     <ul class="days"></ul>
   </div>
 </div>
+
+</html>
 
 <script>
   const daysTag = document.querySelector(".days");
@@ -77,7 +91,7 @@
       liTag += `<li class="inactive">\${i - lastDayOfMonth + 1}</li>`;
     }
 
-    currentDate.innerText = `\${months[currMonth]}\n\${currYear}`;
+    currentDate.innerText = `\${months[currMonth]} \${currYear}`;
     daysTag.innerHTML = liTag;
   };
 
