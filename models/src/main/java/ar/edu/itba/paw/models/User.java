@@ -28,7 +28,7 @@ public class User {
         this.language = builder.language;
         this.role = builder.role;
         this.creationDate = builder.creationDate;
-        this.profilePictureId = builder.profilePictureId; // Initialize profilePictureId in the constructor
+        this.profilePictureId = builder.profilePictureId;
     }
 
     public static class Builder {
@@ -42,7 +42,7 @@ public class User {
         private Language language;
         private UserRole role;
         private Date creationDate;
-        private long profilePictureId; // Add the profilePictureId field in the builder
+        private long profilePictureId;
 
         public Builder userId(long userId) {
             this.userId = userId;
@@ -95,7 +95,7 @@ public class User {
         }
 
         public Builder profilePictureId(long profilePictureId) {
-            this.profilePictureId = profilePictureId; // Set the profilePictureId data
+            this.profilePictureId = profilePictureId;
             return this;
         }
 
@@ -145,7 +145,7 @@ public class User {
     }
 
     public long getProfilePictureId() {
-        return profilePictureId; // Add the getter for profilePictureId
+        return profilePictureId;
     }
 
     @Override
@@ -161,7 +161,7 @@ public class User {
                 ", language=" + language +
                 ", role=" + role +
                 ", creationDate=" + creationDate +
-                ", profilePictureId=" + profilePictureId + // Include profilePictureId in the toString method
+                ", profilePictureId=" + profilePictureId +
                 '}';
     }
 }

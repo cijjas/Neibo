@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 import java.util.Date;
+import java.util.List;
 
 public class Post {
     private final long postId;
@@ -10,7 +11,7 @@ public class Post {
     private final User user;
     private final Channel channel;
     private final long postPictureId;
-
+    private final List<Tag> tags;
     private Post(Builder builder) {
         this.postId = builder.postId;
         this.title = builder.title;
@@ -19,6 +20,7 @@ public class Post {
         this.user = builder.user;
         this.channel = builder.channel;
         this.postPictureId = builder.postPictureId;
+        this.tags = builder.tags;
     }
 
     public static class Builder {
@@ -29,6 +31,7 @@ public class Post {
         private User user;
         private Channel channel;
         private long postPictureId;
+        private List<Tag> tags;
 
         public Builder postId(long postId) {
             this.postId = postId;
@@ -65,6 +68,11 @@ public class Post {
             return this;
         }
 
+        public Builder tags(List<Tag> tags) {
+            this.tags = tags;
+            return this;
+        }
+
         public Post build() {
             return new Post(this);
         }
@@ -98,6 +106,10 @@ public class Post {
         return postPictureId;
     }
 
+    public List<Tag> getTags() {
+        return tags;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -107,7 +119,8 @@ public class Post {
                 ", date=" + date +
                 ", user=" + user +
                 ", channel=" + channel +
-                ", postPictureId=" + postPictureId + // Include postPictureId in the toString method
+                ", postPictureId=" + postPictureId +
+                ", tags=" + tags +
                 '}';
     }
 }
