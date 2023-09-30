@@ -20,15 +20,15 @@ import java.util.Optional;
 public class CommentServiceImpl implements CommentService {
     private final CommentDao commentDao;
     private final EmailService emailService;
-    private final PostService ps;
-    private final UserService ns;
+    private final PostService postService;
+    private final UserService userService;
 
     @Autowired
-    public CommentServiceImpl(final CommentDao commentDao, EmailService emailService, PostService ps, UserService ns){
+    public CommentServiceImpl(final CommentDao commentDao, EmailService emailService, PostService postService, UserService userService){
         this.commentDao = commentDao;
         this.emailService = emailService;
-        this.ps = ps;
-        this.ns = ns;
+        this.postService = postService;
+        this.userService = userService;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
 
 
         //busco al dueno del post:
-        Post post = ps.findPostById(postId).orElse(null);
+        Post post = postService.findPostById(postId).orElse(null);
         assert post != null;
         User user = post.getUser();
         Map<String, Object> variables = new HashMap<>();
@@ -50,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
         variables.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
         emailService.sendMessageUsingThymeleafTemplate(user.getMail(), "New comment", "template-thymeleaf.html", variables);
 
-        for(User n : ns.getNeighborsSubscribedByPostId(postId)) {
+        for(User n : userService.getNeighborsSubscribedByPostId(postId)) {
             Map<String, Object> vars = new HashMap<>();
             vars.put("name", n.getName());
             vars.put("postTitle", post.getTitle());

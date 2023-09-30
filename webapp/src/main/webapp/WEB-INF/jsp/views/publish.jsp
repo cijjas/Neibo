@@ -24,6 +24,9 @@
     <div class="container">
         <div class="row">
 
+            <div>
+                ${channel}
+            </div>
             <div class="column-publish" >
                 <div class="cool-static-container" >
                     <h2 class="card-title"><spring:message code="CreatePost.title"/></h2>

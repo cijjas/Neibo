@@ -4,7 +4,7 @@
     <div class="column d-flex justify-content-center align-items-start">
         <h3 class="m-b-10"><spring:message code="Filter.by.tags"/></h3>
 
-        <div class="m-b-10 w-100" >
+        <div class="m-b-10 w-100">
             <div class="d-flex flex-column justify-content-center align-items-center  w-100">
                 <c:set var="val"><spring:message code="EnterATag"/></c:set>
                 <input id="niakaniaka" type="hidden" value="${val}"/>

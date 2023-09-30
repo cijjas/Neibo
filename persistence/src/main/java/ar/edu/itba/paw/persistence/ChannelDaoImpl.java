@@ -21,6 +21,9 @@ public class ChannelDaoImpl implements ChannelDao {
     private final SimpleJdbcInsert jdbcInsert;
 
     private final String CHANNELS = "SELECT * FROM channels ";
+    private final String CHANNELS_JOIN_NEIGHBORHOODS =
+            "SELECT distinct c.* \n" +
+            "FROM channels c JOIN neighborhoods_channels nc ON c.channelid = nc.channelid JOIN neighborhoods n ON n.neighborhoodid = nc.neighborhoodid ";
 
     @Autowired
     public ChannelDaoImpl(final DataSource ds) {
@@ -59,9 +62,13 @@ public class ChannelDaoImpl implements ChannelDao {
     }
 
     @Override
-    public List<Channel> getChannels() {
-        return jdbcTemplate.query(CHANNELS, ROW_MAPPER);
+    public Optional<Channel> findChannelByName(String channelName) {
+        final List<Channel> list = jdbcTemplate.query(CHANNELS + " WHERE channel = ?", ROW_MAPPER, channelName);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
-
+    @Override
+    public List<Channel> getChannels(final long neighborhoodId) {
+        return jdbcTemplate.query(CHANNELS_JOIN_NEIGHBORHOODS + " WHERE n.neighborhoodid = ?", ROW_MAPPER, neighborhoodId);
+    }
 }
