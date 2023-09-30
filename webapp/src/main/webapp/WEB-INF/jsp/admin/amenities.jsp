@@ -28,36 +28,32 @@
 
         <div class="column-middle">
             <c:forEach var="amenityWithHours" items="${amenitiesHours}">
-<%--                aca abajo arranca el amenitycard --%>
-                <div id="blogpost-container" class="blogpost" style="word-wrap: break-word;" aria-hidden="true">
-                    <div class="post-header">
-                        <h1 class="post-title"><c:out value="${amenityWithHours.amenity.name}" /></h1>
+                <div  class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
+                    <div >
+                        <h2 ><c:out value="${amenityWithHours.amenity.name}" /></h2>
                     </div>
-                    <p class="post-description"><c:out value="${amenityWithHours.amenity.description}" /></p>
+                    <p class="mb-3" style="color:var(--lighttext);"><c:out value="${amenityWithHours.amenity.description}" /></p>
 
-                    <!--    Amenity hours table     -->
-                    <div>
-                        <table>
+                    <div class="d-flex flex-column justify-content-center align-items-center w-100">
+                        <table class="table-striped w-100">
                             <tr>
-                                <th>Day</th>
-                                <th>Open</th>
-                                <th>Close</th>
+                                <th class="day"><spring:message code="Day"/></th>
+                                <th><spring:message code="Open"/></th>
+                                <th><spring:message code="Close"/></th>
                             </tr>
                             <c:forEach var="day" items="${amenityWithHours.amenityHours}">
                                 <tr>
-                                    <td>${day.key}</td>
+                                    <td class="day">${day.key}</td>
                                     <td>${day.value.openTime}</td>
                                     <td>${day.value.closeTime}</td>
                                 </tr>
                             </c:forEach>
                         </table>
                     </div>
-                        <%--    termina amenitycard    --%>
                 </div>
             </c:forEach>
         </div>
         <div class="column-right">
-<%--            <%@ include file="/WEB-INF/jsp/components/rightColumn.jsp" %>--%>
             <a href="${pageContext.request.contextPath}/createAmenity" class="filter-button" >
                 <spring:message code="CreateNewAmenity.button"/>
                 <i class="fa-solid fa-plus"></i>
