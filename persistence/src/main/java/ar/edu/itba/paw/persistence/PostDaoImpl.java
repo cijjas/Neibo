@@ -78,7 +78,7 @@ public class PostDaoImpl implements PostDao {
     private final RowMapper<Post> ROW_MAPPER = (rs, rowNum) -> {
         User user = userDao.findUserById(rs.getLong("userid")).orElse(null);
         Channel channel = channelDao.findChannelById(rs.getLong("channelid")).orElse(null);
-        List<Tag> tags = tagDao.findTagsByPostId(rs.getLong("userid")).orElse(null);
+        List<Tag> tags = tagDao.findTagsByPostId(rs.getLong("postid")).orElse(null);
 
         return new Post.Builder()
                 .postId(rs.getLong("postid"))

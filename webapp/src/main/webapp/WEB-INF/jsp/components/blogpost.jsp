@@ -26,7 +26,15 @@
                 <img class="blogpost-image" src="${pageContext.request.contextPath}/images/<c:out value="${param.postImage}"/>" alt="post_<c:out value="${param.postID}"/>_img " />
             </div>
         </c:if>
+
     </a>
+    <div class="mt-2 d-flex flex-row justify-content-start align-items-center flex-wrap">
+        <c:forEach var="tag" items="${requestScope.postTags}">
+            <a href="${pageContext.request.contextPath}/?tag=${tag.tag}" class="tag-option static m-l-3 m-r-3" data-post-tag="${tag.tag}">
+                <c:out value="${tag.tag}"/>
+            </a>
+        </c:forEach>
+    </div>
 </div>
 
 <script src="${pageContext.request.contextPath}/resources/js/blogpost.js"></script>

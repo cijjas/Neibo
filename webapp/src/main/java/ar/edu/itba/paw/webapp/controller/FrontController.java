@@ -114,24 +114,28 @@ public class FrontController {
     @RequestMapping("/admin/neighbors")
     public ModelAndView neighbors(
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "3") int size
+            @RequestParam(value = "size", defaultValue = "10") int size
     ) {
 
         final ModelAndView mav = new ModelAndView("admin/requestManager");
+        mav.addObject("neighbors", true);
+        mav.addObject("page", page);
         mav.addObject("totalPages", us.getTotalPages(UserRole.NEIGHBOR, getLoggedNeighbor().getNeighborhoodId(), size ));
-        mav.addObject("verifiedList", us.getUsersPage(UserRole.NEIGHBOR,getLoggedNeighbor().getNeighborhoodId(), page, size));
+        mav.addObject("users", us.getUsersPage(UserRole.NEIGHBOR,getLoggedNeighbor().getNeighborhoodId(), page, size));
         return mav;
     }
 
     @RequestMapping("/admin/unverified")
     public ModelAndView unverified(
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "3") int size
+            @RequestParam(value = "size", defaultValue = "10") int size
     ) {
 
         final ModelAndView mav = new ModelAndView("admin/requestManager");
-        mav.addObject("totalPages", us.getTotalPages(UserRole.UNVERIFIED_NEIGHBOR, getLoggedNeighbor().getNeighborhoodId(), size ));
-        mav.addObject("unverifiedList", us.getUsersPage(UserRole.UNVERIFIED_NEIGHBOR,getLoggedNeighbor().getNeighborhoodId(), page, size));
+        mav.addObject("neighbors", false);
+        mav.addObject("page", page);
+        mav.addObject("totalPages", us.getTotalPages(UserRole.UNVERIFIED_NEIGHBOR, getLoggedNeighbor().getNeighborhoodId(), size));
+        mav.addObject("users", us.getUsersPage(UserRole.UNVERIFIED_NEIGHBOR,getLoggedNeighbor().getNeighborhoodId(), page, size));
         return mav;
     }
 

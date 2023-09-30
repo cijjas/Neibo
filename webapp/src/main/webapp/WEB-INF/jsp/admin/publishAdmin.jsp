@@ -23,8 +23,33 @@
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 <div class="container">
     <div class="row">
+        <div class="column-left">
+            <div class="left-column-container">
 
-        <div class="column-publish" >
+
+                <div class="left-box" >
+                    <a  href="${pageContext.request.contextPath}/admin/publish" class="cool-left-button  ">
+                        <i class="fas fa-bullhorn"></i>
+                        Post
+                    </a>
+                    <a  href="${pageContext.request.contextPath}/admin/unverified" class="cool-left-button  ">
+                        <i class="fas fa-comments"></i>
+                        Requests
+                    </a>
+                    <a href="${pageContext.request.contextPath}/admin/neighbors" class="cool-left-button " >
+                        <i class="fas fa-envelope"></i>
+                        Neighbor list
+                    </a>
+                    <a  href="${pageContext.request.contextPath}/admin/calendar" class="cool-left-button " >
+                        <i class="fas fa-envelope"></i>
+                        Event calendar
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="column-middle" >
             <div class="cool-static-container" >
                 <h2 class="card-title"><spring:message code="CreatePost.title"/></h2>
                 <div class="divider"></div>
@@ -118,7 +143,7 @@
 
 
 
-        <div class="column-info" >
+        <div class="column-right" >
             <%@ include file="/WEB-INF/jsp/components/calendarWidget.jsp" %>
         </div>
     </div>

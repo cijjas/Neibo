@@ -66,6 +66,7 @@
                                 <jsp:param name="totalPages" value="${totalPages}" />
                             </jsp:include>
                             <c:forEach var="post" items="${postList}" >
+                                <c:set var="postTags" value="${post.tags}" scope="request"/>
                                 <jsp:include page="/WEB-INF/jsp/components/blogpost.jsp" >
                                     <jsp:param name="postID" value="${post.postId}" />
                                     <jsp:param name="postNeighborMail" value="${post.user.mail}" />
@@ -73,6 +74,7 @@
                                     <jsp:param name="postTitle" value="${post.title}" />
                                     <jsp:param name="postDescription" value="${post.description}" />
                                     <jsp:param name="postImage" value="${post.postPictureId}" />
+
                                 </jsp:include>
                             </c:forEach>
                             <!-- Include the page selector -->

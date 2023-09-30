@@ -4,8 +4,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
-
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,6 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/resources/css/home.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
 </head>
 <body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
@@ -29,7 +28,7 @@
 
     <div class="row">
         <div class="column-left">
-            <%@ include file="/WEB-INF/jsp/components/leftColumn.jsp" %>
+            <%@ include file="/WEB-INF/jsp/admin/controlPanelLeftButtons.jsp" %>
         </div>
 
         <div class="column-middle">
@@ -38,10 +37,12 @@
                 <jsp:param name="page" value="${page}" />
                 <jsp:param name="totalPages" value="${totalPages}" />
             </jsp:include>
-
+            <div>
+                ${neighbors}
+            </div>
             <div class="req-acc-users-list" >
                 <c:choose>
-                    <c:when test="${empty unverifiedList}">
+                    <c:when test="${empty users}">
                         <div class="user-row">
                             <div class="information">
                                 <spring:message code="No.new.requests"/>
@@ -49,7 +50,7 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <c:forEach var="user" items="${unverifiedList}" varStatus="loopStatus">
+                        <c:forEach var="user" items="${users}" varStatus="loopStatus">
                             <div class="user-row">
                                 <div class="information">
                                     <div>
@@ -84,51 +85,7 @@
         </div>
 
         <div class="column-right">
-            <div class="req-acc-users-list" >
-                <c:choose>
-                    <c:when test="${empty verifiedList}">
-                        <div class="user-row">
-                            <div class="information">
-                                <spring:message code="No.verified.Users"/>
-                            </div>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-
-                        <c:forEach var="user" items="${verifiedList}" varStatus="loopStatus">
-                            <div class="user-column  m-2">
-                                <div class="flex-column-centerd">
-                                    <div class="information">
-                                        <div>
-                                            <span style="color:var(--primary)"><spring:message code="Name"/>: </span>
-                                            <span style="color:var(--old-primary)"><c:out value="${user.name}"/></span>
-                                        </div>
-                                        <div>
-
-                                            <span style="color:var(--primary)"><spring:message code="Surname"/>:</span>
-                                            <span style="color:var(--old-primary)"><c:out value="${user.surname}"/></span>
-                                        </div>
-                                        <div>
-                                            <span style="color:var(--primary)"><spring:message code="Email"/>:</span>
-                                            <span style="color:var(--old-primary)"><c:out value="${user.mail}"/></span>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                                <div class="acceptance">
-                                    <button class="ignore-button" onclick=""><spring:message code="Unverify"/></button>
-                                </div>
-                            </div>
-                            <c:if test="${not loopStatus.last}">
-                                <div class="divider"></div>
-                            </c:if>
-                        </c:forEach>
-
-                    </c:otherwise>
-                </c:choose>
-
-            </div>
+            <%@ include file="/WEB-INF/jsp/components/calendarWidget.jsp" %>
         </div>
 
 
