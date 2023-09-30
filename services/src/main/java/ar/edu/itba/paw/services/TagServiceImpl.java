@@ -83,7 +83,7 @@ public class TagServiceImpl implements TagService {
         String formattedQueryString = queryString.toString();
 
         // Check if the current URL contains specific words and append accordingly
-        if (currentUrl.contains("announcements") || currentUrl.contains("forum")) {
+        if (currentUrl.contains("announcements") || currentUrl.contains("complaints")) {
             return currentUrl + "?" + formattedQueryString;
         } else {
             return "/?" + formattedQueryString;

@@ -74,6 +74,28 @@ public class FrontController {
 
     // ------------------------------------- FEED --------------------------------------
 
+
+    private ModelAndView handleChannelRequest(
+            String channelName,
+            int page,
+            int size,
+            SortOrder date,
+            List<String> tags
+    ) {
+        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags);
+        int totalPages = ps.getTotalPages(channelName, size, tags);
+
+        ModelAndView mav = new ModelAndView("views/index");
+        mav.addObject("tagList", ts.getTags());
+        mav.addObject("appliedTags", tags);
+        mav.addObject("postList", postList);
+        mav.addObject("page", page);
+        mav.addObject("totalPages", totalPages);
+        mav.addObject("channel", channelName);
+
+        return mav;
+    }
+
     @RequestMapping("/")
     public ModelAndView index(
             @RequestParam(value = "page", defaultValue = "1") int page,
@@ -81,19 +103,7 @@ public class FrontController {
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ) {
-
-        List<Post> postList = ps.getPostsByCriteria("Feed", page, size, date, tags);
-        int totalPages = ps.getTotalPages("Feed", size, tags);
-
-        final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags());
-        mav.addObject("appliedTags", tags);
-        mav.addObject("postList", postList);
-        mav.addObject("page", page); // Add page parameter to the model
-        mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
-        mav.addObject("channel", "Feed");
-
-        return mav;
+        return handleChannelRequest("Feed", page, size, date, tags);
     }
 
     @RequestMapping("/hey")
@@ -120,6 +130,12 @@ public class FrontController {
         return "redirect:/profile";
     }
 
+    @RequestMapping (value = "/updateLanguagePreference", method = RequestMethod.POST)
+    public String updateLanguagePreference(@RequestParam("language") String language) {
+        User user = getLoggedNeighbor();
+        return "redirect:/profile";
+    }
+
     @RequestMapping(value = "/applyTagsFilter", method = RequestMethod.POST)
     public ModelAndView applyTagsFilter(@RequestParam("tags") String tags, @RequestParam("currentUrl") String currentUrl) {
         ModelAndView mav = new ModelAndView("redirect:" + ts.createURLForTagFilter(tags, currentUrl));
@@ -133,18 +149,7 @@ public class FrontController {
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ) {
-        List<Post> postList = ps.getPostsByCriteria("Administracion", page, size, date, tags);
-        int totalPages = ps.getTotalPages("Administracion", size, tags);
-
-        final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags());
-        mav.addObject("appliedTags", tags);
-        mav.addObject("postList", postList);
-        mav.addObject("page", page); // Add page parameter to the model
-        mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
-        mav.addObject("channel", "Announcements");
-
-        return mav;
+        return handleChannelRequest("Announcements", page, size, date, tags);
     }
 
     // ------------------------------------- FORO --------------------------------------
@@ -156,18 +161,7 @@ public class FrontController {
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ){
-        List<Post> postList = ps.getPostsByCriteria("Foro", page, size, date, tags);
-        int totalPages = ps.getTotalPages("Foro", size, tags);
-
-        final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags());
-        mav.addObject("appliedTags", tags);
-        mav.addObject("postList", postList);
-        mav.addObject("page", page); // Add page parameter to the model
-        mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
-        mav.addObject("channel", "Complaints");
-
-        return mav;
+        return handleChannelRequest("Complaints", page, size, date, tags);
     }
 
     @RequestMapping(value = "/unverified", method = RequestMethod.GET)

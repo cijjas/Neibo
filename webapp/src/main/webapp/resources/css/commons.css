@@ -4,7 +4,8 @@ GLOBAL CSS VARIABLES AND STYLES THAT SHOULD BE USED IN ALL PAGES
 
 
 body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button, span{
-    font-family: 'Lexend Deca', sans-serif;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: bold;
 }
 
 body {

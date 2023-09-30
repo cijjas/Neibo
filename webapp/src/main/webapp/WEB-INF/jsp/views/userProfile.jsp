@@ -28,7 +28,23 @@
                 <div class="col-sm-4 bg-c-lite-green user-profile">
                     <div class="card-block text-center text-white">
                         <div class="m-b-25">
-                            <img src="https://img.icons8.com/bubbles/100/000000/user.png" class="img-radius" alt="User-Profile-Image">
+                            <div class="profile-pic">
+                                <label class="-label" for="file">
+                                    <span class="glyphicon glyphicon-camera"></span>
+                                    <span>Change Image</span>
+                                </label>
+                                <input id="file" type="file" accept="image/*" onchange="loadFile()"/>
+                                <img alt="User Pic" src="/resources/images/roundedPlaceholder.png" id="output" width="200" />
+                            </div>
+
+                            <script>
+                                function loadFile() {
+                                    const image = document.getElementById("output");
+                                    image.src = URL.createObjectURL(event.target.files[0]);
+                                };
+
+                            </script>
+
                         </div>
                         <h6 class="f-w-600"><c:out value="${neighbor.name}"/></h6>
                         <p><c:out value="${neighbor.role}"/></p>
@@ -40,18 +56,18 @@
                         <h6 class="m-b-20 p-b-5 b-b-default f-w-600"><spring:message code="Information"/></h6>
                         <div class="row">
                             <div class="col-sm-6">
-                                <p class="m-b-10 f-w-600"><spring:message code="Email"/></p>
+                                <p class="m-b-10 f-w-600 text-muted" ><spring:message code="Email"/></p>
                                 <h6 class="text-muted f-w-400"><c:out value="${neighbor.mail}"/></h6>
                             </div>
                             <div class="col-sm-6">
-                                <p class="m-b-10 f-w-600"><spring:message code="User"/></p>
+                                <p class="m-b-10 f-w-600 text-muted" ><spring:message code="User"/></p>
                                 <h6 class="text-muted f-w-400"><c:out value="${neighbor.userId}" /></h6>
                             </div>
                         </div>
                         <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600"><spring:message code="Preferences"/></h6>
                         <div class="row">
                             <div class="col-sm-6">
-                                <p class="m-b-10 f-w-600"><spring:message code="DarkMode"/></p>
+                                <p class="m-b-10 f-w-600 text-muted" ><spring:message code="DarkMode"/></p>
                                 <div class="controlled" >
                                     <h6 class="text-muted f-w-400"><spring:message code="Off"/></h6>
 
@@ -66,7 +82,7 @@
                                 </div>
                             </div>
                             <div class="col-sm-6">
-                                <p class="m-b-10 f-w-600"><spring:message code="Language"/></p>
+                                <p class="m-b-10 f-w-600 text-muted"><spring:message code="Language"/></p>
                                 <div class="controlled" >
                                     <h6 class="text-muted f-w-400"><spring:message code="English"/></h6>
                                     <div >
@@ -97,6 +113,8 @@
 <input id="dark-mode-toggle-var" type="hidden" value="${neighbor.darkMode}"/>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("dark-mode-toggle").checked = document.getElementById("dark-mode-toggle-var").value === "true";
+
         const darkModeToggle = document.getElementById("dark-mode-toggle");
         const darkModeForm = document.getElementById("dark-mode-form");
 
@@ -106,8 +124,23 @@
             // Automatically submit the form when the checkbox changes
             darkModeForm.submit();
         });
+
+        const languageToggle = document.getElementById("language-toggle");
+
+        languageToggle.addEventListener("change", function() {
+            const url = "${pageContext.request.contextPath}/changeLanguage";
+            const params = "language=" + (languageToggle.checked ? "es" : "en");
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", url, true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send(params);
+            xhr.onload = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    location.reload();
+                }
+            }
+        });
     });
-    document.getElementById("dark-mode-toggle").checked = document.getElementById("dark-mode-toggle-var").value === "true";
 
 
 

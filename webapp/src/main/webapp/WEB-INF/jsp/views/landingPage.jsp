@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
-    <title>Welcome to Neibo</title>
+    <title><spring:message code="Welcome.to.neibo"/></title>
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/landingPage.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
