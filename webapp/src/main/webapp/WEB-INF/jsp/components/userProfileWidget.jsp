@@ -1,5 +1,5 @@
 
-<a href="${pageContext.request.contextPath}/user">
+<a href="${pageContext.request.contextPath}/profile">
     <div class="grey-container" style="width: 200px; ">
         <div class="row">
             <div class="col-4">

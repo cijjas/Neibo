@@ -4,17 +4,18 @@ import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.Post;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface ChannelService {
-
-    // -----------------------------------------------------------------------------------------------------------------
+    List<Channel> getChannels();
 
     Channel createChannel(final String name);
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     Optional<Channel> findChannelById(long id);
 
-    List<Channel> getChannels();
+    Map<String, Channel> getNeighborChannels(long neighborId);
+
+    Map<String, Channel> getAdminChannels();
+
 }

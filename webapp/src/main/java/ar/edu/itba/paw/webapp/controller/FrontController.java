@@ -3,14 +3,15 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.exceptions.*;
+import ar.edu.itba.paw.webapp.form.AmenityForm;
 import ar.edu.itba.paw.webapp.form.CommentForm;
 import ar.edu.itba.paw.webapp.form.PublishForm;
 import ar.edu.itba.paw.webapp.form.SignupForm;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import enums.Language;
 import enums.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,11 +24,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.sql.SQLOutput;
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Controller
 public class FrontController {
@@ -41,6 +45,9 @@ public class FrontController {
     private final SubscriptionService ss;
     private final CategorizationService cas;
     private final ImageService is;
+    private final AmenityService as;
+    private final ReservationService rs;
+    private final EventService es;
 
     @Autowired
     public FrontController(final PostService ps,
@@ -51,7 +58,10 @@ public class FrontController {
                            final ChannelService chs,
                            final SubscriptionService ss,
                            final CategorizationService cas,
-                           final ImageService is
+                           final ImageService is,
+                           final ReservationService rs,
+                           final AmenityService as,
+                           final EventService es
     ) {
         this.is = is;
         this.ps = ps;
@@ -62,6 +72,9 @@ public class FrontController {
         this.chs = chs;
         this.ss = ss;
         this.cas = cas;
+        this.as = as;
+        this.rs = rs;
+        this.es = es;
     }
 
     // ------------------------------------- FEED --------------------------------------
@@ -79,6 +92,7 @@ public class FrontController {
 
         final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags());
+        mav.addObject("appliedTags", tags);
         mav.addObject("postList", postList);
         mav.addObject("page", page); // Add page parameter to the model
         mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
@@ -97,8 +111,8 @@ public class FrontController {
         return mav;
     }
 
-    @RequestMapping("/user")
-    public ModelAndView user() {
+    @RequestMapping("/profile")
+    public ModelAndView profile() {
         ModelAndView mav = new ModelAndView("views/userProfile");
         mav.addObject("neighbor", getLoggedNeighbor());
         //us.updateLanguage(getLoggedNeighbor().getUserId(), "Spanish");
@@ -108,13 +122,13 @@ public class FrontController {
     public String updateDarkModePreference() {
         User user = getLoggedNeighbor();
         us.toggleDarkMode(user.getUserId());
-
-        return "redirect:/user";
+        return "redirect:/profile";
     }
 
     @RequestMapping(value = "/applyTagsFilter", method = RequestMethod.POST)
-    public String applyTagsFilter(@RequestParam("tags") String tags, @RequestParam("currentUrl") String currentUrl) {
-        return "redirect:" + ts.createURLForTagFilter(tags, currentUrl);
+    public ModelAndView applyTagsFilter(@RequestParam("tags") String tags, @RequestParam("currentUrl") String currentUrl) {
+        ModelAndView mav = new ModelAndView("redirect:" + ts.createURLForTagFilter(tags, currentUrl));
+        return mav;
     }
 
     @RequestMapping("/announcements")
@@ -129,6 +143,7 @@ public class FrontController {
 
         final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags());
+        mav.addObject("appliedTags", tags);
         mav.addObject("postList", postList);
         mav.addObject("page", page); // Add page parameter to the model
         mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
@@ -139,8 +154,8 @@ public class FrontController {
 
     // ------------------------------------- FORO --------------------------------------
 
-    @RequestMapping("/forum")
-    public ModelAndView forum(
+    @RequestMapping("/complaints")
+    public ModelAndView complaints(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
@@ -151,10 +166,11 @@ public class FrontController {
 
         final ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags());
+        mav.addObject("appliedTags", tags);
         mav.addObject("postList", postList);
         mav.addObject("page", page); // Add page parameter to the model
         mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
-        mav.addObject("channel", "Forum");
+        mav.addObject("channel", "Complaints");
 
         return mav;
     }
@@ -170,11 +186,7 @@ public class FrontController {
     public ModelAndView publishForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
         final ModelAndView mav = new ModelAndView("views/publish");
 
-        Map<String, Channel> channelMap = chs.getChannels().stream()
-                .collect(Collectors.toMap(Channel::getChannel, Function.identity()));
-        //no queremos que usuarios puedan publicar en el canal de administracion
-        channelMap.remove("Administracion");
-        mav.addObject("channelList", channelMap);
+        mav.addObject("channelList", chs.getNeighborChannels(getLoggedNeighbor().getUserId()));
 
         return mav;
     }
@@ -182,39 +194,54 @@ public class FrontController {
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
     public ModelAndView publish(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
                                 final BindingResult errors,
-                                @RequestParam("imageFile") MultipartFile imageFile) {
-        if (errors.hasErrors())
+                                @RequestParam("imageFile") MultipartFile imageFile
+                                ){
+        if (errors.hasErrors()){
             return publishForm(publishForm);
-        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
-        ModelAndView mav = new ModelAndView("redirect:/posts/" + p.getPostId() + "?success=true");
+        }
+        Integer channel = publishForm.getChannel();
+        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), channel, publishForm.getTags(), imageFile);
+        ModelAndView mav = new ModelAndView("views/publish");
+        mav.addObject("channelId", channel);
+        mav.addObject("showSuccessMessage", true);
         return mav;
     }
 
+    @RequestMapping(value = "/redirectToChannel", method = RequestMethod.POST)
+    public ModelAndView redirectToChannel(@RequestParam("channelId") int channelId) {
+        String channelName= chs.findChannelById(channelId).get().getChannel().toLowerCase();
+        if(channelName.equals("feed")){
+            return new ModelAndView("redirect:/");
+        }
+        else{
+            return new ModelAndView("redirect:/" + channelName);
+        }
+    }
+    // ------------------------------------- PUBLISH ADMIN --------------------------------------
 
-
-    @RequestMapping(value = "/publishAdmin", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/publish", method = RequestMethod.GET)
     public ModelAndView publishAdminForm(@ModelAttribute("publishForm") final PublishForm publishForm) {
         final ModelAndView mav = new ModelAndView("admin/publishAdmin");
-        Map<String, Channel> channelMap = chs.getChannels().stream()
-                .collect(Collectors.toMap(Channel::getChannel, Function.identity()));
-        channelMap.remove("Foro");
-        channelMap.remove("Feed");
-        //no queremos que usuarios puedan publicar en el canal de administracion
-        mav.addObject("channelList", channelMap);
-
+        mav.addObject("channelList", chs.getAdminChannels());
         return mav;
     }
 
-    @RequestMapping(value = "/publishAdmin", method = RequestMethod.POST)
+    @RequestMapping(value = "/admin/publish", method = RequestMethod.POST)
     public ModelAndView publishAdmin(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
                                      final BindingResult errors,
                                      @RequestParam("imageFile") MultipartFile imageFile) {
-        if (errors.hasErrors())
+        if (errors.hasErrors()){
             return publishForm(publishForm);
+        }
 
         ps.createAdminPost(getLoggedNeighbor().getNeighborhoodId(), publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
+        PublishForm clearedForm = new PublishForm();
+        ModelAndView mav = new ModelAndView("admin/publishAdmin");
+        mav.addObject("showSuccessMessage", true);
+        mav.addObject("channelList", chs.getAdminChannels());
+        mav.addObject("publishForm", clearedForm);
 
-        return new ModelAndView("admin/publishAdmin");
+        return mav;
     }
 
 
@@ -251,8 +278,9 @@ public class FrontController {
             return viewPost(postId, commentForm, false);
         }
         cs.createComment(commentForm.getComment(), getLoggedNeighbor().getUserId(), postId);
-
-        return new ModelAndView("redirect:/posts/" + postId); // Redirect to the "posts" page
+        ModelAndView mav = new ModelAndView("redirect:/posts/" + postId);
+        mav.addObject("commentForm", new CommentForm());
+        return mav;
     }
 
     // ------------------------------------- RESOURCES --------------------------------------
@@ -345,7 +373,12 @@ public class FrontController {
     public ModelAndView test(
     )
     {
-        System.out.println(us.getUnverifiedNeighbors(1));
+
+
+        System.out.println(ps.getPostsByCriteria("Feed", 1, 10, SortOrder.ASC,null));
+
+
+
         return new ModelAndView("views/index");
     }
 
@@ -364,5 +397,84 @@ public class FrontController {
         throw new NeighborhoodNotFoundException();
     }
 
+    @RequestMapping(value = "/admin/amenities", method = RequestMethod.GET)
+    public ModelAndView adminAmenities() {
+        ModelAndView mav = new ModelAndView("admin/amenities");
+
+        List<Amenity> amenities = as.getAmenities();
+        List<AmenityHours> amenityHoursList = new ArrayList<>();
+
+        for (Amenity amenity : amenities) {
+            Map<String, DayTime> amenityTimes = as.getAmenityHoursByAmenityId(amenity.getAmenityId());
+
+            AmenityHours amenityHours = new AmenityHours.Builder().amenity(amenity).amenityHours(amenityTimes).build();
+
+            amenityHoursList.add(amenityHours);
+        }
+        System.out.println("PRINTING THE AMENITIES HOURS LIST: ");
+        System.out.println(amenityHoursList);
+        mav.addObject("amenitiesHours", amenityHoursList);
+        return mav;
+    }
+
+    @RequestMapping(value = "/createAmenity", method = RequestMethod.GET)
+    public ModelAndView createAmenityForm(@ModelAttribute("amenityForm") final AmenityForm amenityForm) {
+        ModelAndView mav = new ModelAndView("admin/createAmenity");
+
+        List<Time> timeList = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
+        try {
+            Date startTime = sdf.parse("00:00");
+            Date endTime = sdf.parse("23:30");
+
+            long currentTime = startTime.getTime();
+            long endTimeMillis = endTime.getTime();
+
+            while (currentTime <= endTimeMillis) {
+                timeList.add(new Time(currentTime));
+                currentTime += 30 * 60 * 1000; // Add 30 minutes in milliseconds
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        mav.addObject("timeList", timeList);
+
+        List<String> daysOfWeek = new ArrayList<>();
+        daysOfWeek.add("Monday");
+        daysOfWeek.add("Tuesday");
+        daysOfWeek.add("Wednesday");
+        daysOfWeek.add("Thursday");
+        daysOfWeek.add("Friday");
+        daysOfWeek.add("Saturday");
+        daysOfWeek.add("Sunday");
+        mav.addObject("daysOfWeek", daysOfWeek);
+        return mav;
+    }
+
+    @RequestMapping(value = "/createAmenity", method = RequestMethod.POST)
+    public ModelAndView createAmenity(@Valid @ModelAttribute("amenityForm") final AmenityForm amenityForm,
+                                      final BindingResult errors) {
+        if (errors.hasErrors()) {
+            System.out.println("ERRORS: " + errors);
+            return createAmenityForm(amenityForm);
+        }
+
+        as.createAmenityWrapper(amenityForm.getName(), amenityForm.getDescription(), amenityForm.getMondayOpenTime(), amenityForm.getMondayCloseTime(), amenityForm.getTuesdayOpenTime(), amenityForm.getTuesdayCloseTime(), amenityForm.getWednesdayOpenTime(), amenityForm.getWednesdayCloseTime(), amenityForm.getThursdayOpenTime(), amenityForm.getThursdayCloseTime(), amenityForm.getFridayOpenTime(), amenityForm.getFridayCloseTime(), amenityForm.getSaturdayOpenTime(), amenityForm.getSaturdayCloseTime(), amenityForm.getSundayOpenTime(), amenityForm.getSundayCloseTime());
+        return new ModelAndView("redirect:/admin/amenities");
+    }
+    // ------------------------------------- CALENDAR --------------------------------------
+    @RequestMapping("/calendar")
+    public ModelAndView calendar() {
+        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Long> eventTimestamps = eventDates.stream()
+                .map(date -> date.getTime())
+                .collect(Collectors.toList());
+
+        ModelAndView mav = new ModelAndView("views/calendar");
+        mav.addObject("eventDates", eventTimestamps);
+        return mav;
+    }
 
 }

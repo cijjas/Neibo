@@ -40,17 +40,14 @@
     let liTag = "";
     for (let i = firstDayOfMonth; i > 0; i--) { // creating li of previous month last days
       liTag += `<li class="inactive">\${lastDateOfLastMonth - i + 1}</li>`;
-      console.log(lastDateOfLastMonth - i + 1)
     }
     for (let i = 1; i <= lastDateOfMonth; i++) { // creating li of all days of current month
       // adding active class to li if the current day, month, and year matched
       let isToday = i === date.getDate() && currMonth === new Date().getMonth() && currYear === new Date().getFullYear() ? "active" : "";
       liTag += `<li class="\${isToday}">\${i}</li>`;
-      console.log(i);
     }
     for (let i = lastDayOfMonth; i < 6; i++) { // creating li of next month first days
       liTag += `<li class="inactive">\${i - lastDayOfMonth + 1}</li>`;
-      console.log(i - lastDayOfMonth + 1);
     }
     currentDate.innerText = `\${months[currMonth]} \n \${currYear}`; // passing current mon and yr as currentDate text
     daysTag.innerHTML = liTag;
