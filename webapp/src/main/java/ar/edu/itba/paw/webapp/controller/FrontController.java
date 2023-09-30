@@ -485,6 +485,13 @@ public class FrontController {
     public ModelAndView amenities(@ModelAttribute("reservationForm") final ReservationForm reservationForm) {
         ModelAndView mav = new ModelAndView("views/amenities");
 
+        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Long> eventTimestamps = eventDates.stream()
+                .map(date -> date.getTime())
+                .collect(Collectors.toList());
+
+        mav.addObject("eventDates", eventTimestamps);
+
         List<Amenity> amenities = as.getAmenities();
         List<AmenityHours> amenityHoursList = new ArrayList<>();
 
