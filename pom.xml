@@ -123,9 +123,6 @@
         <artifactId>spring-security-config</artifactId>
         <version>${spring-security.version}</version>
       </dependency>
-      <!--
-      ADD MORE HERE
-      -->
     </dependencies>
   </dependencyManagement>
 

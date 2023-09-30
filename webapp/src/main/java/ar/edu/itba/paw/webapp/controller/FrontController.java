@@ -11,6 +11,7 @@ import enums.Language;
 import enums.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +29,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Controller
 public class FrontController {
@@ -42,6 +44,8 @@ public class FrontController {
     private final CategorizationService cas;
     private final ImageService is;
 
+    private final EventService es;
+
     @Autowired
     public FrontController(final PostService ps,
                            final UserService us,
@@ -51,7 +55,8 @@ public class FrontController {
                            final ChannelService chs,
                            final SubscriptionService ss,
                            final CategorizationService cas,
-                           final ImageService is
+                           final ImageService is,
+                           final EventService es
     ) {
         this.is = is;
         this.ps = ps;
@@ -62,6 +67,7 @@ public class FrontController {
         this.chs = chs;
         this.ss = ss;
         this.cas = cas;
+        this.es = es;
     }
 
     // ------------------------------------- FEED --------------------------------------
@@ -363,5 +369,17 @@ public class FrontController {
         throw new NeighborhoodNotFoundException();
     }
 
+    // ------------------------------------- CALENDAR --------------------------------------
+    @RequestMapping("/calendar")
+    public ModelAndView calendar() {
+        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Long> eventTimestamps = eventDates.stream()
+                .map(date -> date.getTime())
+                .collect(Collectors.toList());
+
+        ModelAndView mav = new ModelAndView("views/calendar");
+        mav.addObject("eventDates", eventTimestamps);
+        return mav;
+    }
 
 }
