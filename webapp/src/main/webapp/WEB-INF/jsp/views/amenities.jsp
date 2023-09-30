@@ -27,52 +27,52 @@
         </div>
 
         <div class="column-middle">
-            <div id="blogpost-container" class="blogpost" style="word-wrap: break-word;" aria-hidden="true">
+            <div  class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
                     <h2>Make a Reservation</h2>
+                    <div class="divider"></div>
                     <form:form method="post" action="amenities" modelAttribute="reservationForm">
-                        <div class="form-group">
-                            <form:label path="amenityId" class="mt-3">Select Amenity:</form:label>
-                            <form:select path="amenityId" id="amenityId" required="true">
+                        <div class="col-md-12">
+                            <form:label path="amenityId" class="mt-3 mb-1">Select Amenity:</form:label>
+                            <form:select path="amenityId" id="amenityId" required="true" class="cool-input">
                                 <form:options items="${amenitiesHours}" itemValue="amenity.amenityId" itemLabel="amenity.name"/>
                             </form:select>
                             <form:errors path="amenityId" cssClass="error" element="p"/>
                         </div>
 
-                        <div class="form-group">
-                            <form:label path="date" class="mt-3">Choose a Date:</form:label>
-                            <form:input path="date" id="date" type="date" required="true"/>
+                        <div class="col-md-12">
+                            <form:label path="date" class="mt-3 mb-1">Choose a Date:</form:label>
+                            <form:input path="date" id="date" type="date" required="true" class="cool-input"/>
                             <form:errors path="date" cssClass="error" element="p"/>
                         </div>
 
-                        <div class="form-row">
+                        <div class="d-flex flex-row justify-content-center align-items-center">
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <form:label path="startTime" class="mt-3">Start Time:</form:label>
-                                    <form:select path="startTime" id="startTime" required="true">
+                                    <form:label path="startTime" class="mt-3 mb-1">Start Time:</form:label>
+                                    <form:select path="startTime" id="startTime" required="true" class="cool-input">
                                         <c:forEach var="time" items="${timeList}">
                                             <option value="${time}">${time}</option>
                                         </c:forEach>
                                     </form:select>
                                     <form:errors path="startTime" cssClass="error" element="p"/>
-                                </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <form:label path="endTime" class="mt-3">End Time:</form:label>
-                                    <form:select path="endTime" id="endTime" required="true">
+                                    <form:label path="endTime" class="mt-3 mb-1">End Time:</form:label>
+                                    <form:select path="endTime" id="endTime" required="true" class="cool-input">
                                         <c:forEach var="time" items="${timeList}">
                                             <option value="${time}">${time}</option>
                                         </c:forEach>
                                     </form:select>
                                     <form:errors path="endTime" cssClass="error" element="p"/>
-                                </div>
                             </div>
                         </div>
                         <form:errors cssClass="error" element="p"/>
 
-                        <div class="d-flex justify-content-end">
-                            <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg" style="height:40px;" ><spring:message code="Reserve"/></button>
+                        <div class="col-md-12">
+                            <div class="d-flex justify-content-end m-t-40">
+                                <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg" style="height:40px;" ><spring:message code="Reserve"/></button>
+                            </div>
                         </div>
+
                     </form:form>
             </div>
 
@@ -94,22 +94,24 @@
 <%--            </form>--%>
 
             <c:forEach var="amenityWithHours" items="${amenitiesHours}">
-                <div id="blogpost-container" class="blogpost" style="word-wrap: break-word;" aria-hidden="true">
+                <div  class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
 <%--                    <a href="${pageContext.request.contextPath}/reserve/<c:out value="${amenityWithHours.amenity.amenityId}" />" style="text-decoration: none;">--%>
-                        <div class="post-header">
-                            <h1 class="post-title"><c:out value="${amenityWithHours.amenity.name}" /></h1>
+                        <div >
+                            <h2 ><c:out value="${amenityWithHours.amenity.name}" /></h2>
                         </div>
-                        <p class="post-description"><c:out value="${amenityWithHours.amenity.description}" /></p>
-                        <div>
-                            <table>
+                        <p class="mb-3" style="color:var(--lighttext);"><c:out value="${amenityWithHours.amenity.description}" /></p>
+
+
+                        <div class="d-flex flex-column justify-content-center align-items-center w-100">
+                            <table class="table-striped w-100">
                                 <tr>
-                                    <th>Day</th>
+                                    <th class="day">Day</th>
                                     <th>Open</th>
                                     <th>Close</th>
                                 </tr>
                                 <c:forEach var="day" items="${amenityWithHours.amenityHours}">
                                     <tr>
-                                        <td>${day.key}</td>
+                                        <td class="day">${day.key}</td>
                                         <td>${day.value.openTime}</td>
                                         <td>${day.value.closeTime}</td>
                                     </tr>
@@ -120,8 +122,9 @@
                 </div>
             </c:forEach>
         </div>
+
         <div class="column-right">
-            <%@ include file="/WEB-INF/jsp/components/rightColumn.jsp" %>
+            <%@ include file="/WEB-INF/jsp/components/calendarWidget.jsp" %>
         </div>
     </div>
 </div>

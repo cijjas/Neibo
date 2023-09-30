@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/jsp/components/tooltips.jsp" %>
 
 <div class="nav-container">
-    <nav class="navbar navbar-expand-lg custom-navbar" style="z-index: 1000">
+    <nav class="navbar navbar-expand-lg custom-navbar">
         <div class="container-xl">
             <div class="d-flex justify-content-between align-items-center w-100">
                 <a class="navbar-brand" href="${pageContext.request.contextPath}/">

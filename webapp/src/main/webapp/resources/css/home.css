@@ -1225,3 +1225,31 @@ h6 {
     box-shadow: -2px 3px 0 var(--text);
     cursor: pointer;
 }
+/*---------------------------------Amenities -----------------------*/
+
+.table-striped{
+    --oddcolor: var(--background);
+    --evencolor: var(--onbackground);
+    --column-padding: 20px;
+    & td {
+        text-align: center;
+    }
+
+    & th {
+        text-align: center;
+
+    }
+    & th.day,
+    & td.day
+    {
+        text-align: start;
+        padding-left: var(--column-padding);
+    }
+    & tr:nth-child(even) {
+        background-color: var(--evencolor);
+    }
+
+    & tr:nth-child(odd) {
+        background-color: var(--oddcolor);
+    }
+}
