@@ -57,7 +57,7 @@ header .current-date{
     font-size: 1rem;
     font-weight: 500;
     color: var(--text);
-    cursor: default;
+    cursor: pointer;
 }
 .calendar{
     padding: 0px;
@@ -95,7 +95,7 @@ header .current-date{
 }
 .calendar .days li{
     z-index: 1;
-    cursor: pointer;
+    cursor: default;
     position: relative;
     margin-top: 15px;
 }
@@ -121,4 +121,25 @@ header .current-date{
 }
 .days li:not(.active):hover::before{
     background: var(--secondary);
+}
+
+.calendar .days li.event {
+    z-index: 1;
+    cursor: default;
+    position: relative;
+    margin-top: 15px;
+    color: var(--onbackground); /* Set the text color to white */
+}
+
+.calendar .days li.event::before {
+    position: absolute;
+    content: "";
+    left: 50%;
+    top: 50%;
+    height: 22px;
+    width: 22px;
+    z-index: -1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--accent); /* Use the --accent color for the circle */
 }

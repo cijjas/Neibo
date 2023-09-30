@@ -18,6 +18,7 @@
       <span id="next" class="material-symbols-rounded">chevron_right</span>
     </div>
   </header>
+  <div class="divider"></div>
   <div class="calendar">
     <ul class="weeks">
       <li>Sunday</li>
