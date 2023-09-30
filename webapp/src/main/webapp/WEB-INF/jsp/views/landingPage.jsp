@@ -13,7 +13,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
-    <title>Welcome to Neibo</title>
+    <title><spring:message code="Welcome.to.neibo"/></title>
+    <link href="${pageContext.request.contextPath}/resources/css/home.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/landingPage.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
@@ -21,141 +22,183 @@
 <body class="landing-body ${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%----%>
 
-    <%@ include file="/WEB-INF/jsp/components/backgroundDrawing.jsp" %>
+<%@ include file="/WEB-INF/jsp/components/backgroundDrawing.jsp" %>
+<%--Successfull signup popup--%>
+<c:if test="${successfullySignup == true}">
+    <c:set var="successMessage">
+        <spring:message code="Successfully.signup"/>
+    </c:set>
 
+    <jsp:include page="/WEB-INF/jsp/components/successDialog.jsp" >
+        <jsp:param name="successMessage" value="${successMessage}" />
+    </jsp:include>
+    <script>
+        setTimeout(function() {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/redirectToChannel'; // Replace with your desired URL
 
-    <div class="content-container">
-        <%@ include file="/WEB-INF/jsp/components/landingNavbar.jsp" %>
-        <div class="landing-neibo">
-            neibo
-        </div>
-        <p class="landing-description"><spring:message code="Landing.page.desc"/></p>
+            // Optionally, you can add any form data or parameters here
+            // For example, adding a hidden input field with a value
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'channelId';
+            input.value = 'login';
 
-        <a class="action-button"  onclick="openLoginDialog()">
-            <spring:message code="Login"/>
-        </a>
-        <span style="color:var(--lighttext); font-size: 14px;">Not a member?
+            // Append the input field to the form
+            form.appendChild(input);
+
+            // Append the form to the document and submit it
+            document.body.appendChild(form);
+            form.submit();
+        }, 2500);
+    </script>
+</c:if>
+
+<div class="content-container">
+    <%@ include file="/WEB-INF/jsp/components/landingNavbar.jsp" %>
+    <div class="landing-neibo">
+        neibo
+    </div>
+    <p class="landing-description"><spring:message code="Landing.page.desc"/></p>
+
+    <a class="action-button"  onclick="openLoginDialog()">
+        <spring:message code="Login"/>
+    </a>
+    <span style="color:var(--lighttext); font-size: 14px;">Not a member?
             <a onclick="openSignupDialog()" class="a-link">Signup now</a>
         </span>
 
-<%--        Login dialog--%>
-        <div class="dialog" id="loginDialog" style="display: none">
-            <div class="dialog-content">
-                <div class="close-button" onclick="closeLoginDialog()">
-                    <i class="fas fa-close"></i>
-                </div>
-                <div class="title">
-                    <spring:message code="Welcome.to.neibo"/>
-                    <br>
-                    <span><spring:message code="Login.to.continue"/> </span>
-                </div>
+    <%--        Login dialog--%>
+    <div class="dialog" id="loginDialog" style="display: none">
+        <div class="dialog-content">
+            <div class="close-button" onclick="closeLoginDialog()">
+                <i class="fas fa-close"></i>
+            </div>
+            <div class="title">
+                <spring:message code="Welcome.to.neibo"/>
+                <br>
+                <span><spring:message code="Login.to.continue"/> </span>
+            </div>
 
-                <form method="post" class="login-form">
-                    <div class="centered-column">
-                        <label>
-                            <input type="email" placeholder="Email" name="mail" class="input">
-                        </label>
-                        <label>
-                            <input type="password" placeholder="Password" name="password" class="input">
-                        </label>
-
-                    </div>
-                    <label class="centered-row light-text">
-                        <input  name="rememberMe" type="checkbox">
-                        <spring:message code="Remember.me"/>
+            <form method="post" class="login-form" id="loginForm">
+                <div class="centered-column">
+                    <label>
+                        <input type="email" placeholder="Email" name="mail" class="input">
                     </label>
-                    <div class="centered-column">
-                        <button class="action-button">Login</button>
-                        <span style="color:var(--lighttext); font-size: 14px;"><spring:message code="Not.a.member.question"/>
+
+                    <label>
+                        <input type="password" placeholder="Password"  autocomplete="true" name="password" class="input">
+                    </label>
+
+                </div>
+                <label class="centered-row light-text">
+                    <input  name="rememberMe" type="checkbox">
+                    <spring:message code="Remember.me"/>
+                </label>
+                <div class="centered-column">
+                    <button class="action-button">Login</button>
+                    <span style="color:var(--lighttext); font-size: 14px;"><spring:message code="Not.a.member.question"/>
                             <a onclick="closeLoginDialog();openSignupDialog()" class="a-link"><spring:message code="Signup.now"/></a>
                         </span>
-                    </div>
-
-                </form>
-            </div>
-        </div>
-
-        <div class="dialog" id="signupDialog" style="display: none">
-            <div class="dialog-content signup-content">
-                <div class="close-button" onclick="closeSignupDialog()">
-                    <i class="fas fa-close"></i>
-                </div>
-                <div class="title">
-                    <spring:message code="Welcome.to.neibo"/>
-                    <br>
-                    <span><spring:message code="Signup.to.get.started"/></span>
                 </div>
 
-
-                <form:form method="post" action="signup" modelAttribute="signupForm">
-                    <form:errors cssClass="error" element="p"/>
-                    <div class="centered-column">
-
-                        <div class="form-input">
-                            <form:label path="name">
-                                <form:input path="name" placeholder="First Name" class="input"/>
-                            </form:label>
-                            <form:errors path="name" cssClass="landing-error" element="p"/>
-                        </div>
-                        <div class="form-input">
-                            <form:label path="surname">
-                                <form:input path="surname" placeholder="Surname" class="input"/>
-                            </form:label>
-                            <form:errors path="surname" cssClass="landing-error" element="p"/>
-                        </div>
-                        <div class="form-input">
-                            <form:label path="mail">
-                                <form:input path="mail" placeholder="Email" class="input"/>
-                            </form:label>
-                            <form:errors path="mail" cssClass="landing-error" element="p"/>
-                        </div>
-                        <div class="form-input">
-                            <form:label path="password">
-                                <form:input type="password" path="password" placeholder="Password" class="input"/>
-                            </form:label>
-                            <form:errors path="password" cssClass="landing-error" element="p"/>
-                        </div>
-                        <div class="form-input">
-                            <form:select path="neighborhoodId" class="cool-select">
-                                <c:forEach var="entry" items="${neighborhoodsList}">
-                                    <form:option value="${entry.getNeighborhoodId()}">${entry.getName()}</form:option>
-                                </c:forEach>
-                            </form:select>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="action-button"><spring:message code="Signup"/></button>
-                </form:form>
-
-            </div>
+            </form>
         </div>
-
-<%--        Signup dialog--%>
-        <c:if test="${openSignupDialog == true}">
-            <script>
-                document.getElementById("signupDialog").style.display = "flex";
-            </script>
-        </c:if>
-
     </div>
 
+    <div class="dialog" id="signupDialog" style="display: none">
+        <div class="dialog-content signup-content">
+            <div class="close-button" onclick="closeSignupDialog()">
+                <i class="fas fa-close"></i>
+            </div>
+            <div class="title">
+                <spring:message code="Welcome.to.neibo"/>
+                <br>
+                <span><spring:message code="Signup.to.get.started"/></span>
+            </div>
 
-     <script>
-         function openLoginDialog() {
-             document.getElementById("loginDialog").style.display = "flex";
-         }
+            <form:form method="post" action="signup" modelAttribute="signupForm" id="signupForm">
+                <form:errors cssClass="error" element="p"/>
+                <div class="centered-column">
 
-         function closeLoginDialog() {
-             document.getElementById("loginDialog").style.display = "none";
-         }
+                    <div class="form-input">
+                        <form:label path="name">
+                            <form:input path="name" placeholder="First Name" class="input"/>
+                        </form:label>
+                        <form:errors path="name" cssClass="landing-error" element="p"/>
+                    </div>
+                    <div class="form-input">
+                        <form:label path="surname">
+                            <form:input path="surname" placeholder="Surname" class="input"/>
+                        </form:label>
+                        <form:errors path="surname" cssClass="landing-error" element="p"/>
+                    </div>
+                    <div class="form-input">
+                        <form:label path="mail">
+                            <form:input path="mail" placeholder="Email" class="input"/>
+                        </form:label>
+                        <form:errors path="mail" cssClass="landing-error" element="p"/>
+                    </div>
+                    <div class="form-input">
+                        <form:label path="password">
+                            <form:input type="password" path="password" autocomplete="true" placeholder="Password" class="input"/>
+                        </form:label>
+                        <form:errors path="password" cssClass="landing-error" element="p"/>
+                    </div>
+                    <div class="form-input">
+                        <form:select path="neighborhoodId" class="cool-select">
+                            <c:forEach var="entry" items="${neighborhoodsList}">
+                                <form:option value="${entry.getNeighborhoodId()}">${entry.getName()}</form:option>
+                            </c:forEach>
+                        </form:select>
+                    </div>
+                </div>
 
-         function openSignupDialog(){
-             document.getElementById("signupDialog").style.display = "flex";
-         }
-         function closeSignupDialog(){
-             document.getElementById("signupDialog").style.display = "none";
-         }
-     </script>
+                <button type="submit" class="action-button"><spring:message code="Signup"/></button>
+            </form:form>
+
+        </div>
+    </div>
+
+    <%--Signup dialog--%>
+    <c:if test="${openSignupDialog == true}">
+        <script>
+            document.getElementById("signupDialog").style.display = "flex";
+        </script>
+    </c:if>
+
+
+</div>
+
+
+<script>
+    function openLoginDialog() {
+        document.getElementById("loginDialog").style.display = "flex";
+    }
+
+    function closeLoginDialog() {
+        document.getElementById("loginDialog").style.display = "none";
+    }
+
+    function openSignupDialog(){
+        document.getElementById("signupDialog").style.display = "flex";
+    }
+    function closeSignupDialog(){
+        document.getElementById("signupDialog").style.display = "none";
+
+        const formElements = document.querySelectorAll("#signupForm input");
+        formElements.forEach(function (element) {
+            element.value = "";
+        });
+
+        // Clear error messages
+        const errorElements = document.querySelectorAll(".landing-error");
+        errorElements.forEach(function (element) {
+            element.textContent = ""; // Clear the error message text
+        });
+    }
+</script>
 
 
 

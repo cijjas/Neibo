@@ -11,7 +11,6 @@ import enums.Language;
 import enums.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,15 +22,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Controller
 public class FrontController {
@@ -61,8 +56,8 @@ public class FrontController {
                            final ImageService is,
                            final ReservationService rs,
                            final AmenityService as,
-                           final EventService es
-    ) {
+                           final EventService es,
+                           EventService es1) {
         this.is = is;
         this.ps = ps;
         this.us = us;
@@ -74,10 +69,38 @@ public class FrontController {
         this.cas = cas;
         this.as = as;
         this.rs = rs;
-        this.es = es;
+        this.es = es1;
     }
 
     // ------------------------------------- FEED --------------------------------------
+
+
+    private ModelAndView handleChannelRequest(
+            String channelName,
+            int page,
+            int size,
+            SortOrder date,
+            List<String> tags
+    ) {
+        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags);
+        int totalPages = ps.getTotalPages(channelName, size, tags);
+
+        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Long> eventTimestamps = eventDates.stream()
+                .map(d -> d.getTime())
+                .collect(Collectors.toList());
+
+        ModelAndView mav = new ModelAndView("views/index");
+        mav.addObject("tagList", ts.getTags());
+        mav.addObject("appliedTags", tags);
+        mav.addObject("postList", postList);
+        mav.addObject("page", page);
+        mav.addObject("totalPages", totalPages);
+        mav.addObject("channel", channelName);
+        mav.addObject("eventDates", eventTimestamps);
+
+        return mav;
+    }
 
     @RequestMapping("/")
     public ModelAndView index(
@@ -86,25 +109,7 @@ public class FrontController {
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ) {
-
-        List<Post> postList = ps.getPostsByCriteria("Feed", page, size, date, tags);
-        int totalPages = ps.getTotalPages("Feed", size, tags);
-
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(d -> d.getTime())
-                .collect(Collectors.toList());
-
-        final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags());
-        mav.addObject("appliedTags", tags);
-        mav.addObject("postList", postList);
-        mav.addObject("page", page); // Add page parameter to the model
-        mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
-        mav.addObject("channel", "Feed");
-        mav.addObject("eventDates", eventTimestamps);
-
-        return mav;
+        return handleChannelRequest("Feed", page, size, date, tags);
     }
 
     @RequestMapping("/hey")
@@ -131,12 +136,16 @@ public class FrontController {
         return "redirect:/profile";
     }
 
-    @RequestMapping(value = "/applyTagsFilter", method = RequestMethod.POST)
-    public ModelAndView applyTagsFilter(@RequestParam("tags") String tags, @RequestParam("currentUrl") String currentUrl) {
-        String redirectUrl = ts.createURLForTagFilter(tags, currentUrl, getLoggedNeighbor().getNeighborhoodId());
-        return new ModelAndView("redirect:" + redirectUrl);
+    @RequestMapping (value = "/updateLanguagePreference", method = RequestMethod.POST)
+    public String updateLanguagePreference(@RequestParam("language") String language) {
+        User user = getLoggedNeighbor();
+        return "redirect:/profile";
     }
 
+    @RequestMapping(value = "/applyTagsFilter", method = RequestMethod.POST)
+    public ModelAndView applyTagsFilter(@RequestParam("tags") String tags, @RequestParam("currentUrl") String currentUrl) {
+        return new ModelAndView("redirect:" + ts.createURLForTagFilter(tags, currentUrl, getLoggedNeighbor().getNeighborhoodId()));
+    }
 
     @RequestMapping("/announcements")
     public ModelAndView announcements(
@@ -145,24 +154,7 @@ public class FrontController {
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ) {
-        List<Post> postList = ps.getPostsByCriteria("Administracion", page, size, date, tags);
-        int totalPages = ps.getTotalPages("Administracion", size, tags);
-
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(d -> d.getTime())
-                .collect(Collectors.toList());
-
-        final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags());
-        mav.addObject("appliedTags", tags);
-        mav.addObject("postList", postList);
-        mav.addObject("page", page); // Add page parameter to the model
-        mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
-        mav.addObject("channel", "Announcements");
-        mav.addObject("eventDates", eventTimestamps);
-
-        return mav;
+        return handleChannelRequest("Announcements", page, size, date, tags);
     }
 
     // ------------------------------------- FORO --------------------------------------
@@ -174,24 +166,7 @@ public class FrontController {
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ){
-        List<Post> postList = ps.getPostsByCriteria("Complaints", page, size, date, tags);
-        int totalPages = ps.getTotalPages("Complaints", size, tags);
-
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(d -> d.getTime())
-                .collect(Collectors.toList());
-
-        final ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags());
-        mav.addObject("appliedTags", tags);
-        mav.addObject("postList", postList);
-        mav.addObject("page", page); // Add page parameter to the model
-        mav.addObject("totalPages", totalPages); // Add totalPages parameter to the model
-        mav.addObject("channel", "Complaints");
-        mav.addObject("eventDates", eventTimestamps);
-
-        return mav;
+        return handleChannelRequest("Complaints", page, size, date, tags);
     }
 
     @RequestMapping(value = "/unverified", method = RequestMethod.GET)
@@ -350,8 +325,12 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
-    public ModelAndView signupForm(@ModelAttribute("signupForm") final SignupForm signupform) {
+    public ModelAndView signupForm(
+            @ModelAttribute("signupForm") final SignupForm signupform,
+            @RequestParam(value = "successfullySignup", required = false) boolean successfullySignup
+    ) {
         ModelAndView mav = new ModelAndView("views/landingPage");
+        mav.addObject("successfullySignup", successfullySignup);
         mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
         return mav;
     }
@@ -360,13 +339,14 @@ public class FrontController {
     public ModelAndView signupForm(@Valid @ModelAttribute("signupForm") final SignupForm signupForm,
                               final BindingResult errors) {
         if (errors.hasErrors()) {
-            ModelAndView mav = signupForm(signupForm);
+            ModelAndView mav = signupForm(signupForm, false);
             mav.addObject("openSignupDialog", true);
             return mav;
         }
-
         us.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), Language.ENGLISH);
-        return new ModelAndView("redirect:/");
+        ModelAndView mav = new ModelAndView("redirect:/signup");
+        mav.addObject("successfullySignup", true);
+        return mav;
     }
 
 

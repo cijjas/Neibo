@@ -4,13 +4,15 @@
     <div class="column d-flex justify-content-center align-items-start">
         <h3 class="m-b-10"><spring:message code="Filter.by.tags"/></h3>
 
-        <div class="m-b-10" >
-            <c:set var="val"><spring:message code="EnterATag"/></c:set>
-            <input id="niakaniaka" type="hidden" value="${val}"/>
+        <div class="m-b-10 w-100" >
+            <div class="d-flex flex-column justify-content-center align-items-center  w-100">
+                <c:set var="val"><spring:message code="EnterATag"/></c:set>
+                <input id="niakaniaka" type="hidden" value="${val}"/>
 
-            <label for="tag-input2">
-                <input type="text" id="tag-input2" >
-            </label>
+                <label for="tag-input2" class="w-100">
+                    <input type="text" id="tag-input2"  >
+                </label>
+            </div>
         </div>
         <div class="m-b-10 tags-row tags" >
             <c:forEach var="tag" items="${tagList}" >
