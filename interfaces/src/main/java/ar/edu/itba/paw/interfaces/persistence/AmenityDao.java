@@ -9,17 +9,22 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface AmenityDao {
+
+    // --------------------------------------------- AMENITIES INSERT --------------------------------------------------
+
     Amenity createAmenity(String name, String description, Map<String, DayTime> dayHourData);
 
-    List<Amenity> getAmenities();
+    // --------------------------------------------- AMENITIES INSERT --------------------------------------------------
 
     Optional<Amenity> findAmenityById(long amenityId);
 
-    boolean deleteAmenity(long amenityId);
+    List<Amenity> getAmenities();
 
     DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek);
 
     Map<String, DayTime> getAmenityHoursByAmenityId(long amenityId);
 
-    //boolean updateAmenity(long amenityId, String name, String description);
+    // --------------------------------------------- AMENITIES INSERT --------------------------------------------------
+
+    boolean deleteAmenity(long amenityId);
 }

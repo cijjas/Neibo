@@ -161,6 +161,21 @@
                         <form:errors path="password" cssClass="landing-error" element="p"/>
                     </div>
                     <div class="form-input">
+                        <form:label path="identification">
+                            <form:input type="int" path="identification" placeholder="Identification" class="input"/>
+                        </form:label>
+                        <form:errors path="identification" cssClass="landing-error" element="p"/>
+                    </div>
+                    <div class="form-input">
+                        <form:label path="language">
+                            <form:select path="language" class="cool-select">
+                                <form:option value="English">English</form:option>
+                                <form:option value="Spanish">Spanish</form:option>
+                            </form:select>
+                        </form:label>
+                        <form:errors path="language" cssClass="landing-error" element="p"/>
+                    </div>
+                    <div class="form-input">
                         <form:select path="neighborhoodId" class="cool-select">
                             <c:forEach var="entry" items="${neighborhoodsList}">
                                 <form:option value="${entry.getNeighborhoodId()}">${entry.getName()}</form:option>

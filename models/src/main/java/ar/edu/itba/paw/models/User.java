@@ -15,7 +15,8 @@ public class User {
     private final Language language;
     private final UserRole role;
     private final Date creationDate;
-    private final long profilePictureId; // Add the profilePictureId field
+    private final long profilePictureId;
+    private final int identification;
 
     private User(Builder builder) {
         this.userId = builder.userId;
@@ -29,6 +30,7 @@ public class User {
         this.role = builder.role;
         this.creationDate = builder.creationDate;
         this.profilePictureId = builder.profilePictureId;
+        this.identification = builder.identification;
     }
 
     public static class Builder {
@@ -43,6 +45,7 @@ public class User {
         private UserRole role;
         private Date creationDate;
         private long profilePictureId;
+        private int identification;
 
         public Builder userId(long userId) {
             this.userId = userId;
@@ -99,6 +102,11 @@ public class User {
             return this;
         }
 
+        public Builder identification(int identification) {
+            this.identification = identification;
+            return this;
+        }
+
         public User build() {
             return new User(this);
         }
@@ -148,6 +156,10 @@ public class User {
         return profilePictureId;
     }
 
+    public int getIdentification() {
+        return identification;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -162,6 +174,7 @@ public class User {
                 ", role=" + role +
                 ", creationDate=" + creationDate +
                 ", profilePictureId=" + profilePictureId +
+                ", identification=" + identification + // Include identification in the toString method
                 '}';
     }
 }

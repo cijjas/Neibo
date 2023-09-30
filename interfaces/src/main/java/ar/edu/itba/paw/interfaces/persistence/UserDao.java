@@ -22,7 +22,7 @@ public interface UserDao {
     // ---------------------------------------------- USERS INSERT -----------------------------------------------------
 
     User createUser(final String mail, final String password, final String name, final String surname,
-                    final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role);
+                    final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role, final int identification);
 
     // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
@@ -39,5 +39,5 @@ public interface UserDao {
     // ---------------------------------------------- USERS UPDATE -----------------------------------------------------
 
     void setUserValues(final long id, final String password, final String name, final String surname,
-                       final Language language, final boolean darkMode, final long profilePictureId,final UserRole role);
+                       final Language language, final boolean darkMode, final long profilePictureId,final UserRole role, final int identification);
 }

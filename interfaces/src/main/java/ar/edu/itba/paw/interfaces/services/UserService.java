@@ -24,7 +24,7 @@ public interface UserService {
     // -----------------------------------------------------------------------------------------------------------------
 
     User createNeighbor(final String mail, final String password, final String name, final String surname,
-                        final long neighborhoodId, Language language);
+                        final long neighborhoodId, final Language language, final int identification);
 
     // -----------------------------------------------------------------------------------------------------------------
 

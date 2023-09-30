@@ -40,7 +40,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User createUser(final String mail, final String password, final String name, final String surname,
-                           final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role) {
+                           final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role, final int identification) {
         Map<String, Object> data = new HashMap<>();
         data.put("mail", mail);
         data.put("password", password);
@@ -51,6 +51,7 @@ public class UserDaoImpl implements UserDao {
         data.put("darkmode", darkMode);
         data.put("language", language != null ? language.toString() : null);
         data.put("role", role != null ? role.toString() : null);
+        data.put("identification", identification);
 
         final Number key = jdbcInsert.executeAndReturnKey(data);
         return new User.Builder()
@@ -62,6 +63,7 @@ public class UserDaoImpl implements UserDao {
                 .darkMode(darkMode)
                 .language(language)
                 .role(role)
+                .identification(identification)
                 .build();
     }
 
@@ -150,8 +152,9 @@ public class UserDaoImpl implements UserDao {
     // ---------------------------------------------- USERS UPDATE -----------------------------------------------------
 
     @Override
-    public void setUserValues(final long id, final String password, final String name, final String surname, final Language language, final boolean darkMode, final long profilePictureId,final UserRole role) {
-        jdbcTemplate.update("UPDATE users SET name = ?, surname = ?, password = ?, darkmode = ?, language = ?, role = ?, profilepictureid = ?  WHERE userid = ?",
-                name, surname, password, darkMode, language != null ? language.toString() : null, role != null ? role.toString() : null, profilePictureId == 0 ? null : profilePictureId, id);
+    public void setUserValues(final long id, final String password, final String name, final String surname,
+                              final Language language, final boolean darkMode, final long profilePictureId, final UserRole role, final int identification) {
+        jdbcTemplate.update("UPDATE users SET name = ?, surname = ?, password = ?, darkmode = ?, language = ?, role = ?, profilepictureid = ?, identification = ? WHERE userid = ?",
+                name, surname, password, darkMode, language != null ? language.toString() : null, role != null ? role.toString() : null, profilePictureId == 0 ? null : profilePictureId, id, identification);
     }
 }

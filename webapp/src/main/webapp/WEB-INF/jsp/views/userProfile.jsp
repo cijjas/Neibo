@@ -99,9 +99,13 @@
                         <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600"><spring:message code="Preferences"/></h6>
                         <div class="row justify-content-end">
                             <a href="${pageContext.request.contextPath}/logout" class=" cool-button cool-small on-bg">
+                                <spring:message code="SaveChanges"/>
+                            </a>
+                        </div>
+                        <div class="row justify-content-end">
+                            <a href="${pageContext.request.contextPath}/logout" class=" cool-button cool-small on-bg">
                                     <spring:message code="Logout"/>
                             </a>
-
                         </div>
                     </div>
                 </div>
