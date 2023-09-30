@@ -18,6 +18,4 @@ public interface ChannelDao {
     Optional<Channel> findChannelById(long id);
 
     Optional<Channel> findChannelByName(String name);
-
-    List<Channel> getChannels();
 }

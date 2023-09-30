@@ -71,5 +71,4 @@ public class ChannelDaoImpl implements ChannelDao {
     public List<Channel> getChannels(final long neighborhoodId) {
         return jdbcTemplate.query(CHANNELS_JOIN_NEIGHBORHOODS + " WHERE n.neighborhoodid = ?", ROW_MAPPER, neighborhoodId);
     }
-
 }
