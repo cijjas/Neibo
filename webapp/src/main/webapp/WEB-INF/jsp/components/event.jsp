@@ -11,7 +11,7 @@
                 </div>
 
                 <div class="col-md-4 text-right">
-                    <a href="${pageContext.request.contextPath}/admin/deleteEvent/${param.eventId}" class="btn btn-link">
+                    <a href="${pageContext.request.contextPath}/admin/deleteEvent/${param.eventId}?timestamp=${selectedTimestamp}" class="btn btn-link">
                         <i class="fas fa-trash" style="color: var(--error);"></i>
                     </a>
                 </div>

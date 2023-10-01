@@ -723,11 +723,15 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/admin/deleteEvent/{id}", method = RequestMethod.GET)
-    public ModelAndView deleteEvent(@PathVariable(value = "id") int eventId) {
-        ModelAndView mav = new ModelAndView("redirect:/calendar");
+    public ModelAndView deleteEvent(
+            @PathVariable(value = "id") int eventId,
+            @RequestParam(required = false, defaultValue = "0") long timestamp) {
+
+        ModelAndView mav = new ModelAndView("redirect:/calendar?timestamp=" + timestamp);
         es.deleteEvent(eventId);
         return mav;
     }
+
 
     @RequestMapping(value = "/redirectToSite", method = RequestMethod.POST)
     public ModelAndView redirectToSite(
