@@ -8,4 +8,6 @@ public interface ContactDao {
     Contact createContact(long neighborhoodId, String contactName, String contactAddress, String contactPhone);
 
     List<Contact> getContacts(final long neighborhoodId);
+
+    boolean deleteContact(long contactId);
 }

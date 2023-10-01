@@ -87,19 +87,22 @@
                             </div>
 
 
-                            <div class="tags-input" style="display:flex;flex-direction:column;align-items:center;">
-                                <c:set var="val"><spring:message code="EnterATag"/></c:set>
-                                <input id="niakaniaka" type="hidden" value="${val}"/>
-                                <label for="tag-input1">
-                                    <input type="text" id="tag-input1">
-                                </label>
-                                <form:label path="tags" >
-                                    <form:input type="hidden" name="tags" id="tags-input" value="" path="tags"/>
-                                    <div style="text-align: center">
-                                        <form:errors path="tags" cssClass="error" element="p"/>
-                                    </div>
-                                </form:label>
+                            <div style="padding-left: 20%; padding-right: 20%">
+                                <div class="tags-input">
+                                    <c:set var="val"><spring:message code="EnterATag"/></c:set>
+                                    <input id="niakaniaka" type="hidden" value="${val}"/>
+                                    <label for="tag-input1" class="w-100">
+                                        <input type="text" id="tag-input1">
+                                    </label>
+                                    <form:label path="tags" >
+                                        <form:input type="hidden" name="tags" id="tags-input" value="" path="tags"/>
+                                        <div style="text-align: center">
+                                            <form:errors path="tags" cssClass="error" element="p"/>
+                                        </div>
+                                    </form:label>
+                                </div>
                             </div>
+
                         </div>
 
                         <%--Submit button --%>

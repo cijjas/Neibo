@@ -121,37 +121,73 @@ public class FrontController {
     @RequestMapping("/admin/neighbors")
     public ModelAndView neighbors(
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "3") int size
+            @RequestParam(value = "size", defaultValue = "10") int size
     ) {
 
-        final ModelAndView mav = new ModelAndView("admin/requestManager");
+        final ModelAndView mav = new ModelAndView("admin/views/requestManager");
+        mav.addObject("neighbors", true);
+        mav.addObject("page", page);
         mav.addObject("totalPages", us.getTotalPages(UserRole.NEIGHBOR, getLoggedNeighbor().getNeighborhoodId(), size ));
-        mav.addObject("verifiedList", us.getUsersPage(UserRole.NEIGHBOR,getLoggedNeighbor().getNeighborhoodId(), page, size));
+        mav.addObject("users", us.getUsersPage(UserRole.NEIGHBOR,getLoggedNeighbor().getNeighborhoodId(), page, size));
         return mav;
     }
 
     @RequestMapping("/admin/unverified")
     public ModelAndView unverified(
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "3") int size
+            @RequestParam(value = "size", defaultValue = "10") int size
     ) {
-
-        final ModelAndView mav = new ModelAndView("admin/requestManager");
-        mav.addObject("totalPages", us.getTotalPages(UserRole.UNVERIFIED_NEIGHBOR, getLoggedNeighbor().getNeighborhoodId(), size ));
-        mav.addObject("unverifiedList", us.getUsersPage(UserRole.UNVERIFIED_NEIGHBOR,getLoggedNeighbor().getNeighborhoodId(), page, size));
+        final ModelAndView mav = new ModelAndView("admin/views/requestManager");
+        mav.addObject("neighbors", false);
+        mav.addObject("page", page);
+        mav.addObject("totalPages", us.getTotalPages(UserRole.UNVERIFIED_NEIGHBOR, getLoggedNeighbor().getNeighborhoodId(), size));
+        mav.addObject("users", us.getUsersPage(UserRole.UNVERIFIED_NEIGHBOR,getLoggedNeighbor().getNeighborhoodId(), page, size));
         return mav;
     }
 
+    @RequestMapping("/unverifyUser")
+    public ModelAndView unverifyUser(
+            @RequestParam("userId") long userId
+    ) {
+        us.unverifyNeighbor(userId);
+        System.out.println("UNVERIFIED USER" + userId);
+        return new ModelAndView("redirect:/admin/neighbors");
+    }
+
+    @RequestMapping("/verifyUser")
+    public ModelAndView verifyUser(
+            @RequestParam("userId") long userId
+    ) {
+        System.out.println("VERIFIED USER" + userId);
+
+        us.verifyNeighbor(userId);
+        return new ModelAndView("redirect:/admin/unverified");
+    }
 
     // ------------------------------------- PROFILE --------------------------------------
 
-    @RequestMapping("/profile")
-    public ModelAndView profile() {
+    @RequestMapping(value = "/profile", method = RequestMethod.GET)
+    public ModelAndView profile(@ModelAttribute("profilePictureForm") final ProfilePictureForm profilePictureForm) {
         ModelAndView mav = new ModelAndView("views/userProfile");
         mav.addObject("neighbor", getLoggedNeighbor());
         //us.updateLanguage(getLoggedNeighbor().getUserId(), "Spanish");
         return mav;
     }
+
+    @RequestMapping(value = "/profile", method = RequestMethod.POST)
+    public ModelAndView profile(@Valid @ModelAttribute("profilePictureForm") final ProfilePictureForm profilePictureForm,
+                                final BindingResult errors) {
+        ModelAndView mav = new ModelAndView("redirect: /profile");
+
+        if (errors.hasErrors()) {
+            return profile(profilePictureForm);
+        }
+
+        us.updateProfilePicture(getLoggedNeighbor().getUserId(), profilePictureForm.getImageFile());
+        //us.updateLanguage(getLoggedNeighbor().getUserId(), "Spanish");
+        return mav;
+    }
+
     @RequestMapping (value = "/updateDarkModePreference", method = RequestMethod.POST)
     public String updateDarkModePreference() {
         User user = getLoggedNeighbor();
@@ -230,6 +266,8 @@ public class FrontController {
         Integer channelId = publishForm.getChannel();
 
         Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), channelId, publishForm.getTags(), imageFile);
+//        Resource res = rs1.createResource(1, "prueba resource", "prueba descripcion", imageFile);
+//        System.out.println("PRINTING RESOURCE" + res);
         ModelAndView mav = new ModelAndView("views/publish");
         mav.addObject("channelId", channelId);
         mav.addObject("showSuccessMessage", true);
@@ -264,7 +302,7 @@ public class FrontController {
             @ModelAttribute("publishForm") final PublishForm publishForm,
             @RequestParam (value = "onChannelId", required = false) Long onChannelId
     ) {
-        final ModelAndView mav = new ModelAndView("admin/publishAdmin");
+        final ModelAndView mav = new ModelAndView("admin/views/publishAdmin");
         mav.addObject("channelList", chs.getAdminChannels(getLoggedNeighbor().getNeighborhoodId()));
         return mav;
     }
@@ -272,16 +310,15 @@ public class FrontController {
     @RequestMapping(value = "/admin/publish", method = RequestMethod.POST)
     public ModelAndView publishAdmin(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
                                      final BindingResult errors,
-                                     @RequestParam("imageFile") MultipartFile imageFile,
                                      @RequestParam (value = "onChannelId", required = false) Long onChannelId
                                      ) {
         if (errors.hasErrors()){
             return publishForm(publishForm, onChannelId);
         }
 
-        ps.createAdminPost(getLoggedNeighbor().getNeighborhoodId(), publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
+        ps.createAdminPost(getLoggedNeighbor().getNeighborhoodId(), publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), publishForm.getImageFile());
         PublishForm clearedForm = new PublishForm();
-        ModelAndView mav = new ModelAndView("admin/publishAdmin");
+        ModelAndView mav = new ModelAndView("admin/views/publishAdmin");
         mav.addObject("showSuccessMessage", true);
         mav.addObject("channelList", chs.getAdminChannels(getLoggedNeighbor().getNeighborhoodId()));
         mav.addObject("publishForm", clearedForm);
@@ -405,7 +442,13 @@ public class FrontController {
             mav.addObject("openSignupDialog", true);
             return mav;
         }
-        us.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), Language.ENGLISH, signupForm.getIdentification());
+        int identification = 0;
+        try {
+            identification = Integer.parseInt(signupForm.getIdentification());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        us.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), Language.ENGLISH, identification);
         ModelAndView mav = new ModelAndView("redirect:/signup");
         mav.addObject("successfullySignup", true);
         return mav;
@@ -425,7 +468,7 @@ public class FrontController {
 
     @RequestMapping(value = "/admin/amenities", method = RequestMethod.GET)
     public ModelAndView adminAmenities() {
-        ModelAndView mav = new ModelAndView("admin/amenities");
+        ModelAndView mav = new ModelAndView("admin/views/amenities");
 
         List<Amenity> amenities = as.getAmenities();
         List<AmenityHours> amenityHoursList = new ArrayList<>();
@@ -437,15 +480,13 @@ public class FrontController {
 
             amenityHoursList.add(amenityHours);
         }
-        System.out.println("PRINTING THE AMENITIES HOURS LIST: ");
-        System.out.println(amenityHoursList);
         mav.addObject("amenitiesHours", amenityHoursList);
         return mav;
     }
 
-    @RequestMapping(value = "/createAmenity", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/createAmenity", method = RequestMethod.GET)
     public ModelAndView createAmenityForm(@ModelAttribute("amenityForm") final AmenityForm amenityForm) {
-        ModelAndView mav = new ModelAndView("admin/createAmenity");
+        ModelAndView mav = new ModelAndView("admin/views/createAmenity");
 
         List<Time> timeList = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
@@ -479,7 +520,7 @@ public class FrontController {
         return mav;
     }
 
-    @RequestMapping(value = "/createAmenity", method = RequestMethod.POST)
+    @RequestMapping(value = "/admin/createAmenity", method = RequestMethod.POST)
     public ModelAndView createAmenity(@Valid @ModelAttribute("amenityForm") final AmenityForm amenityForm,
                                       final BindingResult errors) {
         if (errors.hasErrors()) {
@@ -620,6 +661,8 @@ public class FrontController {
     @RequestMapping(value = "/information", method = RequestMethod.GET)
     public ModelAndView information() {
         ModelAndView mav = new ModelAndView("views/information");
+        mav.addObject("resourceList", rs1.getResources(getLoggedNeighbor().getNeighborhoodId()));
+        mav.addObject("phoneNumbersList", cs1.getContacts(getLoggedNeighbor().getNeighborhoodId()));
 
         List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
@@ -632,6 +675,54 @@ public class FrontController {
         return mav;
     }
 
+    @RequestMapping(value = "/admin/information", method = RequestMethod.GET)
+    public ModelAndView adminInformation() {
+        ModelAndView mav = new ModelAndView("admin/information");
+        mav.addObject("resourceList", rs1.getResources(getLoggedNeighbor().getNeighborhoodId()));
+        mav.addObject("phoneNumbersList", cs1.getContacts(getLoggedNeighbor().getNeighborhoodId()));
+        return mav;
+    }
+
+    @RequestMapping(value = "/admin/deleteContact/{id}", method = RequestMethod.GET)
+    public ModelAndView deleteContact(@PathVariable(value = "id") int contactId) {
+        ModelAndView mav = new ModelAndView("redirect:/admin/information");
+        cs1.deleteContact(contactId);
+        return mav;
+    }
+
+    @RequestMapping(value = "/admin/createContact", method = RequestMethod.GET)
+    public ModelAndView createContact(@ModelAttribute("contactForm") final ContactForm contactForm) {
+        return new ModelAndView("admin/createContact");
+    }
+
+    @RequestMapping(value = "/admin/createContact", method = RequestMethod.POST)
+    public ModelAndView createContact(@Valid @ModelAttribute("contactForm") final ContactForm contactForm,
+                                      final BindingResult errors) {
+        if (errors.hasErrors()) {
+            System.out.println("ERRORS: " + errors);
+            return createContact(contactForm);
+        }
+        System.out.println(contactForm);
+        Contact cont = cs1.createContact(getLoggedNeighbor().getNeighborhoodId(), contactForm.getContactName(), contactForm.getContactAddress(), contactForm.getContactPhone());
+        System.out.println("created contact: " + cont);
+        return new ModelAndView("redirect:/admin/information");
+    }
+
+    @RequestMapping(value = "/admin/createResource", method = RequestMethod.GET)
+    public ModelAndView createResourceForm(@ModelAttribute("resourceForm") final ResourceForm resourceForm) {
+        return new ModelAndView("admin/createResource");
+    }
+
+    @RequestMapping(value = "/admin/createResource", method = RequestMethod.POST)
+    public ModelAndView createResource(@Valid @ModelAttribute("resourceForm") final ResourceForm resourceForm,
+                                      final BindingResult errors) {
+        if (errors.hasErrors()) {
+            System.out.println("ERRORS: " + errors);
+            return createResourceForm(resourceForm);
+        }
+        rs1.createResource(getLoggedNeighbor().getNeighborhoodId(), resourceForm.getTitle(), resourceForm.getDescription(), resourceForm.getImageFile());
+        return new ModelAndView("redirect:/admin/information");
+    }
 
     // ------------------------------------- TEST --------------------------------------
 
@@ -650,7 +741,7 @@ public class FrontController {
 
     @RequestMapping(value = "/admin/test", method = RequestMethod.GET)
     public ModelAndView adminTest() {
-        return new ModelAndView("admin/requestManager");
+        return new ModelAndView("admin/views/requestManager");
     }
 
     @RequestMapping(value = "/testDuplicatedException", method = RequestMethod.GET)

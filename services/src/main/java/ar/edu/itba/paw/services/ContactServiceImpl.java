@@ -27,4 +27,8 @@ public class ContactServiceImpl implements ContactService {
         return contactDao.getContacts(neighborhoodId);
     }
 
+    @Override
+    public boolean deleteContact(long contactId) {
+        return contactDao.deleteContact(contactId);
+    }
 }

@@ -24,10 +24,7 @@
         </a>
     </div>
 
-<%--    <div class="sticky-bottom-button">--%>
-<%--        <button id="language-toggle" class="cool-button " >Language</button>--%>
-<%--        <button id="dark-mode-toggle" class="cool-button " >Toggle Dark Mode</button>--%>
-<%--    </div>--%>
+
 
 
 </div>

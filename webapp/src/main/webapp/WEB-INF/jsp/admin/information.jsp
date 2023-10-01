@@ -28,14 +28,13 @@
 
     <div class="row">
         <div class="column-left">
-            <%@ include file="/WEB-INF/jsp/components/leftColumn.jsp" %>
+            <%@ include file="/WEB-INF/jsp/admin/components/controlPanelLeftButtons.jsp" %>
         </div>
 
         <div class="column-middle">
             <div  class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
 
-<%--                <p class="mb-3" style="color:var(--lighttext);"><spring:message code="ContactInformation"/></p>--%>
-                <h2 class="mb-3"><spring:message code="ContactInformation"/></h2>
+                <p class="mb-3" style="color:var(--lighttext);"><spring:message code="ContactInformation"/></p>
                 <c:choose>
                     <c:when test="${empty phoneNumbersList}">
                         <div class="no-posts-found">
@@ -50,18 +49,37 @@
                                     <th class="day"><spring:message code="Name"/></th>
                                     <th><spring:message code="Address"/></th>
                                     <th><spring:message code="PhoneNumber"/></th>
+                                    <th>   </th>
                                 </tr>
                                 <c:forEach var="contact" items="${phoneNumbersList}">
                                     <tr>
                                         <td class="day">${contact.contactName}</td>
                                         <td>${contact.contactAddress}</td>
                                         <td>${contact.contactPhone}</td>
+                                        <td>
+                                            <a href="${pageContext.request.contextPath}/admin/deleteContact/${contact.contactId}" class="btn btn-link">
+                                                <i class="fas fa-trash" style="color: var(--primary);"></i>
+                                            </a>
+                                        </td>
                                     </tr>
                                 </c:forEach>
                             </table>
                         </div>
                     </c:otherwise>
                 </c:choose>
+                <div class="add-button m-t-40">
+                    <a href="${pageContext.request.contextPath}/admin/createContact">
+                        <button class="cool-button cool-small on-bg">
+                            <spring:message code="Add"/> <i class="fas fa-plus"></i>
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <div class="upper-feed-buttons-box m-b-20">
+                <a class="cool-feed-button" href="${pageContext.request.contextPath}/admin/createResource">
+                    <spring:message code="AddResource"/>
+                    <i class="fa-solid fa-plus"></i>
+                </a>
             </div>
 
             <c:forEach var="resource" items="${resourceList}">

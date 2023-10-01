@@ -3,7 +3,9 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<html>
+<html lang="en">
+
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,12 +21,17 @@
     <title><spring:message code="CreatePost.title"/></title>
 </head>
 
+
 <body  class="body ${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 <div class="container">
     <div class="row">
+        <div class="column-left">
+            <%@ include file="/WEB-INF/jsp/admin/components/controlPanelLeftButtons.jsp" %>
 
-        <div class="column-publish" >
+        </div>
+
+        <div class="column-middle" >
             <div class="cool-static-container" >
                 <h2 class="card-title"><spring:message code="CreatePost.title"/></h2>
                 <div class="divider"></div>
@@ -118,7 +125,7 @@
 
 
 
-        <div class="column-info" >
+        <div class="column-right" >
             <%@ include file="/WEB-INF/jsp/components/calendarWidget.jsp" %>
         </div>
     </div>

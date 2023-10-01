@@ -1,8 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<html>
+<html lang="en">
+
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,9 +16,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/resources/css/home.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
     <title><spring:message code="CreatePost.title"/></title>
 </head>
+
 
 <body class="body">
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
@@ -23,45 +28,44 @@
 
     <div class="row">
         <div class="column-left">
-            <%@ include file="/WEB-INF/jsp/components/leftColumn.jsp" %>
+            <%@ include file="/WEB-INF/jsp/admin/components/controlPanelLeftButtons.jsp" %>
         </div>
 
         <div class="column-middle">
+            <div class="upper-feed-buttons-box m-b-20">
+                <a class="cool-feed-button" href="${pageContext.request.contextPath}/admin/createAmenity">
+                    <spring:message code="CreateNewAmenity.button"/>
+                    <i class="fa-solid fa-plus"></i>
+                </a>
+            </div>
             <c:forEach var="amenityWithHours" items="${amenitiesHours}">
-<%--                aca abajo arranca el amenitycard --%>
-                <div id="blogpost-container" class="blogpost" style="word-wrap: break-word;" aria-hidden="true">
-                    <div class="post-header">
-                        <h1 class="post-title"><c:out value="${amenityWithHours.amenity.name}" /></h1>
+                <div  class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
+                    <div >
+                        <h2 ><c:out value="${amenityWithHours.amenity.name}" /></h2>
                     </div>
-                    <p class="post-description"><c:out value="${amenityWithHours.amenity.description}" /></p>
+                    <p class="mb-3" style="color:var(--lighttext);"><c:out value="${amenityWithHours.amenity.description}" /></p>
 
-                    <!--    Amenity hours table     -->
-                    <div>
-                        <table>
+                    <div class="d-flex flex-column justify-content-center align-items-center w-100">
+                        <table class="table-striped w-100">
                             <tr>
-                                <th>Day</th>
-                                <th>Open</th>
-                                <th>Close</th>
+                                <th class="day"><spring:message code="Day"/></th>
+                                <th><spring:message code="Open"/></th>
+                                <th><spring:message code="Close"/></th>
                             </tr>
                             <c:forEach var="day" items="${amenityWithHours.amenityHours}">
                                 <tr>
-                                    <td>${day.key}</td>
+                                    <td class="day">${day.key}</td>
                                     <td>${day.value.openTime}</td>
                                     <td>${day.value.closeTime}</td>
                                 </tr>
                             </c:forEach>
                         </table>
                     </div>
-                        <%--    termina amenitycard    --%>
                 </div>
             </c:forEach>
         </div>
         <div class="column-right">
-<%--            <%@ include file="/WEB-INF/jsp/components/rightColumn.jsp" %>--%>
-            <a href="${pageContext.request.contextPath}/createAmenity" class="filter-button" >
-                <spring:message code="CreateNewAmenity.button"/>
-                <i class="fa-solid fa-plus"></i>
-            </a>
+            <%@ include file="/WEB-INF/jsp/components/calendarWidget.jsp" %>
         </div>
     </div>
 </div>

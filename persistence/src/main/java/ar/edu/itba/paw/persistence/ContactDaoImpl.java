@@ -45,6 +45,7 @@ public class ContactDaoImpl implements ContactDao {
 
         final Number key = jdbcInsert.executeAndReturnKey(data);
         return new Contact.Builder()
+                .contactId(key.longValue())
                 .contactAddress(contactAddress)
                 .contactName(contactName)
                 .contactPhone(contactPhone)
@@ -56,6 +57,7 @@ public class ContactDaoImpl implements ContactDao {
 
     private static final RowMapper<Contact> ROW_MAPPER = (rs, rowNum) ->
             new Contact.Builder()
+                    .contactId(rs.getLong("contactid"))
                     .contactAddress(rs.getString("contactaddress"))
                     .contactName(rs.getString("contactname"))
                     .contactPhone(rs.getString("contactphone"))
@@ -64,5 +66,10 @@ public class ContactDaoImpl implements ContactDao {
     @Override
     public List<Contact> getContacts(final long neighborhoodId) {
         return jdbcTemplate.query(CONTACTS + " WHERE ct.neighborhoodid = ?", ROW_MAPPER, neighborhoodId);
+    }
+
+    @Override
+    public boolean deleteContact(long contactId) {
+        return jdbcTemplate.update("DELETE FROM contacts WHERE contactid = ?", contactId) > 0;
     }
 }

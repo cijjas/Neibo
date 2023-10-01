@@ -15,7 +15,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title>Neibo - Reservation</title>
+    <title>Neibo - <spring:message code="Reservations"/></title>
 </head>
 
 <body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
@@ -28,11 +28,11 @@
 
         <div class="column-middle">
             <div  class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
-                    <h2>Make a Reservation</h2>
+                    <h2><spring:message code="MakeReservation"/></h2>
                     <div class="divider"></div>
                     <form:form method="post" action="amenities" modelAttribute="reservationForm">
                         <div class="col-md-12">
-                            <form:label path="amenityId" class="mt-3 mb-1">Select Amenity:</form:label>
+                            <form:label path="amenityId" class="mt-3 mb-1"><spring:message code="SelectAmenity"/></form:label>
                             <form:select path="amenityId" id="amenityId" required="true" class="cool-input">
                                 <form:options items="${amenitiesHours}" itemValue="amenity.amenityId" itemLabel="amenity.name"/>
                             </form:select>
@@ -40,14 +40,14 @@
                         </div>
 
                         <div class="col-md-12">
-                            <form:label path="date" class="mt-3 mb-1">Choose a Date:</form:label>
+                            <form:label path="date" class="mt-3 mb-1"><spring:message code="ChooseDate"/></form:label>
                             <form:input path="date" id="date" type="date" required="true" class="cool-input"/>
                             <form:errors path="date" cssClass="error" element="p"/>
                         </div>
 
                         <div class="d-flex flex-row justify-content-center align-items-center">
                             <div class="col-md-6">
-                                    <form:label path="startTime" class="mt-3 mb-1">Start Time:</form:label>
+                                    <form:label path="startTime" class="mt-3 mb-1"><spring:message code="StartTime"/></form:label>
                                     <form:select path="startTime" id="startTime" required="true" class="cool-input">
                                         <c:forEach var="time" items="${timeList}">
                                             <option value="${time}">${time}</option>
@@ -56,7 +56,7 @@
                                     <form:errors path="startTime" cssClass="error" element="p"/>
                             </div>
                             <div class="col-md-6">
-                                    <form:label path="endTime" class="mt-3 mb-1">End Time:</form:label>
+                                    <form:label path="endTime" class="mt-3 mb-1"><spring:message code="EndTime"/></form:label>
                                     <form:select path="endTime" id="endTime" required="true" class="cool-input">
                                         <c:forEach var="time" items="${timeList}">
                                             <option value="${time}">${time}</option>
@@ -105,9 +105,9 @@
                         <div class="d-flex flex-column justify-content-center align-items-center w-100">
                             <table class="table-striped w-100">
                                 <tr>
-                                    <th class="day">Day</th>
-                                    <th>Open</th>
-                                    <th>Close</th>
+                                    <th class="day"><spring:message code="Day"/></th>
+                                    <th><spring:message code="Open"/></th>
+                                    <th><spring:message code="Close"/></th>
                                 </tr>
                                 <c:forEach var="day" items="${amenityWithHours.amenityHours}">
                                     <tr>

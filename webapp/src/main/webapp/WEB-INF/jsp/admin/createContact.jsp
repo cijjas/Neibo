@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
@@ -13,61 +14,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/resources/css/home.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title><spring:message code="CreateNewAmenity.button"/></title>
+    <title><spring:message code="CreateContact"/></title>
 </head>
 
-<body class="body">
+<body  class="body ${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 <div class="container">
     <div class="row">
 
         <div class="column-publish" >
             <div class="cool-static-container" >
-                <h2 class="card-title"><spring:message code="CreateNewAmenity.button"/></h2>
+                <h2 class="card-title"><spring:message code="CreateContact"/></h2>
                 <div class="divider"></div>
-
-                <form:form method="post" action="createAmenity" modelAttribute="amenityForm">
+                <!-- Post Creation Form -->
+                <form:form method="post" action="/admin/createContact" modelAttribute="contactForm">
                     <form:errors cssClass="error" element="p"/>
 
                     <div class="form-column" style="margin-top:1rem;">
                         <div class="form-group">
-
-                            <div class="form-row">
-                                <spring:message code="Name" var="namePlaceholder"/>
-                                <form:input path="name" class="cool-input" placeholder="${namePlaceholder}"/>
-                                <div class="form-row form-error">
-                                    <form:errors path="name" cssClass="error" element="p"/>
-                                </div>
+                            <spring:message code="ContactName" var="namePlaceholder"/>
+                            <form:input path="contactName" class="cool-input" placeholder="${namePlaceholder}"/>
+                            <div class="form-row form-error">
+                                <form:errors path="contactName" cssClass="error" element="p"/>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <spring:message code="Description" var="descriptionPlaceholder"/>
-                            <form:textarea path="description" class="cool-input" rows="5" placeholder="${descriptionPlaceholder}"/>
+                            <spring:message code="ContactAddress" var="addressPlaceholder"/>
+                            <form:input path="contactAddress" class="cool-input" rows="5" placeholder="${addressPlaceholder}"/>
                             <div class="form-row form-error">
-                                <form:errors path="description" cssClass="error" element="p"/>
+                                <form:errors path="contactAddress" cssClass="error" element="p"/>
                             </div>
                         </div>
 
-                        <p> <spring:message code="AmenityHours"/> </p>
-                        <div class="form-row">
-                            <spring:message code="OpeningClosingTimes" var="openingClosingTimesLabel"/>
-                            <c:forEach var="day" items="${daysOfWeek}">
-                                <div class="form-column">
-                                    <label>${day}</label>
-                                    <select name="${day}OpenTime">
-                                        <c:forEach var="time" items="${timeList}">
-                                            <option value="${time}">${time}</option>
-                                        </c:forEach>
-                                    </select>
-                                    <select name="${day}CloseTime">
-                                        <c:forEach var="time" items="${timeList}">
-                                            <option value="${time}">${time}</option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                            </c:forEach>
+                        <div class="form-group">
+                            <spring:message code="ContactPhone" var="phonePlaceholder"/>
+                            <form:input path="contactPhone" class="cool-input" rows="5" placeholder="${phonePlaceholder}"/>
+                            <div class="form-row form-error">
+                                <form:errors path="contactPhone" cssClass="error" element="p"/>
+                            </div>
                         </div>
                     </div>
 
@@ -75,14 +62,25 @@
                     <div class="d-flex justify-content-end">
                         <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg" style="height:40px;" ><spring:message code="Create.verb"/></button>
                     </div>
+
                 </form:form>
             </div>
         </div>
 
+        <c:if test="${showSuccessMessage == true}">
+            <c:set var="successMessage">
+                <spring:message code="Contact.created.successfully"/>
+            </c:set>
+
+            <jsp:include page="/WEB-INF/jsp/components/successDialog.jsp" >
+                <jsp:param name="successMessage" value="${successMessage}" />
+            </jsp:include>
+        </c:if>
+
+
+
         <div class="column-info" >
-            <div class="cool-static-container" >
-                Eventualmente algo tipo puede ser el perfil, o un par de indicaciones de como crear el posteo (reddit tira esa) o el clima o el calendario
-            </div>
+            <%@ include file="/WEB-INF/jsp/components/calendarWidget.jsp" %>
         </div>
     </div>
 </div>
@@ -98,6 +96,7 @@
 
 
 <!-- Bootstrap JS and jQuery -->
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 <%@ include file="/WEB-INF/jsp/components/footer.jsp" %>
 

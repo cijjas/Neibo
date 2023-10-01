@@ -32,16 +32,18 @@ public class SignupForm {
     @Pattern(regexp = "^[a-zA-Z0-9]+$")
     private String password;
 
-    @Max(2147483646)
-    private Integer identification;
+    @NotBlank
+    @Size(max = 9)
+    @Pattern(regexp = "^[0-9]+$")
+    private String identification;
 
     private String language;
 
-    public Integer getIdentification() {
+    public String getIdentification() {
         return identification;
     }
 
-    public void setIdentification(int identification) {
+    public void setIdentification(String identification) {
         this.identification = identification;
     }
 

@@ -37,12 +37,13 @@ public class ResourceDaoImpl implements ResourceDao {
     public Resource createResource(long neighborhoodId, String title, String description, long imageId) {
         Map<String, Object> data = new HashMap<>();
         data.put("neighborhoodid", neighborhoodId);
-        data.put("title", title);
-        data.put("description", description);
-        data.put("imageId", imageId);
+        data.put("resourcetitle", title);
+        data.put("resourcedescription", description);
+        data.put("resourceimageid", imageId == 0 ? null : imageId);
 
         final Number key = jdbcInsert.executeAndReturnKey(data);
         return new Resource.Builder()
+                .resourceId(key.longValue())
                 .title(title)
                 .description(description)
                 .imageId(imageId)
@@ -54,13 +55,19 @@ public class ResourceDaoImpl implements ResourceDao {
 
     private static final RowMapper<Resource> ROW_MAPPER = (rs, rowNum) ->
             new Resource.Builder()
-                    .title(rs.getString("title"))
-                    .description(rs.getString("description"))
-                    .imageId(rs.getLong("imageId"))
+                    .resourceId(rs.getLong("resourceid"))
+                    .title(rs.getString("resourcetitle"))
+                    .description(rs.getString("resourcedescription"))
+                    .imageId(rs.getLong("resourceimageId"))
                     .neighborhoodId(rs.getLong("neighborhoodid"))
                     .build();
     @Override
     public List<Resource> getResources(final long neighborhoodId) {
         return jdbcTemplate.query(RESOURCES + " WHERE rs.neighborhoodid = ?", ROW_MAPPER, neighborhoodId);
+    }
+
+    @Override
+    public boolean deleteResource(final long resourceId) {
+        return jdbcTemplate.update("DELETE FROM resources WHERE resourceid = ?", resourceId) > 0;
     }
 }
