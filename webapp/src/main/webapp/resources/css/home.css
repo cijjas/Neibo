@@ -447,6 +447,7 @@
     flex-wrap: wrap;
     width: 100%;
 }
+
 .tags-row.tags{
     justify-content: start;
 }
@@ -462,6 +463,14 @@
     border: 1px solid var(--accent);
     border-radius: var(--border-hard);
     transition: all 0.3s ease-in-out;
+    &.static{
+        margin-bottom: 2px;
+        &:hover{
+            cursor: pointer;
+            color: var(--background);
+            background-color: var(--accent);
+        }
+    }
 }
 .filtered-tag:hover,
 .tag-option:hover{
@@ -539,6 +548,7 @@
 
 
 .tags-input {
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1041,6 +1051,15 @@ h6 {
 }
 .m-l-5{
     margin-left: 5px !important;
+}
+.m-r-5{
+    margin-right: 5px !important;
+}
+.m-l-3{
+    margin-left: 3px !important;
+}
+.m-r-3{
+    margin-right: 3px !important;
 }
 .card .card-block p {
     line-height: 25px;

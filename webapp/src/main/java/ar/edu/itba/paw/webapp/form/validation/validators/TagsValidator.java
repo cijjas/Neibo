@@ -15,7 +15,7 @@ public class TagsValidator implements
     private MessageSource messageSource;
 
     private static final String TAG_PATTERN = "^[A-Za-z0-9_]+$";
-
+    private static final int MAX_TAG_LENGTH = 20;
 
 
     @Override
@@ -36,6 +36,15 @@ public class TagsValidator implements
                 String tagError2 = messageSource.getMessage("TagError2", null, Locale.getDefault());
 
                 String errorMessage = tagError1 + tag + tagError2;
+                context.buildConstraintViolationWithTemplate(errorMessage)
+                        .addConstraintViolation()
+                        .disableDefaultConstraintViolation();
+                return false; // If any tag is invalid, return false
+            }
+            if(tag.length() > MAX_TAG_LENGTH) {
+                String tagError3 = messageSource.getMessage("TagError3", null, Locale.getDefault());
+
+                String errorMessage = tag + tagError3 ;
                 context.buildConstraintViolationWithTemplate(errorMessage)
                         .addConstraintViolation()
                         .disableDefaultConstraintViolation();

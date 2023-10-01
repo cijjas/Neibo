@@ -1,8 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<html>
+<html lang="en">
+
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,9 +16,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/resources/css/home.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
     <title><spring:message code="CreatePost.title"/></title>
 </head>
+
 
 <body class="body">
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
@@ -23,10 +28,14 @@
 
     <div class="row">
         <div class="column-left">
-            <%@ include file="/WEB-INF/jsp/components/leftColumn.jsp" %>
+            <%@ include file="/WEB-INF/jsp/admin/controlPanelLeftButtons.jsp" %>
         </div>
 
         <div class="column-middle">
+            <a href="${pageContext.request.contextPath}/createAmenity" class="filter-button" >
+                <spring:message code="CreateNewAmenity.button"/>
+                <i class="fa-solid fa-plus"></i>
+            </a>
             <c:forEach var="amenityWithHours" items="${amenitiesHours}">
                 <div  class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
                     <div >
@@ -54,10 +63,7 @@
             </c:forEach>
         </div>
         <div class="column-right">
-            <a href="${pageContext.request.contextPath}/createAmenity" class="filter-button" >
-                <spring:message code="CreateNewAmenity.button"/>
-                <i class="fa-solid fa-plus"></i>
-            </a>
+            <%@ include file="/WEB-INF/jsp/components/calendarWidget.jsp" %>
         </div>
     </div>
 </div>
