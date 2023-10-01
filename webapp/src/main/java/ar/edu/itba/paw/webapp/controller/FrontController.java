@@ -246,6 +246,8 @@ public class FrontController {
         Integer channelId = publishForm.getChannel();
 
         Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), channelId, publishForm.getTags(), imageFile);
+//        Resource res = rs1.createResource(1, "prueba resource", "prueba descripcion", imageFile);
+//        System.out.println("PRINTING RESOURCE" + res);
         ModelAndView mav = new ModelAndView("views/publish");
         mav.addObject("channelId", channelId);
         mav.addObject("showSuccessMessage", true);
@@ -421,7 +423,13 @@ public class FrontController {
             mav.addObject("openSignupDialog", true);
             return mav;
         }
-        us.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), Language.ENGLISH, signupForm.getIdentification());
+        int identification = 0;
+        try {
+            identification = Integer.parseInt(signupForm.getIdentification());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        us.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), Language.ENGLISH, identification);
         ModelAndView mav = new ModelAndView("redirect:/signup");
         mav.addObject("successfullySignup", true);
         return mav;
@@ -453,8 +461,6 @@ public class FrontController {
 
             amenityHoursList.add(amenityHours);
         }
-        System.out.println("PRINTING THE AMENITIES HOURS LIST: ");
-        System.out.println(amenityHoursList);
         mav.addObject("amenitiesHours", amenityHoursList);
         return mav;
     }
@@ -603,6 +609,40 @@ public class FrontController {
         return mav;
     }
 
+    @RequestMapping(value = "/admin/information", method = RequestMethod.GET)
+    public ModelAndView adminInformation() {
+        ModelAndView mav = new ModelAndView("admin/information");
+        mav.addObject("resourceMap", rs1.getResources(getLoggedNeighbor().getNeighborhoodId()));
+        mav.addObject("phoneNumbersMap", cs1.getContacts(getLoggedNeighbor().getNeighborhoodId()));
+//        Contact cont = cs1.createContact(getLoggedNeighbor().getNeighborhoodId(), "Police", "San Martin 202","911");
+//        System.out.println("CREATED CONTACT: " + cont);
+        return mav;
+    }
+
+    @RequestMapping(value = "/admin/deleteContact/{id}", method = RequestMethod.GET)
+    public ModelAndView deleteContact(@PathVariable(value = "id") int contactId) {
+        ModelAndView mav = new ModelAndView("redirect:/admin/information");
+        cs1.deleteContact(contactId);
+        return mav;
+    }
+
+    @RequestMapping(value = "/admin/createContact", method = RequestMethod.GET)
+    public ModelAndView createContact(@ModelAttribute("contactForm") final ContactForm contactForm) {
+        return new ModelAndView("admin/createContact");
+    }
+
+    @RequestMapping(value = "/admin/createContact", method = RequestMethod.POST)
+    public ModelAndView createAmenity(@Valid @ModelAttribute("contactForm") final ContactForm contactForm,
+                                      final BindingResult errors) {
+        if (errors.hasErrors()) {
+            System.out.println("ERRORS: " + errors);
+            return createContact(contactForm);
+        }
+        System.out.println(contactForm);
+        Contact cont = cs1.createContact(getLoggedNeighbor().getNeighborhoodId(), contactForm.getContactName(), contactForm.getContactAddress(), contactForm.getContactPhone());
+        System.out.println("created contact: " + cont);
+        return new ModelAndView("redirect:/admin/information");
+    }
 
     // ------------------------------------- TEST --------------------------------------
 

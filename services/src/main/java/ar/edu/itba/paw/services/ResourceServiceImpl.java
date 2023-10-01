@@ -35,5 +35,10 @@ public class ResourceServiceImpl implements ResourceService {
     public List<Resource> getResources(final long neighborhoodId) {
         return resourceDao.getResources(neighborhoodId);
     }
+
+    @Override
+    public boolean deleteResource(final long resourceId) {
+        return resourceDao.deleteResource(resourceId);
+    }
 }
 
