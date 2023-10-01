@@ -55,16 +55,19 @@
                     <c:choose>
                         <c:when test="${empty postList}">
                             <div class="no-posts-found">
-                                <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+                                <i class="circle-icon fa-solid fa-magnifying-glass" style="color:var(--text)"></i>
                                 <spring:message code="Posts.notFound"/>
                             </div>
                         </c:when>
                         <c:otherwise>
                             <!-- Include the page selector -->
-                            <jsp:include page="/WEB-INF/jsp/components/pageSelector.jsp">
-                                <jsp:param name="page" value="${page}" />
-                                <jsp:param name="totalPages" value="${totalPages}" />
-                            </jsp:include>
+                            <c:if test="${totalPages >  1}">
+                                <jsp:include page="/WEB-INF/jsp/components/pageSelector.jsp">
+                                    <jsp:param name="page" value="${page}" />
+                                    <jsp:param name="totalPages" value="${totalPages}" />
+                                </jsp:include>
+                            </c:if>
+
                             <c:forEach var="post" items="${postList}" >
                                 <c:set var="postTags" value="${post.tags}" scope="request"/>
                                 <jsp:include page="/WEB-INF/jsp/components/blogpost.jsp" >
@@ -77,11 +80,12 @@
 
                                 </jsp:include>
                             </c:forEach>
-                            <!-- Include the page selector -->
-                            <jsp:include page="/WEB-INF/jsp/components/pageSelector.jsp">
-                                <jsp:param name="page" value="${page}" />
-                                <jsp:param name="totalPages" value="${totalPages}" />
-                            </jsp:include>
+                            <c:if test="${totalPages >  1}">
+                                <jsp:include page="/WEB-INF/jsp/components/pageSelector.jsp">
+                                    <jsp:param name="page" value="${page}" />
+                                    <jsp:param name="totalPages" value="${totalPages}" />
+                                </jsp:include>
+                            </c:if>
                         </c:otherwise>
                     </c:choose>
                 </div>

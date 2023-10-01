@@ -79,9 +79,9 @@
     <a class="action-button"  onclick="openLoginDialog()">
         <spring:message code="Login"/>
     </a>
-    <span style="color:var(--lighttext); font-size: 14px;">Not a member?
-            <a onclick="openSignupDialog()" class="a-link">Signup now</a>
-        </span>
+    <span style="color:var(--lighttext); font-size: 14px;"><spring:message code="Not.a.member.question"/>
+            <a onclick="openSignupDialog()" class="a-link"><spring:message code="Signup.now"/></a>
+    </span>
 
     <%--        Login dialog--%>
     <div class="dialog" id="loginDialog" style="display: none">
@@ -98,11 +98,13 @@
             <form method="post" class="login-form" id="loginForm">
                 <div class="centered-column">
                     <label>
-                        <input type="email" placeholder="Email" name="mail" class="input">
+                        <c:set var="email"><spring:message code="Email"/></c:set>
+                        <input type="email" placeholder="${email}" name="mail" class="input">
                     </label>
 
                     <label>
-                        <input type="password" placeholder="Password"  autocomplete="true" name="password" class="input">
+                        <c:set var="password"><spring:message code="Password"/></c:set>
+                        <input type="password" placeholder="${password}"  autocomplete="true" name="password" class="input">
                     </label>
 
                 </div>
@@ -111,7 +113,8 @@
                     <spring:message code="Remember.me"/>
                 </label>
                 <div class="centered-column">
-                    <button class="action-button">Login</button>
+
+                    <button class="action-button"><spring:message code="Login"/></button>
                     <span style="color:var(--lighttext); font-size: 14px;"><spring:message code="Not.a.member.question"/>
                             <a onclick="closeLoginDialog();openSignupDialog()" class="a-link"><spring:message code="Signup.now"/></a>
                         </span>
@@ -138,39 +141,45 @@
 
                     <div class="form-input">
                         <form:label path="name">
-                            <form:input path="name" placeholder="First Name" class="input"/>
+                            <c:set var="firstName"><spring:message code="First.name"/></c:set>
+                            <form:input path="name" placeholder="${firstName}" class="input"/>
                         </form:label>
                         <form:errors path="name" cssClass="landing-error" element="p"/>
                     </div>
                     <div class="form-input">
                         <form:label path="surname">
-                            <form:input path="surname" placeholder="Surname" class="input"/>
+                            <c:set var="surname"><spring:message code="Surname"/></c:set>
+                            <form:input path="surname" placeholder="${surname}" class="input"/>
                         </form:label>
                         <form:errors path="surname" cssClass="landing-error" element="p"/>
                     </div>
                     <div class="form-input">
                         <form:label path="mail">
-                            <form:input path="mail" placeholder="Email" class="input"/>
+                            <c:set var="email"><spring:message code="Email"/></c:set>
+                            <form:input path="mail" placeholder="${email}" class="input"/>
                         </form:label>
                         <form:errors path="mail" cssClass="landing-error" element="p"/>
                     </div>
                     <div class="form-input">
                         <form:label path="password">
+                            <c:set var="password"><spring:message code="Password"/></c:set>
                             <form:input type="password" path="password" autocomplete="true" placeholder="Password" class="input"/>
                         </form:label>
                         <form:errors path="password" cssClass="landing-error" element="p"/>
                     </div>
                     <div class="form-input">
                         <form:label path="identification">
-                            <form:input type="int" path="identification" placeholder="Identification" class="input"/>
+                            <c:set var="identification"><spring:message code="Identification"/></c:set>
+                            <form:input type="number" pattern="[0-9]*" inputmode="numeric" path="identification" placeholder="${identification}" class="input"/>
                         </form:label>
                         <form:errors path="identification" cssClass="landing-error" element="p"/>
                     </div>
+
                     <div class="form-input">
                         <form:label path="language">
-                            <form:select path="language" class="cool-select">
-                                <form:option value="English">English</form:option>
-                                <form:option value="Spanish">Spanish</form:option>
+                            <form:select path="language" class="cool-select" style="width: 200px;">
+                                <form:option value="English"><spring:message code="English"/></form:option>
+                                <form:option value="Spanish"><spring:message code="Spanish"/></form:option>
                             </form:select>
                         </form:label>
                         <form:errors path="language" cssClass="landing-error" element="p"/>
