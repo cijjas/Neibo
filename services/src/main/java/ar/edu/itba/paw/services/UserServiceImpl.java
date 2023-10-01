@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
     // ---------------------------------------------- USER SETTERS -----------------------------------------------------
 
     @Override
-    public void storeProfilePicture(long userId, MultipartFile image){
+    public void updateProfilePicture(long userId, MultipartFile image){
         Image i = imageService.storeImage(image);
         findUserById(userId).ifPresent(n -> userDao.setUserValues(userId, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), i.getImageId(), n.getRole(), n.getIdentification()));
     }

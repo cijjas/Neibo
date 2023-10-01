@@ -29,12 +29,27 @@
                     <div class="card-block text-center text-white">
                         <div class="m-b-25">
                             <div class="profile-pic">
-                                <label class="-label" for="file">
-                                    <span class="glyphicon glyphicon-camera"></span>
-                                    <span>Change Image</span>
-                                </label>
-                                <input id="file" type="file" accept="image/*" onchange="loadFile()"/>
-                                <img alt="User Pic" src="/resources/images/roundedPlaceholder.png" id="output" width="200" />
+                                <form:form method="post" action="/profile" modelAttribute="profilePictureForm" enctype="multipart/form-data">
+                                    <form:errors cssClass="error" element="p"/>
+                                    <label class="-label" for="file">
+                                        <span class="glyphicon glyphicon-camera"></span>
+                                        <span><spring:message code="ChangeImage"/></span>
+                                    </label>
+                                    <form:input path="imageFile" id="file" type="file" accept="image/*" onchange="loadFile()"/>
+                                    <c:choose>
+                                        <c:when test="${ neighbor.profilePictureId != 0}">
+                                            <div style="display: flex; justify-content: center; align-items: center;">
+                                                <img class="blogpost-image" src="${pageContext.request.contextPath}/images/<c:out value="${neighbor.profilePictureId}"/>" alt="profile_picture_img" />
+                                            </div>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div style="display: flex; justify-content: center; align-items: center;">
+                                                <img class="blogpost-image" src="/resources/images/roundedPlaceholder.png" alt="default_profile_picture_img" />
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <button type="submit" class="cool-button cool-small on-bg"><spring:message code="SaveChanges"/></button>
+                                </form:form>
                             </div>
 
                             <script>

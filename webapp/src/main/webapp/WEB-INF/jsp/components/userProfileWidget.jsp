@@ -3,7 +3,8 @@
     <div class="grey-container" style="width: 200px; ">
         <div class="row">
             <div class="col-4">
-                <div >
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <img class="blogpost-image" src="${pageContext.request.contextPath}/images/<c:out value="${neighbor.profilePictureId}"/>" alt="profile_picture_img" />
                 </div>
             </div>
             <div class="col-8">

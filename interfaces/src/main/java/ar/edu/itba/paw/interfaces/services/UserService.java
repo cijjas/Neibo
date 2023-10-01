@@ -43,7 +43,7 @@ public interface UserService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    void storeProfilePicture(long userId, MultipartFile image);
+    void updateProfilePicture(long userId, MultipartFile image);
 
     void toggleDarkMode(final long id);
 
