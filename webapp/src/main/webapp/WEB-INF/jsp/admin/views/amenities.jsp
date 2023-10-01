@@ -40,8 +40,15 @@
             </div>
             <c:forEach var="amenityWithHours" items="${amenitiesHours}">
                 <div  class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
-                    <div >
-                        <h2 ><c:out value="${amenityWithHours.amenity.name}" /></h2>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h2><c:out value="${amenityWithHours.amenity.name}" /></h2>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <a href="${pageContext.request.contextPath}/admin/deleteAmenity/${amenityWithHours.amenity.amenityId}" class="btn btn-link">
+                                <i class="fas fa-trash" style="color: darkred;"></i>
+                            </a>
+                        </div>
                     </div>
                     <p class="mb-3" style="color:var(--lighttext);"><c:out value="${amenityWithHours.amenity.description}" /></p>
 

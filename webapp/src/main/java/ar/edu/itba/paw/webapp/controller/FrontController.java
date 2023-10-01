@@ -484,6 +484,13 @@ public class FrontController {
         return mav;
     }
 
+    @RequestMapping(value = "/admin/deleteAmenity/{id}", method = RequestMethod.GET)
+    public ModelAndView deleteAmenity(@PathVariable(value = "id") int amenityId) {
+        ModelAndView mav = new ModelAndView("redirect:/admin/amenities");
+        as.deleteAmenity(amenityId);
+        return mav;
+    }
+
     @RequestMapping(value = "/admin/createAmenity", method = RequestMethod.GET)
     public ModelAndView createAmenityForm(@ModelAttribute("amenityForm") final AmenityForm amenityForm) {
         ModelAndView mav = new ModelAndView("admin/views/createAmenity");
@@ -706,6 +713,13 @@ public class FrontController {
         Contact cont = cs1.createContact(getLoggedNeighbor().getNeighborhoodId(), contactForm.getContactName(), contactForm.getContactAddress(), contactForm.getContactPhone());
         System.out.println("created contact: " + cont);
         return new ModelAndView("redirect:/admin/information");
+    }
+
+    @RequestMapping(value = "/admin/deleteResource/{id}", method = RequestMethod.GET)
+    public ModelAndView deleteResource(@PathVariable(value = "id") int resourceId) {
+        ModelAndView mav = new ModelAndView("redirect:/admin/information");
+        rs1.deleteResource(resourceId);
+        return mav;
     }
 
     @RequestMapping(value = "/admin/createResource", method = RequestMethod.GET)

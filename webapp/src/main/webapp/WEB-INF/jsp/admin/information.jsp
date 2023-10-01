@@ -58,7 +58,7 @@
                                         <td>${contact.contactPhone}</td>
                                         <td>
                                             <a href="${pageContext.request.contextPath}/admin/deleteContact/${contact.contactId}" class="btn btn-link">
-                                                <i class="fas fa-trash" style="color: var(--primary);"></i>
+                                                <i class="fas fa-trash" style="color: darkred"></i>
                                             </a>
                                         </td>
                                     </tr>
@@ -84,19 +84,29 @@
 
             <c:forEach var="resource" items="${resourceList}">
                 <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h1><c:out value="${resource.title}" /></h1>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <a href="${pageContext.request.contextPath}/admin/deleteResource/${resource.resourceId}" class="btn btn-link">
+                                <i class="fas fa-trash" style="color: darkred;"></i>
+                            </a>
+                        </div>
+                    </div>
                     <div class="d-flex flex-column justify-content-center align-items-center w-100">
-                        <h1><c:out value="${resource.title}"/></h1>
-                        <h3><c:out value="${resource.description}"/></h3>
+                        <h3><c:out value="${resource.description}" /></h3>
                         <c:if test="${resource.imageId != 0}">
                             <div style="display: flex; justify-content: center; align-items: center;">
-                                <img src="${pageContext.request.contextPath}/images/<c:out value="${resource.imageId}"/>"
+                                <img src="${pageContext.request.contextPath}/images/<c:out value="${resource.imageId}" />"
                                      style="max-width: 100%; max-height: 100vh; border-radius: 5px;"
-                                     alt="resource_${resource.imageId}_img"/>
+                                     alt="resource_${resource.imageId}_img" />
                             </div>
                         </c:if>
                     </div>
                 </div>
             </c:forEach>
+
         </div>
 
         <div class="column-right">
