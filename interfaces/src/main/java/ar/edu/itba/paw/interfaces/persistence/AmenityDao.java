@@ -20,7 +20,7 @@ public interface AmenityDao {
 
     List<Amenity> getAmenities(long neighborhoodId);
 
-    DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek, long neighborhoodId);
+    DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek);
 
     Map<String, DayTime> getAmenityHoursByAmenityId(long amenityId);
 

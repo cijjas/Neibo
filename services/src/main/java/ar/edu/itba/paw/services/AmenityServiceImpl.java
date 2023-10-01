@@ -45,8 +45,8 @@ public class AmenityServiceImpl implements AmenityService {
     }
 
     @Override
-    public DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek, long neighborhoodId) {
-        return amenityDao.getAmenityHoursByDay(amenityId, dayOfWeek, neighborhoodId);
+    public DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek) {
+        return amenityDao.getAmenityHoursByDay(amenityId, dayOfWeek);
     }
 
     @Override
