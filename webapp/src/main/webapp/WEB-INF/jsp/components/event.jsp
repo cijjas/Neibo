@@ -10,11 +10,13 @@
                     <h2><c:out value="${param.eventName}" /></h2>
                 </div>
 
-                <div class="col-md-4 text-right">
-                    <a href="${pageContext.request.contextPath}/admin/deleteEvent/${param.eventId}?timestamp=${selectedTimestamp}" class="btn btn-link">
-                        <i class="fas fa-trash" style="color: var(--error);"></i>
-                    </a>
-                </div>
+                <c:if test="${isAdmin}">
+                    <div class="col-md-4 text-right">
+                        <a href="${pageContext.request.contextPath}/admin/deleteEvent/${param.eventId}?timestamp=${selectedTimestamp}" class="btn btn-link">
+                            <i class="fas fa-trash" style="color: var(--error);"></i>
+                        </a>
+                    </div>
+                </c:if>
             </div>
             <p style="font-size: 12px; font-weight: normal"><c:out value="${param.eventDuration}"></c:out> <spring:message code="Minutes"/></p>
             <div class="divider"></div>
