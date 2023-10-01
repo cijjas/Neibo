@@ -559,9 +559,11 @@ public class FrontController {
 
     //------------------------------------- USER AMENITIES & RESERVATIONS --------------------------------------
     @RequestMapping(value = "/amenities", method = RequestMethod.GET)
-    public ModelAndView amenities(@ModelAttribute("reservationForm") final ReservationForm reservationForm) {
+    public ModelAndView amenities(
+            @ModelAttribute("reservationForm") final ReservationForm reservationForm
+    ) {
         ModelAndView mav = new ModelAndView("views/amenities");
-
+        mav.addObject("channel", BaseChannel.RESERVATIONS.toString());
         List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
@@ -718,6 +720,7 @@ public class FrontController {
         ModelAndView mav = new ModelAndView("views/information");
         mav.addObject("resourceList", rs1.getResources(getLoggedNeighbor().getNeighborhoodId()));
         mav.addObject("phoneNumbersList", cs1.getContacts(getLoggedNeighbor().getNeighborhoodId()));
+        mav.addObject("channel", BaseChannel.INFORMATION.toString());
 
         List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
@@ -732,7 +735,7 @@ public class FrontController {
 
     @RequestMapping(value = "/admin/information", method = RequestMethod.GET)
     public ModelAndView adminInformation() {
-        ModelAndView mav = new ModelAndView("admin/information");
+        ModelAndView mav = new ModelAndView("admin/views/information");
         List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
@@ -752,7 +755,7 @@ public class FrontController {
 
     @RequestMapping(value = "/admin/createContact", method = RequestMethod.GET)
     public ModelAndView createContact(@ModelAttribute("contactForm") final ContactForm contactForm) {
-        ModelAndView mav = new ModelAndView("admin/createContact");
+        ModelAndView mav = new ModelAndView("admin/views/createContact");
         List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
@@ -776,7 +779,7 @@ public class FrontController {
 
     @RequestMapping(value = "/admin/createResource", method = RequestMethod.GET)
     public ModelAndView createResourceForm(@ModelAttribute("resourceForm") final ResourceForm resourceForm) {
-        return new ModelAndView("admin/createResource");
+        return new ModelAndView("admin/views/createResource");
     }
 
     @RequestMapping(value = "/admin/createResource", method = RequestMethod.POST)

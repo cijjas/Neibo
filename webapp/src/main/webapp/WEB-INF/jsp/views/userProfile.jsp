@@ -29,7 +29,7 @@
                     <div class="card-block text-center text-white">
                         <div class="m-b-25">
                             <div class="profile-pic">
-                                <form:form method="post" action="/profile" modelAttribute="profilePictureForm" enctype="multipart/form-data">
+                                <form:form method="post" action="/profile" modelAttribute="profilePictureForm" enctype="multipart/form-data" id="profilePicForm">
                                     <form:errors cssClass="error" element="p"/>
                                     <label class="-label" for="file">
                                         <span class="glyphicon glyphicon-camera"></span>
@@ -38,17 +38,12 @@
                                     <form:input path="imageFile" id="file" type="file" accept="image/*" onchange="loadFile()"/>
                                     <c:choose>
                                         <c:when test="${ neighbor.profilePictureId != 0}">
-                                            <div style="display: flex; justify-content: center; align-items: center;">
-                                                <img class="blogpost-image" src="${pageContext.request.contextPath}/images/<c:out value="${neighbor.profilePictureId}"/>" alt="profile_picture_img" />
-                                            </div>
+                                            <img id="output" src="${pageContext.request.contextPath}/images/<c:out value="${neighbor.profilePictureId}"/>" alt="profile_picture_img" />
                                         </c:when>
                                         <c:otherwise>
-                                            <div style="display: flex; justify-content: center; align-items: center;">
-                                                <img class="blogpost-image" src="/resources/images/roundedPlaceholder.png" alt="default_profile_picture_img" />
-                                            </div>
+                                            <img id="output" src="${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png" alt="default_profile_picture_img" />
                                         </c:otherwise>
                                     </c:choose>
-                                    <button type="submit" class="cool-button cool-small on-bg"><spring:message code="SaveChanges"/></button>
                                 </form:form>
                             </div>
 
@@ -56,13 +51,15 @@
                                 function loadFile() {
                                     const image = document.getElementById("output");
                                     image.src = URL.createObjectURL(event.target.files[0]);
+                                    document.getElementById("profilePicForm").submit();
                                 };
                             </script>
 
                         </div>
                         <h6 class="f-w-600"><c:out value="${neighbor.name}"/></h6>
                         <p><c:out value="${neighbor.role}"/></p>
-                        <i class=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
+
+
                     </div>
                 </div>
                 <div class="col-sm-8">
@@ -111,9 +108,7 @@
                             </div>
                         </div>
                         <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600"><spring:message code="Preferences"/></h6>
-                        <a href="${pageContext.request.contextPath}/logout" class="cool-button cool-small on-bg">
-                            <spring:message code="SaveChanges"/>
-                        </a>
+
                         <div class="row justify-content-end">
                             <a href="${pageContext.request.contextPath}/logout" class=" cool-button cool-small on-bg">
                                     <spring:message code="Logout"/>

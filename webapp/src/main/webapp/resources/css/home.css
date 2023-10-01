@@ -353,20 +353,44 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    & .sticky{
+        position: sticky;
+        top: 20px;
+    }
 }
 
 
-.left-box {
-    position: sticky;
-    padding: 1rem;
-    top: 20px;
+.f-c-c-c{
     display: flex;
     flex-direction: column;
-    justify-content: start;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+.f-r-c-c{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+.f-c-sb-c{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.left-box {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     gap: 1rem;
     width: 100%;
-    height: 500px;
+    height: 600px;
     background-color: var(--onbackground);
     border: 1px solid var(--lighttext);
     border-radius: var(--border-radius);
@@ -386,7 +410,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-.sticky-bottom-button{
+.sticky-bottom{
     position: sticky;
     bottom: 20px;
     display: flex;
@@ -395,13 +419,7 @@
     align-items: center;
     gap:1.25rem;
 
-    &:hover {
-        border-color: var(--primary);
-    }
 
-    &.active {
-        border-color: var(--primary);
-    }
 
 }
 
@@ -433,6 +451,16 @@
         color: var(--background);
         border: 1px solid var(--background);
         background-color: var(--primary);
+    }
+    &.admin-button{
+        color: var(--admin-color);
+        border: 1px solid var(--admin-color);
+
+        &:hover{
+            transform: translateY(-4px) ;
+            box-shadow: -2px 4px 0 0 var(--admin-color);
+            color: var(--admin-color);
+        }
     }
 }
 
@@ -466,6 +494,7 @@
 
 
 .filtered-tag,
+.post-tag,
 .tag-option{
     font-size: 14px;
     padding: 2px 5px 2px 5px;
@@ -1133,9 +1162,11 @@ h6 {
     display: flex;
     justify-content: center;
     align-items: center;
+    & form{
+        display: flex;
+    }
     & input{
         display: none;
-
     }
     & img{
         position: absolute;
