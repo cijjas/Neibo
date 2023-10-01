@@ -4,17 +4,20 @@ public class Amenity {
     private final long amenityId;
     private final String name;
     private final String description;
+    private final long neighborhoodId;
 
     private Amenity(Builder builder) {
         this.amenityId = builder.amenityId;
         this.name = builder.name;
         this.description = builder.description;
+        this.neighborhoodId = builder.neighborhoodId;
     }
 
     public static class Builder {
         private long amenityId;
         private String name;
         private String description;
+        private long neighborhoodId;
 
         public Builder amenityId(long amenityId) {
             this.amenityId = amenityId;
@@ -28,6 +31,11 @@ public class Amenity {
 
         public Builder description(String description) {
             this.description = description;
+            return this;
+        }
+
+        public Builder neighborhoodId(long neighborhoodId) {
+            this.neighborhoodId = neighborhoodId;
             return this;
         }
 
@@ -46,6 +54,10 @@ public class Amenity {
 
     public String getDescription() {
         return description;
+    }
+
+    public long getNeighborhoodId() {
+        return neighborhoodId;
     }
 
     @Override

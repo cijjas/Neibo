@@ -32,6 +32,7 @@
         </div>
 
         <div class="column-middle">
+
             <div class="upper-feed-buttons-box m-b-20">
                 <a class="cool-feed-button" href="${pageContext.request.contextPath}/admin/createAmenity">
                     <spring:message code="CreateNewAmenity.button"/>

@@ -10,7 +10,7 @@ public interface ReservationService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Reservation createReservation(long amenityId, long userId, Date date, Time startTime, Time endTime);
+    Reservation createReservation(long amenityId, long userId, Date date, Time startTime, Time endTime, long neighborhoodId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

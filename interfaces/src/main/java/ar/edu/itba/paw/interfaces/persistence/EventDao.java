@@ -10,6 +10,7 @@ public interface EventDao {
 
     Event createEvent(String name, String description, Date date, long duration, long neighborhoodId);
 
+    // dangerous
     List<Event> getEvents();
 
     Optional<Event> findEventById(long eventId);

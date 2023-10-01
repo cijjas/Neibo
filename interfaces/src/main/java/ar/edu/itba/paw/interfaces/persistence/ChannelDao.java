@@ -9,6 +9,8 @@ public interface ChannelDao {
 
     // -------------------------------------------- CHANNELS INSERT ----------------------------------------------------
 
+    // Specifying neighborhood is not necessary as the channel may be repeated and most likely will, there is a junction table to define
+    // to which neighborhood each channel belongs
     Channel createChannel(final String name);
 
     // -------------------------------------------- CHANNELS SELECT ----------------------------------------------------

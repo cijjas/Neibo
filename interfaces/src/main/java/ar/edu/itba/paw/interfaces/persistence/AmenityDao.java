@@ -12,15 +12,15 @@ public interface AmenityDao {
 
     // --------------------------------------------- AMENITIES INSERT --------------------------------------------------
 
-    Amenity createAmenity(String name, String description, Map<String, DayTime> dayHourData);
+    Amenity createAmenity(String name, String description, Map<String, DayTime> dayHourData, long neighborhoodId);
 
     // --------------------------------------------- AMENITIES INSERT --------------------------------------------------
 
     Optional<Amenity> findAmenityById(long amenityId);
 
-    List<Amenity> getAmenities();
+    List<Amenity> getAmenities(long neighborhoodId);
 
-    DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek);
+    DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek, long neighborhoodId);
 
     Map<String, DayTime> getAmenityHoursByAmenityId(long amenityId);
 

@@ -26,19 +26,19 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public Reservation createReservation(long amenityId, long userId, Date date, Time startTime, Time endTime) {
+    public Reservation createReservation(long amenityId, long userId, Date date, Time startTime, Time endTime, long neighborhoodId) {
         //startTime > endTime || amenity not open || theres another reservation during request time
-        if(startTime.after(endTime) || !isAmenityOpen(date, startTime, endTime, amenityId) || reservationOverlap(date, startTime, endTime, reservationDao.getReservationsByDay(amenityId, date))) {
+        if(startTime.after(endTime) || !isAmenityOpen(date, startTime, endTime, amenityId, neighborhoodId) || reservationOverlap(date, startTime, endTime, reservationDao.getReservationsByDay(amenityId, date))) {
             return null;
         }
 
         return reservationDao.createReservation(amenityId, userId, date, startTime, endTime);
     }
 
-    private boolean isAmenityOpen(Date date, Time startTime, Time endTime, long amenityId) {
+    private boolean isAmenityOpen(Date date, Time startTime, Time endTime, long amenityId, long neighborhoodId) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
         String dayOfWeek = dateFormat.format(date);
-        DayTime amenityHours = amenityDao.getAmenityHoursByDay(amenityId, dayOfWeek);
+        DayTime amenityHours = amenityDao.getAmenityHoursByDay(amenityId, dayOfWeek, neighborhoodId);
 
         if (amenityHours != null) {
             Time openTime = amenityHours.getOpenTime();

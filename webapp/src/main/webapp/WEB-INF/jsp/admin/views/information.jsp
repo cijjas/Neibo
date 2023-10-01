@@ -86,7 +86,7 @@
                 <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
                     <div class="row">
                         <div class="col-md-8">
-                            <h1><c:out value="${resource.title}" /></h1>
+                            <h2><c:out value="${resource.title}" /></h2>
                         </div>
                         <div class="col-md-4 text-right">
                             <a href="${pageContext.request.contextPath}/admin/deleteResource/${resource.resourceId}" class="btn btn-link">
@@ -94,8 +94,11 @@
                             </a>
                         </div>
                     </div>
+                    <div class="divider"></div>
+                    <h3 style="font-weight: normal "><c:out value="${resource.description}" /></h3>
+
                     <div class="d-flex flex-column justify-content-center align-items-center w-100">
-                        <h3><c:out value="${resource.description}" /></h3>
+
                         <c:if test="${resource.imageId != 0}">
                             <div style="display: flex; justify-content: center; align-items: center;">
                                 <img src="${pageContext.request.contextPath}/images/<c:out value="${resource.imageId}" />"

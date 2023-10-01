@@ -437,6 +437,7 @@
     border: 1px solid var(--text);
     border-radius: var(--border-radius);
 
+
     &:hover ,
     &:focus-visible {
         border: var(--border);
@@ -457,6 +458,12 @@
         border: 1px solid var(--admin-color);
 
         &:hover{
+            transform: translateY(-4px) ;
+            box-shadow: -2px 4px 0 0 var(--admin-color);
+            color: var(--admin-color);
+        }
+        &.active {
+            background-color: var(--background);
             transform: translateY(-4px) ;
             box-shadow: -2px 4px 0 0 var(--admin-color);
             color: var(--admin-color);
@@ -883,7 +890,7 @@ footer div {
     box-shadow: -3px 5px 0 0 var(--primary);
 }
 .user-row{
-    padding: 1rem;
+    padding: 5px 10px ;
     width: 100%;
     display: flex;
     flex-direction: row;
