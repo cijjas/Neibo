@@ -74,13 +74,12 @@
                                 <form:label path="imageFile" for="images" class="drop-container" id="dropcontainer">
                                     <span class="drop-title"> <spring:message code="Drop.files"/> </span>
                                     <spring:message code="Or"/>
-                                    <form:input type="file" id="images" accept="image/*" path="imageFile" name="imageFile" onchange="preview()"/>
+                                    <form:input class="select-file-button" type="file" id="images" accept="image/*" path="imageFile" name="imageFile" onchange="preview()"/>
                                 </form:label>
                                 <div style="text-align: center">
                                     <form:errors path="imageFile" cssClass="error" element="p"/>
                                 </div>
                             </div>
-
 
                             <div>
                                 <img id="frame" class="blogpost-image" src=""  alt="uploading image" style="display: none"/>
@@ -139,7 +138,7 @@
                         successContainer.style.opacity = '0'; // Fade out
                         const form = document.createElement('form');
                         form.method = 'POST';
-                        form.action = '/redirectToChannel'; // Replace with your desired URL
+                        form.action = '${pageContext.request.contextPath}/redirectToChannel'; // Replace with your desired URL
 
                         // Optionally, you can add any form data or parameters here
                         // For example, adding a hidden input field with a value

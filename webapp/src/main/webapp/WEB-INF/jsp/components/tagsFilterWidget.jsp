@@ -99,7 +99,7 @@
         // Create a form element
         const tagsFilterForm = document.createElement('form');
         tagsFilterForm.setAttribute('method', 'POST');
-        tagsFilterForm.setAttribute('action', '/applyTagsFilter'); // Set your form action URL
+        tagsFilterForm.setAttribute('action', '${pageContext.request.contextPath}/applyTagsFilter'); // Set your form action URL
 
         // Create a hidden input field for the current URL
         const currentUrlInput = document.createElement('input');

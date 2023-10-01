@@ -61,9 +61,9 @@
                             </tr>
                             <c:forEach var="day" items="${amenityWithHours.amenityHours}">
                                 <tr>
-                                    <td class="day">${day.key}</td>
-                                    <td>${day.value.openTime}</td>
-                                    <td>${day.value.closeTime}</td>
+                                    <td class="day"><c:out value="${day.key}"/></td>
+                                    <td><c:out value="${day.value.openTime}"/></td>
+                                    <td><c:out value="${day.value.closeTime}"/></td>
                                 </tr>
                             </c:forEach>
                         </table>

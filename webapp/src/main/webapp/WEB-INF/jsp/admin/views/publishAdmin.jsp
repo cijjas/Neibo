@@ -45,7 +45,7 @@
                                 <spring:message code="Channel" var="channelPlaceholder"/>
                                 <form:select id="channel-select" path="channel" class="cool-input"  placeholder="${channelPlaceholder}">
                                     <c:forEach var="entry" items="${channelList}">
-                                        <form:option value="${entry.value.channelId}">${entry.key}</form:option>
+                                        <form:option value="${entry.value.channelId}"><c:out value="${entry.key}"/></form:option>
                                     </c:forEach>
                                 </form:select>
                             </div>

@@ -50,7 +50,7 @@
         setTimeout(function() {
             const form = document.createElement('form');
             form.method = 'POST';
-            form.action = '/redirectToChannel'; // Replace with your desired URL
+            form.action = '${pageContext.request.contextPath}/redirectToChannel'; // Replace with your desired URL
 
             // Optionally, you can add any form data or parameters here
             // For example, adding a hidden input field with a value
@@ -187,7 +187,7 @@
                     <div class="form-input">
                         <form:select path="neighborhoodId" class="cool-select">
                             <c:forEach var="entry" items="${neighborhoodsList}">
-                                <form:option value="${entry.getNeighborhoodId()}">${entry.getName()}</form:option>
+                                <form:option value="${entry.getNeighborhoodId()}"><c:out value="${entry.getName()}"/></form:option>
                             </c:forEach>
                         </form:select>
                     </div>

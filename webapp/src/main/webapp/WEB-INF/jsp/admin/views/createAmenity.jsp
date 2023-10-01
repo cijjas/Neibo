@@ -64,10 +64,10 @@
                                 <c:forEach var="day" items="${daysOfWeek}" varStatus="loop">
                                     <c:if test="${loop.index < 4}">
                                         <div class="form-column" style="width: 100px">
-                                            <label>${day}</label>
+                                            <label><c:out value="${day}"/></label>
                                             <select name="${day}OpenTime" class="cool-input" style="font-size: 12px; ">
                                                 <c:forEach var="time" items="${timeList}">
-                                                    <option value="${time}">${time}</option>
+                                                    <option value="${time}"><c:out value="${time}"/></option>
                                                 </c:forEach>
                                             </select>
                                             <select name="${day}CloseTime" class="cool-input" style="font-size: 12px; ">
