@@ -8,6 +8,7 @@ import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.Comment;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Post;
+import enums.Language;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,14 +49,15 @@ public class CommentServiceImpl implements CommentService {
         variables.put("name", user.getName());
         variables.put("postTitle", post.getTitle());
         variables.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
-        emailService.sendMessageUsingThymeleafTemplate(user.getMail(), "New comment", "template-thymeleaf.html", variables);
+        boolean isEnglish = user.getLanguage() == Language.ENGLISH;
+        emailService.sendMessageUsingThymeleafTemplate(user.getMail(), isEnglish? "New comment" : "Nuevo Comentario", isEnglish? "comment-template_en.html" : "comment-template_es.html", variables);
 
         for(User n : userService.getNeighborsSubscribedByPostId(postId)) {
             Map<String, Object> vars = new HashMap<>();
             vars.put("name", n.getName());
             vars.put("postTitle", post.getTitle());
             vars.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
-            emailService.sendMessageUsingThymeleafTemplate(n.getMail(), "New comment", "template-thymeleaf.html", vars);
+            emailService.sendMessageUsingThymeleafTemplate(user.getMail(), isEnglish? "New comment" : "Nuevo Comentario", isEnglish? "comment-template_en.html" : "comment-template_es.html", vars);
         }
 
 

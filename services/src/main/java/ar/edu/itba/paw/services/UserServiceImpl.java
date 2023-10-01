@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
+import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
@@ -24,13 +25,15 @@ public class UserServiceImpl implements UserService {
     private final ImageService imageService;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
+    private final NeighborhoodService neighborhoodService;
 
     @Autowired
-    public UserServiceImpl(final UserDao userDao, final ImageService imageService, final PasswordEncoder passwordEncoder, final EmailService emailService) {
+    public UserServiceImpl(final UserDao userDao, final ImageService imageService, final PasswordEncoder passwordEncoder, final EmailService emailService, final NeighborhoodService neighborhoodService) {
         this.emailService = emailService;
         this.imageService = imageService;
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
+        this.neighborhoodService = neighborhoodService;
     }
 
     // ---------------------------------------------- USER CREATION ----------------------------------------------------
@@ -99,11 +102,15 @@ public class UserServiceImpl implements UserService {
         if ( user == null )
             return;
         userDao.setUserValues(id, user.getPassword(), user.getName(), user.getSurname(), user.getLanguage(), user.isDarkMode(), user.getProfilePictureId(), UserRole.NEIGHBOR, user.getIdentification());
+        String neighborhood = neighborhoodService.findNeighborhoodById(user.getNeighborhoodId()).orElse(null).getName();
         Map<String, Object> vars = new HashMap<>();
         vars.put("name", user.getName());
-        vars.put("postTitle", "Verification");
-        vars.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/");
-        emailService.sendMessageUsingThymeleafTemplate(user.getMail(), "New comment", "template-thymeleaf.html", vars);
+        vars.put("neighborhood", neighborhood);
+        vars.put("loginPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/");
+        if(user.getLanguage() == Language.ENGLISH)
+            emailService.sendMessageUsingThymeleafTemplate(user.getMail(), "Verification", "verification-template_en.html", vars);
+        else
+            emailService.sendMessageUsingThymeleafTemplate(user.getMail(), "Verificación", "verification-template_es.html", vars);
     }
 
     @Override
