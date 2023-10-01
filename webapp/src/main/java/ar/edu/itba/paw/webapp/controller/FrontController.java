@@ -628,7 +628,7 @@ public class FrontController {
 
     @RequestMapping(value = "/admin/information", method = RequestMethod.GET)
     public ModelAndView adminInformation() {
-        ModelAndView mav = new ModelAndView("admin/information");
+        ModelAndView mav = new ModelAndView("admin/views/information");
         mav.addObject("resourceList", rs1.getResources(getLoggedNeighbor().getNeighborhoodId()));
         mav.addObject("phoneNumbersList", cs1.getContacts(getLoggedNeighbor().getNeighborhoodId()));
         return mav;
@@ -643,7 +643,7 @@ public class FrontController {
 
     @RequestMapping(value = "/admin/createContact", method = RequestMethod.GET)
     public ModelAndView createContact(@ModelAttribute("contactForm") final ContactForm contactForm) {
-        return new ModelAndView("admin/createContact");
+        return new ModelAndView("admin/views/createContact");
     }
 
     @RequestMapping(value = "/admin/createContact", method = RequestMethod.POST)
@@ -661,7 +661,7 @@ public class FrontController {
 
     @RequestMapping(value = "/admin/createResource", method = RequestMethod.GET)
     public ModelAndView createResourceForm(@ModelAttribute("resourceForm") final ResourceForm resourceForm) {
-        return new ModelAndView("admin/createResource");
+        return new ModelAndView("admin/views/createResource");
     }
 
     @RequestMapping(value = "/admin/createResource", method = RequestMethod.POST)

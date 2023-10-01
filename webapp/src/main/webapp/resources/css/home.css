@@ -383,8 +383,6 @@
 }
 
 .left-box {
-
-
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -1164,9 +1162,11 @@ h6 {
     display: flex;
     justify-content: center;
     align-items: center;
+    & form{
+        display: flex;
+    }
     & input{
         display: none;
-
     }
     & img{
         position: absolute;
