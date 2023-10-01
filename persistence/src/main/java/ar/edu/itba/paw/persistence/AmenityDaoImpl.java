@@ -129,15 +129,14 @@ public class AmenityDaoImpl implements AmenityDao {
     }
 
     @Override
-    public DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek, long neighborhoodId) {
+    public DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek) {
         Time openTime = null;
         Time closeTime = null;
 
         List<Map<String, Object>> results = jdbcTemplate.queryForList(
-                "SELECT opentime, closetime FROM hours WHERE amenityId = ? AND weekday = ? AND neighborhoodid = ?",
+                "SELECT opentime, closetime FROM hours WHERE amenityId = ? AND weekday = ?",
                 amenityId,
-                dayOfWeek,
-                neighborhoodId
+                dayOfWeek
         );
 
         if (!results.isEmpty()) {

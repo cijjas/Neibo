@@ -38,7 +38,7 @@ public class ReservationServiceImpl implements ReservationService {
     private boolean isAmenityOpen(Date date, Time startTime, Time endTime, long amenityId, long neighborhoodId) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
         String dayOfWeek = dateFormat.format(date);
-        DayTime amenityHours = amenityDao.getAmenityHoursByDay(amenityId, dayOfWeek, neighborhoodId);
+        DayTime amenityHours = amenityDao.getAmenityHoursByDay(amenityId, dayOfWeek);
 
         if (amenityHours != null) {
             Time openTime = amenityHours.getOpenTime();
