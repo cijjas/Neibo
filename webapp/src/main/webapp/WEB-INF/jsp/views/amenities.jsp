@@ -15,7 +15,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title>Neibo - Reservation FELIX!!!!!!</title>
+    <title>Neibo - Reservation</title>
 </head>
 
 <body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
