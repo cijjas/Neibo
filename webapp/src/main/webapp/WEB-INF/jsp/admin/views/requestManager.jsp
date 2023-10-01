@@ -82,7 +82,7 @@
                                             <button class="ignore-button" onclick="unverifyUser(${user.userId})"><spring:message code="Unverify"/></button>
                                         </c:when>
                                         <c:otherwise>
-                                            <button class="ignore-button" onclick=""><spring:message code="Ignore"/></button>
+                                            <%--<button class="ignore-button" onclick=""><spring:message code="Ignore"/></button>--%>
                                             <button class="cool-button cool-small" onclick="verifyUser(${user.userId})"><spring:message code="Accept"/></button>
                                         </c:otherwise>
                                     </c:choose>

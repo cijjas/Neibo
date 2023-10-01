@@ -156,6 +156,6 @@ public class UserDaoImpl implements UserDao {
                               final Language language, final boolean darkMode, final long profilePictureId, final UserRole role, final int identification
     ) {
         jdbcTemplate.update("UPDATE users SET name = ?, surname = ?, password = ?, darkmode = ?, language = ?, role = ?, profilepictureid = ?, identification = ? WHERE userid = ?",
-                name, surname, password, darkMode, language != null ? language.toString() : null, role != null ? role.toString() : null, profilePictureId == 0 ? null : profilePictureId, id, identification);
+                name, surname, password, darkMode, language != null ? language.toString() : null, role != null ? role.toString() : null, profilePictureId == 0 ? null : profilePictureId,  identification, id);
     }
 }
