@@ -685,7 +685,7 @@ public class FrontController {
     public ModelAndView eventForm(
             @ModelAttribute("eventForm") final EventForm eventForm
     ) {
-        final ModelAndView mav = new ModelAndView("views/addEvent");
+        final ModelAndView mav = new ModelAndView("admin/views/addEvent");
         List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
@@ -712,11 +712,25 @@ public class FrontController {
         }
 
         Event e = es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), duration, getLoggedNeighbor().getNeighborhoodId());
-        ModelAndView mav = new ModelAndView("views/addEvent");
+        ModelAndView mav = new ModelAndView("admin/views/addEvent");
         mav.addObject("showSuccessMessage", true);
         return mav;
     }
 
+    @RequestMapping(value = "/admin/deleteEvent/{id}", method = RequestMethod.GET)
+    public ModelAndView deleteEvent(@PathVariable(value = "id") int eventId) {
+        ModelAndView mav = new ModelAndView("redirect:/calendar");
+        es.deleteEvent(eventId);
+        return mav;
+    }
+
+    @RequestMapping(value = "/redirectToSite", method = RequestMethod.POST)
+    public ModelAndView redirectToSite(
+            @RequestParam("site") String site
+    ) {
+        System.out.println("ons ite");
+        return new ModelAndView("redirect:/" + site);
+    }
 
     // ------------------------------------- INFORMATION --------------------------------
     @RequestMapping(value = "/information", method = RequestMethod.GET)

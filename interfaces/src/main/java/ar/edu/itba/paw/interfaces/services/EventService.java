@@ -22,4 +22,6 @@ public interface EventService {
 
     List<Date> getEventDates(long neighborhoodId);
 
+    boolean deleteEvent(long eventId);
+
 }

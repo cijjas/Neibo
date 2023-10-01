@@ -74,7 +74,7 @@
 
                     <%--Submit button --%>
                     <div class="d-flex justify-content-end">
-                        <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg" style="height:40px;" ><spring:message code="Create.verb"/></button>
+                        <button type="submit" class="cool-button cool-small on-bg" style="height:40px;" ><spring:message code="Create.verb"/></button>
                     </div>
 
                 </form:form>
@@ -82,17 +82,31 @@
         </div>
 
         <c:if test="${showSuccessMessage == true}">
-        <c:set var="successMessage">
-            <spring:message code="Event.created.successfully"/>
-        </c:set>
 
-            <jsp:include page="/WEB-INF/jsp/components/successDialog.jsp" >
-                <jsp:param name="successMessage" value="${successMessage}" />
-            </jsp:include>
+            <div id="success-container" class="success-container">
+                <div class="cool-static-container small-size-container justify-content-around ">
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 50 50" fill="none">
+                            <g clip-path="url(#clip0_259_2)">
+                                <path d="M25 50C38.8071 50 50 38.8071 50 25C50 11.1929 38.8071 0 25 0C11.1929 0 0 11.1929 0 25C0 38.8071 11.1929 50 25 50Z" fill="var(--old-primary)"></path>
+                                <path d="M38 15L22 33L12 25" stroke="var(--background)" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_259_2">
+                                    <rect width="50" height="50" fill="var(--background)"></rect>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </div>
+
+                    <div style="text-align:center;font-weight: bold; font-size: 24px; color:var(--old-primary)"> <spring:message code="Event.created.successfully"/> </div>
+                </div>
+            </div>
+
             <script>
                 // JavaScript to show the success message with fade-in effect
                 const successContainer = document.getElementById('success-container');
-                eessContainer.style.display = 'flex'; // Show the container
+                successContainer.style.display = 'flex'; // Show the container
                 setTimeout(function() {
                     successContainer.style.opacity = '1'; // Fade in
                 }, 10); // Delay for a very short time (e.g., 10ms) to trigger the transition
@@ -102,11 +116,11 @@
                     successContainer.style.opacity = '0'; // Fade out
                     const form = document.createElement('form');
                     form.method = 'POST';
-                    form.action = '${pageContext.request.contextPath}/redirectToChannel'; // Replace with your desired URL
-
-                    // Optionally, you can add any form data or parameters here
-                    // For example, adding a hidden input field with a value
+                    form.action = '${pageContext.request.contextPath}/redirectToSite'; // Replace with your desired URL
                     const input = document.createElement('input');
+                    input.type='hidden';
+                    input.name='site';
+                    input.value='calendar';
 
                     // Append the input field to the form
                     form.appendChild(input);

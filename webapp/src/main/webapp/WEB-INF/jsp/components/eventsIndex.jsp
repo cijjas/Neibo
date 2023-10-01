@@ -51,7 +51,7 @@
                 <c:otherwise>
                     <c:forEach var="event" items="${eventList}" >
                         <jsp:include page="/WEB-INF/jsp/components/event.jsp" >
-                            <jsp:param name="eventID" value="${event.eventId}" />
+                            <jsp:param name="eventId" value="${event.eventId}" />
                             <jsp:param name="eventName" value="${event.name}"/>
                             <jsp:param name="eventDescription" value="${event.description}"/>
                             <jsp:param name="eventDate" value="${event.date}"/>

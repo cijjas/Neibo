@@ -20,4 +20,6 @@ public interface EventDao {
 
     List<Date> getEventDates(long neighborhoodId);
 
+    boolean deleteEvent(long eventId);
+
 }

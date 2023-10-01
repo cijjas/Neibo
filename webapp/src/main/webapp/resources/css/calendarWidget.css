@@ -123,6 +123,10 @@ header .current-date{
     background: var(--secondary);
 }
 
+.days li:not(.inactive):hover{
+    cursor: pointer;
+}
+
 .calendar .days li.event {
     z-index: 1;
     cursor: default;

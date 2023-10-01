@@ -41,4 +41,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<Date> getEventDates(long neighborhoodId) { return eventDao.getEventDates(neighborhoodId); }
 
+    @Override
+    public boolean deleteEvent(long eventId) { return eventDao.deleteEvent(eventId); }
+
 }

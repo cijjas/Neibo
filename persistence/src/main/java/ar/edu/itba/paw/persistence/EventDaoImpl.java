@@ -87,4 +87,9 @@ public class EventDaoImpl implements EventDao {
     public List<Date> getEventDates(long neighborhoodId) {
         return jdbcTemplate.queryForList("select distinct date from events where neighborhoodid = ?", Date.class, neighborhoodId);
     }
+
+    @Override
+    public boolean deleteEvent(long eventId){
+        return jdbcTemplate.update("DELETE FROM events WHERE eventid = ?", eventId) > 0;
+    }
 }
