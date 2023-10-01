@@ -1,12 +1,14 @@
 package ar.edu.itba.paw.models;
 
 public class Contact {
+    private final long contactId;
     private final String contactName;
     private final String contactAddress;
     private final String contactPhone;
     private final long neighborhoodId;
 
     private Contact(Builder builder) {
+        this.contactId = builder.contactId;
         this.contactName = builder.contactName;
         this.contactAddress = builder.contactAddress;
         this.contactPhone = builder.contactPhone;
@@ -14,10 +16,16 @@ public class Contact {
     }
 
     public static class Builder {
+        private long contactId;
         private String contactName;
         private String contactAddress;
         private String contactPhone;
         private long neighborhoodId;
+
+        public Builder contactId(long contactId) {
+            this.contactId = contactId;
+            return this;
+        }
 
         public Builder contactName(String contactName) {
             this.contactName = contactName;
@@ -44,6 +52,10 @@ public class Contact {
         }
     }
 
+    public long getContactId() {
+        return contactId;
+    }
+
     public String getContactName() {
         return contactName;
     }
@@ -63,6 +75,7 @@ public class Contact {
     @Override
     public String toString() {
         return "Contact{" +
+                "contactId=" + contactId +
                 "contactName='" + contactName + '\'' +
                 ", contactAddress='" + contactAddress + '\'' +
                 ", contactPhone='" + contactPhone + '\'' +

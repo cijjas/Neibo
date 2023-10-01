@@ -39,10 +39,11 @@ public class ResourceDaoImpl implements ResourceDao {
         data.put("neighborhoodid", neighborhoodId);
         data.put("title", title);
         data.put("description", description);
-        data.put("imageId", imageId);
+        data.put("imageid", imageId == 0 ? null : imageId);
 
         final Number key = jdbcInsert.executeAndReturnKey(data);
         return new Resource.Builder()
+                .resourceId(key.longValue())
                 .title(title)
                 .description(description)
                 .imageId(imageId)
@@ -54,6 +55,7 @@ public class ResourceDaoImpl implements ResourceDao {
 
     private static final RowMapper<Resource> ROW_MAPPER = (rs, rowNum) ->
             new Resource.Builder()
+                    .resourceId(rs.getLong("resourceid"))
                     .title(rs.getString("title"))
                     .description(rs.getString("description"))
                     .imageId(rs.getLong("imageId"))
@@ -62,5 +64,10 @@ public class ResourceDaoImpl implements ResourceDao {
     @Override
     public List<Resource> getResources(final long neighborhoodId) {
         return jdbcTemplate.query(RESOURCES + " WHERE rs.neighborhoodid = ?", ROW_MAPPER, neighborhoodId);
+    }
+
+    @Override
+    public boolean deleteResource(final long resourceId) {
+        return jdbcTemplate.update("DELETE FROM resources WHERE resourceid = ?", resourceId) > 0;
     }
 }
