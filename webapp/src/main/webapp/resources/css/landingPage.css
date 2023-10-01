@@ -7,9 +7,11 @@
 .drawings {
     position: fixed;
     width: 100%;
+    height: inherit;
     overflow: hidden;
     z-index: 0;
     bottom: 0;
+    left: 0;
 }
 
 .content-container {

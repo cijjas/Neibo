@@ -2,18 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <nav id="landing-navbar" class="landing-navbar">
-    <div class="navbar-item">
-        <h3>
-            <a href="${pageContext.request.contextPath}/">
-                About
-            </a>
-        </h3>
-        <h3>
-            <a href="${pageContext.request.contextPath}/">
-                Contact
-            </a>
-        </h3>
-    </div>
+
     <div id="logo" class="navbar-logo">
         <svg  width="80" height="80" viewBox="0 0 711 676" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M277 516.5C173.471 510.748 88.3725 601.154 52.731 653.054C50.7792 655.896 46.266 653.887 47.3215 650.605C79.3442 551.024 177.991 468.147 237.5 463C330 455 349.786 487.698 508 495C610.89 499.749 667.55 468.655 702.824 435.796C705.542 433.265 712.003 437.933 710.028 441.079C684.305 482.063 637.028 535 537 535C382.571 535 430 525 277 516.5Z" fill="var(--primary)"></path>
@@ -23,17 +12,6 @@
             <ellipse cx="424.428" cy="47.3431" rx="36.5" ry="32.5" transform="rotate(33.9471 424.428 47.3431)" fill="var(--primary)"></ellipse>
         </svg>
     </div>
-    <div class="navbar-item">
-        <h3>
-            <a href="${pageContext.request.contextPath}/">
-                Help
-            </a>
-        </h3>
-        <h3>
-            <a href="${pageContext.request.contextPath}/">
-                Start
-            </a>
-        </h3>
-    </div>
+
 
 </nav>

@@ -26,12 +26,25 @@
 
 
     <div class="wave">
-        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path
-                    d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
-                    fill="var(--primary)"
-            ></path>
+        <svg class="w-100" width="1200" height="337" viewBox="0 0 1200 337" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <g filter="url(#filter0_d_277_3)">
+                <path d="M321.39 177.502C379.39 161.135 435.55 131.799 493.39 114.006C575.78 88.6436 661.58 87.1115 743.84 113.414C823.78 138.913 906.67 201.104 985.66 232.701C1055.71 260.733 1132.19 272.276 1200 237.252V12.5H0V133.376C102.466 192.313 213.613 207.573 321.39 177.502Z" fill="#328D3D"/>
+            </g>
+            <defs>
+                <filter id="filter0_d_277_3" x="-32" y="0.5" width="1290" height="336.5" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                    <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                    <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                    <feOffset dx="13" dy="33"/>
+                    <feGaussianBlur stdDeviation="22.5"/>
+                    <feComposite in2="hardAlpha" operator="out"/>
+                    <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_277_3"/>
+                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_277_3" result="shape"/>
+                </filter>
+            </defs>
         </svg>
+
+
 
     </div>
 </div>

@@ -9,6 +9,7 @@
 
 .column-left{
     flex: 1;
+    max-width: 400px;
 }
 
 .column-right {
@@ -18,7 +19,7 @@
 .column-middle {
     flex: 4;
 }
-@media (max-width: 984px) {
+@media (max-width: 992px) {
     .column-right {
         display: none;
     }
@@ -327,10 +328,10 @@
 
 .wave {
     position: absolute;
-    top: 100px;
+    top: 30px;
     width: 100%;
     overflow: hidden;
-    z-index: 0;
+    z-index: -1;
 }
 
 
