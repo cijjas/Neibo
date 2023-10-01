@@ -78,9 +78,8 @@
       }
 
       // Create a link with the timestamp as a query parameter
-      let timestampLink = `<a href="/calendar?timestamp=\${dayDate.getTime()}">\${i}</a>`;
+      liTag += `<li class="\${classNames}" onclick="window.location.href='${pageContext.request.contextPath}/calendar?timestamp=\${dayDate.getTime()}'">\${i}</li>`;
 
-      liTag += `<li class="\${classNames}">\${timestampLink}</li>`;
     }
 
 
