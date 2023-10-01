@@ -3,7 +3,11 @@ package enums;
 public enum BaseChannel {
     ANNOUNCEMENTS,
     COMPLAINTS,
-    FEED;
+    FEED,
+
+    RESERVATIONS,
+
+    INFORMATION;
 
     @Override
     public String toString() {

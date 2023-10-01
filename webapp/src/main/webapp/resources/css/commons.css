@@ -24,14 +24,14 @@ body {
     --darkonbackground : rgb(235, 236, 233);
     --primary: #328d3d;
     --between-primary: #709a58;
-    --old-primary: #9ad379;
     --onprimary: #fdfaf1;
+    --old-primary: #9ad379;
     --secondary: #d8d8c5;
     --accent: #6696e2;
     --error: #de6f6f;
     --scrollbarthumb: #004F2D;
     --bordercolor: #dadad0;
-
+    --admin-color: #578a66;
     --border-light: 5px;
     --border-radius: 10px;
     --border-hard: 50px;
@@ -47,13 +47,14 @@ body {
     --darkonbackground : #4b4f4f;
     --primary: #8fbd79;
     --onprimary: #29333a;
+    --between-primary: #187736;
+    --old-primary: #1ba446;
     --secondary: #595953;
     --accent: #6696e2;
     --error: #de6f6f;
     --scrollbarthumb: #9a968c;
     --bordercolor: #646462;
-    --old-primary: #1ba446;
-
+    --admin-color: #8bcb9d;
 }
 
 

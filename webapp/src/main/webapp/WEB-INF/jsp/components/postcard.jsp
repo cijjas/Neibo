@@ -34,7 +34,7 @@
                     <p class="m-b-10"> <spring:message code="Tags"/> </p>
                         <div class="mt-2 d-flex flex-row justify-content-start align-items-center flex-wrap">
                             <c:forEach var="tag" items="${tags}">
-                                <a class="tag-option static m-l-3 m-r-3" href="${pageContext.request.contextPath}/?tag=${tag.tag}">
+                                <a class="post-tag static m-l-3 m-r-3" href="${pageContext.request.contextPath}/?tag=${tag.tag}">
                                     <c:out value="${tag.tag}" />
                                 </a>
                             </c:forEach>
