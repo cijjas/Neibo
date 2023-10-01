@@ -97,7 +97,7 @@ public class FrontController {
                 .collect(Collectors.toList());
 
         ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags());
+        mav.addObject("tagList", ts.getTags(getLoggedNeighbor().getNeighborhoodId()));
         mav.addObject("appliedTags", tags);
         mav.addObject("postList", postList);
         mav.addObject("page", page);
@@ -160,7 +160,6 @@ public class FrontController {
             @RequestParam("userId") long userId
     ) {
         us.unverifyNeighbor(userId);
-        System.out.println("UNVERIFIED USER" + userId);
         return new ModelAndView("redirect:/admin/neighbors");
     }
 
@@ -168,8 +167,6 @@ public class FrontController {
     public ModelAndView verifyUser(
             @RequestParam("userId") long userId
     ) {
-        System.out.println("VERIFIED USER" + userId);
-
         us.verifyNeighbor(userId);
         return new ModelAndView("redirect:/admin/unverified");
     }

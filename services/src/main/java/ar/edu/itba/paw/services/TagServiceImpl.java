@@ -28,8 +28,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> getTags() {
-        return tagDao.getTags();
+    public List<Tag> getTags(long neighborhoodId) {
+        return tagDao.getTags(neighborhoodId);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class TagServiceImpl implements TagService {
         String[] tagNames = tagsString.split(",");
 
         // Get the existing tags from the database
-        List<Tag> existingTags = tagDao.getTags();
+        List<Tag> existingTags = tagDao.getAllTags();
 
         // Create a mapping of tag names to their corresponding Tag objects
         Map<String, Tag> tagMap = existingTags.stream()

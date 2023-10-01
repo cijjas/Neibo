@@ -15,5 +15,7 @@ public interface TagDao {
 
     Optional<List<Tag>> findTagsByPostId(long id);
 
-    List<Tag> getTags();
+    List<Tag> getTags(long neighborhoodId);
+
+    List<Tag> getAllTags();
 }
