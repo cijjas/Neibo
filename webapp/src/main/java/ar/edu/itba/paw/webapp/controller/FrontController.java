@@ -273,14 +273,13 @@ public class FrontController {
     @RequestMapping(value = "/admin/publish", method = RequestMethod.POST)
     public ModelAndView publishAdmin(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
                                      final BindingResult errors,
-                                     @RequestParam("imageFile") MultipartFile imageFile,
                                      @RequestParam (value = "onChannelId", required = false) Long onChannelId
                                      ) {
         if (errors.hasErrors()){
             return publishForm(publishForm, onChannelId);
         }
 
-        ps.createAdminPost(getLoggedNeighbor().getNeighborhoodId(), publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
+        ps.createAdminPost(getLoggedNeighbor().getNeighborhoodId(), publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), publishForm.getImageFile());
         PublishForm clearedForm = new PublishForm();
         ModelAndView mav = new ModelAndView("admin/publishAdmin");
         mav.addObject("showSuccessMessage", true);
@@ -587,18 +586,16 @@ public class FrontController {
     @RequestMapping(value = "/information", method = RequestMethod.GET)
     public ModelAndView information() {
         ModelAndView mav = new ModelAndView("views/information");
-        mav.addObject("resourceMap", rs1.getResources(getLoggedNeighbor().getNeighborhoodId()));
-        mav.addObject("phoneNumbersMap", cs1.getContacts(getLoggedNeighbor().getNeighborhoodId()));
+        mav.addObject("resourceList", rs1.getResources(getLoggedNeighbor().getNeighborhoodId()));
+        mav.addObject("phoneNumbersList", cs1.getContacts(getLoggedNeighbor().getNeighborhoodId()));
         return mav;
     }
 
     @RequestMapping(value = "/admin/information", method = RequestMethod.GET)
     public ModelAndView adminInformation() {
         ModelAndView mav = new ModelAndView("admin/information");
-        mav.addObject("resourceMap", rs1.getResources(getLoggedNeighbor().getNeighborhoodId()));
-        mav.addObject("phoneNumbersMap", cs1.getContacts(getLoggedNeighbor().getNeighborhoodId()));
-//        Contact cont = cs1.createContact(getLoggedNeighbor().getNeighborhoodId(), "Police", "San Martin 202","911");
-//        System.out.println("CREATED CONTACT: " + cont);
+        mav.addObject("resourceList", rs1.getResources(getLoggedNeighbor().getNeighborhoodId()));
+        mav.addObject("phoneNumbersList", cs1.getContacts(getLoggedNeighbor().getNeighborhoodId()));
         return mav;
     }
 
@@ -615,7 +612,7 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/admin/createContact", method = RequestMethod.POST)
-    public ModelAndView createAmenity(@Valid @ModelAttribute("contactForm") final ContactForm contactForm,
+    public ModelAndView createContact(@Valid @ModelAttribute("contactForm") final ContactForm contactForm,
                                       final BindingResult errors) {
         if (errors.hasErrors()) {
             System.out.println("ERRORS: " + errors);
@@ -624,6 +621,22 @@ public class FrontController {
         System.out.println(contactForm);
         Contact cont = cs1.createContact(getLoggedNeighbor().getNeighborhoodId(), contactForm.getContactName(), contactForm.getContactAddress(), contactForm.getContactPhone());
         System.out.println("created contact: " + cont);
+        return new ModelAndView("redirect:/admin/information");
+    }
+
+    @RequestMapping(value = "/admin/createResource", method = RequestMethod.GET)
+    public ModelAndView createResourceForm(@ModelAttribute("resourceForm") final ResourceForm resourceForm) {
+        return new ModelAndView("admin/createResource");
+    }
+
+    @RequestMapping(value = "/admin/createResource", method = RequestMethod.POST)
+    public ModelAndView createResource(@Valid @ModelAttribute("resourceForm") final ResourceForm resourceForm,
+                                      final BindingResult errors) {
+        if (errors.hasErrors()) {
+            System.out.println("ERRORS: " + errors);
+            return createResourceForm(resourceForm);
+        }
+        rs1.createResource(getLoggedNeighbor().getNeighborhoodId(), resourceForm.getTitle(), resourceForm.getDescription(), resourceForm.getImageFile());
         return new ModelAndView("redirect:/admin/information");
     }
 

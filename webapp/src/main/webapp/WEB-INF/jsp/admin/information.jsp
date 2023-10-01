@@ -36,7 +36,7 @@
 
                 <p class="mb-3" style="color:var(--lighttext);"><spring:message code="ContactInformation"/></p>
                 <c:choose>
-                    <c:when test="${empty phoneNumbersMap}">
+                    <c:when test="${empty phoneNumbersList}">
                         <div class="no-posts-found">
                             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
                             <spring:message code="Contacts.notFound"/>
@@ -51,14 +51,14 @@
                                     <th><spring:message code="PhoneNumber"/></th>
                                     <th>   </th>
                                 </tr>
-                                <c:forEach var="contact" items="${phoneNumbersMap}">
+                                <c:forEach var="contact" items="${phoneNumbersList}">
                                     <tr>
                                         <td class="day">${contact.contactName}</td>
                                         <td>${contact.contactAddress}</td>
                                         <td>${contact.contactPhone}</td>
                                         <td>
-                                            <a href="/admin/deleteContact/${contact.contactId}" class="btn btn-link">
-                                                <i class="fas fa-trash"></i>
+                                            <a href="${pageContext.request.contextPath}/admin/deleteContact/${contact.contactId}" class="btn btn-link">
+                                                <i class="fas fa-trash" style="color: var(--primary);"></i>
                                             </a>
                                         </td>
                                     </tr>
@@ -67,14 +67,36 @@
                         </div>
                     </c:otherwise>
                 </c:choose>
-                <div class="add-button">
-                    <a href="/admin/createContact">
+                <div class="add-button m-t-40">
+                    <a href="${pageContext.request.contextPath}/admin/createContact">
                         <button class="cool-button cool-small on-bg">
-                            Add <i class="fas fa-plus"></i>
+                            <spring:message code="Add"/> <i class="fas fa-plus"></i>
                         </button>
                     </a>
                 </div>
             </div>
+            <div class="upper-feed-buttons-box m-b-20">
+                <a class="cool-feed-button" href="${pageContext.request.contextPath}/admin/createResource">
+                    <spring:message code="AddResource"/>
+                    <i class="fa-solid fa-plus"></i>
+                </a>
+            </div>
+
+            <c:forEach var="resource" items="${resourceList}">
+                <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
+                    <div class="d-flex flex-column justify-content-center align-items-center w-100">
+                        <h1><c:out value="${resource.title}"/></h1>
+                        <h3><c:out value="${resource.description}"/></h3>
+                        <c:if test="${resource.imageId != 0}">
+                            <div style="display: flex; justify-content: center; align-items: center;">
+                                <img src="${pageContext.request.contextPath}/images/<c:out value="${resource.imageId}"/>"
+                                     style="max-width: 100%; max-height: 100vh; border-radius: 5px;"
+                                     alt="resource_${resource.imageId}_img"/>
+                            </div>
+                        </c:if>
+                    </div>
+                </div>
+            </c:forEach>
         </div>
 
         <div class="column-right">

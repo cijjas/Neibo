@@ -37,9 +37,9 @@ public class ResourceDaoImpl implements ResourceDao {
     public Resource createResource(long neighborhoodId, String title, String description, long imageId) {
         Map<String, Object> data = new HashMap<>();
         data.put("neighborhoodid", neighborhoodId);
-        data.put("title", title);
-        data.put("description", description);
-        data.put("imageid", imageId == 0 ? null : imageId);
+        data.put("resourcetitle", title);
+        data.put("resourcedescription", description);
+        data.put("resourceimageid", imageId == 0 ? null : imageId);
 
         final Number key = jdbcInsert.executeAndReturnKey(data);
         return new Resource.Builder()
@@ -56,9 +56,9 @@ public class ResourceDaoImpl implements ResourceDao {
     private static final RowMapper<Resource> ROW_MAPPER = (rs, rowNum) ->
             new Resource.Builder()
                     .resourceId(rs.getLong("resourceid"))
-                    .title(rs.getString("title"))
-                    .description(rs.getString("description"))
-                    .imageId(rs.getLong("imageId"))
+                    .title(rs.getString("resourcetitle"))
+                    .description(rs.getString("resourcedescription"))
+                    .imageId(rs.getLong("resourceimageId"))
                     .neighborhoodId(rs.getLong("neighborhoodid"))
                     .build();
     @Override
