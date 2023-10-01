@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Post;
+import enums.Language;
 import enums.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,11 +75,12 @@ public class PostServiceImpl implements PostService {
         assert post != null;
         try {
             for(User n : userService.getNeighbors(neighborhoodId)) {
+                boolean isEnglish = n.getLanguage() == Language.ENGLISH;
                 Map<String, Object> vars = new HashMap<>();
                 vars.put("name", n.getName());
                 vars.put("postTitle", post.getTitle());
                 vars.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
-                emailService.sendMessageUsingThymeleafTemplate(n.getMail(), "New Announcement", "announcement-template_en.html", vars);
+                emailService.sendMessageUsingThymeleafTemplate(n.getMail(), isEnglish? "New Announcement" : "Nuevo Anuncio", isEnglish? "announcement-template_en.html" : "announcement-template_es.html", vars);
             }
         } catch(Exception e) {
             System.out.println(e.getMessage());
