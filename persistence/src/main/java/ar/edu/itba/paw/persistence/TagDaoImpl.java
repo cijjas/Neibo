@@ -24,6 +24,10 @@ public class TagDaoImpl implements TagDao {
             "select tags.tagid, tag\n" +
             "from posts_tags join tags on posts_tags.tagid = tags.tagid ";
 
+    private final String TAGS_JOIN_POSTS_JOIN_USERS_JOIN_NEIGHBORHOODS =
+            "select distinct tags.tagid, tag\n" +
+            "from posts_tags join tags on posts_tags.tagid = tags.tagid join posts p on posts_tags.postid = p.postid join users u on u.userid = p.userid join neighborhoods nh on u.neighborhoodid = nh.neighborhoodid ";
+
     @Autowired
     public TagDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
@@ -62,9 +66,12 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public List<Tag> getTags() {
-        return jdbcTemplate.query(TAGS, ROW_MAPPER);
+    public List<Tag> getTags(long neighborhoodId) {
+        return jdbcTemplate.query(TAGS_JOIN_POSTS_JOIN_USERS_JOIN_NEIGHBORHOODS + " WHERE nh.neighborhoodid=?", ROW_MAPPER, neighborhoodId);
     }
 
-
+    @Override
+    public List<Tag> getAllTags() {
+        return jdbcTemplate.query(TAGS, ROW_MAPPER);
+    }
 }

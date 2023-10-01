@@ -120,10 +120,10 @@
                                         const form = document.createElement('form');
                                         form.method = 'POST';
                                         if(verify){
-                                            form.action = '/verifyUser';
+                                            form.action = '${pageContext.request.contextPath}/verifyUser';
                                         }
                                         else{
-                                            form.action = '/unverifyUser';
+                                            form.action = '${pageContext.request.contextPath}/unverifyUser';
                                         }
                                         const input = document.createElement('input');
                                         input.type = 'hidden';

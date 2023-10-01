@@ -97,7 +97,7 @@ public class FrontController {
                 .collect(Collectors.toList());
 
         ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags());
+        mav.addObject("tagList", ts.getTags(getLoggedNeighbor().getNeighborhoodId()));
         mav.addObject("appliedTags", tags);
         mav.addObject("postList", postList);
         mav.addObject("page", page);
@@ -160,7 +160,6 @@ public class FrontController {
             @RequestParam("userId") long userId
     ) {
         us.unverifyNeighbor(userId);
-        System.out.println("UNVERIFIED USER" + userId);
         return new ModelAndView("redirect:/admin/neighbors");
     }
 
@@ -168,8 +167,6 @@ public class FrontController {
     public ModelAndView verifyUser(
             @RequestParam("userId") long userId
     ) {
-        System.out.println("VERIFIED USER" + userId);
-
         us.verifyNeighbor(userId);
         return new ModelAndView("redirect:/admin/unverified");
     }
@@ -504,6 +501,13 @@ public class FrontController {
         return mav;
     }
 
+    @RequestMapping(value = "/admin/deleteAmenity/{id}", method = RequestMethod.GET)
+    public ModelAndView deleteAmenity(@PathVariable(value = "id") int amenityId) {
+        ModelAndView mav = new ModelAndView("redirect:/admin/amenities");
+        as.deleteAmenity(amenityId);
+        return mav;
+    }
+
     @RequestMapping(value = "/admin/createAmenity", method = RequestMethod.GET)
     public ModelAndView createAmenityForm(@ModelAttribute("amenityForm") final AmenityForm amenityForm) {
         ModelAndView mav = new ModelAndView("admin/views/createAmenity");
@@ -775,6 +779,13 @@ public class FrontController {
         Contact cont = cs1.createContact(getLoggedNeighbor().getNeighborhoodId(), contactForm.getContactName(), contactForm.getContactAddress(), contactForm.getContactPhone());
         System.out.println("created contact: " + cont);
         return new ModelAndView("redirect:/admin/information");
+    }
+
+    @RequestMapping(value = "/admin/deleteResource/{id}", method = RequestMethod.GET)
+    public ModelAndView deleteResource(@PathVariable(value = "id") int resourceId) {
+        ModelAndView mav = new ModelAndView("redirect:/admin/information");
+        rs1.deleteResource(resourceId);
+        return mav;
     }
 
     @RequestMapping(value = "/admin/createResource", method = RequestMethod.GET)

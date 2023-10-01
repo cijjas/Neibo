@@ -25,7 +25,6 @@ public class UserDetailsService implements org.springframework.security.core.use
     @Override
     public UserDetails loadUserByUsername(String mail) throws NeighborNotFoundException {
         final User n = us.findUserByMail(mail).orElseThrow(NeighborNotFoundException::new);
-        System.out.println(n);
         final Set<GrantedAuthority> authorities = new HashSet<>();
 
         // Add roles based on user data from the database
@@ -43,7 +42,6 @@ public class UserDetailsService implements org.springframework.security.core.use
                 // Handle unknown roles or add a default role
                 break;
         }
-        System.out.println(authorities);
 
         return new UserAuth(n.getMail(), n.getPassword(), authorities);
     }
