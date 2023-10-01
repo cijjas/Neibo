@@ -18,7 +18,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title><spring:message code="CreatePost.title"/></title>
+    <title><spring:message code="Create.an.announcement"/></title>
 </head>
 
 
@@ -33,7 +33,7 @@
 
         <div class="column-middle" >
             <div class="cool-static-container" >
-                <h2 class="card-title"><spring:message code="CreatePost.title"/></h2>
+                <h2 class="card-title"><spring:message code="Create.an.announcement"/></h2>
                 <div class="divider"></div>
                 <!-- Post Creation Form -->
                 <form:form method="post" action="publish" modelAttribute="publishForm" enctype="multipart/form-data">

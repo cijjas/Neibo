@@ -8,10 +8,10 @@
             <a  href="${pageContext.request.contextPath}/admin/unverified" class="cool-left-button  ">
                 <i class="fas fa-circle-check"></i> <spring:message code="Requests"/>
             </a>
-            <a  href="${pageContext.request.contextPath}/admin/calendar" class="cool-left-button " >
-                <i class="fas fa-calendar-days"></i> <spring:message code="Events"/>
+            <a  href="${pageContext.request.contextPath}/calendar" class="cool-left-button " >
+                <i class="fas fa-calendar-days"></i> <spring:message code="Calendar"/>
             </a>
-            <a  href="${pageContext.request.contextPath}/admin/amenities" class="cool-left-button ${channel == 'Reservations' ? 'active' : ''}" >
+            <a href="${pageContext.request.contextPath}/admin/amenities" class="cool-left-button ${channel == 'Reservations' ? 'active' : ''}" >
                 <i class="fas fa-table-tennis-paddle-ball"></i> <spring:message code="Amenities"/>
             </a>
             <a id="informationButton" href="${pageContext.request.contextPath}/admin/information" class="cool-left-button ${channel == 'Information' ? 'active' : ''}" >
