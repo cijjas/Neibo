@@ -25,13 +25,13 @@ public class AmenityServiceImpl implements AmenityService {
     }
 
     @Override
-    public Amenity createAmenity(String name, String description, Map<String, DayTime> dayHourData){
-        return amenityDao.createAmenity(name, description, dayHourData);
+    public Amenity createAmenity(String name, String description, Map<String, DayTime> dayHourData, long neighborhoodId){
+        return amenityDao.createAmenity(name, description, dayHourData, neighborhoodId);
     }
 
     @Override
-    public List<Amenity> getAmenities() {
-        return amenityDao.getAmenities();
+    public List<Amenity> getAmenities(long neighborhoodId) {
+        return amenityDao.getAmenities(neighborhoodId);
     }
 
     @Override
@@ -45,8 +45,8 @@ public class AmenityServiceImpl implements AmenityService {
     }
 
     @Override
-    public DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek) {
-        return amenityDao.getAmenityHoursByDay(amenityId, dayOfWeek);
+    public DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek, long neighborhoodId) {
+        return amenityDao.getAmenityHoursByDay(amenityId, dayOfWeek, neighborhoodId);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class AmenityServiceImpl implements AmenityService {
     }
 
     @Override
-    public Amenity createAmenityWrapper(String name, String description, Time mondayOpenTime, Time mondayCloseTime, Time tuesdayOpenTime, Time tuesdayCloseTime, Time wednesdayOpenTime, Time wednesdayCloseTime, Time thursdayOpenTime, Time thursdayCloseTime, Time fridayOpenTime, Time fridayCloseTime, Time saturdayOpenTime, Time saturdayCloseTime, Time sundayOpenTime, Time sundayCloseTime) {
+    public Amenity createAmenityWrapper(String name, String description, Time mondayOpenTime, Time mondayCloseTime, Time tuesdayOpenTime, Time tuesdayCloseTime, Time wednesdayOpenTime, Time wednesdayCloseTime, Time thursdayOpenTime, Time thursdayCloseTime, Time fridayOpenTime, Time fridayCloseTime, Time saturdayOpenTime, Time saturdayCloseTime, Time sundayOpenTime, Time sundayCloseTime, long neighborhoodId) {
         Map<String, DayTime> timeMap = new HashMap<>();
 
         timeMap.put("Monday", createDayTime(mondayOpenTime, mondayCloseTime));
@@ -68,7 +68,7 @@ public class AmenityServiceImpl implements AmenityService {
 
         System.out.println("Finished filling the map: " + timeMap);
 
-        return createAmenity(name, description, timeMap);
+        return createAmenity(name, description, timeMap, neighborhoodId);
     }
 
 
