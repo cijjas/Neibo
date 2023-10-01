@@ -129,6 +129,7 @@ public class FrontController {
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
+        mav.addObject("panelOption", "Neighbors");
         mav.addObject("eventDates", eventTimestamps);
         mav.addObject("neighbors", true);
         mav.addObject("page", page);
@@ -147,6 +148,7 @@ public class FrontController {
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
+        mav.addObject("panelOption", "Requests");
         mav.addObject("eventDates", eventTimestamps);
         mav.addObject("neighbors", false);
         mav.addObject("page", page);
@@ -294,6 +296,7 @@ public class FrontController {
             return new ModelAndView("redirect:/" + channelName);
         }
     }
+
     @RequestMapping(value = "/publishToChannel", method = RequestMethod.POST)
     public ModelAndView publishToChannel(
             @RequestParam("channel") String channelString
@@ -314,6 +317,7 @@ public class FrontController {
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
+        mav.addObject("panelOption", "PublishAdmin");
         mav.addObject("eventDates", eventTimestamps);
         mav.addObject("channelList", chs.getAdminChannels(getLoggedNeighbor().getNeighborhoodId()));
         return mav;
@@ -496,6 +500,7 @@ public class FrontController {
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
+        mav.addObject("panelOption", "Amenities");
         mav.addObject("eventDates", eventTimestamps);
         mav.addObject("amenitiesHours", amenityHoursList);
         return mav;
@@ -744,6 +749,7 @@ public class FrontController {
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
+        mav.addObject("panelOption", "Information");
         mav.addObject("eventDates", eventTimestamps);
         mav.addObject("resourceList", rs1.getResources(getLoggedNeighbor().getNeighborhoodId()));
         mav.addObject("phoneNumbersList", cs1.getContacts(getLoggedNeighbor().getNeighborhoodId()));

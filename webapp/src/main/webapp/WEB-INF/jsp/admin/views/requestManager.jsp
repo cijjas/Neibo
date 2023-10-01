@@ -50,7 +50,7 @@
                 </jsp:include>
             </c:if>
 
-            <div class="req-acc-users-list" >
+            <div class="req-acc-users-list p-3" >
                 <c:choose>
                     <c:when test="${empty users}">
                         <div class="user-row">
@@ -71,21 +71,21 @@
                             <div class="user-row">
                                 <div class="information">
                                     <div>
-                                        <span style="color:var(--primary)"><spring:message code="Name"/>: </span>
-                                        <span style="color:var(--old-primary)"><c:out value="${user.name}"/></span>
+                                        <span style="color:var(--text)"><spring:message code="Name"/>: </span>
+                                        <span style="color:var(--primary)"><c:out value="${user.name}"/></span>
                                     </div>
                                     <div>
 
-                                        <span style="color:var(--primary)"><spring:message code="Surname"/>:</span>
-                                        <span style="color:var(--old-primary)"><c:out value="${user.surname}"/></span>
+                                        <span style="color:var(--text)"><spring:message code="Surname"/>:</span>
+                                        <span style="color:var(--primary)"><c:out value="${user.surname}"/></span>
                                     </div>
                                     <div>
-                                        <span style="color:var(--primary)"><spring:message code="Email"/>:</span>
-                                        <span style="color:var(--old-primary)"><c:out value="${user.mail}"/></span>
+                                        <span style="color:var(--text)"><spring:message code="Email"/>:</span>
+                                        <span style="color:var(--primary)"><c:out value="${user.mail}"/></span>
                                     </div>
                                     <div>
-                                        <span style="color:var(--primary)">ID:</span>
-                                        <span style="color:var(--old-primary)"><c:out value="${user.userId}"/></span>
+                                        <span style="color:var(--text)"><spring:message code="Identification"/>:</span>
+                                        <span style="color:var(--primary)"><c:out value="${user.identification}"/></span>
                                     </div>
                                 </div>
 
@@ -102,18 +102,7 @@
                                     </c:choose>
                                 </div>
                                 <script>
-                                    <%--function ignoreUser() {--%>
-                                    <%--    const form = document.createElement('form');--%>
-                                    <%--    form.method = 'POST';--%>
-                                    <%--    form.action = '/ignoreUser';--%>
-                                    <%--    const input = document.createElement('input');--%>
-                                    <%--    input.type = 'hidden';--%>
-                                    <%--    input.name = 'userId';--%>
-                                    <%--    input.value = '${user.userId}';--%>
-                                    <%--    form.appendChild(input);--%>
-                                    <%--    document.body.appendChild(form);--%>
-                                    <%--    form.submit();--%>
-                                    <%--}--%>
+
                                     function verifyUser(userId) {
                                         const verify = true;
                                         handleUserVerification(userId, verify)

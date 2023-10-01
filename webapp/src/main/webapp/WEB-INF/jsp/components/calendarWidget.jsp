@@ -1,6 +1,6 @@
 <div class="wrapper">
   <header class="header-content">
-    <a class="current-date" href="${pageContext.request.contextPath}/calendar"></a>
+    <a class="current-date" style="font-weight: bold" href="${pageContext.request.contextPath}/calendar"></a>
     <div class="icons">
       <span id="prev" ><i class="fa-solid fa-angle-left"></i></span>
       <span id="next" ><i  class="fa-solid fa-angle-right"></i></span>
