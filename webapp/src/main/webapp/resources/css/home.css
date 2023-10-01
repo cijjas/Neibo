@@ -1301,9 +1301,8 @@ h6 {
 /*---------------------------------Amenities -----------------------*/
 
 .table-striped{
-    --oddcolor: var(--background);
-    --evencolor: var(--onbackground);
     --column-padding: 20px;
+    color: var(--text);
     & td {
         text-align: center;
     }
@@ -1319,10 +1318,10 @@ h6 {
         padding-left: var(--column-padding);
     }
     & tr:nth-child(even) {
-        background-color: var(--evencolor);
+        background-color: var(--onbackground);
     }
 
     & tr:nth-child(odd) {
-        background-color: var(--oddcolor);
+        background-color: var(--background);
     }
 }

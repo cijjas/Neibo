@@ -2,7 +2,7 @@
 <a href="${pageContext.request.contextPath}/profile">
     <div class="grey-container" style="width: 200px;text-overflow: ellipsis ">
         <div class="row">
-            <div class="col-4 f-c-c-c pr-0">
+            <div class="col-4 f-c-c-c pr-2">
                 <div style="display: flex; justify-content: center; align-items: center;">
                     <c:choose>
                         <c:when test="${loggedUser.profilePictureId != 0}">

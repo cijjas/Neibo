@@ -55,7 +55,14 @@
                     <c:when test="${empty users}">
                         <div class="user-row">
                             <div class="information">
-                                <spring:message code="No.new.requests"/>
+                                <c:choose >
+                                    <c:when test="${neighbors}">
+                                        <spring:message code="No.verified.Users"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <spring:message code="No.new.requests"/>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </div>
                     </c:when>

@@ -58,7 +58,7 @@
                                         <td>${contact.contactPhone}</td>
                                         <td>
                                             <a href="${pageContext.request.contextPath}/admin/deleteContact/${contact.contactId}" class="btn btn-link">
-                                                <i class="fas fa-trash" style="color: darkred"></i>
+                                                <i class="fas fa-trash" style="color: var(--error);"></i>
                                             </a>
                                         </td>
                                     </tr>
@@ -90,7 +90,7 @@
                         </div>
                         <div class="col-md-4 text-right">
                             <a href="${pageContext.request.contextPath}/admin/deleteResource/${resource.resourceId}" class="btn btn-link">
-                                <i class="fas fa-trash" style="color: darkred;"></i>
+                                <i class="fas fa-trash" style="color: var(--error);"></i>
                             </a>
                         </div>
                     </div>

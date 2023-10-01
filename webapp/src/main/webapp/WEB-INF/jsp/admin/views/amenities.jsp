@@ -22,7 +22,7 @@
 </head>
 
 
-<body class="body">
+<body class="body ${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
 <div class="container">
 
@@ -46,7 +46,7 @@
                         </div>
                         <div class="col-md-4 text-right">
                             <a href="${pageContext.request.contextPath}/admin/deleteAmenity/${amenityWithHours.amenity.amenityId}" class="btn btn-link">
-                                <i class="fas fa-trash" style="color: darkred;"></i>
+                                <i class="fas fa-trash" style="color: var(--error);"></i>
                             </a>
                         </div>
                     </div>

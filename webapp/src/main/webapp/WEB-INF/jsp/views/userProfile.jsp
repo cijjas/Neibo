@@ -52,7 +52,7 @@
                                     const image = document.getElementById("output");
                                     image.src = URL.createObjectURL(event.target.files[0]);
                                     document.getElementById("profilePicForm").submit();
-                                };
+                                }
                             </script>
 
                         </div>
@@ -67,21 +67,31 @@
                         <h6 class="m-b-20 p-b-5 b-b-default f-w-600"><spring:message code="Information"/></h6>
                         <div class="row">
                             <div class="col-sm-6">
-                                <p class="m-b-10 f-w-600 text-muted" ><spring:message code="Email"/></p>
+                                <p class="m-b-10 f-w-600 " ><spring:message code="Email"/></p>
                                 <h6 class="text-muted f-w-400"><c:out value="${neighbor.mail}"/></h6>
                             </div>
                             <div class="col-sm-6">
-                                <p class="m-b-10 f-w-600 text-muted" ><spring:message code="User"/></p>
-                                <h6 class="text-muted f-w-400"><c:out value="${neighbor.userId}" /></h6>
+                                <p class="m-b-10 f-w-600 " ><spring:message code="Name"/></p>
+                                <h6 class="text-muted f-w-400"><c:out value="${neighbor.name}" /></h6>
+                            </div>
+                        </div>
+                        <div class="divider m-t-40"></div>
+                        <div class="row m-t-40">
+                            <div class="col-sm-6">
+                                <p class="m-b-10 f-w-600 " ><spring:message code="Surname"/></p>
+                                <h6 class="text-muted f-w-400"><c:out value="${neighbor.surname}"/></h6>
+                            </div>
+                            <div class="col-sm-6">
+                                <p class="m-b-10 f-w-600 " ><spring:message code="User.since"/></p>
+                                <h6 class="text-muted f-w-400"><c:out value="${neighbor.creationDate}" /></h6>
                             </div>
                         </div>
                         <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600"><spring:message code="Preferences"/></h6>
-                        <div class="row">
+                        <div class="row m-t-40">
                             <div class="col-sm-6">
-                                <p class="m-b-10 f-w-600 text-muted" ><spring:message code="DarkMode"/></p>
+                                <p class="m-b-10 f-w-600 " ><spring:message code="DarkMode"/></p>
                                 <div class="controlled" >
                                     <h6 class="text-muted f-w-400"><spring:message code="Off"/></h6>
-
                                     <form id="dark-mode-form" action="${pageContext.request.contextPath}/updateDarkModePreference" method="POST">
                                         <label class="switch">
                                             <input class="toggle" type="checkbox" id="dark-mode-toggle" name="darkMode">
@@ -92,22 +102,9 @@
                                     <h6 class="text-muted f-w-400"><spring:message code="On"/></h6>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <p class="m-b-10 f-w-600 text-muted"><spring:message code="Language"/></p>
-                                <div class="controlled" >
-                                    <h6 class="text-muted f-w-400"><spring:message code="English"/></h6>
-                                    <div >
-                                        <label class="switch ">
-                                            <input class="toggle" type="checkbox" id="language-toggle">
-                                            <span class="slider"></span>
-                                            <span class="card-side"></span>
-                                        </label>
-                                    </div>
-                                        <h6 class="text-muted f-w-400"><spring:message code="Spanish"/></h6>
-                                </div>
-                            </div>
+
                         </div>
-                        <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600"><spring:message code="Preferences"/></h6>
+
 
                         <div class="row justify-content-end">
                             <a href="${pageContext.request.contextPath}/logout" class=" cool-button cool-small on-bg">

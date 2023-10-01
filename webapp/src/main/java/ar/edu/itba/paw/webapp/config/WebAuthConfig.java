@@ -77,8 +77,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
             // Check if the user has the role "UNVERIFIED_NEIGHBOR"
             if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_UNVERIFIED_NEIGHBOR"))) {
                 // Redirect to the "/unverified" page for unverified neighbors
-                String redirectUrl = request.getContextPath() + "/unverified";
-                response.sendRedirect(redirectUrl);
+                response.sendRedirect("/unverified");
             } else {
                 // Redirect to the default page for other roles
                 response.sendRedirect("/");
