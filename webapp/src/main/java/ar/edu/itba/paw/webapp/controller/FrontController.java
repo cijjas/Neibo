@@ -514,9 +514,11 @@ public class FrontController {
 
     //------------------------------------- USER AMENITIES & RESERVATIONS --------------------------------------
     @RequestMapping(value = "/amenities", method = RequestMethod.GET)
-    public ModelAndView amenities(@ModelAttribute("reservationForm") final ReservationForm reservationForm) {
+    public ModelAndView amenities(
+            @ModelAttribute("reservationForm") final ReservationForm reservationForm
+    ) {
         ModelAndView mav = new ModelAndView("views/amenities");
-
+        mav.addObject("channel", BaseChannel.RESERVATIONS.toString());
         List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
@@ -605,6 +607,7 @@ public class FrontController {
         ModelAndView mav = new ModelAndView("views/information");
         mav.addObject("resourceList", rs1.getResources(getLoggedNeighbor().getNeighborhoodId()));
         mav.addObject("phoneNumbersList", cs1.getContacts(getLoggedNeighbor().getNeighborhoodId()));
+        mav.addObject("channel", BaseChannel.INFORMATION.toString());
         return mav;
     }
 
