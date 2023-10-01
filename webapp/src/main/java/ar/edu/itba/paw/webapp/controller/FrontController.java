@@ -243,8 +243,13 @@ public class FrontController {
             @RequestParam(value = "onChannelId", required = false) Long onChannelId
     ) {
         final ModelAndView mav = new ModelAndView("views/publish");
+        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Long> eventTimestamps = eventDates.stream()
+                .map(date -> date.getTime())
+                .collect(Collectors.toList());
         mav.addObject("channel", onChannelId);
         mav.addObject("channelList", chs.getNeighborChannels(getLoggedNeighbor().getNeighborhoodId(), getLoggedNeighbor().getUserId()));
+        mav.addObject("eventDates", eventTimestamps);
         return mav;
     }
 
@@ -610,11 +615,49 @@ public class FrontController {
         List<Event> eventList = es.getEventsByDate(selectedDate, getLoggedNeighbor().getNeighborhoodId());
 
         ModelAndView mav = new ModelAndView("views/calendar");
+        mav.addObject("isAdmin", getLoggedNeighbor().getRole() == UserRole.ADMINISTRATOR);
         mav.addObject("eventDates", eventTimestamps);
         mav.addObject("selectedTimestamp", selectedDate.getTime()); // Pass the selected timestamp
         mav.addObject("eventList", eventList);
         return mav;
     }
+
+    @RequestMapping(value = "/admin/addEvent", method = RequestMethod.GET)
+    public ModelAndView eventForm(
+            @ModelAttribute("eventForm") final EventForm eventForm
+    ) {
+        final ModelAndView mav = new ModelAndView("views/addEvent");
+        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Long> eventTimestamps = eventDates.stream()
+                .map(date -> date.getTime())
+                .collect(Collectors.toList());
+        mav.addObject("eventDates", eventTimestamps);
+        return mav;
+    }
+
+    @RequestMapping(value = "/admin/addEvent", method = RequestMethod.POST)
+    public ModelAndView addEvent(
+            @Valid @ModelAttribute("eventForm") final EventForm eventForm,
+            final BindingResult errors
+    ) {
+        if (errors.hasErrors()) {
+            return eventForm(eventForm);
+        }
+
+        long duration = 0;
+        try {
+            duration = Long.parseLong(eventForm.getDuration());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            // Handle the parsing error, e.g., by returning an error response to the user.
+        }
+
+        Event e = es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), duration, getLoggedNeighbor().getNeighborhoodId());
+        ModelAndView mav = new ModelAndView("views/addEvent");
+        mav.addObject("showSuccessMessage", true);
+        return mav;
+    }
+
 
     // ------------------------------------- INFORMATION --------------------------------
     @RequestMapping(value = "/information", method = RequestMethod.GET)
@@ -623,6 +666,15 @@ public class FrontController {
         mav.addObject("resourceList", rs1.getResources(getLoggedNeighbor().getNeighborhoodId()));
         mav.addObject("phoneNumbersList", cs1.getContacts(getLoggedNeighbor().getNeighborhoodId()));
         mav.addObject("channel", BaseChannel.INFORMATION.toString());
+
+        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Long> eventTimestamps = eventDates.stream()
+                .map(date -> date.getTime())
+                .collect(Collectors.toList());
+
+        mav.addObject("resourceMap", rs1.getResources(getLoggedNeighbor().getNeighborhoodId()));
+        mav.addObject("phoneNumbersMap", cs1.getContacts(getLoggedNeighbor().getNeighborhoodId()));
+        mav.addObject("eventDates", eventTimestamps);
         return mav;
     }
 

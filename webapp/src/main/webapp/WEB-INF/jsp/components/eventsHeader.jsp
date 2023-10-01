@@ -4,10 +4,12 @@
     <h2>
         current date
     </h2>
-    <a href="${pageContext.request.contextPath}/publish" class="filter-button">
-        <spring:message code="CreateNewEvent.button" />
-        <i class="fa-solid fa-plus"></i>
-    </a>
+    <c:if test="${isAdmin}">
+        <a href="${pageContext.request.contextPath}/admin/addEvent" class="cool-button">
+            <spring:message code="CreateNewEvent.button" />
+            <i class="fa-solid fa-plus"></i>
+        </a>
+    </c:if>
 </div>
 
 <%--<script>--%>

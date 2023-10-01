@@ -11,6 +11,7 @@ import java.sql.Time;
 @ReservationTime
 public class ReservationForm {
 
+
     private Date date;
 
     private Time startTime;
