@@ -166,13 +166,28 @@ public class FrontController {
 
     // ------------------------------------- PROFILE --------------------------------------
 
-    @RequestMapping("/profile")
-    public ModelAndView profile() {
+    @RequestMapping(value = "/profile", method = RequestMethod.GET)
+    public ModelAndView profile(@ModelAttribute("profilePictureForm") final ProfilePictureForm profilePictureForm) {
         ModelAndView mav = new ModelAndView("views/userProfile");
         mav.addObject("neighbor", getLoggedNeighbor());
         //us.updateLanguage(getLoggedNeighbor().getUserId(), "Spanish");
         return mav;
     }
+
+    @RequestMapping(value = "/profile", method = RequestMethod.POST)
+    public ModelAndView profile(@Valid @ModelAttribute("profilePictureForm") final ProfilePictureForm profilePictureForm,
+                                final BindingResult errors) {
+        ModelAndView mav = new ModelAndView("redirect: /profile");
+
+        if (errors.hasErrors()) {
+            return profile(profilePictureForm);
+        }
+
+        us.updateProfilePicture(getLoggedNeighbor().getUserId(), profilePictureForm.getImageFile());
+        //us.updateLanguage(getLoggedNeighbor().getUserId(), "Spanish");
+        return mav;
+    }
+
     @RequestMapping (value = "/updateDarkModePreference", method = RequestMethod.POST)
     public String updateDarkModePreference() {
         User user = getLoggedNeighbor();
