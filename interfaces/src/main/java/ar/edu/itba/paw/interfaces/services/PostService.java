@@ -13,6 +13,7 @@ public interface PostService {
 
     Post createPost(final String title, final String description, final long neighborId, final long channelId, String tags, final MultipartFile imageFile);
 
+    // It is not entirely necessary to have the neighborhoodId here but makes it easier for the mail sending
     Post createAdminPost(final long neighborhoodId, final String title, final String description, final long neighborId, final int channelId, String tags, final MultipartFile imageFile);
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -486,7 +486,7 @@ public class FrontController {
     public ModelAndView adminAmenities() {
         ModelAndView mav = new ModelAndView("admin/views/amenities");
 
-        List<Amenity> amenities = as.getAmenities();
+        List<Amenity> amenities = as.getAmenities(getLoggedNeighbor().getNeighborhoodId());
         List<AmenityHours> amenityHoursList = new ArrayList<>();
 
         for (Amenity amenity : amenities) {
@@ -562,7 +562,7 @@ public class FrontController {
             return createAmenityForm(amenityForm);
         }
 
-        as.createAmenityWrapper(amenityForm.getName(), amenityForm.getDescription(), amenityForm.getMondayOpenTime(), amenityForm.getMondayCloseTime(), amenityForm.getTuesdayOpenTime(), amenityForm.getTuesdayCloseTime(), amenityForm.getWednesdayOpenTime(), amenityForm.getWednesdayCloseTime(), amenityForm.getThursdayOpenTime(), amenityForm.getThursdayCloseTime(), amenityForm.getFridayOpenTime(), amenityForm.getFridayCloseTime(), amenityForm.getSaturdayOpenTime(), amenityForm.getSaturdayCloseTime(), amenityForm.getSundayOpenTime(), amenityForm.getSundayCloseTime());
+        as.createAmenityWrapper(amenityForm.getName(), amenityForm.getDescription(), amenityForm.getMondayOpenTime(), amenityForm.getMondayCloseTime(), amenityForm.getTuesdayOpenTime(), amenityForm.getTuesdayCloseTime(), amenityForm.getWednesdayOpenTime(), amenityForm.getWednesdayCloseTime(), amenityForm.getThursdayOpenTime(), amenityForm.getThursdayCloseTime(), amenityForm.getFridayOpenTime(), amenityForm.getFridayCloseTime(), amenityForm.getSaturdayOpenTime(), amenityForm.getSaturdayCloseTime(), amenityForm.getSundayOpenTime(), amenityForm.getSundayCloseTime(), getLoggedNeighbor().getNeighborhoodId());
         return new ModelAndView("redirect:/admin/amenities");
     }
 
@@ -580,7 +580,7 @@ public class FrontController {
 
         mav.addObject("eventDates", eventTimestamps);
 
-        List<Amenity> amenities = as.getAmenities();
+        List<Amenity> amenities = as.getAmenities(getLoggedNeighbor().getNeighborhoodId());
         List<AmenityHours> amenityHoursList = new ArrayList<>();
 
         for (Amenity amenity : amenities) {
@@ -630,7 +630,7 @@ public class FrontController {
             return amenities(reservationForm);
         }
 
-        Reservation res = rs.createReservation(reservationForm.getAmenityId(), getLoggedNeighbor().getUserId(), reservationForm.getDate(), reservationForm.getStartTime(), reservationForm.getEndTime());
+        Reservation res = rs.createReservation(reservationForm.getAmenityId(), getLoggedNeighbor().getUserId(), reservationForm.getDate(), reservationForm.getStartTime(), reservationForm.getEndTime(), getLoggedNeighbor().getNeighborhoodId());
         System.out.println("RESERVATION: " + res);
         return new ModelAndView("redirect:/amenities");
     }

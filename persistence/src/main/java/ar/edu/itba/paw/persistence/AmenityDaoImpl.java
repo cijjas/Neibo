@@ -37,10 +37,11 @@ public class AmenityDaoImpl implements AmenityDao {
     // ---------------------------------------------- AMENITY INSERT ---------------------------------------------------
 
     @Override
-    public Amenity createAmenity(String name, String description, Map<String, DayTime> dayHourData) {
+    public Amenity createAmenity(String name, String description, Map<String, DayTime> dayHourData, long neighborhoodId) {
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
         data.put("description", description);
+        data.put("neighborhoodid", neighborhoodId);
 
         final Number amenityId = jdbcInsert.executeAndReturnKey(data);
 
@@ -58,7 +59,7 @@ public class AmenityDaoImpl implements AmenityDao {
             hoursData.put("weekday", dayOfWeek);
             hoursData.put("opentime", openTime);
             hoursData.put("closetime", closeTime);
-            hoursData.put("amenityId", amenityId.intValue()); // Convert amenityId to int
+            hoursData.put("amenityid", amenityId.intValue()); // Convert amenityId to int
 
             // Insert into hours table
             jdbcInsertHours.execute(hoursData);
@@ -79,6 +80,7 @@ public class AmenityDaoImpl implements AmenityDao {
                 .amenityId(rs.getLong("amenityid"))
                 .name(rs.getString("name"))
                 .description(rs.getString("description"))
+                .neighborhoodId(rs.getLong("neighborhoodid"))
                 .build();
     };
 
@@ -94,8 +96,8 @@ public class AmenityDaoImpl implements AmenityDao {
     }
 
     @Override
-    public List<Amenity> getAmenities() {
-        return jdbcTemplate.query("SELECT * FROM amenities", ROW_MAPPER);
+    public List<Amenity> getAmenities(long neighborhoodId) {
+        return jdbcTemplate.query("SELECT * FROM amenities WHERE neighborhoodId = ?", ROW_MAPPER, neighborhoodId);
     }
 
     @Override
@@ -127,14 +129,15 @@ public class AmenityDaoImpl implements AmenityDao {
     }
 
     @Override
-    public DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek) {
+    public DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek, long neighborhoodId) {
         Time openTime = null;
         Time closeTime = null;
 
         List<Map<String, Object>> results = jdbcTemplate.queryForList(
-                "SELECT opentime, closetime FROM hours WHERE amenityId = ? AND weekday = ?",
+                "SELECT opentime, closetime FROM hours WHERE amenityId = ? AND weekday = ? AND neighborhoodid = ?",
                 amenityId,
-                dayOfWeek
+                dayOfWeek,
+                neighborhoodId
         );
 
         if (!results.isEmpty()) {
