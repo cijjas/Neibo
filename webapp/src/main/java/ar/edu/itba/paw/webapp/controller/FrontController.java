@@ -124,7 +124,7 @@ public class FrontController {
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
 
-        final ModelAndView mav = new ModelAndView("admin/requestManager");
+        final ModelAndView mav = new ModelAndView("admin/views/requestManager");
         mav.addObject("neighbors", true);
         mav.addObject("page", page);
         mav.addObject("totalPages", us.getTotalPages(UserRole.NEIGHBOR, getLoggedNeighbor().getNeighborhoodId(), size ));
@@ -137,8 +137,7 @@ public class FrontController {
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
-
-        final ModelAndView mav = new ModelAndView("admin/requestManager");
+        final ModelAndView mav = new ModelAndView("admin/views/requestManager");
         mav.addObject("neighbors", false);
         mav.addObject("page", page);
         mav.addObject("totalPages", us.getTotalPages(UserRole.UNVERIFIED_NEIGHBOR, getLoggedNeighbor().getNeighborhoodId(), size));
@@ -146,6 +145,24 @@ public class FrontController {
         return mav;
     }
 
+    @RequestMapping("/unverifyUser")
+    public ModelAndView unverifyUser(
+            @RequestParam("userId") long userId
+    ) {
+        us.unverifyNeighbor(userId);
+        System.out.println("UNVERIFIED USER" + userId);
+        return new ModelAndView("redirect:/admin/neighbors");
+    }
+
+    @RequestMapping("/verifyUser")
+    public ModelAndView verifyUser(
+            @RequestParam("userId") long userId
+    ) {
+        System.out.println("VERIFIED USER" + userId);
+
+        us.verifyNeighbor(userId);
+        return new ModelAndView("redirect:/admin/unverified");
+    }
 
     // ------------------------------------- PROFILE --------------------------------------
 
@@ -265,7 +282,7 @@ public class FrontController {
             @ModelAttribute("publishForm") final PublishForm publishForm,
             @RequestParam (value = "onChannelId", required = false) Long onChannelId
     ) {
-        final ModelAndView mav = new ModelAndView("admin/publishAdmin");
+        final ModelAndView mav = new ModelAndView("admin/views/publishAdmin");
         mav.addObject("channelList", chs.getAdminChannels(getLoggedNeighbor().getNeighborhoodId()));
         return mav;
     }
@@ -281,7 +298,7 @@ public class FrontController {
 
         ps.createAdminPost(getLoggedNeighbor().getNeighborhoodId(), publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), publishForm.getImageFile());
         PublishForm clearedForm = new PublishForm();
-        ModelAndView mav = new ModelAndView("admin/publishAdmin");
+        ModelAndView mav = new ModelAndView("admin/views/publishAdmin");
         mav.addObject("showSuccessMessage", true);
         mav.addObject("channelList", chs.getAdminChannels(getLoggedNeighbor().getNeighborhoodId()));
         mav.addObject("publishForm", clearedForm);
@@ -431,7 +448,7 @@ public class FrontController {
 
     @RequestMapping(value = "/admin/amenities", method = RequestMethod.GET)
     public ModelAndView adminAmenities() {
-        ModelAndView mav = new ModelAndView("admin/amenities");
+        ModelAndView mav = new ModelAndView("admin/views/amenities");
 
         List<Amenity> amenities = as.getAmenities();
         List<AmenityHours> amenityHoursList = new ArrayList<>();
@@ -449,7 +466,7 @@ public class FrontController {
 
     @RequestMapping(value = "/createAmenity", method = RequestMethod.GET)
     public ModelAndView createAmenityForm(@ModelAttribute("amenityForm") final AmenityForm amenityForm) {
-        ModelAndView mav = new ModelAndView("admin/createAmenity");
+        ModelAndView mav = new ModelAndView("admin/views/createAmenity");
 
         List<Time> timeList = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
@@ -657,7 +674,7 @@ public class FrontController {
 
     @RequestMapping(value = "/admin/test", method = RequestMethod.GET)
     public ModelAndView adminTest() {
-        return new ModelAndView("admin/requestManager");
+        return new ModelAndView("admin/views/requestManager");
     }
 
     @RequestMapping(value = "/testDuplicatedException", method = RequestMethod.GET)

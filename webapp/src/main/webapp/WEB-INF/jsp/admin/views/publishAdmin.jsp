@@ -27,7 +27,7 @@
 <div class="container">
     <div class="row">
         <div class="column-left">
-            <%@ include file="/WEB-INF/jsp/admin/controlPanelLeftButtons.jsp" %>
+            <%@ include file="/WEB-INF/jsp/admin/components/controlPanelLeftButtons.jsp" %>
 
         </div>
 
