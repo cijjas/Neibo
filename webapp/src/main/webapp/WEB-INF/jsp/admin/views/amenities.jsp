@@ -32,10 +32,16 @@
         </div>
 
         <div class="column-middle">
-            <a href="${pageContext.request.contextPath}/createAmenity" class="filter-button" >
-                <spring:message code="CreateNewAmenity.button"/>
-                <i class="fa-solid fa-plus"></i>
-            </a>
+<%--            <a href="${pageContext.request.contextPath}/createAmenity" class="filter-button" >--%>
+<%--                <spring:message code="CreateNewAmenity.button"/>--%>
+<%--                <i class="fa-solid fa-plus"></i>--%>
+<%--            </a>--%>
+            <div class="upper-feed-buttons-box m-b-20">
+                <a class="cool-feed-button" href="${pageContext.request.contextPath}/admin/createAmenity">
+                    <spring:message code="CreateNewAmenity.button"/>
+                    <i class="fa-solid fa-plus"></i>
+                </a>
+            </div>
             <c:forEach var="amenityWithHours" items="${amenitiesHours}">
                 <div  class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
                     <div >

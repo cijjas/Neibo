@@ -464,7 +464,7 @@ public class FrontController {
         return mav;
     }
 
-    @RequestMapping(value = "/createAmenity", method = RequestMethod.GET)
+    @RequestMapping(value = "/admin/createAmenity", method = RequestMethod.GET)
     public ModelAndView createAmenityForm(@ModelAttribute("amenityForm") final AmenityForm amenityForm) {
         ModelAndView mav = new ModelAndView("admin/views/createAmenity");
 
@@ -500,7 +500,7 @@ public class FrontController {
         return mav;
     }
 
-    @RequestMapping(value = "/createAmenity", method = RequestMethod.POST)
+    @RequestMapping(value = "/admin/createAmenity", method = RequestMethod.POST)
     public ModelAndView createAmenity(@Valid @ModelAttribute("amenityForm") final AmenityForm amenityForm,
                                       final BindingResult errors) {
         if (errors.hasErrors()) {
