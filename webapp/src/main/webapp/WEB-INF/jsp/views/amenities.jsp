@@ -72,7 +72,6 @@
                                 <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg" style="height:40px;" ><spring:message code="Reserve"/></button>
                             </div>
                         </div>
-
                     </form:form>
             </div>
 
@@ -131,6 +130,15 @@
                 </div>
             </div>
         </div>
+        <c:if test="${param.showSuccessMessage == true}">
+            <c:set var="successMessage">
+                <spring:message code="Reservation.created.successfully"/>
+            </c:set>
+
+            <jsp:include page="/WEB-INF/jsp/components/successDialog.jsp" >
+                <jsp:param name="successMessage" value="${successMessage}" />
+            </jsp:include>
+        </c:if>
     </div>
 </div>
 

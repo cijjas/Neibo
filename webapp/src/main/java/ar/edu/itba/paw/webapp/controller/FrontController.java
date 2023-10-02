@@ -630,10 +630,17 @@ public class FrontController {
             System.out.println("ERRORS: " + errors);
             return amenities(reservationForm);
         }
+        ModelAndView mav = new ModelAndView("redirect:/amenities");
 
         Reservation res = rs.createReservation(reservationForm.getAmenityId(), getLoggedNeighbor().getUserId(), reservationForm.getDate(), reservationForm.getStartTime(), reservationForm.getEndTime(), getLoggedNeighbor().getNeighborhoodId());
+        if(res == null) {
+            mav.addObject("showSuccessMessage", false);
+        }
+        else {
+            mav.addObject("showSuccessMessage", true);
+        }
         System.out.println("RESERVATION: " + res);
-        return new ModelAndView("redirect:/amenities");
+        return mav;
     }
 
     @RequestMapping(value = "/deleteReservation/{id}", method = RequestMethod.GET)
@@ -744,7 +751,6 @@ public class FrontController {
     public ModelAndView redirectToSite(
             @RequestParam("site") String site
     ) {
-        System.out.println("ons ite");
         return new ModelAndView("redirect:/" + site);
     }
 
@@ -821,7 +827,13 @@ public class FrontController {
 
     @RequestMapping(value = "/admin/createResource", method = RequestMethod.GET)
     public ModelAndView createResourceForm(@ModelAttribute("resourceForm") final ResourceForm resourceForm) {
-        return new ModelAndView("admin/views/createResource");
+        ModelAndView mav = new ModelAndView("admin/views/createResource");
+        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Long> eventTimestamps = eventDates.stream()
+                .map(date -> date.getTime())
+                .collect(Collectors.toList());
+        mav.addObject("eventDates", eventTimestamps);
+        return mav;
     }
 
     @RequestMapping(value = "/admin/createResource", method = RequestMethod.POST)
