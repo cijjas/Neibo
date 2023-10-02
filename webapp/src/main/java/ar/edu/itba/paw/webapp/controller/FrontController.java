@@ -619,6 +619,7 @@ public class FrontController {
             e.printStackTrace();
         }
         mav.addObject("timeList", timeList);
+        mav.addObject("reservationsList", rs.getReservationsByUserId(getLoggedNeighbor().getUserId()));
         return mav;
     }
 

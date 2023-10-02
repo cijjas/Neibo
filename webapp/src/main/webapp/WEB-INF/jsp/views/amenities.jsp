@@ -76,23 +76,6 @@
                     </form:form>
             </div>
 
-
-        <%--            <form action="${pageContext.request.contextPath}/completeReservation" method="get">--%>
-<%--                <label for="amenityId">Select Amenity:</label>--%>
-<%--                <select id="amenityId" name="amenityId" required>--%>
-<%--                    <c:forEach var="amenityWithHours" items="${amenitiesHours}">--%>
-<%--                        <option value="${amenityWithHours.amenity.amenityId}">--%>
-<%--                            <c:out value="${amenityWithHours.amenity.name}" />--%>
-<%--                        </option>--%>
-<%--                    </c:forEach>--%>
-<%--                </select>--%>
-
-<%--                <label for="chosenDate">Choose a Date:</label>--%>
-<%--                <input type="date" id="chosenDate" name="chosenDate" required>--%>
-
-<%--                <input type="submit" value="Continue">--%>
-<%--            </form>--%>
-
             <c:forEach var="amenityWithHours" items="${amenitiesHours}">
                 <div  class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
 <%--                    <a href="${pageContext.request.contextPath}/reserve/<c:out value="${amenityWithHours.amenity.amenityId}" />" style="text-decoration: none;">--%>
@@ -125,6 +108,25 @@
 
         <div class="column-right">
             <%@ include file="/WEB-INF/jsp/components/calendarWidget.jsp" %>
+            <div class="grey-static-container m-t-40">
+                <div class="column d-flex justify-content-center align-items-start">
+                    <h3 class="m-b-10"><spring:message code="MyReservations"/></h3>
+                    <c:forEach var="reservation" items="${reservationsList}">
+                        <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
+                            <div class="d-flex flex-row justify-content-between align-items-center">
+                                <div>
+                                    <h4><c:out value="${reservation.amenity.name}" /></h4>
+                                </div>
+                                <div>
+                                    <p class="mb-3" style="color:var(--lighttext);"><spring:message code="Date"/> <c:out value="${reservation.date}" /></p>
+                                    <p class="mb-3" style="color:var(--lighttext);"><spring:message code="StartTime"/> <c:out value="${reservation.startTime}" /></p>
+                                    <p class="mb-3" style="color:var(--lighttext);"><spring:message code="EndTime"/> <c:out value="${reservation.endTime}" /></p>
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
         </div>
     </div>
 </div>
