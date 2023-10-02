@@ -186,7 +186,7 @@ public class FrontController {
     @RequestMapping(value = "/profile", method = RequestMethod.POST)
     public ModelAndView profile(@Valid @ModelAttribute("profilePictureForm") final ProfilePictureForm profilePictureForm,
                                 final BindingResult errors) {
-        ModelAndView mav = new ModelAndView("redirect: /profile");
+        ModelAndView mav = new ModelAndView("redirect:/profile");
 
         if (errors.hasErrors()) {
             return profile(profilePictureForm);
@@ -633,6 +633,12 @@ public class FrontController {
 
         Reservation res = rs.createReservation(reservationForm.getAmenityId(), getLoggedNeighbor().getUserId(), reservationForm.getDate(), reservationForm.getStartTime(), reservationForm.getEndTime(), getLoggedNeighbor().getNeighborhoodId());
         System.out.println("RESERVATION: " + res);
+        return new ModelAndView("redirect:/amenities");
+    }
+
+    @RequestMapping(value = "/deleteReservation/{id}", method = RequestMethod.GET)
+    public ModelAndView deleteReservation( @PathVariable(value = "id") int reservationId) {
+        rs.deleteReservation(reservationId);
         return new ModelAndView("redirect:/amenities");
     }
 

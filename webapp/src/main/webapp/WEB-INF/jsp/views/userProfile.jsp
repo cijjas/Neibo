@@ -29,7 +29,7 @@
                     <div class="card-block text-center text-white">
                         <div class="m-b-25">
                             <div class="profile-pic">
-                                <form:form method="post" action="/profile" modelAttribute="profilePictureForm" enctype="multipart/form-data" id="profilePicForm">
+                                <form:form method="post" action="${pageContext.request.contextPath}/profile" modelAttribute="profilePictureForm" enctype="multipart/form-data" id="profilePicForm">
                                     <form:errors cssClass="error" element="p"/>
                                     <label class="-label" for="file">
                                         <span class="glyphicon glyphicon-camera"></span>

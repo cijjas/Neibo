@@ -116,6 +116,9 @@
                             <div class="d-flex flex-row justify-content-between align-items-center">
                                 <div>
                                     <h4><c:out value="${reservation.amenity.name}" /></h4>
+                                    <a href="${pageContext.request.contextPath}/deleteReservation/${reservation.reservationId}" class="btn btn-link">
+                                        <i class="fas fa-trash" style="color: var(--error);"></i>
+                                    </a>
                                 </div>
                                 <div>
                                     <p class="mb-3" style="color:var(--lighttext);"><spring:message code="Date"/> <c:out value="${reservation.date}" /></p>
