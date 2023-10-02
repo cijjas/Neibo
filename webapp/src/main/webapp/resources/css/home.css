@@ -370,8 +370,15 @@
 }
 .f-r-c-c{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+.f-r-sb-c{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
     gap: 1rem;
 }

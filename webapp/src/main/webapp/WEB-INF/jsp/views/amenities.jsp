@@ -110,20 +110,20 @@
             <%@ include file="/WEB-INF/jsp/components/calendarWidget.jsp" %>
             <div class="grey-static-container m-t-40">
                 <div class="column d-flex justify-content-center align-items-start">
-                    <h3 class="m-b-10"><spring:message code="MyReservations"/></h3>
+                    <h3 class="m-b-20"><spring:message code="MyReservations"/></h3>
                     <c:forEach var="reservation" items="${reservationsList}">
                         <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
-                            <div class="d-flex flex-row justify-content-between align-items-center">
-                                <div>
-                                    <h4><c:out value="${reservation.amenity.name}" /></h4>
-                                    <a href="${pageContext.request.contextPath}/deleteReservation/${reservation.reservationId}" class="btn btn-link">
+                            <div class="f-c-c-c">
+                                <div class="f-r-sb-c w-100">
+                                    <h5><c:out value="${reservation.amenity.name}" /></h5>
+                                    <a href="${pageContext.request.contextPath}/deleteReservation/${reservation.reservationId}" class="f-c-c-c">
                                         <i class="fas fa-trash" style="color: var(--error);"></i>
                                     </a>
                                 </div>
                                 <div>
-                                    <p class="mb-3" style="color:var(--lighttext);"><spring:message code="Date"/> <c:out value="${reservation.date}" /></p>
-                                    <p class="mb-3" style="color:var(--lighttext);"><spring:message code="StartTime"/> <c:out value="${reservation.startTime}" /></p>
-                                    <p class="mb-3" style="color:var(--lighttext);"><spring:message code="EndTime"/> <c:out value="${reservation.endTime}" /></p>
+                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="Date"/> <c:out value="${reservation.date}" /></h6>
+                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="StartTime"/> <c:out value="${reservation.startTime}" /></h6>
+                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="EndTime"/> <c:out value="${reservation.endTime}" /></h6>
                                 </div>
                             </div>
                         </div>
