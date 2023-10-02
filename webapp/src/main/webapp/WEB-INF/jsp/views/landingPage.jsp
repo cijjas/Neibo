@@ -170,7 +170,7 @@
                     <div class="form-input">
                         <form:label path="identification">
                             <c:set var="identification"><spring:message code="Identification"/></c:set>
-                            <form:input type="number" pattern="[0-9]*" inputmode="numeric" path="identification" placeholder="${identification}" class="input"/>
+                            <form:input type="number" pattern="[0-9]*" inputmode="numeric" min="1" max="99999999" path="identification" placeholder="${identification}" class="input"/>
                         </form:label>
                         <form:errors path="identification" cssClass="landing-error" element="p"/>
                     </div>
