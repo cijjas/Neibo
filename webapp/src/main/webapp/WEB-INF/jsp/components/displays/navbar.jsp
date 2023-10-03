@@ -1,6 +1,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html;charset=UTF-8"%>
-<%@ include file="/WEB-INF/jsp/components/tooltips.jsp" %>
+<%@ include file="/WEB-INF/jsp/components/structure/tooltips.jsp" %>
 
 <div class="nav-container">
     <nav class="navbar navbar-expand-lg custom-navbar">
@@ -18,7 +18,7 @@
                 </a>
 
 
-                <%@ include file="/WEB-INF/jsp/components/userProfileWidget.jsp" %>
+                <%@ include file="/WEB-INF/jsp/components/widgets/userProfileWidget.jsp" %>
             </div>
         </div>
     </nav>
@@ -26,12 +26,14 @@
 
 
     <div class="wave">
-        <svg class="w-100" width="1200" height="337" viewBox="0 0 1200 337" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <svg class="w-100" preserveAspectRatio="none" width="1200" height="382" viewBox="0 0 1200 382" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g filter="url(#filter0_d_277_3)">
-                <path d="M321.39 177.502C379.39 161.135 435.55 131.799 493.39 114.006C575.78 88.6436 661.58 87.1115 743.84 113.414C823.78 138.913 906.67 201.104 985.66 232.701C1055.71 260.733 1132.19 272.276 1200 237.252V12.5H0V133.376C102.466 192.313 213.613 207.573 321.39 177.502Z" fill="#328D3D"/>
+                <path d="M321.39 222.002C379.39 205.635 435.55 176.299 493.39 158.506C575.78 133.144 661.58 131.612 743.84 157.914C823.78 183.413 906.67 245.604 985.66 277.201C1055.71 305.233 1132.19 316.776 1200 281.752V0H0V177.876C102.466 236.813 213.613 252.073 321.39 222.002Z" fill="var(--primary)"/>
+                <path d="M321.39 222.002C379.39 205.635 435.55 176.299 493.39 158.506C575.78 133.144 661.58 131.612 743.84 157.914C823.78 183.413 906.67 245.604 985.66 277.201C1055.71 305.233 1132.19 316.776 1200 281.752V0H0V177.876C102.466 236.813 213.613 252.073 321.39 222.002Z" fill="url(#paint0_radial_277_3)" fill-opacity="0.2"/>
+                <path d="M321.39 222.002C379.39 205.635 435.55 176.299 493.39 158.506C575.78 133.144 661.58 131.612 743.84 157.914C823.78 183.413 906.67 245.604 985.66 277.201C1055.71 305.233 1132.19 316.776 1200 281.752V0H0V177.876C102.466 236.813 213.613 252.073 321.39 222.002Z" fill="url(#paint1_radial_277_3)" fill-opacity="0.2"/>
             </g>
             <defs>
-                <filter id="filter0_d_277_3" x="-32" y="0.5" width="1290" height="336.5" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <filter id="filter0_d_277_3" x="-32" y="-12" width="1290" height="393.5" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
                     <feFlood flood-opacity="0" result="BackgroundImageFix"/>
                     <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
                     <feOffset dx="13" dy="33"/>
@@ -41,8 +43,22 @@
                     <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_277_3"/>
                     <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_277_3" result="shape"/>
                 </filter>
+                <radialGradient id="paint0_radial_277_3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1200 266) rotate(-128.273) scale(347.104 789.416)">
+                    <stop stop-color="#0D2202"/>
+                    <stop offset="0.747285" stop-opacity="0"/>
+                    <stop offset="1" stop-color="#52CB19" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="paint1_radial_277_3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(364 249) rotate(-100.767) scale(310.466 706.089)">
+                    <stop stop-color="#053407"/>
+                    <stop offset="0.747285" stop-opacity="0"/>
+                    <stop offset="1" stop-opacity="0"/>
+                </radialGradient>
             </defs>
         </svg>
+
+
+
+
 
 
 

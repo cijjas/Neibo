@@ -20,7 +20,7 @@
 </head>
 <body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%----%>
-<%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
+<%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
 <div class="container"> <!-- Wrap card content in a container -->
     <div class="cool-static-container p-0">
         <div class="page-content page-container" id="page-content">

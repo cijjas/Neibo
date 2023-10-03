@@ -23,20 +23,20 @@
 
 <body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
 <!-- Navigation Bar -->
-    <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
+    <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
 
     <div class="container ">
         <div class="row">
             <div class="column column-left">
-                <%@ include file="/WEB-INF/jsp/components/leftColumn.jsp" %>
+                <%@ include file="/WEB-INF/jsp/components/displays/leftColumn.jsp" %>
             </div>
 
             <div class="column column-middle ">
-                <%@ include file="/WEB-INF/jsp/components/postcard.jsp" %>
+                <%@ include file="/WEB-INF/jsp/components/widgets/postcard.jsp" %>
             </div>
 
             <div class="column column-right">
-                <%@ include file="/WEB-INF/jsp/components/calendarWidget.jsp" %>
+                <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %>
             </div>
         </div>
     </div>
@@ -48,7 +48,7 @@
 
     <!-- Bootstrap JS and jQuery -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-    <%@ include file="/WEB-INF/jsp/components/footer.jsp" %>
+    <%@ include file="/WEB-INF/jsp/components/displays/footer.jsp" %>
 
 </body>
 </html>

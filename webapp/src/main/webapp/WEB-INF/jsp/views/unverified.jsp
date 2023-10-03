@@ -23,7 +23,7 @@
 <body >
 <%----%>
 
-<%@ include file="/WEB-INF/jsp/components/backgroundDrawing.jsp" %>
+<%@ include file="/WEB-INF/jsp/components/structure/backgroundDrawing.jsp" %>
     <div class="container">
         <div class="d-flex flex-column justify-content-center align-items-center ">
             <div class="cool-static-container" style="width: 500px; margin-top: 100px">

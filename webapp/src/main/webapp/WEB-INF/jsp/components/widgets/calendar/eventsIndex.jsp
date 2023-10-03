@@ -35,7 +35,7 @@
 
         <div id="placeholder-posts-container">
             <c:forEach begin="1" end="10" var="index">
-                <%@ include file="/WEB-INF/jsp/components/placeholderBlogpost.jsp" %>
+                <%@ include file="/WEB-INF/jsp/components/widgets/placeholderBlogpost.jsp" %>
             </c:forEach>
         </div>
 
@@ -50,7 +50,7 @@
                 </c:when>
                 <c:otherwise>
                     <c:forEach var="event" items="${eventList}" >
-                        <jsp:include page="/WEB-INF/jsp/components/event.jsp" >
+                        <jsp:include page="/WEB-INF/jsp/components/widgets/calendar/event.jsp" >
                             <jsp:param name="eventId" value="${event.eventId}" />
                             <jsp:param name="eventName" value="${event.name}"/>
                             <jsp:param name="eventDescription" value="${event.description}"/>

@@ -47,7 +47,6 @@
     border-radius: 10px;
 }
 .custom-navbar {
-    background-color: var(--primary);
 }
 
 .custom-btn {
@@ -328,7 +327,7 @@
 
 .wave {
     position: absolute;
-    top: 30px;
+    top: 0;
     width: 100%;
     overflow: hidden;
     z-index: -1;

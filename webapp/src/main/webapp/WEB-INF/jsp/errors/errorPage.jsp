@@ -25,7 +25,7 @@
 
     <%--<%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>--%>
 
-    <%@ include file="/WEB-INF/jsp/components/backgroundDrawing.jsp" %>
+    <%@ include file="/WEB-INF/jsp/components/structure/backgroundDrawing.jsp" %>
 
 
 

@@ -20,28 +20,19 @@
     </head>
 
     <body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
-        <%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
-        <div class="container">
-            <div class="calendar-box">
-                <%@ include file="/WEB-INF/jsp/components/calendarBox.jsp" %>
+        <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
+        <div class="container f-c-c-c" >
+            <div style="width: 80%">
+                <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarBox.jsp" %>
+                <%@include file="/WEB-INF/jsp/components/widgets/calendar/eventsHeader.jsp"%>
+                <%@include file="/WEB-INF/jsp/components/widgets/calendar/eventsIndex.jsp"%>
             </div>
-        </div>
 
-        <div class="container">
-            <div class="events-header">
-                <%@include file="/WEB-INF/jsp/components/eventsHeader.jsp"%>
-            </div>
-        </div>
-
-        <div class="container">
-            <div class="events-index">
-                <%@include file="/WEB-INF/jsp/components/eventsIndex.jsp"%>
-            </div>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 
-        <%@ include file="/WEB-INF/jsp/components/footer.jsp" %>
+        <%@ include file="/WEB-INF/jsp/components/displays/footer.jsp" %>
     </body>
 
 </html>

@@ -31,7 +31,7 @@
 <body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%----%>
 
-<%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
+<%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
 
 
 <div class="container" >
@@ -44,7 +44,7 @@
         <div class="column-middle">
 
             <c:if test="${totalPages > 1}">
-                <jsp:include page="/WEB-INF/jsp/components/pageSelector.jsp">
+                <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
                     <jsp:param name="page" value="${page}" />
                     <jsp:param name="totalPages" value="${totalPages}" />
                 </jsp:include>
@@ -143,7 +143,7 @@
         </div>
 
         <div class="column-right">
-            <%@ include file="/WEB-INF/jsp/components/calendarWidget.jsp" %>
+            <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %>
         </div>
 
 

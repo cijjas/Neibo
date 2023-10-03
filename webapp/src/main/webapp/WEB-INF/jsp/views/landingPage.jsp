@@ -22,7 +22,7 @@
 <body class="landing-body ${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%----%>
 
-<%@ include file="/WEB-INF/jsp/components/backgroundDrawing.jsp" %>
+<%@ include file="/WEB-INF/jsp/components/structure/backgroundDrawing.jsp" %>
 <%--Successfull signup popup--%>
 
 <%-- show error if parameter error is in url --%>
@@ -43,7 +43,7 @@
         <spring:message code="Successfully.signup"/>
     </c:set>
 
-    <jsp:include page="/WEB-INF/jsp/components/successDialog.jsp" >
+    <jsp:include page="/WEB-INF/jsp/components/widgets/successDialog.jsp" >
         <jsp:param name="successMessage" value="${successMessage}" />
     </jsp:include>
     <script>
@@ -70,7 +70,7 @@
 </c:if>
 
 <div class="content-container">
-    <%@ include file="/WEB-INF/jsp/components/landingNavbar.jsp" %>
+    <%@ include file="/WEB-INF/jsp/components/displays/landingNavbar.jsp" %>
     <div class="landing-neibo">
         neibo
     </div>

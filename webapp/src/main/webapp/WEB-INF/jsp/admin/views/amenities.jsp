@@ -23,7 +23,7 @@
 
 
 <body class="body ${loggedUser.darkMode ? 'dark-mode' : ''}">
-<%@ include file="/WEB-INF/jsp/components/navbar.jsp" %>
+<%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
 <div class="container">
 
     <div class="row">
@@ -73,13 +73,13 @@
             </c:forEach>
         </div>
         <div class="column-right">
-            <%@ include file="/WEB-INF/jsp/components/calendarWidget.jsp" %>
+            <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
-<%@ include file="/WEB-INF/jsp/components/footer.jsp" %>
+<%@ include file="/WEB-INF/jsp/components/displays/footer.jsp" %>
 
 </body>
 </html>

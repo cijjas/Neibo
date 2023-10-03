@@ -8,30 +8,40 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 </head>
 
-<div class="wrapper">
-  <header>
-    <div class="icons">
-      <span id="prev" class="material-symbols-rounded">chevron_left</span>
+<div class="f-c-c-c">
+  <div class="wrapper">
+
+    <header class="f-r-sb-c w-50 m-t-40">
+      <div class="icons">
+        <span id="prev" ><i class="fa-solid fa-angle-left"></i></span>
+      </div>
+      <p class="current-date" style="font-weight: bold"></p>
+      <div class="icons">
+        <span id="next"  ><i  class="fa-solid fa-angle-right"></i></span>
+      </div>
+    </header>
+    <div class="divider"></div>
+
+    <div class="f-c-c-c h-100">
+      <div class="calendar">
+        <ul class="weeks">
+          <li><spring:message code="days.sunday"/></li>
+          <li><spring:message code="days.monday"/></li>
+          <li><spring:message code="days.tuesday"/></li>
+          <li><spring:message code="days.wednesday"/></li>
+          <li><spring:message code="days.thursday"/></li>
+          <li><spring:message code="days.friday"/></li>
+          <li><spring:message code="days.saturday"/></li>
+        </ul>
+        <ul class="days"></ul>
+      </div>
     </div>
-    <p class="current-date"></p>
-    <div class="icons">
-      <span id="next" class="material-symbols-rounded">chevron_right</span>
-    </div>
-  </header>
-  <div class="divider"></div>
-  <div class="calendar">
-    <ul class="weeks">
-      <li><spring:message code="days.sunday"/></li>
-      <li><spring:message code="days.monday"/></li>
-      <li><spring:message code="days.tuesday"/></li>
-      <li><spring:message code="days.wednesday"/></li>
-      <li><spring:message code="days.thursday"/></li>
-      <li><spring:message code="days.friday"/></li>
-      <li><spring:message code="days.saturday"/></li>
-    </ul>
-    <ul class="days"></ul>
+
+
+
   </div>
 </div>
+
 
 </html>
 
