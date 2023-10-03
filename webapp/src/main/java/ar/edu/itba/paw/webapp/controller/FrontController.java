@@ -683,9 +683,7 @@ public class FrontController {
         String selectedMonth = getLoggedNeighbor().getLanguage() == Language.ENGLISH
                 ? monthsEnglish[selectedMonthIndex]
                 : monthsSpanish[selectedMonthIndex];
-        System.out.println(selectedMonth);
         int selectedYear = selectedDate.getYear() + 1900; // getYear() returns years since 1900
-        System.out.println(selectedYear);
 
         ModelAndView mav = new ModelAndView("views/calendar");
         mav.addObject("isAdmin", getLoggedNeighbor().getRole() == UserRole.ADMINISTRATOR);
