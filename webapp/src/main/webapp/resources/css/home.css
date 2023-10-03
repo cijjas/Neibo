@@ -74,6 +74,7 @@
 
 .upper-feed-buttons-box {
     padding: 1rem;
+    margin-bottom: 1.25rem;
     top: 20px;
     display: flex;
     flex-direction: row;
@@ -135,7 +136,7 @@
 
 
 .blogpost {
-    margin: 1.25rem auto;
+    margin-bottom: 1.25rem;
     padding: 20px;
     width: 100%;
     background-color: var(--onbackground);
@@ -360,36 +361,8 @@
 }
 
 
-.f-c-c-c{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-}
-.f-r-c-c{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-}
-.f-r-sb-c{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-}
-.f-c-sb-c{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-}
-
 .left-box {
+    margin-bottom: 1.25rem;
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -837,6 +810,13 @@ input[type=file]::file-selector-button:hover{
         color: var(--primary);
     }
 
+    &.active{
+        transform: translateY(-2px);
+        border: 1px solid var(--background);
+        box-shadow: 0 5px 0 0 var(--primary);
+        color: var(--background);
+        background-color: var(--primary);
+    }
 }
 
 

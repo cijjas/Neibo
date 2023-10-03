@@ -23,8 +23,6 @@
     <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
     <div class="container">
         <div class="row">
-
-
             <div class="column-publish" >
                 <div class="cool-static-container" >
                     <h2 class="card-title"><spring:message code="CreatePost.title"/></h2>
@@ -41,7 +39,7 @@
                                         <c:forEach var="entry" items="${channelList}">
                                             <c:choose>
                                                 <c:when test="${entry.value.channelId == channel}">
-                                                    <form:option value="${entry.value.channelId}" selected="selected">${entry.key}</form:option>
+                                                    <form:option value="${entry.value.channelId}" selected="selected"><spring:message code="${entry.key}"/></form:option>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <form:option value="${entry.value.channelId}">${entry.key}</form:option>
@@ -145,31 +143,25 @@
                     successContainer.style.display = 'flex'; // Show the container
                     setTimeout(function() {
                         successContainer.style.opacity = '1'; // Fade in
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = '${pageContext.request.contextPath}/redirectToChannel'; // Replace with your desired URL
+                        // Optionally, you can add any form data or parameters here
+                        // For example, adding a hidden input field with a value
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'channelId';
+                        input.value = '${channelId}';
+
+                        // Append the input field to the form
+                        form.appendChild(input);
+
+                        // Append the form to the document and submit it
+                        document.body.appendChild(form);
+                        form.submit();
                     }, 10); // Delay for a very short time (e.g., 10ms) to trigger the transition
 
-                    // JavaScript to hide the success message with fade-out effect after 2 seconds
-                    setTimeout(function() {
-                        successContainer.style.opacity = '0'; // Fade out
-                        setTimeout(function() {
-                            successContainer.style.display = 'none'; // Hide the container
-                            const form = document.createElement('form');
-                            form.method = 'POST';
-                            form.action = '${pageContext.request.contextPath}/redirectToChannel'; // Replace with your desired URL
-                            // Optionally, you can add any form data or parameters here
-                            // For example, adding a hidden input field with a value
-                            const input = document.createElement('input');
-                            input.type = 'hidden';
-                            input.name = 'channelId';
-                            input.value = '${channelId}';
 
-                            // Append the input field to the form
-                            form.appendChild(input);
-
-                            // Append the form to the document and submit it
-                            document.body.appendChild(form);
-                            form.submit();
-                        }, 500); // Wait for the transition to complete (adjust timing as needed)
-                    }, 2000); // 2000 milliseconds (2 seconds)
                 </script>
 
             </c:if>

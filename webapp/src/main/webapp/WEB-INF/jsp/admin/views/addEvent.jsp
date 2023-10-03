@@ -109,11 +109,6 @@
                 successContainer.style.display = 'flex'; // Show the container
                 setTimeout(function() {
                     successContainer.style.opacity = '1'; // Fade in
-                }, 10); // Delay for a very short time (e.g., 10ms) to trigger the transition
-
-                // JavaScript to hide the success message with fade-out effect after 2 seconds
-                setTimeout(function() {
-                    successContainer.style.opacity = '0'; // Fade out
                     const form = document.createElement('form');
                     form.method = 'POST';
                     form.action = '${pageContext.request.contextPath}/redirectToSite'; // Replace with your desired URL
@@ -128,11 +123,8 @@
                     // Append the form to the document and submit it
                     document.body.appendChild(form);
                     form.submit();
+                }, 10); // Delay for a very short time (e.g., 10ms) to trigger the transition
 
-                    setTimeout(function() {
-                        successContainer.style.display = 'none'; // Hide the container
-                    }, 500); // Wait for the transition to complete (adjust timing as needed)
-                }, 2000); // 2000 milliseconds (2 seconds)
             </script>
 
         </c:if>

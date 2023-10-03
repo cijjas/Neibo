@@ -25,7 +25,7 @@
 
 
 <div style=" position: absolute; width: 100%; height: 100%; top:0; left:0; z-index: 1">
-    <div class="w-100">
+   <div class="w-100">
         <svg style=" position: absolute; top:500px; left:100px" width="618" height="217" viewBox="0 0 618 217" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M76.493 99.851C79.621 99.851 82.705 100.038 85.735 100.403C98.136 75.843 123.595 59 152.988 59C174.343 59 193.621 67.891 207.324 82.172C219.651 75.564 233.74 71.816 248.705 71.816C297.145 71.816 336.413 111.084 336.413 159.524C336.413 165.136 335.886 170.625 334.879 175.944H0C0.216 133.882 34.38 99.851 76.493 99.851Z" fill="#FDFCFB"/>
             <g filter="url(#filter0_d_0_1)">
@@ -69,12 +69,11 @@
 
         <div class="row">
             <div class="column-left">
-                    <%@ include file="/WEB-INF/jsp/components/displays/leftColumn.jsp" %>
+                    <%@ include file="/WEB-INF/jsp/components/widgets/leftColumn.jsp" %>
             </div>
 
             <div class="column-middle">
-                <%@ include file="/WEB-INF/jsp/components/displays/upperFeedButtons.jsp" %>
-
+                    <%@ include file="/WEB-INF/jsp/components/widgets/upperFeedButtons.jsp" %>
                 <script>
                     function showPostsAfterDelay() {
                         document.getElementById('placeholder-posts-container').style.display = 'none';
@@ -136,6 +135,7 @@
             </div>
 
             <div class="column-right">
+
                 <%@ include file="/WEB-INF/jsp/components/displays/rightColumn.jsp" %>
             </div>
 

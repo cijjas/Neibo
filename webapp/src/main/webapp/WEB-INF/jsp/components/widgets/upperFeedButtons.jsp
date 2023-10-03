@@ -1,13 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 
+<c:if test="${channel != 'Announcements'}">
+    <div class="upper-feed-buttons-box ">
 
-<div class="upper-feed-buttons-box ">
-    <a onclick="publishInChannel()" class="cool-feed-button" >
-        <spring:message code="CreateNewPost.button"/>
-        <i class="fa-solid fa-plus"></i>
-    </a>
-</div>
+        <a onclick="publishInChannel()" class="cool-feed-button" >
+            <spring:message code="CreateNewPost.button"/>
+            <i class="fa-solid fa-plus"></i>
+        </a>
+    </div>
+</c:if>
 
 
 <script>

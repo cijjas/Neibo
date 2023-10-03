@@ -14,7 +14,7 @@
         </c:if>
     </c:url>
     <a class="pagination-button small-a ${page <= 1 ? 'disabled' : ''}"
-       href="${prevUrl}"
+       href="${pageContext.request.contextPath}/${prevUrl}"
        onclick="return ${page <= 1 ? 'false' : 'true'}">
         <i class="fas fa-chevron-left"></i>
     </a>
@@ -29,7 +29,7 @@
             </c:if>
         </c:url>
         <a class="pagination-button ${page == pageNumber ? 'active' : ''}"
-           href="${pageUrl}">
+           href="${pageContext.request.contextPath}/${pageUrl}">
                 ${pageNumber}
         </a>
     </c:forEach>
@@ -43,7 +43,7 @@
         </c:if>
     </c:url>
     <a class="pagination-button small-a ${page >= totalPages ? 'disabled' : ''}"
-       href="${nextUrl}"
+       href="${pageContext.request.contextPath}/${nextUrl}"
        onclick="return ${page >= totalPages ? 'false' : 'true'}">
         <i class="fas fa-chevron-right"></i>
     </a>

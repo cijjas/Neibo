@@ -129,7 +129,7 @@ header .current-date{
 
 .calendar .days li.event {
     z-index: 1;
-    cursor: default;
+    cursor: pointer;
     position: relative;
     margin-top: 15px;
     color: var(--onbackground); /* Set the text color to white */

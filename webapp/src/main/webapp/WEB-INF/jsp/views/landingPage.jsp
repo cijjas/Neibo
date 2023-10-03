@@ -15,6 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
     <title><spring:message code="Welcome.to.neibo"/></title>
     <link href="${pageContext.request.contextPath}/resources/css/home.css" rel="stylesheet"/>
+
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/landingPage.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
@@ -23,10 +24,6 @@
 <%----%>
 
 <%@ include file="/WEB-INF/jsp/components/structure/backgroundDrawing.jsp" %>
-<%--Successfull signup popup--%>
-
-<%-- show error if parameter error is in url --%>
-
 
 <c:if test="${error == true}">
     <c:set var="errorMessage">
@@ -95,7 +92,8 @@
                 <span><spring:message code="Login.to.continue"/> </span>
             </div>
 
-            <form method="post" class="login-form" id="loginForm">
+            <form method="post" class="login-form" id="loginForm" >
+
                 <div class="centered-column">
                     <label>
                         <c:set var="email"><spring:message code="Email"/></c:set>
@@ -109,15 +107,24 @@
 
                 </div>
                 <label class="centered-row light-text">
-                    <input  name="rememberMe" type="checkbox">
+                    <input name="rememberMe" type="checkbox">
                     <spring:message code="Remember.me"/>
                 </label>
                 <div class="centered-column">
 
-                    <button class="action-button"><spring:message code="Login"/></button>
+                    <button class="action-button" onclick="tryLogin()">
+                        <spring:message code="Login"/>
+                    </button>
                     <span style="color:var(--lighttext); font-size: 14px;"><spring:message code="Not.a.member.question"/>
-                            <a onclick="closeLoginDialog();openSignupDialog()" class="a-link"><spring:message code="Signup.now"/></a>
-                        </span>
+                            <a onclick="closeLoginDialog(); openSignupDialog();" class="a-link"><spring:message code="Signup.now"/></a>
+                    </span>
+                   <script>
+                       function tryLogin(){
+                           if(document.getElementById("loginForm").checkValidity()){
+                               document.getElementById("loginForm").submit();
+                           }
+                       }
+                   </script>
                 </div>
 
             </form>
@@ -167,23 +174,37 @@
                         </form:label>
                         <form:errors path="password" cssClass="landing-error" element="p"/>
                     </div>
+
+                    <%-- ID --%>
                     <div class="form-input">
                         <form:label path="identification">
                             <c:set var="identification"><spring:message code="Identification"/></c:set>
-                            <form:input type="number" pattern="[0-9]*" inputmode="numeric" min="1" max="99999999" path="identification" placeholder="${identification}" class="input"/>
+
+                            <form:input
+                                    type="number"
+                                    pattern="[0-9]*"
+                                    inputmode="numeric"
+                                    min="1" max="99999999"
+                                    path="identification"
+                                    placeholder="${identification}"
+                                    class="input"
+                            />
                         </form:label>
                         <form:errors path="identification" cssClass="landing-error" element="p"/>
                     </div>
 
+                    <%-- SELECT Language --%>
                     <div class="form-input">
                         <form:label path="language">
-                            <form:select path="language" class="cool-select" style="width: 200px;">
+                            <form:select path="language" class="cool-select" >
                                 <form:option value="English"><spring:message code="English"/></form:option>
                                 <form:option value="Spanish"><spring:message code="Spanish"/></form:option>
                             </form:select>
                         </form:label>
                         <form:errors path="language" cssClass="landing-error" element="p"/>
                     </div>
+
+                    <%-- SELECT NEIGHBORHOOD --%>
                     <div class="form-input">
                         <form:select path="neighborhoodId" class="cool-select">
                             <c:forEach var="entry" items="${neighborhoodsList}">
@@ -211,6 +232,9 @@
 
 
 <script>
+    function closeErrorDialog(){
+        document.getElementById("errorDialog").style.display = "none";
+    }
     function openLoginDialog() {
         document.getElementById("loginDialog").style.display = "flex";
     }

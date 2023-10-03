@@ -37,7 +37,6 @@
                 <div class="divider"></div>
                 <div>
                     <form:form method="post" action="createAmenity" modelAttribute="amenityForm">
-                        <form:errors cssClass="error" element="p"/>
                         <div class="d-flex flex-column justify-content-between align-items-center">
 
                             <div class="form-row">
@@ -102,7 +101,9 @@
                             </div>
                         </div>
 
-
+                        <div class="f-c-c-c w-100 m-t-40">
+                            <form:errors cssClass="error" element="p"/>
+                        </div>
 
                         <%--Submit button --%>
                         <div class="d-flex justify-content-end m-t-40">

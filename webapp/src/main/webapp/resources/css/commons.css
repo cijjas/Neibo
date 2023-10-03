@@ -127,6 +127,7 @@ input[type="url"],
 input[type="search"],
 input[type="select"]
 {
+    width: 100%;
     height: 40px;
 }
 input[type="checkbox"] {
@@ -174,6 +175,7 @@ input[type="checkbox"] {
 
 label{
     margin-bottom:0;
+    width: 100%;
 }
 
 button:focus-visible,
@@ -184,4 +186,36 @@ button:focus{
 
 p{
     margin-bottom:0;
+}
+
+
+
+
+.f-c-c-c{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+.f-r-c-c{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+.f-r-sb-c{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+.f-c-sb-c{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
 }

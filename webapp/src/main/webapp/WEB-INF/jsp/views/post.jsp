@@ -28,7 +28,7 @@
     <div class="container ">
         <div class="row">
             <div class="column column-left">
-                <%@ include file="/WEB-INF/jsp/components/displays/leftColumn.jsp" %>
+                <%@ include file="/WEB-INF/jsp/components/widgets/leftColumn.jsp" %>
             </div>
 
             <div class="column column-middle ">

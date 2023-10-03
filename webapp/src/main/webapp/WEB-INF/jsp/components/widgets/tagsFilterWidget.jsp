@@ -14,11 +14,20 @@
                 </label>
             </div>
         </div>
-        <div class="m-b-10 tags-row tags" >
-            <c:forEach var="tag" items="${tagList}" >
-                <a class="tag-option"  onclick="addTagToApply('${tag.tag}')" >${tag.tag}</a>
+        <div class="m-b-10 tags-row tags">
+            <c:forEach var="tag" items="${tagList}" varStatus="loop">
+                <c:choose>
+                    <c:when test="${loop.index < 20}">
+                        <a class="tag-option" onclick="addTagToApply('${tag.tag}')">${tag.tag}</a>
+                    </c:when>
+                    <c:otherwise>
+                        <a class="tag-option" onclick="addTagToApply('${tag.tag}'  )" style="display: none" >${tag.tag}</a>
+                    </c:otherwise>
+                </c:choose>
+
             </c:forEach>
         </div>
+
         <div hidden="hidden" id="applied-tags" data-tags="${appliedTags}"></div>
 
         <script>

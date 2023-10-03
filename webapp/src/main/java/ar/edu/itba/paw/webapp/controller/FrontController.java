@@ -289,7 +289,7 @@ public class FrontController {
             @RequestParam("channelId") int channelId
     ) {
         String channelName= chs.findChannelById(channelId).get().getChannel().toLowerCase();
-        if(channelName.equals(BaseChannel.FEED.toString())){
+        if(channelName.equals(BaseChannel.FEED.toString().toLowerCase())){
             return new ModelAndView("redirect:/");
         }
         else {
@@ -624,8 +624,10 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/amenities", method = RequestMethod.POST)
-    public ModelAndView amenities(@Valid @ModelAttribute("reservationForm") final ReservationForm reservationForm,
-                                  final BindingResult errors) {
+    public ModelAndView amenities(
+            @Valid @ModelAttribute("reservationForm") final ReservationForm reservationForm,
+            final BindingResult errors
+    ) {
         if (errors.hasErrors()) {
             System.out.println("ERRORS: " + errors);
             return amenities(reservationForm);
@@ -634,7 +636,7 @@ public class FrontController {
 
         Reservation res = rs.createReservation(reservationForm.getAmenityId(), getLoggedNeighbor().getUserId(), reservationForm.getDate(), reservationForm.getStartTime(), reservationForm.getEndTime(), getLoggedNeighbor().getNeighborhoodId());
         if(res == null) {
-            mav.addObject("showSuccessMessage", false);
+            mav.addObject("showErrorMessage", true);
         }
         else {
             mav.addObject("showSuccessMessage", true);

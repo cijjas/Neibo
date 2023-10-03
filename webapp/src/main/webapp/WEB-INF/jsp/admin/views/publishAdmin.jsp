@@ -2,6 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <html lang="en">
 
@@ -41,14 +42,9 @@
 
                     <div class="form-column" style="margin-top:1rem;">
                         <div class="form-group">
-                            <div class="form-row">
-                                <spring:message code="Channel" var="channelPlaceholder"/>
-                                <form:select id="channel-select" path="channel" class="cool-input"  placeholder="${channelPlaceholder}">
-                                    <c:forEach var="entry" items="${channelList}">
-                                        <form:option value="${entry.value.channelId}"><c:out value="${entry.key}"/></form:option>
-                                    </c:forEach>
-                                </form:select>
-                            </div>
+
+                            <form:hidden path="channel" value="1" />
+
 
                             <div class="form-row">
 

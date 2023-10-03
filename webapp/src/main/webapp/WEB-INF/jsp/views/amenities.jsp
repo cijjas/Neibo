@@ -23,7 +23,7 @@
 <div class="container">
     <div class="row">
         <div class="column-left">
-            <%@ include file="/WEB-INF/jsp/components/displays/leftColumn.jsp" %>
+            <%@ include file="/WEB-INF/jsp/components/widgets/leftColumn.jsp" %>
         </div>
 
         <div class="column-middle">
@@ -137,6 +137,15 @@
 
             <jsp:include page="/WEB-INF/jsp/components/widgets/successDialog.jsp" >
                 <jsp:param name="successMessage" value="${successMessage}" />
+            </jsp:include>
+        </c:if>
+        <c:if test="${param.showErrorMessage == true}">
+            <c:set var="errorMessage">
+                <spring:message code="Reservation.error"/>
+            </c:set>
+
+            <jsp:include page="/WEB-INF/jsp/errors/errorDialog.jsp" >
+                <jsp:param name="errorMessage" value="${errorMessage}" />
             </jsp:include>
         </c:if>
     </div>

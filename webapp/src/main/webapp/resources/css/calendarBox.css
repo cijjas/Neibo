@@ -134,6 +134,7 @@ header .current-date{
 
 .calendar .days li.event::before {
     position: absolute;
+    cursor: pointer;
     content: "";
     left: 50%;
     top: 50%;
