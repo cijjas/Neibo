@@ -26,7 +26,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @Controller
 public class FrontController {
 
@@ -80,6 +81,7 @@ public class FrontController {
 
     // ------------------------------------- FEED --------------------------------------
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(FrontController.class); // importante!! Usar la implementacion de sl4j
 
     private ModelAndView handleChannelRequest(
             String channelName,
@@ -115,6 +117,8 @@ public class FrontController {
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ) {
+        LOGGER.info("Registered a new user under the id {}", getLoggedNeighbor().getUserId());
+
         return handleChannelRequest(BaseChannel.FEED.toString(), page, size, date, tags);
     }
 
