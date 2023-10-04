@@ -853,13 +853,9 @@ public class FrontController {
     public ModelAndView test(
     )
     {
-        System.out.println(chs.getChannels(1));
-        System.out.println(chs.createChannel(1,"Poker"));
-        System.out.println(chs.getChannels(1));
-
         // rs.createReservation(1,14, java.sql.Date.valueOf("2023-09-25"), Time.valueOf("12:00:00"), Time.valueOf("16:00:00"));
 
-        return new ModelAndView("views/index");
+        return new ModelAndView("views/testView");
     }
 
     @RequestMapping(value = "/admin/test", method = RequestMethod.GET)
