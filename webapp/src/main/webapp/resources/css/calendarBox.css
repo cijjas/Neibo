@@ -1,10 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap");
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Lexend', sans-serif;
-}
+
 
 .wrapper{
     padding: 30px;
@@ -14,7 +8,6 @@
     align-items: center;
     gap: 1rem;
     width: 100%;
-    height: 100%;
     background-color: var(--onbackground);
     color: var(--primary);
     border: 1px solid var(--lighttext);
@@ -22,147 +15,168 @@
     transform: translateY(-4px) ;
     box-shadow: -3px 5px 0 0 var(--lighttext);
     margin-bottom: 20px;
-}
-.wrapper header{
-    display: flex;
-    align-items: stretch;
-    justify-content: space-between;
-}
-header .icons{
-    display: flex;
-}
-header .icons span {
-    height: 50px;
-    width: 50px;
-    margin: 1px;
-    cursor: pointer;
-    color: var(--primary);
-    text-align: center;
-    line-height: 50px;
-    font-size: 2rem;
-    user-select: none;
-    border-radius: 50%;
-    display: flex; /* Center the content horizontally and vertically */
-    justify-content: center;
-    align-items: center;
+
+
+    & span {
+        height: 50px;
+        width: 50px;
+        margin: 1px;
+        cursor: pointer;
+        color: var(--primary);
+        text-align: center;
+        font-size: 2rem;
+        user-select: none;
+        border-radius: 50%;
+        display: flex; /* Center the content horizontally and vertically */
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s ease-in-out;
+        &:hover{
+            background: var(--secondary);
+        }
+    }
+    & .current-date{
+        font-size: 2rem;
+        font-weight: 500;
+        color: var(--text);
+        cursor: default;
+    }
+
 }
 
 
-.icons span:last-child{
-    margin-right: -10px;
-}
-header .icons span:hover{
-    background: var(--secondary);
-}
-header .current-date{
-    font-size: 2rem;
-    font-weight: 500;
-    color: var(--text);
-    cursor: default;
-}
-.calendar{
-    padding: 0px;
-}
-.calendar ul {
-    display: flex;
-    flex-wrap: wrap;
-    list-style: none;
-    justify-content: center; /* Center the weeks and days horizontally */
-    align-items: center; /* Center the weeks and days vertically */
-    padding: 0; /* Remove any padding */
+.calendar {
+    padding: 0;
+
+    & ul {
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+        justify-content: center; /* Center the weeks and days horizontally */
+        align-items: center; /* Center the weeks and days vertically */
+        padding: 0; /* Remove any padding */
+        &.weeks {
+            margin-bottom: -5px;
+            width: 100%; /* Make the weeks take up the full width of the container */
+
+            & li {
+                font-weight: 550;
+                cursor: default;
+                color: var(--primary);
+            }
+        }
+
+
+        &.days {
+            margin-bottom: 15px;
+            width: 100%; /* Make the days take up the full width of the container */
+
+            & li {
+                z-index: 1;
+                cursor: pointer;
+                position: relative;
+                margin-top: 15px;
+                margin-bottom: 15px;
+                transition: all 0.3s ease-in-out;
+
+                &.inactive {
+                    &:hover{
+                        transform: translateY(0px)!important;
+
+                    }
+
+                    cursor: default;
+                    color: var(--lighttext);
+                }
+
+                &.active {
+                    color: var(--always-background);
+                    &::before {
+                        background: var(--primary);
+                    }
+                }
+
+                &::before {
+                    position: absolute;
+                    content: "";
+                    left: 50%;
+                    top: 50%;
+                    height: 35px; /* Reduce the height and width to make the circle smaller */
+                    width: 35px; /* Reduce the height and width to make the circle smaller */
+                    z-index: -1;
+                    border-radius: 50%;
+                    transform: translate(-50%, -50%);
+                    transition: all 0.3s ease-in-out;
+                }
+
+                &:not(.active):hover::before {
+                    color: var(--text);
+                    background: var(--secondary);
+                }
+
+                &.event {
+                    z-index: 1;
+                    cursor: pointer;
+                    position: relative;
+                    margin-top: 15px;
+                    color: var(--always-background); /* Set the text color to white */
+                    &::before {
+                        position: absolute;
+                        cursor: pointer;
+                        content: "";
+                        left: 50%;
+                        top: 50%;
+                        height: 35px;
+                        width: 35px;
+                        z-index: -1;
+                        border-radius: 50%;
+                        transform: translate(-50%, -50%);
+                        background: var(--old-primary); /* Use the --accent color for the circle */
+                    }
+
+                }
+
+                &.today {
+                    z-index: 1;
+                    cursor: pointer;
+                    position: relative;
+                    margin-top: 15px;
+                    color: var(--always-background); /* Set the text color to white */
+
+                    &::before {
+                        position: absolute;
+                        content: "";
+                        left: 50%;
+                        top: 50%;
+                        height: 35px;
+                        width: 35px;
+                        z-index: -1;
+                        border-radius: 50%;
+                        transform: translate(-50%, -50%);
+                        background: var(--error);
+                    }
+                }
+                &:hover{
+                    transform: translateY(-4px);
+                }
+
+            }
+        }
+
+        & li {
+            color: var(--text);
+            width: calc(100% / 7);
+            font-size: 1rem;
+            text-align: center; /* Center the text within each day */
+            padding: 5px; /* Add some padding to space out the days */
+        }
+    }
 }
 
-.calendar .weeks {
-    margin-bottom: -5px;
-    width: 100%; /* Make the weeks take up the full width of the container */
-}
 
-.calendar .days {
-    margin-bottom: 15px;
-    width: 100%; /* Make the days take up the full width of the container */
-}
 
-.calendar li {
-    color: var(--text);
-    width: calc(100% / 7);
-    font-size: 1rem;
-    text-align: center; /* Center the text within each day */
-    padding: 5px; /* Add some padding to space out the days */
-}
-.calendar .weeks li{
-    font-weight: 550;
-    cursor: default;
-    color: var(--primary);
-}
-.calendar .days li{
-    z-index: 1;
-    cursor: pointer;
-    position: relative;
-    margin-top: 15px;
-}
-.days li.inactive{
-    color: var(--lighttext);
-}
-.days li.active{
-    color: var(--onbackground);
-}
-.days li::before {
-    position: absolute;
-    content: "";
-    left: 50%;
-    top: 50%;
-    height: 35px; /* Reduce the height and width to make the circle smaller */
-    width: 35px; /* Reduce the height and width to make the circle smaller */
-    z-index: -1;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-}
-.days li.active::before{
-    background: var(--primary);
-}
-.days li:not(.active):hover::before{
-    background: var(--secondary);
-}
 
-.calendar .days li.event {
-    z-index: 1;
-    cursor: pointer;
-    position: relative;
-    margin-top: 15px;
-    color: var(--onbackground); /* Set the text color to white */
-}
 
-.calendar .days li.event::before {
-    position: absolute;
-    cursor: pointer;
-    content: "";
-    left: 50%;
-    top: 50%;
-    height: 35px;
-    width: 35px;
-    z-index: -1;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--accent); /* Use the --accent color for the circle */
-}
 
-.calendar .days li.today {
-    z-index: 1;
-    cursor: pointer;
-    position: relative;
-    margin-top: 15px;
-    color: var(--onbackground); /* Set the text color to white */
-}
 
-.calendar .days li.today::before {
-    position: absolute;
-    content: "";
-    left: 50%;
-    top: 50%;
-    height: 35px;
-    width: 35px;
-    z-index: -1;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    background: var(--error);
-}
+

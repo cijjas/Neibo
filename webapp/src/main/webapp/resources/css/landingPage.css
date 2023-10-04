@@ -2,30 +2,25 @@
 .landing-body {
     margin: 0;
     padding: 0;
-    overflow: hidden;
 }
 .drawings {
-    position: fixed;
+    position: absolute;
     width: 100%;
-    height: inherit;
+    scroll-behavior: smooth;
     overflow: hidden;
-    z-index: 0;
+    z-index: -1;
     bottom: 0;
     left: 0;
 }
 
 .content-container {
-    position: absolute;
+    position: relative;
     top: 0;
     left: 0;
     z-index: 1;
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-    gap: 10px;
+
 }
 
 .landing-navbar {
@@ -52,7 +47,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-top: 3rem;
+    margin-top: 50px;
     text-align: center;
     font-family: -apple-system-headline, BlinkMacSystemFont, sans-serif;
 }

@@ -35,8 +35,8 @@
 /*-------------------------------NAVBAR-----------------------------*/
 
 .square-button {
-    width: 40px;/* Adjust the width as needed */
-    height: 40px;/* Set the same height as the width for a square button */
+    width: 40px;
+    height: 40px;
     border: 1px solid var(--bordercolor);
     background-color: var(--background);
     border-radius: 5px;
@@ -59,7 +59,7 @@
     transition: all 0.5s ease-in-out;
     &:hover {
         color: var(--background);
-        text-shadow: 0 0 10px var(--onbackground);/* Adjust the values for the desired glow effect */
+        text-shadow: 0 0 10px var(--onbackground);
 
     }
     &:focus-within,
@@ -113,22 +113,21 @@
 
 
 
-/* Styling for the post input */
 .post-input {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
-    border-radius: 5px; /* Rounded input field */
+    border-radius: 5px;
 }
 
-/* Styling for the post submit button */
+
 .post-button {
     background-color: var(--primary);
     color: #fff;
     padding: 8px 16px;
     border: none;
-    border-radius: 5px; /* Rounded button */
+    border-radius: 5px;
     cursor: pointer;
 }
 
@@ -160,21 +159,21 @@
 .post-author{
     font-size: 14px;
     color: var(--lighttext);
-    white-space: nowrap; /* Prevent text from wrapping to the next line */
-    overflow: hidden;    /* Hide overflowing content */
+    white-space: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .post-date{
     font-size: 12px;
     color: var(--lighttext);
-    white-space: nowrap; /* Prevent text from wrapping to the next line */
-    overflow: hidden;    /* Hide overflowing content */
+    white-space: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
 
 }
 .post-description {
-    max-height: calc(1.2em * 10); /* Adjust the line height and number of lines as needed */
+    max-height: calc(1.2em * 10);
     overflow: hidden;
     position: relative;
     color: var(--lighttext);
@@ -186,7 +185,7 @@
         left: 0;
         width: 100%;
         transition: all 0.3s ease-in-out;
-        height: 20px; /* Adjust the height to control the fade-out length */
+        height: 20px;
         background: linear-gradient(to bottom, var(--onbackgroundfaded), var(--onbackground));
     }
 }
@@ -292,7 +291,7 @@
 #success-container {
     display: none;
     opacity: 0;
-    transition: opacity 0.5s ease-in-out; /* Adjust the transition duration as needed */
+    transition: opacity 0.5s ease-in-out;
 }
 
 .success-container {
@@ -302,8 +301,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.3); /* Semi-transparent background */
-    z-index: 50; /* Ensure it's above other elements */
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 50;
     justify-content: center;
     align-items: center;
 
@@ -333,7 +332,6 @@
     overflow: hidden;
     z-index: -1;
 }
-
 
 .svg-logo{
     margin: 10px;
@@ -623,13 +621,16 @@
         box-shadow: 0 0px 0px -2px var(--accent);
 
         & a {
-            margin: 0 7px 3px;
+            margin: 0 10px 3px;
             display: inline-block;
             cursor: pointer;
         }
+        &.tag{
+            margin-bottom: 10px;
+        }
     }
-}
 
+}
 
 
 
@@ -712,8 +713,8 @@ input[type=file]::file-selector-button:hover{
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    z-index: 1000; /* Ensure it's above other elements */
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
     justify-content: center;
     align-items: center;
 }
@@ -775,14 +776,14 @@ input[type=file]::file-selector-button:hover{
     margin-bottom: 5px;
     color:var(--text);
     &.small-a{
-        width: 30px; /* Adjust the width as needed for smaller buttons */
-        height: 30px; /* Set the same height as the width for square buttons */
+        width: 30px;
+        height: 30px;
         padding: 4px;
     }
 
 
     &.active {
-        background-color: var(--primary); /* Use the primary color for the active button */
+        background-color: var(--primary);
         color: white;
     }
 }
@@ -798,10 +799,10 @@ input[type=file]::file-selector-button:hover{
     margin: 5px;
     transition: all 0.3s ease-in-out;
     &.small-a {
-        width: 30px; /* Adjust the width as needed for smaller buttons */
-        height: 30px; /* Set the same height as the width for square buttons */
-        font-size: 16px; /* Adjust the font size for the button content */
-        padding: 4px; /* Adjust padding for better visual alignment */
+        width: 30px;
+        height: 30px;
+        font-size: 16px;
+        padding: 4px;
     }
 
     &:hover:not(.active) {
@@ -1186,7 +1187,7 @@ h6 {
             align-items: center;
             background-color: rgba(0, 0, 0, 0.8);
             z-index: 10000;
-            color: rgb(250, 250, 250); /* Assuming you have a $fontColor variable defined */
+            color: rgb(250, 250, 250);
             transition: background-color 0.2s ease-in-out;
             border-radius: 100px;
             margin-bottom: 0;

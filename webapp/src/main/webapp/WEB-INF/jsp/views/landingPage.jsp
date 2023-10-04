@@ -23,7 +23,6 @@
 <body class="landing-body ${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%----%>
 
-<%@ include file="/WEB-INF/jsp/components/structure/backgroundDrawing.jsp" %>
 
 <c:if test="${error == true}">
     <c:set var="errorMessage">
@@ -67,168 +66,177 @@
 </c:if>
 
 <div class="content-container">
-    <%@ include file="/WEB-INF/jsp/components/displays/landingNavbar.jsp" %>
-    <div class="landing-neibo">
-        neibo
-    </div>
-    <p class="landing-description"><spring:message code="Landing.page.desc"/></p>
-
-    <a class="action-button"  onclick="openLoginDialog()">
-        <spring:message code="Login"/>
-    </a>
-    <span style="color:var(--lighttext); font-size: 14px;"><spring:message code="Not.a.member.question"/>
-            <a onclick="openSignupDialog()" class="a-link"><spring:message code="Signup.now"/></a>
-    </span>
-
-    <%--        Login dialog--%>
-    <div class="dialog" id="loginDialog" style="display: none">
-        <div class="dialog-content">
-            <div class="close-button" onclick="closeLoginDialog()">
-                <i class="fas fa-close"></i>
-            </div>
-            <div class="title">
-                <spring:message code="Welcome.to.neibo"/>
-                <br>
-                <span><spring:message code="Login.to.continue"/> </span>
-            </div>
-
-            <form method="post" class="login-form" id="loginForm" >
-
-                <div class="centered-column">
-                    <label>
-                        <c:set var="email"><spring:message code="Email"/></c:set>
-                        <input type="email" placeholder="${email}" name="mail" class="input">
-                    </label>
-
-                    <label>
-                        <c:set var="password"><spring:message code="Password"/></c:set>
-                        <input type="password" placeholder="${password}"  autocomplete="true" name="password" class="input">
-                    </label>
-
-                </div>
-                <label class="centered-row light-text">
-                    <input name="rememberMe" type="checkbox">
-                    <spring:message code="Remember.me"/>
-                </label>
-                <div class="centered-column">
-
-                    <button class="action-button" onclick="tryLogin()">
-                        <spring:message code="Login"/>
-                    </button>
-                    <span style="color:var(--lighttext); font-size: 14px;"><spring:message code="Not.a.member.question"/>
-                            <a onclick="closeLoginDialog(); openSignupDialog();" class="a-link"><spring:message code="Signup.now"/></a>
-                    </span>
-                   <script>
-                       function tryLogin(){
-                           if(document.getElementById("loginForm").checkValidity()){
-                               document.getElementById("loginForm").submit();
-                           }
-                       }
-                   </script>
-                </div>
-
-            </form>
+    <div class="container f-c-c-c">
+        <%@ include file="/WEB-INF/jsp/components/displays/landingNavbar.jsp" %>
+        <div class="landing-neibo ">
+            neibo
         </div>
-    </div>
+        <p class="landing-description" style="mix-blend-mode: screen"><spring:message code="Landing.page.desc"/></p>
 
-    <div class="dialog" id="signupDialog" style="display: none">
-        <div class="dialog-content signup-content">
-            <div class="close-button" onclick="closeSignupDialog()">
-                <i class="fas fa-close"></i>
-            </div>
-            <div class="title">
-                <spring:message code="Welcome.to.neibo"/>
-                <br>
-                <span><spring:message code="Signup.to.get.started"/></span>
-            </div>
+        <a class="action-button"  onclick="openLoginDialog()">
+            <spring:message code="Login"/>
+        </a>
+        <span style="color:var(--lighttext); font-size: 14px; mix-blend-mode: screen">
+            <spring:message code="Not.a.member.question"/>
+            <a onclick="openSignupDialog()" class="a-link">
+                <spring:message code="Signup.now"/>
+            </a>
+        </span>
 
-            <form:form method="post" action="signup" modelAttribute="signupForm" id="signupForm">
-                <form:errors cssClass="error" element="p"/>
-                <div class="centered-column">
+        <%--        Login dialog--%>
+        <div class="dialog" id="loginDialog" style="display: none">
+            <div class="dialog-content">
+                <div class="close-button" onclick="closeLoginDialog()">
+                    <i class="fas fa-close"></i>
+                </div>
+                <div class="title">
+                    <spring:message code="Welcome.to.neibo"/>
+                    <br>
+                    <span><spring:message code="Login.to.continue"/> </span>
+                </div>
 
-                    <div class="form-input">
-                        <form:label path="name">
-                            <c:set var="firstName"><spring:message code="First.name"/></c:set>
-                            <form:input path="name" placeholder="${firstName}" class="input"/>
-                        </form:label>
-                        <form:errors path="name" cssClass="landing-error" element="p"/>
-                    </div>
-                    <div class="form-input">
-                        <form:label path="surname">
-                            <c:set var="surname"><spring:message code="Surname"/></c:set>
-                            <form:input path="surname" placeholder="${surname}" class="input"/>
-                        </form:label>
-                        <form:errors path="surname" cssClass="landing-error" element="p"/>
-                    </div>
-                    <div class="form-input">
-                        <form:label path="mail">
+                <form method="post" class="login-form" id="loginForm" >
+
+                    <div class="centered-column">
+                        <label>
                             <c:set var="email"><spring:message code="Email"/></c:set>
-                            <form:input path="mail" placeholder="${email}" class="input"/>
-                        </form:label>
-                        <form:errors path="mail" cssClass="landing-error" element="p"/>
-                    </div>
-                    <div class="form-input">
-                        <form:label path="password">
+                            <input type="email" placeholder="${email}" name="mail" class="input">
+                        </label>
+
+                        <label>
                             <c:set var="password"><spring:message code="Password"/></c:set>
-                            <form:input type="password" path="password" autocomplete="true" placeholder="Password" class="input"/>
-                        </form:label>
-                        <form:errors path="password" cssClass="landing-error" element="p"/>
+                            <input type="password" placeholder="${password}"  autocomplete="true" name="password" class="input">
+                        </label>
+
+                    </div>
+                    <label class="centered-row light-text">
+                        <input name="rememberMe" type="checkbox">
+                        <spring:message code="Remember.me"/>
+                    </label>
+                    <div class="centered-column">
+
+                        <button class="action-button" onclick="tryLogin()">
+                            <spring:message code="Login"/>
+                        </button>
+                        <span style="color:var(--lighttext); font-size: 14px;"><spring:message code="Not.a.member.question"/>
+                                <a onclick="closeLoginDialog(); openSignupDialog();" class="a-link"><spring:message code="Signup.now"/></a>
+                        </span>
+                       <script>
+                           function tryLogin(){
+                               if(document.getElementById("loginForm").checkValidity()){
+                                   document.getElementById("loginForm").submit();
+                               }
+                           }
+                       </script>
                     </div>
 
-                    <%-- ID --%>
-                    <div class="form-input">
-                        <form:label path="identification">
-                            <c:set var="identification"><spring:message code="Identification"/></c:set>
+                </form>
+            </div>
+        </div>
 
-                            <form:input
-                                    type="number"
-                                    pattern="[0-9]*"
-                                    inputmode="numeric"
-                                    min="1" max="99999999"
-                                    path="identification"
-                                    placeholder="${identification}"
-                                    class="input"
-                            />
-                        </form:label>
-                        <form:errors path="identification" cssClass="landing-error" element="p"/>
-                    </div>
-
-                    <%-- SELECT Language --%>
-                    <div class="form-input">
-                        <form:label path="language">
-                            <form:select path="language" class="cool-select" >
-                                <form:option value="English"><spring:message code="English"/></form:option>
-                                <form:option value="Spanish"><spring:message code="Spanish"/></form:option>
-                            </form:select>
-                        </form:label>
-                        <form:errors path="language" cssClass="landing-error" element="p"/>
-                    </div>
-
-                    <%-- SELECT NEIGHBORHOOD --%>
-                    <div class="form-input">
-                        <form:select path="neighborhoodId" class="cool-select">
-                            <c:forEach var="entry" items="${neighborhoodsList}">
-                                <form:option value="${entry.getNeighborhoodId()}"><c:out value="${entry.getName()}"/></form:option>
-                            </c:forEach>
-                        </form:select>
-                    </div>
+        <div class="dialog" id="signupDialog" style="display: none">
+            <div class="dialog-content signup-content">
+                <div class="close-button" onclick="closeSignupDialog()">
+                    <i class="fas fa-close"></i>
+                </div>
+                <div class="title">
+                    <spring:message code="Welcome.to.neibo"/>
+                    <br>
+                    <span><spring:message code="Signup.to.get.started"/></span>
                 </div>
 
-                <button type="submit" class="action-button"><spring:message code="Signup"/></button>
-            </form:form>
+                <form:form method="post" action="signup" modelAttribute="signupForm" id="signupForm">
+                    <form:errors cssClass="error" element="p"/>
+                    <div class="centered-column">
 
+                        <div class="form-input">
+                            <form:label path="name">
+                                <c:set var="firstName"><spring:message code="First.name"/></c:set>
+                                <form:input path="name" placeholder="${firstName}" class="input"/>
+                            </form:label>
+                            <form:errors path="name" cssClass="landing-error" element="p"/>
+                        </div>
+                        <div class="form-input">
+                            <form:label path="surname">
+                                <c:set var="surname"><spring:message code="Surname"/></c:set>
+                                <form:input path="surname" placeholder="${surname}" class="input"/>
+                            </form:label>
+                            <form:errors path="surname" cssClass="landing-error" element="p"/>
+                        </div>
+                        <div class="form-input">
+                            <form:label path="mail">
+                                <c:set var="email"><spring:message code="Email"/></c:set>
+                                <form:input path="mail" placeholder="${email}" class="input"/>
+                            </form:label>
+                            <form:errors path="mail" cssClass="landing-error" element="p"/>
+                        </div>
+                        <div class="form-input">
+                            <form:label path="password">
+                                <c:set var="password"><spring:message code="Password"/></c:set>
+                                <form:input type="password" path="password" autocomplete="true" placeholder="Password" class="input"/>
+                            </form:label>
+                            <form:errors path="password" cssClass="landing-error" element="p"/>
+                        </div>
+
+                        <%-- ID --%>
+                        <div class="form-input">
+                            <form:label path="identification">
+                                <c:set var="identification"><spring:message code="Identification"/></c:set>
+
+                                <form:input
+                                        type="number"
+                                        pattern="[0-9]*"
+                                        inputmode="numeric"
+                                        min="1" max="99999999"
+                                        path="identification"
+                                        placeholder="${identification}"
+                                        class="input"
+                                />
+                            </form:label>
+                            <form:errors path="identification" cssClass="landing-error" element="p"/>
+                        </div>
+
+                        <%-- SELECT Language --%>
+                        <div class="form-input">
+                            <form:label path="language">
+                                <form:select path="language" class="cool-select" >
+                                    <form:option value="English"><spring:message code="English"/></form:option>
+                                    <form:option value="Spanish"><spring:message code="Spanish"/></form:option>
+                                </form:select>
+                            </form:label>
+                            <form:errors path="language" cssClass="landing-error" element="p"/>
+                        </div>
+
+                        <%-- SELECT NEIGHBORHOOD --%>
+                        <div class="form-input">
+                            <form:select path="neighborhoodId" class="cool-select">
+                                <c:forEach var="entry" items="${neighborhoodsList}">
+                                    <form:option value="${entry.getNeighborhoodId()}"><c:out value="${entry.getName()}"/></form:option>
+                                </c:forEach>
+                            </form:select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="action-button"><spring:message code="Signup"/></button>
+                </form:form>
+
+            </div>
         </div>
+
+        <%--Signup dialog--%>
+        <c:if test="${openSignupDialog == true}">
+            <script>
+                document.getElementById("signupDialog").style.display = "flex";
+            </script>
+        </c:if>
     </div>
 
-    <%--Signup dialog--%>
-    <c:if test="${openSignupDialog == true}">
-        <script>
-            document.getElementById("signupDialog").style.display = "flex";
-        </script>
-    </c:if>
-
+    <%@ include file="/WEB-INF/jsp/components/structure/backgroundDrawing.jsp" %>
 
 </div>
+
+<%-- <div class="container f-c-c-c">--%>
+<%-- </div>--%>
 
 
 <script>
