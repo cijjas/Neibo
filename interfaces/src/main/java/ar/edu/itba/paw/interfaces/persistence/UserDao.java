@@ -36,6 +36,10 @@ public interface UserDao {
 
     int getTotalUsers(UserRole role, long neighborhoodId);
 
+    List<User> getEventUsers(long eventId);
+
+    boolean isAttending(long eventId, long userId);
+
     // ---------------------------------------------- USERS UPDATE -----------------------------------------------------
 
     void setUserValues(final long id, final String password, final String name, final String surname,

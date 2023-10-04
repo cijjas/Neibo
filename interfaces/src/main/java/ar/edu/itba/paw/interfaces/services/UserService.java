@@ -40,6 +40,9 @@ public interface UserService {
 
     int getTotalPages(UserRole role, long neighborhoodId, int size );
 
+    List<User> getEventUsers(long eventId);
+
+    boolean isAttending(long eventId, long userId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

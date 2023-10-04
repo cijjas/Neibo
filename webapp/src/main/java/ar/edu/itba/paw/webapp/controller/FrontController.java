@@ -45,6 +45,7 @@ public class FrontController {
     private final EventService es;
     private final ResourceService rs1;
     private final ContactService cs1;
+    private final AttendanceService as1;
 
 
     @Autowired
@@ -62,7 +63,8 @@ public class FrontController {
                            final EventService es,
                            EventService es1,
                            final ResourceService rs1,
-                           final ContactService cs1) {
+                           final ContactService cs1,
+                           AttendanceService as1) {
         this.is = is;
         this.ps = ps;
         this.us = us;
@@ -77,6 +79,7 @@ public class FrontController {
         this.es = es1;
         this.rs1 = rs1;
         this.cs1 = cs1;
+        this.as1 = as1;
     }
 
     // ------------------------------------- FEED --------------------------------------
@@ -756,6 +759,48 @@ public class FrontController {
             @RequestParam("site") String site
     ) {
         return new ModelAndView("redirect:/" + site);
+    }
+
+    // ------------------------------------- POSTS --------------------------------------
+
+    @RequestMapping(value = "/events/{id:\\d+}", method = RequestMethod.GET)
+    public ModelAndView viewEvent(@PathVariable(value = "id") int eventId,
+                                 @RequestParam(value = "success", required = false) boolean success) {
+        ModelAndView mav = new ModelAndView("views/event");
+
+        Optional<Event> optionalEvent = es.findEventById(eventId);
+
+        mav.addObject("event", optionalEvent.orElseThrow(PostNotFoundException::new));
+        mav.addObject("attendees", us.getEventUsers(eventId));
+        mav.addObject("willAttend", us.isAttending(eventId, getLoggedNeighbor().getUserId()));
+
+        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Long> eventTimestamps = eventDates.stream()
+                .map(date -> date.getTime())
+                .collect(Collectors.toList());
+        mav.addObject("eventDates", eventTimestamps);
+
+        mav.addObject("showSuccessMessage", success);
+
+        return mav;
+    }
+
+    @RequestMapping(value = "/attend/{id:\\d+}", method = RequestMethod.POST)
+    public ModelAndView attendEvent(@PathVariable(value = "id") int eventId) {
+
+        ModelAndView mav = new ModelAndView("redirect:/events/" + eventId);
+        as1.createAttendee(getLoggedNeighbor().getUserId(), eventId);
+
+        return mav;
+    }
+
+    @RequestMapping(value = "/unattend/{id:\\d+}", method = RequestMethod.POST)
+    public ModelAndView unattendEvent(@PathVariable(value = "id") int eventId) {
+
+        ModelAndView mav = new ModelAndView("redirect:/events/" + eventId);
+        as1.deleteAttendee(getLoggedNeighbor().getUserId(), eventId);
+
+        return mav;
     }
 
     // ------------------------------------- INFORMATION --------------------------------
