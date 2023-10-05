@@ -181,6 +181,23 @@ public class AmenityDaoImpl implements AmenityDao {
 
     @Override
     public boolean deleteAmenity(long amenityId) {
-        return jdbcTemplate.update("DELETE FROM amenities WHERE amenityid = ?", amenityId) > 0;
+        List<Number> hoursIds = jdbcTemplate.queryForList(
+                "SELECT ah.hoursid FROM amenities_hours ah " +
+                        "WHERE ah.amenityid = ?", Number.class, amenityId);
+
+        boolean deleted = jdbcTemplate.update("DELETE FROM amenities WHERE amenityid = ?", amenityId) > 0;
+
+        // delete hour from hours table if unused by any other amenity
+        for (Number hoursId : hoursIds) {
+            int count = jdbcTemplate.queryForObject(
+                    "SELECT COUNT(*) FROM amenities_hours WHERE hoursid = ?",
+                    Integer.class, hoursId);
+
+            if (count == 0) {
+                // If not associated with any other amenity, delete the hours entry
+                jdbcTemplate.update("DELETE FROM hours WHERE hoursid = ?", hoursId);
+            }
+        }
+        return deleted;
     }
 }
