@@ -82,6 +82,16 @@ public class UserServiceImpl implements UserService {
         return userDao.getTotalUsers(role, neighborhoodId)/size;
     }
 
+    @Override
+    public List<User> getEventUsers (long eventId) {
+        return userDao.getEventUsers(eventId);
+    }
+
+    @Override
+    public boolean isAttending(long eventId, long userId) {
+        return userDao.isAttending(eventId, userId);
+    }
+
     // ---------------------------------------------- USER SETTERS -----------------------------------------------------
 
     @Override

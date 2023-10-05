@@ -32,6 +32,7 @@ body {
     --scrollbarthumb: #004F2D;
     --bordercolor: #dadad0;
     --admin-color: #578a66;
+    --always-background:#faf6e8;
     --border-light: 5px;
     --border-radius: 10px;
     --border-hard: 50px;
@@ -55,6 +56,8 @@ body {
     --scrollbarthumb: #9a968c;
     --bordercolor: #646462;
     --admin-color: #8bcb9d;
+    --always-background:#faf6e8;
+
 }
 
 

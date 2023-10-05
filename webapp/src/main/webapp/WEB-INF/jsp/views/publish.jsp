@@ -68,7 +68,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group w-50">
                                 <form:label path="imageFile" for="images" class="drop-container" id="dropcontainer">
                                     <span class="drop-title"> <spring:message code="Drop.files"/> </span>
                                     <spring:message code="Or"/>
@@ -84,8 +84,8 @@
                             </div>
 
 
-                            <div style="padding-left: 20%; padding-right: 20%">
-                                <div class="tags-input">
+                            <div class="w-50">
+                                <div class="tags-input w-100">
                                     <c:set var="val"><spring:message code="EnterATag"/></c:set>
                                     <input id="niakaniaka" type="hidden" value="${val}"/>
                                     <label for="tag-input1" class="w-100">
