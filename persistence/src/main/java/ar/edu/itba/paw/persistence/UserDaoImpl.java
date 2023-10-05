@@ -28,6 +28,10 @@ public class UserDaoImpl implements UserDao {
             "select u.*\n" +
                     "from posts p join posts_users on p.postid = posts_users.postid join users u on posts_users.userid = u.userid ";
 
+    private final String EVENTS_JOIN_USERS =
+            "select u.* \n" +
+                    "from events e join events_users on e.eventid = events_users.eventid join users u on events_users.userid = u.userid ";
+
     @Autowired
     public UserDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
@@ -157,5 +161,15 @@ public class UserDaoImpl implements UserDao {
     ) {
         jdbcTemplate.update("UPDATE users SET name = ?, surname = ?, password = ?, darkmode = ?, language = ?, role = ?, profilepictureid = ?, identification = ? WHERE userid = ?",
                 name, surname, password, darkMode, language != null ? language.toString() : null, role != null ? role.toString() : null, profilePictureId == 0 ? null : profilePictureId,  identification, id);
+    }
+
+    @Override
+    public List<User> getEventUsers (long eventId) {
+        return jdbcTemplate.query(EVENTS_JOIN_USERS + " WHERE e.eventid = ?", ROW_MAPPER, eventId);
+    }
+
+    @Override
+    public boolean isAttending(long eventId, long userId) {
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM events_users WHERE eventid = ? AND userid = ?", Integer.class, eventId, userId) == 1;
     }
 }
