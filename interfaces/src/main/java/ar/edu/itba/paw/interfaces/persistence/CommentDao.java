@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
+import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.Comment;
 
 import java.util.List;
@@ -14,6 +15,8 @@ public interface CommentDao {
     // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
 
     Comment createComment(final String comment, final long neighborId, final long postId);
+
+    Optional<Comment> findCommentById(long id);
 
     //Optional<List<Comment>> findCommentsByUserId(long id);
 }

@@ -91,8 +91,8 @@ public class FrontController {
             List<String> tags
     ) {
         List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags, getLoggedNeighbor().getNeighborhoodId());
-        int totalPages = ps.getTotalPages(channelName, size, tags, getLoggedNeighbor().getNeighborhoodId());
 
+        int totalPages = ps.getTotalPages(channelName, size, tags, getLoggedNeighbor().getNeighborhoodId());
         List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(d -> d.getTime())

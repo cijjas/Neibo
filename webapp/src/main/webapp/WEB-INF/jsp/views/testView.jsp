@@ -26,6 +26,8 @@
   }
   getComment();
 
+
+
   // Function to fetch an image from the API and display it
   async function getImage() {
     try {

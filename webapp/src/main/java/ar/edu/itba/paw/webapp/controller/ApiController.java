@@ -68,6 +68,15 @@ public class ApiController {
         return cs.findCommentsByPostId(postId).toString();
     }
 
+    @RequestMapping(value = "/commentById", method = RequestMethod.GET)
+    @ResponseBody
+    public String getPostComment(
+            @RequestParam(value = "id", required = false) int commentId
+    ) {
+        String ans = cs.findCommentById(commentId).get().getComment();
+         return ans;
+    }
+
     @RequestMapping(value = "/image", method = RequestMethod.GET)
     @ResponseBody
     public byte[] getImage(
@@ -83,4 +92,5 @@ public class ApiController {
     ) {
         return ps.findPostById(postId).get().toString();
     }
+
 }

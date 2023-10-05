@@ -15,11 +15,34 @@
 
     <!-- Image section -->
     <c:if test="${post.postPictureId != 0}">
-        <div style="display: flex; justify-content: center; align-items: center;">
-            <img src="${pageContext.request.contextPath}/images/<c:out value="${post.postPictureId}"/>"
-                 style="max-width: 100%; max-height: 100vh; border-radius: 5px;"
+        <div class="placeholder-glow" style="display: flex; justify-content: center; align-items: center;">
+            <img id="postImage"
+                 class="placeholder col-12 "
+                 src=""
+                 style="max-width: 100%; max-height: 100vh; border-radius: 5px; height: 300px"
                  alt="post_${post.postId}_img"/>
         </div>
+        <script>
+            getImage();
+            async function getImage() {
+                let image = document.getElementById('postImage')
+                try{
+
+                    const response= await fetch('${pageContext.request.contextPath}/images/<c:out value="${post.postPictureId}"/>');
+                    if(!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const blob = await response.blob();
+                    image.src = URL.createObjectURL(blob);
+                    image.classList.remove('placeholder');
+                    image.style.height = 'auto';
+                }
+                catch (e) {
+                    image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
+                    console.log(e);
+                }
+            }
+        </script>
     </c:if>
 
     </div>
@@ -100,16 +123,36 @@
                 </div>
             </c:when>
             <c:otherwise>
-                <c:forEach var="comment" items="${comments}">
+                <c:forEach var="comment" items="${comments}" varStatus="loopStatus">
                     <div class="cool-comment">
                         <div class="comment-header">
                             <strong><c:out value="${comment.user.name} ${comment.user.surname}" /></strong>
                         </div>
-                        <div class="comment-body">
-                            <c:out value="${comment.comment}" />
+                        <div class="comment-body placeholder-glow">
+                            <p class="placeholder col-<%= Math.round(Math.floor(Math.random() * 12) + 1) %>" id="comment-${comment.commentId}"></p>
+                            <script>
+                                async function getPostComment(commentId) {
+                                    try {
+                                        const response = await fetch("/api/commentById?id=" + commentId);
+                                        if (!response.ok) {
+                                            throw new Error("Failed to fetch data from the API.");
+                                        }
+                                        const commentElement = document.getElementById("comment-" + commentId);
+                                        commentElement.textContent = await response.text();
+                                        commentElement.classList.remove('placeholder');
+                                    } catch (error) {
+                                        console.error(error.message);
+                                    }
+                                }
+                                getPostComment(${comment.commentId});
+
+                            </script>
                         </div>
                     </div>
                 </c:forEach>
+
+
+
             </c:otherwise>
         </c:choose>
     </div>
