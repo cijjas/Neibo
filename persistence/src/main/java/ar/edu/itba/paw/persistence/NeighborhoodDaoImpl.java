@@ -1,13 +1,16 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.models.Neighborhood;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +23,8 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     private final SimpleJdbcInsert jdbcInsert;
 
     private final String NEIGHBORHOODS = "SELECT * FROM neighborhoods ";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodDaoImpl.class);
 
     @Autowired
     public NeighborhoodDaoImpl(final DataSource ds) {
@@ -36,11 +41,16 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
         Map<String, Object> data = new HashMap<>();
         data.put("neighborhoodname", name);
 
-        final Number key = jdbcInsert.executeAndReturnKey(data);
-        return new Neighborhood.Builder()
-                .neighborhoodId(key.longValue())
-                .name(name)
-                .build();
+        try {
+            final Number key = jdbcInsert.executeAndReturnKey(data);
+            return new Neighborhood.Builder()
+                    .neighborhoodId(key.longValue())
+                    .name(name)
+                    .build();
+        } catch (DataAccessException ex) {
+            LOGGER.error("Error inserting the Neighborhood", ex);
+            throw new InsertionException("An error occurred whilst creating the Neighborhood");
+        }
     }
 
     // ----------------------------------------- NEIGHBORHOODS SELECT --------------------------------------------------

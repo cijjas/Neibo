@@ -1,13 +1,17 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -25,6 +29,8 @@ public class ChannelDaoImpl implements ChannelDao {
             "SELECT distinct c.* \n" +
             "FROM channels c JOIN neighborhoods_channels nc ON c.channelid = nc.channelid JOIN neighborhoods n ON n.neighborhoodid = nc.neighborhoodid ";
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChannelDaoImpl.class);
+
     @Autowired
     public ChannelDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
@@ -40,11 +46,18 @@ public class ChannelDaoImpl implements ChannelDao {
         Map<String, Object> data = new HashMap<>();
         data.put("channel", channel);
 
-        final Number key = jdbcInsert.executeAndReturnKey(data);
-        return new Channel.Builder()
-                .channelId(key.longValue())
-                .channel(channel)
-                .build();
+        try {
+            final Number key = jdbcInsert.executeAndReturnKey(data);
+            return new Channel.Builder()
+                    .channelId(key.longValue())
+                    .channel(channel)
+                    .build();
+        } catch (DataAccessException ex) {
+            LOGGER.error("Error inserting the Channel", ex);
+            throw new InsertionException("An error occurred whilst creating the channel");
+        }
+
+
     }
 
     // -------------------------------------------- CHANNELS SELECT ----------------------------------------------------

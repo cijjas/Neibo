@@ -1,13 +1,17 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.models.Amenity;
 import ar.edu.itba.paw.models.DayTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Time;
@@ -22,6 +26,8 @@ public class AmenityDaoImpl implements AmenityDao {
     private final SimpleJdbcInsert jdbcInsert;
     private final SimpleJdbcInsert jdbcInsertHours;
     private final SimpleJdbcInsert jdbcInsertAmenityHours;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AmenityDaoImpl.class);
 
     @Autowired
     public AmenityDaoImpl(final DataSource ds) {
@@ -79,7 +85,12 @@ public class AmenityDaoImpl implements AmenityDao {
             Map<String, Object> amenityHoursData = new HashMap<>();
             amenityHoursData.put("amenityid", amenityId.longValue());
             amenityHoursData.put("hoursid", hoursId);
-            jdbcInsertAmenityHours.execute(amenityHoursData);
+            try {
+                jdbcInsertAmenityHours.execute(amenityHoursData);
+            } catch (DataAccessException ex) {
+                LOGGER.error("Error inserting the Amenity", ex);
+                throw new InsertionException("An error occurred whilst creating the amenity");
+            }
         }
 
         return new Amenity.Builder()

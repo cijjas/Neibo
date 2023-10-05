@@ -1,17 +1,20 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.ImageDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.Comment;
 import ar.edu.itba.paw.models.Image;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -28,6 +31,9 @@ public class ImageDaoImpl implements ImageDao {
     private final SimpleJdbcInsert jdbcInsert;
 
     private final String IMAGES = "SELECT * FROM images ";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageDaoImpl.class);
+
     @Autowired
     public ImageDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
@@ -45,14 +51,21 @@ public class ImageDaoImpl implements ImageDao {
         try {
             imageBytes = image.getBytes();
         } catch (IOException e) {
-            System.out.println("Issue uploading the image");
+            LOGGER.error("Error whilst getting the Image bytes", e);
+            throw new InsertionException("An error occurred whilst storing the image");
         }
-        data.put("image", imageBytes);
-        final Number key = jdbcInsert.executeAndReturnKey(data);
-        return new Image.Builder()
-                .imageId(key.longValue())
-                .image(imageBytes)
-                .build();
+
+        try {
+            data.put("image", imageBytes);
+            final Number key = jdbcInsert.executeAndReturnKey(data);
+            return new Image.Builder()
+                    .imageId(key.longValue())
+                    .image(imageBytes)
+                    .build();
+        } catch (DataAccessException ex) {
+            LOGGER.error("Error Inserting the Image", ex);
+            throw new InsertionException("An error occurred whilst storing the image");
+        }
     }
 
     // --------------------------------------------- IMAGES SELECT -----------------------------------------------------

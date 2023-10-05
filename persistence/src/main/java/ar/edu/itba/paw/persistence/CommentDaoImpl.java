@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.CommentDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Channel;
@@ -7,10 +8,13 @@ import ar.edu.itba.paw.models.Comment;
 import ar.edu.itba.paw.models.Post;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Timestamp;
@@ -31,6 +35,8 @@ public class CommentDaoImpl implements CommentDao {
             "SELECT postid, commentid, comment, commentdate, u.userid, name, surname, mail \n" +
             "FROM comments JOIN public.users u ON comments.userid = u.userid ";
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommentDaoImpl.class);
+
     @Autowired
     public CommentDaoImpl(final DataSource ds, UserDao userDao) {
         this.userDao = userDao;
@@ -50,12 +56,17 @@ public class CommentDaoImpl implements CommentDao {
         data.put("userid", userId);
         data.put("postid", postId);
 
-        final Number key = jdbcInsert.executeAndReturnKey(data);
-        return new Comment.Builder()
-                .commentId(key.longValue())
-                .comment(comment)
-                .postId(postId)
-                .build();
+        try {
+            final Number key = jdbcInsert.executeAndReturnKey(data);
+            return new Comment.Builder()
+                    .commentId(key.longValue())
+                    .comment(comment)
+                    .postId(postId)
+                    .build();
+        } catch (DataAccessException ex) {
+            LOGGER.error("Error inserting the Comment", ex);
+            throw new InsertionException("An error occurred whilst creating the Comment");
+        }
     }
 
     private final RowMapper<Comment> ROW_MAPPER = (rs, rowNum) -> {

@@ -1,13 +1,16 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.ResourceDao;
 import ar.edu.itba.paw.models.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +25,8 @@ public class ResourceDaoImpl implements ResourceDao {
     private final String RESOURCES =
             "select rs.* " +
             "from resources rs";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResourceDaoImpl.class);
 
     @Autowired
     public ResourceDaoImpl(final DataSource ds) {
@@ -41,14 +46,21 @@ public class ResourceDaoImpl implements ResourceDao {
         data.put("resourcedescription", description);
         data.put("resourceimageid", imageId == 0 ? null : imageId);
 
-        final Number key = jdbcInsert.executeAndReturnKey(data);
-        return new Resource.Builder()
-                .resourceId(key.longValue())
-                .title(title)
-                .description(description)
-                .imageId(imageId)
-                .neighborhoodId(neighborhoodId)
-                .build();
+
+        try {
+            final Number key = jdbcInsert.executeAndReturnKey(data);
+            return new Resource.Builder()
+                    .resourceId(key.longValue())
+                    .title(title)
+                    .description(description)
+                    .imageId(imageId)
+                    .neighborhoodId(neighborhoodId)
+                    .build();
+        } catch (DataAccessException ex) {
+            LOGGER.error("Error inserting the Resource", ex);
+            throw new InsertionException("An error occurred whilst creating the Resource");
+        }
+
     }
 
     // --------------------------------------------- RESOURCE SELECT ----------------------------------------------------

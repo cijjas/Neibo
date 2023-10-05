@@ -1,10 +1,12 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.User;
 import enums.Language;
 import enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -14,6 +16,8 @@ import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -32,6 +36,8 @@ public class UserDaoImpl implements UserDao {
             "select u.* \n" +
                     "from events e join events_users on e.eventid = events_users.eventid join users u on events_users.userid = u.userid ";
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
+
     @Autowired
     public UserDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
@@ -44,7 +50,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User createUser(final String mail, final String password, final String name, final String surname,
-                           final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role, final int identification) {
+                           final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role, final int identification){
         Map<String, Object> data = new HashMap<>();
         data.put("mail", mail);
         data.put("password", password);
@@ -56,19 +62,23 @@ public class UserDaoImpl implements UserDao {
         data.put("language", language != null ? language.toString() : null);
         data.put("role", role != null ? role.toString() : null);
         data.put("identification", identification);
-
-        final Number key = jdbcInsert.executeAndReturnKey(data);
-        return new User.Builder()
-                .userId(key.longValue())
-                .name(name).mail(mail)
-                .surname(surname)
-                .password(password)
-                .neighborhoodId(neighborhoodId)
-                .darkMode(darkMode)
-                .language(language)
-                .role(role)
-                .identification(identification)
-                .build();
+        try {
+            final Number key = jdbcInsert.executeAndReturnKey(data);
+            return new User.Builder()
+                    .userId(key.longValue())
+                    .name(name).mail(mail)
+                    .surname(surname)
+                    .password(password)
+                    .neighborhoodId(neighborhoodId)
+                    .darkMode(darkMode)
+                    .language(language)
+                    .role(role)
+                    .identification(identification)
+                    .build();
+        } catch (DataAccessException ex) {
+            LOGGER.error("Error inserting the User", ex);
+            throw new InsertionException("An error occurred whilst creating the User");
+        }
     }
 
     // ---------------------------------------------- USERS SELECT -----------------------------------------------------

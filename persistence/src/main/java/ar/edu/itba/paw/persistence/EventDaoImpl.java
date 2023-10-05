@@ -1,15 +1,18 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.models.Event;
 
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -25,6 +28,8 @@ public class EventDaoImpl implements EventDao {
     private final String EVENTS_JOIN_NEIGHBORHOODS =
             "select e.*\n" +
                     "from events e join neighborhoods nh on e.neighborhoodid = nh.neighborhoodid ";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EventDaoImpl.class);
 
     @Autowired
     public EventDaoImpl(final DataSource ds) {
@@ -43,15 +48,20 @@ public class EventDaoImpl implements EventDao {
         data.put("duration", duration);
         data.put("neighborhoodid", neighborhoodId);
 
-        final Number key = jdbcInsert.executeAndReturnKey(data);
-        return new Event.Builder()
-                .eventId(key.longValue())
-                .name(name)
-                .description(description)
-                .date(date)
-                .duration(duration)
-                .neighborhoodId(neighborhoodId)
-                .build();
+        try {
+            final Number key = jdbcInsert.executeAndReturnKey(data);
+            return new Event.Builder()
+                    .eventId(key.longValue())
+                    .name(name)
+                    .description(description)
+                    .date(date)
+                    .duration(duration)
+                    .neighborhoodId(neighborhoodId)
+                    .build();
+        } catch (DataAccessException ex) {
+            LOGGER.error("Error inserting the Event", ex);
+            throw new InsertionException("An error occurred whilst creating the event");
+        }
     }
 
     private static final RowMapper<Event> ROW_MAPPER = (rs, rowNum) -> new Event.Builder()
