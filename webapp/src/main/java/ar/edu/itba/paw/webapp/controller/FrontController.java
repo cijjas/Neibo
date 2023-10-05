@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.webapp.exceptions.*;
 import ar.edu.itba.paw.webapp.form.*;
 import enums.BaseChannel;
 import enums.Language;
@@ -90,16 +90,16 @@ public class FrontController {
             SortOrder date,
             List<String> tags
     ) {
-        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags, getLoggedNeighbor().getNeighborhoodId());
-        int totalPages = ps.getTotalPages(channelName, size, tags, getLoggedNeighbor().getNeighborhoodId());
+        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags, getLoggedUser().getNeighborhoodId());
+        int totalPages = ps.getTotalPages(channelName, size, tags, getLoggedUser().getNeighborhoodId());
 
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(d -> d.getTime())
                 .collect(Collectors.toList());
 
         ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags(getLoggedNeighbor().getNeighborhoodId()));
+        mav.addObject("tagList", ts.getTags(getLoggedUser().getNeighborhoodId()));
         mav.addObject("appliedTags", tags);
         mav.addObject("postList", postList);
         mav.addObject("page", page);
@@ -117,7 +117,7 @@ public class FrontController {
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ) {
-        LOGGER.info("Registered a new user under the id {}", getLoggedNeighbor().getUserId());
+        LOGGER.info("Registered a new user under the id {}", getLoggedUser().getUserId());
 
         return handleChannelRequest(BaseChannel.FEED.toString(), page, size, date, tags);
     }
@@ -129,7 +129,7 @@ public class FrontController {
     ) {
 
         final ModelAndView mav = new ModelAndView("admin/views/requestManager");
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
@@ -137,8 +137,8 @@ public class FrontController {
         mav.addObject("eventDates", eventTimestamps);
         mav.addObject("neighbors", true);
         mav.addObject("page", page);
-        mav.addObject("totalPages", us.getTotalPages(UserRole.NEIGHBOR, getLoggedNeighbor().getNeighborhoodId(), size ));
-        mav.addObject("users", us.getUsersPage(UserRole.NEIGHBOR,getLoggedNeighbor().getNeighborhoodId(), page, size));
+        mav.addObject("totalPages", us.getTotalPages(UserRole.NEIGHBOR, getLoggedUser().getNeighborhoodId(), size ));
+        mav.addObject("users", us.getUsersPage(UserRole.NEIGHBOR, getLoggedUser().getNeighborhoodId(), page, size));
         return mav;
     }
 
@@ -148,7 +148,7 @@ public class FrontController {
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
         final ModelAndView mav = new ModelAndView("admin/views/requestManager");
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
@@ -156,8 +156,8 @@ public class FrontController {
         mav.addObject("eventDates", eventTimestamps);
         mav.addObject("neighbors", false);
         mav.addObject("page", page);
-        mav.addObject("totalPages", us.getTotalPages(UserRole.UNVERIFIED_NEIGHBOR, getLoggedNeighbor().getNeighborhoodId(), size));
-        mav.addObject("users", us.getUsersPage(UserRole.UNVERIFIED_NEIGHBOR,getLoggedNeighbor().getNeighborhoodId(), page, size));
+        mav.addObject("totalPages", us.getTotalPages(UserRole.UNVERIFIED_NEIGHBOR, getLoggedUser().getNeighborhoodId(), size));
+        mav.addObject("users", us.getUsersPage(UserRole.UNVERIFIED_NEIGHBOR, getLoggedUser().getNeighborhoodId(), page, size));
         return mav;
     }
 
@@ -182,7 +182,7 @@ public class FrontController {
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public ModelAndView profile(@ModelAttribute("profilePictureForm") final ProfilePictureForm profilePictureForm) {
         ModelAndView mav = new ModelAndView("views/userProfile");
-        mav.addObject("neighbor", getLoggedNeighbor());
+        mav.addObject("neighbor", getLoggedUser());
         //us.updateLanguage(getLoggedNeighbor().getUserId(), "Spanish");
         return mav;
     }
@@ -196,27 +196,27 @@ public class FrontController {
             return profile(profilePictureForm);
         }
 
-        us.updateProfilePicture(getLoggedNeighbor().getUserId(), profilePictureForm.getImageFile());
+        us.updateProfilePicture(getLoggedUser().getUserId(), profilePictureForm.getImageFile());
         //us.updateLanguage(getLoggedNeighbor().getUserId(), "Spanish");
         return mav;
     }
 
     @RequestMapping (value = "/updateDarkModePreference", method = RequestMethod.POST)
     public String updateDarkModePreference() {
-        User user = getLoggedNeighbor();
+        User user = getLoggedUser();
         us.toggleDarkMode(user.getUserId());
         return "redirect:/profile";
     }
 
     @RequestMapping (value = "/updateLanguagePreference", method = RequestMethod.POST)
     public String updateLanguagePreference(@RequestParam("language") String language) {
-        User user = getLoggedNeighbor();
+        User user = getLoggedUser();
         return "redirect:/profile";
     }
 
     @RequestMapping(value = "/applyTagsFilter", method = RequestMethod.POST)
     public ModelAndView applyTagsFilter(@RequestParam("tags") String tags, @RequestParam("currentUrl") String currentUrl) {
-        return new ModelAndView("redirect:" + ts.createURLForTagFilter(tags, currentUrl, getLoggedNeighbor().getNeighborhoodId()));
+        return new ModelAndView("redirect:" + ts.createURLForTagFilter(tags, currentUrl, getLoggedUser().getNeighborhoodId()));
     }
 
     // ------------------------------------- ANNOUNCEMENTS --------------------------------------
@@ -256,12 +256,12 @@ public class FrontController {
             @RequestParam(value = "onChannelId", required = false) Long onChannelId
     ) {
         final ModelAndView mav = new ModelAndView("views/publish");
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
         mav.addObject("channel", onChannelId);
-        mav.addObject("channelList", chs.getNeighborChannels(getLoggedNeighbor().getNeighborhoodId(), getLoggedNeighbor().getUserId()));
+        mav.addObject("channelList", chs.getNeighborChannels(getLoggedUser().getNeighborhoodId(), getLoggedUser().getUserId()));
         mav.addObject("eventDates", eventTimestamps);
         return mav;
     }
@@ -278,7 +278,7 @@ public class FrontController {
         }
         Integer channelId = publishForm.getChannel();
 
-        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), channelId, publishForm.getTags(), imageFile);
+        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedUser().getUserId(), channelId, publishForm.getTags(), imageFile);
 //        Resource res = rs1.createResource(1, "prueba resource", "prueba descripcion", imageFile);
 //        System.out.println("PRINTING RESOURCE" + res);
         ModelAndView mav = new ModelAndView("views/publish");
@@ -317,13 +317,13 @@ public class FrontController {
             @RequestParam (value = "onChannelId", required = false) Long onChannelId
     ) {
         final ModelAndView mav = new ModelAndView("admin/views/publishAdmin");
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
         mav.addObject("panelOption", "PublishAdmin");
         mav.addObject("eventDates", eventTimestamps);
-        mav.addObject("channelList", chs.getAdminChannels(getLoggedNeighbor().getNeighborhoodId()));
+        mav.addObject("channelList", chs.getAdminChannels(getLoggedUser().getNeighborhoodId()));
         return mav;
     }
 
@@ -336,11 +336,11 @@ public class FrontController {
             return publishForm(publishForm, onChannelId);
         }
 
-        ps.createAdminPost(getLoggedNeighbor().getNeighborhoodId(), publishForm.getSubject(), publishForm.getMessage(), getLoggedNeighbor().getUserId(), publishForm.getChannel(), publishForm.getTags(), publishForm.getImageFile());
+        ps.createAdminPost(getLoggedUser().getNeighborhoodId(), publishForm.getSubject(), publishForm.getMessage(), getLoggedUser().getUserId(), publishForm.getChannel(), publishForm.getTags(), publishForm.getImageFile());
         PublishForm clearedForm = new PublishForm();
         ModelAndView mav = new ModelAndView("admin/views/publishAdmin");
         mav.addObject("showSuccessMessage", true);
-        mav.addObject("channelList", chs.getAdminChannels(getLoggedNeighbor().getNeighborhoodId()));
+        mav.addObject("channelList", chs.getAdminChannels(getLoggedUser().getNeighborhoodId()));
         mav.addObject("publishForm", clearedForm);
 
         return mav;
@@ -355,14 +355,14 @@ public class FrontController {
                                  @RequestParam(value = "success", required = false) boolean success) {
         ModelAndView mav = new ModelAndView("views/post");
 
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
 
 
         Optional<Post> optionalPost = ps.findPostById(postId);
-        mav.addObject("post", optionalPost.orElseThrow(PostNotFoundException::new));
+        mav.addObject("post", optionalPost.orElseThrow(() -> new NotFoundException("Post Not Found")));
 
         Optional<List<Comment>> optionalComments = cs.findCommentsByPostId(postId);
         mav.addObject("comments", optionalComments.orElse(Collections.emptyList()));
@@ -387,7 +387,7 @@ public class FrontController {
         if (errors.hasErrors()) {
             return viewPost(postId, commentForm, false);
         }
-        cs.createComment(commentForm.getComment(), getLoggedNeighbor().getUserId(), postId);
+        cs.createComment(commentForm.getComment(), getLoggedUser().getUserId(), postId);
         ModelAndView mav = new ModelAndView("redirect:/posts/" + postId);
         mav.addObject("commentForm", new CommentForm());
         return mav;
@@ -401,24 +401,6 @@ public class FrontController {
         return is.getImage(imageId).map(Image::getImage).orElse(null);
     }
 
-    // ------------------------------------- EXCEPTIONS --------------------------------------
-    @ExceptionHandler({NeighborNotFoundException.class, NeighborhoodNotFoundException.class, PostNotFoundException.class})
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    public ModelAndView notFound(NeiboException ex) {
-        ModelAndView mav = new ModelAndView("errors/errorPage");
-        mav.addObject("errorCode", "404");
-        mav.addObject("errorMsg", ex.getMessage());
-        return mav;
-    }
-
-    @ExceptionHandler({DuplicatedNeighbor.class, DuplicatedNeighborhood.class, DuplicatedChannel.class, DuplicatedCategory.class, DuplicatedSubscription.class})
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    public ModelAndView duplicated(NeiboException ex) {
-        ModelAndView mav = new ModelAndView("errors/errorPage");
-        mav.addObject("errorCode", "409"); // 409 = Conflict
-        mav.addObject("errorMsg", ex.getMessage());
-        return mav;
-    }
 
     // ---------------------------------- LOGIN SIGNUP AND SESSION  -----------------------------------
 
@@ -475,13 +457,13 @@ public class FrontController {
     }
 
     @ModelAttribute("loggedUser")
-    public User getLoggedNeighbor() {
+    public User getLoggedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken)
             return null;
         String email = authentication.getName();
         Optional<User> neighborOptional = us.findUserByMail(email);
-        return neighborOptional.orElseThrow(NeighborhoodNotFoundException::new);
+        return neighborOptional.orElseThrow(() -> new NotFoundException("Neighbor Not Found"));
     }
 
     // ------------------------------------- AMENITIES --------------------------------------
@@ -490,7 +472,7 @@ public class FrontController {
     public ModelAndView adminAmenities() {
         ModelAndView mav = new ModelAndView("admin/views/amenities");
 
-        List<Amenity> amenities = as.getAmenities(getLoggedNeighbor().getNeighborhoodId());
+        List<Amenity> amenities = as.getAmenities(getLoggedUser().getNeighborhoodId());
         List<AmenityHours> amenityHoursList = new ArrayList<>();
 
         for (Amenity amenity : amenities) {
@@ -500,7 +482,7 @@ public class FrontController {
 
             amenityHoursList.add(amenityHours);
         }
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
@@ -549,7 +531,7 @@ public class FrontController {
         daysOfWeek.add("Friday");
         daysOfWeek.add("Saturday");
         daysOfWeek.add("Sunday");
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
@@ -566,7 +548,7 @@ public class FrontController {
             return createAmenityForm(amenityForm);
         }
 
-        as.createAmenityWrapper(amenityForm.getName(), amenityForm.getDescription(), amenityForm.getMondayOpenTime(), amenityForm.getMondayCloseTime(), amenityForm.getTuesdayOpenTime(), amenityForm.getTuesdayCloseTime(), amenityForm.getWednesdayOpenTime(), amenityForm.getWednesdayCloseTime(), amenityForm.getThursdayOpenTime(), amenityForm.getThursdayCloseTime(), amenityForm.getFridayOpenTime(), amenityForm.getFridayCloseTime(), amenityForm.getSaturdayOpenTime(), amenityForm.getSaturdayCloseTime(), amenityForm.getSundayOpenTime(), amenityForm.getSundayCloseTime(), getLoggedNeighbor().getNeighborhoodId());
+        as.createAmenityWrapper(amenityForm.getName(), amenityForm.getDescription(), amenityForm.getMondayOpenTime(), amenityForm.getMondayCloseTime(), amenityForm.getTuesdayOpenTime(), amenityForm.getTuesdayCloseTime(), amenityForm.getWednesdayOpenTime(), amenityForm.getWednesdayCloseTime(), amenityForm.getThursdayOpenTime(), amenityForm.getThursdayCloseTime(), amenityForm.getFridayOpenTime(), amenityForm.getFridayCloseTime(), amenityForm.getSaturdayOpenTime(), amenityForm.getSaturdayCloseTime(), amenityForm.getSundayOpenTime(), amenityForm.getSundayCloseTime(), getLoggedUser().getNeighborhoodId());
         return new ModelAndView("redirect:/admin/amenities");
     }
 
@@ -577,14 +559,14 @@ public class FrontController {
     ) {
         ModelAndView mav = new ModelAndView("views/amenities");
         mav.addObject("channel", BaseChannel.RESERVATIONS.toString());
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
 
         mav.addObject("eventDates", eventTimestamps);
 
-        List<Amenity> amenities = as.getAmenities(getLoggedNeighbor().getNeighborhoodId());
+        List<Amenity> amenities = as.getAmenities(getLoggedUser().getNeighborhoodId());
         List<AmenityHours> amenityHoursList = new ArrayList<>();
 
         for (Amenity amenity : amenities) {
@@ -623,7 +605,7 @@ public class FrontController {
             e.printStackTrace();
         }
         mav.addObject("timeList", timeList);
-        mav.addObject("reservationsList", rs.getReservationsByUserId(getLoggedNeighbor().getUserId()));
+        mav.addObject("reservationsList", rs.getReservationsByUserId(getLoggedUser().getUserId()));
         return mav;
     }
 
@@ -638,7 +620,7 @@ public class FrontController {
         }
         ModelAndView mav = new ModelAndView("redirect:/amenities");
 
-        Reservation res = rs.createReservation(reservationForm.getAmenityId(), getLoggedNeighbor().getUserId(), reservationForm.getDate(), reservationForm.getStartTime(), reservationForm.getEndTime(), getLoggedNeighbor().getNeighborhoodId());
+        Reservation res = rs.createReservation(reservationForm.getAmenityId(), getLoggedUser().getUserId(), reservationForm.getDate(), reservationForm.getStartTime(), reservationForm.getEndTime(), getLoggedUser().getNeighborhoodId());
         if(res == null) {
             mav.addObject("showErrorMessage", true);
         }
@@ -663,12 +645,12 @@ public class FrontController {
 
         Date selectedDate = new Date(timestamp != 0 ? timestamp : System.currentTimeMillis());
 
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
 
-        List<Event> eventList = es.getEventsByDate(selectedDate, getLoggedNeighbor().getNeighborhoodId());
+        List<Event> eventList = es.getEventsByDate(selectedDate, getLoggedUser().getNeighborhoodId());
 
         // Define arrays for month names in English and Spanish
         String[] monthsEnglish = {
@@ -686,13 +668,13 @@ public class FrontController {
         // Get the selected day, month (word), and year directly from selectedDate
         int selectedDay = selectedDate.getDate(); // getDate() returns the day of the month
         int selectedMonthIndex = selectedDate.getMonth(); // getMonth() returns the month as 0-based index
-        String selectedMonth = getLoggedNeighbor().getLanguage() == Language.ENGLISH
+        String selectedMonth = getLoggedUser().getLanguage() == Language.ENGLISH
                 ? monthsEnglish[selectedMonthIndex]
                 : monthsSpanish[selectedMonthIndex];
         int selectedYear = selectedDate.getYear() + 1900; // getYear() returns years since 1900
 
         ModelAndView mav = new ModelAndView("views/calendar");
-        mav.addObject("isAdmin", getLoggedNeighbor().getRole() == UserRole.ADMINISTRATOR);
+        mav.addObject("isAdmin", getLoggedUser().getRole() == UserRole.ADMINISTRATOR);
         mav.addObject("eventDates", eventTimestamps);
         mav.addObject("selectedTimestamp", selectedDate.getTime()); // Pass the selected timestamp
         mav.addObject("selectedDay", selectedDay);
@@ -709,7 +691,7 @@ public class FrontController {
             @ModelAttribute("eventForm") final EventForm eventForm
     ) {
         final ModelAndView mav = new ModelAndView("admin/views/addEvent");
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
@@ -734,7 +716,7 @@ public class FrontController {
             // Handle the parsing error, e.g., by returning an error response to the user.
         }
 
-        Event e = es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), duration, getLoggedNeighbor().getNeighborhoodId());
+        Event e = es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), duration, getLoggedUser().getNeighborhoodId());
         ModelAndView mav = new ModelAndView("admin/views/addEvent");
         mav.addObject("showSuccessMessage", true);
         return mav;
@@ -762,17 +744,17 @@ public class FrontController {
     @RequestMapping(value = "/information", method = RequestMethod.GET)
     public ModelAndView information() {
         ModelAndView mav = new ModelAndView("views/information");
-        mav.addObject("resourceList", rs1.getResources(getLoggedNeighbor().getNeighborhoodId()));
-        mav.addObject("phoneNumbersList", cs1.getContacts(getLoggedNeighbor().getNeighborhoodId()));
+        mav.addObject("resourceList", rs1.getResources(getLoggedUser().getNeighborhoodId()));
+        mav.addObject("phoneNumbersList", cs1.getContacts(getLoggedUser().getNeighborhoodId()));
         mav.addObject("channel", BaseChannel.INFORMATION.toString());
 
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
 
-        mav.addObject("resourceMap", rs1.getResources(getLoggedNeighbor().getNeighborhoodId()));
-        mav.addObject("phoneNumbersMap", cs1.getContacts(getLoggedNeighbor().getNeighborhoodId()));
+        mav.addObject("resourceMap", rs1.getResources(getLoggedUser().getNeighborhoodId()));
+        mav.addObject("phoneNumbersMap", cs1.getContacts(getLoggedUser().getNeighborhoodId()));
         mav.addObject("eventDates", eventTimestamps);
         return mav;
     }
@@ -780,14 +762,14 @@ public class FrontController {
     @RequestMapping(value = "/admin/information", method = RequestMethod.GET)
     public ModelAndView adminInformation() {
         ModelAndView mav = new ModelAndView("admin/views/information");
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
         mav.addObject("panelOption", "Information");
         mav.addObject("eventDates", eventTimestamps);
-        mav.addObject("resourceList", rs1.getResources(getLoggedNeighbor().getNeighborhoodId()));
-        mav.addObject("phoneNumbersList", cs1.getContacts(getLoggedNeighbor().getNeighborhoodId()));
+        mav.addObject("resourceList", rs1.getResources(getLoggedUser().getNeighborhoodId()));
+        mav.addObject("phoneNumbersList", cs1.getContacts(getLoggedUser().getNeighborhoodId()));
         return mav;
     }
 
@@ -801,7 +783,7 @@ public class FrontController {
     @RequestMapping(value = "/admin/createContact", method = RequestMethod.GET)
     public ModelAndView createContact(@ModelAttribute("contactForm") final ContactForm contactForm) {
         ModelAndView mav = new ModelAndView("admin/views/createContact");
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
@@ -817,7 +799,7 @@ public class FrontController {
             return createContact(contactForm);
         }
         System.out.println(contactForm);
-        Contact cont = cs1.createContact(getLoggedNeighbor().getNeighborhoodId(), contactForm.getContactName(), contactForm.getContactAddress(), contactForm.getContactPhone());
+        Contact cont = cs1.createContact(getLoggedUser().getNeighborhoodId(), contactForm.getContactName(), contactForm.getContactAddress(), contactForm.getContactPhone());
         System.out.println("created contact: " + cont);
         return new ModelAndView("redirect:/admin/information");
     }
@@ -832,7 +814,7 @@ public class FrontController {
     @RequestMapping(value = "/admin/createResource", method = RequestMethod.GET)
     public ModelAndView createResourceForm(@ModelAttribute("resourceForm") final ResourceForm resourceForm) {
         ModelAndView mav = new ModelAndView("admin/views/createResource");
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
@@ -847,9 +829,40 @@ public class FrontController {
             System.out.println("ERRORS: " + errors);
             return createResourceForm(resourceForm);
         }
-        rs1.createResource(getLoggedNeighbor().getNeighborhoodId(), resourceForm.getTitle(), resourceForm.getDescription(), resourceForm.getImageFile());
+        rs1.createResource(getLoggedUser().getNeighborhoodId(), resourceForm.getTitle(), resourceForm.getDescription(), resourceForm.getImageFile());
         return new ModelAndView("redirect:/admin/information");
     }
+
+
+    // ------------------------------------- EXCEPTIONS --------------------------------------
+
+    @ExceptionHandler({NotFoundException.class})
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    public ModelAndView notFound(RuntimeException ex) {
+        ModelAndView mav = new ModelAndView("errors/errorPage");
+        mav.addObject("errorCode", "404");
+        mav.addObject("errorMsg", ex.getMessage());
+        return mav;
+    }
+
+    @ExceptionHandler({DuplicateKeyException.class})
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    public ModelAndView duplicated(RuntimeException ex) {
+        ModelAndView mav = new ModelAndView("errors/errorPage");
+        mav.addObject("errorCode", "409"); // 409 = Conflict
+        mav.addObject("errorMsg", ex.getMessage());
+        return mav;
+    }
+
+    @ExceptionHandler({InsertionException.class})
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ModelAndView insertion(RuntimeException ex) {
+        ModelAndView mav = new ModelAndView("errors/errorPage");
+        mav.addObject("errorCode", "500");
+        mav.addObject("errorMsg", ex.getMessage());
+        return mav;
+    }
+
 
     // ------------------------------------- TEST --------------------------------------
 
@@ -865,7 +878,7 @@ public class FrontController {
     @RequestMapping(value = "/admin/test", method = RequestMethod.GET)
     public ModelAndView adminTest() {
         ModelAndView mav = new ModelAndView("admin/views/requestManager");
-        List<Date> eventDates = es.getEventDates(getLoggedNeighbor().getNeighborhoodId());
+        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
         List<Long> eventTimestamps = eventDates.stream()
                 .map(date -> date.getTime())
                 .collect(Collectors.toList());
@@ -875,11 +888,16 @@ public class FrontController {
 
     @RequestMapping(value = "/testDuplicatedException", method = RequestMethod.GET)
     public ModelAndView testDuplicatedException() {
-        throw new DuplicatedNeighbor();
+        throw new DuplicateKeyException("testing wubbawubba");
     }
 
     @RequestMapping(value = "/testNotFoundException", method = RequestMethod.GET)
     public ModelAndView testNotFoundException() {
-        throw new NeighborhoodNotFoundException();
+        throw new NotFoundException("testing wubabidabi");
+    }
+
+    @RequestMapping(value = "/testException", method = RequestMethod.GET)
+    public ModelAndView testException() {
+        throw new InsertionException("An error occurred whilst creating the User");
     }
 }

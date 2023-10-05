@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.persistence.TagDao;
@@ -10,11 +11,13 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Post;
 import enums.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -28,6 +31,8 @@ public class PostDaoImpl implements PostDao {
     private ChannelDao channelDao;
     private TagDao tagDao;
     private UserDao userDao;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PostDaoImpl.class);
 
     private final String POSTS_JOIN_USERS_JOIN_CHANNELS =
         "SELECT DISTINCT p.* " +
@@ -64,13 +69,18 @@ public class PostDaoImpl implements PostDao {
         data.put("postPictureId", imageId == 0 ? null : imageId);
         data.put("channelid", channelId);
 
-        final Number key = jdbcInsert.executeAndReturnKey(data);
-        return new Post.Builder()
-                .postId(key.longValue())
-                .title(title)
-                .postPictureId(imageId)
-                .description(description)
-                .build();
+        try {
+            final Number key = jdbcInsert.executeAndReturnKey(data);
+            return new Post.Builder()
+                    .postId(key.longValue())
+                    .title(title)
+                    .postPictureId(imageId)
+                    .description(description)
+                    .build();
+        } catch (DataAccessException ex) {
+            LOGGER.error("Error inserting the Post", ex);
+            throw new InsertionException("An error occurred whilst creating the Post");
+        }
     }
 
     // ------------------------------------------------ POSTS SELECT ---------------------------------------------------

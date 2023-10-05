@@ -22,13 +22,13 @@ public interface UserDao {
     // ---------------------------------------------- USERS INSERT -----------------------------------------------------
 
     User createUser(final String mail, final String password, final String name, final String surname,
-                    final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role, final int identification);
+                    final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role, final int identification) ;
 
     // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
     Optional<User> findUserById(final long neighborId);
 
-    public Optional<User> findUserByMail(final String mail);
+    Optional<User> findUserByMail(final String mail);
 
     List<User> getUsersByCriteria(UserRole role, long neighborhoodId, int page, int size);
 
