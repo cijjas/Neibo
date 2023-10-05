@@ -142,12 +142,13 @@
     border: 1px solid var(--text);
     border-radius: var(--border-radius);
     transition: all 0.3s ease-in-out;
-}
 
-.blogpost:hover{
-    transform: translateY(-4px) ;
-    box-shadow: -3px 5px 0 0 var(--primary);
-    border : var(--border);
+    &:hover{
+        transform: translateY(-4px) ;
+        box-shadow: -3px 5px 0 0 var(--primary);
+        border : var(--border);
+    }
+
 }
 
 .blogpost-author-and-date{
@@ -920,12 +921,56 @@ footer div {
     border: 1px solid var(--bordercolor);
     border-radius: var(--border-hard);
     transition: all 0.3s ease-in-out;
+    &.outlined{
+        color: var(--error);
+        background-color: var(--darkonbackground);
+        border: 1px solid var(--error);
+        &:hover{
+            border: 1px solid var(--error);
+            transform: translateY(-4px) ;
+            box-shadow: 0 5px 0 0 var(--error);
+            color: var(--error);
+        }
+    }
+    &:hover{
+        border: 1px solid var(--error);
+        transform: translateY(-4px) ;
+        box-shadow: 0 5px 0 0 var(--error);
+        color: var(--error);
+    }
 }
-.ignore-button:hover{
-    border: 1px solid var(--error);
-    transform: translateY(-4px) ;
-    box-shadow: 0 5px 0 0 var(--error);
-    color: var(--error);
+
+.accept-button{
+    font-size: 12px;
+    padding: 10px;
+    color: var(--text);
+    background-color: var(--background);
+    border: 1px solid var(--bordercolor);
+    border-radius: var(--border-hard);
+    transition: all 0.3s ease-in-out;
+    &.outlined{
+        color: var(--primary);
+        background-color: var(--darkonbackground);
+        border: 1px solid var(--primary);
+        &.background{
+            background-color: var(--background);
+        }
+        &.on-background{
+            background-color: var(--onbackground);
+        }
+        &:hover{
+            border: 1px solid var(--primary);
+            transform: translateY(-4px) ;
+            box-shadow: 0 5px 0 0 var(--primary);
+            color: var(--primary);
+        }
+    }
+    &:hover{
+        border: 1px solid var(--primary);
+        transform: translateY(-4px) ;
+        box-shadow: 0 5px 0 0 var(--primary);
+        color: var(--primary);
+    }
 }
 
 /*-------------------------------------------------cool buttons --------------------*/
@@ -964,12 +1009,16 @@ footer div {
 
 .cool-button.cool-small{
     width: 120px;
+    &.dark-on-bg{
+        background-color: var(--darkonbackground);
+        padding: 5px 5px;
+    }
+    &.on-bg{
+        background-color: var(--onbackground);
+        padding: 5px 5px;
+    }
 }
 
-.cool-button.cool-small.on-bg{
-    background-color: var(--onbackground);
-    padding: 5px 5px;
-}
 
 
 

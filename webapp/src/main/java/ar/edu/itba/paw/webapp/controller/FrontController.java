@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Time;
 import java.text.ParseException;
@@ -28,6 +29,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+
 @Controller
 public class FrontController {
 
@@ -211,10 +214,18 @@ public class FrontController {
         return "redirect:/profile";
     }
 
-    @RequestMapping (value = "/updateLanguagePreference", method = RequestMethod.POST)
-    public String updateLanguagePreference(@RequestParam("language") String language) {
+    @RequestMapping (value = "/change-language", method = RequestMethod.POST)
+    public String updateLanguagePreference(
+            @RequestParam(value="lang", required = false) String language,
+            HttpServletRequest request
+    ) {
         User user = getLoggedNeighbor();
-        return "redirect:/profile";
+        Locale locale = new Locale(language);
+        request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
+        us.toggleLanguage(user.getUserId());
+        // Redirect back to the previous page or a specific page
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/");
     }
 
     @RequestMapping(value = "/applyTagsFilter", method = RequestMethod.POST)

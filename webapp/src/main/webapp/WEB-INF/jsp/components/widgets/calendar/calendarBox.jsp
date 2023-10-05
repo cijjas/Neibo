@@ -19,6 +19,7 @@
       <div class="icons">
         <span id="next"  ><i  class="fa-solid fa-angle-right"></i></span>
       </div>
+
     </header>
     <div class="divider"></div>
 
@@ -36,7 +37,12 @@
         <ul class="days"></ul>
       </div>
     </div>
-
+    <c:if test="${isAdmin}">
+      <a href="${pageContext.request.contextPath}/admin/addEvent" class="accept-button outlined on-background">
+        <spring:message code="CreateNewEvent.button" />
+        <i class="fa-solid fa-plus"></i>
+      </a>
+    </c:if>
 
 
   </div>

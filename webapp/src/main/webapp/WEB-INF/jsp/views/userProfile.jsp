@@ -102,11 +102,23 @@
                                     <h6 class="text-muted f-w-400"><spring:message code="On"/></h6>
                                 </div>
                             </div>
+                            <div class="col-sm-6">
+                                <p class="m-b-10 f-w-600 " ><spring:message code="Language"/></p>
+                                <div class="controlled" >
+                                    <h6 class="text-muted f-w-400"><spring:message code="English"/></h6>
+                                    <label class="switch">
+                                        <input class="toggle" type="checkbox" id="language-toggle" name="darkMode">
+                                        <span class="slider"></span>
+                                        <span class="card-side"></span>
+                                    </label>
+                                    <h6 class="text-muted f-w-400"><spring:message code="Spanish"/></h6>
+                                </div>
+                            </div>
 
                         </div>
 
 
-                        <div class="row justify-content-end">
+                        <div class="row justify-content-end m-t-40">
                             <a href="${pageContext.request.contextPath}/logout" class=" cool-button cool-small on-bg">
                                     <spring:message code="Logout"/>
                             </a>
@@ -119,6 +131,8 @@
 </div>
 
 <input id="dark-mode-toggle-var" type="hidden" value="${neighbor.darkMode}"/>
+<input id="language-var" type="hidden" value="${neighbor.language}"/>
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("dark-mode-toggle").checked = document.getElementById("dark-mode-toggle-var").value === "true";
@@ -134,9 +148,21 @@
         });
 
         const languageToggle = document.getElementById("language-toggle");
+        document.getElementById("language-toggle").checked = document.getElementById("language-var").value === "SPANISH";
 
         languageToggle.addEventListener("change", function() {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '${pageContext.request.contextPath}/change-language';
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'lang';
+            input.value =  document.getElementById("language-var").value === "SPANISH" ? "en" : "es";
 
+            form.appendChild(input);
+            document.body.appendChild(form);
+
+            form.submit();
         });
     });
 
