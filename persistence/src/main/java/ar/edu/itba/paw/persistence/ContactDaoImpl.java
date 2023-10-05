@@ -1,15 +1,18 @@
 package ar.edu.itba.paw.persistence;
 
 
+import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
 import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.Contact;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +27,8 @@ public class ContactDaoImpl implements ContactDao {
     private final String CONTACTS =
             "select ct.* " +
             "from contacts ct";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContactDaoImpl.class);
 
     @Autowired
     public ContactDaoImpl(final DataSource ds) {
@@ -43,14 +48,20 @@ public class ContactDaoImpl implements ContactDao {
         data.put("contactaddress", contactAddress);
         data.put("contactphone", contactPhone);
 
-        final Number key = jdbcInsert.executeAndReturnKey(data);
-        return new Contact.Builder()
-                .contactId(key.longValue())
-                .contactAddress(contactAddress)
-                .contactName(contactName)
-                .contactPhone(contactPhone)
-                .neighborhoodId(neighborhoodId)
-                .build();
+        try {
+            final Number key = jdbcInsert.executeAndReturnKey(data);
+            return new Contact.Builder()
+                    .contactId(key.longValue())
+                    .contactAddress(contactAddress)
+                    .contactName(contactName)
+                    .contactPhone(contactPhone)
+                    .neighborhoodId(neighborhoodId)
+                    .build();
+        } catch (DataAccessException ex) {
+            LOGGER.error("Error inserting the Contact", ex);
+            throw new InsertionException("An error occurred whilst creating the contact");
+        }
+
     }
 
     // --------------------------------------------- CONTACT SELECT ----------------------------------------------------

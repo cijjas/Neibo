@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.ReservationDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
@@ -7,11 +8,13 @@ import ar.edu.itba.paw.models.Amenity;
 import ar.edu.itba.paw.models.Reservation;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.sql.Time;
@@ -26,6 +29,8 @@ public class ReservationDaoImpl implements ReservationDao {
 
     private UserDao userDao;
     private AmenityDao amenityDao;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReservationDaoImpl.class);
 
     @Autowired
     public ReservationDaoImpl(final DataSource ds, UserDao userDao, AmenityDao amenityDao) {
@@ -48,13 +53,19 @@ public class ReservationDaoImpl implements ReservationDao {
         data.put("starttime", startTime);
         data.put("endtime", endTime);
 
-        final Number key = jdbcInsert.executeAndReturnKey(data);
-        return new Reservation.Builder()
-                .reservationId(key.longValue())
-                .date(date)
-                .startTime(startTime)
-                .endTime(endTime)
-                .build();
+        try {
+            final Number key = jdbcInsert.executeAndReturnKey(data);
+            return new Reservation.Builder()
+                    .reservationId(key.longValue())
+                    .date(date)
+                    .startTime(startTime)
+                    .endTime(endTime)
+                    .build();
+        } catch (DataAccessException ex) {
+            LOGGER.error("Error inserting the Reservation", ex);
+            throw new InsertionException("An error occurred whilst creating the Reservation");
+        }
+
     }
 
     // ---------------------------------------------- RESERVATIONS SELECT ----------------------------------------------
