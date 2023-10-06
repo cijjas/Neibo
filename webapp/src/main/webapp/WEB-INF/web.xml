@@ -58,7 +58,6 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
 
 
-<!--
 
   <error-page>
     <error-code>401</error-code>
@@ -79,7 +78,6 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
     <error-code>500</error-code>
     <location>/WEB-INF/jsp/errors/errorPage.jsp</location>
   </error-page>
--->
 
   <filter>
     <filter-name>springSecurityFilterChain</filter-name>
