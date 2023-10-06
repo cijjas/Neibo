@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EventServiceImpl implements EventService {
@@ -42,6 +43,22 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Date> getEventDates(long neighborhoodId) { return eventDao.getEventDates(neighborhoodId); }
+
+    @Override
+    public List<Long> getEventTimestamps(long neighborhoodId) {
+        List<Date> eventDates = getEventDates(neighborhoodId);
+
+        return eventDates.stream()
+                .map(Date::getTime)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getEventTimestampsString(long neighborhoodId) {
+        return getEventTimestamps(neighborhoodId).stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+    }
 
     @Override
     public boolean deleteEvent(long eventId) { return eventDao.deleteEvent(eventId); }

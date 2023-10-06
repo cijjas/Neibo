@@ -77,12 +77,8 @@ public class AdminController {
     @RequestMapping(value = "/information", method = RequestMethod.GET)
     public ModelAndView adminInformation() {
         ModelAndView mav = new ModelAndView("admin/views/information");
-        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(date -> date.getTime())
-                .collect(Collectors.toList());
+
         mav.addObject("panelOption", "Information");
-        mav.addObject("eventDates", eventTimestamps);
         mav.addObject("resourceList", rs1.getResources(getLoggedUser().getNeighborhoodId()));
         mav.addObject("phoneNumbersList", cs1.getContacts(getLoggedUser().getNeighborhoodId()));
         return mav;
@@ -97,12 +93,8 @@ public class AdminController {
     ) {
 
         final ModelAndView mav = new ModelAndView("admin/views/requestManager");
-        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(date -> date.getTime())
-                .collect(Collectors.toList());
+
         mav.addObject("panelOption", "Neighbors");
-        mav.addObject("eventDates", eventTimestamps);
         mav.addObject("neighbors", true);
         mav.addObject("page", page);
         mav.addObject("totalPages", us.getTotalPages(UserRole.NEIGHBOR, getLoggedUser().getNeighborhoodId(), size ));
@@ -118,12 +110,8 @@ public class AdminController {
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
         final ModelAndView mav = new ModelAndView("admin/views/requestManager");
-        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(date -> date.getTime())
-                .collect(Collectors.toList());
+
         mav.addObject("panelOption", "Requests");
-        mav.addObject("eventDates", eventTimestamps);
         mav.addObject("neighbors", false);
         mav.addObject("page", page);
         mav.addObject("totalPages", us.getTotalPages(UserRole.UNVERIFIED_NEIGHBOR, getLoggedUser().getNeighborhoodId(), size));
@@ -157,12 +145,8 @@ public class AdminController {
             @RequestParam(value = "onChannelId", required = false) Long onChannelId
     ) {
         final ModelAndView mav = new ModelAndView("admin/views/publishAdmin");
-        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(date -> date.getTime())
-                .collect(Collectors.toList());
+
         mav.addObject("panelOption", "PublishAdmin");
-        mav.addObject("eventDates", eventTimestamps);
         mav.addObject("channelList", chs.getAdminChannels(getLoggedUser().getNeighborhoodId()));
         return mav;
     }
@@ -203,12 +187,8 @@ public class AdminController {
 
             amenityHoursList.add(amenityHours);
         }
-        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(date -> date.getTime())
-                .collect(Collectors.toList());
+
         mav.addObject("panelOption", "Amenities");
-        mav.addObject("eventDates", eventTimestamps);
         mav.addObject("amenitiesHours", amenityHoursList);
         return mav;
     }
@@ -252,11 +232,6 @@ public class AdminController {
         daysOfWeek.add("Friday");
         daysOfWeek.add("Saturday");
         daysOfWeek.add("Sunday");
-        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(date -> date.getTime())
-                .collect(Collectors.toList());
-        mav.addObject("eventDates", eventTimestamps);
         mav.addObject("daysOfWeek", daysOfWeek);
         return mav;
     }
@@ -280,11 +255,6 @@ public class AdminController {
             @ModelAttribute("eventForm") final EventForm eventForm
     ) {
         final ModelAndView mav = new ModelAndView("admin/views/addEvent");
-        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(date -> date.getTime())
-                .collect(Collectors.toList());
-        mav.addObject("eventDates", eventTimestamps);
         return mav;
     }
 
@@ -326,11 +296,6 @@ public class AdminController {
     @RequestMapping(value = "/createContact", method = RequestMethod.GET)
     public ModelAndView createContact(@ModelAttribute("contactForm") final ContactForm contactForm) {
         ModelAndView mav = new ModelAndView("admin/views/createContact");
-        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(date -> date.getTime())
-                .collect(Collectors.toList());
-        mav.addObject("eventDates", eventTimestamps);
         return mav;
     }
 
@@ -360,11 +325,6 @@ public class AdminController {
     @RequestMapping(value = "/createResource", method = RequestMethod.GET)
     public ModelAndView createResourceForm(@ModelAttribute("resourceForm") final ResourceForm resourceForm) {
         ModelAndView mav = new ModelAndView("admin/views/createResource");
-        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(date -> date.getTime())
-                .collect(Collectors.toList());
-        mav.addObject("eventDates", eventTimestamps);
         return mav;
     }
 

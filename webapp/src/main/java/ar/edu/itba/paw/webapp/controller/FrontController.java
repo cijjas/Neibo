@@ -99,10 +99,7 @@ public class FrontController {
         List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags, getLoggedUser().getNeighborhoodId());
         int totalPages = ps.getTotalPages(channelName, size, tags, getLoggedUser().getNeighborhoodId());
 
-        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(d -> d.getTime())
-                .collect(Collectors.toList());
+
 
         ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags(getLoggedUser().getNeighborhoodId()));
@@ -111,7 +108,7 @@ public class FrontController {
         mav.addObject("page", page);
         mav.addObject("totalPages", totalPages);
         mav.addObject("channel", channelName);
-        mav.addObject("eventDates", eventTimestamps);
+
 
         return mav;
     }
@@ -216,13 +213,9 @@ public class FrontController {
             @RequestParam(value = "onChannelId", required = false) Long onChannelId
     ) {
         final ModelAndView mav = new ModelAndView("views/publish");
-        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(date -> date.getTime())
-                .collect(Collectors.toList());
+
         mav.addObject("channel", onChannelId);
         mav.addObject("channelList", chs.getNeighborChannels(getLoggedUser().getNeighborhoodId(), getLoggedUser().getUserId()));
-        mav.addObject("eventDates", eventTimestamps);
         return mav;
     }
 
@@ -277,10 +270,6 @@ public class FrontController {
                                  @RequestParam(value = "success", required = false) boolean success) {
         ModelAndView mav = new ModelAndView("views/post");
 
-        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(date -> date.getTime())
-                .collect(Collectors.toList());
 
 
         Optional<Post> optionalPost = ps.findPostById(postId);
@@ -296,7 +285,6 @@ public class FrontController {
         mav.addObject("commentForm", commentForm);
 
         mav.addObject("showSuccessMessage", success);
-        mav.addObject("eventDates", eventTimestamps);
 
 
         return mav;
@@ -394,12 +382,6 @@ public class FrontController {
     ) {
         ModelAndView mav = new ModelAndView("views/amenities");
         mav.addObject("channel", BaseChannel.RESERVATIONS.toString());
-        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(date -> date.getTime())
-                .collect(Collectors.toList());
-
-        mav.addObject("eventDates", eventTimestamps);
 
         List<Amenity> amenities = as.getAmenities(getLoggedUser().getNeighborhoodId());
         List<AmenityHours> amenityHoursList = new ArrayList<>();
@@ -480,10 +462,6 @@ public class FrontController {
 
         Date selectedDate = new Date(timestamp != 0 ? timestamp : System.currentTimeMillis());
 
-        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(date -> date.getTime())
-                .collect(Collectors.toList());
 
         List<Event> eventList = es.getEventsByDate(selectedDate, getLoggedUser().getNeighborhoodId());
 
@@ -510,7 +488,6 @@ public class FrontController {
 
         ModelAndView mav = new ModelAndView("views/calendar");
         mav.addObject("isAdmin", getLoggedUser().getRole() == UserRole.ADMINISTRATOR);
-        mav.addObject("eventDates", eventTimestamps);
         mav.addObject("selectedTimestamp", selectedDate.getTime()); // Pass the selected timestamp
         mav.addObject("selectedDay", selectedDay);
         mav.addObject("selectedMonth", selectedMonth);
@@ -540,11 +517,6 @@ public class FrontController {
         mav.addObject("attendees", us.getEventUsers(eventId));
         mav.addObject("willAttend", us.isAttending(eventId, getLoggedUser().getUserId()));
 
-        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(date -> date.getTime())
-                .collect(Collectors.toList());
-        mav.addObject("eventDates", eventTimestamps);
 
         mav.addObject("showSuccessMessage", success);
 
@@ -577,14 +549,10 @@ public class FrontController {
         mav.addObject("phoneNumbersList", cs1.getContacts(getLoggedUser().getNeighborhoodId()));
         mav.addObject("channel", BaseChannel.INFORMATION.toString());
 
-        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(date -> date.getTime())
-                .collect(Collectors.toList());
+
 
         mav.addObject("resourceMap", rs1.getResources(getLoggedUser().getNeighborhoodId()));
         mav.addObject("phoneNumbersMap", cs1.getContacts(getLoggedUser().getNeighborhoodId()));
-        mav.addObject("eventDates", eventTimestamps);
         return mav;
     }
 
@@ -635,11 +603,6 @@ public class FrontController {
     @RequestMapping(value = "/admin/test", method = RequestMethod.GET)
     public ModelAndView adminTest() {
         ModelAndView mav = new ModelAndView("admin/views/requestManager");
-        List<Date> eventDates = es.getEventDates(getLoggedUser().getNeighborhoodId());
-        List<Long> eventTimestamps = eventDates.stream()
-                .map(date -> date.getTime())
-                .collect(Collectors.toList());
-        mav.addObject("eventDates", eventTimestamps);
         return mav;
     }
 
