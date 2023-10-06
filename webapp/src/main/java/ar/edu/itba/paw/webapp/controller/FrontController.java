@@ -49,7 +49,7 @@ public class FrontController {
     private final ResourceService rs1;
     private final ContactService cs1;
     private final AttendanceService as1;
-
+    private final LikeService ls;
 
     @Autowired
     public FrontController(final PostService ps,
@@ -67,7 +67,8 @@ public class FrontController {
                            EventService es1,
                            final ResourceService rs1,
                            final ContactService cs1,
-                           AttendanceService as1) {
+                           AttendanceService as1,
+                           final LikeService ls) {
         this.is = is;
         this.ps = ps;
         this.us = us;
@@ -83,6 +84,7 @@ public class FrontController {
         this.rs1 = rs1;
         this.cs1 = cs1;
         this.as1 = as1;
+        this.ls = ls;
     }
 
     // ------------------------------------- FEED --------------------------------------
@@ -627,8 +629,14 @@ public class FrontController {
     public ModelAndView test(
     )
     {
-        // rs.createReservation(1,14, java.sql.Date.valueOf("2023-09-25"), Time.valueOf("12:00:00"), Time.valueOf("16:00:00"));
-
+        System.out.println(ps.findPostById(2));
+        /*
+        ls.addLikeToPost(2, getLoggedUser().getUserId());
+        ls.addLikeToPost(2, getLoggedUser().getUserId()+1);
+        ls.addLikeToPost(2, getLoggedUser().getUserId()+2);
+        ls.addLikeToPost(3, getLoggedUser().getUserId());
+        ls.removeLikeFromPost(3, getLoggedUser().getUserId());
+        */
         return new ModelAndView("views/testView");
     }
 

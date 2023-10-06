@@ -25,10 +25,10 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
     public SubscriptionDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName("posts_users");
+                .withTableName("posts_users_subscriptions");
     }
 
-    // ---------------------------------------------- POST_USERS INSERT ------------------------------------------------
+    // ---------------------------------------------- POST_USERS_SUBSCRIPTIONS INSERT ----------------------------------
 
     @Override
     public void createSubscription(long userId, long postId) {
