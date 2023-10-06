@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
-import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
-import ar.edu.itba.paw.interfaces.persistence.PostDao;
-import ar.edu.itba.paw.interfaces.persistence.TagDao;
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
@@ -31,6 +28,7 @@ public class PostDaoImpl implements PostDao {
     private ChannelDao channelDao;
     private TagDao tagDao;
     private UserDao userDao;
+    private LikeDao likeDao;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PostDaoImpl.class);
 
@@ -46,11 +44,13 @@ public class PostDaoImpl implements PostDao {
     public PostDaoImpl(final DataSource ds,
                        ChannelDao channelDao,
                        UserDao userDao,
-                       TagDao tagDao
+                       TagDao tagDao,
+                       LikeDao likeDao
                        ) {
         this.userDao = userDao;
         this.channelDao = channelDao;
         this.tagDao = tagDao;
+        this.likeDao = likeDao;
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
                 .usingGeneratedKeyColumns("postid")
@@ -99,6 +99,7 @@ public class PostDaoImpl implements PostDao {
                 .tags(tags)
                 .user(user)
                 .channel(channel)
+                .likes(likeDao.getLikes(rs.getLong("postid")))
                 .build();
     };
 

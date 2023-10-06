@@ -12,6 +12,8 @@ public class Post {
     private final Channel channel;
     private final long postPictureId;
     private final List<Tag> tags;
+    private final int likes;  // Added likes field
+
     private Post(Builder builder) {
         this.postId = builder.postId;
         this.title = builder.title;
@@ -21,6 +23,7 @@ public class Post {
         this.channel = builder.channel;
         this.postPictureId = builder.postPictureId;
         this.tags = builder.tags;
+        this.likes = builder.likes;
     }
 
     public static class Builder {
@@ -32,6 +35,7 @@ public class Post {
         private Channel channel;
         private long postPictureId;
         private List<Tag> tags;
+        private int likes;
 
         public Builder postId(long postId) {
             this.postId = postId;
@@ -73,6 +77,11 @@ public class Post {
             return this;
         }
 
+        public Builder likes(int likes) {
+            this.likes = likes;
+            return this;
+        }
+
         public Post build() {
             return new Post(this);
         }
@@ -110,6 +119,10 @@ public class Post {
         return tags;
     }
 
+    public int getLikes() {
+        return likes;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -121,6 +134,7 @@ public class Post {
                 ", channel=" + channel +
                 ", postPictureId=" + postPictureId +
                 ", tags=" + tags +
+                ", likes=" + likes +
                 '}';
     }
 }
