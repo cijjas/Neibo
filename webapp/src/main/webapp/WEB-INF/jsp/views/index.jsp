@@ -43,7 +43,7 @@
                 </filter>
             </defs>
         </svg>
-        <svg style=" position: absolute; top:1200px; left:1200px" width="618" height="217" viewBox="0 0 618 217" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg style=" position: absolute; top:1000px; left:1200px" width="618" height="217" viewBox="0 0 618 217" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M76.493 99.851C79.621 99.851 82.705 100.038 85.735 100.403C98.136 75.843 123.595 59 152.988 59C174.343 59 193.621 67.891 207.324 82.172C219.651 75.564 233.74 71.816 248.705 71.816C297.145 71.816 336.413 111.084 336.413 159.524C336.413 165.136 335.886 170.625 334.879 175.944H0C0.216 133.882 34.38 99.851 76.493 99.851Z" fill="#FDFCFB"/>
             <g filter="url(#filter0_d_0_1)">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M490.92 124.85C487.792 124.85 484.708 125.038 481.678 125.403C469.278 100.843 443.819 84 414.426 84C393.071 84 373.792 92.891 360.089 107.172C347.763 100.564 333.673 96.816 318.708 96.816C270.268 96.816 231 136.084 231 184.524C231 190.136 231.527 195.625 232.534 200.944H567.413C567.197 158.882 533.033 124.85 490.92 124.85Z" fill="#FBFBFB"/>
@@ -119,7 +119,10 @@
                                     <jsp:param name="postImage" value="${post.postPictureId}" />
 
                                 </jsp:include>
+
                             </c:forEach>
+
+
                             <c:if test="${totalPages >  1}">
                                 <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
                                     <jsp:param name="page" value="${page}" />

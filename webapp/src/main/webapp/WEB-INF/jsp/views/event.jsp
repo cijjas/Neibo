@@ -32,7 +32,7 @@
         </div>
 
         <div class="column column-middle ">
-            <%@ include file="/WEB-INF/jsp/components/widgets/eventcard.jsp" %>
+            <%@ include file="/WEB-INF/jsp/components/widgets/eventCard.jsp" %>
         </div>
 
         <div class="column column-right">

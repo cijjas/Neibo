@@ -37,6 +37,10 @@ public class CommentServiceImpl implements CommentService {
         return commentDao.findCommentsByPostId(id);
     }
 
+    public Optional<Comment> findCommentById(long id){
+        return commentDao.findCommentById(id);
+    }
+
     @Override
     public Comment createComment(String comment, long neighborId, long postId) {
 

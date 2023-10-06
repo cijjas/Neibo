@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.models;
 
 import java.sql.Time;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AmenityHours {
@@ -36,7 +39,17 @@ public class AmenityHours {
     }
 
     public Map<String, DayTime> getAmenityHours() {
-        return amenityHours;
+        List<String> customOrder = Arrays.asList("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
+
+        // Sort the map keys based on the custom order
+        Map<String, DayTime> sortedMap = new LinkedHashMap<>();
+        for (String day : customOrder) {
+            if (amenityHours.containsKey(day)) {
+                sortedMap.put(day, amenityHours.get(day));
+            }
+        }
+
+        return sortedMap;
     }
 
     @Override

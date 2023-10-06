@@ -16,6 +16,10 @@
   <url>http://www.example.com</url>
 
   <dependencies>
+      <dependency>
+          <groupId>javax.validation</groupId>
+          <artifactId>validation-api</artifactId>
+      </dependency>
   </dependencies>
 
   <build>

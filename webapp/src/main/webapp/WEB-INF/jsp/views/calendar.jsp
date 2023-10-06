@@ -2,6 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <html lang="en">
 
@@ -24,8 +25,26 @@
         <div class="container f-c-c-c" >
             <div style="width: 80%">
                 <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarBox.jsp" %>
-                <%@include file="/WEB-INF/jsp/components/widgets/calendar/eventsHeader.jsp"%>
-                <%@include file="/WEB-INF/jsp/components/widgets/calendar/eventsIndex.jsp"%>
+
+
+                <div class="f-c-c-c">
+                    <div class="upper-feed-buttons-box " style="width: 80%">
+                        <div class="f-c-c-c w-100">
+                            <h2>
+                                <spring:message code="date.format">
+                                    <spring:argument value="${selectedDay}"/>
+                                    <spring:argument value="${selectedMonth}"/>
+                                    <spring:argument value="${fn:replace(selectedYear, '.', '')}" />
+                                </spring:message>
+                            </h2>
+                            <div class="divider"></div>
+                            <%@include file="/WEB-INF/jsp/components/widgets/calendar/eventsIndex.jsp"%>
+
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
 
         </div>

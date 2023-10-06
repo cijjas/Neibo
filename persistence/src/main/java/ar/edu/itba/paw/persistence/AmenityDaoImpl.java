@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.models.Amenity;
 import ar.edu.itba.paw.models.DayTime;
-import ar.edu.itba.paw.models.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,6 +25,7 @@ public class AmenityDaoImpl implements AmenityDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private final SimpleJdbcInsert jdbcInsertHours;
+    private final SimpleJdbcInsert jdbcInsertAmenityHours;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AmenityDaoImpl.class);
 
@@ -38,6 +38,8 @@ public class AmenityDaoImpl implements AmenityDao {
         this.jdbcInsertHours = new SimpleJdbcInsert(ds)
                 .usingGeneratedKeyColumns("hoursid")
                 .withTableName("hours");
+        this.jdbcInsertAmenityHours = new SimpleJdbcInsert(ds)
+                .withTableName("amenities_hours");
     }
 
     // ---------------------------------------------- AMENITY INSERT ---------------------------------------------------
@@ -51,25 +53,40 @@ public class AmenityDaoImpl implements AmenityDao {
 
         final Number amenityId = jdbcInsert.executeAndReturnKey(data);
 
-        // Insert opening/closing hours for each day of the week
         for (Map.Entry<String, DayTime> entry : dayHourData.entrySet()) {
             String dayOfWeek = entry.getKey();
             DayTime openingClosingTimes = entry.getValue();
 
-            // Extract open and close times from DayTime
             Time openTime = openingClosingTimes.getOpenTime();
             Time closeTime = openingClosingTimes.getCloseTime();
 
-            // Create a new record in the hours table for this day
-            Map<String, Object> hoursData = new HashMap<>();
-            hoursData.put("weekday", dayOfWeek);
-            hoursData.put("opentime", openTime);
-            hoursData.put("closetime", closeTime);
-            hoursData.put("amenityid", amenityId.intValue()); // Convert amenityId to int
+            // Check if the same hours entry already exists in the 'hours' table
+            List<Map<String, Object>> existingHours = jdbcTemplate.queryForList(
+                    "SELECT hoursid FROM hours WHERE weekday = ? AND opentime = ? AND closetime = ?",
+                    dayOfWeek, openTime, closeTime);
 
-            // Insert into hours table
+            long hoursId;
+
+            if (existingHours.isEmpty()) {
+                // If it doesn't exist, create a new entry in the 'hours' table
+                Map<String, Object> hoursData = new HashMap<>();
+                hoursData.put("weekday", dayOfWeek);
+                hoursData.put("opentime", openTime);
+                hoursData.put("closetime", closeTime);
+
+                hoursId = jdbcInsertHours.executeAndReturnKey(hoursData).longValue();
+            } else {
+                // If it exists, use the existing hoursId
+                Map<String, Object> existingHour = existingHours.get(0);
+                hoursId = ((Number) existingHour.get("hoursid")).longValue();
+            }
+
+            // Insert into the 'amenities_hours' junction table
+            Map<String, Object> amenityHoursData = new HashMap<>();
+            amenityHoursData.put("amenityid", amenityId.longValue());
+            amenityHoursData.put("hoursid", hoursId);
             try {
-                jdbcInsertHours.execute(hoursData);
+                jdbcInsertAmenityHours.execute(amenityHoursData);
             } catch (DataAccessException ex) {
                 LOGGER.error("Error inserting the Amenity", ex);
                 throw new InsertionException("An error occurred whilst creating the amenity");
@@ -95,11 +112,6 @@ public class AmenityDaoImpl implements AmenityDao {
                 .build();
     };
 
-    //    @Override
-    //    public boolean updateAmenity(long amenityId, String name, String description) {
-    //        return jdbcTemplate.update("UPDATE amenities SET name = ?, description = ? WHERE amenityid = ?", name, description, amenityId) > 0;
-    //    }
-
     @Override
     public Optional<Amenity> findAmenityById(long amenityId) {
         List<Amenity> amenities = jdbcTemplate.query("SELECT * FROM amenities WHERE amenityid = ?", ROW_MAPPER, amenityId);
@@ -116,9 +128,10 @@ public class AmenityDaoImpl implements AmenityDao {
         Map<String, DayTime> amenityHoursMap = new HashMap<>();
 
         List<Map<String, Object>> results = jdbcTemplate.queryForList(
-                "SELECT weekday, opentime, closetime " +
-                        "FROM hours " +
-                        "WHERE amenityId = ?",
+                "SELECT h.weekday, h.opentime, h.closetime " +
+                        "FROM amenities_hours ah " +
+                        "JOIN hours h ON ah.hoursid = h.hoursid " +
+                        "WHERE ah.amenityId = ?",
                 amenityId
         );
 
@@ -131,7 +144,6 @@ public class AmenityDaoImpl implements AmenityDao {
                 DayTime dayTime = new DayTime();
                 dayTime.setOpenTime(openTime);
                 dayTime.setCloseTime(closeTime);
-//                amenityHoursMap.put(dayOfWeek, new DayTime.Builder().openTime(openTime).closeTime(closeTime).build());
                 amenityHoursMap.put(dayOfWeek, dayTime);
             }
         }
@@ -145,7 +157,10 @@ public class AmenityDaoImpl implements AmenityDao {
         Time closeTime = null;
 
         List<Map<String, Object>> results = jdbcTemplate.queryForList(
-                "SELECT opentime, closetime FROM hours WHERE amenityId = ? AND weekday = ?",
+                "SELECT h.opentime, h.closetime " +
+                        "FROM amenities_hours ah " +
+                        "JOIN hours h ON ah.hoursid = h.hoursid " +
+                        "WHERE ah.amenityId = ? AND h.weekday = ?",
                 amenityId,
                 dayOfWeek
         );
@@ -156,7 +171,6 @@ public class AmenityDaoImpl implements AmenityDao {
             closeTime = (Time) firstResult.get("closetime");
         }
 
-//        return new DayTime.Builder().openTime(openTime).closeTime(closeTime).build();
         DayTime dayTime = new DayTime();
         dayTime.setOpenTime(openTime);
         dayTime.setCloseTime(closeTime);
@@ -167,6 +181,23 @@ public class AmenityDaoImpl implements AmenityDao {
 
     @Override
     public boolean deleteAmenity(long amenityId) {
-        return jdbcTemplate.update("DELETE FROM amenities WHERE amenityid = ?", amenityId) > 0;
+        List<Number> hoursIds = jdbcTemplate.queryForList(
+                "SELECT ah.hoursid FROM amenities_hours ah " +
+                        "WHERE ah.amenityid = ?", Number.class, amenityId);
+
+        boolean deleted = jdbcTemplate.update("DELETE FROM amenities WHERE amenityid = ?", amenityId) > 0;
+
+        // delete hour from hours table if unused by any other amenity
+        for (Number hoursId : hoursIds) {
+            int count = jdbcTemplate.queryForObject(
+                    "SELECT COUNT(*) FROM amenities_hours WHERE hoursid = ?",
+                    Integer.class, hoursId);
+
+            if (count == 0) {
+                // If not associated with any other amenity, delete the hours entry
+                jdbcTemplate.update("DELETE FROM hours WHERE hoursid = ?", hoursId);
+            }
+        }
+        return deleted;
     }
 }

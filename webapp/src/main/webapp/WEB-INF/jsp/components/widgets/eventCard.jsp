@@ -23,7 +23,7 @@
                     <form method="post" action="${pageContext.request.contextPath}/attend/${event.eventId}">
                         <div class="d-flex flex-row justify-content-end align-items-center">
                             <div class="d-flex flex-column justify-content-center align-items-end">
-                                <button id="submitAttendance" type="submit" class="cool-button cool-small on-bg" style="margin-top:5px; font-size: 12px;">
+                                <button id="submitAttendance" type="submit" class="accept-button outlined" style="margin-top:5px; font-size: 12px; font-weight: bold;">
                                     <spring:message code="Attend"/>
                                 </button>
                             </div>
@@ -36,7 +36,7 @@
                     <form method="post" action="${pageContext.request.contextPath}/unattend/${event.eventId}">
                         <div class="d-flex flex-row justify-content-end align-items-center">
                             <div class="d-flex flex-column justify-content-center align-items-end">
-                                <button id="submitUnattendance" type="submit" class="cool-button cool-small on-bg" style="margin-top:5px; font-size: 12px;">
+                                <button id="submitUnattendance" type="submit" class="ignore-button outlined" style="margin-top:5px; font-size: 12px;">
                                     <spring:message code="Unattend"/>
                                 </button>
                             </div>
@@ -45,7 +45,6 @@
                 </div>
             </c:otherwise>
         </c:choose>
-
     </div>
 
     <%--    List of attendees:--%>
