@@ -629,14 +629,19 @@ public class FrontController {
     public ModelAndView test(
     )
     {
-        System.out.println(ps.findPostById(2));
         /*
+        System.out.println(ps.findPostById(2));
+
         ls.addLikeToPost(2, getLoggedUser().getUserId());
         ls.addLikeToPost(2, getLoggedUser().getUserId()+1);
         ls.addLikeToPost(2, getLoggedUser().getUserId()+2);
         ls.addLikeToPost(3, getLoggedUser().getUserId());
         ls.removeLikeFromPost(3, getLoggedUser().getUserId());
-        */
+
+        System.out.println("lalala");
+        System.out.println(ls.isPostLiked(2, getLoggedUser().getUserId()));
+
+         */
         return new ModelAndView("views/testView");
     }
 

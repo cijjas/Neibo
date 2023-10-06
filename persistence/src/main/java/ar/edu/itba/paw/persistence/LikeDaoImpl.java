@@ -52,6 +52,13 @@ public class LikeDaoImpl implements LikeDao {
         return jdbcTemplate.queryForObject(sql, Integer.class, postId);
     }
 
+    @Override
+    public boolean isPostLiked(long postId, long userId) {
+        String sql = "SELECT COUNT(*) FROM posts_users_likes WHERE postid = ? AND userid = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, postId, userId) > 0;
+    }
+
+
 
     // ---------------------------------------------- POST_USERS_LIKES DELETE ------------------------------------------
 

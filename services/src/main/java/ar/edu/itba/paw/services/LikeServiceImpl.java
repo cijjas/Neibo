@@ -23,6 +23,11 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
+    public boolean isPostLiked(long postId, long userId) {
+        return likeDao.isPostLiked(postId, userId);
+    }
+
+    @Override
     public void removeLikeFromPost(long postId, long userId) {
         likeDao.deleteLike(postId, userId);
     }
