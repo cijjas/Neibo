@@ -58,8 +58,6 @@ public class TestConfig {
     private DatabasePopulator databasePopulator() {
         final ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(hsqldbSql);
-        populator.addScript(schemaSql);
-
         return populator;
     }
 }
