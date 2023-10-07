@@ -33,4 +33,6 @@ public interface AmenityService {
 
     boolean deleteAmenity(long amenityId);
 
+    List<Time> getAllTimes();
+
 }

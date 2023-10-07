@@ -23,8 +23,8 @@ public class ApiController {
     private final AmenityService as;
     private final ReservationService rs;
     private final EventService es;
-    private final ResourceService rs1;
-    private final ContactService cs1;
+    private final ResourceService res;
+    private final ContactService cos;
     private final LikeService ls;
 
 
@@ -41,9 +41,8 @@ public class ApiController {
                          final ReservationService rs,
                          final AmenityService as,
                          final EventService es,
-                         EventService es1,
-                         final ResourceService rs1,
-                         final ContactService cs1,
+                         final ResourceService res,
+                         final ContactService cos,
                          final LikeService ls) {
         this.sessionUtils = sessionUtils;
         this.is = is;
@@ -57,9 +56,9 @@ public class ApiController {
         this.cas = cas;
         this.as = as;
         this.rs = rs;
-        this.es = es1;
-        this.rs1 = rs1;
-        this.cs1 = cs1;
+        this.es = es;
+        this.res = res;
+        this.cos = cos;
         this.ls = ls;
     }
 

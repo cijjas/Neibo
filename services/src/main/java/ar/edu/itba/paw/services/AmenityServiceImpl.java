@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AmenityServiceImpl implements AmenityService {
@@ -77,6 +74,28 @@ public class AmenityServiceImpl implements AmenityService {
         dayTime.setOpenTime(openTime);
         dayTime.setCloseTime(closeTime);
         return dayTime;
+    }
+
+    @Override
+    public List<Time> getAllTimes() {
+        List<Time> timeList = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
+        try {
+            Date startTime = sdf.parse("00:00");
+            Date endTime = sdf.parse("23:30");
+
+            long currentTime = startTime.getTime();
+            long endTimeMillis = endTime.getTime();
+
+            while (currentTime <= endTimeMillis) {
+                timeList.add(new Time(currentTime));
+                currentTime += 30 * 60 * 1000; // Add 30 minutes in milliseconds USE AN ENUM PLS
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return timeList;
     }
 
 
