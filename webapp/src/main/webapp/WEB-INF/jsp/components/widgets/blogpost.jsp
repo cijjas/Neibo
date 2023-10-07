@@ -7,10 +7,16 @@
     <div class="container">
         <div class=" row ">
             <div class="col-md-1 grey-bg col-md-pull-1" >
-                <div class="f-c-c-c mt-3">
+                <div class="f-c-c-c mt-3" style="gap: 1px">
                     <span id="like-button-${param.postID}" class="like-button" data-post-id="${param.postID}">
                         <i class="fa-solid fa-thumbs-up"></i>
+
                     </span>
+                    <span class="like-count" id="like-count-${param.postID}" data-like-count="${param.postLikes}">
+                        ${param.postLikes}
+                    </span>
+
+
                 </div>
             </div>
             <div class="col-md-11 pt-3 pb-3 pr-3 col-md-push-11">
@@ -68,26 +74,53 @@
         }
     }
 
-    document.getElementById('like-button-${param.postID}').addEventListener('click', function () {
+
+    document.getElementById('like-button-${param.postID}').addEventListener('click', async function () {
         const liked = this.getAttribute('data-liked') === 'true';
         const postId = this.getAttribute('data-post-id'); // Get the post ID from the data attribute
         const likeEndpoint = liked ? '/api/unlike?postId=' + postId : '/api/like?postId=' + postId; // Determine the appropriate API endpoint based on the like status
-        fetch(likeEndpoint, {
-            method: 'POST'
-        })
-            .then(response => {
-                if (response.ok) {
-                    this.setAttribute('data-liked', (!liked).toString());
-                    this.classList.toggle('liked', !liked);
-                } else {
-                    console.error('Failed to like/unlike the post.');
-                }
-            })
-            .catch(error => {
-                console.error('An error occurred:', error);
+
+        try {
+            const response = await fetch(likeEndpoint, {
+                method: 'POST'
             });
+
+            if (response.ok) {
+                // Update the like count based on the button action
+                const likeCountElement = document.getElementById('like-count-' + postId);
+                const currentCount = parseInt(likeCountElement.getAttribute('data-like-count'), 10);
+                const newCount = liked ? currentCount - 1 : currentCount + 1;
+
+                // Simulate a false count-up/down animation
+                animateCount(likeCountElement, currentCount, newCount);
+
+                // Update the like count attribute
+                likeCountElement.setAttribute('data-like-count', newCount);
+
+                // Update the like button appearance
+                this.setAttribute('data-liked', (!liked).toString());
+                this.classList.toggle('liked', !liked);
+            } else {
+                console.error('Failed to like/unlike the post.');
+            }
+        } catch (error) {
+            console.error('An error occurred:', error);
+        }
     });
 
+    function animateCount(element, from, to) {
+        let current = from;
+        const increment = from < to ? 1 : -1;
+
+        const interval = setInterval(function () {
+            if (current === to) {
+                clearInterval(interval);
+            } else {
+                current += increment;
+                element.innerText = current;
+            }
+        }, 50); // Adjust the interval and animation speed as needed
+    }
 
 </script>
 

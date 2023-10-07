@@ -11,9 +11,6 @@ import enums.SortOrder;
 import enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,6 +28,8 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 @Controller
 public class FrontController {
+
+    private final SessionUtils sessionUtils;
 
     private final PostService ps;
     private final UserService us;
@@ -50,7 +49,8 @@ public class FrontController {
     private final LikeService ls;
 
     @Autowired
-    public FrontController(final PostService ps,
+    public FrontController(SessionUtils sessionUtils, 
+                           final PostService ps,
                            final UserService us,
                            final NeighborhoodService nhs,
                            final CommentService cs,
@@ -66,6 +66,7 @@ public class FrontController {
                            final ContactService cos,
                            final AttendanceService ats,
                            final LikeService ls) {
+        this.sessionUtils = sessionUtils;
         this.is = is;
         this.ps = ps;
         this.us = us;
@@ -95,13 +96,13 @@ public class FrontController {
             SortOrder date,
             List<String> tags
     ) {
-        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags, getLoggedUser().getNeighborhoodId());
-        int totalPages = ps.getTotalPages(channelName, size, tags, getLoggedUser().getNeighborhoodId());
+        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags, sessionUtils.getLoggedUser().getNeighborhoodId());
+        int totalPages = ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId());
 
 
 
         ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags(getLoggedUser().getNeighborhoodId()));
+        mav.addObject("tagList", ts.getTags(sessionUtils.getLoggedUser().getNeighborhoodId()));
         mav.addObject("appliedTags", tags);
         mav.addObject("postList", postList);
         mav.addObject("page", page);
@@ -119,7 +120,7 @@ public class FrontController {
             @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ) {
-        LOGGER.info("Registered a new user under the id {}", getLoggedUser().getUserId());
+        LOGGER.info("Registered a new user under the id {}", sessionUtils.getLoggedUser().getUserId());
 
         return handleChannelRequest(BaseChannel.FEED.toString(), page, size, date, tags);
     }
@@ -132,7 +133,7 @@ public class FrontController {
             @ModelAttribute("profilePictureForm") final ProfilePictureForm profilePictureForm
     ) {
         ModelAndView mav = new ModelAndView("views/userProfile");
-        mav.addObject("neighbor", getLoggedUser());
+        mav.addObject("neighbor", sessionUtils.getLoggedUser());
         return mav;
     }
 
@@ -146,13 +147,13 @@ public class FrontController {
             LOGGER.error("Error while updating profile picture");
             return profile(profilePictureForm);
         }
-        us.updateProfilePicture(getLoggedUser().getUserId(), profilePictureForm.getImageFile());
+        us.updateProfilePicture(sessionUtils.getLoggedUser().getUserId(), profilePictureForm.getImageFile());
         return mav;
     }
 
     @RequestMapping (value = "/updateDarkModePreference", method = RequestMethod.POST)
     public String updateDarkModePreference() {
-        User user = getLoggedUser();
+        User user = sessionUtils.getLoggedUser();
         us.toggleDarkMode(user.getUserId());
         return "redirect:/profile";
     }
@@ -162,7 +163,7 @@ public class FrontController {
             @RequestParam(value="lang", required = false) String language,
             HttpServletRequest request
     ) {
-        User user = getLoggedUser();
+        User user = sessionUtils.getLoggedUser();
         Locale locale = new Locale(language);
         request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
         us.toggleLanguage(user.getUserId());
@@ -176,7 +177,7 @@ public class FrontController {
             @RequestParam("tags") String tags,
             @RequestParam("currentUrl") String currentUrl
     ) {
-        return new ModelAndView("redirect:" + ts.createURLForTagFilter(tags, currentUrl, getLoggedUser().getNeighborhoodId()));
+        return new ModelAndView("redirect:" + ts.createURLForTagFilter(tags, currentUrl, sessionUtils.getLoggedUser().getNeighborhoodId()));
     }
 
     // ------------------------------------- ANNOUNCEMENTS --------------------------------------
@@ -218,7 +219,7 @@ public class FrontController {
         final ModelAndView mav = new ModelAndView("views/publish");
 
         mav.addObject("channel", onChannelId);
-        mav.addObject("channelList", chs.getNeighborChannels(getLoggedUser().getNeighborhoodId(), getLoggedUser().getUserId()));
+        mav.addObject("channelList", chs.getNeighborChannels(sessionUtils.getLoggedUser().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId()));
         return mav;
     }
 
@@ -234,7 +235,7 @@ public class FrontController {
         }
         Integer channelId = publishForm.getChannel();
 
-        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedUser().getUserId(), channelId, publishForm.getTags(), imageFile);
+        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), channelId, publishForm.getTags(), imageFile);
         ModelAndView mav = new ModelAndView("views/publish");
         mav.addObject("channelId", channelId);
         mav.addObject("showSuccessMessage", true);
@@ -298,7 +299,7 @@ public class FrontController {
         if (errors.hasErrors()) {
             return viewPost(postId, commentForm, false);
         }
-        cs.createComment(commentForm.getComment(), getLoggedUser().getUserId(), postId);
+        cs.createComment(commentForm.getComment(), sessionUtils.getLoggedUser().getUserId(), postId);
         ModelAndView mav = new ModelAndView("redirect:/posts/" + postId);
         mav.addObject("commentForm", new CommentForm());
         return mav;
@@ -369,15 +370,7 @@ public class FrontController {
         return mav;
     }
 
-    @ModelAttribute("loggedUser")
-    public User getLoggedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken)
-            return null;
-        String email = authentication.getName();
-        Optional<User> neighborOptional = us.findUserByMail(email);
-        return neighborOptional.orElseThrow(() -> new NotFoundException("Neighbor Not Found"));
-    }
+   
 
     //------------------------------------- USER AMENITIES & RESERVATIONS --------------------------------------
 
@@ -404,7 +397,7 @@ public class FrontController {
             return reservation(reservationTimeForm, reservationTimeForm.getAmenityId(), reservationTimeForm.getDate());
         }
         ModelAndView mav = new ModelAndView("redirect:/amenities");
-        Reservation res = rs.createReservation(reservationTimeForm.getAmenityId(), getLoggedUser().getUserId(), reservationTimeForm.getDate(), reservationTimeForm.getStartTime(), reservationTimeForm.getEndTime(), getLoggedUser().getNeighborhoodId());
+        Reservation res = rs.createReservation(reservationTimeForm.getAmenityId(), sessionUtils.getLoggedUser().getUserId(), reservationTimeForm.getDate(), reservationTimeForm.getStartTime(), reservationTimeForm.getEndTime(), sessionUtils.getLoggedUser().getNeighborhoodId());
         mav.addObject(res == null ? "showErrorMessage" : "showSuccessMessage", true);
 
         return mav;
@@ -417,7 +410,7 @@ public class FrontController {
         ModelAndView mav = new ModelAndView("views/amenities");
         mav.addObject("channel", BaseChannel.RESERVATIONS.toString());
 
-        List<Amenity> amenities = as.getAmenities(getLoggedUser().getNeighborhoodId());
+        List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId());
 
         List<AmenityHours> amenityHoursList = new ArrayList<>();
         for (Amenity amenity : amenities) {
@@ -427,7 +420,7 @@ public class FrontController {
         }
         mav.addObject("amenitiesHours", amenityHoursList);
         mav.addObject("daysOfWeek", rs.getDaysOfWeek());
-        mav.addObject("reservationsList", rs.getReservationsByUserId(getLoggedUser().getUserId()));
+        mav.addObject("reservationsList", rs.getReservationsByUserId(sessionUtils.getLoggedUser().getUserId()));
         return mav;
     }
 
@@ -461,7 +454,7 @@ public class FrontController {
         Date selectedDate = new Date(timestamp != 0 ? timestamp : System.currentTimeMillis());
 
 
-        List<Event> eventList = es.getEventsByDate(selectedDate, getLoggedUser().getNeighborhoodId());
+        List<Event> eventList = es.getEventsByDate(selectedDate, sessionUtils.getLoggedUser().getNeighborhoodId());
 
         // Define arrays for month names in English and Spanish
         String[] monthsEnglish = {
@@ -479,13 +472,13 @@ public class FrontController {
         // Get the selected day, month (word), and year directly from selectedDate
         int selectedDay = selectedDate.getDate(); // getDate() returns the day of the month
         int selectedMonthIndex = selectedDate.getMonth(); // getMonth() returns the month as 0-based index
-        String selectedMonth = getLoggedUser().getLanguage() == Language.ENGLISH
+        String selectedMonth = sessionUtils.getLoggedUser().getLanguage() == Language.ENGLISH
                 ? monthsEnglish[selectedMonthIndex]
                 : monthsSpanish[selectedMonthIndex];
         int selectedYear = selectedDate.getYear() + 1900; // getYear() returns years since 1900
 
         ModelAndView mav = new ModelAndView("views/calendar");
-        mav.addObject("isAdmin", getLoggedUser().getRole() == UserRole.ADMINISTRATOR);
+        mav.addObject("isAdmin", sessionUtils.getLoggedUser().getRole() == UserRole.ADMINISTRATOR);
         mav.addObject("selectedTimestamp", selectedDate.getTime()); // Pass the selected timestamp
         mav.addObject("selectedDay", selectedDay);
         mav.addObject("selectedMonth", selectedMonth);
@@ -512,7 +505,7 @@ public class FrontController {
         Optional<Event> optionalEvent = es.findEventById(eventId);
         mav.addObject("event", optionalEvent.orElseThrow(() -> new NotFoundException("Event not found")));
         mav.addObject("attendees", us.getEventUsers(eventId));
-        mav.addObject("willAttend", us.isAttending(eventId, getLoggedUser().getUserId()));
+        mav.addObject("willAttend", us.isAttending(eventId, sessionUtils.getLoggedUser().getUserId()));
         mav.addObject("showSuccessMessage", success);
 
         return mav;
@@ -522,7 +515,7 @@ public class FrontController {
     public ModelAndView attendEvent(@PathVariable(value = "id") int eventId) {
 
         ModelAndView mav = new ModelAndView("redirect:/events/" + eventId);
-        ats.createAttendee(getLoggedUser().getUserId(), eventId);
+        ats.createAttendee(sessionUtils.getLoggedUser().getUserId(), eventId);
 
         return mav;
     }
@@ -531,7 +524,7 @@ public class FrontController {
     public ModelAndView unattendEvent(@PathVariable(value = "id") int eventId) {
 
         ModelAndView mav = new ModelAndView("redirect:/events/" + eventId);
-        ats.deleteAttendee(getLoggedUser().getUserId(), eventId);
+        ats.deleteAttendee(sessionUtils.getLoggedUser().getUserId(), eventId);
 
         return mav;
     }
@@ -541,11 +534,11 @@ public class FrontController {
     @RequestMapping(value = "/information", method = RequestMethod.GET)
     public ModelAndView information() {
         ModelAndView mav = new ModelAndView("views/information");
-        mav.addObject("resourceList", res.getResources(getLoggedUser().getNeighborhoodId()));
-        mav.addObject("phoneNumbersList", cos.getContacts(getLoggedUser().getNeighborhoodId()));
+        mav.addObject("resourceList", res.getResources(sessionUtils.getLoggedUser().getNeighborhoodId()));
+        mav.addObject("phoneNumbersList", cos.getContacts(sessionUtils.getLoggedUser().getNeighborhoodId()));
         mav.addObject("channel", BaseChannel.INFORMATION.toString());
-        mav.addObject("resourceMap", res.getResources(getLoggedUser().getNeighborhoodId()));
-        mav.addObject("phoneNumbersMap", cos.getContacts(getLoggedUser().getNeighborhoodId()));
+        mav.addObject("resourceMap", res.getResources(sessionUtils.getLoggedUser().getNeighborhoodId()));
+        mav.addObject("phoneNumbersMap", cos.getContacts(sessionUtils.getLoggedUser().getNeighborhoodId()));
         return mav;
     }
 

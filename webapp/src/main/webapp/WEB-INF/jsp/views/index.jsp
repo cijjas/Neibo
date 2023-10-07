@@ -106,7 +106,7 @@
                                     <jsp:param name="postTitle" value="${post.title}" />
                                     <jsp:param name="postDescription" value="${post.description}" />
                                     <jsp:param name="postImage" value="${post.postPictureId}" />
-
+                                    <jsp:param name="postLikes" value="${post.likes}" />
                                 </jsp:include>
 
                             </c:forEach>

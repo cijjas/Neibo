@@ -1,14 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.form.*;
 import enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +16,8 @@ import java.util.*;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+    private final SessionUtils sessionUtils;
+
     private final PostService ps;
     private final UserService us;
     private final NeighborhoodService nhs;
@@ -37,20 +35,22 @@ public class AdminController {
 
 
     @Autowired
-    public AdminController(final PostService ps,
-                         final UserService us,
-                         final NeighborhoodService nhs,
-                         final CommentService cs,
-                         final TagService ts,
-                         final ChannelService chs,
-                         final SubscriptionService ss,
-                         final CategorizationService cas,
-                         final ImageService is,
-                         final ReservationService rs,
-                         final AmenityService as,
-                         final EventService es,
-                         final ResourceService res,
-                         final ContactService cos) {
+    public AdminController(SessionUtils sessionUtils, 
+                           final PostService ps,
+                           final UserService us,
+                           final NeighborhoodService nhs,
+                           final CommentService cs,
+                           final TagService ts,
+                           final ChannelService chs,
+                           final SubscriptionService ss,
+                           final CategorizationService cas,
+                           final ImageService is,
+                           final ReservationService rs,
+                           final AmenityService as,
+                           final EventService es,
+                           final ResourceService res,
+                           final ContactService cos) {
+        this.sessionUtils = sessionUtils;
         this.is = is;
         this.ps = ps;
         this.us = us;
@@ -74,8 +74,8 @@ public class AdminController {
         ModelAndView mav = new ModelAndView("admin/views/information");
 
         mav.addObject("panelOption", "Information");
-        mav.addObject("resourceList", res.getResources(getLoggedUser().getNeighborhoodId()));
-        mav.addObject("phoneNumbersList", cos.getContacts(getLoggedUser().getNeighborhoodId()));
+        mav.addObject("resourceList", res.getResources(sessionUtils.getLoggedUser().getNeighborhoodId()));
+        mav.addObject("phoneNumbersList", cos.getContacts(sessionUtils.getLoggedUser().getNeighborhoodId()));
         return mav;
     }
 
@@ -92,8 +92,8 @@ public class AdminController {
         mav.addObject("panelOption", "Neighbors");
         mav.addObject("neighbors", true);
         mav.addObject("page", page);
-        mav.addObject("totalPages", us.getTotalPages(UserRole.NEIGHBOR, getLoggedUser().getNeighborhoodId(), size ));
-        mav.addObject("users", us.getUsersPage(UserRole.NEIGHBOR, getLoggedUser().getNeighborhoodId(), page, size));
+        mav.addObject("totalPages", us.getTotalPages(UserRole.NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhoodId(), size ));
+        mav.addObject("users", us.getUsersPage(UserRole.NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhoodId(), page, size));
         return mav;
     }
 
@@ -109,8 +109,8 @@ public class AdminController {
         mav.addObject("panelOption", "Requests");
         mav.addObject("neighbors", false);
         mav.addObject("page", page);
-        mav.addObject("totalPages", us.getTotalPages(UserRole.UNVERIFIED_NEIGHBOR, getLoggedUser().getNeighborhoodId(), size));
-        mav.addObject("users", us.getUsersPage(UserRole.UNVERIFIED_NEIGHBOR, getLoggedUser().getNeighborhoodId(), page, size));
+        mav.addObject("totalPages", us.getTotalPages(UserRole.UNVERIFIED_NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhoodId(), size));
+        mav.addObject("users", us.getUsersPage(UserRole.UNVERIFIED_NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhoodId(), page, size));
         return mav;
     }
 
@@ -142,7 +142,7 @@ public class AdminController {
         final ModelAndView mav = new ModelAndView("admin/views/publishAdmin");
 
         mav.addObject("panelOption", "PublishAdmin");
-        mav.addObject("channelList", chs.getAdminChannels(getLoggedUser().getNeighborhoodId()));
+        mav.addObject("channelList", chs.getAdminChannels(sessionUtils.getLoggedUser().getNeighborhoodId()));
         return mav;
     }
 
@@ -156,11 +156,11 @@ public class AdminController {
             return publishAdminForm(publishForm, onChannelId);
         }
 
-        ps.createAdminPost(getLoggedUser().getNeighborhoodId(), publishForm.getSubject(), publishForm.getMessage(), getLoggedUser().getUserId(), publishForm.getChannel(), publishForm.getTags(), publishForm.getImageFile());
+        ps.createAdminPost(sessionUtils.getLoggedUser().getNeighborhoodId(), publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), publishForm.getChannel(), publishForm.getTags(), publishForm.getImageFile());
         PublishForm clearedForm = new PublishForm();
         ModelAndView mav = new ModelAndView("admin/views/publishAdmin");
         mav.addObject("showSuccessMessage", true);
-        mav.addObject("channelList", chs.getAdminChannels(getLoggedUser().getNeighborhoodId()));
+        mav.addObject("channelList", chs.getAdminChannels(sessionUtils.getLoggedUser().getNeighborhoodId()));
         mav.addObject("publishForm", clearedForm);
 
         return mav;
@@ -172,7 +172,7 @@ public class AdminController {
     public ModelAndView adminAmenities() {
         ModelAndView mav = new ModelAndView("admin/views/amenities");
 
-        List<Amenity> amenities = as.getAmenities(getLoggedUser().getNeighborhoodId());
+        List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId());
         List<AmenityHours> amenityHoursList = new ArrayList<>();
 
         for (Amenity amenity : amenities) {
@@ -211,7 +211,7 @@ public class AdminController {
             return createAmenityForm(amenityForm);
         }
 
-        as.createAmenityWrapper(amenityForm.getName(), amenityForm.getDescription(), amenityForm.getMondayOpenTime(), amenityForm.getMondayCloseTime(), amenityForm.getTuesdayOpenTime(), amenityForm.getTuesdayCloseTime(), amenityForm.getWednesdayOpenTime(), amenityForm.getWednesdayCloseTime(), amenityForm.getThursdayOpenTime(), amenityForm.getThursdayCloseTime(), amenityForm.getFridayOpenTime(), amenityForm.getFridayCloseTime(), amenityForm.getSaturdayOpenTime(), amenityForm.getSaturdayCloseTime(), amenityForm.getSundayOpenTime(), amenityForm.getSundayCloseTime(), getLoggedUser().getNeighborhoodId());
+        as.createAmenityWrapper(amenityForm.getName(), amenityForm.getDescription(), amenityForm.getMondayOpenTime(), amenityForm.getMondayCloseTime(), amenityForm.getTuesdayOpenTime(), amenityForm.getTuesdayCloseTime(), amenityForm.getWednesdayOpenTime(), amenityForm.getWednesdayCloseTime(), amenityForm.getThursdayOpenTime(), amenityForm.getThursdayCloseTime(), amenityForm.getFridayOpenTime(), amenityForm.getFridayCloseTime(), amenityForm.getSaturdayOpenTime(), amenityForm.getSaturdayCloseTime(), amenityForm.getSundayOpenTime(), amenityForm.getSundayCloseTime(), sessionUtils.getLoggedUser().getNeighborhoodId());
         return new ModelAndView("redirect:/admin/amenities");
     }
 
@@ -241,7 +241,7 @@ public class AdminController {
             e.printStackTrace();
         }
 
-        Event e = es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), duration, getLoggedUser().getNeighborhoodId());
+        Event e = es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), duration, sessionUtils.getLoggedUser().getNeighborhoodId());
         ModelAndView mav = new ModelAndView("admin/views/addEvent");
         mav.addObject("showSuccessMessage", true);
         return mav;
@@ -271,7 +271,7 @@ public class AdminController {
         if (errors.hasErrors()) {
             return createContact(contactForm);
         }
-        Contact cont = cos.createContact(getLoggedUser().getNeighborhoodId(), contactForm.getContactName(), contactForm.getContactAddress(), contactForm.getContactPhone());
+        Contact cont = cos.createContact(sessionUtils.getLoggedUser().getNeighborhoodId(), contactForm.getContactName(), contactForm.getContactAddress(), contactForm.getContactPhone());
         return new ModelAndView("redirect:/admin/information");
     }
 
@@ -299,7 +299,7 @@ public class AdminController {
         if (errors.hasErrors()) {
             return createResourceForm(resourceForm);
         }
-        res.createResource(getLoggedUser().getNeighborhoodId(), resourceForm.getTitle(), resourceForm.getDescription(), resourceForm.getImageFile());
+        res.createResource(sessionUtils.getLoggedUser().getNeighborhoodId(), resourceForm.getTitle(), resourceForm.getDescription(), resourceForm.getImageFile());
         return new ModelAndView("redirect:/admin/information");
     }
 
@@ -315,15 +315,6 @@ public class AdminController {
     // -------------------------------------------------------------------------------
     // Transition this into AuthenticatedUtils?
 
-    @ModelAttribute("loggedUser")
-    public User getLoggedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken)
-            return null;
-        String email = authentication.getName();
-        Optional<User> neighborOptional = us.findUserByMail(email);
-        return neighborOptional.orElseThrow(() -> new NotFoundException("Neighbor Not Found"));
-    }
-
+   
 
 }
