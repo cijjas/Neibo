@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.form.*;
+import ar.edu.itba.paw.webapp.form.validation.ReservationTimeForm;
 import enums.BaseChannel;
 import enums.Language;
 import enums.SortOrder;
@@ -378,6 +379,39 @@ public class FrontController {
 
     //------------------------------------- USER AMENITIES & RESERVATIONS --------------------------------------
 
+    @RequestMapping(value = "/reservation", method = RequestMethod.GET)
+    public ModelAndView reservation(@ModelAttribute("reservationTimeForm") final ReservationTimeForm reservationTimeForm,
+                                        @RequestParam(value = "amenityId", required = false) long amenityId,
+                                        @RequestParam(value = "date", required = false) java.sql.Date date) {
+        System.out.println("llegue a reservation");
+        ModelAndView mav = new ModelAndView("views/reservation");
+        mav.addObject("amenityId", amenityId);
+        mav.addObject("amenityName", as.findAmenityById(amenityId).orElse(null).getName());
+        mav.addObject("date", date);
+        mav.addObject("reservationsList", rs.getReservationsByDay(amenityId, date));
+        mav.addObject("timeList", rs.getAvailableTimesByDate(amenityId, date));
+        return mav;
+    }
+
+    @RequestMapping(value = "/reservation", method = RequestMethod.POST)
+    public ModelAndView reservation(@Valid @ModelAttribute("reservationTimeForm") final ReservationTimeForm reservationTimeForm,
+                                    final BindingResult errors) {
+        if (errors.hasErrors()) {
+            return reservation(reservationTimeForm, reservationTimeForm.getAmenityId(), reservationTimeForm.getDate());
+        }
+        ModelAndView mav = new ModelAndView("redirect:/amenities");
+
+        Reservation res = rs.createReservation(reservationTimeForm.getAmenityId(), getLoggedUser().getUserId(), reservationTimeForm.getDate(), reservationTimeForm.getStartTime(), reservationTimeForm.getEndTime(), getLoggedUser().getNeighborhoodId());
+        if(res == null) {
+            mav.addObject("showErrorMessage", true);
+        }
+        else {
+            mav.addObject("showSuccessMessage", true);
+        }
+
+        return mav;
+    }
+
     @RequestMapping(value = "/amenities", method = RequestMethod.GET)
     public ModelAndView amenities(
             @ModelAttribute("reservationForm") final ReservationForm reservationForm
@@ -386,25 +420,16 @@ public class FrontController {
         mav.addObject("channel", BaseChannel.RESERVATIONS.toString());
 
         List<Amenity> amenities = as.getAmenities(getLoggedUser().getNeighborhoodId());
-        List<AmenityHours> amenityHoursList = new ArrayList<>();
 
+        List<AmenityHours> amenityHoursList = new ArrayList<>();
         for (Amenity amenity : amenities) {
             Map<String, DayTime> amenityTimes = as.getAmenityHoursByAmenityId(amenity.getAmenityId());
-
             AmenityHours amenityHours = new AmenityHours.Builder().amenity(amenity).amenityHours(amenityTimes).build();
-
             amenityHoursList.add(amenityHours);
         }
         mav.addObject("amenitiesHours", amenityHoursList);
-        List<String> daysOfWeek = new ArrayList<>();
-        daysOfWeek.add("Monday");
-        daysOfWeek.add("Tuesday");
-        daysOfWeek.add("Wednesday");
-        daysOfWeek.add("Thursday");
-        daysOfWeek.add("Friday");
-        daysOfWeek.add("Saturday");
-        daysOfWeek.add("Sunday");
-        mav.addObject("daysOfWeek", daysOfWeek);
+
+        mav.addObject("daysOfWeek", rs.getDaysOfWeek());
 
         List<Time> timeList = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
@@ -437,16 +462,11 @@ public class FrontController {
             System.out.println("ERRORS: " + errors);
             return amenities(reservationForm);
         }
-        ModelAndView mav = new ModelAndView("redirect:/amenities");
+        System.out.println("estoy llegando antes del redirect");
+        ModelAndView mav = new ModelAndView("redirect:/reservation");
+        mav.addObject("amenityId", reservationForm.getAmenityId());
+        mav.addObject("date", reservationForm.getDate());
 
-        Reservation res = rs.createReservation(reservationForm.getAmenityId(), getLoggedUser().getUserId(), reservationForm.getDate(), reservationForm.getStartTime(), reservationForm.getEndTime(), getLoggedUser().getNeighborhoodId());
-        if(res == null) {
-            mav.addObject("showErrorMessage", true);
-        }
-        else {
-            mav.addObject("showSuccessMessage", true);
-        }
-        System.out.println("RESERVATION: " + res);
         return mav;
     }
 

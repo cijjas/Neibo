@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.models.DayTime;
 import ar.edu.itba.paw.models.Reservation;
 
 import java.sql.Date;
@@ -18,11 +19,15 @@ public interface ReservationService {
 
     List<Reservation> getReservations();
 
+    List<Time> getAvailableTimesByDate(long amenityId, Date date);
+
     List<Reservation> getReservationsByAmenityId(long amenityId);
 
     List<Reservation> getReservationsByUserId(long userId);
 
     List<Reservation> getReservationsByDay(long amenityId, Date date);
+
+    List<String> getDaysOfWeek();
 
     // -----------------------------------------------------------------------------------------------------------------
 

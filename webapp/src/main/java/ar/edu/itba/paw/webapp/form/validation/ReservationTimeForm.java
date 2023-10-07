@@ -1,4 +1,5 @@
-package ar.edu.itba.paw.webapp.form;
+package ar.edu.itba.paw.webapp.form.validation;
+
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.ReservationTime;
 import ar.edu.itba.paw.webapp.form.validation.constraints.TimeOrder;
@@ -8,11 +9,16 @@ import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.sql.Time;
 
-public class ReservationForm {
+@ReservationTime
+public class ReservationTimeForm {
 
     private Date date;
 
     private long amenityId;
+
+    private Time startTime;
+
+    private Time endTime;
 
     public Date getDate() {
         return date;
@@ -30,11 +36,27 @@ public class ReservationForm {
         this.amenityId = amenityId;
     }
 
+    public Time getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Time startTime) {
+        this.startTime = startTime;
+    }
+
+    public Time getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Time endTime) {
+        this.endTime = endTime;
+    }
+
     @Override
     public String toString() {
         return "ReservationForm{" +
-                ", date=" + date +
-                ", amenityId=" + amenityId +
+                "startTime=" + startTime +
+                ", endTime=" + endTime +
                 '}';
     }
 }

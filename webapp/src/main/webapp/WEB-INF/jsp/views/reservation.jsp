@@ -15,7 +15,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title>Neibo - <spring:message code="Reservations"/></title>
+    <title>Neibo - <spring:message code="ChooseTime"/></title>
 </head>
 
 <body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
@@ -28,58 +28,57 @@
 
         <div class="column-middle">
             <div  class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
-                <h2><spring:message code="MakeReservation"/></h2>
+                <h2><spring:message code="ChooseTime"/></h2>
+                <p><c:out value="${amenityName}"/></p>
+                <p><c:out value="${date}"/></p>
                 <div class="divider"></div>
-
-                <form:form method="post" action="amenities" modelAttribute="reservationForm">
-                    <div class="col-md-12">
-                        <form:label path="amenityId" class="mt-3 mb-1"><spring:message code="SelectAmenity"/></form:label>
-                        <form:select path="amenityId" id="amenityId" required="true" class="cool-input">
-                            <form:options items="${amenitiesHours}" itemValue="amenity.amenityId" itemLabel="amenity.name"/>
-                        </form:select>
-                        <form:errors path="amenityId" cssClass="error" element="p"/>
+                <table >
+                    <thead>
+                    <tr>
+                        <th style="color: var(--error)"><spring:message code="UnavailableTimes"/></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="reservation" items="${reservationsList}">
+                        <tr>
+                            <td style="color: var(--error)"><c:out value="${reservation.startTime}" /> - <c:out value="${reservation.endTime}" /></td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+                <form:form method="post" action="reservation" modelAttribute="reservationTimeForm">
+                    <div class="d-flex flex-row justify-content-center align-items-center">
+                        <div class="col-md-6">
+                            <form:label path="startTime" class="mt-3 mb-1"><spring:message code="StartTime"/></form:label>
+                            <form:select path="startTime" id="startTime" required="true" class="cool-input">
+                                <c:forEach var="time" items="${timeList}">
+                                    <option value="${time}">${time}</option>
+                                </c:forEach>
+                            </form:select>
+                            <form:errors path="startTime" cssClass="error" element="p"/>
+                        </div>
+                        <div class="col-md-6">
+                            <form:label path="endTime" class="mt-3 mb-1"><spring:message code="EndTime"/></form:label>
+                            <form:select path="endTime" id="endTime" required="true" class="cool-input">
+                                <c:forEach var="time" items="${timeList}">
+                                    <option value="${time}">${time}</option>
+                                </c:forEach>
+                            </form:select>
+                            <form:errors path="endTime" cssClass="error" element="p"/>
+                        </div>
                     </div>
+                    <form:errors cssClass="error" element="p"/>
 
-                    <div class="col-md-12">
-                        <form:label path="date" class="mt-3 mb-1"><spring:message code="ChooseDate"/></form:label>
-                        <form:input path="date" id="date" type="date" required="true" class="cool-input"/>
-                        <form:errors path="date" cssClass="error" element="p"/>
-                    </div>
+                    <input type="hidden" name="amenityId" value="${amenityId}" />
+                    <input type="hidden" name="date" value="${date}" />
 
                     <div class="col-md-12">
                         <div class="d-flex justify-content-end m-t-40">
-                            <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg" style="height:40px;" ><spring:message code="SeeTimesButton"/></button>
+                            <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg" style="height:40px;" ><spring:message code="Reserve"/></button>
                         </div>
                     </div>
                 </form:form>
-
             </div>
-
-            <c:forEach var="amenityWithHours" items="${amenitiesHours}">
-                <div  class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
-                    <div >
-                        <h2 ><c:out value="${amenityWithHours.amenity.name}" /></h2>
-                    </div>
-                    <p class="mb-3" style="color:var(--lighttext);"><c:out value="${amenityWithHours.amenity.description}" /></p>
-
-                    <div class="d-flex flex-column justify-content-center align-items-center w-100">
-                        <table class="table-striped w-100">
-                            <tr>
-                                <th class="day"><spring:message code="Day"/></th>
-                                <th><spring:message code="Open"/></th>
-                                <th><spring:message code="Close"/></th>
-                            </tr>
-                            <c:forEach var="day" items="${amenityWithHours.amenityHours}">
-                                <tr>
-                                    <td class="day">${day.key}</td>
-                                    <td>${day.value.openTime}</td>
-                                    <td>${day.value.closeTime}</td>
-                                </tr>
-                            </c:forEach>
-                        </table>
-                    </div>
-                </div>
-            </c:forEach>
         </div>
 
         <div class="column-right">
@@ -107,24 +106,6 @@
                 </div>
             </div>
         </div>
-        <c:if test="${param.showSuccessMessage == true}">
-            <c:set var="successMessage">
-                <spring:message code="Reservation.created.successfully"/>
-            </c:set>
-
-            <jsp:include page="/WEB-INF/jsp/components/widgets/successDialog.jsp" >
-                <jsp:param name="successMessage" value="${successMessage}" />
-            </jsp:include>
-        </c:if>
-        <c:if test="${param.showErrorMessage == true}">
-            <c:set var="errorMessage">
-                <spring:message code="Reservation.error"/>
-            </c:set>
-
-            <jsp:include page="/WEB-INF/jsp/errors/errorDialog.jsp" >
-                <jsp:param name="errorMessage" value="${errorMessage}" />
-            </jsp:include>
-        </c:if>
     </div>
 </div>
 
