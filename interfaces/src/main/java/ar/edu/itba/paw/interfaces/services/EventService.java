@@ -23,6 +23,10 @@ public interface EventService {
 
     List<Date> getEventDates(long neighborhoodId);
 
+    List<Long> getEventTimestamps(long neighborhoodId);
+
+    String getEventTimestampsString(long neighborhoodId);
+
     boolean deleteEvent(long eventId);
 
 }

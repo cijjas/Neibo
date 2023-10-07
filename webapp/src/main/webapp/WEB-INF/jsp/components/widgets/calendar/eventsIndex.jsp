@@ -1,5 +1,6 @@
 
 
+<div class="w-100">
 
     <script>
         function showPostsAfterDelay() {
@@ -17,10 +18,10 @@
     </div>
 
 
-    <div id="actual-posts-container">
+    <div id="actual-posts-container ">
         <c:choose>
             <c:when test="${empty eventList}">
-                <div class="no-posts-found">
+                <div class="no-posts-found ">
                     <i class="circle-icon fa-solid fa-magnifying-glass"></i>
                     <spring:message code="Events.notFound"/>
                 </div>
@@ -34,10 +35,10 @@
                             <jsp:param name="eventDate" value="${event.date}"/>
                             <jsp:param name="eventDuration" value="${event.duration}"/>
                         </jsp:include>
-
                 </c:forEach>
             </c:otherwise>
         </c:choose>
     </div>
 
+</div>
 
