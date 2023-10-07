@@ -51,12 +51,22 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags, long neighborhoodId) {
-        return postDao.getPostsByCriteria(channel, page, size, date, tags, neighborhoodId);
+        return postDao.getPostsByCriteria(channel, page, size, date, tags, neighborhoodId, false);
     }
 
     @Override
     public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId) {
-        return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId);
+        return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, false);
+    }
+
+    @Override
+    public List<Post> getHotPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags, long neighborhoodId) {
+        return postDao.getPostsByCriteria(channel, page, size, date, tags, neighborhoodId, true);
+    }
+
+    @Override
+    public int getHotPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId) {
+        return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, true);
     }
 
     @Override

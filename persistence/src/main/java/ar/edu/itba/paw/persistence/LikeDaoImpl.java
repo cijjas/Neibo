@@ -13,6 +13,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +38,7 @@ public class LikeDaoImpl implements LikeDao {
     public void createLike(long postId, long userId) {
         Map<String, Object> data = new HashMap<>();
         data.put("postid", postId);
+        data.put("likedate", Timestamp.valueOf(LocalDateTime.now()));
         data.put("userid", userId);
 
         try {
@@ -45,7 +48,7 @@ public class LikeDaoImpl implements LikeDao {
             throw new InsertionException("An error occurred whilst liking the post");
         }
     }
-    // ---------------------------------------------- POST_USERS_LIKES DELETE ------------------------------------------
+    // ---------------------------------------------- POST_USERS_LIKES SELECT ------------------------------------------
 
     public int getLikes(long postId) {
         String sql = "SELECT COUNT(*) FROM posts_users_likes WHERE postid = ?";
@@ -57,8 +60,6 @@ public class LikeDaoImpl implements LikeDao {
         String sql = "SELECT COUNT(*) FROM posts_users_likes WHERE postid = ? AND userid = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class, postId, userId) > 0;
     }
-
-
 
     // ---------------------------------------------- POST_USERS_LIKES DELETE ------------------------------------------
 

@@ -24,5 +24,9 @@ public interface PostService {
 
     int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId);
 
+    List<Post> getHotPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags, long neighborhoodId);
+
+    int getHotPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId);
+
     int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId);
 }
