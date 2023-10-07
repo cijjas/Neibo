@@ -2,12 +2,9 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api")
@@ -28,6 +25,7 @@ public class ApiController {
     private final EventService es;
     private final ResourceService rs1;
     private final ContactService cs1;
+    private final LikeService ls;
 
 
     @Autowired
@@ -45,7 +43,8 @@ public class ApiController {
                          final EventService es,
                          EventService es1,
                          final ResourceService rs1,
-                         final ContactService cs1) {
+                         final ContactService cs1,
+                         final LikeService ls) {
         this.sessionUtils = sessionUtils;
         this.is = is;
         this.ps = ps;
@@ -61,6 +60,7 @@ public class ApiController {
         this.es = es1;
         this.rs1 = rs1;
         this.cs1 = cs1;
+        this.ls = ls;
     }
 
     @RequestMapping(value = "/comment", method = RequestMethod.GET)
@@ -87,7 +87,44 @@ public class ApiController {
         return es.getEventTimestampsString(sessionUtils.getLoggedUser().getNeighborhoodId());
     }
 
+    @RequestMapping(value = "/like", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> likePost(
+            @RequestParam(value = "postId") long postId
+    ) {
+        long userId = sessionUtils.getLoggedUser().getUserId();
+        ls.addLikeToPost(postId, userId);
+        return ResponseEntity.ok("{\"message\": \"Post liked successfully.\"}");
+    }
+    @RequestMapping(value = "/unlike", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> unlikePost(
+            @RequestParam(value = "postId") long postId
+    ) {
 
+        long userId = sessionUtils.getLoggedUser().getUserId();
+        System.out.println("UNLIKED: unliking");
+        ls.removeLikeFromPost(postId, userId);
+        System.out.println("UNLIKED: unlike");
+        return ResponseEntity.ok("{\"message\": \"Post unliked successfully.\"}");
+    }
+
+    @RequestMapping(value = "/is-liked", method = RequestMethod.GET)
+    @ResponseBody
+    public String isLiked(
+            @RequestParam(value = "postId") long postId
+    ) {
+
+        long userId = sessionUtils.getLoggedUser().getUserId();
+        System.out.println("ISLIKED: unliking");
+
+        if(ls.isPostLiked(postId, userId)){
+            System.out.println("ISLIKED: true");
+            return "true";
+        }
+
+        return "false";
+    }
 
     @RequestMapping(value = "/image", method = RequestMethod.GET)
     @ResponseBody

@@ -30,7 +30,7 @@ public class UserDaoImpl implements UserDao {
 
     private final String USERS_JOIN_POSTS_USERS_AND_POSTS =
             "select u.*\n" +
-                    "from posts p join posts_users on p.postid = posts_users.postid join users u on posts_users.userid = u.userid ";
+                    "from posts p join posts_users_subscriptions on p.postid = posts_users_subscriptions.postid join users u on posts_users_subscriptions.userid = u.userid ";
 
     private final String EVENTS_JOIN_USERS =
             "select u.* \n" +

@@ -17,6 +17,7 @@
 }
 
 .column-middle {
+    max-width: 580px;
     flex: 4;
 }
 @media (max-width: 992px) {
@@ -260,7 +261,7 @@
 /*------------------- PLACEHOLDER -----------------------------------*/
 
 .placeholder{
-    margin: 1px auto;
+    margin: 1px ;
     border-radius: 3px;
 }
 
@@ -1368,5 +1369,25 @@ h6 {
 
     & tr:nth-child(odd) {
         background-color: var(--background);
+    }
+}
+
+.like-button{
+    padding: 7px;
+    border-radius: 50px;
+    transition: all 0.1s ease-in-out;
+    background-color: var(--darkonbackground);
+    color: var(--lighttext);
+    cursor: pointer;
+    &:hover{
+        transform: scale(1.1);
+    }
+    & .pl-3 .pr-3 .pt-2 .pb-2 :hover{
+        transform: scale(1.1);
+
+    }
+    &.liked{
+        color: var(--green);
+        background-color: var(--light-green);
     }
 }

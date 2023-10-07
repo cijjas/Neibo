@@ -8,8 +8,9 @@
         <div class=" row ">
             <div class="col-md-1 grey-bg col-md-pull-1" >
                 <div class="f-c-c-c mt-3">
-                    <i class="fa-solid fa-thumbs-up"></i>
-                    <i class="fa-regular fa-thumbs-up"></i>
+                    <span id="like-button-${param.postID}" class="like-button" data-post-id="${param.postID}">
+                        <i class="fa-solid fa-thumbs-up"></i>
+                    </span>
                 </div>
             </div>
             <div class="col-md-11 pt-3 pb-3 pr-3 col-md-push-11">
@@ -21,11 +22,10 @@
                             <div style="font-size: 12px;color: var(--lighttext);">
                                 <spring:message code="posted"/>
                                 <span class="post-date" data-post-date="<c:out value="${param.postDate}"/>">
-                    </span>
+                                </span>
                             </div>
 
                         </div>
-
                         <h1 class="post-title"><c:out value="${param.postTitle}" /></h1>
                     </div>
                     <p class="post-description"><c:out value="${param.postDescription}" /></p>
@@ -49,20 +49,46 @@
 </div>
 
 <script>
-    async function getPostComment() {
-        try {
-            const response = await fetch("/api/commentById?id=" + commentId);
-            if (!response.ok) {
-                throw new Error("Failed to fetch data from the API.");
-            }
-            const commentElement = document.getElementById("comment-" + commentId);
-            commentElement.textContent = await response.text();
-            commentElement.classList.remove('placeholder');
-        } catch (error) {
-            console.error(error.message);
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('#like-button-'+ ${param.postID}).forEach(likeButton => {
+            const postId = this.getElementById('like-button-${param.postID}').getAttribute('data-post-id');
+            setLikeStatus(postId);
+        });
+    });
+    async function setLikeStatus(postId){
+        try{
+            const response = await fetch('/api/is-liked?postId=' + postId);
+            const isLikedResponse = await response.text();
+            const likeButton = document.getElementById('like-button-' + postId);
+            likeButton.setAttribute('data-liked', isLikedResponse);
+            likeButton.classList.toggle('liked', isLikedResponse === 'true');
+        }
+        catch(error){
+            console.error('An error occurred:', error);
         }
     }
-    getPostComment(${comment.commentId});
+
+    document.getElementById('like-button-${param.postID}').addEventListener('click', function () {
+        const liked = this.getAttribute('data-liked') === 'true';
+        const postId = this.getAttribute('data-post-id'); // Get the post ID from the data attribute
+        const likeEndpoint = liked ? '/api/unlike?postId=' + postId : '/api/like?postId=' + postId; // Determine the appropriate API endpoint based on the like status
+        fetch(likeEndpoint, {
+            method: 'POST'
+        })
+            .then(response => {
+                if (response.ok) {
+                    this.setAttribute('data-liked', (!liked).toString());
+                    this.classList.toggle('liked', !liked);
+                } else {
+                    console.error('Failed to like/unlike the post.');
+                }
+            })
+            .catch(error => {
+                console.error('An error occurred:', error);
+            });
+    });
+
+
 </script>
 
 <script src="${pageContext.request.contextPath}/resources/js/blogpost.js"></script>

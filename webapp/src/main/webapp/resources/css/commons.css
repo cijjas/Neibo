@@ -51,6 +51,8 @@ body {
     --admin-color: #578a66;
     --always-background:#faf6e8;
     --on-onbackground: rgb(238, 236, 231);
+    --green: #328d3d;
+    --light-green: #9ad379;
 
     --border-light: 5px;
     --border-radius: 10px;
@@ -76,6 +78,8 @@ body {
     --admin-color: #8bcb9d;
     --always-background:#faf6e8;
     --on-onbackground: rgb(63, 68, 75);
+    --green: #1b6926;
+    --light-green:  #9ad379;
 
 }
 
@@ -253,6 +257,13 @@ p{
     flex-direction: row;
     justify-content: start;
     align-items: center;
+    gap: 1rem;
+}
+.f-c-s-s{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
     gap: 1rem;
 }
 .f-r-st-c{

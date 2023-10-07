@@ -1,51 +1,97 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<div class="card-container">
+<div class="card-container ">
     <!-- Post information -->
     <div class="post-section">
         <div class="post-info">
-            <h2><c:out value="${post.title}" /></h2>
-            <p style="font-size: 12px; font-weight: normal"><spring:message code="PostedBy"/> <c:out value="${post.user.name}" /></p>
-            <div class="divider"></div>
+            <p style="font-weight: bolder; font-size: 20px; color: var(--text)"><c:out value="${post.title}" /></p>
+            <p style="font-size: 12px; font-weight: normal" class="m-t-40 "><spring:message code="PostedBy"/> <c:out value="${post.user.name}" /></p>
+            <div class="divider m-b-20"></div>
             <div class="postcard-description">
                 <c:out value="${post.description}" />
             </div>
         </div >
 
-    <!-- Image section -->
-    <c:if test="${post.postPictureId != 0}">
-        <div class="placeholder-glow" style="display: flex; justify-content: center; align-items: center;">
-            <img id="postImage"
-                 class="placeholder col-12 "
-                 src=""
-                 style="max-width: 100%; max-height: 100vh; border-radius: 5px; height: 300px"
-                 alt="post_${post.postId}_img"/>
-        </div>
-        <script>
-            getImage();
-            async function getImage() {
-                let image = document.getElementById('postImage')
-                try{
+        <!-- Image section -->
+        <c:if test="${post.postPictureId != 0}">
+            <div class="placeholder-glow" style="display: flex; justify-content: center; align-items: center;">
+                <img id="postImage"
+                     class="blogpost-image placeholder "
+                     src=""
+                     style="max-width: 100%; max-height: 100vh; border-radius: 5px; height: 300px"
+                     alt="post_${post.postId}_img"/>
+            </div>
+            <script>
+                getImage();
+                async function getImage() {
+                    let image = document.getElementById('postImage')
+                    try{
 
-                    const response= await fetch('${pageContext.request.contextPath}/images/<c:out value="${post.postPictureId}"/>');
-                    if(!response.ok) {
-                        throw new Error('Network response was not ok');
+                        const response= await fetch('${pageContext.request.contextPath}/images/<c:out value="${post.postPictureId}"/>');
+                        if(!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        const blob = await response.blob();
+                        image.src = URL.createObjectURL(blob);
+                        image.classList.remove('placeholder');
+                        image.style.height = 'auto';
                     }
-                    const blob = await response.blob();
-                    image.src = URL.createObjectURL(blob);
-                    image.classList.remove('placeholder');
-                    image.style.height = 'auto';
+                    catch (e) {
+                        image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
+                        console.log(e);
+                    }
                 }
-                catch (e) {
-                    image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
-                    console.log(e);
-                }
-            }
-        </script>
-    </c:if>
+            </script>
+        </c:if>
 
     </div>
+    <div class="m-b-20">
+        <span id="post-like-button" class="like-button pl-3 pr-3 pt-2 pb-2" data-post-id="${post.postId}">
+            <i class="fa-solid fa-thumbs-up"></i>
+            <spring:message code="Like"/>
+        </span>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const likeButton = document.getElementById('post-like-button');
+            const postId = likeButton.getAttribute('data-post-id');
+            setLikeStatus(postId);
+        });
+        async function setLikeStatus(postId){
+            try{
+                const response = await fetch('/api/is-liked?postId=' + postId);
+                const isLikedResponse = await response.text();
+                const likeButton = document.getElementById('post-like-button');
+                likeButton.setAttribute('data-liked', isLikedResponse);
+                likeButton.classList.toggle('liked', isLikedResponse === 'true');
+            }
+            catch(error){
+                console.error('An error occurred:', error);
+            }
+        }
+        document.getElementById('post-like-button').addEventListener('click', function () {
+            const liked = this.getAttribute('data-liked') === 'true';
+            const postId = this.getAttribute('data-post-id'); // Get the post ID from the data attribute
+            const likeEndpoint = liked ? '/api/unlike?postId=' + postId : '/api/like?postId=' + postId; // Determine the appropriate API endpoint based on the like status
+            fetch(likeEndpoint, {
+                method: 'POST'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        this.setAttribute('data-liked', (!liked).toString());
+                        this.classList.toggle('liked', !liked);
+                    } else {
+                        console.error('Failed to like/unlike the post.');
+                    }
+                })
+                .catch(error => {
+                    console.error('An error occurred:', error);
+                });
+        });
+    </script>
+
 
     <!-- Tag section -->
     <div class="tag-section">
@@ -150,12 +196,8 @@
                         </div>
                     </div>
                 </c:forEach>
-
-
-
             </c:otherwise>
         </c:choose>
     </div>
-
 
 </div>
