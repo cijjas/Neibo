@@ -88,7 +88,7 @@ public class FrontController {
 
     // ------------------------------------- FEED --------------------------------------
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FrontController.class); // importante!! Usar la implementacion de sl4j
+    private static final Logger LOGGER = LoggerFactory.getLogger(FrontController.class);
 
     private ModelAndView handleChannelRequest(
             String channelName,
@@ -596,12 +596,16 @@ public class FrontController {
     public ModelAndView test(
     )
     {
+
+
+    LOGGER.info(ps.getPostsByCriteria(BaseChannel.ANNOUNCEMENTS.toString(), 1, 10, SortOrder.DESC, null, 1).toString());
+        /*ls.addLikeToPost(2, getLoggedUser().getUserId());
+        ls.addLikeToPost(2, getLoggedUser().getUserId()+1);
+        ls.addLikeToPost(2, getLoggedUser().getUserId()+2);*/
         /*
         System.out.println(ps.findPostById(2));
 
-        ls.addLikeToPost(2, getLoggedUser().getUserId());
-        ls.addLikeToPost(2, getLoggedUser().getUserId()+1);
-        ls.addLikeToPost(2, getLoggedUser().getUserId()+2);
+
         ls.addLikeToPost(3, getLoggedUser().getUserId());
         ls.removeLikeFromPost(3, getLoggedUser().getUserId());
 
