@@ -65,8 +65,8 @@
     </script>
 </c:if>
 
-<div class="content-container">
-    <div class="container f-c-c-c">
+<div class="content-container ">
+    <div class="container f-c-c-c" >
         <%@ include file="/WEB-INF/jsp/components/displays/landingNavbar.jsp" %>
         <div class="landing-neibo ">
             neibo

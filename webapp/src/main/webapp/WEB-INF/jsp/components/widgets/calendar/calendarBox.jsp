@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
 </head>
 
-<div class="f-c-c-c">
+<div class="f-c-c-c w-100">
   <div class="wrapper">
     <div id="calendar-box" class="f-c-c-c">
       <header class="f-r-sb-c w-100 ">
@@ -21,6 +21,7 @@
 
       </header>
       <div class="divider m-b-20 m-t-40"></div>
+
 
       <div class="f-c-c-c h-100 m-b-20 ">
         <div class="calendar">
@@ -38,7 +39,7 @@
       </div>
       <div>
         <c:if test="${isAdmin}">
-          <a href="${pageContext.request.contextPath}/admin/addEvent" class="accept-button outlined on-background">
+          <a href="${pageContext.request.contextPath}/admin/addEvent" class="accept-button outlined on-background ">
             <spring:message code="CreateNewEvent.button" />
             <i class="fa-solid fa-plus"></i>
           </a>

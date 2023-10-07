@@ -23,26 +23,35 @@
     <body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
         <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
         <div class="container f-c-c-c" >
-            <div style="width: 80%">
-                <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarBox.jsp" %>
+            <div class="row w-100">
+                <div class="col-lg-8  w-100 pl-0">
+                    <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarBox.jsp" %>
+                </div>
+                <div class="col-lg-4  h-100 w-100 pr-0">
+                    <div class="f-c-c-c">
+                        <div class="upper-feed-buttons-box w-100" style="padding: 20px">
+                            <div class="f-c-c-c w-100">
+                                <div>
+                                    <p style=" font-size: 32px;color: var(--primary); text-align: center">
+                                        <spring:message code="Events"/>
 
+                                    </p>
+                                    <p style=" font-size: 16px;">
+                                        <spring:message code="date.format">
+                                            <spring:argument value="${selectedDay}"/>
+                                            <spring:argument value="${selectedMonth}"/>
+                                            <spring:argument value="${fn:replace(selectedYear, '.', '')}" />
+                                        </spring:message>
+                                    </p>
+                                </div>
+                                <div class="divider m-b-20 "></div>
+                                <%@include file="/WEB-INF/jsp/components/widgets/calendar/eventsIndex.jsp"%>
 
-                <div class="f-c-c-c">
-                    <div class="upper-feed-buttons-box " style="width: 80%">
-                        <div class="f-c-c-c w-100">
-                            <h2>
-                                <spring:message code="date.format">
-                                    <spring:argument value="${selectedDay}"/>
-                                    <spring:argument value="${selectedMonth}"/>
-                                    <spring:argument value="${fn:replace(selectedYear, '.', '')}" />
-                                </spring:message>
-                            </h2>
-                            <div class="divider"></div>
-                            <%@include file="/WEB-INF/jsp/components/widgets/calendar/eventsIndex.jsp"%>
+                            </div>
 
                         </div>
-
                     </div>
+
                 </div>
 
             </div>

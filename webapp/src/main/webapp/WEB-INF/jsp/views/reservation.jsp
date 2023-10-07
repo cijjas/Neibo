@@ -29,23 +29,10 @@
         <div class="column-middle">
             <div  class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
                 <h2><spring:message code="ChooseTime"/></h2>
-                <p><c:out value="${amenityName}"/></p>
-                <p><c:out value="${date}"/></p>
+                <p style="color: var(--lighttext)"><c:out value="${amenityName}"/></p>
+                <p style="color: var(--lighttext)"><c:out value="${date}"/></p>
                 <div class="divider"></div>
-                <table >
-                    <thead>
-                    <tr>
-                        <th style="color: var(--error)"><spring:message code="UnavailableTimes"/></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach var="reservation" items="${reservationsList}">
-                        <tr>
-                            <td style="color: var(--error)"><c:out value="${reservation.startTime}" /> - <c:out value="${reservation.endTime}" /></td>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
+
                 <form:form method="post" action="reservation" modelAttribute="reservationTimeForm">
                     <div class="d-flex flex-row justify-content-center align-items-center">
                         <div class="col-md-6">
@@ -74,10 +61,41 @@
 
                     <div class="col-md-12">
                         <div class="d-flex justify-content-end m-t-40">
-                            <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg" style="height:40px;" ><spring:message code="Reserve"/></button>
+                            <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg m-b-20" style="height:40px;" ><spring:message code="Reserve"/></button>
                         </div>
                     </div>
                 </form:form>
+                <table class="table-striped w-100 table-hover">
+                    <thead>
+                    <tr>
+                        <th><spring:message code="UnavailableTimes"/></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="time" items="${timeList}">
+                        <c:set var="isUnavailable" value="false" />
+                        <c:forEach var="reservation" items="${reservationsList}">
+                            <c:if test="${time == reservation.startTime || time == reservation.endTime}">
+                                <c:set var="isUnavailable" value="true" />
+                            </c:if>
+                        </c:forEach>
+                        <tr>
+                            <c:choose>
+                                <c:when test="${isUnavailable}">
+                                    <td style="color: var(--error)">
+                                        <c:out value="${time}" />
+                                    </td>
+                                </c:when>
+                                <c:otherwise>
+                                    <td>
+                                        <c:out value="${time}" />
+                                    </td>
+                                </c:otherwise>
+                            </c:choose>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
             </div>
         </div>
 

@@ -1387,7 +1387,7 @@ h6 {
 
     }
     &.liked{
-        color: var(--green);
-        background-color: var(--light-green);
+        color: var(--light-green);
+        background-color: inherit;
     }
 }

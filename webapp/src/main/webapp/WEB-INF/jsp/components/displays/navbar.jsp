@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ include file="/WEB-INF/jsp/components/structure/tooltips.jsp" %>
 
-<div class="nav-container">
+<div class="nav-container m-b-20">
     <nav class="navbar navbar-expand-lg custom-navbar">
         <div class="container-xl">
             <div class="d-flex justify-content-between align-items-center w-100">

@@ -4,21 +4,21 @@
 
     <script>
         function showPostsAfterDelay() {
-            document.getElementById('placeholder-posts-container').style.display = 'none';
-            document.getElementById('actual-posts-container').style.display = 'block';
+            document.getElementById('placeholder-events').style.display = 'none';
+            document.getElementById('actual-events').style.display = 'block';
         }
 
         setTimeout(showPostsAfterDelay, 1000);
     </script>
 
-    <div id="placeholder-posts-container">
-        <c:forEach begin="1" end="10" var="index">
+    <div id="placeholder-events">
+        <c:forEach begin="1" end="3" var="index">
             <%@ include file="/WEB-INF/jsp/components/widgets/placeholderBlogpost.jsp" %>
         </c:forEach>
     </div>
 
 
-    <div id="actual-posts-container ">
+    <div id="actual-events" style="display: none">
         <c:choose>
             <c:when test="${empty eventList}">
                 <div class="no-posts-found ">

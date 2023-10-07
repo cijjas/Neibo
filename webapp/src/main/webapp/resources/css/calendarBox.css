@@ -1,7 +1,7 @@
 
 
 .wrapper{
-    padding: 30px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -14,7 +14,6 @@
     border-radius: var(--border-radius);
     transform: translateY(-4px) ;
     box-shadow: -3px 5px 0 0 var(--lighttext);
-    margin-bottom: 20px;
 
     & span {
         height: 50px;

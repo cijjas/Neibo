@@ -1,7 +1,7 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<nav id="landing-navbar" class="landing-navbar">
+<nav id="landing-navbar" class="landing-navbar " style="margin-top: 50px">
 
     <div id="logo" class="navbar-logo">
         <svg  width="80" height="80" viewBox="0 0 711 676" fill="none" xmlns="http://www.w3.org/2000/svg">
