@@ -85,7 +85,7 @@
 
 
                         <div class="d-flex flex-column justify-content-center align-items-center w-100">
-                            <table class="table-striped w-100">
+                            <table class="table-striped w-100 table-hover">
                                 <tr>
                                     <th class="day"><spring:message code="Day"/></th>
                                     <th><spring:message code="Open"/></th>

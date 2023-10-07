@@ -132,17 +132,19 @@
 }
 
 /* ----------------------------------------------------- BlogPosts CSS-------------------------------------------------*/
-
+.grey-bg{
+    background-color: var(--on-onbackground);
+}
 
 .blogpost {
     margin-bottom: 1.25rem;
-    padding: 20px;
+    padding: 0;
     width: 100%;
     background-color: var(--onbackground);
     border: 1px solid var(--text);
     border-radius: var(--border-radius);
     transition: all 0.3s ease-in-out;
-
+    overflow: hidden;
     &:hover{
         transform: translateY(-4px) ;
         box-shadow: -3px 5px 0 0 var(--primary);
@@ -258,7 +260,7 @@
 /*------------------- PLACEHOLDER -----------------------------------*/
 
 .placeholder{
-    margin:1px auto;
+    margin: 1px auto;
     border-radius: 3px;
 }
 
@@ -340,7 +342,6 @@
 
 .container {
     position: relative;
-    top: 20px;
 }
 
 /*--------------------LEFT COLUMN----------------------------*/

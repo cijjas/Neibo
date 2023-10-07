@@ -64,10 +64,9 @@ public class FrontController {
                            final ReservationService rs,
                            final AmenityService as,
                            final EventService es,
-                           EventService es1,
                            final ResourceService rs1,
                            final ContactService cs1,
-                           AttendanceService as1,
+                           final AttendanceService as1,
                            final LikeService ls) {
         this.is = is;
         this.ps = ps;
@@ -80,7 +79,7 @@ public class FrontController {
         this.cas = cas;
         this.as = as;
         this.rs = rs;
-        this.es = es1;
+        this.es = es;
         this.rs1 = rs1;
         this.cs1 = cs1;
         this.as1 = as1;
