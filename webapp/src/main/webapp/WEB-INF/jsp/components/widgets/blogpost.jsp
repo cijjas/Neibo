@@ -3,38 +3,93 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 
-<div id="blogpost-container" class="blogpost" style="word-wrap: break-word;" aria-hidden="true">
-    <a href="${pageContext.request.contextPath}/posts/<c:out value="${param.postID}" />" style="text-decoration: none;">
-        <div class="post-header">
-            <div class="blogpost-author-and-date">
-                <span class="post-author"><c:out value="${param.postNeighborMail}" /></span>
-
-                <div style="font-size: 12px;color: var(--lighttext);">
-                    <spring:message code="posted"/>
-                    <span class="post-date" data-post-date="<c:out value="${param.postDate}"/>">
+<div id="blogpost-container" class="blogpost" >
+    <div class="container">
+        <div class=" row ">
+            <div class="col-md-1 grey-bg col-md-pull-1" >
+                <div class="f-c-c-c mt-3">
+                    <span id="like-button-${param.postID}" class="like-button" data-post-id="${param.postID}">
+                        <i class="fa-solid fa-thumbs-up"></i>
                     </span>
                 </div>
-
             </div>
+            <div class="col-md-11 pt-3 pb-3 pr-3 col-md-push-11">
+                <a href="${pageContext.request.contextPath}/posts/<c:out value="${param.postID}" />" style="text-decoration: none;">
+                    <div class="post-header">
+                        <div class="blogpost-author-and-date">
+                            <span class="post-author"><c:out value="${param.postNeighborMail}" /></span>
 
-            <h1 class="post-title"><c:out value="${param.postTitle}" /></h1>
+                            <div style="font-size: 12px;color: var(--lighttext);">
+                                <spring:message code="posted"/>
+                                <span class="post-date" data-post-date="<c:out value="${param.postDate}"/>">
+                                </span>
+                            </div>
+
+                        </div>
+                        <h1 class="post-title"><c:out value="${param.postTitle}" /></h1>
+                    </div>
+                    <p class="post-description"><c:out value="${param.postDescription}" /></p>
+                    <c:if test="${ param.postImage != 0}">
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            <img class="blogpost-image" src="${pageContext.request.contextPath}/images/<c:out value="${param.postImage}"/>" alt="post_<c:out value="${param.postID}"/>_img " />
+                        </div>
+                    </c:if>
+
+                </a>
+                <div class="mt-2 d-flex flex-row justify-content-start align-items-center flex-wrap">
+                    <c:forEach var="postTag" items="${requestScope.postTags}">
+                        <a href="${pageContext.request.contextPath}/?tag=${postTag.tag}" class="post-tag static m-l-3 m-r-3" data-post-tag="${postTag.tag}">
+                            <c:out value="${postTag.tag}"/>
+                        </a>
+                    </c:forEach>
+                </div>
+            </div>
         </div>
-        <p class="post-description"><c:out value="${param.postDescription}" /></p>
-        <c:if test="${ param.postImage != 0}">
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <img class="blogpost-image" src="${pageContext.request.contextPath}/images/<c:out value="${param.postImage}"/>" alt="post_<c:out value="${param.postID}"/>_img " />
-            </div>
-        </c:if>
-
-    </a>
-    <div class="mt-2 d-flex flex-row justify-content-start align-items-center flex-wrap">
-        <c:forEach var="postTag" items="${requestScope.postTags}">
-            <a href="${pageContext.request.contextPath}/?tag=${postTag.tag}" class="post-tag static m-l-3 m-r-3" data-post-tag="${postTag.tag}">
-                <c:out value="${postTag.tag}"/>
-            </a>
-        </c:forEach>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('#like-button-'+ ${param.postID}).forEach(likeButton => {
+            const postId = this.getElementById('like-button-${param.postID}').getAttribute('data-post-id');
+            setLikeStatus(postId);
+        });
+    });
+    async function setLikeStatus(postId){
+        try{
+            const response = await fetch('/api/is-liked?postId=' + postId);
+            const isLikedResponse = await response.text();
+            const likeButton = document.getElementById('like-button-' + postId);
+            likeButton.setAttribute('data-liked', isLikedResponse);
+            likeButton.classList.toggle('liked', isLikedResponse === 'true');
+        }
+        catch(error){
+            console.error('An error occurred:', error);
+        }
+    }
+
+    document.getElementById('like-button-${param.postID}').addEventListener('click', function () {
+        const liked = this.getAttribute('data-liked') === 'true';
+        const postId = this.getAttribute('data-post-id'); // Get the post ID from the data attribute
+        const likeEndpoint = liked ? '/api/unlike?postId=' + postId : '/api/like?postId=' + postId; // Determine the appropriate API endpoint based on the like status
+        fetch(likeEndpoint, {
+            method: 'POST'
+        })
+            .then(response => {
+                if (response.ok) {
+                    this.setAttribute('data-liked', (!liked).toString());
+                    this.classList.toggle('liked', !liked);
+                } else {
+                    console.error('Failed to like/unlike the post.');
+                }
+            })
+            .catch(error => {
+                console.error('An error occurred:', error);
+            });
+    });
+
+
+</script>
 
 <script src="${pageContext.request.contextPath}/resources/js/blogpost.js"></script>
 

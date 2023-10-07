@@ -26,10 +26,16 @@
   <div id="calendar-box-placeholder" class="f-c-c-c placeholder-glow w-100">
     <header class="f-r-sb-c w-100 m-t-40" >
       <div class="f-r-sb-c w-100">
-        <div class="placeholder col-5"></div>
+        <div class="f-c-s-s" style="gap: 5px; width: 50%">
+          <div class="placeholder col-12 "></div>
+          <div class="placeholder col-6 "></div>
+        </div>
 
-        <div class="placeholder col-2 "></div>
-        <div class="placeholder col-2"></div>
+        <div class="f-r-sb-c ">
+          <div class="placeholder col-4 "></div>
+          <div class="placeholder col-4"></div>
+
+        </div>
 
       </div>
     </header>

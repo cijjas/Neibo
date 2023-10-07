@@ -323,7 +323,9 @@ public class AdminController {
     // ------------------------------------- CONTACT --------------------------------------
 
     @RequestMapping(value = "/createResource", method = RequestMethod.GET)
-    public ModelAndView createResourceForm(@ModelAttribute("resourceForm") final ResourceForm resourceForm) {
+    public ModelAndView createResourceForm(
+            @ModelAttribute("resourceForm") final ResourceForm resourceForm
+    ) {
         ModelAndView mav = new ModelAndView("admin/views/createResource");
         return mav;
     }
