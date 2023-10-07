@@ -15,11 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.sql.Time;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -36,8 +32,8 @@ public class AdminController {
     private final AmenityService as;
     private final ReservationService rs;
     private final EventService es;
-    private final ResourceService rs1;
-    private final ContactService cs1;
+    private final ResourceService res;
+    private final ContactService cos;
 
 
     @Autowired
@@ -53,9 +49,8 @@ public class AdminController {
                          final ReservationService rs,
                          final AmenityService as,
                          final EventService es,
-                         EventService es1,
-                         final ResourceService rs1,
-                         final ContactService cs1) {
+                         final ResourceService res,
+                         final ContactService cos) {
         this.is = is;
         this.ps = ps;
         this.us = us;
@@ -67,9 +62,9 @@ public class AdminController {
         this.cas = cas;
         this.as = as;
         this.rs = rs;
-        this.es = es1;
-        this.rs1 = rs1;
-        this.cs1 = cs1;
+        this.es = es;
+        this.res = res;
+        this.cos = cos;
     }
 
     // ------------------------------------- INFORMATION --------------------------------------
@@ -79,8 +74,8 @@ public class AdminController {
         ModelAndView mav = new ModelAndView("admin/views/information");
 
         mav.addObject("panelOption", "Information");
-        mav.addObject("resourceList", rs1.getResources(getLoggedUser().getNeighborhoodId()));
-        mav.addObject("phoneNumbersList", cs1.getContacts(getLoggedUser().getNeighborhoodId()));
+        mav.addObject("resourceList", res.getResources(getLoggedUser().getNeighborhoodId()));
+        mav.addObject("phoneNumbersList", cos.getContacts(getLoggedUser().getNeighborhoodId()));
         return mav;
     }
 
@@ -204,35 +199,8 @@ public class AdminController {
     public ModelAndView createAmenityForm(@ModelAttribute("amenityForm") final AmenityForm amenityForm) {
         ModelAndView mav = new ModelAndView("admin/views/createAmenity");
 
-        List<Time> timeList = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-
-        try {
-            Date startTime = sdf.parse("00:00");
-            Date endTime = sdf.parse("23:30");
-
-            long currentTime = startTime.getTime();
-            long endTimeMillis = endTime.getTime();
-
-            while (currentTime <= endTimeMillis) {
-                timeList.add(new Time(currentTime));
-                currentTime += 30 * 60 * 1000; // Add 30 minutes in milliseconds USE AN ENUM PLS
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        mav.addObject("timeList", timeList);
-
-        List<String> daysOfWeek = new ArrayList<>();
-        daysOfWeek.add("Monday");
-        daysOfWeek.add("Tuesday");
-        daysOfWeek.add("Wednesday");
-        daysOfWeek.add("Thursday");
-        daysOfWeek.add("Friday");
-        daysOfWeek.add("Saturday");
-        daysOfWeek.add("Sunday");
-        mav.addObject("daysOfWeek", daysOfWeek);
+        mav.addObject("timeList", as.getAllTimes());
+        mav.addObject("daysOfWeek", rs.getDaysOfWeek());
         return mav;
     }
 
@@ -240,7 +208,6 @@ public class AdminController {
     public ModelAndView createAmenity(@Valid @ModelAttribute("amenityForm") final AmenityForm amenityForm,
                                       final BindingResult errors) {
         if (errors.hasErrors()) {
-            System.out.println("ERRORS: " + errors);
             return createAmenityForm(amenityForm);
         }
 
@@ -272,7 +239,6 @@ public class AdminController {
             duration = Long.parseLong(eventForm.getDuration());
         } catch (NumberFormatException e) {
             e.printStackTrace();
-            // Handle the parsing error, e.g., by returning an error response to the user.
         }
 
         Event e = es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), duration, getLoggedUser().getNeighborhoodId());
@@ -303,19 +269,16 @@ public class AdminController {
     public ModelAndView createContact(@Valid @ModelAttribute("contactForm") final ContactForm contactForm,
                                       final BindingResult errors) {
         if (errors.hasErrors()) {
-            System.out.println("ERRORS: " + errors);
             return createContact(contactForm);
         }
-        System.out.println(contactForm);
-        Contact cont = cs1.createContact(getLoggedUser().getNeighborhoodId(), contactForm.getContactName(), contactForm.getContactAddress(), contactForm.getContactPhone());
-        System.out.println("created contact: " + cont);
+        Contact cont = cos.createContact(getLoggedUser().getNeighborhoodId(), contactForm.getContactName(), contactForm.getContactAddress(), contactForm.getContactPhone());
         return new ModelAndView("redirect:/admin/information");
     }
 
     @RequestMapping(value = "/deleteContact/{id}", method = RequestMethod.GET)
     public ModelAndView deleteContact(@PathVariable(value = "id") int contactId) {
         ModelAndView mav = new ModelAndView("redirect:/admin/information");
-        cs1.deleteContact(contactId);
+        cos.deleteContact(contactId);
         return mav;
     }
 
@@ -334,17 +297,16 @@ public class AdminController {
     public ModelAndView createResource(@Valid @ModelAttribute("resourceForm") final ResourceForm resourceForm,
                                        final BindingResult errors) {
         if (errors.hasErrors()) {
-            System.out.println("ERRORS: " + errors);
             return createResourceForm(resourceForm);
         }
-        rs1.createResource(getLoggedUser().getNeighborhoodId(), resourceForm.getTitle(), resourceForm.getDescription(), resourceForm.getImageFile());
+        res.createResource(getLoggedUser().getNeighborhoodId(), resourceForm.getTitle(), resourceForm.getDescription(), resourceForm.getImageFile());
         return new ModelAndView("redirect:/admin/information");
     }
 
     @RequestMapping(value = "/deleteResource/{id}", method = RequestMethod.GET)
     public ModelAndView deleteResource(@PathVariable(value = "id") int resourceId) {
         ModelAndView mav = new ModelAndView("redirect:/admin/information");
-        rs1.deleteResource(resourceId);
+        res.deleteResource(resourceId);
         return mav;
     }
 

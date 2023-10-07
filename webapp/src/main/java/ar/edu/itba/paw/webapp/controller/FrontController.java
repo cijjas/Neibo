@@ -23,11 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.sql.Time;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -47,9 +44,9 @@ public class FrontController {
     private final AmenityService as;
     private final ReservationService rs;
     private final EventService es;
-    private final ResourceService rs1;
-    private final ContactService cs1;
-    private final AttendanceService as1;
+    private final ResourceService res;
+    private final ContactService cos;
+    private final AttendanceService ats;
     private final LikeService ls;
 
     @Autowired
@@ -65,9 +62,9 @@ public class FrontController {
                            final ReservationService rs,
                            final AmenityService as,
                            final EventService es,
-                           final ResourceService rs1,
-                           final ContactService cs1,
-                           final AttendanceService as1,
+                           final ResourceService res,
+                           final ContactService cos,
+                           final AttendanceService ats,
                            final LikeService ls) {
         this.is = is;
         this.ps = ps;
@@ -81,9 +78,9 @@ public class FrontController {
         this.as = as;
         this.rs = rs;
         this.es = es;
-        this.rs1 = rs1;
-        this.cs1 = cs1;
-        this.as1 = as1;
+        this.res = res;
+        this.cos = cos;
+        this.ats = ats;
         this.ls = ls;
     }
 
@@ -131,24 +128,25 @@ public class FrontController {
     // ------------------------------------- PROFILE --------------------------------------
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
-    public ModelAndView profile(@ModelAttribute("profilePictureForm") final ProfilePictureForm profilePictureForm) {
+    public ModelAndView profile(
+            @ModelAttribute("profilePictureForm") final ProfilePictureForm profilePictureForm
+    ) {
         ModelAndView mav = new ModelAndView("views/userProfile");
         mav.addObject("neighbor", getLoggedUser());
-        //us.updateLanguage(getLoggedNeighbor().getUserId(), "Spanish");
         return mav;
     }
 
     @RequestMapping(value = "/profile", method = RequestMethod.POST)
-    public ModelAndView profile(@Valid @ModelAttribute("profilePictureForm") final ProfilePictureForm profilePictureForm,
-                                final BindingResult errors) {
+    public ModelAndView profile(
+            @Valid @ModelAttribute("profilePictureForm") final ProfilePictureForm profilePictureForm,
+            final BindingResult errors
+    ) {
         ModelAndView mav = new ModelAndView("redirect:/profile");
-
         if (errors.hasErrors()) {
+            LOGGER.error("Error while updating profile picture");
             return profile(profilePictureForm);
         }
-
         us.updateProfilePicture(getLoggedUser().getUserId(), profilePictureForm.getImageFile());
-        //us.updateLanguage(getLoggedNeighbor().getUserId(), "Spanish");
         return mav;
     }
 
@@ -174,7 +172,10 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/applyTagsFilter", method = RequestMethod.POST)
-    public ModelAndView applyTagsFilter(@RequestParam("tags") String tags, @RequestParam("currentUrl") String currentUrl) {
+    public ModelAndView applyTagsFilter(
+            @RequestParam("tags") String tags,
+            @RequestParam("currentUrl") String currentUrl
+    ) {
         return new ModelAndView("redirect:" + ts.createURLForTagFilter(tags, currentUrl, getLoggedUser().getNeighborhoodId()));
     }
 
@@ -234,8 +235,6 @@ public class FrontController {
         Integer channelId = publishForm.getChannel();
 
         Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedUser().getUserId(), channelId, publishForm.getTags(), imageFile);
-//        Resource res = rs1.createResource(1, "prueba resource", "prueba descripcion", imageFile);
-//        System.out.println("PRINTING RESOURCE" + res);
         ModelAndView mav = new ModelAndView("views/publish");
         mav.addObject("channelId", channelId);
         mav.addObject("showSuccessMessage", true);
@@ -248,7 +247,7 @@ public class FrontController {
             @RequestParam("channelId") int channelId
     ) {
         String channelName= chs.findChannelById(channelId).get().getChannel().toLowerCase();
-        if(channelName.equals(BaseChannel.FEED.toString().toLowerCase())){
+        if(channelName.equals(BaseChannel.FEED.toString())){
             return new ModelAndView("redirect:/");
         }
         else {
@@ -267,12 +266,12 @@ public class FrontController {
     // ------------------------------------- POSTS --------------------------------------
 
     @RequestMapping(value = "/posts/{id:\\d+}", method = RequestMethod.GET)
-    public ModelAndView viewPost(@PathVariable(value = "id") int postId,
-                                 @ModelAttribute("commentForm") final CommentForm commentForm,
-                                 @RequestParam(value = "success", required = false) boolean success) {
+    public ModelAndView viewPost(
+            @PathVariable(value = "id") int postId,
+            @ModelAttribute("commentForm") final CommentForm commentForm,
+            @RequestParam(value = "success", required = false) boolean success
+    ) {
         ModelAndView mav = new ModelAndView("views/post");
-
-
 
         Optional<Post> optionalPost = ps.findPostById(postId);
         mav.addObject("post", optionalPost.orElseThrow(() -> new NotFoundException("Post Not Found")));
@@ -285,17 +284,17 @@ public class FrontController {
 
         mav.addObject("tags", tags);
         mav.addObject("commentForm", commentForm);
-
         mav.addObject("showSuccessMessage", success);
-
 
         return mav;
     }
 
     @RequestMapping(value = "/posts/{id:\\d+}", method = RequestMethod.POST)
-    public ModelAndView viewPost(@PathVariable(value = "id") int postId,
-                                 @Valid @ModelAttribute("commentForm") final CommentForm commentForm,
-                                 final BindingResult errors) {
+    public ModelAndView viewPost(
+            @PathVariable(value = "id") int postId,
+            @Valid @ModelAttribute("commentForm") final CommentForm commentForm,
+            final BindingResult errors
+    ) {
         if (errors.hasErrors()) {
             return viewPost(postId, commentForm, false);
         }
@@ -309,16 +308,19 @@ public class FrontController {
 
     @RequestMapping(value = "/images/{imageId}")
     @ResponseBody
-    public byte[] imageRetriever(@PathVariable long imageId) {
+    public byte[] imageRetriever(
+            @PathVariable long imageId
+    ) {
         return is.getImage(imageId).map(Image::getImage).orElse(null);
     }
 
     // ---------------------------------- LOGIN SIGNUP AND SESSION  -----------------------------------
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ModelAndView logIn(Model model,
-                            @ModelAttribute("signupForm") final SignupForm signupform,
-                            @RequestParam(value = "error", required = false, defaultValue = "false") boolean error
+    public ModelAndView logIn(
+            Model model,
+            @ModelAttribute("signupForm") final SignupForm signupform,
+            @RequestParam(value = "error", required = false, defaultValue = "false") boolean error
     ) {
         model.addAttribute("neighbor", new User.Builder());
         ModelAndView mav = new ModelAndView("views/landingPage");
@@ -329,8 +331,9 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ModelAndView logIn(@RequestParam("mail") String mail,
-                              @RequestParam("password") String password
+    public ModelAndView logIn(
+            @RequestParam("mail") String mail,
+            @RequestParam("password") String password
     ) {
         return new ModelAndView("views/index");
     }
@@ -379,10 +382,11 @@ public class FrontController {
     //------------------------------------- USER AMENITIES & RESERVATIONS --------------------------------------
 
     @RequestMapping(value = "/reservation", method = RequestMethod.GET)
-    public ModelAndView reservation(@ModelAttribute("reservationTimeForm") final ReservationTimeForm reservationTimeForm,
-                                        @RequestParam(value = "amenityId", required = false) long amenityId,
-                                        @RequestParam(value = "date", required = false) java.sql.Date date) {
-        System.out.println("llegue a reservation");
+    public ModelAndView reservation(
+            @ModelAttribute("reservationTimeForm") final ReservationTimeForm reservationTimeForm,
+            @RequestParam(value = "amenityId", required = false) long amenityId,
+            @RequestParam(value = "date", required = false) java.sql.Date date
+    ) {
         ModelAndView mav = new ModelAndView("views/reservation");
         mav.addObject("amenityId", amenityId);
         mav.addObject("amenityName", as.findAmenityById(amenityId).orElse(null).getName());
@@ -394,19 +398,14 @@ public class FrontController {
 
     @RequestMapping(value = "/reservation", method = RequestMethod.POST)
     public ModelAndView reservation(@Valid @ModelAttribute("reservationTimeForm") final ReservationTimeForm reservationTimeForm,
-                                    final BindingResult errors) {
+                                    final BindingResult errors
+    ) {
         if (errors.hasErrors()) {
             return reservation(reservationTimeForm, reservationTimeForm.getAmenityId(), reservationTimeForm.getDate());
         }
         ModelAndView mav = new ModelAndView("redirect:/amenities");
-
         Reservation res = rs.createReservation(reservationTimeForm.getAmenityId(), getLoggedUser().getUserId(), reservationTimeForm.getDate(), reservationTimeForm.getStartTime(), reservationTimeForm.getEndTime(), getLoggedUser().getNeighborhoodId());
-        if(res == null) {
-            mav.addObject("showErrorMessage", true);
-        }
-        else {
-            mav.addObject("showSuccessMessage", true);
-        }
+        mav.addObject(res == null ? "showErrorMessage" : "showSuccessMessage", true);
 
         return mav;
     }
@@ -427,27 +426,7 @@ public class FrontController {
             amenityHoursList.add(amenityHours);
         }
         mav.addObject("amenitiesHours", amenityHoursList);
-
         mav.addObject("daysOfWeek", rs.getDaysOfWeek());
-
-        List<Time> timeList = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-
-        try {
-            Date startTime = sdf.parse("00:00");
-            Date endTime = sdf.parse("23:30");
-
-            long currentTime = startTime.getTime();
-            long endTimeMillis = endTime.getTime();
-
-            while (currentTime <= endTimeMillis) {
-                timeList.add(new Time(currentTime));
-                currentTime += 30 * 60 * 1000; // Add 30 minutes in milliseconds
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        mav.addObject("timeList", timeList);
         mav.addObject("reservationsList", rs.getReservationsByUserId(getLoggedUser().getUserId()));
         return mav;
     }
@@ -458,10 +437,8 @@ public class FrontController {
             final BindingResult errors
     ) {
         if (errors.hasErrors()) {
-            System.out.println("ERRORS: " + errors);
             return amenities(reservationForm);
         }
-        System.out.println("estoy llegando antes del redirect");
         ModelAndView mav = new ModelAndView("redirect:/reservation");
         mav.addObject("amenityId", reservationForm.getAmenityId());
         mav.addObject("date", reservationForm.getDate());
@@ -533,12 +510,9 @@ public class FrontController {
         ModelAndView mav = new ModelAndView("views/event");
 
         Optional<Event> optionalEvent = es.findEventById(eventId);
-
         mav.addObject("event", optionalEvent.orElseThrow(() -> new NotFoundException("Event not found")));
         mav.addObject("attendees", us.getEventUsers(eventId));
         mav.addObject("willAttend", us.isAttending(eventId, getLoggedUser().getUserId()));
-
-
         mav.addObject("showSuccessMessage", success);
 
         return mav;
@@ -548,7 +522,7 @@ public class FrontController {
     public ModelAndView attendEvent(@PathVariable(value = "id") int eventId) {
 
         ModelAndView mav = new ModelAndView("redirect:/events/" + eventId);
-        as1.createAttendee(getLoggedUser().getUserId(), eventId);
+        ats.createAttendee(getLoggedUser().getUserId(), eventId);
 
         return mav;
     }
@@ -557,27 +531,23 @@ public class FrontController {
     public ModelAndView unattendEvent(@PathVariable(value = "id") int eventId) {
 
         ModelAndView mav = new ModelAndView("redirect:/events/" + eventId);
-        as1.deleteAttendee(getLoggedUser().getUserId(), eventId);
+        ats.deleteAttendee(getLoggedUser().getUserId(), eventId);
 
         return mav;
     }
+
 
     // ------------------------------------- INFORMATION --------------------------------
     @RequestMapping(value = "/information", method = RequestMethod.GET)
     public ModelAndView information() {
         ModelAndView mav = new ModelAndView("views/information");
-        mav.addObject("resourceList", rs1.getResources(getLoggedUser().getNeighborhoodId()));
-        mav.addObject("phoneNumbersList", cs1.getContacts(getLoggedUser().getNeighborhoodId()));
+        mav.addObject("resourceList", res.getResources(getLoggedUser().getNeighborhoodId()));
+        mav.addObject("phoneNumbersList", cos.getContacts(getLoggedUser().getNeighborhoodId()));
         mav.addObject("channel", BaseChannel.INFORMATION.toString());
-
-
-
-        mav.addObject("resourceMap", rs1.getResources(getLoggedUser().getNeighborhoodId()));
-        mav.addObject("phoneNumbersMap", cs1.getContacts(getLoggedUser().getNeighborhoodId()));
+        mav.addObject("resourceMap", res.getResources(getLoggedUser().getNeighborhoodId()));
+        mav.addObject("phoneNumbersMap", cos.getContacts(getLoggedUser().getNeighborhoodId()));
         return mav;
     }
-
-
 
 
     // ------------------------------------- EXCEPTIONS --------------------------------------
@@ -613,26 +583,7 @@ public class FrontController {
     // ------------------------------------- TEST --------------------------------------
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public ModelAndView test(
-    )
-    {
-
-
-    LOGGER.info(ps.getPostsByCriteria(BaseChannel.ANNOUNCEMENTS.toString(), 1, 10, SortOrder.DESC, null, 1).toString());
-        /*ls.addLikeToPost(2, getLoggedUser().getUserId());
-        ls.addLikeToPost(2, getLoggedUser().getUserId()+1);
-        ls.addLikeToPost(2, getLoggedUser().getUserId()+2);*/
-        /*
-        System.out.println(ps.findPostById(2));
-
-
-        ls.addLikeToPost(3, getLoggedUser().getUserId());
-        ls.removeLikeFromPost(3, getLoggedUser().getUserId());
-
-        System.out.println("lalala");
-        System.out.println(ls.isPostLiked(2, getLoggedUser().getUserId()));
-
-         */
+    public ModelAndView test() {
         return new ModelAndView("views/testView");
     }
 
