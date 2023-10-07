@@ -103,9 +103,7 @@ public class ApiController {
     ) {
 
         long userId = sessionUtils.getLoggedUser().getUserId();
-        System.out.println("UNLIKED: unliking");
         ls.removeLikeFromPost(postId, userId);
-        System.out.println("UNLIKED: unlike");
         return ResponseEntity.ok("{\"message\": \"Post unliked successfully.\"}");
     }
 
@@ -116,13 +114,9 @@ public class ApiController {
     ) {
 
         long userId = sessionUtils.getLoggedUser().getUserId();
-        System.out.println("ISLIKED: unliking");
-
         if(ls.isPostLiked(postId, userId)){
-            System.out.println("ISLIKED: true");
             return "true";
         }
-
         return "false";
     }
 
