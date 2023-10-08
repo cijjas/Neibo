@@ -15,5 +15,5 @@ public interface LikeDao {
 
     // ---------------------------------------------- POST_USERS_LIKES DELETE ------------------------------------------
 
-    void deleteLike(long postId, long userId);
+    boolean deleteLike(long postId, long userId);
 }

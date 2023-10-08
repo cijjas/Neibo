@@ -34,8 +34,8 @@ public class AttendanceDaoImpl implements AttendanceDao {
     }
 
     @Override
-    public void deleteAttendee(long userId, long eventId) {
+    public boolean deleteAttendee(long userId, long eventId) {
         final String sql = "delete from events_users where userid = ? and eventid = ?";
-        jdbcTemplate.update(sql, userId, eventId);
+        return jdbcTemplate.update(sql, userId, eventId) > 0;
     }
 }

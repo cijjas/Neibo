@@ -64,7 +64,7 @@ public class LikeDaoImpl implements LikeDao {
     // ---------------------------------------------- POST_USERS_LIKES DELETE ------------------------------------------
 
     @Override
-    public void deleteLike(long postId, long userId){
-        jdbcTemplate.update("DELETE FROM posts_users_likes WHERE postid = ? AND userid = ? ", postId, userId);
+    public boolean deleteLike(long postId, long userId){
+        return jdbcTemplate.update("DELETE FROM posts_users_likes WHERE postid = ? AND userid = ? ", postId, userId) > 0;
     }
 }

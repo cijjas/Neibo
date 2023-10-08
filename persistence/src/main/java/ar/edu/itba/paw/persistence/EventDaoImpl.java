@@ -74,11 +74,6 @@ public class EventDaoImpl implements EventDao {
             .build();
 
     @Override
-    public List<Event> getEvents() {
-        return jdbcTemplate.query(EVENTS, ROW_MAPPER);
-    }
-
-    @Override
     public Optional<Event> findEventById(long eventId) {
         final List<Event> list = jdbcTemplate.query(EVENTS + " where eventid = ?", ROW_MAPPER, eventId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));

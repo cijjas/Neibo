@@ -194,8 +194,8 @@ public class PostDaoImpl implements PostDao {
         }
 
         // Log results
-        LOGGER.info(String.valueOf(query));
-        LOGGER.info(String.valueOf(queryParams));
+        LOGGER.info("{}", query);
+        LOGGER.info("{}", queryParams);
 
         // LAUNCH IT!
         return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
@@ -248,8 +248,8 @@ public class PostDaoImpl implements PostDao {
         }
 
         // Log results
-        LOGGER.info(String.valueOf(query));
-        LOGGER.info(String.valueOf(queryParams));
+        LOGGER.info("{}", query);
+        LOGGER.info("{}", queryParams);
 
         // Execute the query and retrieve the count
         return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());

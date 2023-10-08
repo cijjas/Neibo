@@ -1,0 +1,54 @@
+package ar.edu.itba.paw.persistence;
+
+import ar.edu.itba.paw.models.Channel;
+import ar.edu.itba.paw.persistence.config.TestConfig;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
+
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.*;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = TestConfig.class)
+@Sql("classpath:hsqlValueCleanUp.sql")
+public class ChannelMappingDaoImplTest {
+
+    private JdbcTemplate jdbcTemplate;
+    private TestInsertionUtils testInsertionUtils;
+    private ChannelMappingDaoImpl channelMappingDao;
+
+    @Autowired
+    private DataSource ds;
+
+    @Before
+    public void setUp() {
+        jdbcTemplate = new JdbcTemplate(ds);
+        channelMappingDao = new ChannelMappingDaoImpl(ds);
+        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
+    }
+
+    @Test
+    public void testCreateChannelMapping() {
+        // Pre Conditions
+        Number chKey = testInsertionUtils.createChannel();
+        Number nhKey = testInsertionUtils.createNeighborhood();
+
+        // Exercise
+        channelMappingDao.createChannelMappingDao(chKey.longValue(), nhKey.longValue());
+
+        // Validations & Post Conditions
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods_channels.name()));
+    }
+}
+
