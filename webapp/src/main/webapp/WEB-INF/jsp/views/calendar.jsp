@@ -24,10 +24,10 @@
         <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
         <div class="container f-c-c-c" >
             <div class="row w-100">
-                <div class="col-lg-8  w-100 pl-0">
+                <div class="col-lg-8  w-100 m-b-20">
                     <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarBox.jsp" %>
                 </div>
-                <div class="col-lg-4  h-100 w-100 pr-0">
+                <div class="col-lg-4  h-100 w-100 ">
                     <div class="f-c-c-c">
                         <div class="upper-feed-buttons-box w-100" style="padding: 20px">
                             <div class="f-c-c-c w-100">
@@ -46,18 +46,12 @@
                                 </div>
                                 <div class="divider m-b-20 "></div>
                                 <%@include file="/WEB-INF/jsp/components/widgets/calendar/eventsIndex.jsp"%>
-
                             </div>
-
                         </div>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 
         <%@ include file="/WEB-INF/jsp/components/displays/footer.jsp" %>

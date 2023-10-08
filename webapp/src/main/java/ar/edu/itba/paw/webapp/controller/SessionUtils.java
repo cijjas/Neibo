@@ -8,10 +8,11 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.Optional;
 
-@Component // Add this annotation to make AuthenticationUtils a Spring-managed component
+@Component
 class SessionUtils {
 
     private final UserService userService;
@@ -23,7 +24,7 @@ class SessionUtils {
 
 
 
-
+    @ModelAttribute("loggedUser")
     public User getLoggedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken)

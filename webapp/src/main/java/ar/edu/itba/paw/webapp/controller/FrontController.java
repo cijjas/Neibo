@@ -99,8 +99,6 @@ public class FrontController {
         List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags, sessionUtils.getLoggedUser().getNeighborhoodId());
         int totalPages = ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId());
 
-
-
         ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags(sessionUtils.getLoggedUser().getNeighborhoodId()));
         mav.addObject("appliedTags", tags);
@@ -108,7 +106,6 @@ public class FrontController {
         mav.addObject("page", page);
         mav.addObject("totalPages", totalPages);
         mav.addObject("channel", channelName);
-
 
         return mav;
     }
@@ -484,7 +481,6 @@ public class FrontController {
         mav.addObject("selectedMonth", selectedMonth);
         mav.addObject("selectedYear", selectedYear);
         mav.addObject("eventList", eventList);
-
         return mav;
     }
 

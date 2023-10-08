@@ -3,6 +3,17 @@
 
 <c:if test="${channel != 'Announcements'}">
     <div class="upper-feed-buttons-box ">
+        <div class="f-r-s-c">
+            <a onclick="hotPosts()" class="cool-feed-button rounded" >
+                Hot
+                <i class="fa-solid fa-fire"></i>
+            </a>
+            <a onclick="trendingPosts()" class="cool-feed-button rounded" >
+                Trending
+                <i class="fa-solid fa-arrow-up-right-dots"></i>
+            </a>
+        </div>
+
 
         <a onclick="publishInChannel()" class="cool-feed-button" >
             <spring:message code="CreateNewPost.button"/>
