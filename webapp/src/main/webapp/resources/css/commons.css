@@ -4,10 +4,12 @@ GLOBAL CSS VARIABLES AND STYLES THAT SHOULD BE USED IN ALL PAGES
 
 
 body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button, span{
-    font-family: 'IBM Plex Sans', sans-serif;
+    font: 14px/1 'IBM Plex Sans', sans-serif;
     font-weight: bold;
 }
+body {
 
+}
 body {
     margin: 0;
     padding: 0;
@@ -318,4 +320,22 @@ p{
 }
 .h-5rem{
     height: 5rem;
+}
+
+.font-size-12{
+    font-size: 12px;
+}
+.font-size-16{
+    font-size: 16px;
+}
+.font-size-24{
+    font-size: 24px;
+}
+
+.font-weight-bold{
+    font-weight: bold;
+}
+
+.font-weight-bolder{
+    font-weight: bolder;
 }

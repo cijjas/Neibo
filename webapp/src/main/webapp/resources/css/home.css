@@ -35,6 +35,32 @@
     }
 }
 
+.c-light-text{
+    color: var(--lighttext);
+}
+.c-primary{
+    color: var(--primary);
+}
+
+.c-text{
+    color: var(--text);
+}
+.c-old-primary{
+    color: var(--old-primary);
+}
+.c-accent{
+    color: var(--accent);
+}
+.c-background{
+    color: var(--background);
+}
+.c-on-background{
+    color: var(--onbackground);
+}
+.c-on-on-background{
+    color: var(--on-onbackground);
+}
+
 
 /*-------------------------------NAVBAR-----------------------------*/
 

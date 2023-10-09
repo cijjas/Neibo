@@ -10,10 +10,9 @@
                 <div class="f-c-c-c mt-3" style="gap: 1px">
                     <span id="like-button-${param.postID}" class="like-button" data-post-id="${param.postID}">
                         <i class="fa-solid fa-thumbs-up"></i>
-
                     </span>
-                    <span class="like-count" id="like-count-${param.postID}" data-like-count="${param.postLikes}">
-                        ${param.postLikes}
+                    <span class="like-count c-light-text" id="like-count-${param.postID}" data-like-count="${param.postLikes}">
+                        <c:out value="${param.postLikes}"/>
                     </span>
 
 
@@ -55,72 +54,88 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        document.querySelectorAll('#like-button-'+ ${param.postID}).forEach(likeButton => {
-            const postId = this.getElementById('like-button-${param.postID}').getAttribute('data-post-id');
-            setLikeStatus(postId);
-        });
-    });
-    async function setLikeStatus(postId){
-        try{
-            const response = await fetch('/api/is-liked?postId=' + postId);
-            const isLikedResponse = await response.text();
-            const likeButton = document.getElementById('like-button-' + postId);
-            likeButton.setAttribute('data-liked', isLikedResponse);
-            likeButton.classList.toggle('liked', isLikedResponse === 'true');
-        }
-        catch(error){
-            console.error('An error occurred:', error);
-        }
-    }
+    (function(){
 
-
-    document.getElementById('like-button-${param.postID}').addEventListener('click', async function () {
-        const liked = this.getAttribute('data-liked') === 'true';
-        const postId = this.getAttribute('data-post-id'); // Get the post ID from the data attribute
-        const likeEndpoint = liked ? '/api/unlike?postId=' + postId : '/api/like?postId=' + postId; // Determine the appropriate API endpoint based on the like status
-
-        try {
-            const response = await fetch(likeEndpoint, {
-                method: 'POST'
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('#like-button-'+ ${param.postID}).forEach(likeButton => {
+                const postId = this.getElementById('like-button-${param.postID}').getAttribute('data-post-id');
+                setLikeStatus(postId);
             });
-
-            if (response.ok) {
-                // Update the like count based on the button action
-                const likeCountElement = document.getElementById('like-count-' + postId);
-                const currentCount = parseInt(likeCountElement.getAttribute('data-like-count'), 10);
-                const newCount = liked ? currentCount - 1 : currentCount + 1;
-
-                // Simulate a false count-up/down animation
-                animateCount(likeCountElement, currentCount, newCount);
-
-                // Update the like count attribute
-                likeCountElement.setAttribute('data-like-count', newCount);
-
-                // Update the like button appearance
-                this.setAttribute('data-liked', (!liked).toString());
-                this.classList.toggle('liked', !liked);
-            } else {
-                console.error('Failed to like/unlike the post.');
+        });
+        async function setLikeStatus(postId){
+            try{
+                const response = await fetch('/api/is-liked?postId=' + postId);
+                const isLikedResponse = await response.text();
+                const likeButton = document.getElementById('like-button-' + postId);
+                likeButton.setAttribute('data-liked', isLikedResponse);
+                likeButton.classList.toggle('liked', isLikedResponse === 'true');
             }
-        } catch (error) {
-            console.error('An error occurred:', error);
+            catch(error){
+                console.error('An error occurred:', error);
+            }
         }
-    });
 
-    function animateCount(element, from, to) {
-        let current = from;
-        const increment = from < to ? 1 : -1;
+        let likeButtonLocked = false; // Like Semaphore
 
-        const interval = setInterval(function () {
-            if (current === to) {
-                clearInterval(interval);
-            } else {
-                current += increment;
-                element.innerText = current;
+        document.getElementById('like-button-${param.postID}').addEventListener('click', async function () {
+            if (likeButtonLocked) {
+                return; // If the like button is locked, ignore the click event
             }
-        }, 50); // Adjust the interval and animation speed as needed
-    }
+            likeButtonLocked = true;
+            const liked = this.getAttribute('data-liked') === 'true';
+            const postId = this.getAttribute('data-post-id'); // Get the post ID from the data attribute
+            const likeEndpoint = liked ? '/api/unlike?postId=' + postId : '/api/like?postId=' + postId; // Determine the appropriate API endpoint based on the like status
+            const likeCountElement = document.getElementById('like-count-' + postId);
+            const currentCount = parseInt(likeCountElement.getAttribute('data-like-count'), 10);
+            const newCount = liked ? currentCount - 1 : currentCount + 1;
+            this.setAttribute('data-liked', (!liked).toString());
+            this.classList.toggle('liked', !liked);
+            const originalLiked = liked;
+
+            // Simulate a false count-up/down animation
+            animateCount(likeCountElement, currentCount, newCount);
+
+            // Update the like count attribute
+            likeCountElement.setAttribute('data-like-count', newCount);
+            try {
+                const response = await fetch(likeEndpoint, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    console.log('Successfully liked/unliked the post.');
+                } else {
+                    console.error('Failed to like/unlike the post.');
+                }
+            } catch (error) {
+                // If the response is not OK, revert the like button to its original state
+                this.setAttribute('data-liked', originalLiked.toString());
+                this.classList.toggle('liked', originalLiked);
+                likeCountElement.setAttribute('data-like-count', currentCount);
+                console.error('An error occurred:', error);
+            } finally {
+                likeButtonLocked = false; // Unlock the like button after the operation is complete
+            }
+        });
+
+        function animateCount(element, from, to) {
+            let current = from;
+            const increment = from < to ? 1 : -1;
+
+            const interval = setInterval(function () {
+                if (current === to) {
+                    clearInterval(interval);
+                } else {
+                    current += increment;
+                    element.innerText = current;
+                }
+            }, 50); // Adjust the interval and animation speed as needed
+        }
+
+    })();
+
+
+
 
 </script>
 

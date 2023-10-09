@@ -27,7 +27,7 @@
     function publishInChannel(){
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = '${pageContext.request.contextPath}/publishToChannel'; // Replace with your desired URL
+        form.action = '${pageContext.request.contextPath}/publish-to-channel'; // Replace with your desired URL
 
         // Optionally, you can add any form data or parameters here
         // For example, adding a hidden input field with a value

@@ -145,7 +145,7 @@
                         successContainer.style.opacity = '1'; // Fade in
                         const form = document.createElement('form');
                         form.method = 'POST';
-                        form.action = '${pageContext.request.contextPath}/redirectToChannel'; // Replace with your desired URL
+                        form.action = '${pageContext.request.contextPath}/redirect-to-channel'; // Replace with your desired URL
                         // Optionally, you can add any form data or parameters here
                         // For example, adding a hidden input field with a value
                         const input = document.createElement('input');

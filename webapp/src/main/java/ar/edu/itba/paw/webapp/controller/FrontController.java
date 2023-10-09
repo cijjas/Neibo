@@ -148,7 +148,7 @@ public class FrontController {
         return mav;
     }
 
-    @RequestMapping (value = "/updateDarkModePreference", method = RequestMethod.POST)
+    @RequestMapping (value = "/update-darkmode-preference", method = RequestMethod.POST)
     public String updateDarkModePreference() {
         User user = sessionUtils.getLoggedUser();
         us.toggleDarkMode(user.getUserId());
@@ -240,7 +240,7 @@ public class FrontController {
     }
 
 
-    @RequestMapping(value = "/redirectToChannel", method = RequestMethod.POST)
+    @RequestMapping(value = "/redirect-to-channel", method = RequestMethod.POST)
     public ModelAndView redirectToChannel(
             @RequestParam("channelId") int channelId
     ) {
@@ -253,7 +253,7 @@ public class FrontController {
         }
     }
 
-    @RequestMapping(value = "/publishToChannel", method = RequestMethod.POST)
+    @RequestMapping(value = "/publish-to-channel", method = RequestMethod.POST)
     public ModelAndView publishToChannel(
             @RequestParam("channel") String channelString
     ) {
@@ -348,8 +348,10 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public ModelAndView signupForm(@Valid @ModelAttribute("signupForm") final SignupForm signupForm,
-                              final BindingResult errors) {
+    public ModelAndView signupForm(
+            @Valid @ModelAttribute("signupForm") final SignupForm signupForm,
+            final BindingResult errors
+    ) {
         if (errors.hasErrors()) {
             ModelAndView mav = signupForm(signupForm, false);
             mav.addObject("openSignupDialog", true);
@@ -436,7 +438,7 @@ public class FrontController {
         return mav;
     }
 
-    @RequestMapping(value = "/deleteReservation/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete-reservation/{id}", method = RequestMethod.GET)
     public ModelAndView deleteReservation( @PathVariable(value = "id") int reservationId) {
         rs.deleteReservation(reservationId);
         return new ModelAndView("redirect:/amenities");
@@ -484,7 +486,7 @@ public class FrontController {
         return mav;
     }
 
-    @RequestMapping(value = "/redirectToSite", method = RequestMethod.POST)
+    @RequestMapping(value = "/redirect-to-site", method = RequestMethod.POST)
     public ModelAndView redirectToSite(
             @RequestParam("site") String site
     ) {
@@ -497,7 +499,6 @@ public class FrontController {
     public ModelAndView viewEvent(@PathVariable(value = "id") int eventId,
                                  @RequestParam(value = "success", required = false) boolean success) {
         ModelAndView mav = new ModelAndView("views/event");
-
         Optional<Event> optionalEvent = es.findEventById(eventId);
         mav.addObject("event", optionalEvent.orElseThrow(() -> new NotFoundException("Event not found")));
         mav.addObject("attendees", us.getEventUsers(eventId));
@@ -509,10 +510,8 @@ public class FrontController {
 
     @RequestMapping(value = "/attend/{id:\\d+}", method = RequestMethod.POST)
     public ModelAndView attendEvent(@PathVariable(value = "id") int eventId) {
-
         ModelAndView mav = new ModelAndView("redirect:/events/" + eventId);
         ats.createAttendee(sessionUtils.getLoggedUser().getUserId(), eventId);
-
         return mav;
     }
 
@@ -596,4 +595,16 @@ public class FrontController {
     public ModelAndView testException() {
         throw new InsertionException("An error occurred whilst creating the User");
     }
+
+    @RequestMapping(value = "/service-profile", method = RequestMethod.GET)
+    public ModelAndView serviceProfile() {
+        ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
+        return mav;
+    }
+    @RequestMapping(value = "/services", method = RequestMethod.GET)
+    public ModelAndView services() {
+        ModelAndView mav = new ModelAndView("serviceProvider/views/services");
+        return mav;
+    }
+
 }

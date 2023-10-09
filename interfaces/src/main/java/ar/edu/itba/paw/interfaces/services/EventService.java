@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public interface EventService {
 
-    List<Event> getEvents();
 
     Optional<Event> findEventById(long eventId);
 

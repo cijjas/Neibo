@@ -92,7 +92,7 @@
                                 <p class="m-b-10 f-w-600 " ><spring:message code="DarkMode"/></p>
                                 <div class="controlled" >
                                     <h6 class="text-muted f-w-400"><spring:message code="Off"/></h6>
-                                    <form id="dark-mode-form" action="${pageContext.request.contextPath}/updateDarkModePreference" method="POST">
+                                    <form id="dark-mode-form" action="${pageContext.request.contextPath}/update-darkmode-preference" method="POST">
                                         <label class="switch">
                                             <input class="toggle" type="checkbox" id="dark-mode-toggle" name="darkMode">
                                             <span class="slider"></span>

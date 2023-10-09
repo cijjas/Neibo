@@ -1,0 +1,260 @@
+
+
+.service-card {
+    overflow: hidden;
+    width: 100%;
+    height: 650px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--onbackground);
+    border: var(--border);
+    border-radius: var(--border-radius);
+    transform: translateY(-4px);
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 0 0 var(--primary);
+
+    & .card-header{
+        margin:0;
+        padding:0;
+        & .back-image{
+            width: 100%;
+            max-height: 30vh;
+        }
+    }
+
+    & .card-body {
+        height: 40%;
+        position: relative;
+        width: 100%;
+        border-bottom: 1px solid var(--lighttext);
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translate(-50%, 0);
+            background-size: cover;
+            background-image: var(--background-image);  /*This is ok no worries*/
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+        }
+        &::after {
+            content: "";
+            position: absolute;
+            top: -35px;
+            left: 50%;
+            transform: translate(-50%, 0);
+            background-repeat: no-repeat;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+        }
+        & .inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, 0);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    & .card-footer {
+        height: 20%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        & .inner {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            & div:first-child {
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            & div:last-child {
+                font-size: 12px;
+            }
+        }
+    }
+}
+
+/*-------------------------service widget-----------------------*/
+.service-widget {
+    background: var(--onbackground);
+    width: 100%;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--lighttext);
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+    white-space: normal;
+    display: block;
+    transform: translateY(0);
+    cursor: pointer;
+
+    & svg {
+        width: 85px;
+        height: 85px;
+        margin: 0 auto;
+    }
+
+    & .card-text {
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        & .img-avatar {
+            width: 80px;
+            height: 80px;
+            position: absolute;
+            border-radius: 50%;
+            border: 6px solid var(--onbackground);
+            background-image: linear-gradient(-60deg, #16a085 0%, #f4d03f 100%);
+            top: 15px;
+            left: 100px;
+        }
+    }
+
+    & .title-total {
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+        padding: 1.5em 1.5em 1.5em 50px;
+        gap: 10px;
+        & .title {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
+            align-items: end;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 12px;
+        }
+        & .desc {
+            color: var(--lighttext);
+            font-size: 12px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 5;
+            -webkit-box-orient: vertical;
+            text-overflow: ellipsis;
+            white-space: normal;
+        }
+        & .actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            align-items: center;
+            padding: 0.5rem 1rem;
+        }
+    }
+
+
+    & .portada {
+        width: 100%;
+        height: 100%;
+        border-top-left-radius: var(--border-radius);
+        border-bottom-left-radius: var(--border-radius);
+        background-image: url("https://m.media-amazon.com/images/S/aplus-media/vc/cab6b08a-dd8f-4534-b845-e33489e91240._CR75,0,300,300_PT0_SX300__.jpg");
+        background-position: bottom center;
+        background-size: cover;
+    }
+
+    &:hover{
+        transform: translateY(-4px);
+        box-shadow: 0 4px 0 0 var(--primary);
+    }
+}
+
+
+
+
+
+
+
+
+
+/*--------------------------tabbed box ---------------*/
+
+section {
+    background-color: var(--onbackground);
+    display: none;
+    padding: 20px;
+    border-top: 1px solid var(--primary);
+    border-bottom: 1px solid var(--primary);
+    border-left: 1px solid var(--primary);
+    border-right: 1px solid var(--primary);
+    z-index: -1;
+    transform: translateY(-4px);
+    box-shadow: 0 4px 0 0 var(--primary);
+    border-radius:0 var(--border-radius) var(--border-radius) var(--border-radius);
+}
+
+input[type=radio]{
+    display: none;
+}
+
+label {
+    position: relative;
+    display: inline-block;
+    border: 1px solid var(--primary);
+    padding: 15px 25px;
+    font-weight: bolder;
+    text-align: center;
+    color: var(--lighttext);
+    width: 32%;
+    background-color: var(--onbackground);
+
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    border-bottom: 1px solid transparent;
+    transform: translateY(-2px);
+    &:before {
+        font-weight: normal;
+        margin-right: 10px;
+    }
+
+
+    &:hover {
+        color: var(--old-primary);
+        cursor: pointer;
+    }
+
+}
+
+
+input:checked + label {
+    color: var(--primary);
+    z-index: 2;
+    border-left: 1px solid var(--primary);
+    border-right: 1px solid var(--primary);
+    border-top: 3px solid var(--primary);
+    border-bottom: 2px solid transparent;
+}
+
+#tab1:checked ~ #content1,
+#tab2:checked ~ #content2,
+#tab3:checked ~ #content3,
+#tab4:checked ~ #content4 {
+    display: flex;
+}
+
+
+#content1 {
+    & .container {
+        padding: 0;
+        margin: 0;
+    }
+    & .review-box {
+        padding: 1.5rem;
+        margin: 1.5rem;
+        background-color: var(--darkonbackground);
+        color: var(--text);
+        border-radius: var(--border-radius);
+    }
+}
