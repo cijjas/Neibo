@@ -36,6 +36,8 @@
 }
 
 .postcard-description {
+    font-weight: normal;
+    font-size: 12px;
     overflow: hidden;
     position: relative;
     color: var(--text);

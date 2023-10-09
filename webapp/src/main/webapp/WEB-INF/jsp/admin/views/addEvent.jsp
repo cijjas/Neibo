@@ -111,7 +111,7 @@
                     successContainer.style.opacity = '1'; // Fade in
                     const form = document.createElement('form');
                     form.method = 'POST';
-                    form.action = '${pageContext.request.contextPath}/redirectToSite'; // Replace with your desired URL
+                    form.action = '${pageContext.request.contextPath}/redirect-to-site'; // Replace with your desired URL
                     const input = document.createElement('input');
                     input.type='hidden';
                     input.name='site';

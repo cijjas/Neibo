@@ -1,0 +1,18 @@
+package ar.edu.itba.paw.interfaces.services;
+
+import ar.edu.itba.paw.models.Review;
+
+import java.util.List;
+
+public interface ReviewService {
+    // -------------------------------------------- REVIEWS INSERT -----------------------------------------------------
+    Review createReview(long workerId, long userId, float rating, String review);
+
+    // -------------------------------------------- REVIEWS SELECT -----------------------------------------------------
+    Review getReview(long reviewId);
+
+    List<Review> getReviews(long workerId);
+
+    // -------------------------------------------- REVIEWS DELETE -----------------------------------------------------
+    void deleteReview(long reviewId);
+}

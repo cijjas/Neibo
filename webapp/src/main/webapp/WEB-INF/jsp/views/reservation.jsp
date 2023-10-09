@@ -109,7 +109,7 @@
                             <div class="f-c-c-c">
                                 <div class="f-r-sb-c w-100">
                                     <h5><c:out value="${reservation.amenity.name}" /></h5>
-                                    <a href="${pageContext.request.contextPath}/deleteReservation/${reservation.reservationId}" class="f-c-c-c">
+                                    <a href="${pageContext.request.contextPath}/delete-reservation/${reservation.reservationId}" class="f-c-c-c">
                                         <i class="fas fa-trash" style="color: var(--error);"></i>
                                     </a>
                                 </div>

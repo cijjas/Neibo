@@ -32,13 +32,15 @@
             </div>
 
             <div class="f-c-c-c">
-
                 <div class="divider"></div>
                 <a id="reservationsButton" href="${pageContext.request.contextPath}/amenities" class="cool-left-button ${channel == 'Reservations' ? 'active' : ''}" >
                     <i class="fas fa-calendar-days"></i> <spring:message code="Reservations"/>
                 </a>
                 <a id="informationButton" href="${pageContext.request.contextPath}/information" class="cool-left-button ${channel == 'Information' ? 'active' : ''}" >
                     <i class="fas fa-address-card"></i> <spring:message code="Information"/>
+                </a>
+                <a id="servicesButton" href="${pageContext.request.contextPath}/service-profile" class="cool-left-button " >
+                    <i class="fa-solid fa-handshake-angle"></i> <spring:message code="Services"/>
                 </a>
             </div>
 

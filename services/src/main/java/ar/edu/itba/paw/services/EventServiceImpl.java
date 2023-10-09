@@ -23,8 +23,6 @@ public class EventServiceImpl implements EventService {
         this.eventDao = eventDao;
     }
 
-    @Override
-    public List<Event> getEvents() { return null; }
 
     @Override
     public Optional<Event> findEventById(long eventId) { return eventDao.findEventById(eventId); }

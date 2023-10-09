@@ -37,14 +37,17 @@
           <ul class="days"></ul>
         </div>
       </div>
-      <div>
-        <c:if test="${isAdmin}">
+
+      <c:if test="${isAdmin}">
+        <div class="f-c-c-c">
+
           <a href="${pageContext.request.contextPath}/admin/addEvent" class="accept-button outlined on-background ">
             <spring:message code="CreateNewEvent.button" />
             <i class="fa-solid fa-plus"></i>
           </a>
-        </c:if>
-      </div>
+        </div>
+      </c:if>
+
     </div>
 
     <div id="calendar-box-placeholder" class="f-c-c-c placeholder-glow w-100">
