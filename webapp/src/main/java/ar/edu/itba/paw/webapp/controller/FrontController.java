@@ -257,7 +257,7 @@ public class FrontController {
             @RequestParam("channelId") int channelId
     ) {
         String channelName= chs.findChannelById(channelId).get().getChannel().toLowerCase();
-        if(channelName.equals(BaseChannel.FEED.toString())){
+        if(channelName.equals(BaseChannel.FEED.toString().toLowerCase())){
             return new ModelAndView("redirect:/");
         }
         else {
@@ -584,6 +584,8 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
+//        Worker worker = ws.createWorker("worker2@test.com", "WorkerName2", "WorkerSurn2ame", "password2", 5467364, "PhoneNumber", "Address", Language.ENGLISH, 1, "BusinessName");
+//        ws.updateWorker(worker.getUser().getUserId(), "Worker2Name", "Worker2Surname", "pa2ssword", 5437564, "PhoneNumber", "Address", Language.ENGLISH, false, "BusinessName", 1, 1, "Mi Biografia");
         return new ModelAndView("views/testView");
     }
 

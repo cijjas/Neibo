@@ -86,6 +86,7 @@ public class WorkerDaoImpl implements WorkerDao {
                 .address(rs.getString("address"))
                 .businessName(rs.getString("businessName"))
                 .backgroundPictureId(rs.getLong("backgroundPictureId"))
+                .bio(rs.getString("bio"))
                 .build();
     };
 
@@ -173,10 +174,10 @@ public class WorkerDaoImpl implements WorkerDao {
 
     // ---------------------------------------------- WORKERS UPDATE -----------------------------------------------------
     @Override
-    public void updateWorker(long workerId, String phoneNumber, String address, String businessName, long backgroundPictureId) {
+    public void updateWorker(long workerId, String phoneNumber, String address, String businessName, long backgroundPictureId, String bio) {
         try {
-            jdbcTemplate.update("UPDATE workers_info SET phoneNumber = ?, address = ?, businessName = ?, backgroundPictureId = ? WHERE workerId = ?",
-                    phoneNumber, address, businessName, backgroundPictureId, workerId);
+            jdbcTemplate.update("UPDATE workers_info SET phoneNumber = ?, address = ?, businessName = ?, backgroundPictureId = ?, bio = ? WHERE workerId = ?",
+                    phoneNumber, address, businessName, backgroundPictureId, bio, workerId);
         } catch (DataAccessException ex) {
             LOGGER.error("Error updating the worker", ex);
             throw new InsertionException("An error occurred whilst updating the Worker");
