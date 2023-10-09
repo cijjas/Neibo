@@ -6,6 +6,7 @@ public class Worker {
     private final String phoneNumber;
     private final String businessName;
     private final String address;
+    private final String bio;
     private final long backgroundPictureId;
 
 
@@ -14,6 +15,7 @@ public class Worker {
         this.phoneNumber = builder.phoneNumber;
         this.businessName = builder.businessName;
         this.address = builder.address;
+        this.bio = builder.bio;
         this.backgroundPictureId = builder.backgroundPictureId;
     }
 
@@ -22,6 +24,7 @@ public class Worker {
         private String phoneNumber;
         private String businessName;
         private String address;
+        private String bio;
         private long backgroundPictureId;
 
         public Builder user(User user) {
@@ -49,6 +52,11 @@ public class Worker {
             return this;
         }
 
+        public Builder bio(String bio) {
+            this.bio = bio;
+            return this;
+        }
+
         public Worker build() {
             return new Worker(this);
         }
@@ -70,6 +78,14 @@ public class Worker {
         return businessName;
     }
 
+    public String getBio() {
+        return bio;
+    }
+
+    public long getBackgroundPictureId() {
+        return backgroundPictureId;
+    }
+
     @Override
     public String toString() {
         return "Worker{" +
@@ -77,6 +93,7 @@ public class Worker {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", businessName='" + businessName + '\'' +
                 ", address='" + address + '\'' +
+                ", bio='" + bio + '\'' +
                 '}';
     }
 }

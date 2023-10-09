@@ -18,6 +18,6 @@ public interface WorkerDao {
     int getWorkersCountByCriteria(List<String> professions, long neighborhoodId);
 
     // ---------------------------------------------- WORKERS UPDATE -----------------------------------------------------
-    void updateWorker(long userId, String phoneNumber, String address, String businessName, long backgroundPictureId);
+    void updateWorker(long userId, String phoneNumber, String address, String businessName, long backgroundPictureId, String bio);
 
 }

@@ -588,7 +588,8 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-        ws.createWorker("worker@test.com", "WorkerName", "WorkerSurname", "password", 5467564, "PhoneNumber", "Address", Language.ENGLISH, 1, "BusinessName");
+//        Worker worker = ws.createWorker("worker2@test.com", "WorkerName2", "WorkerSurn2ame", "password2", 5467364, "PhoneNumber", "Address", Language.ENGLISH, 1, "BusinessName");
+//        ws.updateWorker(worker.getUser().getUserId(), "Worker2Name", "Worker2Surname", "pa2ssword", 5437564, "PhoneNumber", "Address", Language.ENGLISH, false, "BusinessName", 1, 1, "Mi Biografia");
         return new ModelAndView("views/testView");
     }
 

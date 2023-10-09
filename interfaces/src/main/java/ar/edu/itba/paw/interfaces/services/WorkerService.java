@@ -20,7 +20,7 @@ public interface WorkerService {
     int getWorkersCountByCriteria(List<String> professions, long neighborhoodId);
 
     // ---------------------------------------------- WORKERS UPDATE -----------------------------------------------------
-    void updateWorker(long userId, String name, String surname, String password, int identification,
-                      String phoneNumber, String address, Language language, boolean darkMode,
-                      String businessName, long profilePictureId, long backgroundPictureId);
+    void updateWorker(long userId, String name, String surname, String password, int identification, String phoneNumber,
+                      String address, Language language, boolean darkMode, String businessName, long profilePictureId,
+                      long backgroundPictureId, String bio);
 }
