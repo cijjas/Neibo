@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
+import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.models.Booking;
 import ar.edu.itba.paw.models.User;
 import enums.Language;
 import enums.UserRole;
@@ -24,6 +26,8 @@ public class UserDaoImpl implements UserDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
+    private BookingDao bookingDao;
+
     private final String USERS =
             "select u.* \n" +
                     "from users u";
@@ -39,7 +43,8 @@ public class UserDaoImpl implements UserDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
 
     @Autowired
-    public UserDaoImpl(final DataSource ds) {
+    public UserDaoImpl(final DataSource ds, final BookingDao bookingDao) {
+        this.bookingDao = bookingDao;
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
                 .usingGeneratedKeyColumns("userid")
@@ -83,20 +88,23 @@ public class UserDaoImpl implements UserDao {
 
     // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
-    private static final RowMapper<User> ROW_MAPPER = (rs, rowNum) ->
-            new User.Builder()
-                    .userId(rs.getLong("userid"))
-                    .mail(rs.getString("mail"))
-                    .name(rs.getString("name"))
-                    .surname(rs.getString("surname"))
-                    .password(rs.getString("password"))
-                    .neighborhoodId(rs.getLong("neighborhoodid"))
-                    .creationDate(rs.getDate("creationdate"))
-                    .darkMode(rs.getBoolean("darkmode"))
-                    .profilePictureId(rs.getLong("profilepictureid"))
-                    .language(rs.getString("language") != null ? Language.valueOf(rs.getString("language")) : null)
-                    .role(rs.getString("role") != null ? UserRole.valueOf(rs.getString("role")) : null)
-                    .build();
+    private final RowMapper<User> ROW_MAPPER = (rs, rowNum) -> {
+        List<Booking> bookings = bookingDao.getUserBookings(rs.getLong("userid"));
+        return new User.Builder()
+                .userId(rs.getLong("userid"))
+                .mail(rs.getString("mail"))
+                .name(rs.getString("name"))
+                .surname(rs.getString("surname"))
+                .password(rs.getString("password"))
+                .neighborhoodId(rs.getLong("neighborhoodid"))
+                .creationDate(rs.getDate("creationdate"))
+                .darkMode(rs.getBoolean("darkmode"))
+                .profilePictureId(rs.getLong("profilepictureid"))
+                .language(rs.getString("language") != null ? Language.valueOf(rs.getString("language")) : null)
+                .role(rs.getString("role") != null ? UserRole.valueOf(rs.getString("role")) : null)
+                .bookings(bookings)
+                .build();
+    };
 
     @Override
     public Optional<User> findUserById(final long userId) {

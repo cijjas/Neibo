@@ -24,7 +24,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> getEvents() { return eventDao.getEvents(); }
+    public List<Event> getEvents() { return null; }
 
     @Override
     public Optional<Event> findEventById(long eventId) { return eventDao.findEventById(eventId); }

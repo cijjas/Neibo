@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 @Service
 public class TagServiceImpl implements TagService {
     private final TagDao tagDao;
-    private final CategorizationDao categorizationDao;
-    private final ChannelService channelService;
+    private CategorizationDao categorizationDao;
+    private ChannelService channelService;
     @Autowired
-    public TagServiceImpl(final TagDao tagDao, final CategorizationDao categorizationDao, final ChannelService channelService) {
+    public TagServiceImpl(TagDao tagDao, CategorizationDao categorizationDao, final ChannelService channelService) {
         this.channelService = channelService;
         this.tagDao = tagDao;
         this.categorizationDao = categorizationDao;

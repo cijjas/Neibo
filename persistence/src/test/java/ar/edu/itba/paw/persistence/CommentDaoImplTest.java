@@ -1,27 +1,21 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.persistence.BookingDao;
+import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Comment;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.persistence.CommentDaoImpl;
-import ar.edu.itba.paw.persistence.Table;
-import ar.edu.itba.paw.persistence.TestInsertionUtils;
-import ar.edu.itba.paw.persistence.UserDaoImpl;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +31,8 @@ public class CommentDaoImplTest {
     private CommentDaoImpl commentDao;
 
     private UserDao userDao;
+    private BookingDao bookingDao;
+    private ShiftDao shiftDao;
 
     private static final String COMMENT_TEXT = "Sample Comment";
 
@@ -46,8 +42,6 @@ public class CommentDaoImplTest {
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        userDao = new UserDaoImpl(ds);
-        commentDao = new CommentDaoImpl(ds, userDao);
         testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
     }
 
