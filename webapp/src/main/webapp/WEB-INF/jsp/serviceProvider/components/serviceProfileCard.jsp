@@ -12,7 +12,7 @@
                 </c:otherwise>
             </c:choose>
         </div>
-        <div class="card-body" data-profile-image='${pageContext.request.contextPath}/images/<c:out value=""/>'>
+        <div class="card-body" data-profile-image='${pageContext.request.contextPath}/images/<c:out value="${worker.backgroundPictureId}"/>'>
             <div class="inner">
                 <div style="font-size: 18px;margin-bottom: 10px;">
                     <c:out value="${worker.businessName}"/>

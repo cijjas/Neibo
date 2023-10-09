@@ -620,6 +620,8 @@ public class FrontController {
     ) {
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
         Optional<Worker> optionalWorker = ws.findWorkerById(workerId);
+
+
         mav.addObject("worker", optionalWorker.orElseThrow(() -> new NotFoundException("Worker not found")));
         return mav;
     }
@@ -627,6 +629,8 @@ public class FrontController {
     @RequestMapping(value = "/services", method = RequestMethod.GET)
     public ModelAndView services() {
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
+        List<Worker> workerList = ws.getWorkersByCriteria(1,10, Collections.emptyList(), sessionUtils.getLoggedUser().getNeighborhoodId());
+        mav.addObject("workerList", workerList);
         return mav;
     }
 
