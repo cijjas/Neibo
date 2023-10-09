@@ -47,6 +47,10 @@ public class FrontController {
     private final ContactService cos;
     private final AttendanceService ats;
     private final LikeService ls;
+    private final NeighborhoodWorkerService nhws;
+    private final ProfessionWorkerService pws;
+    private final ReviewService rws;
+    private final WorkerService ws;
 
     @Autowired
     public FrontController(SessionUtils sessionUtils, 
@@ -65,7 +69,11 @@ public class FrontController {
                            final ResourceService res,
                            final ContactService cos,
                            final AttendanceService ats,
-                           final LikeService ls) {
+                           final LikeService ls,
+                           final NeighborhoodWorkerService nhws,
+                           final ProfessionWorkerService pws,
+                           final ReviewService rws,
+                           final WorkerService ws) {
         this.sessionUtils = sessionUtils;
         this.is = is;
         this.ps = ps;
@@ -83,6 +91,10 @@ public class FrontController {
         this.cos = cos;
         this.ats = ats;
         this.ls = ls;
+        this.nhws = nhws;
+        this.pws = pws;
+        this.rws = rws;
+        this.ws = ws;
     }
 
     // ------------------------------------- FEED --------------------------------------
