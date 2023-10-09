@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.Time;
 import java.util.HashMap;
 import java.util.List;

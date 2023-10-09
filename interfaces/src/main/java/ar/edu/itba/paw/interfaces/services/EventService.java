@@ -9,8 +9,6 @@ import java.util.Optional;
 
 public interface EventService {
 
-    List<Event> getEvents();
-
     Optional<Event> findEventById(long eventId);
 
     Event createEvent(String name, String description, Date date, long duration, long neighborhoodId);
