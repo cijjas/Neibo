@@ -2,7 +2,9 @@ package ar.edu.itba.paw.models;
 
 import enums.Language;
 import enums.UserRole;
+
 import java.util.Date;
+import java.util.List;
 
 public class User {
     private final long userId;
@@ -17,6 +19,7 @@ public class User {
     private final Date creationDate;
     private final long profilePictureId;
     private final int identification;
+    private final List<Booking> bookings;
 
     private User(Builder builder) {
         this.userId = builder.userId;
@@ -31,6 +34,7 @@ public class User {
         this.creationDate = builder.creationDate;
         this.profilePictureId = builder.profilePictureId;
         this.identification = builder.identification;
+        this.bookings = builder.bookings;
     }
 
     public static class Builder {
@@ -46,6 +50,7 @@ public class User {
         private Date creationDate;
         private long profilePictureId;
         private int identification;
+        private List<Booking> bookings;
 
         public Builder userId(long userId) {
             this.userId = userId;
@@ -107,6 +112,11 @@ public class User {
             return this;
         }
 
+        public Builder bookings(List<Booking> bookings) {
+            this.bookings = bookings;
+            return this;
+        }
+
         public User build() {
             return new User(this);
         }
@@ -160,6 +170,10 @@ public class User {
         return identification;
     }
 
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -174,7 +188,8 @@ public class User {
                 ", role=" + role +
                 ", creationDate=" + creationDate +
                 ", profilePictureId=" + profilePictureId +
-                ", identification=" + identification + // Include identification in the toString method
+                ", identification=" + identification +
+                ", bookings=" + bookings +
                 '}';
     }
 }

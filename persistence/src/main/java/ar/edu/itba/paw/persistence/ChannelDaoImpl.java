@@ -56,8 +56,6 @@ public class ChannelDaoImpl implements ChannelDao {
             LOGGER.error("Error inserting the Channel", ex);
             throw new InsertionException("An error occurred whilst creating the channel");
         }
-
-
     }
 
     // -------------------------------------------- CHANNELS SELECT ----------------------------------------------------

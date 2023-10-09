@@ -5,10 +5,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.form.*;
 import ar.edu.itba.paw.webapp.form.validation.ReservationTimeForm;
-import enums.BaseChannel;
-import enums.Language;
-import enums.SortOrder;
-import enums.UserRole;
+import enums.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -21,7 +18,10 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
+import java.sql.Date;
+import java.util.stream.Collectors;
 
+import ar.edu.itba.paw.models.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -47,13 +47,15 @@ public class FrontController {
     private final ContactService cos;
     private final AttendanceService ats;
     private final LikeService ls;
+    private final BookingService bs;
+    private final ShiftService shs;
     private final NeighborhoodWorkerService nhws;
     private final ProfessionWorkerService pws;
     private final ReviewService rws;
     private final WorkerService ws;
 
     @Autowired
-    public FrontController(SessionUtils sessionUtils, 
+    public FrontController(SessionUtils sessionUtils,
                            final PostService ps,
                            final UserService us,
                            final NeighborhoodService nhs,
@@ -73,7 +75,9 @@ public class FrontController {
                            final NeighborhoodWorkerService nhws,
                            final ProfessionWorkerService pws,
                            final ReviewService rws,
-                           final WorkerService ws) {
+                           final WorkerService ws,
+                           final BookingService bs,
+                           final ShiftService shs) {
         this.sessionUtils = sessionUtils;
         this.is = is;
         this.ps = ps;
@@ -95,6 +99,8 @@ public class FrontController {
         this.pws = pws;
         this.rws = rws;
         this.ws = ws;
+        this.bs = bs;
+        this.shs = shs;
     }
 
     // ------------------------------------- FEED --------------------------------------
@@ -513,6 +519,7 @@ public class FrontController {
             @RequestParam(value = "success", required = false) boolean success
     ) {
         ModelAndView mav = new ModelAndView("views/event");
+
         Optional<Event> optionalEvent = es.findEventById(eventId);
         mav.addObject("event", optionalEvent.orElseThrow(() -> new NotFoundException("Event not found")));
         mav.addObject("attendees", us.getEventUsers(eventId));
@@ -586,10 +593,92 @@ public class FrontController {
 
     // ------------------------------------- TEST --------------------------------------
 
+    @RequestMapping(value = "/testAmenityCreation", method = RequestMethod.GET)
+    public ModelAndView amenities1() {
+        ModelAndView mav = new ModelAndView("views/amenities3");
+
+        // Create lists of pairs for DaysOfTheWeek and StandardTime
+        List<Pair<Integer, String>> daysPairs = new ArrayList<>();
+        List<Pair<Integer, String>> timesPairs = new ArrayList<>();
+
+        for (DayOfTheWeek day : DayOfTheWeek.values())
+            daysPairs.add(new Pair<>(day.getId(), day.name()));
+
+
+        for (StandardTime time : StandardTime.values())
+            timesPairs.add(new Pair<>(time.getId(), time.toString()));
+
+
+        mav.addObject("daysPairs", daysPairs);
+        mav.addObject("timesPairs", timesPairs);
+
+        return mav;
+    }
+
+
+
+
+    @RequestMapping(value = "/testAmenityCreation", method = RequestMethod.POST)
+    public ModelAndView amenities2(
+            @RequestParam("selectedShifts") List<String> selectedShifts
+    ) {
+        // mandar la lista de Strings al service que este los parsee, obtenga los valores que quiere y cree los shifts y luego los asocie
+        System.out.println(selectedShifts);
+        return new ModelAndView("redirect:/");
+    }
+
+
+    @RequestMapping(value = "/testAmenityBooking", method = RequestMethod.GET)
+    public ModelAndView booking() {
+        ModelAndView mav = new ModelAndView("views/amenities2");
+        int amenityId = 1;
+
+        // supongo que ya sabemos la fecha y el amenity id
+        mav.addObject("bookingDate", Date.valueOf("2023-10-10"));
+        mav.addObject("amenityId", amenityId);
+        mav.addObject("bookings", shs.getShifts(amenityId, DayOfTheWeek.Tuesday.getId(),Date.valueOf("2023-10-10")));
+        mav.addObject(Date.valueOf("2023-10-10"));
+        return mav;
+    }
+
+    @RequestMapping(value = "/testAmenityBooking", method = RequestMethod.POST)
+    public ModelAndView booking2(
+            @RequestParam("amenityId") Long amenityId,
+            @RequestParam("date") Date date,
+            @RequestParam("selectedShifts") List<Long> selectedShifts
+    ) {
+        System.out.println(selectedShifts);
+        int userId = 23; // where tha fuck is getLoggedUser()?
+        bs.createBooking(userId, amenityId, selectedShifts, date);
+        return new ModelAndView("redirect:/");
+    }
+
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-//        Worker worker = ws.createWorker("worker2@test.com", "WorkerName2", "WorkerSurn2ame", "password2", 5467364, "PhoneNumber", "Address", Language.ENGLISH, 1, "BusinessName");
-//        ws.updateWorker(worker.getUser().getUserId(), "Worker2Name", "Worker2Surname", "pa2ssword", 5437564, "PhoneNumber", "Address", Language.ENGLISH, false, "BusinessName", 1, 1, "Mi Biografia");
+
+        /*// System.out.println(bs.createBooking(););
+        System.out.println("Shifts on Tueday 2023-10-10 for the Swimming Pool");
+        System.out.println(shs.getShifts(1, DayOfTheWeek.Tuesday.getId(),Date.valueOf("2023-10-10")));
+
+        System.out.println("Overall All the Shifts for the Swimming Pool particular day (Monday)");
+        System.out.println(shs.getShifts(1, 1));
+
+        System.out.println("Enum check");
+        System.out.println(DayOfTheWeek.Thursday.getId()); // 4 hopefully
+        System.out.println(StandardTime.TIME_06_30.getId()); // 14 hopefully
+        // values of the array are obtained through the Shift object, when the user chooses a specific shift time, it has
+        // a mapping to a shiftId, those are the values expected to be received in the arrayList
+        System.out.println("User bookings 23");
+        System.out.println(bs.getUserBookings(23));
+
+        System.out.println("User bookings 25");
+        System.out.println(bs.getUserBookings(25));
+
+        System.out.println("Create Booking");
+        bs.createBooking(23, 1, new ArrayList<>(Arrays.asList(28L, 29L, 30L)), Date.valueOf("2023-10-10"));
+        */
+
+
         return new ModelAndView("views/testView");
     }
 
