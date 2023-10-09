@@ -181,7 +181,7 @@ public class FrontController {
         return "redirect:" + (referer != null ? referer : "/");
     }
 
-    @RequestMapping(value = "/applyTagsFilter", method = RequestMethod.POST)
+    @RequestMapping(value = "/apply-tags-as-filter", method = RequestMethod.POST)
     public ModelAndView applyTagsFilter(
             @RequestParam("tags") String tags,
             @RequestParam("currentUrl") String currentUrl
@@ -257,7 +257,7 @@ public class FrontController {
             @RequestParam("channelId") int channelId
     ) {
         String channelName= chs.findChannelById(channelId).get().getChannel().toLowerCase();
-        if(channelName.equals(BaseChannel.FEED.toString())){
+        if(channelName.equals(BaseChannel.FEED.toString().toLowerCase())){
             return new ModelAndView("redirect:/");
         }
         else {
@@ -508,8 +508,10 @@ public class FrontController {
     // ------------------------------------- POSTS --------------------------------------
 
     @RequestMapping(value = "/events/{id:\\d+}", method = RequestMethod.GET)
-    public ModelAndView viewEvent(@PathVariable(value = "id") int eventId,
-                                 @RequestParam(value = "success", required = false) boolean success) {
+    public ModelAndView viewEvent(
+            @PathVariable(value = "id") int eventId,
+            @RequestParam(value = "success", required = false) boolean success
+    ) {
         ModelAndView mav = new ModelAndView("views/event");
         Optional<Event> optionalEvent = es.findEventById(eventId);
         mav.addObject("event", optionalEvent.orElseThrow(() -> new NotFoundException("Event not found")));
@@ -528,7 +530,9 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/unattend/{id:\\d+}", method = RequestMethod.POST)
-    public ModelAndView unattendEvent(@PathVariable(value = "id") int eventId) {
+    public ModelAndView unattendEvent(
+            @PathVariable(value = "id") int eventId
+    ) {
 
         ModelAndView mav = new ModelAndView("redirect:/events/" + eventId);
         ats.deleteAttendee(sessionUtils.getLoggedUser().getUserId(), eventId);
@@ -584,6 +588,7 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
+        ws.createWorker("worker@test.com", "WorkerName", "WorkerSurname", "password", 5467564, "PhoneNumber", "Address", Language.ENGLISH, 1, "BusinessName");
         return new ModelAndView("views/testView");
     }
 
@@ -608,11 +613,16 @@ public class FrontController {
         throw new InsertionException("An error occurred whilst creating the User");
     }
 
-    @RequestMapping(value = "/service-profile", method = RequestMethod.GET)
-    public ModelAndView serviceProfile() {
+    @RequestMapping(value = "/service/profile/{id:\\d+}", method = RequestMethod.GET)
+    public ModelAndView serviceProfile(
+            @PathVariable(value = "id") int workerId
+    ) {
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
+        Optional<Worker> optionalWorker = ws.findWorkerById(workerId);
+        mav.addObject("worker", optionalWorker.orElseThrow(() -> new NotFoundException("Worker not found")));
         return mav;
     }
+
     @RequestMapping(value = "/services", method = RequestMethod.GET)
     public ModelAndView services() {
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");

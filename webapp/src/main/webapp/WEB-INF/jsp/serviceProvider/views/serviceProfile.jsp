@@ -34,9 +34,9 @@
         <div class="column-left">
           <%@ include file="/WEB-INF/jsp/components/widgets/leftColumn.jsp" %>
         </div>
-
         <div class="column-middle">
           <div class="f-c-c-c">
+
             <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileCard.jsp" %>
             <%@ include file="/WEB-INF/jsp/serviceProvider/components/tabbedBox.jsp" %>
 

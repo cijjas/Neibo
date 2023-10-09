@@ -41,7 +41,7 @@
             </c:choose>
         </div>
 
-        <p class="error-message">
+        <p class="error-message m-b-20 m-t-40">
             <span class="font-weight-bold"><spring:message code="Error"/>: </span>
             <c:choose>
                 <c:when test="${not empty errorMsg}">
