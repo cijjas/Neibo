@@ -618,8 +618,8 @@ public class FrontController {
     public ModelAndView amenities2(
             @RequestParam("selectedShifts") List<String> selectedShifts
     ) {
-        // mandar la lista de Strings al service que este los parsee, obtenga los valores que quiere y cree los shifts y luego los asocie
         System.out.println(selectedShifts);
+        as.createAmenity("New Amenity", "This is a great new amenity", 1, selectedShifts);
         return new ModelAndView("redirect:/");
     }
 

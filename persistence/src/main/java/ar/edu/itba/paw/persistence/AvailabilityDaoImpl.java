@@ -41,7 +41,8 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
         this.shiftDao = shiftDao;
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName("amenities_shifts_availability");
+                .withTableName("amenities_shifts_availability")
+                .usingGeneratedKeyColumns("amenityavailabilityid");
     }
 
     // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY INSERT -----------------------------------------
