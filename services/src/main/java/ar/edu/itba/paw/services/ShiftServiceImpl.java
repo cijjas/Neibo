@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ShiftServiceImpl implements ShiftService {
@@ -21,12 +22,17 @@ public class ShiftServiceImpl implements ShiftService {
     }
 
     @Override
-    public List<Shift> getShifts(long amenityId, long dayId) {
-        return shiftDao.getAllShifts(amenityId, dayId);
+    public Optional<Shift> findShift(long amenityId, long dayId) {
+        return shiftDao.findShift(amenityId, dayId);
     }
 
     @Override
     public List<Shift> getShifts(long amenityId, long dayId, Date date) {
         return shiftDao.getShifts(amenityId, dayId, date);
+    }
+
+    @Override
+    public Shift createShift(long dayId, long timeId) {
+        return shiftDao.createShift(dayId, timeId);
     }
 }
