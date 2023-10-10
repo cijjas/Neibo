@@ -398,17 +398,19 @@ public class FrontController {
             @RequestParam(value = "date", required = false) java.sql.Date date
     ) {
         ModelAndView mav = new ModelAndView("views/reservation");
-        mav.addObject("amenityId", amenityId);
+
+        mav.addObject("amenityId", 1);
+        mav.addObject("date", Date.valueOf("2023-10-10"));
+        //mav.addObject("date", date);
         mav.addObject("amenityName", as.findAmenityById(amenityId).orElse(null).getName());
-        mav.addObject("date", date);
-        mav.addObject("reservationsList", rs.getReservationsByDay(amenityId, date));
-        mav.addObject("timeList", rs.getAvailableTimesByDate(amenityId, date));
+        mav.addObject("bookings", shs.getShifts(amenityId, DayOfTheWeek.Tuesday.getId(), Date.valueOf("2023-10-10")));
         return mav;
     }
 
     @RequestMapping(value = "/reservation", method = RequestMethod.POST)
-    public ModelAndView reservation(@Valid @ModelAttribute("reservationTimeForm") final ReservationTimeForm reservationTimeForm,
-                                    final BindingResult errors
+    public ModelAndView reservation(
+            @Valid @ModelAttribute("reservationTimeForm") final ReservationTimeForm reservationTimeForm,
+            final BindingResult errors
     ) {
         if (errors.hasErrors()) {
             return reservation(reservationTimeForm, reservationTimeForm.getAmenityId(), reservationTimeForm.getDate());

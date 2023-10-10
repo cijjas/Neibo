@@ -1423,3 +1423,87 @@ h6 {
         background-color: inherit;
     }
 }
+
+
+
+.shifts-reservation{
+    width: 100%;
+    color: var(--text);
+    & table{
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        border: 1px solid var(--bordercolor);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        color: var(--text);
+
+        & td {
+            text-align: center;
+        }
+
+        & th {
+            font-weight: bolder;
+            color: var(--text);
+            text-align: center;
+
+        }
+        & th.day,
+        & td.day
+        {
+            text-align: start;
+            padding-left: var(--column-padding);
+        }
+        & tr:nth-child(even) {
+            background-color: var(--darkonbackground);
+        }
+
+        & tr:nth-child(odd) {
+            background-color: var(--onbackground);
+        }
+    }
+
+    & .cat{
+        background-color: var(--onbackground);
+        width: 100%;
+        border-radius: var(--border-radius);
+        border: 1px solid var(--lighttext);
+        overflow: hidden;
+        float: left;
+
+        & label {
+            &  span {
+                padding: 5px;
+                text-align: center;
+                display: block;
+                cursor: pointer;
+                transition: all 0.3s ease-in-out;
+
+                &:hover{
+                    color: var(--background);
+                    background-color: var(--old-primary);
+                }
+            }
+            & input {
+                position: absolute;
+                display: none;
+                color: var(--text) !important;
+                &  + span{
+                    color: var(--text);
+                }
+
+            }
+        }
+        & input:checked + span {
+            color: var(--background);
+            background-color: var(--primary);
+        }
+        & input:disabled + span {
+            color: var(--text);
+            background-color: var(--lightertext);
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+    }
+
+}

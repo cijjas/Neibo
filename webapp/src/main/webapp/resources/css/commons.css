@@ -37,6 +37,7 @@ body {
 :root {
     --text: #4f5248;
     --lighttext: #83887f;
+    --lightertext: #9ca194;
     --background: #faf6e8;
     --onbackground: rgb(243, 243, 235);
     --onbackgroundfaded: rgb(245, 245, 244, 0.2);
@@ -64,6 +65,7 @@ body {
 .dark-mode {
     --text: #ced3c1;
     --lighttext: #b1bbab;
+    --lightertext: #878f82;
     --background: #454c52;
     --onbackground: rgb(59, 64, 70);
     --onbackgroundfaded: rgba(49, 58, 63, 0.1);
