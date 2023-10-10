@@ -19,6 +19,11 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
+    private final String WORKERS_PROFESSIONS_JOIN_PROFESSIONS =
+            "SELECT * " +
+                    "FROM workers_professions wp  " +
+                    "JOIN professions p ON wp.professionid = p.professionid ";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ProfessionWorkerDaoImpl.class);
 
 
@@ -41,6 +46,16 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
             LOGGER.error("Error inserting the Worker Profession", ex);
             throw new InsertionException("An error occurred whilst inserting the Worker Profession");
         }
+    }
 
+    // --------------------------------------- PROFESSIONWORKERS SELECT ------------------------------------------------
+    @Override
+    public String getWorkerProfession(long workerId) {
+        return jdbcTemplate.queryForObject(
+                WORKERS_PROFESSIONS_JOIN_PROFESSIONS +
+                        "WHERE workerid = ?",
+                new Object[]{workerId},
+                (rs, rowNum) -> rs.getString("profession")
+        );
     }
 }

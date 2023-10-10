@@ -37,17 +37,11 @@
 
       <div class="column-middle">
         <div class="upper-feed-buttons-box">
-
         </div>
-
         <div class="f-c-c-c">
-
-          <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileWidget.jsp" %>
-          <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileWidget.jsp" %>
-          <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileWidget.jsp" %>
-          <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileWidget.jsp" %>
-          <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileWidget.jsp" %>
-          <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileWidget.jsp" %>
+          <c:forEach var="worker" items="${workersList}" >
+            <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileWidget.jsp" %>
+          </c:forEach>
         </div>
       </div>
 

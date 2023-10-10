@@ -13,6 +13,10 @@ public interface ReviewService {
 
     List<Review> getReviews(long workerId);
 
+    float getAvgRating(long workerId);
+
+    int getReviewsCount(long workerId);
+
     // -------------------------------------------- REVIEWS DELETE -----------------------------------------------------
     void deleteReview(long reviewId);
 }

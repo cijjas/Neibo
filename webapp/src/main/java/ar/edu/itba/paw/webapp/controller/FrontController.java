@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.form.*;
 import ar.edu.itba.paw.webapp.form.validation.ReservationTimeForm;
+import ar.edu.itba.paw.webapp.form.validation.ReviewForm;
 import enums.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -704,22 +705,25 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/service/profile/{id:\\d+}", method = RequestMethod.GET)
-    public ModelAndView serviceProfile(
+    public ModelAndView serviceProfile(@ModelAttribute("reviewForm") final ReviewForm reviewForm,
             @PathVariable(value = "id") int workerId
     ) {
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
         Optional<Worker> optionalWorker = ws.findWorkerById(workerId);
 
-
         mav.addObject("worker", optionalWorker.orElseThrow(() -> new NotFoundException("Worker not found")));
+        mav.addObject("profession", pws.getWorkerProfession(workerId));
+        mav.addObject("reviews", rws.getReviews(workerId));
+        mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
+        mav.addObject("averageRating", rws.getAvgRating(workerId));
         return mav;
     }
 
     @RequestMapping(value = "/services", method = RequestMethod.GET)
     public ModelAndView services() {
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
-        List<Worker> workerList = ws.getWorkersByCriteria(1,10, Collections.emptyList(), sessionUtils.getLoggedUser().getNeighborhoodId());
-        mav.addObject("workerList", workerList);
+        List<Worker> workerList = ws.getWorkersByCriteria(1,10, null, sessionUtils.getLoggedUser().getNeighborhoodId());
+        mav.addObject("workersList", workerList);
         return mav;
     }
 
