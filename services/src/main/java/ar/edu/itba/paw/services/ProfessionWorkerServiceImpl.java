@@ -19,4 +19,10 @@ public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
     public void addWorkerProfession(long workerId, long professionId) {
         professionWorkerDao.addWorkerProfession(workerId, professionId);
     }
+
+    // --------------------------------------- PROFESSIONWORKERS SELECT ------------------------------------------------
+    @Override
+    public String getWorkerProfession(long workerId) {
+        return professionWorkerDao.getWorkerProfession(workerId);
+    }
 }

@@ -3,13 +3,13 @@
 
     <div class="">
         <input id="tab1" type="radio" name="tabs" checked>
-        <label for="tab1">Reviews</label>
+        <label for="tab1"><spring:message code="Reviews"/></label>
 
         <input id="tab2" type="radio" name="tabs">
-        <label for="tab2">Posts</label>
+        <label for="tab2"><spring:message code="Posts"/></label>
 
         <input id="tab3" type="radio" name="tabs">
-        <label for="tab3">Information</label>
+        <label for="tab3"><spring:message code="Information"/></label>
 
 
 
@@ -41,18 +41,53 @@
 
             <div class="container">
                 <div class="f-c-c-c">
-                    <div class="review-box f-c-s-s w-100">
-                        <span class="font-size-16 font-weight-bold">Juan ignacio</span>
-                        <span class="font-size-12">Barrio cerrado chacras</span>
-                        <div class="f-r-c-c">
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-solid fa-star"></i>
-                            <i class="fa-regular fa-star-half-stroke"></i>
-                            <i class="fa-regular fa-star"></i>
+                    <c:forEach var="review" items="${reviews}">
+                        <div class="review-box f-c-s-s w-100">
+                            <span class="font-size-16 font-weight-bold" id="userNamePlaceholder"><spring:message code="Loading."/></span>
+                            <span class="font-size-12" id="neighborhoodNamePlaceholder"><spring:message code="Loading."/></span>
+                            <div class="f-r-c-c">
+                                                    <%-- VER COMO CASTEAR FULLSTARS A INT--%>
+                                <c:set var="fullStars" value="${review.rating}" />
+                                <c:set var="halfStar" value="${review.rating - fullStars}" />
+                                <c:set var="emptyStars" value="${5 - fullStars - (halfStar > 0 ? 1 : 0)}" />
+
+                                <c:forEach begin="1" end="${fullStars}">
+                                    <i class="fa-solid fa-star"></i>
+                                </c:forEach>
+
+                                <c:if test="${halfStar > 0}">
+                                    <i class="fa-solid fa-star-half-stroke"></i>
+                                </c:if>
+
+                                <c:forEach begin="1" end="${emptyStars}">
+                                    <i class="fa-regular fa-star"></i>
+                                </c:forEach>
+                            </div>
+                            <p class="font-size-12"> <c:out value="${review.review}"/></p>
                         </div>
-                        <p class="font-size-12"> El flaco es muy bueno pero la verdad tiene cara de orto y no me gusta</p>
-                    </div>
+                        <script>
+                            async function fetchUserData(reviewUserId) {
+                                try {
+                                    const userNameResponse = await fetch("/api/userName?id=" + reviewUserId);
+                                    if (!userNameResponse.ok) {
+                                        throw new Error("Failed to fetch user name from the API.");
+                                    }
+                                    const userNameElement = document.getElementById("userNamePlaceholder");
+                                    userNameElement.textContent = await userNameResponse.text();
+
+                                    const neighborhoodNameResponse = await fetch("/api/neighborhoodName?id=" + reviewUserId);
+                                    if (!neighborhoodNameResponse.ok) {
+                                        throw new Error("Failed to fetch neighborhood name from the API.");
+                                    }
+                                    const neighborhoodNameElement = document.getElementById("neighborhoodNamePlaceholder");
+                                    neighborhoodNameElement.textContent = await neighborhoodNameResponse.text();
+                                } catch (error) {
+                                    console.error(error.message);
+                                }
+                            }
+                            fetchUserData(${review.userId});
+                        </script>
+                    </c:forEach>
                 </div>
             </div>
         </section>

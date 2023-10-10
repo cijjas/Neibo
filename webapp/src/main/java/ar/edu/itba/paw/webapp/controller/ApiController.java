@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ public class ApiController {
     private final ResourceService res;
     private final ContactService cos;
     private final LikeService ls;
+    private final ProfessionWorkerService pws;
 
 
     @Autowired
@@ -43,7 +45,8 @@ public class ApiController {
                          final EventService es,
                          final ResourceService res,
                          final ContactService cos,
-                         final LikeService ls) {
+                         final LikeService ls,
+                         final ProfessionWorkerService pws) {
         this.sessionUtils = sessionUtils;
         this.is = is;
         this.ps = ps;
@@ -60,6 +63,7 @@ public class ApiController {
         this.res = res;
         this.cos = cos;
         this.ls = ls;
+        this.pws = pws;
     }
 
     @RequestMapping(value = "/comment", method = RequestMethod.GET)
@@ -136,4 +140,28 @@ public class ApiController {
         return ps.findPostById(postId).get().toString();
     }
 
+    @RequestMapping(value = "/profession", method = RequestMethod.GET)
+    @ResponseBody
+    public String getProfession(
+            @RequestParam(value = "id") long workerId
+    ) {
+        return pws.getWorkerProfession(workerId);
+    }
+
+    @RequestMapping(value = "/userName", method = RequestMethod.GET)
+    @ResponseBody
+    public String getUserName(
+            @RequestParam(value = "id") long userId
+    ) {
+        return us.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found")).getName();
+    }
+
+    @RequestMapping(value = "/neighborhoodName", method = RequestMethod.GET)
+    @ResponseBody
+    public String getNeighborhoodName(
+            @RequestParam(value = "id") long userId
+    ) {
+        return nhs.findNeighborhoodById(us.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found"))
+                        .getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
+    }
 }

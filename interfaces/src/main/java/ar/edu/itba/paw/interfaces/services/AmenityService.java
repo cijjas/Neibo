@@ -40,25 +40,5 @@ public interface AmenityService {
     // -----------------------------------------------------------------------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
     // JOACO
-    Amenity createAmenity(
-            String name, String description, long neighborhoodId,
-            StandardTime stMonday,  StandardTime etMonday,
-            StandardTime stTuesday,  StandardTime etTuesday,
-            StandardTime stWednesday,  StandardTime etWednesday,
-            StandardTime stThursday,  StandardTime etThursday,
-            StandardTime stFriday,  StandardTime etFriday,
-            StandardTime stSaturday,  StandardTime etSaturday,
-            StandardTime stSunday,  StandardTime etSunday
-            );
-
-    Amenity createAmenity(
-            String name, String description, long neighborhoodId,
-            long stMondayShiftId,  long etMondayShiftId,
-            long stTuesdayShiftId,  long etTuesdayShiftId,
-            long stWednesdayShiftId,  long etWednesdayShiftId,
-            long stThursdayShiftId,  long etThursdayShiftId,
-            long stFridayShiftId,  long etFridayShiftId,
-            long stSaturdayShiftId,  long etSaturdayShiftId,
-            long stSundayShiftId,  long etSundayShiftId
-    );
+    Amenity createAmenity(String name, String description, long neighborhoodId, List<String> selectedShifts);
 }

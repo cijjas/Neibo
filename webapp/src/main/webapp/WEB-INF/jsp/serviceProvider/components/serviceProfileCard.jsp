@@ -4,7 +4,7 @@
     <div class="service-card">
         <div class="card-header">
             <c:choose>
-                <c:when test="${loggedUser.profilePictureId != 0}">
+                <c:when test="${worker.user.profilePictureId != 0}">
                     <img class="back-image"   src="${pageContext.request.contextPath}/images/<c:out value="${worker.user.profilePictureId}"/>" alt="profile_picture_img" />
                 </c:when>
                 <c:otherwise>
@@ -18,22 +18,22 @@
                     <c:out value="${worker.businessName}"/>
                 </div>
                 <div class="c-light-text c-primary" style="font-size: 13px">
-                    Categoria
+                    <c:out value="${profession}"/>
                 </div>
                 <span class="c-light-text" style="margin-left: 10px;"> <c:out value="${worker.phoneNumber}"/></span>
                 <p  class="c-light-text mr-3 ml-3" style="text-align: center">
-                    Bacon ipsum dolor sit amet landjaeger sausage brisket, jerky drumstick fatback boudin ball tip turducken. Pork belly meatball t-bone bresaola tail filet mignon kevin turkey ribeye shank flank doner cow kielbasa shankle. Pig swine chicken hamburger, tenderloin turkey rump ball tip sirloin frankfurter meatloaf boudin brisket ham hock.
+                    <c:out value="${worker.bio}"/>
                 </p>
             </div>
         </div>
         <div class="card-footer">
             <div class="inner">
-                <div>4.3</div>
-                <div class="c-light-text">Rating</div>
+                <div><c:out value="${averageRating}"/></div>
+                <div class="c-light-text"><spring:message code="Rating"/></div>
             </div>
             <div class="inner">
-                <div>432</div>
-                <div class="c-light-text">Reviews</div>
+                <div><c:out value="${reviewsCount}"/></div>
+                <div class="c-light-text"><spring:message code="Reviews"/></div>
             </div>
             <div class="inner">
                 <div>30</div>
