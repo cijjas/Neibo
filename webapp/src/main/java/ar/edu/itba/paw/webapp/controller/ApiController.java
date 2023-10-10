@@ -95,6 +95,7 @@ public class ApiController {
         ls.addLikeToPost(postId, userId);
         return ResponseEntity.ok("{\"message\": \"Post liked successfully.\"}");
     }
+
     @RequestMapping(value = "/unlike", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> unlikePost(

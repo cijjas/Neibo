@@ -14,6 +14,31 @@
 
 
         <section id="content1">
+    <%--            <form:form method="post" action="review" modelAttribute="reviewForm">--%>
+    <%--                <!-- Message input -->--%>
+    <%--                <div class="form-group">--%>
+    <%--                    <div class="w-100">--%>
+
+    <%--                        <div class="w-100">--%>
+    <%--                            <spring:message code="Leave.a.review" var="commentPlaceholder"/>--%>
+    <%--                            <form:textarea id="commentInput" path="comment" class="cool-input grey-input"  rows="3" placeholder="${commentPlaceholder}"/>--%>
+    <%--                            <div class="form-row form-error" style="font-size: 12px; margin-left:0.5rem">--%>
+    <%--                                <form:errors path="comment" cssClass="error" element="p"/>--%>
+    <%--                            </div>--%>
+    <%--                        </div>--%>
+    <%--                        <!-- Submit button -->--%>
+    <%--                        <div class="d-flex flex-column justify-content-center align-items-end">--%>
+    <%--                            <button id="submitButton" type="submit" class="cool-button cool-small on-bg" style="margin-top:5px; font-size: 12px;" >--%>
+    <%--                                <spring:message code="Submit"/>--%>
+    <%--                            </button>--%>
+    <%--                        </div>--%>
+    <%--                    </div>--%>
+    <%--                </div>--%>
+    <%--                <form:errors cssClass="error" element="p"/>--%>
+    <%--            </form:form>--%>
+
+
+
             <div class="container">
                 <div class="f-c-c-c">
                     <div class="review-box f-c-s-s w-100">
@@ -38,11 +63,16 @@
         </section>
 
         <section id="content3">
-            Bacon ipsum dolor sit amet beef venison beef ribs kielbasa. Sausage pig leberkas, t-bone sirloin shoulder bresaola. Frankfurter rump porchetta ham. Pork belly prosciutto brisket meatloaf short ribs.
-            Brisket meatball turkey short loin boudin leberkas meatloaf chuck andouille pork loin pastrami spare ribs pancetta rump. Frankfurter corned beef beef tenderloin short loin meatloaf swine ground round venison.
+            <c:out value="${worker.user.mail}"/>
+            <c:out value="${worker.address}"/>
+            <c:out value="${worker.user.name}"/>
         </section>
 
 
     </div>
 
 </div>
+
+
+
+<%----%>

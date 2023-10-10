@@ -187,7 +187,7 @@ public class FrontController {
         return "redirect:" + (referer != null ? referer : "/");
     }
 
-    @RequestMapping(value = "/applyTagsFilter", method = RequestMethod.POST)
+    @RequestMapping(value = "/apply-tags-as-filter", method = RequestMethod.POST)
     public ModelAndView applyTagsFilter(
             @RequestParam("tags") String tags,
             @RequestParam("currentUrl") String currentUrl
@@ -514,8 +514,10 @@ public class FrontController {
     // ------------------------------------- POSTS --------------------------------------
 
     @RequestMapping(value = "/events/{id:\\d+}", method = RequestMethod.GET)
-    public ModelAndView viewEvent(@PathVariable(value = "id") int eventId,
-                                 @RequestParam(value = "success", required = false) boolean success) {
+    public ModelAndView viewEvent(
+            @PathVariable(value = "id") int eventId,
+            @RequestParam(value = "success", required = false) boolean success
+    ) {
         ModelAndView mav = new ModelAndView("views/event");
 
         Optional<Event> optionalEvent = es.findEventById(eventId);
@@ -535,7 +537,9 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/unattend/{id:\\d+}", method = RequestMethod.POST)
-    public ModelAndView unattendEvent(@PathVariable(value = "id") int eventId) {
+    public ModelAndView unattendEvent(
+            @PathVariable(value = "id") int eventId
+    ) {
 
         ModelAndView mav = new ModelAndView("redirect:/events/" + eventId);
         ats.deleteAttendee(sessionUtils.getLoggedUser().getUserId(), eventId);
@@ -699,14 +703,23 @@ public class FrontController {
         throw new InsertionException("An error occurred whilst creating the User");
     }
 
-    @RequestMapping(value = "/service-profile", method = RequestMethod.GET)
-    public ModelAndView serviceProfile() {
+    @RequestMapping(value = "/service/profile/{id:\\d+}", method = RequestMethod.GET)
+    public ModelAndView serviceProfile(
+            @PathVariable(value = "id") int workerId
+    ) {
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
+        Optional<Worker> optionalWorker = ws.findWorkerById(workerId);
+
+
+        mav.addObject("worker", optionalWorker.orElseThrow(() -> new NotFoundException("Worker not found")));
         return mav;
     }
+
     @RequestMapping(value = "/services", method = RequestMethod.GET)
     public ModelAndView services() {
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
+        List<Worker> workerList = ws.getWorkersByCriteria(1,10, Collections.emptyList(), sessionUtils.getLoggedUser().getNeighborhoodId());
+        mav.addObject("workerList", workerList);
         return mav;
     }
 
