@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Post;
+import enums.BaseChannel;
 import enums.Language;
 import enums.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,28 +51,28 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId) {
-        return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, false);
+    public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, long userId) {
+        return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, false, userId);
     }
 
     @Override
-    public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId) {
-        return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, false);
+    public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, long userId) {
+        return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, false, userId);
     }
 
     @Override
     public List<Post> getHotPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId) {
-        return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, true);
+        return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, true, 0);
     }
 
     @Override
     public int getHotPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId) {
-        return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, true);
+        return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, true, 0);
     }
 
     @Override
-    public int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId) {
-        return (int) Math.ceil((double) getPostsCountByCriteria(channel, tags, neighborhoodId) / size);
+    public int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId, long userId) {
+        return (int) Math.ceil((double) getPostsCountByCriteria(channel, tags, neighborhoodId, userId) / size);
     }
 
     @Override
@@ -97,5 +98,14 @@ public class PostServiceImpl implements PostService {
         }
 
         return post;
+    }
+
+    @Override
+    public Post createWorkerPost(final String title, final String description, final long neighborId, final MultipartFile imageFile) {
+        Image i = null;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            i = imageService.storeImage(imageFile);
+        }
+        return postDao.createPost(title, description, neighborId, BaseChannel.WORKERS.getId(), i == null ? 0 : i.getImageId());
     }
 }

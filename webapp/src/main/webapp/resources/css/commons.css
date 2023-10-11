@@ -7,10 +7,9 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button, span{
     font: 14px/1 'IBM Plex Sans', sans-serif;
     font-weight: bold;
 }
-body {
 
-}
 body {
+    overflow: inherit;
     margin: 0;
     padding: 0;
     background-color: var(--background);
@@ -37,6 +36,7 @@ body {
 :root {
     --text: #4f5248;
     --lighttext: #83887f;
+    --lightertext: #9ca194;
     --background: #faf6e8;
     --onbackground: rgb(243, 243, 235);
     --onbackgroundfaded: rgb(245, 245, 244, 0.2);
@@ -64,6 +64,7 @@ body {
 .dark-mode {
     --text: #ced3c1;
     --lighttext: #b1bbab;
+    --lightertext: #878f82;
     --background: #454c52;
     --onbackground: rgb(59, 64, 70);
     --onbackgroundfaded: rgba(49, 58, 63, 0.1);
@@ -111,7 +112,12 @@ a:hover {
     color: inherit;
 }
 
-
+.normal{
+    font-weight: normal;
+}
+.bold{
+    font-weight: bold;
+}
 
 i {
     color: inherit;

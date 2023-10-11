@@ -97,7 +97,7 @@ public class ShiftDaoImplTest {
         testInsertionUtils.createShift(dKey.longValue(), tKey.longValue());
 
         // Exercise
-        Optional<Shift> foundShift = shiftDao.findShiftId(dKey.longValue(), tKey.longValue());
+        Optional<Shift> foundShift = shiftDao.findShiftId(tKey.longValue(), dKey.longValue());
 
         // Validations & Post Conditions
         assertTrue(foundShift.isPresent());

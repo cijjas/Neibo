@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <html>
 <head>
@@ -29,73 +30,59 @@
         <div class="column-middle">
             <div  class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
                 <h2><spring:message code="ChooseTime"/></h2>
-                <p style="color: var(--lighttext)"><c:out value="${amenityName}"/></p>
-                <p style="color: var(--lighttext)"><c:out value="${date}"/></p>
+                <p class="c-light-text mt-2"><c:out value="${amenityName}"/></p>
+                <p class="c-light-text mt-2"><c:out value="${date}"/></p>
                 <div class="divider"></div>
 
-                <form:form method="post" action="reservation" modelAttribute="reservationTimeForm">
-                    <div class="d-flex flex-row justify-content-center align-items-center">
-                        <div class="col-md-6">
-                            <form:label path="startTime" class="mt-3 mb-1"><spring:message code="StartTime"/></form:label>
-                            <form:select path="startTime" id="startTime" required="true" class="cool-input">
-                                <c:forEach var="time" items="${timeList}">
-                                    <option value="${time}">${time}</option>
+                <div class="f-c-c-c">
+                    <div class="shifts-reservation f-c-c-c">
+                        <form name="shiftForm" action="${pageContext.request.contextPath}/testAmenityCreation" method="post">
+                            <table>
+                                <tr>
+                                    <th>Shift</th>
+                                    <th>Status</th>
+                                </tr>
+                                <c:forEach var="shift" items="${bookings}" varStatus="loopStatus">
+                                    <tr>
+                                        <td>${shift.shiftId}</td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${shift.taken}">
+                                                    <div class="cat">
+                                                        <label class="w-100">
+                                                            <input type="checkbox" name="selectedShifts" value="${shift.shiftId}" disabled/>
+                                                            <span>${shift.startTime.timeInterval} - ${bookings[loopStatus.index + 1].startTime.timeInterval}</span>
+                                                        </label>
+                                                    </div>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="cat">
+                                                        <label class="w-100">
+                                                            <input type="checkbox" name="selectedShifts" value="${shift.shiftId}" />
+                                                            <span>${shift.startTime.timeInterval} - ${bookings[loopStatus.index + 1].startTime.timeInterval}</span>
+                                                        </label>
+                                                    </div>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                    </tr>
                                 </c:forEach>
-                            </form:select>
-                            <form:errors path="startTime" cssClass="error" element="p"/>
-                        </div>
-                        <div class="col-md-6">
-                            <form:label path="endTime" class="mt-3 mb-1"><spring:message code="EndTime"/></form:label>
-                            <form:select path="endTime" id="endTime" required="true" class="cool-input">
-                                <c:forEach var="time" items="${timeList}">
-                                    <option value="${time}">${time}</option>
-                                </c:forEach>
-                            </form:select>
-                            <form:errors path="endTime" cssClass="error" element="p"/>
-                        </div>
+
+                            </table>
+
+
+                        </form>
                     </div>
-                    <form:errors cssClass="error" element="p"/>
-
-                    <input type="hidden" name="amenityId" value="${amenityId}" />
-                    <input type="hidden" name="date" value="${date}" />
-
                     <div class="col-md-12">
                         <div class="d-flex justify-content-end m-t-40">
-                            <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg m-b-20" style="height:40px;" ><spring:message code="Reserve"/></button>
+                            <button onclick="" type="submit" class="cool-button cool-small on-bg m-b-20" style="height:40px;" ><spring:message code="Reserve"/></button>
                         </div>
                     </div>
-                </form:form>
-                <table class="table-striped w-100 table-hover">
-                    <thead>
-                    <tr>
-                        <th><spring:message code="UnavailableTimes"/></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach var="time" items="${timeList}">
-                        <c:set var="isUnavailable" value="false" />
-                        <c:forEach var="reservation" items="${reservationsList}">
-                            <c:if test="${time == reservation.startTime || time == reservation.endTime}">
-                                <c:set var="isUnavailable" value="true" />
-                            </c:if>
-                        </c:forEach>
-                        <tr>
-                            <c:choose>
-                                <c:when test="${isUnavailable}">
-                                    <td style="color: var(--error)">
-                                        <c:out value="${time}" />
-                                    </td>
-                                </c:when>
-                                <c:otherwise>
-                                    <td>
-                                        <c:out value="${time}" />
-                                    </td>
-                                </c:otherwise>
-                            </c:choose>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
+                </div>
+
+
+
+
             </div>
         </div>
 

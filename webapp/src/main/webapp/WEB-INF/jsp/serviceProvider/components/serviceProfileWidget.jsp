@@ -24,7 +24,7 @@
             </div>
             <div class="title-total">
                 <div class="title">
-                    <span id="professionPlaceholder"><spring:message code="Loading."/></span>
+                    <span id="professionPlaceholder-${worker.user.userId}"><spring:message code="Loading."/></span>
                 </div>
                 <h2><c:out value="${worker.user.name}"/></h2>
                 <div class="desc">
@@ -37,7 +37,7 @@
                             if (!response.ok) {
                                 throw new Error("Failed to fetch data from the API.");
                             }
-                            const professionElement = document.getElementById("professionPlaceholder");
+                            const professionElement = document.getElementById("professionPlaceholder-${worker.user.userId}");
                             professionElement.textContent = await response.text();
                         } catch (error) {
                             console.error(error.message);

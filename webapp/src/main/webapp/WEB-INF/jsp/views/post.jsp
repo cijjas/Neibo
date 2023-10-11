@@ -24,7 +24,6 @@
 <body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
 <!-- Navigation Bar -->
     <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
-
     <div class="container ">
         <div class="row">
             <div class="column column-left">
@@ -32,7 +31,7 @@
             </div>
 
             <div class="column column-middle ">
-                <%@ include file="/WEB-INF/jsp/components/widgets/postcard.jsp" %>
+                <%@ include file="/WEB-INF/jsp/components/widgets/postCard.jsp" %>
             </div>
 
             <div class="column column-right">

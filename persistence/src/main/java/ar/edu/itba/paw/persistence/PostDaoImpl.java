@@ -134,7 +134,7 @@ public class PostDaoImpl implements PostDao {
     // --------------------------------------------------- COMPLEX -----------------------------------------------------
 
     @Override
-    public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, boolean hot) {
+    public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, boolean hot, long userId) {
         // BASE QUERY
         StringBuilder query = new StringBuilder(POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
         // PARAMS
@@ -147,6 +147,11 @@ public class PostDaoImpl implements PostDao {
         if (channel != null && !channel.isEmpty()) {
             query.append(" AND channel LIKE ?");
             queryParams.add(channel);
+        }
+
+        if(userId != 0) {
+        	query.append(" AND u.userid = ?");
+        	queryParams.add(userId);
         }
 
         // Append neighborhoodId condition, 1, 2 or 3 representing Olivos Golf Club, Pacheco Golf or Martindale for example
@@ -198,7 +203,7 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, boolean hot) {
+    public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, boolean hot, long userId) {
         // Create the base SQL query string for counting
         StringBuilder query = new StringBuilder(COUNT_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
 
@@ -211,6 +216,11 @@ public class PostDaoImpl implements PostDao {
         if (channel != null && !channel.isEmpty()) {
             query.append(" AND c.channel LIKE ?");
             queryParams.add("%" + channel + "%");
+        }
+
+        if(userId != 0) {
+            query.append(" AND u.userid = ?");
+            queryParams.add(userId);
         }
 
         // Append the neighborhoodId condition

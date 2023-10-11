@@ -16,7 +16,7 @@ public interface PostDao {
 
     Optional<Post> findPostById(long id);
 
-    List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, boolean hot);
+    List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, boolean hot, long userId);
 
-    int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, boolean hot);
+    int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, boolean hot, long userId);
 }

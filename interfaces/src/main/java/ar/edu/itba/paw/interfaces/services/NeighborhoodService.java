@@ -15,5 +15,7 @@ public interface NeighborhoodService {
 
     Optional<Neighborhood> findNeighborhoodById(long id);
 
+    Optional<Neighborhood> findNeighborhoodByName(String name);
+
     List<Neighborhood> getNeighborhoods();
 }

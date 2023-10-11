@@ -59,6 +59,7 @@
                                 <form:errors path="date" cssClass="error" element="p" />
                             </div>
 
+
                             <div class="col-md-6">
                                 <spring:message code="Duration" var="durationPlaceholder" />
                                 <form:input path="duration" class="cool-input" placeholder="${durationPlaceholder}" type="number" min="1" max="79999" />
