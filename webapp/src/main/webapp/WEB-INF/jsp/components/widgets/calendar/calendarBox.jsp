@@ -229,7 +229,7 @@
         icon.addEventListener("click", () => {
           selectedMonth = icon.id === "prev" ? selectedMonth - 1 : selectedMonth + 1;
           if (selectedMonth < 0 || selectedMonth > 11) {
-            selectedDate.setMonth(selectedMonth);
+            selectedDate = new Date(selectedYear, selectedMonth, new Date().getDate());
             selectedYear = selectedDate.getFullYear();
             selectedMonth = selectedDate.getMonth();
           } else {
