@@ -31,7 +31,7 @@
             </div>
 
             <div class="column column-middle ">
-                <%@ include file="/WEB-INF/jsp/components/widgets/postcard.jsp" %>
+                <%@ include file="/WEB-INF/jsp/components/widgets/postCard.jsp" %>
             </div>
 
             <div class="column column-right">

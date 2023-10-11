@@ -468,7 +468,8 @@ public class FrontController {
 
     @RequestMapping("/calendar")
     public ModelAndView calendar(
-            @RequestParam(required = false, defaultValue = "0") long timestamp) {
+            @RequestParam(required = false, defaultValue = "0") long timestamp
+    ) {
 
         Date selectedDate = new Date(timestamp != 0 ? timestamp : System.currentTimeMillis());
 
@@ -502,6 +503,7 @@ public class FrontController {
         mav.addObject("selectedDay", selectedDay);
         mav.addObject("selectedMonth", selectedMonth);
         mav.addObject("selectedYear", selectedYear);
+        mav.addObject("selectedDate", selectedDate );
         mav.addObject("eventList", eventList);
         return mav;
     }

@@ -225,10 +225,52 @@
             <c:otherwise>
                 <c:forEach var="comment" items="${comments}" varStatus="loopStatus">
                     <div class="cool-comment w-100 p-2">
-                        <stong class="comment-header f-r-sb-c ">
+                        <div class="comment-header f-r-sb-c mb-2">
+                            <div class="f-r-s-c placeholder-glow">
+                                <img
+                                        id="comment-image-${comment.commentId}"
+                                        src=""
+                                        class="small-profile-picture placeholder"
+                                        alt="profile_picture_img"
+                                />
+                                <script>
+                                    (function(){
+                                        getCommentImage();
+                                        async function getCommentImage() {
+                                            let image = document.getElementById('comment-image-'+ ${comment.commentId})
+                                            if("${comment.user.profilePictureId}" === "0"){
+                                                image.src = "${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png";
+                                                image.classList.remove('placeholder');
+                                                return;
+                                            }
+                                            try{
+                                                const response= await fetch('${pageContext.request.contextPath}/images/<c:out value="${comment.user.profilePictureId}"/>');
+                                                if(!response.ok) {
+                                                    throw new Error('Network response was not ok');
+                                                }
+                                                const blob = await response.blob();
+
+                                                setTimeout(() => {
+                                                    image.classList.remove('placeholder');
+                                                    image.src = URL.createObjectURL(blob);
+                                                }, 3000);
+
+                                            }
+                                            catch (e) {
+                                                image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
+                                                console.log(e);
+                                            }
+                                        }
+                                    })();
+
+                                </script>
+
                                 <div class="bold"><c:out value="${comment.user.name} ${comment.user.surname}" /></div>
-                                <div class="bold"><c:out value="${comment.date}" /></div>
-                        </stong>
+
+                            </div>
+
+                            <div class="bold"><c:out value="${comment.date}" /></div>
+                        </div>
                         <div class="comment-body placeholder-glow w-100">
                             <p class="mt-2 w-100 c-light-text normal placeholder col-6" id="comment-${comment.commentId}"></p>
                             <script>

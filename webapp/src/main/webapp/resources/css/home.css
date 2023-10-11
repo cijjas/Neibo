@@ -1549,3 +1549,16 @@ h6 {
     }
 
 }
+
+
+.small-profile-picture{
+    width: 15px;
+    height: 15px;
+    border-radius: 50px;
+    object-fit: cover;
+    transition: all 0.3s ease-in-out;
+
+    & .rounded-placeholder{
+        background-color: var(--lighttext);
+    }
+}
