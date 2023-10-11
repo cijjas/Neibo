@@ -130,16 +130,16 @@ public class TestInsertionUtils {
                 .usingGeneratedKeyColumns("professionid");
     }
 
-    public Number createChannel(String channelName) {
+    public long createChannel(String channelName) {
         Map<String, Object> channelData = new HashMap<>();
         channelData.put("channel", channelName);
-        return channelInsert.executeAndReturnKey(channelData);
+        return channelInsert.executeAndReturnKey(channelData).longValue();
     }
 
-    public Number createNeighborhood(String neighborhoodName) {
+    public long createNeighborhood(String neighborhoodName) {
         Map<String, Object> neighborhoodData = new HashMap<>();
         neighborhoodData.put("neighborhoodname", neighborhoodName);
-        return neighborhoodInsert.executeAndReturnKey(neighborhoodData);
+        return neighborhoodInsert.executeAndReturnKey(neighborhoodData).longValue();
     }
 
     public void createNeighborhoodChannelMapping(Number neighborhoodId, Number channelId) {
@@ -157,32 +157,32 @@ public class TestInsertionUtils {
         likeInsert.execute(data);
     }
 
-    public Number createEvent(String name, String description, Date date, long duration, long neighborhoodId) {
+    public long createEvent(String name, String description, Date date, long duration, long neighborhoodId) {
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
         data.put("description", description);
         data.put("date", date);
         data.put("duration", duration);
         data.put("neighborhoodid", neighborhoodId);
-        return eventInsert.executeAndReturnKey(data);
+        return eventInsert.executeAndReturnKey(data).longValue();
     }
 
-    public Number createContact(long neighborhoodId, String contactName, String contactAddress, String contactPhone) {
+    public long createContact(long neighborhoodId, String contactName, String contactAddress, String contactPhone) {
         Map<String, Object> data = new HashMap<>();
         data.put("neighborhoodid", neighborhoodId);
         data.put("contactname", contactName);
         data.put("contactaddress", contactAddress);
         data.put("contactphone", contactPhone);
-        return contactInsert.executeAndReturnKey(data);
+        return contactInsert.executeAndReturnKey(data).longValue();
     }
 
-    public Number createComment(String comment, long userId, long postId) {
+    public long createComment(String comment, long userId, long postId) {
         Map<String, Object> data = new HashMap<>();
         data.put("comment", comment);
         data.put("commentdate", Timestamp.valueOf(LocalDateTime.now()));
         data.put("userid", userId);
         data.put("postid", postId);
-        return commentInsert.executeAndReturnKey(data);
+        return commentInsert.executeAndReturnKey(data).longValue();
     }
 
     public void createCategorization(long tagId, long postId) {
@@ -199,7 +199,7 @@ public class TestInsertionUtils {
         attendanceInsert.execute(data);
     }
 
-    public Number createPost(String title, String description, long userId, long channelId, long imageId) {
+    public long createPost(String title, String description, long userId, long channelId, long imageId) {
         Map<String, Object> data = new HashMap<>();
         data.put("title", title);
         data.put("description", description);
@@ -207,10 +207,10 @@ public class TestInsertionUtils {
         data.put("userid", userId);
         data.put("postPictureId", imageId == 0 ? null : imageId);
         data.put("channelid", channelId);
-        return postInsert.executeAndReturnKey(data);
+        return postInsert.executeAndReturnKey(data).longValue();
     }
 
-    public Number createUser(String mail, String password, String name, String surname,
+    public long createUser(String mail, String password, String name, String surname,
                              long neighborhoodId, Language language, boolean darkMode, UserRole role, int identification) {
         Map<String, Object> data = new HashMap<>();
         data.put("mail", mail);
@@ -223,13 +223,13 @@ public class TestInsertionUtils {
         data.put("language", language != null ? language.toString() : null);
         data.put("role", role != null ? role.toString() : null);
         data.put("identification", identification);
-        return userInsert.executeAndReturnKey(data);
+        return userInsert.executeAndReturnKey(data).longValue();
     }
 
-    public Number createTag(String name) {
+    public long createTag(String name) {
         Map<String, Object> data = new HashMap<>();
         data.put("tag", name);
-        return tagInsert.executeAndReturnKey(data);
+        return tagInsert.executeAndReturnKey(data).longValue();
     }
 
     public void createSubscription(long userId, long postId) {
@@ -239,52 +239,52 @@ public class TestInsertionUtils {
         subscriptionInsert.execute(data);
     }
 
-    public Number createResource(long neighborhoodId, String title, String description, long imageId) {
+    public long createResource(long neighborhoodId, String title, String description, long imageId) {
         Map<String, Object> data = new HashMap<>();
         data.put("neighborhoodid", neighborhoodId);
         data.put("resourcetitle", title);
         data.put("resourcedescription", description);
         data.put("resourceimageid", imageId == 0 ? null : imageId);
-        return resourceInsert.executeAndReturnKey(data);
+        return resourceInsert.executeAndReturnKey(data).longValue();
     }
 
-    public Number createReservation(long amenityId, long userId, Date date, Time startTime, Time endTime) {
+    public long createReservation(long amenityId, long userId, Date date, Time startTime, Time endTime) {
         Map<String, Object> data = new HashMap<>();
         data.put("amenityid", amenityId);
         data.put("userid", userId);
         data.put("date", date);
         data.put("starttime", startTime);
         data.put("endtime", endTime);
-        return reservationInsert.executeAndReturnKey(data);
+        return reservationInsert.executeAndReturnKey(data).longValue();
     }
 
-    public Number createAvailability(long amenityId, long shiftId) {
+    public long createAvailability(long amenityId, long shiftId) {
         Map<String, Object> data = new HashMap<>();
         data.put("amenityid", amenityId);
         data.put("shiftid", shiftId);
-        return availabilityInsert.executeAndReturnKey(data);
+        return availabilityInsert.executeAndReturnKey(data).longValue();
     }
 
-    public Number createBooking(long userId, long amenityAvailabilityId, java.sql.Date reservationDate) {
+    public long createBooking(long userId, long amenityAvailabilityId, java.sql.Date reservationDate) {
         Map<String, Object> data = new HashMap<>();
         data.put("userid", userId);
         data.put("amenityavailabilityid", amenityAvailabilityId);
         data.put("date", reservationDate);
-        return bookingInsert.executeAndReturnKey(data);
+        return bookingInsert.executeAndReturnKey(data).longValue();
     }
 
-    public Number createDay(String day) {
+    public long createDay(String day) {
         Map<String, Object> data = new HashMap<>();
         data.put("dayname", day);
 
-        return dayInsert.executeAndReturnKey(data);
+        return dayInsert.executeAndReturnKey(data).longValue();
     }
 
-    public Number createTime(Time timeInterval) {
+    public long createTime(Time timeInterval) {
         Map<String, Object> data = new HashMap<>();
         data.put("timeinterval", timeInterval);
 
-        return timeInsert.executeAndReturnKey(data);
+        return timeInsert.executeAndReturnKey(data).longValue();
     }
 
     public void addWorkerToNeighborhood(long workerId, long neighborhoodId) {
@@ -295,7 +295,7 @@ public class TestInsertionUtils {
         neighborhoodWorkerInsert.execute(data);
     }
 
-    public Number createReview(long workerId, long userId, float rating, String review) {
+    public long createReview(long workerId, long userId, float rating, String review) {
         Map<String, Object> data = new HashMap<>();
         data.put("workerid", workerId);
         data.put("userid", userId);
@@ -303,7 +303,7 @@ public class TestInsertionUtils {
         data.put("review", review);
         data.put("date", Timestamp.valueOf(LocalDateTime.now()));
 
-        return reviewInsert.executeAndReturnKey(data);
+        return reviewInsert.executeAndReturnKey(data).longValue();
     }
 
     public void createWorker(long workerId, String phoneNumber, String address, String businessName) {
@@ -324,24 +324,24 @@ public class TestInsertionUtils {
         professionWorkerInsert.execute(data);
     }
 
-    public Number createAmenity(String name, String description, long neighborhoodId) {
+    public long createAmenity(String name, String description, long neighborhoodId) {
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
         data.put("description", description);
         data.put("neighborhoodid", neighborhoodId);
 
-        return amenityInsert.executeAndReturnKey(data);
+        return amenityInsert.executeAndReturnKey(data).longValue();
     }
 
-    public Number createShift(long dayId, long startTimeId) {
+    public long createShift(long dayId, long startTimeId) {
         Map<String, Object> data = new HashMap<>();
         data.put("dayid", dayId);
         data.put("starttime", startTimeId);
 
-        return shiftInsert.executeAndReturnKey(data);
+        return shiftInsert.executeAndReturnKey(data).longValue();
     }
 
-    public Number createImage(MultipartFile image) {
+    public long createImage(MultipartFile image) {
         Map<String, Object> data = new HashMap<>();
         byte[] imageBytes;
         try {
@@ -351,38 +351,38 @@ public class TestInsertionUtils {
         }
 
         data.put("image", imageBytes);
-        return imageInsert.executeAndReturnKey(data);
+        return imageInsert.executeAndReturnKey(data).longValue();
     }
 
-    public Number createProfession(String profession) {
+    public long createProfession(String profession) {
         Map<String, Object> data = new HashMap<>();
         data.put("profession", profession);
-        return professionInsertion.executeAndReturnKey(data);
+        return professionInsertion.executeAndReturnKey(data).longValue();
     }
 
     // ----------------------------------------------------------------------------------------------------
     // OVERLOADS FOR SIMPLIFYING TESTING ------------------------------------------------------------------
     // ----------------------------------------------------------------------------------------------------
 
-    public Number createContact(long neighborhoodId) {
+    public long createContact(long neighborhoodId) {
         String contactName = "Dummy Contact";
         String address = "Dummy address";
         String number = "14213242";
         return createContact(neighborhoodId, contactName, address, number);
     }
 
-    public Number createChannel() {
+    public long createChannel() {
         String channelName = "Dummy Channel";
         return createChannel(channelName);
     }
 
-    public Number createComment(long userId, long postId) {
+    public long createComment(long userId, long postId) {
         String comment = "Dummy Commentttt";
         return createComment(comment, userId, postId);
     }
 
 
-    public Number createEvent(long neighborhoodId) {
+    public long createEvent(long neighborhoodId) {
         String name = "Dummy Event Name";
         String description = "Me estoy volviendo loco";
         Date date = java.sql.Date.valueOf("2001-3-14");
@@ -390,18 +390,18 @@ public class TestInsertionUtils {
         return createEvent(name, description, date, duration, neighborhoodId);
     }
 
-    public Number createNeighborhood() {
+    public long createNeighborhood() {
         String name = "Dummy Neighborhood";
         return createNeighborhood(name);
     }
 
-    public Number createPost(long userId, long channelId, long imageId) {
+    public long createPost(long userId, long channelId, long imageId) {
         String title = "Dummy Title";
         String description = "Dummy Description";
         return createPost(title, description, userId, channelId, imageId);
     }
 
-    public Number createUser(long neighborhoodId) {
+    public long createUser(long neighborhoodId) {
         // Generate dummy values
         String mail = "dummy@mail.com";
         String password = "password";
@@ -414,7 +414,7 @@ public class TestInsertionUtils {
         return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id);
     }
 
-    public Number createUser(String mail, long neighborhoodId) {
+    public long createUser(String mail, long neighborhoodId) {
         // Generate dummy values
         String password = "password";
         String name = "Dummy";
@@ -426,7 +426,7 @@ public class TestInsertionUtils {
         return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id);
     }
 
-    public Number createUser(String mail, UserRole role, long neighborhoodId) {
+    public long createUser(String mail, UserRole role, long neighborhoodId) {
         // Generate dummy values
         String password = "password";
         String name = "Dummy";
@@ -437,41 +437,40 @@ public class TestInsertionUtils {
         return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id);
     }
 
-    public Number createTag() {
+    public long createTag() {
         String tagName = "Dummy Tag";
         return createTag(tagName);
     }
 
-    public Number createResource(long neighborhoodId) {
+    public long createResource(long neighborhoodId, long imageId) {
         String title = "Dummy Resource";
         String description = "Dummy Resource Description";
-        long imageId = 0;
         return createResource(neighborhoodId, title, description, imageId);
     }
 
-    public Number createReservation(long amenityId, long userId) {
+    public long createReservation(long amenityId, long userId) {
         Date date = new Date();
         Time startTime = Time.valueOf(LocalDateTime.now().toLocalTime());
         Time endTime = Time.valueOf(LocalDateTime.now().plusHours(1).toLocalTime());
         return createReservation(amenityId, userId, date, startTime, endTime);
     }
 
-    public Number createBooking(long userId, long amenityAvailabilityId) {
+    public long createBooking(long userId, long amenityAvailabilityId) {
         java.sql.Date date = java.sql.Date.valueOf("2022-12-12");
         return createBooking(userId, amenityAvailabilityId, date);
     }
 
-    public Number createDay() {
+    public long createDay() {
         String dayName = "Groundhog Day";
         return createDay(dayName);
     }
 
-    public Number createTime() {
+    public long createTime() {
         java.sql.Time time = new java.sql.Time(System.currentTimeMillis());
         return createTime(time);
     }
 
-    public Number createReview(long workerId, long userId) {
+    public long createReview(long workerId, long userId) {
         float rating = 2.34234F;
         String review = "Really Great Job";
         return createReview(workerId, userId, rating, review);
@@ -484,13 +483,13 @@ public class TestInsertionUtils {
         createWorker(workerId, phoneNumber, address, businessName);
     }
 
-    public Number createAmenity(long neighborhoodId) {
+    public long createAmenity(long neighborhoodId) {
         String name = "Amenity Name";
         String description = "Amenity Description";
         return createAmenity(name, description, neighborhoodId);
     }
 
-    public Number createImage(){
+    public long createImage(){
         // Create a small byte array for a fake image (e.g., a 1x1 white pixel)
         byte[] fakeImageBytes = new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
 
@@ -499,7 +498,7 @@ public class TestInsertionUtils {
         return createImage(fakeImage);
     }
 
-    public Number createProfession() {
+    public long createProfession() {
         String profession = "Some Profession";
         return createProfession(profession);
     }

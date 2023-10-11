@@ -42,31 +42,31 @@ public class AttendanceDaoImplTest {
     @Test
     public void testCreateAttendee() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number eKey = testInsertionUtils.createEvent(nhKey.longValue());
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long eKey = testInsertionUtils.createEvent(nhKey);
 
         // Exercise
-        attendanceDao.createAttendee(uKey.longValue(), eKey.longValue());
+        attendanceDao.createAttendee(uKey, eKey);
 
         // Validations & Post Conditions
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "events_users"));
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events_users.name()));
     }
 
     @Test
     public void testDeleteAttendee() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number eKey = testInsertionUtils.createEvent(nhKey.longValue());
-        testInsertionUtils.createAttendance(uKey.longValue(), eKey.longValue());
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long eKey = testInsertionUtils.createEvent(nhKey);
+        testInsertionUtils.createAttendance(uKey, eKey);
 
         // Exercise
-        boolean deleted = attendanceDao.deleteAttendee(uKey.longValue(), eKey.longValue());
+        boolean deleted = attendanceDao.deleteAttendee(uKey, eKey);
 
         // Validations & Post Conditions
         assertTrue(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, "events_users"));
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events_users.name()));
     }
 
     @Test
@@ -78,6 +78,6 @@ public class AttendanceDaoImplTest {
 
         // Validations & Post Conditions
         assertFalse(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, "events_users"));
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events_users.name()));
     }
 }

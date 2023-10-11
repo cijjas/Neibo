@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 
@@ -36,29 +37,29 @@ public class NeighborhoodWorkerDaoImplTest {
     @Test
     public void testAddWorkerToNeighborhood() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        testInsertionUtils.createWorker(uKey.longValue());
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        testInsertionUtils.createWorker(uKey);
 
         // Exercise
-        neighborhoodWorkerDao.addWorkerToNeighborhood(uKey.longValue(), nhKey.longValue());
+        neighborhoodWorkerDao.addWorkerToNeighborhood(uKey, nhKey);
 
         // Validations & Post Conditions
-        // No exception should be thrown
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_neighborhoods.name()));
     }
 
     @Test
     public void testRemoveWorkerFromNeighborhood() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        testInsertionUtils.createWorker(uKey.longValue());
-        neighborhoodWorkerDao.addWorkerToNeighborhood(uKey.longValue(), nhKey.longValue());
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        testInsertionUtils.createWorker(uKey);
+        neighborhoodWorkerDao.addWorkerToNeighborhood(uKey, nhKey);
 
         // Exercise
-        neighborhoodWorkerDao.removeWorkerFromNeighborhood(uKey.longValue(), nhKey.longValue());
+        neighborhoodWorkerDao.removeWorkerFromNeighborhood(uKey, nhKey);
 
         // Validations & Post Conditions
-        // No exception should be thrown
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_neighborhoods.name()));
     }
 }

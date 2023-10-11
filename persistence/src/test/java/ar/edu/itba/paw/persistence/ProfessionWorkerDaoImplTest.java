@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 
@@ -45,7 +46,7 @@ public class ProfessionWorkerDaoImplTest {
         professionWorkerDao.addWorkerProfession(uKey.longValue(), pKey.longValue());
 
         // Validations & Post Conditions
-        // No exceptions :D
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_professions.name()));
     }
 
     @Test
@@ -63,15 +64,4 @@ public class ProfessionWorkerDaoImplTest {
         // Validations & Post Conditions
         assertEquals(PROFESSION_NAME, profession);
     }
-
-/*    @Test
-    public void testGetNoWorkerProfession() {
-        // Pre Conditions
-
-        // Exercise
-        String profession = professionWorkerDao.getWorkerProfession(1);
-
-        // Validations & Post Conditions
-        assertNull(PROFESSION_NAME);
-    }*/
 }

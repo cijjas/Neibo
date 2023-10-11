@@ -33,8 +33,8 @@ public class ContactDaoImplTest {
     private ContactDaoImpl contactDao;
 
     private static final String CONTACT_NAME = "Sample Contact";
-    private static final  String ADDRESS = "Sample Address";
-    private static final  String NUMBER = "123456789";
+    private static final String ADDRESS = "Sample Address";
+    private static final String NUMBER = "123456789";
 
 
     @Autowired
@@ -50,27 +50,26 @@ public class ContactDaoImplTest {
     @Test
     public void testCreateContact() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
+        long nhKey = testInsertionUtils.createNeighborhood();
 
         // Exercise
-        Contact c = contactDao.createContact(nhKey.longValue(), CONTACT_NAME, ADDRESS, NUMBER);
+        Contact c = contactDao.createContact(nhKey, CONTACT_NAME, ADDRESS, NUMBER);
 
         // Validations & Post Conditions
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.contacts.name()));
         assertEquals(CONTACT_NAME, c.getContactName());
         assertEquals(ADDRESS, c.getContactAddress());
         assertEquals(NUMBER, c.getContactPhone());
-
     }
 
     @Test
     public void testGetContacts() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        testInsertionUtils.createContact(nhKey.longValue(), CONTACT_NAME, ADDRESS, NUMBER);
+        long nhKey = testInsertionUtils.createNeighborhood();
+        testInsertionUtils.createContact(nhKey, CONTACT_NAME, ADDRESS, NUMBER);
 
         // Exercise
-        List<Contact> contacts = contactDao.getContacts(nhKey.longValue());
+        List<Contact> contacts = contactDao.getContacts(nhKey);
 
         // Validations & Post Conditions
         assertEquals(1, contacts.size());
@@ -90,11 +89,11 @@ public class ContactDaoImplTest {
     @Test
     public void testDeleteContact() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number contactId = testInsertionUtils.createContact(nhKey.longValue());
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long contactId = testInsertionUtils.createContact(nhKey);
 
         // Exercise
-        boolean deleted = contactDao.deleteContact(contactId.longValue());
+        boolean deleted = contactDao.deleteContact(contactId);
 
         // Validations & Post Conditions
         assertTrue(deleted);

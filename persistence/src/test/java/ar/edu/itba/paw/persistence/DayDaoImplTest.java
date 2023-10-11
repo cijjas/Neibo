@@ -13,6 +13,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import ar.edu.itba.paw.interfaces.persistence.DayDao;
+
 import javax.sql.DataSource;
 import java.util.Optional;
 
@@ -47,17 +48,17 @@ public class DayDaoImplTest {
         Day createdDay = dayDao.createDay(DAY_NAME);
 
         // Validations & Post Conditions
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "days"));
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.days.name()));
         assertEquals(DAY_NAME, createdDay.getDayName());
     }
 
     @Test
     public void testFindDayById() {
         // Pre Conditions
-        Number dayKey = testInsertionUtils.createDay();
+        long dayKey = testInsertionUtils.createDay();
 
         // Exercise
-        Optional<Day> foundDay = dayDao.findDayById(dayKey.longValue());
+        Optional<Day> foundDay = dayDao.findDayById(dayKey);
 
         // Validations & Post Conditions
         assertTrue(foundDay.isPresent());

@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes =TestConfig.class)
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class PostDaoImplTest {
 
@@ -71,16 +72,16 @@ public class PostDaoImplTest {
     private static final int BASE_PAGE_SIZE = 10;
     private static final boolean NOT_HOT = false;
     private static final boolean HOT = true;
-    private Number nhKey1;
-    private Number nhKey2;
-    private Number tKey1;
-    private Number tKey2;
-    private Number uKey1;
-    private Number uKey2;
-    private Number uKey3;
-    private Number uKey4;
-    private Number chKey1;
-    private Number chKey2;
+    private long nhKey1;
+    private long nhKey2;
+    private long tKey1;
+    private long tKey2;
+    private long uKey1;
+    private long uKey2;
+    private long uKey3;
+    private long uKey4;
+    private long chKey1;
+    private long chKey2;
 
     @Before
     public void setUp() {
@@ -101,32 +102,33 @@ public class PostDaoImplTest {
     @Test
     public void testCreatePost() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number chKey = testInsertionUtils.createChannel();
-        Number iKey = testInsertionUtils.createImage();
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long chKey = testInsertionUtils.createChannel();
+        long iKey = testInsertionUtils.createImage();
 
         // Exercise
-        Post createdPost = postDao.createPost(TITLE_1, DESC_1, uKey.longValue(), chKey.longValue(), iKey.longValue());
+        Post createdPost = postDao.createPost(TITLE_1, DESC_1, uKey, chKey, iKey);
 
         // Validations & Post Conditions
         assertNotNull(createdPost);
         assertEquals(TITLE_1, createdPost.getTitle());
         assertEquals(DESC_1, createdPost.getDescription());
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts.name()));
     }
 
     @Test
     public void testFindPostById() {
         // Pre Conditions
         // Insert a test post into the database
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number chKey = testInsertionUtils.createChannel();
-        Number iKey = testInsertionUtils.createImage();
-        Number pKey = testInsertionUtils.createPost(uKey.longValue(), chKey.longValue(), iKey.longValue());
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long chKey = testInsertionUtils.createChannel();
+        long iKey = testInsertionUtils.createImage();
+        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
 
         // Exercise
-        Optional<Post> maybePost = postDao.findPostById(pKey.longValue());
+        Optional<Post> maybePost = postDao.findPostById(pKey);
 
         // Validations
         assertTrue(maybePost.isPresent());
@@ -150,7 +152,7 @@ public class PostDaoImplTest {
         populatePosts();
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(null, BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1.longValue(), NOT_HOT, 0);
+        List<Post> retrievedPosts = postDao.getPostsByCriteria(null, BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1, NOT_HOT, 0);
 
         // Validations
         assertEquals(2, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts
@@ -163,7 +165,7 @@ public class PostDaoImplTest {
         populatePosts();
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_1, BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1.longValue(), NOT_HOT, 0);
+        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_1, BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1, NOT_HOT, 0);
 
 
         // Validations
@@ -174,11 +176,11 @@ public class PostDaoImplTest {
     public void testGetPostsByCriteriaChannelAndNeighborhoodAndTag() {
         // Pre Conditions
         populatePosts();
-        List <String> TAG_LIST = new ArrayList<>();
+        List<String> TAG_LIST = new ArrayList<>();
         TAG_LIST.add(TAG_NAME_1);
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_1, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey1.longValue(), NOT_HOT,0);
+        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_1, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey1, NOT_HOT, 0);
 
         // Validations
         assertEquals(1, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts
@@ -188,11 +190,11 @@ public class PostDaoImplTest {
     public void testGetPostsByCriteriaChannelAndNeighborhoodAndMultipleTag() {
         // Pre Conditions
         populatePosts();
-        List <String> TAG_LIST = new ArrayList<>();
+        List<String> TAG_LIST = new ArrayList<>();
         TAG_LIST.add(TAG_NAME_2);
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey2.longValue(), NOT_HOT,0);
+        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey2, NOT_HOT, 0);
 
         // Validations
         assertEquals(2, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts
@@ -202,11 +204,11 @@ public class PostDaoImplTest {
     public void testGetPostsByCriteriaChannelAndNeighborhoodAndMultipleTagAndSize() {
         // Pre Conditions
         populatePosts();
-        List <String> TAG_LIST = new ArrayList<>();
+        List<String> TAG_LIST = new ArrayList<>();
         TAG_LIST.add(TAG_NAME_2);
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, BASE_PAGE, 1, TAG_LIST, nhKey2.longValue(), NOT_HOT, 0);
+        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, BASE_PAGE, 1, TAG_LIST, nhKey2, NOT_HOT, 0);
 
         // Validations
         assertEquals(1, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts
@@ -216,11 +218,11 @@ public class PostDaoImplTest {
     public void testGetPostsByCriteriaChannelAndNeighborhoodAndMultipleTagAndSizeAndPage() {
         // Pre Conditions
         populatePosts();
-        List <String> TAG_LIST = new ArrayList<>();
+        List<String> TAG_LIST = new ArrayList<>();
         TAG_LIST.add(TAG_NAME_2);
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, 2, 1, TAG_LIST, nhKey2.longValue(), NOT_HOT, 0);
+        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, 2, 1, TAG_LIST, nhKey2, NOT_HOT, 0);
 
         // Validations
         assertEquals(1, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts
@@ -244,10 +246,10 @@ public class PostDaoImplTest {
         nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
         nhKey2 = testInsertionUtils.createNeighborhood(NH_NAME_2);
 
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1.longValue());
-        uKey2 = testInsertionUtils.createUser(USER_MAIL_2, nhKey1.longValue());
-        uKey3 = testInsertionUtils.createUser(USER_MAIL_3, nhKey2.longValue());
-        uKey4 = testInsertionUtils.createUser(USER_MAIL_4, nhKey2.longValue());
+        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
+        uKey2 = testInsertionUtils.createUser(USER_MAIL_2, nhKey1);
+        uKey3 = testInsertionUtils.createUser(USER_MAIL_3, nhKey2);
+        uKey4 = testInsertionUtils.createUser(USER_MAIL_4, nhKey2);
 
         chKey1 = testInsertionUtils.createChannel(CHANNEL_NAME_1);
         chKey2 = testInsertionUtils.createChannel(CHANNEL_NAME_2);
@@ -255,20 +257,20 @@ public class PostDaoImplTest {
         tKey1 = testInsertionUtils.createTag(TAG_NAME_1);
         tKey2 = testInsertionUtils.createTag(TAG_NAME_2);
 
-        Number pKey1 = testInsertionUtils.createPost(TITLE_1, DESC_1, uKey1.longValue(), chKey1.longValue(), 0);
-        Number pKey2 = testInsertionUtils.createPost(TITLE_2, DESC_2, uKey2.longValue(), chKey1.longValue(), 0);
-        testInsertionUtils.createCategorization(tKey1.longValue(), pKey2.longValue());
-        Number pKey3 = testInsertionUtils.createPost(TITLE_3, DESC_3, uKey3.longValue(), chKey2.longValue(), 0);
-        testInsertionUtils.createCategorization(tKey2.longValue(), pKey3.longValue());
-        Number pKey4 = testInsertionUtils.createPost(TITLE_4, DESC_4, uKey4.longValue(), chKey2.longValue(), 0);
-        testInsertionUtils.createCategorization(tKey1.longValue(), pKey4.longValue());
-        testInsertionUtils.createCategorization(tKey2.longValue(), pKey4.longValue());
+        long pKey1 = testInsertionUtils.createPost(TITLE_1, DESC_1, uKey1, chKey1, 0);
+        long pKey2 = testInsertionUtils.createPost(TITLE_2, DESC_2, uKey2, chKey1, 0);
+        testInsertionUtils.createCategorization(tKey1, pKey2);
+        long pKey3 = testInsertionUtils.createPost(TITLE_3, DESC_3, uKey3, chKey2, 0);
+        testInsertionUtils.createCategorization(tKey2, pKey3);
+        long pKey4 = testInsertionUtils.createPost(TITLE_4, DESC_4, uKey4, chKey2, 0);
+        testInsertionUtils.createCategorization(tKey1, pKey4);
+        testInsertionUtils.createCategorization(tKey2, pKey4);
 
         // Comments to become hot
-        testInsertionUtils.createComment(uKey4.longValue(), pKey4.longValue());
-        testInsertionUtils.createComment(uKey4.longValue(), pKey4.longValue());
-        testInsertionUtils.createComment(uKey4.longValue(), pKey4.longValue());
-        testInsertionUtils.createComment(uKey4.longValue(), pKey4.longValue());
-        testInsertionUtils.createComment(uKey4.longValue(), pKey4.longValue());
+        testInsertionUtils.createComment(uKey4, pKey4);
+        testInsertionUtils.createComment(uKey4, pKey4);
+        testInsertionUtils.createComment(uKey4, pKey4);
+        testInsertionUtils.createComment(uKey4, pKey4);
+        testInsertionUtils.createComment(uKey4, pKey4);
     }
 }

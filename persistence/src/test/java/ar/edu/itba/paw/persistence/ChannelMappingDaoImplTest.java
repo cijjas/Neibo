@@ -41,14 +41,13 @@ public class ChannelMappingDaoImplTest {
     @Test
     public void testCreateChannelMapping() {
         // Pre Conditions
-        Number chKey = testInsertionUtils.createChannel();
-        Number nhKey = testInsertionUtils.createNeighborhood();
+        long chKey = testInsertionUtils.createChannel();
+        long nhKey = testInsertionUtils.createNeighborhood();
 
         // Exercise
-        channelMappingDao.createChannelMappingDao(chKey.longValue(), nhKey.longValue());
+        channelMappingDao.createChannelMapping(chKey, nhKey);
 
         // Validations & Post Conditions
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods_channels.name()));
     }
 }
-

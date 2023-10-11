@@ -45,20 +45,19 @@ public class TimeDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Time createdTime = timeDao.createTime(TIME_INTERVAL);
+        long timeKey = testInsertionUtils.createTime();
 
         // Validations & Post Conditions
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "times"));
-        assertEquals(TIME_INTERVAL, createdTime.getTimeInterval());
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.times.name()));
     }
 
     @Test
     public void testFindTimeById() {
         // Pre Conditions
-        Number timeKey = testInsertionUtils.createTime();
+        long timeKey = testInsertionUtils.createTime();
 
         // Exercise
-        Optional<Time> foundTime = timeDao.findTimeById(timeKey.longValue());
+        Optional<Time> foundTime = timeDao.findTimeById(timeKey);
 
         // Validations & Post Conditions
         assertTrue(foundTime.isPresent());

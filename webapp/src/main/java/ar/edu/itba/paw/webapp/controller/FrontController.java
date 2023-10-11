@@ -309,8 +309,7 @@ public class FrontController {
         mav.addObject("page", page);
         mav.addObject("totalPages", totalPages);
 
-        Optional<List<Tag>> optionalTags = ts.findTagsByPostId(postId);
-        List<Tag> tags = optionalTags.orElse(Collections.emptyList());
+        List<Tag> tags = ts.findTagsByPostId(postId);
 
         mav.addObject("tags", tags);
         mav.addObject("commentForm", commentForm);

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.Tag;
@@ -106,9 +107,9 @@ public class PostDaoImpl implements PostDao {
     // ------------------------------------------------ POSTS SELECT ---------------------------------------------------
 
     private final RowMapper<Post> ROW_MAPPER = (rs, rowNum) -> {
-        User user = userDao.findUserById(rs.getLong("userid")).orElse(null);
-        Channel channel = channelDao.findChannelById(rs.getLong("channelid")).orElse(null);
-        List<Tag> tags = tagDao.findTagsByPostId(rs.getLong("postid")).orElse(null);
+        User user = userDao.findUserById(rs.getLong("userid")).orElseThrow(() -> new NotFoundException("User not Found"));
+        Channel channel = channelDao.findChannelById(rs.getLong("channelid")).orElseThrow(()-> new NotFoundException("Channel not Found"));
+        List<Tag> tags = tagDao.findTagsByPostId(rs.getLong("postid"));
 
         return new Post.Builder()
                 .postId(rs.getLong("postid"))

@@ -58,14 +58,25 @@ public class ChannelDaoImplTest {
     @Test
     public void testFindChannelById() {
         // Pre Conditions
-        Number chKey = testInsertionUtils.createChannel();
+        long chKey = testInsertionUtils.createChannel();
 
         // Exercise
-        Optional<Channel> ch = channelDao.findChannelById(chKey.longValue());
+        Optional<Channel> ch = channelDao.findChannelById(chKey);
 
         // Validations & Post Conditions
         assertTrue(ch.isPresent());
-        assertEquals(chKey.longValue(), ch.get().getChannelId());
+        assertEquals(chKey, ch.get().getChannelId());
+    }
+
+    @Test
+    public void testFindChannelByInvalidId() {
+        // Pre Conditions
+
+        // Exercise
+        Optional<Channel> ch = channelDao.findChannelById(1);
+
+        // Validations & Post Conditions
+        assertFalse(ch.isPresent());
     }
 
     @Test
@@ -81,16 +92,6 @@ public class ChannelDaoImplTest {
         assertEquals(CHANNEL_NAME, ch.get().getChannel());
     }
 
-    @Test
-    public void testFindChannelByInvalidId() {
-        // Pre Conditions
-
-        // Exercise
-        Optional<Channel> ch = channelDao.findChannelById(1);
-
-        // Validations & Post Conditions
-        assertFalse(ch.isPresent());
-    }
 
     @Test
     public void testFindChannelByInvalidName() {
@@ -106,12 +107,12 @@ public class ChannelDaoImplTest {
     @Test
     public void testGetChannels() {
         // Pre Conditions
-        Number chKey = testInsertionUtils.createChannel();
-        Number nhKey = testInsertionUtils.createNeighborhood();
+        long chKey = testInsertionUtils.createChannel();
+        long nhKey = testInsertionUtils.createNeighborhood();
         testInsertionUtils.createNeighborhoodChannelMapping(nhKey, chKey);
 
         // Exercise
-        List<Channel> channels = channelDao.getChannels(nhKey.longValue());
+        List<Channel> channels = channelDao.getChannels(nhKey);
 
         // Validations & Post Conditions
         assertEquals(1, channels.size());
@@ -120,10 +121,10 @@ public class ChannelDaoImplTest {
     @Test
     public void testGetNoChannels() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
+        long nhKey = testInsertionUtils.createNeighborhood();
 
         // Exercise
-        List<Channel> channels = channelDao.getChannels(nhKey.longValue());
+        List<Channel> channels = channelDao.getChannels(nhKey);
 
         // Validations & Post Conditions
         assertEquals(0, channels.size());
