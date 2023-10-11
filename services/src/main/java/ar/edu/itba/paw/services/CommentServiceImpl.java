@@ -33,8 +33,14 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Optional<List<Comment>> findCommentsByPostId(long id) {
-        return commentDao.findCommentsByPostId(id);
+    public List<Comment> findCommentsByPostId(long id, int page, int size) { return commentDao.findCommentsByPostId(id,page,size); }
+
+    @Override
+    public int getCommentsCountByPostId(long id) { return commentDao.getCommentsCountByPostId(id); }
+
+    @Override
+    public int getTotalPostPages(long id, int size) {
+        return (int) Math.ceil((double) commentDao.getCommentsCountByPostId(id) / size);
     }
 
     public Optional<Comment> findCommentById(long id){

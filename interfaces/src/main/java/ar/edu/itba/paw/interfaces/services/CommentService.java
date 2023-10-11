@@ -11,5 +11,9 @@ public interface CommentService {
 
     Optional<Comment> findCommentById(long id);
 
-    Optional<List<Comment>> findCommentsByPostId(long id);
+    List<Comment> findCommentsByPostId(long id, int page, int size);
+
+    int getCommentsCountByPostId(long id);
+
+    int getTotalPostPages(long id, int size);
 }

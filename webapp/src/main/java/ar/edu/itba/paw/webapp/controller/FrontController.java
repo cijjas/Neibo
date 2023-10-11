@@ -286,15 +286,21 @@ public class FrontController {
     public ModelAndView viewPost(
             @PathVariable(value = "id") int postId,
             @ModelAttribute("commentForm") final CommentForm commentForm,
-            @RequestParam(value = "success", required = false) boolean success
+            @RequestParam(value = "success", required = false) boolean success,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
     ) {
         ModelAndView mav = new ModelAndView("views/post");
 
         Optional<Post> optionalPost = ps.findPostById(postId);
         mav.addObject("post", optionalPost.orElseThrow(() -> new NotFoundException("Post Not Found")));
 
-        Optional<List<Comment>> optionalComments = cs.findCommentsByPostId(postId);
-        mav.addObject("comments", optionalComments.orElse(Collections.emptyList()));
+        List<Comment> commentList = cs.findCommentsByPostId(postId, page, size);
+        int totalPages = cs.getTotalPostPages(postId, size);
+
+        mav.addObject("comments", commentList);
+        mav.addObject("page", page);
+        mav.addObject("totalPages", totalPages);
 
         Optional<List<Tag>> optionalTags = ts.findTagsByPostId(postId);
         List<Tag> tags = optionalTags.orElse(Collections.emptyList());
@@ -307,19 +313,22 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/posts/{id:\\d+}", method = RequestMethod.POST)
-    public ModelAndView viewPost(
+    public ModelAndView addCommentToPost(
             @PathVariable(value = "id") int postId,
             @Valid @ModelAttribute("commentForm") final CommentForm commentForm,
-            final BindingResult errors
+            final BindingResult errors,
+            @RequestParam(value = "post_page", defaultValue = "1") int postPage,
+            @RequestParam(value = "post_size", defaultValue = "10") int postSize
     ) {
         if (errors.hasErrors()) {
-            return viewPost(postId, commentForm, false);
+            return viewPost(postId, commentForm, false, postPage, postSize);
         }
         cs.createComment(commentForm.getComment(), sessionUtils.getLoggedUser().getUserId(), postId);
         ModelAndView mav = new ModelAndView("redirect:/posts/" + postId);
         mav.addObject("commentForm", new CommentForm());
         return mav;
     }
+
 
     // ------------------------------------- RESOURCES --------------------------------------
 
@@ -656,6 +665,26 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
+        Random random = new Random();
+        for (int i = 5; i < 35; i++) {
+            String email = "worker" + i + "@test.com";
+            String name = "WorkerName" + i;
+            String surname = "WorkerSurname" + i;
+            String password = "password";
+            int identificationNumber = 1000000 + i; // Starting from 1000000
+            String phoneNumber = "PhoneNumber" + i;
+            String address = "Address" + i;
+            Language language = Language.ENGLISH;
+
+            // Generate a random job number between 1 and 4
+            int jobNumber = random.nextInt(4) + 1;
+
+            // Create the worker
+            Worker worker = ws.createWorker(email, name, surname, password, identificationNumber, phoneNumber, address, language, jobNumber, "BusinessName");
+
+            // Add the worker to a neighborhood (assuming neighborhood ID is 1)
+            nhws.addWorkerToNeighborhood(worker.getUser().getUserId(), 1);
+        }
 
         /*// System.out.println(bs.createBooking(););
         System.out.println("Shifts on Tueday 2023-10-10 for the Swimming Pool");

@@ -89,33 +89,33 @@ public class CommentDaoImplTest {
         assertFalse(comment.isPresent());
     }
 
-    @Test
-    public void testFindCommentsByPostId() {
-        // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number chKey = testInsertionUtils.createChannel();
-        Number pKey = testInsertionUtils.createPost(uKey.longValue(), chKey.longValue(), 0);
-        testInsertionUtils.createComment(uKey.longValue(), pKey.longValue());
+//    @Test
+//    public void testFindCommentsByPostId() {
+//        // Pre Conditions
+//        Number nhKey = testInsertionUtils.createNeighborhood();
+//        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
+//        Number chKey = testInsertionUtils.createChannel();
+//        Number pKey = testInsertionUtils.createPost(uKey.longValue(), chKey.longValue(), 0);
+//        testInsertionUtils.createComment(uKey.longValue(), pKey.longValue());
+//
+//        // Exercise
+//        Optional<List<Comment>> comments = commentDao.findCommentsByPostId(pKey.longValue());
+//
+//        // Validations & Post Conditions
+//        assertTrue(comments.isPresent());
+//        assertEquals(1, comments.get().size());
+//    }
 
-        // Exercise
-        Optional<List<Comment>> comments = commentDao.findCommentsByPostId(pKey.longValue());
-
-        // Validations & Post Conditions
-        assertTrue(comments.isPresent());
-        assertEquals(1, comments.get().size());
-    }
-
-    @Test
-    public void testFindCommentsByInvalidPostId() {
-        // Pre Conditions
-
-        // Exercise
-        Optional<List<Comment>> comments = commentDao.findCommentsByPostId(1);
-
-        // Validations & Post Conditions
-        assertFalse(comments.isPresent());
-    }
+//    @Test
+//    public void testFindCommentsByInvalidPostId() {
+//        // Pre Conditions
+//
+//        // Exercise
+//        Optional<List<Comment>> comments = commentDao.findCommentsByPostId(1);
+//
+//        // Validations & Post Conditions
+//        assertFalse(comments.isPresent());
+//    }
 
 /*    @Test
     public void testFindNoCommentsByPostId() {

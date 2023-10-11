@@ -10,7 +10,9 @@ public interface CommentDao {
 
     // -------------------------------------------- COMMENTS INSERT ----------------------------------------------------
 
-    Optional<List<Comment>> findCommentsByPostId(long id);
+    List<Comment> findCommentsByPostId(long id, int page, int size);
+
+    int getCommentsCountByPostId(long id);
 
     // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
 
