@@ -16,17 +16,18 @@ public interface PostService {
     // It is not entirely necessary to have the neighborhoodId here but makes it easier for the mail sending
     Post createAdminPost(final long neighborhoodId, final String title, final String description, final long neighborId, final int channelId, String tags, final MultipartFile imageFile);
 
+    Post createWorkerPost(final String title, final String description, final long neighborId, final MultipartFile imageFile);
     // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Post> findPostById(long id);
 
-    List<Post> getPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags, long neighborhoodId);
+    List<Post> getPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags, long neighborhoodId, long userId);
 
-    int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId);
+    int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, long userId);
 
     List<Post> getHotPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags, long neighborhoodId);
 
     int getHotPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId);
 
-    int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId);
+    int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId, long userId);
 }

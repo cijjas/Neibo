@@ -41,10 +41,10 @@
 
             <div class="container">
                 <div class="f-c-c-c">
-                    <c:forEach var="review" items="${reviews}">
+                    <c:forEach var="review" items="${reviews}" varStatus="loopStatus">
                         <div class="review-box f-c-s-s w-100">
-                            <span class="font-size-16 font-weight-bold" id="userNamePlaceholder"><spring:message code="Loading."/></span>
-                            <span class="font-size-12" id="neighborhoodNamePlaceholder"><spring:message code="Loading."/></span>
+                            <span class="font-size-16 font-weight-bold" id="userNamePlaceholder-${loopStatus.index}"><spring:message code="Loading."/></span>
+                            <span class="font-size-12" id="neighborhoodNamePlaceholder-${loopStatus.index}"><spring:message code="Loading."/></span>
                             <div class="f-r-c-c">
                                                     <%-- VER COMO CASTEAR FULLSTARS A INT--%>
                                 <c:set var="fullStars" value="${review.rating}" />
@@ -66,30 +66,26 @@
                             <p class="font-size-12"> <c:out value="${review.review}"/></p>
                         </div>
                         <script>
-                            (function(){
-                                async function fetchUserData(reviewUserId) {
-                                    try {
-                                        const userNameResponse = await fetch("/api/userName?id=" + reviewUserId);
-                                        if (!userNameResponse.ok) {
-                                            throw new Error("Failed to fetch user name from the API.");
-                                        }
-                                        const userNameElement = document.getElementById("userNamePlaceholder");
-                                        userNameElement.textContent = await userNameResponse.text();
-
-                                        const neighborhoodNameResponse = await fetch("/api/neighborhoodName?id=" + reviewUserId);
-                                        if (!neighborhoodNameResponse.ok) {
-                                            throw new Error("Failed to fetch neighborhood name from the API.");
-                                        }
-                                        const neighborhoodNameElement = document.getElementById("neighborhoodNamePlaceholder");
-                                        neighborhoodNameElement.textContent = await neighborhoodNameResponse.text();
-                                    } catch (error) {
-                                        console.error(error.message);
+                            async function fetchUserData(reviewUserId) {
+                                try {
+                                    const userNameResponse = await fetch("/api/userName?id=" + reviewUserId);
+                                    if (!userNameResponse.ok) {
+                                        throw new Error("Failed to fetch user name from the API.");
                                     }
+                                    const userNameElement = document.getElementById("userNamePlaceholder-${loopStatus.index}");
+                                    userNameElement.textContent = await userNameResponse.text();
+
+                                    const neighborhoodNameResponse = await fetch("/api/neighborhoodName?id=" + reviewUserId);
+                                    if (!neighborhoodNameResponse.ok) {
+                                        throw new Error("Failed to fetch neighborhood name from the API.");
+                                    }
+                                    const neighborhoodNameElement = document.getElementById("neighborhoodNamePlaceholder-${loopStatus.index}");
+                                    neighborhoodNameElement.textContent = await neighborhoodNameResponse.text();
+                                } catch (error) {
+                                    console.error(error.message);
                                 }
-                                fetchUserData(${review.userId});
-
-                            })();
-
+                            }
+                            fetchUserData(${review.userId});
                         </script>
                     </c:forEach>
                 </div>
@@ -97,8 +93,46 @@
         </section>
 
         <section id="content2">
-            Bacon ipsum dolor sit amet landjaeger sausage brisket, jerky drumstick fatback boudin ball tip turducken. Pork belly meatball t-bone bresaola tail filet mignon kevin turkey ribeye shank flank doner cow kielbasa shankle. Pig swine chicken hamburger, tenderloin turkey rump ball tip sirloin frankfurter meatloaf boudin brisket ham hock. Hamburger venison brisket tri-tip andouille pork belly ball tip short ribs biltong meatball chuck. Pork chop ribeye tail short ribs, beef hamburger meatball kielbasa rump corned beef porchetta landjaeger flank. Doner rump frankfurter meatball meatloaf, cow kevin pork pork loin venison fatback spare ribs salami beef ribs.
-            Jerky jowl pork chop tongue, kielbasa shank venison. Capicola shank pig ribeye leberkas filet mignon brisket beef kevin tenderloin porchetta. Capicola fatback venison shank kielbasa, drumstick ribeye landjaeger beef kevin tail meatball pastrami prosciutto pancetta. Tail kevin spare ribs ground round ham ham hock brisket shoulder. Corned beef tri-tip leberkas flank sausage ham hock filet mignon beef ribs pancetta turkey.
+            <div id="actual-posts-container">
+                <c:choose>
+                    <c:when test="${empty postList}">
+                        <div class="no-posts-found">
+                            <i class="circle-icon fa-solid fa-magnifying-glass" style="color:var(--text)"></i>
+                            <spring:message code="Posts.notFound"/>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <!-- Include the page selector -->
+                        <c:if test="${totalPages >  1}">
+                            <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                                <jsp:param name="page" value="${page}" />
+                                <jsp:param name="totalPages" value="${totalPages}" />
+                            </jsp:include>
+                        </c:if>
+
+                        <c:forEach var="post" items="${postList}" >
+                            <c:set var="postTags" value="${post.tags}" scope="request"/>
+                            <jsp:include page="/WEB-INF/jsp/components/widgets/blogpost.jsp" >
+                                <jsp:param name="postID" value="${post.postId}" />
+                                <jsp:param name="postNeighborMail" value="${post.user.mail}" />
+                                <jsp:param name="postDate" value="${post.date}" />
+                                <jsp:param name="postTitle" value="${post.title}" />
+                                <jsp:param name="postDescription" value="${post.description}" />
+                                <jsp:param name="postImage" value="${post.postPictureId}" />
+                                <jsp:param name="postLikes" value="${post.likes}" />
+                            </jsp:include>
+                        </c:forEach>
+
+
+                        <c:if test="${totalPages >  1}">
+                            <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                                <jsp:param name="page" value="${page}" />
+                                <jsp:param name="totalPages" value="${totalPages}" />
+                            </jsp:include>
+                        </c:if>
+                    </c:otherwise>
+                </c:choose>
+            </div>
         </section>
 
         <section id="content3">
