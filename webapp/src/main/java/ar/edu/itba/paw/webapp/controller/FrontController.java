@@ -118,6 +118,14 @@ public class FrontController {
         List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags, sessionUtils.getLoggedUser().getNeighborhoodId());
         int totalPages = ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId());
 
+        String contextPath;
+
+        if (channelName.equals(BaseChannel.FEED.toString())) {
+            contextPath = "";
+        } else {
+            contextPath = "/" + channelName.toLowerCase();
+        }
+
         ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags(sessionUtils.getLoggedUser().getNeighborhoodId()));
         mav.addObject("appliedTags", tags);
@@ -125,6 +133,7 @@ public class FrontController {
         mav.addObject("page", page);
         mav.addObject("totalPages", totalPages);
         mav.addObject("channel", channelName);
+        mav.addObject("contextPath", contextPath);
 
         return mav;
     }
@@ -295,6 +304,8 @@ public class FrontController {
         Optional<Post> optionalPost = ps.findPostById(postId);
         mav.addObject("post", optionalPost.orElseThrow(() -> new NotFoundException("Post Not Found")));
 
+        String contextPath = "/posts/" + postId;
+
         List<Comment> commentList = cs.findCommentsByPostId(postId, page, size);
         int totalPages = cs.getTotalPostPages(postId, size);
 
@@ -308,6 +319,7 @@ public class FrontController {
         mav.addObject("tags", tags);
         mav.addObject("commentForm", commentForm);
         mav.addObject("showSuccessMessage", success);
+        mav.addObject("contextPath", contextPath);
 
         return mav;
     }
