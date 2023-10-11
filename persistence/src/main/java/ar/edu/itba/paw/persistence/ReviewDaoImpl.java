@@ -80,6 +80,26 @@ public class ReviewDaoImpl implements ReviewDao {
         return jdbcTemplate.query("SELECT * FROM reviews WHERE workerid = ?", reviewRowMapper, workerId);
     }
 
+    @Override
+    public float getAvgRating(long workerId) {
+        return jdbcTemplate.query("SELECT AVG(rating) FROM reviews WHERE workerid = ?", rs -> {
+            if (rs.next()) {
+                return rs.getFloat(1);
+            }
+            return 0f;
+        }, workerId);
+    }
+
+    @Override
+    public int getReviewsCount(long workerId) {
+        return jdbcTemplate.query("SELECT COUNT(*) FROM reviews WHERE workerid = ?", rs -> {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
+        }, workerId);
+    }
+
     // ---------------------------------------------- REVIEWS DELETE ---------------------------------------------------
     @Override
     public void deleteReview(long reviewId) {
