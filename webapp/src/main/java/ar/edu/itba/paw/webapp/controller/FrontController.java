@@ -400,11 +400,10 @@ public class FrontController {
     ) {
         ModelAndView mav = new ModelAndView("views/reservation");
 
-        mav.addObject("amenityId", 1);
-        mav.addObject("date", Date.valueOf("2023-10-10"));
-        //mav.addObject("date", date);
+        mav.addObject("amenityId", amenityId);
+        mav.addObject("date", date);
         mav.addObject("amenityName", as.findAmenityById(amenityId).orElse(null).getName());
-        mav.addObject("bookings", shs.getShifts(amenityId, DayOfTheWeek.Tuesday.getId(), Date.valueOf("2023-10-10")));
+        mav.addObject("bookings", shs.getShifts(amenityId,date));
         return mav;
     }
 
@@ -639,7 +638,7 @@ public class FrontController {
         // supongo que ya sabemos la fecha y el amenity id
         mav.addObject("bookingDate", Date.valueOf("2023-10-10"));
         mav.addObject("amenityId", amenityId);
-        mav.addObject("bookings", shs.getShifts(amenityId, DayOfTheWeek.Tuesday.getId(),Date.valueOf("2023-10-10")));
+        mav.addObject("bookings", shs.getShifts(amenityId,Date.valueOf("2023-10-10")));
         mav.addObject(Date.valueOf("2023-10-10"));
         return mav;
     }
@@ -687,6 +686,7 @@ public class FrontController {
 
     @RequestMapping(value = "/admin/test", method = RequestMethod.GET)
     public ModelAndView adminTest() {
+
         ModelAndView mav = new ModelAndView("admin/views/requestManager");
         return mav;
     }

@@ -85,18 +85,18 @@
             const liked = this.getAttribute('data-liked') === 'true';
             const postId = this.getAttribute('data-post-id'); // Get the post ID from the data attribute
             const likeEndpoint = liked ? '/api/unlike?postId=' + postId : '/api/like?postId=' + postId; // Determine the appropriate API endpoint based on the like status
+
             const likeCountElement = document.getElementById('like-count-' + postId);
             const currentCount = parseInt(likeCountElement.getAttribute('data-like-count'), 10);
             const newCount = liked ? currentCount - 1 : currentCount + 1;
             this.setAttribute('data-liked', (!liked).toString());
             this.classList.toggle('liked', !liked);
             const originalLiked = liked;
-
             // Simulate a false count-up/down animation
             animateCount(likeCountElement, currentCount, newCount);
-
             // Update the like count attribute
             likeCountElement.setAttribute('data-like-count', newCount);
+
             try {
                 const response = await fetch(likeEndpoint, {
                     method: 'POST'

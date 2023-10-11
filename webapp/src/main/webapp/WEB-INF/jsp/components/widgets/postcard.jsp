@@ -46,12 +46,45 @@
         </c:if>
 
     </div>
-    <div class="m-b-20">
-        <span id="post-like-button" class="like-button pl-3 pr-3 pt-2 pb-2" data-post-id="${post.postId}">
-            <i class="fa-solid fa-thumbs-up"></i>
-            <spring:message code="Like"/>
-        </span>
+
+    <div class="row">
+        <div class="col-6">
+            <div class="ml-2 d-flex flex-column justify-content-start align-items-start">
+                <div class="f-r-c-c">
+
+                    <span id="post-like-button" class="post-like-button pl-3 pr-3 pt-2 pb-2" data-post-id="${post.postId}">
+                       <span class=" mr-1 " id="like-count" data-like-count="${post.likes}">
+                            <c:out value="${post.likes}"/>
+                        </span>
+                        <i class="fa-solid fa-thumbs-up"></i>
+                    </span>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-6">
+                <c:choose>
+                    <c:when test="${empty tags}">
+                    </c:when>
+                    <c:otherwise>
+                        <div class="mr-2">
+                            <div class="w-100 d-flex flex-row justify-content-end align-items-center flex-wrap">
+
+                                <c:forEach var="tag" items="${tags}">
+                                    <a class="post-tag static m-l-3 m-r-3" href="${pageContext.request.contextPath}/?tag=${tag.tag}">
+                                        <c:out value="${tag.tag}" />
+                                    </a>
+                                </c:forEach>
+                            </div>
+                        </div>
+
+
+                    </c:otherwise>
+                </c:choose>
+        </div>
+
     </div>
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -71,10 +104,29 @@
                 console.error('An error occurred:', error);
             }
         }
+
+        let likeButtonLocked = false; // Like Semaphore
+
         document.getElementById('post-like-button').addEventListener('click', function () {
+            if (likeButtonLocked) {
+                return; // If the like button is locked, ignore the click event
+            }
+            likeButtonLocked = true;
             const liked = this.getAttribute('data-liked') === 'true';
             const postId = this.getAttribute('data-post-id'); // Get the post ID from the data attribute
             const likeEndpoint = liked ? '/api/unlike?postId=' + postId : '/api/like?postId=' + postId; // Determine the appropriate API endpoint based on the like status
+
+            const likeCountElement = document.getElementById('like-count');
+            const currentCount = parseInt(likeCountElement.getAttribute('data-like-count'), 10);
+            const newCount = liked ? currentCount - 1 : currentCount + 1;
+            this.setAttribute('data-liked', (!liked).toString());
+            this.classList.toggle('liked', !liked);
+            const originalLiked = liked;
+            // Simulate a false count-up/down animation
+            animateCount(likeCountElement, currentCount, newCount);
+            // Update the like count attribute
+            likeCountElement.setAttribute('data-like-count', newCount);
+
             fetch(likeEndpoint, {
                 method: 'POST'
             })
@@ -82,36 +134,38 @@
                     if (response.ok) {
                         this.setAttribute('data-liked', (!liked).toString());
                         this.classList.toggle('liked', !liked);
+                        likeButtonLocked = false;
                     } else {
                         console.error('Failed to like/unlike the post.');
                     }
                 })
                 .catch(error => {
+                    // If the response is not OK, revert the like button to its original state
+                    this.setAttribute('data-liked', originalLiked.toString());
+                    this.classList.toggle('liked', originalLiked);
+                    likeCountElement.setAttribute('data-like-count', currentCount);
                     console.error('An error occurred:', error);
                 });
+
+            function animateCount(element, from, to) {
+                let current = from;
+                const increment = from < to ? 1 : -1;
+
+                const interval = setInterval(function () {
+                    if (current === to) {
+                        clearInterval(interval);
+                    } else {
+                        current += increment;
+                        element.innerText = current;
+                    }
+                }, 50); // Adjust the interval and animation speed as needed
+            }
         });
     </script>
 
 
     <!-- Tag section -->
-    <div class="tag-section">
-        <div class="tag-list">
-            <c:choose>
-                <c:when test="${empty tags}">
-                </c:when>
-                <c:otherwise>
-                    <p class="m-b-10"> <spring:message code="Tags"/> </p>
-                        <div class="mt-2 d-flex flex-row justify-content-start align-items-center flex-wrap">
-                            <c:forEach var="tag" items="${tags}">
-                                <a class="post-tag static m-l-3 m-r-3" href="${pageContext.request.contextPath}/?tag=${tag.tag}">
-                                    <c:out value="${tag.tag}" />
-                                </a>
-                            </c:forEach>
-                        </div>
-                </c:otherwise>
-            </c:choose>
-        </div>
-    </div>
+
 
     <!-- Comment section -->
     <div class="comments-section">
@@ -170,12 +224,13 @@
             </c:when>
             <c:otherwise>
                 <c:forEach var="comment" items="${comments}" varStatus="loopStatus">
-                    <div class="cool-comment">
-                        <div class="comment-header">
-                            <strong><c:out value="${comment.user.name} ${comment.user.surname}" /></strong>
-                        </div>
-                        <div class="comment-body placeholder-glow">
-                            <p class="placeholder col-<%= Math.round(Math.floor(Math.random() * 12) + 1) %>" id="comment-${comment.commentId}"></p>
+                    <div class="cool-comment w-100 p-2">
+                        <stong class="comment-header f-r-sb-c ">
+                                <div class="bold"><c:out value="${comment.user.name} ${comment.user.surname}" /></div>
+                                <div class="bold"><c:out value="${comment.date}" /></div>
+                        </stong>
+                        <div class="comment-body placeholder-glow w-100">
+                            <p class="mt-2 w-100 c-light-text normal placeholder col-6" id="comment-${comment.commentId}"></p>
                             <script>
                                 async function getPostComment(commentId) {
                                     try {
@@ -186,6 +241,8 @@
                                         const commentElement = document.getElementById("comment-" + commentId);
                                         commentElement.textContent = await response.text();
                                         commentElement.classList.remove('placeholder');
+                                        commentElement.classList.remove('col-6');
+
                                     } catch (error) {
                                         console.error(error.message);
                                     }

@@ -7,10 +7,9 @@ body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button, span{
     font: 14px/1 'IBM Plex Sans', sans-serif;
     font-weight: bold;
 }
-body {
 
-}
 body {
+    overflow: inherit;
     margin: 0;
     padding: 0;
     background-color: var(--background);
@@ -113,7 +112,12 @@ a:hover {
     color: inherit;
 }
 
-
+.normal{
+    font-weight: normal;
+}
+.bold{
+    font-weight: bold;
+}
 
 i {
     color: inherit;

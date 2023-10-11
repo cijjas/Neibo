@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface ShiftService {
     Optional<Shift> findShift(long amenityId, long dayId);
 
-    List<Shift> getShifts(long amenityId, long dayId, Date date);
+    List<Shift> getShifts(long amenityId, Date date);
 
     Shift createShift(long dayId, long timeId);
 

@@ -66,26 +66,30 @@
                             <p class="font-size-12"> <c:out value="${review.review}"/></p>
                         </div>
                         <script>
-                            async function fetchUserData(reviewUserId) {
-                                try {
-                                    const userNameResponse = await fetch("/api/userName?id=" + reviewUserId);
-                                    if (!userNameResponse.ok) {
-                                        throw new Error("Failed to fetch user name from the API.");
-                                    }
-                                    const userNameElement = document.getElementById("userNamePlaceholder");
-                                    userNameElement.textContent = await userNameResponse.text();
+                            (function(){
+                                async function fetchUserData(reviewUserId) {
+                                    try {
+                                        const userNameResponse = await fetch("/api/userName?id=" + reviewUserId);
+                                        if (!userNameResponse.ok) {
+                                            throw new Error("Failed to fetch user name from the API.");
+                                        }
+                                        const userNameElement = document.getElementById("userNamePlaceholder");
+                                        userNameElement.textContent = await userNameResponse.text();
 
-                                    const neighborhoodNameResponse = await fetch("/api/neighborhoodName?id=" + reviewUserId);
-                                    if (!neighborhoodNameResponse.ok) {
-                                        throw new Error("Failed to fetch neighborhood name from the API.");
+                                        const neighborhoodNameResponse = await fetch("/api/neighborhoodName?id=" + reviewUserId);
+                                        if (!neighborhoodNameResponse.ok) {
+                                            throw new Error("Failed to fetch neighborhood name from the API.");
+                                        }
+                                        const neighborhoodNameElement = document.getElementById("neighborhoodNamePlaceholder");
+                                        neighborhoodNameElement.textContent = await neighborhoodNameResponse.text();
+                                    } catch (error) {
+                                        console.error(error.message);
                                     }
-                                    const neighborhoodNameElement = document.getElementById("neighborhoodNamePlaceholder");
-                                    neighborhoodNameElement.textContent = await neighborhoodNameResponse.text();
-                                } catch (error) {
-                                    console.error(error.message);
                                 }
-                            }
-                            fetchUserData(${review.userId});
+                                fetchUserData(${review.userId});
+
+                            })();
+
                         </script>
                     </c:forEach>
                 </div>

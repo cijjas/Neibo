@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <html>
 <head>
@@ -33,42 +34,48 @@
                 <p class="c-light-text mt-2"><c:out value="${date}"/></p>
                 <div class="divider"></div>
 
-                <h2>Available Shifts for ${date}</h2>
                 <div class="f-c-c-c">
                     <div class="shifts-reservation f-c-c-c">
-                        <table>
-                            <tr>
-                                <th>Shift</th>
-                                <th>Status</th>
-                            </tr>
-                            <c:forEach var="shift" items="${bookings}" >
+                        <form name="shiftForm" action="${pageContext.request.contextPath}/testAmenityCreation" method="post">
+                            <table>
                                 <tr>
-                                    <td>${shift.shiftId}</td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${shift.taken}">
-                                                <div class="cat " >
-                                                    <label class="w-100">
-                                                        <input type="checkbox" name="selectedShifts" value="${shift.shiftId}" disabled/> <span> ${shift.startTime.timeInterval} - hasta</span>
-                                                    </label>
-                                                </div>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <div class="cat ">
-                                                    <label class="w-100">
-                                                        <input type="checkbox" name="selectedShifts" value="${shift.shiftId}" /> <span> ${shift.startTime.timeInterval} - HASTA</span>
-                                                    </label>
-                                                </div>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
+                                    <th>Shift</th>
+                                    <th>Status</th>
                                 </tr>
-                            </c:forEach>
-                        </table>
+                                <c:forEach var="shift" items="${bookings}" varStatus="loopStatus">
+                                    <tr>
+                                        <td>${shift.shiftId}</td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${shift.taken}">
+                                                    <div class="cat">
+                                                        <label class="w-100">
+                                                            <input type="checkbox" name="selectedShifts" value="${shift.shiftId}" disabled/>
+                                                            <span>${shift.startTime.timeInterval} - ${bookings[loopStatus.index + 1].startTime.timeInterval}</span>
+                                                        </label>
+                                                    </div>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="cat">
+                                                        <label class="w-100">
+                                                            <input type="checkbox" name="selectedShifts" value="${shift.shiftId}" />
+                                                            <span>${shift.startTime.timeInterval} - ${bookings[loopStatus.index + 1].startTime.timeInterval}</span>
+                                                        </label>
+                                                    </div>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+
+                            </table>
+
+
+                        </form>
                     </div>
                     <div class="col-md-12">
                         <div class="d-flex justify-content-end m-t-40">
-                            <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg m-b-20" style="height:40px;" ><spring:message code="Reserve"/></button>
+                            <button onclick="" type="submit" class="cool-button cool-small on-bg m-b-20" style="height:40px;" ><spring:message code="Reserve"/></button>
                         </div>
                     </div>
                 </div>

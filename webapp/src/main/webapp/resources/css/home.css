@@ -661,6 +661,7 @@
             cursor: pointer;
         }
         &.tag{
+            padding: 2px 3px 2px 10px;
             margin-bottom: 10px;
         }
     }
@@ -1014,15 +1015,32 @@ footer div {
     font-weight: normal;
     overflow: hidden;
     cursor: pointer;
-    padding: 1em 1em;
+    padding: 7px 7px;
     width: 200px;
     transition: all 0.3s ease-in-out;
+    border-radius: var(--border-hard);
 
     box-shadow: 0 0 0 0 var(--primary);
     background-color: var(--background);
     color: var(--primary);
     border: 1px solid var(--primary);
-    border-radius: var(--border-hard);
+
+    &.red{
+        padding: 7px 7px;
+        font-size: 12px;
+        color: var(--text);
+        background-color: var(--onbackground);
+        border: 1px solid var(--lighttext);
+        border-radius: var(--border-hard);
+        transition: all 0.3s ease-in-out;
+        &:hover{
+            border: 1px solid var(--error);
+            transform: translateY(-4px) ;
+            box-shadow: 0 5px 0 0 var(--error);
+            color: var(--error);
+        }
+    }
+
 
     &:hover ,
     &:active ,
@@ -1411,6 +1429,8 @@ h6 {
     background-color: var(--darkonbackground);
     color: var(--lighttext);
     cursor: pointer;
+
+
     &:hover{
         transform: scale(1.1);
     }
@@ -1418,12 +1438,34 @@ h6 {
         transform: scale(1.1);
 
     }
+
+
     &.liked{
         color: var(--light-green);
         background-color: inherit;
+
+
     }
 }
+.post-like-button{
+    padding: 7px;
+    border-radius: 50px;
+    transition: all 0.1s ease-in-out;
+    background-color: var(--darkonbackground);
+    color: var(--lighttext);
+    cursor: pointer;
 
+
+
+
+
+    &.liked{
+        color: var(--primary);
+        background-color: var(--old-primary);
+
+
+    }
+}
 
 
 .shifts-reservation{

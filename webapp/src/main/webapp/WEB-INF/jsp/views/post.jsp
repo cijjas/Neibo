@@ -24,7 +24,6 @@
 <body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
 <!-- Navigation Bar -->
     <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
-
     <div class="container ">
         <div class="row">
             <div class="column column-left">

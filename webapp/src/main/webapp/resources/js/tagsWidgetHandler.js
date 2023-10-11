@@ -1,4 +1,4 @@
-(function(){
+    (function(){
 
     "use strict"
 
@@ -68,7 +68,8 @@
 
         return this;
     }
-// Check if the tag exists in the list of available tags
+
+    // Check if the tag exists in the list of available tags
     TagsInput.prototype.tagExistsInOptions = function (tag) {
         const tagOptions = document.querySelectorAll('.tag-option');
         for (var i = 0; i < tagOptions.length; i++) {
@@ -87,7 +88,20 @@
         return this;
     }
 
-    // Make sure input string have no error with the plugin
+    // Function to clear the commaeparated tags array
+    TagsInput.prototype.clearAllTags = function () {
+        this.arr = [];
+        this.orignal_input.value = '';
+        this.wrapper.querySelectorAll('.tag').forEach(function(tag) {
+            tag.remove();
+        }
+        );
+
+
+    }
+
+
+        // Make sure input string have no error with the plugin
     TagsInput.prototype.anyErrors = function(string){
         if( this.options.max != null && this.arr.length >= this.options.max ){
             console.log('max tags limit reached');
@@ -165,6 +179,7 @@
                 e.preventDefault();
                 tags.input.value = '';
                 if (str !== '') tags.addTag(str);
+
                 clearFilteredTags();
             }
 
@@ -172,7 +187,21 @@
 
     }
 
-    // Set All the Default Values
+        function insertClearButton(tags) {
+            const clearButton = document.createElement('a');
+            clearButton.className = 'w-100 cool-button red';
+            clearButton.innerHTML = '<spring:message code="Clear.all.tags"/>';
+            clearButton.style.fontWeight = 'bolder';
+            clearButton.onclick = function () {
+                tags.clearAllTags();
+                // Remove the clear button after clearing the tags
+                clearButton.remove();
+            };
+
+            tags.wrapper.insertBefore(clearButton, tags.input);
+        }
+
+        // Set All the Default Values
     TagsInput.defaults = {
         selector : '',
         wrapperClass : 'tags-input-wrapper',
