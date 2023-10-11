@@ -89,15 +89,40 @@ public class ShiftDaoImplTest {
         assertFalse(foundShift.isPresent());
     }
 
-    /*
     @Test
-    public void testGetAllShifts() {
+    public void testFindShiftId() {
+        // Pre Conditions
+        Number dKey = testInsertionUtils.createDay();
+        Number tKey = testInsertionUtils.createTime();
+        testInsertionUtils.createShift(dKey.longValue(), tKey.longValue());
+
+        // Exercise
+        Optional<Shift> foundShift = shiftDao.findShiftId(dKey.longValue(), tKey.longValue());
+
+        // Validations & Post Conditions
+        assertTrue(foundShift.isPresent());
+    }
+
+    @Test
+    public void testFindShiftIdInvalid() {
+        // Pre Conditions
+
+        // Exercise
+        Optional<Shift> foundShift = shiftDao.findShiftId(1, 1);
+
+        // Validations & Post Conditions
+        assertFalse(foundShift.isPresent());
+    }
+
+    @Test
+    public void testGetShifts() {
         // Pre Conditions
         Number nhKey = testInsertionUtils.createNeighborhood();
         Number aKey = testInsertionUtils.createAmenity(nhKey.longValue());
         Number dKey = testInsertionUtils.createDay();
         Number tKey = testInsertionUtils.createTime();
-        testInsertionUtils.createShift(dKey.longValue(), tKey.longValue());
+        Number sKey =  testInsertionUtils.createShift(dKey.longValue(), tKey.longValue());
+        testInsertionUtils.createAvailability(aKey.longValue(), sKey.longValue());
 
         // Exercise
         List<Shift> shifts = shiftDao.getShifts(aKey.longValue(), dKey.longValue(), Date.valueOf("2022-12-12"));
@@ -105,11 +130,15 @@ public class ShiftDaoImplTest {
         // Validations & Post Conditions
         assertEquals(1, shifts.size());
     }
-     */
 
     @Test
-    public void testGetShifts() {
+    public void testGetNoShifts() {
         // Pre Conditions
 
+        // Exercise
+        List<Shift> shifts = shiftDao.getShifts(1, 1, Date.valueOf("2022-12-12"));
+
+        // Validations & Post Conditions
+        assertEquals(0, shifts.size());
     }
 }

@@ -50,8 +50,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags, long neighborhoodId) {
-        return postDao.getPostsByCriteria(channel, page, size, date, tags, neighborhoodId, false);
+    public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId) {
+        return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, false);
     }
 
     @Override
@@ -60,8 +60,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getHotPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags, long neighborhoodId) {
-        return postDao.getPostsByCriteria(channel, page, size, date, tags, neighborhoodId, true);
+    public List<Post> getHotPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId) {
+        return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, true);
     }
 
     @Override

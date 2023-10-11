@@ -134,7 +134,7 @@ public class PostDaoImpl implements PostDao {
     // --------------------------------------------------- COMPLEX -----------------------------------------------------
 
     @Override
-    public List<Post> getPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags, long neighborhoodId, boolean hot) {
+    public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, boolean hot) {
         // BASE QUERY
         StringBuilder query = new StringBuilder(POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
         // PARAMS
@@ -179,10 +179,6 @@ public class PostDaoImpl implements PostDao {
             // Append the hot post conditions for comments
             query.append(" AND (SELECT COUNT(commentid) FROM comments as cm WHERE cm.postid = p.postid AND cm.commentdate >= NOW() - INTERVAL '72 HOURS') >= 1");
         }
-
-
-        // Append the ORDER BY clause
-        query.append(" ORDER BY postdate ").append(date);
 
         if (page != 0) {
             // Calculate the offset based on the page and size
@@ -254,102 +250,4 @@ public class PostDaoImpl implements PostDao {
         // Execute the query and retrieve the count
         return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());
     }
-
-
-    // ------------------------------------------------- EARLY VERSIONS ---------------------------------------------------
-
-    @Override
-    public List<Post> getPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags, long neighborhoodId) {
-        // Create the base SQL query string
-        StringBuilder query = new StringBuilder(POSTS_JOIN_USERS_JOIN_CHANNELS);
-
-        // Create a list to hold query parameters
-        List<Object> queryParams = new ArrayList<>();
-
-        // Append the WHERE clause to start building the query
-        query.append(" WHERE 1 = 1");
-
-        // Append conditions based on the provided parameters
-        if (channel != null && !channel.isEmpty()) {
-            query.append(" AND channel LIKE ?");
-            queryParams.add(channel);
-        }
-
-        // Append the neighborhoodId condition
-        query.append(" AND u.neighborhoodid = ?");
-        queryParams.add(neighborhoodId);
-
-        if (tags != null && !tags.isEmpty()) {
-            query.append(" AND EXISTS (");
-            query.append("SELECT 1 FROM posts_tags pt JOIN tags t ON pt.tagid = t.tagid");
-            query.append(" WHERE pt.postid = p.postid AND t.tag IN (");
-            for (int i = 0; i < tags.size(); i++) {
-                query.append("?");
-                queryParams.add(tags.get(i)); // Use the tag name as a string
-                if (i < tags.size() - 1) {
-                    query.append(", ");
-                }
-            }
-            query.append(")");
-            query.append(" HAVING COUNT(DISTINCT pt.tagid) = ?)"); // Ensure all specified tags exist
-            queryParams.add(tags.size());
-        }
-
-        // Append the ORDER BY clause
-        query.append(" ORDER BY postdate ").append(date);
-
-        if (page != 0) {
-            // Calculate the offset based on the page and size
-            int offset = (page - 1) * size;
-            // Append the LIMIT and OFFSET clauses for pagination
-            query.append(" LIMIT ? OFFSET ?");
-            queryParams.add(size);
-            queryParams.add(offset);
-        }
-
-        return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
-    }
-
-    @Override
-    public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId) {
-        // Create the base SQL query string for counting
-        StringBuilder query = new StringBuilder(COUNT_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
-
-        // Create a list to hold query parameters
-        List<Object> queryParams = new ArrayList<>();
-
-        // Append conditions based on the provided parameters
-        query.append(" WHERE 1 = 1");
-
-        if (channel != null && !channel.isEmpty()) {
-            query.append(" AND c.channel LIKE ?");
-            queryParams.add("%" + channel + "%");
-        }
-
-        // Append the neighborhoodId condition
-        query.append(" AND u.neighborhoodid = ?");
-        queryParams.add(neighborhoodId);
-
-
-        if (tags != null && !tags.isEmpty()) {
-            query.append(" AND EXISTS (");
-            query.append("SELECT 1 FROM posts_tags pt JOIN tags t ON pt.tagid = t.tagid");
-            query.append(" WHERE pt.postid = p.postid AND t.tag IN (");
-            for (int i = 0; i < tags.size(); i++) {
-                query.append("?");
-                queryParams.add(tags.get(i)); // Use the tag name as a string
-                if (i < tags.size() - 1) {
-                    query.append(", ");
-                }
-            }
-            query.append(")");
-            query.append(" HAVING COUNT(DISTINCT pt.tagid) = ?)"); // Ensure all specified tags exist
-            queryParams.add(tags.size());
-        }
-
-        // Execute the query and retrieve the result
-        return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());
-    }
-
-
 }

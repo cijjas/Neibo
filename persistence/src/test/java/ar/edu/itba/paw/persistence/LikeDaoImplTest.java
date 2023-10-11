@@ -34,8 +34,8 @@ public class LikeDaoImplTest {
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        likeDao = new LikeDaoImpl(ds);
         testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
+        likeDao = new LikeDaoImpl(ds);
     }
 
     @Test

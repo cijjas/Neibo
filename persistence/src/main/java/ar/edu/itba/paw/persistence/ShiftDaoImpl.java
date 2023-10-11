@@ -118,8 +118,8 @@ public class ShiftDaoImpl implements ShiftDao {
     }
 
     @Override
-    public Optional<Shift> findShift(long amenityId, long dayId) {
-        final List<Shift> list = jdbcTemplate.query(SHIFTS_JOIN_AMENITIES + " WHERE amenityid = ? and dayid = ?", ROW_MAPPER, amenityId, dayId);
+    public Optional<Shift> findShiftId(long startTime, long dayId) {
+        final List<Shift> list = jdbcTemplate.query(SHIFTS + " WHERE starttime = ? and dayid = ?", ROW_MAPPER, startTime, dayId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 

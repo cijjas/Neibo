@@ -102,7 +102,7 @@ public class ReviewDaoImpl implements ReviewDao {
 
     // ---------------------------------------------- REVIEWS DELETE ---------------------------------------------------
     @Override
-    public void deleteReview(long reviewId) {
-        jdbcTemplate.update("DELETE FROM reviews WHERE reviewid = ?", reviewId);
+    public boolean deleteReview(long reviewId) {
+        return jdbcTemplate.update("DELETE FROM reviews WHERE reviewid = ?", reviewId) > 0;
     }
 }

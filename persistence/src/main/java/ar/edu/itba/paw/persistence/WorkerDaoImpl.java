@@ -106,6 +106,7 @@ public class WorkerDaoImpl implements WorkerDao {
         query.append(" AND wn.neighborhoodid = ?");
         queryParams.add(neighborhoodId);
 
+
         // Append multiple professions conditions
         if (professions != null && !professions.isEmpty()) {
             query.append(" AND EXISTS (");

@@ -112,10 +112,9 @@ public class FrontController {
             String channelName,
             int page,
             int size,
-            SortOrder date,
             List<String> tags
     ) {
-        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags, sessionUtils.getLoggedUser().getNeighborhoodId());
+        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId());
         int totalPages = ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId());
 
         ModelAndView mav = new ModelAndView("views/index");
@@ -133,12 +132,11 @@ public class FrontController {
     public ModelAndView index(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ) {
         LOGGER.info("Registered a new user under the id {}", sessionUtils.getLoggedUser().getUserId());
 
-        return handleChannelRequest(BaseChannel.FEED.toString(), page, size, date, tags);
+        return handleChannelRequest(BaseChannel.FEED.toString(), page, size, tags);
     }
 
 
@@ -202,10 +200,9 @@ public class FrontController {
     public ModelAndView announcements(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ) {
-        return handleChannelRequest(BaseChannel.ANNOUNCEMENTS.toString(), page, size, date, tags);
+        return handleChannelRequest(BaseChannel.ANNOUNCEMENTS.toString(), page, size, tags);
     }
 
     // ------------------------------------- FORUM --------------------------------------
@@ -214,10 +211,9 @@ public class FrontController {
     public ModelAndView complaints(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ){
-        return handleChannelRequest(BaseChannel.COMPLAINTS.toString(), page, size, date, tags);
+        return handleChannelRequest(BaseChannel.COMPLAINTS.toString(), page, size, tags);
     }
 
     @RequestMapping(value = "/unverified", method = RequestMethod.GET)

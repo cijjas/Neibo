@@ -22,8 +22,8 @@ public class ShiftServiceImpl implements ShiftService {
     }
 
     @Override
-    public Optional<Shift> findShift(long amenityId, long dayId) {
-        return shiftDao.findShift(amenityId, dayId);
+    public Optional<Shift> findShift(long startTime, long dayId) {
+        return shiftDao.findShiftId(startTime, dayId);
     }
 
     @Override
