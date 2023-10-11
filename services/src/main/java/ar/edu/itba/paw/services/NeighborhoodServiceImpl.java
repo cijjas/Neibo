@@ -27,5 +27,10 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     public List<Neighborhood> getNeighborhoods() { return neighborhoodDao.getNeighborhoods(); }
 
     @Override
+    public Optional<Neighborhood> findNeighborhoodByName(String name) {
+        return neighborhoodDao.findNeighborhoodByName(name);
+    }
+
+    @Override
     public Optional<Neighborhood> findNeighborhoodById(long id) { return neighborhoodDao.findNeighborhoodById(id); }
 }

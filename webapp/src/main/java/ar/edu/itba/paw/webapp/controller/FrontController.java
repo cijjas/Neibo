@@ -115,8 +115,8 @@ public class FrontController {
             SortOrder date,
             List<String> tags
     ) {
-        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags, sessionUtils.getLoggedUser().getNeighborhoodId());
-        int totalPages = ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId());
+        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), 0);
+        int totalPages = ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), 0);
 
         ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags(sessionUtils.getLoggedUser().getNeighborhoodId()));
@@ -656,6 +656,28 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
+//        Random random = new Random();
+//        for (int i = 5; i < 35; i++) {
+//            String email = "worker" + i + "@test.com";
+//            String name = "WorkerName" + i;
+//            String surname = "WorkerSurname" + i;
+//            String password = "password";
+//            int identificationNumber = 1000000 + i; // Starting from 1000000
+//            String phoneNumber = "PhoneNumber" + i;
+//            String address = "Address" + i;
+//            Language language = Language.ENGLISH;
+//
+//            // Generate a random job number between 1 and 4
+//            int jobNumber = random.nextInt(4) + 1;
+//
+//            // Create the worker
+//            Worker worker = ws.createWorker(email, name, surname, password, identificationNumber, phoneNumber, address, language, jobNumber, "BusinessName");
+//
+//            // Add the worker to a neighborhood (assuming neighborhood ID is 1)
+//            nhws.addWorkerToNeighborhood(worker.getUser().getUserId(), 1);
+//        }
+
+//        ps.createWorkerPost("This is a second test posttt", "Alrighty Aphrodite", 29, null);
 
         /*// System.out.println(bs.createBooking(););
         System.out.println("Shifts on Tueday 2023-10-10 for the Swimming Pool");
@@ -711,11 +733,16 @@ public class FrontController {
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
         Optional<Worker> optionalWorker = ws.findWorkerById(workerId);
 
+        List<Post> postList = ps.getPostsByCriteria(BaseChannel.WORKERS.toString(), 1, 10, SortOrder.DESC, null, 0, workerId);
+        int totalPages = ps.getTotalPages(BaseChannel.WORKERS.toString(), 10, null, 0, workerId);
+
         mav.addObject("worker", optionalWorker.orElseThrow(() -> new NotFoundException("Worker not found")));
         mav.addObject("profession", pws.getWorkerProfession(workerId));
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
         mav.addObject("averageRating", rws.getAvgRating(workerId));
+        mav.addObject("postList", postList);
+        mav.addObject("totalPages", totalPages);
         return mav;
     }
 
