@@ -2,9 +2,9 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.Amenity;
+import ar.edu.itba.paw.models.Availability;
+import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import enums.DayOfTheWeek;
-import enums.StandardTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +32,6 @@ public class AvailabilityDaoImplTest {
     private AvailabilityDao availabilityDao;
     private DayDao dayDao;
     private TimeDao timeDao;
-    // Define any necessary constants for your tests here
 
     @Autowired
     private DataSource ds;
@@ -53,19 +52,40 @@ public class AvailabilityDaoImplTest {
         // Pre Conditions
         Number nhKey = testInsertionUtils.createNeighborhood();
         Number aKey = testInsertionUtils.createAmenity(nhKey.longValue());
+        Number dKey = testInsertionUtils.createDay();
+        Number tKey = testInsertionUtils.createTime();
+        Number sKey = testInsertionUtils.createShift(dKey.longValue(), tKey.longValue());
 
         // Exercise
-        //testInsertionUtils.createAvailability();
+        Number createdAvailability = availabilityDao.createAvailability(aKey.longValue(), sKey.longValue());
+
+        // Validations & Post Conditions
+        assertNotNull(createdAvailability);
     }
 
     @Test
     public void testFindAvailabilityId() {
-        // Add your test logic here
+        // Pre Conditions
+        Number nhKey = testInsertionUtils.createNeighborhood();
+        Number aKey = testInsertionUtils.createAmenity(nhKey.longValue());
+        Number dKey = testInsertionUtils.createDay();
+        Number tKey = testInsertionUtils.createTime();
+        Number sKey = testInsertionUtils.createShift(dKey.longValue(), tKey.longValue());
+        Number availabilityKey = testInsertionUtils.createAvailability(aKey.longValue(), sKey.longValue());
+
+        // Exercise
+        Optional<Long> foundAvailability = availabilityDao.findAvailabilityId(aKey.longValue(), sKey.longValue());
+
+        // Validations & Post Conditions
+        assertTrue(foundAvailability.isPresent());
     }
 
     @Test
     public void testFindInvalidAvailabilityId() {
-        // Add your test logic here
+        // Exercise
+        Optional<Long> foundAvailability = availabilityDao.findAvailabilityId(1, 1); // Invalid ID
+
+        // Validations & Post Conditions
+        assertFalse(foundAvailability.isPresent());
     }
-    // You can add more test methods as needed
 }

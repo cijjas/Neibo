@@ -47,7 +47,7 @@ public class ImageDaoImpl implements ImageDao {
     @Override
     public Image storeImage(MultipartFile image) {
         Map<String, Object> data = new HashMap<>();
-        byte[] imageBytes = null;
+        byte[] imageBytes;
         try {
             imageBytes = image.getBytes();
         } catch (IOException e) {

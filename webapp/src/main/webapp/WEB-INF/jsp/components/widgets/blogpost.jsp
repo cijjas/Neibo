@@ -22,7 +22,47 @@
                 <a href="${pageContext.request.contextPath}/posts/<c:out value="${param.postID}" />" style="text-decoration: none;">
                     <div class="post-header">
                         <div class="blogpost-author-and-date">
-                            <span class="post-author"><c:out value="${param.postNeighborMail}" /></span>
+                            <div class="f-r-s-c placeholder-glow" style="gap: 3px">
+                                <img
+                                        id="postUserProfilePictureId-${param.postID}"
+                                        src=""
+                                        class="small-profile-picture placeholder"
+                                        alt="profile_picture_img"
+                                />
+                                <script>
+                                    (function(){
+                                        postUserProfilePictureId();
+                                        async function postUserProfilePictureId() {
+                                            let image = document.getElementById('postUserProfilePictureId-'+ ${param.postID})
+                                            if("${param.postUserProfilePictureId}" === "0"){
+                                                image.src = "${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png";
+                                                image.classList.remove('placeholder');
+                                                return;
+                                            }
+                                            try{
+                                                const response= await fetch('${pageContext.request.contextPath}/images/<c:out value="${param.postUserProfilePictureId}"/>');
+                                                if(!response.ok) {
+                                                    throw new Error('Network response was not ok');
+                                                }
+                                                const blob = await response.blob();
+
+                                                setTimeout(() => {
+                                                    image.classList.remove('placeholder');
+                                                    image.src = URL.createObjectURL(blob);
+                                                }, 3000);
+
+                                            }
+                                            catch (e) {
+                                                image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
+                                                console.log(e);
+                                            }
+                                        }
+                                    })();
+
+                                </script>
+                                <span class="post-author"><c:out value="${param.postNeighborMail}" /></span>
+
+                            </div>
 
                             <div style="font-size: 12px;color: var(--lighttext);">
                                 <spring:message code="posted"/>
@@ -85,18 +125,18 @@
             const liked = this.getAttribute('data-liked') === 'true';
             const postId = this.getAttribute('data-post-id'); // Get the post ID from the data attribute
             const likeEndpoint = liked ? '/api/unlike?postId=' + postId : '/api/like?postId=' + postId; // Determine the appropriate API endpoint based on the like status
+
             const likeCountElement = document.getElementById('like-count-' + postId);
             const currentCount = parseInt(likeCountElement.getAttribute('data-like-count'), 10);
             const newCount = liked ? currentCount - 1 : currentCount + 1;
             this.setAttribute('data-liked', (!liked).toString());
             this.classList.toggle('liked', !liked);
             const originalLiked = liked;
-
             // Simulate a false count-up/down animation
             animateCount(likeCountElement, currentCount, newCount);
-
             // Update the like count attribute
             likeCountElement.setAttribute('data-like-count', newCount);
+
             try {
                 const response = await fetch(likeEndpoint, {
                     method: 'POST'

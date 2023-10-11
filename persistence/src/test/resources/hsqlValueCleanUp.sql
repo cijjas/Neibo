@@ -1,5 +1,8 @@
 SET DATABASE SQL SYNTAX PGS TRUE;
 -- Clean values from all tables
+DELETE FROM users_availability;
+DELETE FROM amenities_shifts_availability;
+DELETE FROM images;
 DELETE FROM events_users;
 DELETE FROM events;
 DELETE FROM comments;
@@ -16,7 +19,6 @@ DELETE FROM users;
 DELETE FROM resources;
 DELETE FROM reservations;
 DELETE FROM hours;
-DELETE FROM images;
 DELETE FROM channels;
 DELETE FROM neighborhoods;
 
@@ -31,6 +33,5 @@ DELETE FROM reviews;
 DELETE FROM shifts;
 DELETE FROM times;
 DELETE FROM days;
-DELETE FROM users_availability;
-DELETE FROM amenities_shifts_availability;
+
 

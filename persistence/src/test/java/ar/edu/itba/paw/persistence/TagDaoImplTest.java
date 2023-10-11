@@ -32,7 +32,7 @@ public class TagDaoImplTest {
     private TestInsertionUtils testInsertionUtils;
     private TagDaoImpl tagDao;
 
-    private String CHANNEL_NAME = "Sample Tag";
+    private String TAG_NAME = "Sample Tag";
 
     @Autowired
     private DataSource ds;
@@ -49,11 +49,11 @@ public class TagDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Tag ch = tagDao.createTag("Sample Tag");
+        Tag ch = tagDao.createTag(TAG_NAME);
 
         // Validations & Post Conditions
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.tags.name()));
-        assertEquals(CHANNEL_NAME, ch.getTag());
+        assertEquals(TAG_NAME, ch.getTag());
     }
 
     @Test

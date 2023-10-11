@@ -2,7 +2,12 @@
 
 <div class="grey-static-container ">
     <div class="column d-flex justify-content-center align-items-start">
-        <h3 class="m-b-10"><spring:message code="Filter.by.tags"/></h3>
+
+        <div class="f-r-sb-c w-100">
+            <h3 class="m-b-10"><spring:message code="Filter.by.tags"/></h3>
+
+
+        </div>
 
         <div class="m-b-10 w-100">
             <div class="d-flex flex-column justify-content-center align-items-center  w-100">
@@ -55,9 +60,15 @@
             window.addEventListener('load', initializeAppliedTags);
         </script>
         <div class=" tags-row submit-tags ">
-            <a class="w-100 cool-button cool-small on-bg grey" onclick="applyTagsAsFilter()">
+            <a class="w-100 mb-2 cool-button cool-small on-bg grey " onclick="applyTagsAsFilter()" style="font-weight: bolder">
                 <spring:message code="Apply"/>
             </a>
+
+            <a class="w-100 cool-button red " onclick="clearAllTags()" style="font-weight: bolder">
+                <spring:message code="Clear.all.tags"/>
+                <i class="fa-solid fa-xmark"></i>
+            </a>
+
         </div>
 
     </div>
@@ -67,6 +78,10 @@
 <script src="${pageContext.request.contextPath}/resources/js/tagsWidgetHandler.js"></script>
 
 <script>
+
+    function clearAllTags(){
+        tagInput2.clearAllTags();
+    }
 
     function filterTags(tags, query) {
         const tagList = document.querySelectorAll('.tag-option');

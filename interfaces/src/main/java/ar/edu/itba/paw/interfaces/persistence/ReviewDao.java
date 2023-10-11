@@ -18,6 +18,6 @@ public interface ReviewDao {
     int getReviewsCount(long workerId);
 
     // -------------------------------------------- REVIEWS DELETE -----------------------------------------------------
-    void deleteReview(long reviewId);
+    boolean deleteReview(long reviewId);
 
 }

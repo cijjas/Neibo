@@ -66,6 +66,12 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
         final List<Neighborhood> list = jdbcTemplate.query(NEIGHBORHOODS + " WHERE neighborhoodid = ?", ROW_MAPPER, id);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
+
+    @Override
+    public Optional<Neighborhood> findNeighborhoodByName(String name) {
+        final List<Neighborhood> list = jdbcTemplate.query(NEIGHBORHOODS + " WHERE neighborhoodname = ?", ROW_MAPPER, name);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+    }
     
     @Override
     public List<Neighborhood> getNeighborhoods() {

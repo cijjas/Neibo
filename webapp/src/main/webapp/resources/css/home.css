@@ -661,6 +661,7 @@
             cursor: pointer;
         }
         &.tag{
+            padding: 2px 3px 2px 10px;
             margin-bottom: 10px;
         }
     }
@@ -1014,15 +1015,32 @@ footer div {
     font-weight: normal;
     overflow: hidden;
     cursor: pointer;
-    padding: 1em 1em;
+    padding: 7px 7px;
     width: 200px;
     transition: all 0.3s ease-in-out;
+    border-radius: var(--border-hard);
 
     box-shadow: 0 0 0 0 var(--primary);
     background-color: var(--background);
     color: var(--primary);
     border: 1px solid var(--primary);
-    border-radius: var(--border-hard);
+
+    &.red{
+        padding: 7px 7px;
+        font-size: 12px;
+        color: var(--text);
+        background-color: var(--onbackground);
+        border: 1px solid var(--lighttext);
+        border-radius: var(--border-hard);
+        transition: all 0.3s ease-in-out;
+        &:hover{
+            border: 1px solid var(--error);
+            transform: translateY(-4px) ;
+            box-shadow: 0 5px 0 0 var(--error);
+            color: var(--error);
+        }
+    }
+
 
     &:hover ,
     &:active ,
@@ -1411,6 +1429,8 @@ h6 {
     background-color: var(--darkonbackground);
     color: var(--lighttext);
     cursor: pointer;
+
+
     &:hover{
         transform: scale(1.1);
     }
@@ -1418,8 +1438,127 @@ h6 {
         transform: scale(1.1);
 
     }
+
+
     &.liked{
         color: var(--light-green);
         background-color: inherit;
+
+
+    }
+}
+.post-like-button{
+    padding: 7px;
+    border-radius: 50px;
+    transition: all 0.1s ease-in-out;
+    background-color: var(--darkonbackground);
+    color: var(--lighttext);
+    cursor: pointer;
+
+
+
+
+
+    &.liked{
+        color: var(--primary);
+        background-color: var(--old-primary);
+
+
+    }
+}
+
+
+.shifts-reservation{
+    width: 100%;
+    color: var(--text);
+    & table{
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        border: 1px solid var(--bordercolor);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        color: var(--text);
+
+        & td {
+            text-align: center;
+        }
+
+        & th {
+            font-weight: bolder;
+            color: var(--text);
+            text-align: center;
+
+        }
+        & th.day,
+        & td.day
+        {
+            text-align: start;
+            padding-left: var(--column-padding);
+        }
+        & tr:nth-child(even) {
+            background-color: var(--darkonbackground);
+        }
+
+        & tr:nth-child(odd) {
+            background-color: var(--onbackground);
+        }
+    }
+
+    & .cat{
+        background-color: var(--onbackground);
+        width: 100%;
+        border-radius: var(--border-radius);
+        border: 1px solid var(--lighttext);
+        overflow: hidden;
+        float: left;
+
+        & label {
+            &  span {
+                padding: 5px;
+                text-align: center;
+                display: block;
+                cursor: pointer;
+                transition: all 0.3s ease-in-out;
+
+                &:hover{
+                    color: var(--background);
+                    background-color: var(--old-primary);
+                }
+            }
+            & input {
+                position: absolute;
+                display: none;
+                color: var(--text) !important;
+                &  + span{
+                    color: var(--text);
+                }
+
+            }
+        }
+        & input:checked + span {
+            color: var(--background);
+            background-color: var(--primary);
+        }
+        & input:disabled + span {
+            color: var(--text);
+            background-color: var(--lightertext);
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+    }
+
+}
+
+
+.small-profile-picture{
+    width: 15px;
+    height: 15px;
+    border-radius: 50px;
+    object-fit: cover;
+    transition: all 0.3s ease-in-out;
+
+    & .rounded-placeholder{
+        background-color: var(--lighttext);
     }
 }

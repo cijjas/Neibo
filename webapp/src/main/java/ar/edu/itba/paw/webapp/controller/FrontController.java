@@ -112,11 +112,10 @@ public class FrontController {
             String channelName,
             int page,
             int size,
-            SortOrder date,
             List<String> tags
     ) {
-        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags, sessionUtils.getLoggedUser().getNeighborhoodId());
-        int totalPages = ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId());
+        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), 0);
+        int totalPages = ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), 0);
 
         String contextPath;
 
@@ -142,12 +141,11 @@ public class FrontController {
     public ModelAndView index(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ) {
         LOGGER.info("Registered a new user under the id {}", sessionUtils.getLoggedUser().getUserId());
 
-        return handleChannelRequest(BaseChannel.FEED.toString(), page, size, date, tags);
+        return handleChannelRequest(BaseChannel.FEED.toString(), page, size, tags);
     }
 
 
@@ -211,10 +209,9 @@ public class FrontController {
     public ModelAndView announcements(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ) {
-        return handleChannelRequest(BaseChannel.ANNOUNCEMENTS.toString(), page, size, date, tags);
+        return handleChannelRequest(BaseChannel.ANNOUNCEMENTS.toString(), page, size, tags);
     }
 
     // ------------------------------------- FORUM --------------------------------------
@@ -223,10 +220,9 @@ public class FrontController {
     public ModelAndView complaints(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
             @RequestParam(value = "tag", required = false) List<String> tags
     ){
-        return handleChannelRequest(BaseChannel.COMPLAINTS.toString(), page, size, date, tags);
+        return handleChannelRequest(BaseChannel.COMPLAINTS.toString(), page, size, tags);
     }
 
     @RequestMapping(value = "/unverified", method = RequestMethod.GET)
@@ -420,17 +416,18 @@ public class FrontController {
             @RequestParam(value = "date", required = false) java.sql.Date date
     ) {
         ModelAndView mav = new ModelAndView("views/reservation");
+
         mav.addObject("amenityId", amenityId);
-        mav.addObject("amenityName", as.findAmenityById(amenityId).orElse(null).getName());
         mav.addObject("date", date);
-        mav.addObject("reservationsList", rs.getReservationsByDay(amenityId, date));
-        mav.addObject("timeList", rs.getAvailableTimesByDate(amenityId, date));
+        mav.addObject("amenityName", as.findAmenityById(amenityId).orElse(null).getName());
+        mav.addObject("bookings", shs.getShifts(amenityId,date));
         return mav;
     }
 
     @RequestMapping(value = "/reservation", method = RequestMethod.POST)
-    public ModelAndView reservation(@Valid @ModelAttribute("reservationTimeForm") final ReservationTimeForm reservationTimeForm,
-                                    final BindingResult errors
+    public ModelAndView reservation(
+            @Valid @ModelAttribute("reservationTimeForm") final ReservationTimeForm reservationTimeForm,
+            final BindingResult errors
     ) {
         if (errors.hasErrors()) {
             return reservation(reservationTimeForm, reservationTimeForm.getAmenityId(), reservationTimeForm.getDate());
@@ -488,7 +485,8 @@ public class FrontController {
 
     @RequestMapping("/calendar")
     public ModelAndView calendar(
-            @RequestParam(required = false, defaultValue = "0") long timestamp) {
+            @RequestParam(required = false, defaultValue = "0") long timestamp
+    ) {
 
         Date selectedDate = new Date(timestamp != 0 ? timestamp : System.currentTimeMillis());
 
@@ -522,6 +520,7 @@ public class FrontController {
         mav.addObject("selectedDay", selectedDay);
         mav.addObject("selectedMonth", selectedMonth);
         mav.addObject("selectedYear", selectedYear);
+        mav.addObject("selectedDate", selectedDate );
         mav.addObject("eventList", eventList);
         return mav;
     }
@@ -658,7 +657,7 @@ public class FrontController {
         // supongo que ya sabemos la fecha y el amenity id
         mav.addObject("bookingDate", Date.valueOf("2023-10-10"));
         mav.addObject("amenityId", amenityId);
-        mav.addObject("bookings", shs.getShifts(amenityId, DayOfTheWeek.Tuesday.getId(),Date.valueOf("2023-10-10")));
+        mav.addObject("bookings", shs.getShifts(amenityId,Date.valueOf("2023-10-10")));
         mav.addObject(Date.valueOf("2023-10-10"));
         return mav;
     }
@@ -677,26 +676,28 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-        Random random = new Random();
-        for (int i = 5; i < 35; i++) {
-            String email = "worker" + i + "@test.com";
-            String name = "WorkerName" + i;
-            String surname = "WorkerSurname" + i;
-            String password = "password";
-            int identificationNumber = 1000000 + i; // Starting from 1000000
-            String phoneNumber = "PhoneNumber" + i;
-            String address = "Address" + i;
-            Language language = Language.ENGLISH;
+//        Random random = new Random();
+//        for (int i = 5; i < 35; i++) {
+//            String email = "worker" + i + "@test.com";
+//            String name = "WorkerName" + i;
+//            String surname = "WorkerSurname" + i;
+//            String password = "password";
+//            int identificationNumber = 1000000 + i; // Starting from 1000000
+//            String phoneNumber = "PhoneNumber" + i;
+//            String address = "Address" + i;
+//            Language language = Language.ENGLISH;
+//
+//            // Generate a random job number between 1 and 4
+//            int jobNumber = random.nextInt(4) + 1;
+//
+//            // Create the worker
+//            Worker worker = ws.createWorker(email, name, surname, password, identificationNumber, phoneNumber, address, language, jobNumber, "BusinessName");
+//
+//            // Add the worker to a neighborhood (assuming neighborhood ID is 1)
+//            nhws.addWorkerToNeighborhood(worker.getUser().getUserId(), 1);
+//        }
 
-            // Generate a random job number between 1 and 4
-            int jobNumber = random.nextInt(4) + 1;
-
-            // Create the worker
-            Worker worker = ws.createWorker(email, name, surname, password, identificationNumber, phoneNumber, address, language, jobNumber, "BusinessName");
-
-            // Add the worker to a neighborhood (assuming neighborhood ID is 1)
-            nhws.addWorkerToNeighborhood(worker.getUser().getUserId(), 1);
-        }
+//        ps.createWorkerPost("This is a second test posttt", "Alrighty Aphrodite", 29, null);
 
 
         /*// System.out.println(bs.createBooking(););
@@ -727,6 +728,7 @@ public class FrontController {
 
     @RequestMapping(value = "/admin/test", method = RequestMethod.GET)
     public ModelAndView adminTest() {
+
         ModelAndView mav = new ModelAndView("admin/views/requestManager");
         return mav;
     }
@@ -753,11 +755,16 @@ public class FrontController {
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
         Optional<Worker> optionalWorker = ws.findWorkerById(workerId);
 
+        List<Post> postList = ps.getPostsByCriteria(BaseChannel.WORKERS.toString(), 1, 10,null, 0, workerId);
+        int totalPages = ps.getTotalPages(BaseChannel.WORKERS.toString(), 10, null, 0, workerId);
+
         mav.addObject("worker", optionalWorker.orElseThrow(() -> new NotFoundException("Worker not found")));
         mav.addObject("profession", pws.getWorkerProfession(workerId));
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
         mav.addObject("averageRating", rws.getAvgRating(workerId));
+        mav.addObject("postList", postList);
+        mav.addObject("totalPages", totalPages);
         return mav;
     }
 

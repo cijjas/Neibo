@@ -4,12 +4,14 @@ import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.services.ShiftService;
 import ar.edu.itba.paw.models.Shift;
+import enums.DayOfTheWeek;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Calendar;
 
 @Service
 public class ShiftServiceImpl implements ShiftService {
@@ -22,14 +24,22 @@ public class ShiftServiceImpl implements ShiftService {
     }
 
     @Override
-    public Optional<Shift> findShift(long amenityId, long dayId) {
-        return shiftDao.findShift(amenityId, dayId);
+    public Optional<Shift> findShift(long startTime, long dayId) {
+        return shiftDao.findShiftId(startTime, dayId);
     }
 
     @Override
-    public List<Shift> getShifts(long amenityId, long dayId, Date date) {
-        return shiftDao.getShifts(amenityId, dayId, date);
+    public List<Shift> getShifts(long amenityId, Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        // Get the day of the week as an integer (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+        return shiftDao.getShifts(amenityId, dayOfWeek-1, date);
     }
+
+
+
 
     @Override
     public Shift createShift(long dayId, long timeId) {

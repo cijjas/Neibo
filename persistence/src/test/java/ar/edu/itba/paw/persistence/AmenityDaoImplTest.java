@@ -92,10 +92,9 @@ public class AmenityDaoImplTest {
         Number aKey = testInsertionUtils.createAmenity(nhKey.longValue());
 
         // Exercise
-        List<Amenity> amenities = amenityDao.getAmenities2(aKey.longValue());
+        List<Amenity> amenities = amenityDao.getAmenities2(nhKey.longValue());
 
         // Validations & Post Conditions
         assertEquals(1, amenities.size());
-        // You can add more assertions as needed
     }
 }

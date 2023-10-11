@@ -7,8 +7,11 @@ import enums.UserRole;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -45,6 +48,8 @@ public class TestInsertionUtils {
     private final SimpleJdbcInsert professionWorkerInsert;
     private final SimpleJdbcInsert amenityInsert;
     private final SimpleJdbcInsert shiftInsert;
+    private final SimpleJdbcInsert imageInsert;
+    private final SimpleJdbcInsert professionInsertion;
 
     // private final SimpleJdbcInsert professionInsert; no insertion in this dao
 
@@ -117,6 +122,12 @@ public class TestInsertionUtils {
         this.shiftInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("shifts")
                 .usingGeneratedKeyColumns("shiftid");
+        this.imageInsert = new SimpleJdbcInsert(dataSource)
+                .usingGeneratedKeyColumns("imageid")
+                .withTableName("images");
+        this.professionInsertion = new SimpleJdbcInsert(dataSource)
+                .withTableName("professions")
+                .usingGeneratedKeyColumns("professionid");
     }
 
     public Number createChannel(String channelName) {
@@ -295,18 +306,18 @@ public class TestInsertionUtils {
         return reviewInsert.executeAndReturnKey(data);
     }
 
-    public Number createWorker(long workerId, String phoneNumber, String address, String businessName) {
+    public void createWorker(long workerId, String phoneNumber, String address, String businessName) {
         Map<String, Object> data = new HashMap<>();
         data.put("workerId", workerId);
         data.put("phoneNumber", phoneNumber);
         data.put("address", address);
         data.put("businessName", businessName);
 
-        return workerInsert.executeAndReturnKey(data);
+        workerInsert.execute(data);
     }
 
 
-    public void addWorkerProfession(long workerId, long professionId) {
+    public void createWorkerProfession(long workerId, long professionId) {
         Map<String, Object> data = new HashMap<>();
         data.put("workerid", workerId);
         data.put("professionid", professionId);
@@ -328,6 +339,25 @@ public class TestInsertionUtils {
         data.put("starttime", startTimeId);
 
         return shiftInsert.executeAndReturnKey(data);
+    }
+
+    public Number createImage(MultipartFile image) {
+        Map<String, Object> data = new HashMap<>();
+        byte[] imageBytes;
+        try {
+            imageBytes = image.getBytes();
+        } catch (IOException e) {
+            throw new InsertionException("An error occurred whilst setting up the test");
+        }
+
+        data.put("image", imageBytes);
+        return imageInsert.executeAndReturnKey(data);
+    }
+
+    public Number createProfession(String profession) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("profession", profession);
+        return professionInsertion.executeAndReturnKey(data);
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -384,6 +414,29 @@ public class TestInsertionUtils {
         return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id);
     }
 
+    public Number createUser(String mail, long neighborhoodId) {
+        // Generate dummy values
+        String password = "password";
+        String name = "Dummy";
+        String surname = "User";
+        int id = 43243846;
+        Language lang = Language.ENGLISH;
+        boolean dm = false;
+        UserRole role = UserRole.NEIGHBOR;
+        return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id);
+    }
+
+    public Number createUser(String mail, UserRole role, long neighborhoodId) {
+        // Generate dummy values
+        String password = "password";
+        String name = "Dummy";
+        String surname = "User";
+        int id = 43243846;
+        Language lang = Language.ENGLISH;
+        boolean dm = false;
+        return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id);
+    }
+
     public Number createTag() {
         String tagName = "Dummy Tag";
         return createTag(tagName);
@@ -424,16 +477,30 @@ public class TestInsertionUtils {
         return createReview(workerId, userId, rating, review);
     }
 
-    public Number createWorker(long workerId) {
+    public void createWorker(long workerId) {
         String phoneNumber = "11-2222-3333";
         String address = "Somewhere 1232";
         String businessName = "Jo&Co";
-        return createWorker(workerId, phoneNumber, address, businessName);
+        createWorker(workerId, phoneNumber, address, businessName);
     }
 
     public Number createAmenity(long neighborhoodId) {
         String name = "Amenity Name";
         String description = "Amenity Description";
         return createAmenity(name, description, neighborhoodId);
+    }
+
+    public Number createImage(){
+        // Create a small byte array for a fake image (e.g., a 1x1 white pixel)
+        byte[] fakeImageBytes = new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
+
+        // Create a MockMultipartFile using the fake image bytes
+        MockMultipartFile fakeImage = new MockMultipartFile("image", "fake.jpg", "image/jpeg", fakeImageBytes);
+        return createImage(fakeImage);
+    }
+
+    public Number createProfession() {
+        String profession = "Some Profession";
+        return createProfession(profession);
     }
 }
