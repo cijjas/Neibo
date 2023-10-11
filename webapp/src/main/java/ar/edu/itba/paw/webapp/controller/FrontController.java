@@ -490,29 +490,12 @@ public class FrontController {
 
         Date selectedDate = new Date(timestamp != 0 ? timestamp : System.currentTimeMillis());
 
-
         List<Event> eventList = es.getEventsByDate(selectedDate, sessionUtils.getLoggedUser().getNeighborhoodId());
-
-        // Define arrays for month names in English and Spanish
-        String[] monthsEnglish = {
-                "January", "February", "March", "April",
-                "May", "June", "July", "August",
-                "September", "October", "November", "December"
-        };
-
-        String[] monthsSpanish = {
-                "enero", "febrero", "marzo", "abril",
-                "mayo", "junio", "julio", "agosto",
-                "septiembre", "octubre", "noviembre", "diciembre"
-        };
 
         // Get the selected day, month (word), and year directly from selectedDate
         int selectedDay = selectedDate.getDate(); // getDate() returns the day of the month
-        int selectedMonthIndex = selectedDate.getMonth(); // getMonth() returns the month as 0-based index
-        String selectedMonth = sessionUtils.getLoggedUser().getLanguage() == Language.ENGLISH
-                ? monthsEnglish[selectedMonthIndex]
-                : monthsSpanish[selectedMonthIndex];
-        int selectedYear = selectedDate.getYear() + 1900; // getYear() returns years since 1900
+        String selectedMonth = es.getSelectedMonth(selectedDate.getMonth(), sessionUtils.getLoggedUser().getLanguage());
+        int selectedYear = es.getSelectedYear(selectedDate.getYear());
 
         ModelAndView mav = new ModelAndView("views/calendar");
         mav.addObject("isAdmin", sessionUtils.getLoggedUser().getRole() == UserRole.ADMINISTRATOR);

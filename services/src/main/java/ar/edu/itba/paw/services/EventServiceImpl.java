@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Event;
 import java.util.Date;
 
 import ar.edu.itba.paw.models.User;
+import enums.Language;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,5 +61,28 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public boolean deleteEvent(long eventId) { return eventDao.deleteEvent(eventId); }
+
+    @Override
+    public String getSelectedMonth(int month, Language language) {
+        // Define arrays for month names in English and Spanish
+        String[] monthsEnglish = {
+                "January", "February", "March", "April",
+                "May", "June", "July", "August",
+                "September", "October", "November", "December"
+        };
+
+        String[] monthsSpanish = {
+                "enero", "febrero", "marzo", "abril",
+                "mayo", "junio", "julio", "agosto",
+                "septiembre", "octubre", "noviembre", "diciembre"
+        };
+
+        return language == Language.ENGLISH ? monthsEnglish[month] : monthsSpanish[month];
+    }
+
+    @Override
+    public int getSelectedYear(int year) {
+        return year + 1900;
+    }
 
 }
