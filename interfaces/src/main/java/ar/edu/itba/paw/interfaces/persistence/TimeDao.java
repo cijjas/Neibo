@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface TimeDao {
     // Should not be used, as we can manually manipulate the DB
-    Time createTime(String timeInterval);
+    Time createTime(java.sql.Time timeInterval);
 
     Optional<Time> findTimeById(long timeId);
 }

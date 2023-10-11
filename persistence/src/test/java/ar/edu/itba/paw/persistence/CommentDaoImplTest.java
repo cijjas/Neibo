@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.BookingDao;
-import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.Comment;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -33,6 +31,10 @@ public class CommentDaoImplTest {
     private UserDao userDao;
     private BookingDao bookingDao;
     private ShiftDao shiftDao;
+    private AmenityDao amenityDao;
+    private DayDao dayDao;
+    private TimeDao timeDao;
+
 
     private static final String COMMENT_TEXT = "Sample Comment";
 
@@ -43,6 +45,13 @@ public class CommentDaoImplTest {
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
         testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
+        dayDao = new DayDaoImpl(ds);
+        timeDao = new TimeDaoImpl(ds);
+        shiftDao = new ShiftDaoImpl(ds, dayDao, timeDao);
+        amenityDao = new AmenityDaoImpl(ds, shiftDao);
+        bookingDao = new BookingDaoImpl(ds, shiftDao, amenityDao);
+        userDao = new UserDaoImpl(ds, bookingDao);
+        commentDao = new CommentDaoImpl(ds, userDao);
     }
 
     @Test

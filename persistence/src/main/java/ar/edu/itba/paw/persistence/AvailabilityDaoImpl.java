@@ -41,18 +41,19 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
         this.shiftDao = shiftDao;
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName("amenities_shifts_availability");
+                .withTableName("amenities_shifts_availability")
+                .usingGeneratedKeyColumns("amenityavailabilityid");
     }
 
     // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY INSERT -----------------------------------------
 
     @Override
-    public void createAvailability(long amenityId, long shiftId) {
+    public Number createAvailability(long amenityId, long shiftId) {
         Map<String, Object> data = new HashMap<>();
         data.put("amenityid", amenityId);
         data.put("shiftid", shiftId);
         try {
-            jdbcInsert.execute(data);
+            return jdbcInsert.executeAndReturnKey(data);
         } catch (DataAccessException ex) {
             LOGGER.error("Error inserting the Availability", ex);
             throw new InsertionException("An error occurred whilst creating the Availability for the Amenity");
@@ -60,7 +61,7 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
     }
 
     @Override
-    public Optional<Long> getAvailabilityId(long amenityId, long shiftId) {
+    public Optional<Long> findAvailabilityId(long amenityId, long shiftId) {
         String query = "SELECT amenityAvailabilityId FROM amenities_shifts_availability WHERE amenityid = ? AND shiftid = ?";
 
         try {

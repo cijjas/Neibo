@@ -21,11 +21,6 @@ public class ShiftServiceImpl implements ShiftService {
     }
 
     @Override
-    public List<Shift> getShifts(long amenityId, long dayId) {
-        return shiftDao.getAllShifts(amenityId, dayId);
-    }
-
-    @Override
     public List<Shift> getShifts(long amenityId, long dayId, Date date) {
         return shiftDao.getShifts(amenityId, dayId, date);
     }

@@ -2,7 +2,7 @@ package ar.edu.itba.paw.models;
 
 public class Time {
     private long timeId;
-    private String timeInterval;
+    private java.sql.Time timeInterval;
 
     private Time(Builder builder) {
         this.timeId = builder.timeId;
@@ -11,14 +11,14 @@ public class Time {
 
     public static class Builder {
         private long timeId;
-        private String timeInterval;
+        private java.sql.Time timeInterval;
 
         public Builder timeId(long timeId) {
             this.timeId = timeId;
             return this;
         }
 
-        public Builder timeInterval(String timeInterval) {
+        public Builder timeInterval(java.sql.Time timeInterval) {
             this.timeInterval = timeInterval;
             return this;
         }
@@ -32,7 +32,7 @@ public class Time {
         return timeId;
     }
 
-    public String getTimeInterval() {
+    public java.sql.Time getTimeInterval() {
         return timeInterval;
     }
 
@@ -40,7 +40,7 @@ public class Time {
     public String toString() {
         return "Time{" +
                 "timeId=" + timeId +
-                ", timeInterval='" + timeInterval + '\'' +
+                ", timeInterval=" + timeInterval +
                 '}';
     }
 }

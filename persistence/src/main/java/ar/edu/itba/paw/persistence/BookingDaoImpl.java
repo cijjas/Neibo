@@ -53,13 +53,13 @@ public class BookingDaoImpl implements BookingDao {
     // ----------------------------------------------- AMENITIES_SHIFTS INSERT -----------------------------------------
     // BOOKING
     @Override
-    public void createBooking(long userId, long amenityAvailabilityId, Date reservationDate) {
+    public Number createBooking(long userId, long amenityAvailabilityId, Date reservationDate) {
         Map<String, Object> data = new HashMap<>();
         data.put("userid", userId);
         data.put("amenityavailabilityid", amenityAvailabilityId);
         data.put("date", reservationDate);
         try {
-            jdbcInsert.execute(data);
+            return jdbcInsert.executeAndReturnKey(data);
         } catch (DataAccessException ex) {
             LOGGER.error("Error inserting the Booking", ex);
             throw new InsertionException("An error occurred whilst creating the Booking for the User");

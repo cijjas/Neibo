@@ -1,32 +1,33 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.SubscriptionDao;
-import ar.edu.itba.paw.persistence.SubscriptionDaoImpl;
-import ar.edu.itba.paw.persistence.Table;
-import ar.edu.itba.paw.persistence.TestInsertionUtils;
+import ar.edu.itba.paw.models.Day;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
-
+import ar.edu.itba.paw.interfaces.persistence.DayDao;
 import javax.sql.DataSource;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 @Sql("classpath:hsqlValueCleanUp.sql")
-public class SubscriptionDaoImplTest {
+public class DayDaoImplTest {
 
     private JdbcTemplate jdbcTemplate;
     private TestInsertionUtils testInsertionUtils;
-    private SubscriptionDaoImpl subscriptionDao;
+    private DayDao dayDao;
+
+    private String DAY_NAME = "TestDay";
 
     @Autowired
     private DataSource ds;
@@ -34,22 +35,42 @@ public class SubscriptionDaoImplTest {
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        subscriptionDao = new SubscriptionDaoImpl(ds);
+        dayDao = new DayDaoImpl(ds);
         testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
     }
 
     @Test
-    public void testCreateSubscription() {
+    public void testCreateDay() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number chKey = testInsertionUtils.createChannel();
-        Number pKey = testInsertionUtils.createPost(uKey.longValue(), chKey.longValue(), 0);
 
         // Exercise
-        subscriptionDao.createSubscription(uKey.longValue(), pKey.longValue());
+        Day createdDay = dayDao.createDay(DAY_NAME);
 
         // Validations & Post Conditions
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_subscriptions.name()));
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "days"));
+        assertEquals(DAY_NAME, createdDay.getDayName());
+    }
+
+    @Test
+    public void testFindDayById() {
+        // Pre Conditions
+        Number dayKey = testInsertionUtils.createDay();
+
+        // Exercise
+        Optional<Day> foundDay = dayDao.findDayById(dayKey.longValue());
+
+        // Validations & Post Conditions
+        assertTrue(foundDay.isPresent());
+    }
+
+    @Test
+    public void testFindDayByInvalidId() {
+        // Pre Conditions
+
+        // Exercise
+        Optional<Day> foundDay = dayDao.findDayById(1);
+
+        // Validations & Post Conditions
+        assertFalse(foundDay.isPresent());
     }
 }

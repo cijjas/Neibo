@@ -41,6 +41,5 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
             LOGGER.error("Error inserting the Worker Profession", ex);
             throw new InsertionException("An error occurred whilst inserting the Worker Profession");
         }
-
     }
 }

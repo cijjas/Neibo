@@ -4,7 +4,6 @@ import ar.edu.itba.paw.models.DayTime;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ImageConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.TagsConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.TimeOrder;
-import com.sun.corba.se.spi.orb.StringPair;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;

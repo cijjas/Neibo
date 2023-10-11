@@ -15,9 +15,5 @@ public interface ShiftDao {
 
     Optional<Shift> findShiftById(long shiftId);
 
-    List<Shift> getAllShifts(long amenityId, long dayId);
-
     public List<Shift> getShifts(long amenityId, long dayId, Date date);
-
-
 }
