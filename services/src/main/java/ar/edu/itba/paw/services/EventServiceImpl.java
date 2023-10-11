@@ -85,4 +85,9 @@ public class EventServiceImpl implements EventService {
         return year + 1900;
     }
 
+    @Override
+    public String getDateString(Date date) {
+        return date.getDate() + "-" + (date.getMonth() + 1) + "-" + (date.getYear() + 1900);
+    }
+
 }

@@ -33,4 +33,6 @@ public interface EventService {
 
     int getSelectedYear(int year);
 
+    String getDateString(Date date);
+
 }

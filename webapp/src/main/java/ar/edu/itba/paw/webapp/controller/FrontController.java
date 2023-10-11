@@ -496,6 +496,7 @@ public class FrontController {
         int selectedDay = selectedDate.getDate(); // getDate() returns the day of the month
         String selectedMonth = es.getSelectedMonth(selectedDate.getMonth(), sessionUtils.getLoggedUser().getLanguage());
         int selectedYear = es.getSelectedYear(selectedDate.getYear());
+        String dateString = es.getDateString(selectedDate);
 
         ModelAndView mav = new ModelAndView("views/calendar");
         mav.addObject("isAdmin", sessionUtils.getLoggedUser().getRole() == UserRole.ADMINISTRATOR);
@@ -505,6 +506,7 @@ public class FrontController {
         mav.addObject("selectedYear", selectedYear);
         mav.addObject("selectedDate", selectedDate );
         mav.addObject("eventList", eventList);
+        mav.addObject("dateString", dateString);
         return mav;
     }
 
