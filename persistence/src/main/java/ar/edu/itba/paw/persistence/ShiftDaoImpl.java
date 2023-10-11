@@ -97,12 +97,6 @@ public class ShiftDaoImpl implements ShiftDao {
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
-    @Override
-    public List<Shift> getAllShifts(long amenityId, long dayId) {
-        return jdbcTemplate.query(SHIFTS_JOIN_AMENITIES + " WHERE a.amenityid = ? AND dayid = ?", ROW_MAPPER, amenityId, dayId);
-    }
-
-
 
     @Override
     public List<Shift> getShifts(long amenityId, long dayId, Date date) {

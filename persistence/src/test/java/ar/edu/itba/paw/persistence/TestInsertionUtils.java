@@ -1,7 +1,10 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
+import ar.edu.itba.paw.models.*;
 import enums.Language;
 import enums.UserRole;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
@@ -12,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class TestInsertionUtils {
 
@@ -31,6 +35,18 @@ public class TestInsertionUtils {
     private final SimpleJdbcInsert subscriptionInsert;
     private final SimpleJdbcInsert resourceInsert;
     private final SimpleJdbcInsert reservationInsert;
+    private final SimpleJdbcInsert availabilityInsert;
+    private final SimpleJdbcInsert bookingInsert;
+    private final SimpleJdbcInsert dayInsert;
+    private final SimpleJdbcInsert timeInsert;
+    private final SimpleJdbcInsert neighborhoodWorkerInsert;
+    private final SimpleJdbcInsert reviewInsert;
+    private final SimpleJdbcInsert workerInsert;
+    private final SimpleJdbcInsert professionWorkerInsert;
+    private final SimpleJdbcInsert amenityInsert;
+    private final SimpleJdbcInsert shiftInsert;
+
+    // private final SimpleJdbcInsert professionInsert; no insertion in this dao
 
     public TestInsertionUtils(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
@@ -74,6 +90,33 @@ public class TestInsertionUtils {
         this.reservationInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName(Table.reservations.name())
                 .usingGeneratedKeyColumns("reservationid");
+        this.availabilityInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("amenities_shifts_availability")
+                .usingGeneratedKeyColumns("amenityavailabilityid");
+        this.bookingInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("users_availability")
+                .usingGeneratedKeyColumns("bookingid");
+        this.dayInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("days")
+                .usingGeneratedKeyColumns("dayid");
+        this.timeInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("times")
+                .usingGeneratedKeyColumns("timeid");
+        this.neighborhoodWorkerInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("workers_neighborhoods");
+        this.professionWorkerInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("workers_professions");
+        this.reviewInsert = new SimpleJdbcInsert(dataSource)
+                .usingGeneratedKeyColumns("reviewid")
+                .withTableName("reviews");
+        this.workerInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("workers_info");
+        this.amenityInsert = new SimpleJdbcInsert(dataSource)
+                .usingGeneratedKeyColumns("amenityid")
+                .withTableName("amenities");
+        this.shiftInsert = new SimpleJdbcInsert(dataSource)
+                .withTableName("shifts")
+                .usingGeneratedKeyColumns("shiftid");
     }
 
     public Number createChannel(String channelName) {
@@ -94,6 +137,7 @@ public class TestInsertionUtils {
         ncData.put("channelid", channelId);
         channelNeighborhoodMappingInsert.execute(ncData);
     }
+
     public void createLike(long postId, long userId) {
         Map<String, Object> data = new HashMap<>();
         data.put("postid", postId);
@@ -156,7 +200,7 @@ public class TestInsertionUtils {
     }
 
     public Number createUser(String mail, String password, String name, String surname,
-                           long neighborhoodId, Language language, boolean darkMode, UserRole role, int identification) {
+                             long neighborhoodId, Language language, boolean darkMode, UserRole role, int identification) {
         Map<String, Object> data = new HashMap<>();
         data.put("mail", mail);
         data.put("password", password);
@@ -203,6 +247,89 @@ public class TestInsertionUtils {
         return reservationInsert.executeAndReturnKey(data);
     }
 
+    public Number createAvailability(long amenityId, long shiftId) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("amenityid", amenityId);
+        data.put("shiftid", shiftId);
+        return availabilityInsert.executeAndReturnKey(data);
+    }
+
+    public Number createBooking(long userId, long amenityAvailabilityId, java.sql.Date reservationDate) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("userid", userId);
+        data.put("amenityavailabilityid", amenityAvailabilityId);
+        data.put("date", reservationDate);
+        return bookingInsert.executeAndReturnKey(data);
+    }
+
+    public Number createDay(String day) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("dayname", day);
+
+        return dayInsert.executeAndReturnKey(data);
+    }
+
+    public Number createTime(Time timeInterval) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("timeinterval", timeInterval);
+
+        return timeInsert.executeAndReturnKey(data);
+    }
+
+    public void addWorkerToNeighborhood(long workerId, long neighborhoodId) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("workerid", workerId);
+        data.put("neighborhoodid", neighborhoodId);
+
+        neighborhoodWorkerInsert.execute(data);
+    }
+
+    public Number createReview(long workerId, long userId, float rating, String review) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("workerid", workerId);
+        data.put("userid", userId);
+        data.put("rating", rating);
+        data.put("review", review);
+        data.put("date", Timestamp.valueOf(LocalDateTime.now()));
+
+        return reviewInsert.executeAndReturnKey(data);
+    }
+
+    public Number createWorker(long workerId, String phoneNumber, String address, String businessName) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("workerId", workerId);
+        data.put("phoneNumber", phoneNumber);
+        data.put("address", address);
+        data.put("businessName", businessName);
+
+        return workerInsert.executeAndReturnKey(data);
+    }
+
+
+    public void addWorkerProfession(long workerId, long professionId) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("workerid", workerId);
+        data.put("professionid", professionId);
+        professionWorkerInsert.execute(data);
+    }
+
+    public Number createAmenity(String name, String description, long neighborhoodId) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", name);
+        data.put("description", description);
+        data.put("neighborhoodid", neighborhoodId);
+
+        return amenityInsert.executeAndReturnKey(data);
+    }
+
+    public Number createShift(long dayId, long startTimeId) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("dayid", dayId);
+        data.put("starttime", startTimeId);
+
+        return shiftInsert.executeAndReturnKey(data);
+    }
+
     // ----------------------------------------------------------------------------------------------------
     // OVERLOADS FOR SIMPLIFYING TESTING ------------------------------------------------------------------
     // ----------------------------------------------------------------------------------------------------
@@ -230,10 +357,10 @@ public class TestInsertionUtils {
         String description = "Me estoy volviendo loco";
         Date date = java.sql.Date.valueOf("2001-3-14");
         long duration = 90;
-        return createEvent(name, description, date, duration, neighborhoodId) ;
+        return createEvent(name, description, date, duration, neighborhoodId);
     }
 
-    public Number createNeighborhood(){
+    public Number createNeighborhood() {
         String name = "Dummy Neighborhood";
         return createNeighborhood(name);
     }
@@ -274,5 +401,39 @@ public class TestInsertionUtils {
         Time startTime = Time.valueOf(LocalDateTime.now().toLocalTime());
         Time endTime = Time.valueOf(LocalDateTime.now().plusHours(1).toLocalTime());
         return createReservation(amenityId, userId, date, startTime, endTime);
+    }
+
+    public Number createBooking(long userId, long amenityAvailabilityId) {
+        java.sql.Date date = java.sql.Date.valueOf("2022-12-12");
+        return createBooking(userId, amenityAvailabilityId, date);
+    }
+
+    public Number createDay() {
+        String dayName = "Groundhog Day";
+        return createDay(dayName);
+    }
+
+    public Number createTime() {
+        java.sql.Time time = new java.sql.Time(System.currentTimeMillis());
+        return createTime(time);
+    }
+
+    public Number createReview(long workerId, long userId) {
+        float rating = 2.34234F;
+        String review = "Really Great Job";
+        return createReview(workerId, userId, rating, review);
+    }
+
+    public Number createWorker(long workerId) {
+        String phoneNumber = "11-2222-3333";
+        String address = "Somewhere 1232";
+        String businessName = "Jo&Co";
+        return createWorker(workerId, phoneNumber, address, businessName);
+    }
+
+    public Number createAmenity(long neighborhoodId) {
+        String name = "Amenity Name";
+        String description = "Amenity Description";
+        return createAmenity(name, description, neighborhoodId);
     }
 }
