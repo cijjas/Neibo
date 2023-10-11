@@ -27,7 +27,7 @@ public class BookingServiceImpl implements BookingService {
 
     public void createBooking(long userId,long amenityId, List<Long> shiftIds,  Date reservationDate) {
         for (Long shiftId : shiftIds) {
-            Long availabilityId = availabilityDao.getAvailabilityId(amenityId, shiftId).orElseThrow(()-> new NotFoundException("Availability not found.")); // DB guarantees the combination is unique
+            Long availabilityId = availabilityDao.findAvailabilityId(amenityId, shiftId).orElseThrow(()-> new NotFoundException("Availability not found.")); // DB guarantees the combination is unique
             bookingDao.createBooking(userId, availabilityId, reservationDate);
         }
     }

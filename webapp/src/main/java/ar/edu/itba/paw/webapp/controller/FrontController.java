@@ -658,6 +658,7 @@ public class FrontController {
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
 
+
         /*// System.out.println(bs.createBooking(););
         System.out.println("Shifts on Tueday 2023-10-10 for the Swimming Pool");
         System.out.println(shs.getShifts(1, DayOfTheWeek.Tuesday.getId(),Date.valueOf("2023-10-10")));

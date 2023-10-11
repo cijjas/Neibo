@@ -1,5 +1,4 @@
 SET DATABASE SQL SYNTAX PGS TRUE;
-
 -- Clean values from all tables
 DELETE FROM events_users;
 DELETE FROM events;
@@ -21,5 +20,17 @@ DELETE FROM images;
 DELETE FROM channels;
 DELETE FROM neighborhoods;
 
--- Insert values into tables
--- (Insert the same values as provided in your previous script)
+-- Clean values from tables related to workers
+DELETE FROM workers_info;
+DELETE FROM workers_professions;
+DELETE FROM professions;
+DELETE FROM workers_neighborhoods;
+DELETE FROM reviews;
+
+-- Clean values from tables related to amenity refactor
+DELETE FROM shifts;
+DELETE FROM times;
+DELETE FROM days;
+DELETE FROM users_availability;
+DELETE FROM amenities_shifts_availability;
+

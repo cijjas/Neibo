@@ -35,13 +35,15 @@ public class TimeDaoImpl implements TimeDao {
     @Autowired
     public TimeDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds);
+        this.jdbcInsert = new SimpleJdbcInsert(ds)
+                .withTableName("times")
+                .usingGeneratedKeyColumns("timeid");
     }
 
     // ----------------------------------------------- TIMES INSERT ----------------------------------------------------
 
     @Override
-    public Time createTime(String timeInterval) {
+    public Time createTime(java.sql.Time timeInterval) {
         Map<String, Object> data = new HashMap<>();
         data.put("timeinterval", timeInterval);
 
@@ -62,7 +64,7 @@ public class TimeDaoImpl implements TimeDao {
     private static final RowMapper<Time> ROW_MAPPER =
             (rs, rowNum) -> new Time.Builder()
                     .timeId(rs.getLong("timeid"))
-                    .timeInterval(rs.getTime("timeinterval").toString())
+                    .timeInterval(rs.getTime("timeinterval"))
                     .build();
 
     @Override

@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class DayDaoImpl implements DayDao {
+public class    DayDaoImpl implements DayDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
