@@ -15,6 +15,8 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -60,9 +62,9 @@ public class ProfessionWorkerDaoImplTest {
         testInsertionUtils.createWorkerProfession(uKey.longValue(), pKey.longValue());
 
         // Exercise
-        String profession = professionWorkerDao.getWorkerProfession(uKey.longValue());
+        List<String> profession = professionWorkerDao.getWorkerProfessions(uKey.longValue());
 
         // Validations & Post Conditions
-        assertEquals(PROFESSION_NAME, profession);
+        assertFalse(profession.isEmpty());
     }
 }

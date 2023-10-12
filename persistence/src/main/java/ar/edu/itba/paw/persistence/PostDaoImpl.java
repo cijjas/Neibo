@@ -22,6 +22,9 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static ar.edu.itba.paw.persistence.DaoUtils.appendCommonConditions;
+import static ar.edu.itba.paw.persistence.DaoUtils.appendPaginationClause;
+
 @Repository
 public class PostDaoImpl implements PostDao {
     private final JdbcTemplate jdbcTemplate;
@@ -142,7 +145,7 @@ public class PostDaoImpl implements PostDao {
         // PARAMS
         List<Object> queryParams = new ArrayList<>();
 
-        appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags);
+        appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags, postStatus);
 
         if (page != 0)
             appendPaginationClause(query, queryParams, page, size);
@@ -163,7 +166,7 @@ public class PostDaoImpl implements PostDao {
         // Create a list to hold query parameters
         List<Object> queryParams = new ArrayList<>();
 
-        appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags);
+        appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags, postStatus);
 
         // Log results
         LOGGER.info("{}", query);
@@ -172,68 +175,4 @@ public class PostDaoImpl implements PostDao {
         // Execute the query and retrieve the count
         return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-    // ------------------------------------------------- HELPER METHODS ------------------------------------------------
-    // -----------------------------------------------------------------------------------------------------------------
-
-
-    private void appendCommonConditions(StringBuilder query, List<Object> queryParams, String channel, long userId, long neighborhoodId, List<String> tags) {
-        appendInitialWhereClause(query);
-        appendNeighborhoodIdCondition(query, queryParams, neighborhoodId);
-
-        if (channel != null && !channel.isEmpty())
-            appendChannelCondition(query, queryParams, channel);
-
-        if (userId != 0)
-            appendUserIdCondition(query, queryParams, userId);
-
-        if (tags != null && !tags.isEmpty())
-            appendTagsCondition(query, queryParams, tags);
-    }
-
-    private void appendInitialWhereClause(StringBuilder query) {
-        query.append(" WHERE 1 = 1");
-    }
-
-    private void appendChannelCondition(StringBuilder query, List<Object> queryParams, String channel) {
-        query.append(" AND channel LIKE ?");
-        queryParams.add(channel);
-    }
-
-    private void appendUserIdCondition(StringBuilder query, List<Object> queryParams, long userId) {
-        query.append(" AND u.userid = ?");
-        queryParams.add(userId);
-    }
-
-    private void appendNeighborhoodIdCondition(StringBuilder query, List<Object> queryParams, long neighborhoodId) {
-        query.append(" AND u.neighborhoodid = ?");
-        queryParams.add(neighborhoodId);
-    }
-
-    private void appendTagsCondition(StringBuilder query, List<Object> queryParams, List<String> tags) {
-        query.append(" AND EXISTS (");
-        query.append("SELECT 1 FROM posts_tags pt JOIN tags t ON pt.tagid = t.tagid");
-        query.append(" WHERE pt.postid = p.postid AND t.tag IN (");
-
-        for (int i = 0; i < tags.size(); i++) {
-            query.append("?");
-            queryParams.add(tags.get(i)); // Use the tag name as a string
-            if (i < tags.size() - 1) {
-                query.append(", ");
-            }
-        }
-        query.append(")");
-        query.append(" HAVING COUNT(DISTINCT pt.tagid) = ?)"); // Ensure all specified tags exist
-        queryParams.add(tags.size());
-    }
-
-    private void appendPaginationClause(StringBuilder query, List<Object> queryParams, int page, int size) {
-        // Calculate the offset based on the page and size
-        int offset = (page - 1) * size;
-        query.append(" LIMIT ? OFFSET ?");
-        queryParams.add(size);
-        queryParams.add(offset);
-    }
-
 }

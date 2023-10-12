@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TestInsertionUtils {
+class TestInsertionUtils {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert channelInsert;

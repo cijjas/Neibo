@@ -22,7 +22,9 @@ public interface PostService {
 
     Optional<Post> findPostById(long id);
 
-    List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, long userId);
+    List<Post> getWorkerPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, long userId);
+
+    List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus);
 
     int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, String postStatus, long userId);
 

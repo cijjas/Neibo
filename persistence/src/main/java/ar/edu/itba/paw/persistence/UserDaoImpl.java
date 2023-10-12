@@ -21,6 +21,8 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static ar.edu.itba.paw.persistence.DaoUtils.*;
+
 @Repository
 public class UserDaoImpl implements UserDao {
     private final JdbcTemplate jdbcTemplate;
@@ -34,11 +36,15 @@ public class UserDaoImpl implements UserDao {
 
     private final String USERS_JOIN_POSTS_USERS_AND_POSTS =
             "select u.*\n" +
-                    "from posts p join posts_users_subscriptions on p.postid = posts_users_subscriptions.postid join users u on posts_users_subscriptions.userid = u.userid ";
+            "from posts p " +
+                    "join posts_users_subscriptions on p.postid = posts_users_subscriptions.postid " +
+                    "join users u on posts_users_subscriptions.userid = u.userid ";
 
     private final String EVENTS_JOIN_USERS =
             "select u.* \n" +
-                    "from events e join events_users on e.eventid = events_users.eventid join users u on events_users.userid = u.userid ";
+            "from events e " +
+                    "join events_users on e.eventid = events_users.eventid " +
+                    "join users u on events_users.userid = u.userid ";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
 
@@ -126,26 +132,17 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getUsersByCriteria(UserRole role, long neighborhoodId, int page, int size) {
 
-        StringBuilder query = new StringBuilder("SELECT * FROM users WHERE 1 = 1");
+        StringBuilder query = new StringBuilder("SELECT * FROM users u WHERE 1 = 1");
         List<Object> queryParams = new ArrayList<>();
 
-        if (role != null) {
-            query.append(" AND role = ?");
-            queryParams.add(role.toString());
-        }
+        if (role != null)
+            appendRoleCondition(query, queryParams, role);
 
-        if (neighborhoodId > 0) {
-            query.append(" AND neighborhoodid = ?");
-            queryParams.add(neighborhoodId);
-        }
+        if (neighborhoodId > 0)
+            appendNeighborhoodIdCondition(query, queryParams, neighborhoodId);
 
-        if ( page != 0 ){
-            int offset = (page - 1) * size;
-
-            query.append(" LIMIT ? OFFSET ?");
-            queryParams.add(size);
-            queryParams.add(offset);
-        }
+        if (page != 0)
+            appendPaginationClause(query, queryParams, page, size);
 
 
         return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
@@ -153,18 +150,14 @@ public class UserDaoImpl implements UserDao {
 
 
     public int getTotalUsers(UserRole role, long neighborhoodId) {
-        StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM users WHERE 1 = 1");
+        StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM users u WHERE 1 = 1");
         List<Object> queryParams = new ArrayList<>();
 
-        if (role != null) {
-            query.append(" AND role = ?");
-            queryParams.add(role.toString());
-        }
+        if (role != null)
+            appendRoleCondition(query, queryParams, role);
 
-        if (neighborhoodId > 0) {
-            query.append(" AND neighborhoodid = ?");
-            queryParams.add(neighborhoodId);
-        }
+        if (neighborhoodId > 0)
+            appendNeighborhoodIdCondition(query, queryParams, neighborhoodId);
 
         // Use queryForObject to retrieve the count as an integer
         return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());
