@@ -10,13 +10,17 @@ public interface CommentDao {
 
     // -------------------------------------------- COMMENTS INSERT ----------------------------------------------------
 
-    Optional<List<Comment>> findCommentsByPostId(long id);
+    Comment createComment(final String comment, final long neighborId, final long postId);
+
 
     // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
 
-    Comment createComment(final String comment, final long neighborId, final long postId);
 
     Optional<Comment> findCommentById(long id);
+
+    List<Comment> findCommentsByPostId(long id, int page, int size);
+
+    int getCommentsCountByPostId(long id);
 
     //Optional<List<Comment>> findCommentsByUserId(long id);
 }

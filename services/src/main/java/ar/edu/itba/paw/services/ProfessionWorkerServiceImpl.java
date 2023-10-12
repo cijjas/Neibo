@@ -5,6 +5,8 @@ import ar.edu.itba.paw.interfaces.services.ProfessionWorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
     private final ProfessionWorkerDao professionWorkerDao;
@@ -22,7 +24,7 @@ public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
 
     // --------------------------------------- PROFESSIONWORKERS SELECT ------------------------------------------------
     @Override
-    public String getWorkerProfession(long workerId) {
-        return professionWorkerDao.getWorkerProfession(workerId);
+    public List<String> getWorkerProfessions(long workerId) {
+        return professionWorkerDao.getWorkerProfessions(workerId);
     }
 }

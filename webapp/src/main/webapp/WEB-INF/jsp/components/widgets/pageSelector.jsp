@@ -3,6 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <c:set var="currentUrl" value="${pageContext.request.requestURL}"/>
+<c:set var="baseUrl" value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}"/>
 
 <div class="pagination">
     <c:url var="prevUrl" value="${pageContext.request.contextPath}">
@@ -13,8 +14,9 @@
             </c:forEach>
         </c:if>
     </c:url>
+
     <a class="pagination-button small-a ${page <= 1 ? 'disabled' : ''}"
-       href="${pageContext.request.contextPath}/${prevUrl}"
+       href="${baseUrl}${contextPath}/${prevUrl}"
        onclick="return ${page <= 1 ? 'false' : 'true'}">
         <i class="fas fa-chevron-left"></i>
     </a>
@@ -29,9 +31,12 @@
             </c:if>
         </c:url>
         <a class="pagination-button ${page == pageNumber ? 'active' : ''}"
-           href="${pageContext.request.contextPath}/${pageUrl}">
+           href="${baseUrl}${contextPath}/${pageUrl}">
                 ${pageNumber}
         </a>
+        <script>
+            console.log("pageUrl ${pageUrl}");
+        </script>
     </c:forEach>
 
     <c:url var="nextUrl" value="${pageContext.request.contextPath}">
@@ -43,7 +48,7 @@
         </c:if>
     </c:url>
     <a class="pagination-button small-a ${page >= totalPages ? 'disabled' : ''}"
-       href="${pageContext.request.contextPath}/${nextUrl}"
+       href="${baseUrl}${contextPath}/${nextUrl}"
        onclick="return ${page >= totalPages ? 'false' : 'true'}">
         <i class="fas fa-chevron-right"></i>
     </a>

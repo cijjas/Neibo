@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Post;
 import enums.BaseChannel;
 import enums.Language;
+import enums.PostStatus;
 import enums.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,28 +52,25 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags, long neighborhoodId, long userId) {
-        return postDao.getPostsByCriteria(channel, page, size, date, tags, neighborhoodId, false, userId);
+    public List<Post> getWorkerPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, long userId) {
+        return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, PostStatus.valueOf(postStatus), userId);
     }
 
     @Override
-    public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, long userId) {
-        return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, false, userId);
+    public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus) {
+        return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, PostStatus.valueOf(postStatus), 0);
     }
 
     @Override
-    public List<Post> getHotPostsByCriteria(String channel, int page, int size, SortOrder date, List<String> tags, long neighborhoodId) {
-        return postDao.getPostsByCriteria(channel, page, size, date, tags, neighborhoodId, true, 0);
+    public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, String postStatus, long userId) {
+        // parse de statusString into the postStatusEnum
+        return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, PostStatus.valueOf(postStatus), userId);
     }
 
     @Override
-    public int getHotPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId) {
-        return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, true, 0);
-    }
-
-    @Override
-    public int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId, long userId) {
-        return (int) Math.ceil((double) getPostsCountByCriteria(channel, tags, neighborhoodId, userId) / size);
+    public int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId, String postStatus, long userId) {
+        // parse de statusString into the postStatusEnum
+        return (int) Math.ceil((double) getPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId) / size);
     }
 
     @Override

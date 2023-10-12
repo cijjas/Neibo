@@ -44,4 +44,28 @@
         form.submit();
     }
 
+    function hotPosts() {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('postStatus', 'hot');
+        window.location.href = currentUrl.toString();
+    }
+
+    function trendingPosts() {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('postStatus', 'trending');
+        window.location.href = currentUrl.toString();
+    }
+
+
+    function addQueryParams(url, queryParams) {
+        if (url.includes("?")) {
+            // URL already has query parameters, so append with '&'
+            return url + "&" + queryParams;
+        } else {
+            // URL doesn't have query parameters, so append with '?'
+            return url + "?" + queryParams;
+        }
+    }
+
+
 </script>

@@ -31,7 +31,7 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
 
 
     @Override
-    public void createChannelMappingDao(long channelId, long neighborhoodId) {
+    public void createChannelMapping(long channelId, long neighborhoodId) {
         Map<String, Object> data = new HashMap<>();
         data.put("channelid", channelId);
         data.put("neighborhoodid", neighborhoodId);

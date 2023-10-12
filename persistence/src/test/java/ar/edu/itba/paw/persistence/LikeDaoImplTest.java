@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.LikeDao;
-import ar.edu.itba.paw.persistence.LikeDaoImpl;
-import ar.edu.itba.paw.persistence.Table;
-import ar.edu.itba.paw.persistence.TestInsertionUtils;
+import enums.Table;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,36 +31,39 @@ public class LikeDaoImplTest {
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        likeDao = new LikeDaoImpl(ds);
         testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
+        likeDao = new LikeDaoImpl(ds);
     }
 
     @Test
     public void testCreateLike() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number chKey = testInsertionUtils.createChannel();
-        Number pKey = testInsertionUtils.createPost(uKey.longValue(), chKey.longValue(), 0);
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long chKey = testInsertionUtils.createChannel();
+        long iKey = testInsertionUtils.createImage();
+        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
 
         // Exercise
-        likeDao.createLike(pKey.longValue(), uKey.longValue());
+        likeDao.createLike(pKey, uKey);
 
         // Validations & Post Conditions
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
     }
 
     @Test
     public void testGetLikes() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number chKey = testInsertionUtils.createChannel();
-        Number pKey = testInsertionUtils.createPost(uKey.longValue(), chKey.longValue(), 0);
-        testInsertionUtils.createLike(pKey.longValue(), uKey.longValue());
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long chKey = testInsertionUtils.createChannel();
+        long iKey = testInsertionUtils.createImage();
+        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
+        testInsertionUtils.createLike(pKey, uKey);
 
         // Exercise
-        int likes = likeDao.getLikes(pKey.longValue());
+        int likes = likeDao.getLikes(pKey);
 
         // Validations & Post Conditions
         assertEquals(1, likes);
@@ -83,14 +83,15 @@ public class LikeDaoImplTest {
     @Test
     public void testIsPostLiked() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number chKey = testInsertionUtils.createChannel();
-        Number pKey = testInsertionUtils.createPost(uKey.longValue(), chKey.longValue(), 0);
-        testInsertionUtils.createLike(pKey.longValue(), uKey.longValue());
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long chKey = testInsertionUtils.createChannel();
+        long iKey = testInsertionUtils.createImage();
+        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
+        testInsertionUtils.createLike(pKey, uKey);
 
         // Exercise
-        boolean liked = likeDao.isPostLiked(pKey.longValue(), uKey.longValue());
+        boolean liked = likeDao.isPostLiked(pKey, uKey);
 
         // Validations & Post Conditions
         assertTrue(liked);
@@ -110,20 +111,22 @@ public class LikeDaoImplTest {
     @Test
     public void testDeleteLike() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number chKey = testInsertionUtils.createChannel();
-        Number pKey = testInsertionUtils.createPost(uKey.longValue(), chKey.longValue(), 0);
-        testInsertionUtils.createLike(pKey.longValue(), uKey.longValue());
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long chKey = testInsertionUtils.createChannel();
+        long iKey = testInsertionUtils.createImage();
+        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
+        testInsertionUtils.createLike(pKey, uKey);
 
         // Exercise
-        boolean deleted = likeDao.deleteLike(pKey.longValue(), uKey.longValue());
+        boolean deleted = likeDao.deleteLike(pKey, uKey);
 
         // Validations & Post Conditions
         assertTrue(deleted);
         assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
     }
 
+    @Test
     public void testDeleteInvalidLike() {
         // Pre Conditions
 

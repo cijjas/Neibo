@@ -55,7 +55,7 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                <form:input path="date" id="date" type="date" required="true" class="cool-input" />
+                                <form:input path="date" id="date" type="date" required="true" class="cool-input" value="${dateString}"/>
                                 <form:errors path="date" cssClass="error" element="p" />
                             </div>
 

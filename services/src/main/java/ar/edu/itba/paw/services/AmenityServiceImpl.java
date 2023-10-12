@@ -123,7 +123,7 @@ public class AmenityServiceImpl implements AmenityService {
             long dayId = Long.parseLong(shiftParts[0]);
             long timeId = Long.parseLong(shiftParts[1]);
 
-            Optional<Shift> existingShift = shiftDao.findShift(dayId, timeId);
+            Optional<Shift> existingShift = shiftDao.findShiftId(dayId, timeId);
 
             if (existingShift.isPresent()) {
                 availabilityDao.createAvailability(amenity.getAmenityId(), existingShift.get().getShiftId());

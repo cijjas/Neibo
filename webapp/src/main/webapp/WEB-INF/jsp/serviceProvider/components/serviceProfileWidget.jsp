@@ -91,20 +91,21 @@
                     <c:out value="${worker.bio}"/>
                 </div>
                 <script>
-                    async function getProfession(workerId) {
+                    async function getProfessions(workerId) {
                         try {
                             const response = await fetch("/api/profession?id=" + workerId);
                             if (!response.ok) {
                                 throw new Error("Failed to fetch data from the API.");
                             }
                             const professionElement = document.getElementById("professionPlaceholder-${worker.user.userId}");
-                            professionElement.textContent = await response.text();
+                            professionElement.textContent = await response.text(); // Set the response as text content
                         } catch (error) {
                             console.error(error.message);
                         }
                     }
-                    getProfession(${worker.user.userId});
+                    getProfessions(${worker.user.userId});
                 </script>
+
             </div>
         </div>
     </a>

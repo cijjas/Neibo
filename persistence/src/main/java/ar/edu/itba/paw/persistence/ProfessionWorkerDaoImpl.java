@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -20,7 +21,7 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
     private final SimpleJdbcInsert jdbcInsert;
 
     private final String WORKERS_PROFESSIONS_JOIN_PROFESSIONS =
-            "SELECT * " +
+            "SELECT profession " +
                     "FROM workers_professions wp  " +
                     "JOIN professions p ON wp.professionid = p.professionid ";
 
@@ -50,12 +51,12 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
 
     // --------------------------------------- PROFESSIONWORKERS SELECT ------------------------------------------------
     @Override
-    public String getWorkerProfession(long workerId) {
-        return jdbcTemplate.queryForObject(
+    public List<String> getWorkerProfessions(long workerId) {
+        return jdbcTemplate.queryForList(
                 WORKERS_PROFESSIONS_JOIN_PROFESSIONS +
                         "WHERE workerid = ?",
                 new Object[]{workerId},
-                (rs, rowNum) -> rs.getString("profession")
+                String.class
         );
     }
 }

@@ -110,11 +110,19 @@ public class FrontController {
             String channelName,
             int page,
             int size,
-            SortOrder date,
-            List<String> tags
+            List<String> tags,
+            String postStatus
     ) {
-        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, date, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), 0);
-        int totalPages = ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), 0);
+        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), postStatus);
+        int totalPages = ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), postStatus, 0);
+
+        String contextPath;
+
+        if (channelName.equals(BaseChannel.FEED.toString())) {
+            contextPath = "";
+        } else {
+            contextPath = "/" + channelName.toLowerCase();
+        }
 
         ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags(sessionUtils.getLoggedUser().getNeighborhoodId()));
@@ -123,6 +131,7 @@ public class FrontController {
         mav.addObject("page", page);
         mav.addObject("totalPages", totalPages);
         mav.addObject("channel", channelName);
+        mav.addObject("contextPath", contextPath);
 
         return mav;
     }
@@ -131,12 +140,12 @@ public class FrontController {
     public ModelAndView index(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
-            @RequestParam(value = "tag", required = false) List<String> tags
+            @RequestParam(value = "tag", required = false) List<String> tags,
+            @RequestParam(value = "postStatus", required = false, defaultValue = "none") String postStatus
     ) {
         LOGGER.info("Registered a new user under the id {}", sessionUtils.getLoggedUser().getUserId());
 
-        return handleChannelRequest(BaseChannel.FEED.toString(), page, size, date, tags);
+        return handleChannelRequest(BaseChannel.FEED.toString(), page, size, tags, postStatus);
     }
 
 
@@ -200,10 +209,10 @@ public class FrontController {
     public ModelAndView announcements(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
-            @RequestParam(value = "tag", required = false) List<String> tags
+            @RequestParam(value = "tag", required = false) List<String> tags,
+            @RequestParam(value = "postStatus", required = false, defaultValue = "none") String postStatus
     ) {
-        return handleChannelRequest(BaseChannel.ANNOUNCEMENTS.toString(), page, size, date, tags);
+        return handleChannelRequest(BaseChannel.ANNOUNCEMENTS.toString(), page, size, tags, postStatus);
     }
 
     // ------------------------------------- FORUM --------------------------------------
@@ -212,10 +221,10 @@ public class FrontController {
     public ModelAndView complaints(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "date", defaultValue = "DESC", required = false) SortOrder date,
-            @RequestParam(value = "tag", required = false) List<String> tags
+            @RequestParam(value = "tag", required = false) List<String> tags,
+            @RequestParam(value = "postStatus", required = false, defaultValue = "none") String postStatus
     ){
-        return handleChannelRequest(BaseChannel.COMPLAINTS.toString(), page, size, date, tags);
+        return handleChannelRequest(BaseChannel.COMPLAINTS.toString(), page, size, tags, postStatus);
     }
 
     @RequestMapping(value = "/unverified", method = RequestMethod.GET)
@@ -249,7 +258,7 @@ public class FrontController {
         }
         Integer channelId = publishForm.getChannel();
 
-        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), channelId, publishForm.getTags(), imageFile);
+        ps.createPost(publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), channelId, publishForm.getTags(), imageFile);
         ModelAndView mav = new ModelAndView("views/publish");
         mav.addObject("channelId", channelId);
         mav.addObject("showSuccessMessage", true);
@@ -261,7 +270,7 @@ public class FrontController {
     public ModelAndView redirectToChannel(
             @RequestParam("channelId") int channelId
     ) {
-        String channelName= chs.findChannelById(channelId).get().getChannel().toLowerCase();
+        String channelName= chs.findChannelById(channelId).orElseThrow(()-> new NotFoundException("Channel not Found")).getChannel().toLowerCase();
         if(channelName.equals(BaseChannel.FEED.toString().toLowerCase())){
             return new ModelAndView("redirect:/");
         }
@@ -274,7 +283,7 @@ public class FrontController {
     public ModelAndView publishToChannel(
             @RequestParam("channel") String channelString
     ) {
-        long channelId = chs.findChannelByName(channelString).get().getChannelId();
+        long channelId = chs.findChannelByName(channelString).orElseThrow(()-> new NotFoundException("Channel not Found")).getChannelId();
         return new ModelAndView("redirect:/publish?onChannelId=" + channelId);
     }
 
@@ -284,40 +293,51 @@ public class FrontController {
     public ModelAndView viewPost(
             @PathVariable(value = "id") int postId,
             @ModelAttribute("commentForm") final CommentForm commentForm,
-            @RequestParam(value = "success", required = false) boolean success
+            @RequestParam(value = "success", required = false) boolean success,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
     ) {
         ModelAndView mav = new ModelAndView("views/post");
 
         Optional<Post> optionalPost = ps.findPostById(postId);
         mav.addObject("post", optionalPost.orElseThrow(() -> new NotFoundException("Post Not Found")));
 
-        Optional<List<Comment>> optionalComments = cs.findCommentsByPostId(postId);
-        mav.addObject("comments", optionalComments.orElse(Collections.emptyList()));
+        String contextPath = "/posts/" + postId;
 
-        Optional<List<Tag>> optionalTags = ts.findTagsByPostId(postId);
-        List<Tag> tags = optionalTags.orElse(Collections.emptyList());
+        List<Comment> commentList = cs.findCommentsByPostId(postId, page, size);
+        int totalPages = cs.getTotalPostPages(postId, size);
+
+        mav.addObject("comments", commentList);
+        mav.addObject("page", page);
+        mav.addObject("totalPages", totalPages);
+
+        List<Tag> tags = ts.findTagsByPostId(postId);
 
         mav.addObject("tags", tags);
         mav.addObject("commentForm", commentForm);
         mav.addObject("showSuccessMessage", success);
+        mav.addObject("contextPath", contextPath);
 
         return mav;
     }
 
     @RequestMapping(value = "/posts/{id:\\d+}", method = RequestMethod.POST)
-    public ModelAndView viewPost(
+    public ModelAndView addCommentToPost(
             @PathVariable(value = "id") int postId,
             @Valid @ModelAttribute("commentForm") final CommentForm commentForm,
-            final BindingResult errors
+            final BindingResult errors,
+            @RequestParam(value = "post_page", defaultValue = "1") int postPage,
+            @RequestParam(value = "post_size", defaultValue = "10") int postSize
     ) {
         if (errors.hasErrors()) {
-            return viewPost(postId, commentForm, false);
+            return viewPost(postId, commentForm, false, postPage, postSize);
         }
         cs.createComment(commentForm.getComment(), sessionUtils.getLoggedUser().getUserId(), postId);
         ModelAndView mav = new ModelAndView("redirect:/posts/" + postId);
         mav.addObject("commentForm", new CommentForm());
         return mav;
     }
+
 
     // ------------------------------------- RESOURCES --------------------------------------
 
@@ -400,7 +420,7 @@ public class FrontController {
 
         mav.addObject("amenityId", amenityId);
         mav.addObject("date", date);
-        mav.addObject("amenityName", as.findAmenityById(amenityId).orElse(null).getName());
+        mav.addObject("amenityName", as.findAmenityById(amenityId).orElseThrow(()-> new NotFoundException("Amenity not Found")).getName());
         mav.addObject("bookings", shs.getShifts(amenityId,date));
         return mav;
     }
@@ -469,29 +489,13 @@ public class FrontController {
 
         Date selectedDate = new Date(timestamp != 0 ? timestamp : System.currentTimeMillis());
 
-
         List<Event> eventList = es.getEventsByDate(selectedDate, sessionUtils.getLoggedUser().getNeighborhoodId());
-
-        // Define arrays for month names in English and Spanish
-        String[] monthsEnglish = {
-                "January", "February", "March", "April",
-                "May", "June", "July", "August",
-                "September", "October", "November", "December"
-        };
-
-        String[] monthsSpanish = {
-                "enero", "febrero", "marzo", "abril",
-                "mayo", "junio", "julio", "agosto",
-                "septiembre", "octubre", "noviembre", "diciembre"
-        };
 
         // Get the selected day, month (word), and year directly from selectedDate
         int selectedDay = selectedDate.getDate(); // getDate() returns the day of the month
-        int selectedMonthIndex = selectedDate.getMonth(); // getMonth() returns the month as 0-based index
-        String selectedMonth = sessionUtils.getLoggedUser().getLanguage() == Language.ENGLISH
-                ? monthsEnglish[selectedMonthIndex]
-                : monthsSpanish[selectedMonthIndex];
-        int selectedYear = selectedDate.getYear() + 1900; // getYear() returns years since 1900
+        String selectedMonth = es.getSelectedMonth(selectedDate.getMonth(), sessionUtils.getLoggedUser().getLanguage());
+        int selectedYear = es.getSelectedYear(selectedDate.getYear());
+        String dateString = es.getDateString(selectedDate);
 
         ModelAndView mav = new ModelAndView("views/calendar");
         mav.addObject("isAdmin", sessionUtils.getLoggedUser().getRole() == UserRole.ADMINISTRATOR);
@@ -501,6 +505,7 @@ public class FrontController {
         mav.addObject("selectedYear", selectedYear);
         mav.addObject("selectedDate", selectedDate );
         mav.addObject("eventList", eventList);
+        mav.addObject("dateString", dateString);
         return mav;
     }
 
@@ -650,8 +655,7 @@ public class FrontController {
     @RequestMapping(value = "/admin/test", method = RequestMethod.GET)
     public ModelAndView adminTest() {
 
-        ModelAndView mav = new ModelAndView("adminRequestHandler");
-        return mav;
+        return new ModelAndView("admin/views/adminRequestHandler");
     }
 
     @RequestMapping(value = "/testDuplicatedException", method = RequestMethod.GET)
@@ -679,11 +683,11 @@ public class FrontController {
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
         Optional<Worker> optionalWorker = ws.findWorkerById(workerId);
 
-        List<Post> postList = ps.getPostsByCriteria(BaseChannel.WORKERS.toString(), 1, 10, SortOrder.DESC, null, 0, workerId);
-        int totalPages = ps.getTotalPages(BaseChannel.WORKERS.toString(), 10, null, 0, workerId);
+        List<Post> postList = ps.getWorkerPostsByCriteria(BaseChannel.WORKERS.toString(), 1, 10,null, 0, null,workerId);
+        int totalPages = ps.getTotalPages(BaseChannel.WORKERS.toString(), 10, null, 0, null, workerId);
 
         mav.addObject("worker", optionalWorker.orElseThrow(() -> new NotFoundException("Worker not found")));
-        mav.addObject("profession", pws.getWorkerProfession(workerId));
+        mav.addObject("professions", pws.getWorkerProfessions(workerId));
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
         mav.addObject("averageRating", rws.getAvgRating(workerId));

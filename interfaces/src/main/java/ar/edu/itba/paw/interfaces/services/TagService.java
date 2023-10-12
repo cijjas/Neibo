@@ -17,7 +17,7 @@ public interface TagService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<List<Tag>> findTagsByPostId(long id);
+    List<Tag> findTagsByPostId(long id);
 
     List<Tag> getTags(long neighborhoodId);
 }

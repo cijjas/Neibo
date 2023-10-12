@@ -46,22 +46,10 @@
                             <span class="font-size-16 font-weight-bold" id="userNamePlaceholder-${loopStatus.index}"><spring:message code="Loading."/></span>
                             <span class="font-size-12" id="neighborhoodNamePlaceholder-${loopStatus.index}"><spring:message code="Loading."/></span>
                             <div class="f-r-c-c">
-                                                    <%-- VER COMO CASTEAR FULLSTARS A INT--%>
-                                <c:set var="fullStars" value="${review.rating}" />
-                                <c:set var="halfStar" value="${review.rating - fullStars}" />
-                                <c:set var="emptyStars" value="${5 - fullStars - (halfStar > 0 ? 1 : 0)}" />
+                                <div id="starsContainer-${loopStatus.index}">
+                                    <!-- Container for stars -->
+                                </div>
 
-                                <c:forEach begin="1" end="${fullStars}">
-                                    <i class="fa-solid fa-star"></i>
-                                </c:forEach>
-
-                                <c:if test="${halfStar > 0}">
-                                    <i class="fa-solid fa-star-half-stroke"></i>
-                                </c:if>
-
-                                <c:forEach begin="1" end="${emptyStars}">
-                                    <i class="fa-regular fa-star"></i>
-                                </c:forEach>
                             </div>
                             <p class="font-size-12"> <c:out value="${review.review}"/></p>
                         </div>
@@ -81,6 +69,26 @@
                                     }
                                     const neighborhoodNameElement = document.getElementById("neighborhoodNamePlaceholder-${loopStatus.index}");
                                     neighborhoodNameElement.textContent = await neighborhoodNameResponse.text();
+
+                                    // Calculate rating as stars
+                                    const fullStars = Math.floor(${review.rating});
+                                    const halfStar = ${review.rating} - fullStars;
+                                    const emptyStars = 5 - fullStars - (halfStar > 0 ? 1 : 0);
+
+                                    const starsContainer = document.querySelector("#starsContainer-${loopStatus.index}");
+                                    starsContainer.innerHTML = "";
+
+                                    for (let i = 1; i <= fullStars; i++) {
+                                        starsContainer.innerHTML += '<i class="fa-solid fa-star"></i>';
+                                    }
+
+                                    if (halfStar > 0) {
+                                        starsContainer.innerHTML += '<i class="fa-solid fa-star-half-stroke"></i>';
+                                    }
+
+                                    for (let i = 1; i <= emptyStars; i++) {
+                                        starsContainer.innerHTML += '<i class="fa-regular fa-star"></i>';
+                                    }
                                 } catch (error) {
                                     console.error(error.message);
                                 }

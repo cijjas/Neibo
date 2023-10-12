@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/api")
 public class ApiController {
@@ -66,13 +68,13 @@ public class ApiController {
         this.pws = pws;
     }
 
-    @RequestMapping(value = "/comment", method = RequestMethod.GET)
-    @ResponseBody
-    public String getComment(
-            @RequestParam(value = "id", required = false) int postId
-    ) {
-        return cs.findCommentsByPostId(postId).toString();
-    }
+//    @RequestMapping(value = "/comment", method = RequestMethod.GET)
+//    @ResponseBody
+//    public String getComment(
+//            @RequestParam(value = "id", required = false) int postId
+//    ) {
+//        return cs.findCommentsByPostId(postId).toString();
+//    }
 
     @RequestMapping(value = "/commentById", method = RequestMethod.GET)
     @ResponseBody
@@ -142,10 +144,18 @@ public class ApiController {
 
     @RequestMapping(value = "/profession", method = RequestMethod.GET)
     @ResponseBody
-    public String getProfession(
+    public String getProfessions(
             @RequestParam(value = "id") long workerId
     ) {
-        return pws.getWorkerProfession(workerId);
+        List<String> professions = pws.getWorkerProfessions(workerId);
+        StringBuilder professionsString = new StringBuilder();
+        for (String profession : professions) {
+            if (professionsString.length() > 0) {
+                professionsString.append(", ");
+            }
+            professionsString.append(profession);
+        }
+        return professionsString.toString();
     }
 
     @RequestMapping(value = "/userName", method = RequestMethod.GET)
