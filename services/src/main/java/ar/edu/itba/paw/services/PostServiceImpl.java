@@ -51,7 +51,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, long userId) {
+    public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId) {
+        return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, false, 0);
+    }
+
+    @Override
+    public List<Post> getWorkerPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, long userId) {
         return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, false, userId);
     }
 
