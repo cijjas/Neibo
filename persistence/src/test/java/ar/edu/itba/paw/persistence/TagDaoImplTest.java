@@ -1,11 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.TagDao;
-import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.Tag;
-import ar.edu.itba.paw.persistence.TagDaoImpl;
-import ar.edu.itba.paw.persistence.Table;
-import ar.edu.itba.paw.persistence.TestInsertionUtils;
+import enums.Table;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +15,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.*;
 

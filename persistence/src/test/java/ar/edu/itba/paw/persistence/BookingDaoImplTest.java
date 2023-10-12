@@ -5,11 +5,9 @@ import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.interfaces.persistence.DayDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
-import ar.edu.itba.paw.models.Amenity;
 import ar.edu.itba.paw.models.Booking;
-import ar.edu.itba.paw.models.Day;
-import ar.edu.itba.paw.models.Shift;
 import ar.edu.itba.paw.persistence.config.TestConfig;
+import enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +21,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.*;
 

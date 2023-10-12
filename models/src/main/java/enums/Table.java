@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.persistence;
+package enums;
 
 public enum Table {
     neighborhoods,

@@ -2,9 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.ResourceDao;
 import ar.edu.itba.paw.models.Resource;
-import ar.edu.itba.paw.persistence.ResourceDaoImpl;
-import ar.edu.itba.paw.persistence.Table;
-import ar.edu.itba.paw.persistence.TestInsertionUtils;
+import enums.Table;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
