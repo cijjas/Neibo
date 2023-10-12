@@ -22,13 +22,9 @@ public interface PostService {
 
     Optional<Post> findPostById(long id);
 
-    List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, long userId);
+    List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, long userId);
 
-    int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, long userId);
+    int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, String postStatus, long userId);
 
-    List<Post> getHotPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId);
-
-    int getHotPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId);
-
-    int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId, long userId);
+    int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId, String postStatus, long userId);
 }

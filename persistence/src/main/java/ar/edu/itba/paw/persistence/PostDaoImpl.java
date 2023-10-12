@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Post;
+import enums.PostStatus;
 import enums.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -41,7 +42,7 @@ public class PostDaoImpl implements PostDao {
                     "LEFT JOIN posts_tags pt ON p.postid = pt.postid  " +
                     "LEFT JOIN tags t ON pt.tagid = t.tagid ";
 
-    private final String POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES =
+    private final String FROM_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES =
         "SELECT DISTINCT p.* " +
         "FROM posts p  " +
                 "JOIN users u ON p.userid = u.userid  " +
@@ -135,65 +136,16 @@ public class PostDaoImpl implements PostDao {
     // --------------------------------------------------- COMPLEX -----------------------------------------------------
 
     @Override
-    public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, boolean hot, long userId) {
+    public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         // BASE QUERY
-        StringBuilder query = new StringBuilder(POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
+        StringBuilder query = new StringBuilder(FROM_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
         // PARAMS
         List<Object> queryParams = new ArrayList<>();
 
-        // Append the WHERE so we can freely stack conditions
-        query.append(" WHERE 1 = 1");
+        appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags);
 
-        // Append channel condition, "Administracion", "Feed", etc
-        if (channel != null && !channel.isEmpty()) {
-            query.append(" AND channel LIKE ?");
-            queryParams.add(channel);
-        }
-
-        if(userId != 0) {
-        	query.append(" AND u.userid = ?");
-        	queryParams.add(userId);
-        }
-
-        // Append neighborhoodId condition, 1, 2 or 3 representing Olivos Golf Club, Pacheco Golf or Martindale for example
-        query.append(" AND u.neighborhoodid = ?");
-        queryParams.add(neighborhoodId);
-
-        // Append multiple tags conditions
-        if (tags != null && !tags.isEmpty()) {
-            query.append(" AND EXISTS (");
-            query.append("SELECT 1 FROM posts_tags pt JOIN tags t ON pt.tagid = t.tagid");
-            query.append(" WHERE pt.postid = p.postid AND t.tag IN (");
-            for (int i = 0; i < tags.size(); i++) {
-                query.append("?");
-                queryParams.add(tags.get(i)); // Use the tag name as a string
-                if (i < tags.size() - 1) {
-                    query.append(", ");
-                }
-            }
-            query.append(")");
-            query.append(" HAVING COUNT(DISTINCT pt.tagid) = ?)"); // Ensure all specified tags exist
-            queryParams.add(tags.size());
-        }
-
-        // Hot Filter, what is considered hot is statically defined as having more than 2 likes and more than 2 comments in the last 72 hours
-        // this values could be obtained with an average or a percentile from a standard distribution
-        if ( hot ){
-            // Append the hot post conditions for likes
-            query.append(" AND (SELECT COUNT(userid) FROM posts_users_likes as pul WHERE pul.postid = p.postid AND pul.likedate >= NOW() - INTERVAL '72 HOURS') >= 1");
-
-            // Append the hot post conditions for comments
-            query.append(" AND (SELECT COUNT(commentid) FROM comments as cm WHERE cm.postid = p.postid AND cm.commentdate >= NOW() - INTERVAL '72 HOURS') >= 1");
-        }
-
-        if (page != 0) {
-            // Calculate the offset based on the page and size
-            int offset = (page - 1) * size;
-            // Append the LIMIT and OFFSET clauses for pagination
-            query.append(" LIMIT ? OFFSET ?");
-            queryParams.add(size);
-            queryParams.add(offset);
-        }
+        if (page != 0)
+            appendPaginationClause(query, queryParams, page, size);
 
         // Log results
         LOGGER.info("{}", query);
@@ -204,55 +156,14 @@ public class PostDaoImpl implements PostDao {
     }
 
     @Override
-    public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, boolean hot, long userId) {
+    public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         // Create the base SQL query string for counting
         StringBuilder query = new StringBuilder(COUNT_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
 
         // Create a list to hold query parameters
         List<Object> queryParams = new ArrayList<>();
 
-        // Append conditions based on the provided parameters
-        query.append(" WHERE 1 = 1");
-
-        if (channel != null && !channel.isEmpty()) {
-            query.append(" AND c.channel LIKE ?");
-            queryParams.add("%" + channel + "%");
-        }
-
-        if(userId != 0) {
-            query.append(" AND u.userid = ?");
-            queryParams.add(userId);
-        }
-
-        // Append the neighborhoodId condition
-        query.append(" AND u.neighborhoodid = ?");
-        queryParams.add(neighborhoodId);
-
-        // Append multiple tags conditions
-        if (tags != null && !tags.isEmpty()) {
-            query.append(" AND EXISTS (");
-            query.append("SELECT 1 FROM posts_tags pt JOIN tags t ON pt.tagid = t.tagid");
-            query.append(" WHERE pt.postid = p.postid AND t.tag IN (");
-            for (int i = 0; i < tags.size(); i++) {
-                query.append("?");
-                queryParams.add(tags.get(i)); // Use the tag name as a string
-                if (i < tags.size() - 1) {
-                    query.append(", ");
-                }
-            }
-            query.append(")");
-            query.append(" HAVING COUNT(DISTINCT pt.tagid) = ?)"); // Ensure all specified tags exist
-            queryParams.add(tags.size());
-        }
-
-        // This could become something more complex, that uses an enum for hot type, hot comment-wise, like-wise, or both-wise
-        if ( hot ){
-            // Append the hot post conditions for likes
-            query.append(" AND (SELECT COUNT(userid) FROM posts_users_likes as pul WHERE pul.postid = p.postid AND pul.likedate >= NOW() - INTERVAL '72 HOURS') >= 1");
-
-            // Append the hot post conditions for comments
-            query.append(" AND (SELECT COUNT(commentid) FROM comments as cm WHERE cm.postid = p.postid AND cm.commentdate >= NOW() - INTERVAL '72 HOURS') >= 1");
-        }
+        appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags);
 
         // Log results
         LOGGER.info("{}", query);
@@ -261,4 +172,68 @@ public class PostDaoImpl implements PostDao {
         // Execute the query and retrieve the count
         return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------- HELPER METHODS ------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
+
+    private void appendCommonConditions(StringBuilder query, List<Object> queryParams, String channel, long userId, long neighborhoodId, List<String> tags) {
+        appendInitialWhereClause(query);
+        appendNeighborhoodIdCondition(query, queryParams, neighborhoodId);
+
+        if (channel != null && !channel.isEmpty())
+            appendChannelCondition(query, queryParams, channel);
+
+        if (userId != 0)
+            appendUserIdCondition(query, queryParams, userId);
+
+        if (tags != null && !tags.isEmpty())
+            appendTagsCondition(query, queryParams, tags);
+    }
+
+    private void appendInitialWhereClause(StringBuilder query) {
+        query.append(" WHERE 1 = 1");
+    }
+
+    private void appendChannelCondition(StringBuilder query, List<Object> queryParams, String channel) {
+        query.append(" AND channel LIKE ?");
+        queryParams.add(channel);
+    }
+
+    private void appendUserIdCondition(StringBuilder query, List<Object> queryParams, long userId) {
+        query.append(" AND u.userid = ?");
+        queryParams.add(userId);
+    }
+
+    private void appendNeighborhoodIdCondition(StringBuilder query, List<Object> queryParams, long neighborhoodId) {
+        query.append(" AND u.neighborhoodid = ?");
+        queryParams.add(neighborhoodId);
+    }
+
+    private void appendTagsCondition(StringBuilder query, List<Object> queryParams, List<String> tags) {
+        query.append(" AND EXISTS (");
+        query.append("SELECT 1 FROM posts_tags pt JOIN tags t ON pt.tagid = t.tagid");
+        query.append(" WHERE pt.postid = p.postid AND t.tag IN (");
+
+        for (int i = 0; i < tags.size(); i++) {
+            query.append("?");
+            queryParams.add(tags.get(i)); // Use the tag name as a string
+            if (i < tags.size() - 1) {
+                query.append(", ");
+            }
+        }
+        query.append(")");
+        query.append(" HAVING COUNT(DISTINCT pt.tagid) = ?)"); // Ensure all specified tags exist
+        queryParams.add(tags.size());
+    }
+
+    private void appendPaginationClause(StringBuilder query, List<Object> queryParams, int page, int size) {
+        // Calculate the offset based on the page and size
+        int offset = (page - 1) * size;
+        query.append(" LIMIT ? OFFSET ?");
+        queryParams.add(size);
+        queryParams.add(offset);
+    }
+
 }

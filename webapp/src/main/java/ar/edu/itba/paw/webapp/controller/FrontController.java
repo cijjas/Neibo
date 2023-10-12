@@ -112,10 +112,11 @@ public class FrontController {
             String channelName,
             int page,
             int size,
-            List<String> tags
+            List<String> tags,
+            String postStatus
     ) {
-        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), 0);
-        int totalPages = ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), 0);
+        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), postStatus, 0);
+        int totalPages = ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), postStatus, 0);
 
         String contextPath;
 
@@ -141,11 +142,12 @@ public class FrontController {
     public ModelAndView index(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "tag", required = false) List<String> tags
+            @RequestParam(value = "tag", required = false) List<String> tags,
+            @RequestParam(value = "postStatus", required = false, defaultValue = "none") String postStatus
     ) {
         LOGGER.info("Registered a new user under the id {}", sessionUtils.getLoggedUser().getUserId());
 
-        return handleChannelRequest(BaseChannel.FEED.toString(), page, size, tags);
+        return handleChannelRequest(BaseChannel.FEED.toString(), page, size, tags, postStatus);
     }
 
 
@@ -209,9 +211,10 @@ public class FrontController {
     public ModelAndView announcements(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "tag", required = false) List<String> tags
+            @RequestParam(value = "tag", required = false) List<String> tags,
+            @RequestParam(value = "postStatus", required = false, defaultValue = "none") String postStatus
     ) {
-        return handleChannelRequest(BaseChannel.ANNOUNCEMENTS.toString(), page, size, tags);
+        return handleChannelRequest(BaseChannel.ANNOUNCEMENTS.toString(), page, size, tags, postStatus);
     }
 
     // ------------------------------------- FORUM --------------------------------------
@@ -220,9 +223,10 @@ public class FrontController {
     public ModelAndView complaints(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "tag", required = false) List<String> tags
+            @RequestParam(value = "tag", required = false) List<String> tags,
+            @RequestParam(value = "postStatus", required = false, defaultValue = "none") String postStatus
     ){
-        return handleChannelRequest(BaseChannel.COMPLAINTS.toString(), page, size, tags);
+        return handleChannelRequest(BaseChannel.COMPLAINTS.toString(), page, size, tags, postStatus);
     }
 
     @RequestMapping(value = "/unverified", method = RequestMethod.GET)
@@ -739,8 +743,8 @@ public class FrontController {
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
         Optional<Worker> optionalWorker = ws.findWorkerById(workerId);
 
-        List<Post> postList = ps.getPostsByCriteria(BaseChannel.WORKERS.toString(), 1, 10,null, 0, workerId);
-        int totalPages = ps.getTotalPages(BaseChannel.WORKERS.toString(), 10, null, 0, workerId);
+        List<Post> postList = ps.getPostsByCriteria(BaseChannel.WORKERS.toString(), 1, 10,null, 0, null,workerId);
+        int totalPages = ps.getTotalPages(BaseChannel.WORKERS.toString(), 10, null, 0, null, workerId);
 
         mav.addObject("worker", optionalWorker.orElseThrow(() -> new NotFoundException("Worker not found")));
         mav.addObject("profession", pws.getWorkerProfession(workerId));

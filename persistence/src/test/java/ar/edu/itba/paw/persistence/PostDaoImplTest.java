@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.Post;
 import ar.edu.itba.paw.persistence.config.TestConfig;
+import enums.PostStatus;
 import enums.Table;
 import org.junit.Before;
 import org.junit.Test;
@@ -151,7 +152,7 @@ public class PostDaoImplTest {
         populatePosts();
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(null, BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1, NOT_HOT, 0);
+        List<Post> retrievedPosts = postDao.getPostsByCriteria(null, BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1, PostStatus.none, 0);
 
         // Validations
         assertEquals(2, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts
@@ -164,7 +165,7 @@ public class PostDaoImplTest {
         populatePosts();
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_1, BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1, NOT_HOT, 0);
+        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_1, BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1, PostStatus.none, 0);
 
 
         // Validations
@@ -179,7 +180,7 @@ public class PostDaoImplTest {
         TAG_LIST.add(TAG_NAME_1);
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_1, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey1, NOT_HOT, 0);
+        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_1, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey1, PostStatus.none, 0);
 
         // Validations
         assertEquals(1, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts
@@ -193,7 +194,7 @@ public class PostDaoImplTest {
         TAG_LIST.add(TAG_NAME_2);
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey2, NOT_HOT, 0);
+        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey2, PostStatus.none, 0);
 
         // Validations
         assertEquals(2, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts
@@ -207,7 +208,7 @@ public class PostDaoImplTest {
         TAG_LIST.add(TAG_NAME_2);
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, BASE_PAGE, 1, TAG_LIST, nhKey2, NOT_HOT, 0);
+        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, BASE_PAGE, 1, TAG_LIST, nhKey2, PostStatus.none, 0);
 
         // Validations
         assertEquals(1, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts
@@ -221,7 +222,7 @@ public class PostDaoImplTest {
         TAG_LIST.add(TAG_NAME_2);
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, 2, 1, TAG_LIST, nhKey2, NOT_HOT, 0);
+        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, 2, 1, TAG_LIST, nhKey2, PostStatus.none, 0);
 
         // Validations
         assertEquals(1, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts

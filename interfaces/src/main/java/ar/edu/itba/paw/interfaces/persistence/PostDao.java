@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Post;
+import enums.PostStatus;
 import enums.SortOrder;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public interface PostDao {
 
     Optional<Post> findPostById(long id);
 
-    List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, boolean hot, long userId);
+    List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus hot, long userId);
 
-    int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, boolean hot, long userId);
+    int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus hot, long userId);
 }
