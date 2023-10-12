@@ -117,6 +117,14 @@ public class FrontController {
         List<Post> postList = ps.getPostsByCriteria(channelName, page, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId());
         int totalPages = ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), 0);
 
+        String contextPath;
+
+        if (channelName.equals(BaseChannel.FEED.toString())) {
+            contextPath = "";
+        } else {
+            contextPath = "/" + channelName.toLowerCase();
+        }
+
         ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags(sessionUtils.getLoggedUser().getNeighborhoodId()));
         mav.addObject("appliedTags", tags);
@@ -124,6 +132,7 @@ public class FrontController {
         mav.addObject("page", page);
         mav.addObject("totalPages", totalPages);
         mav.addObject("channel", channelName);
+        mav.addObject("contextPath", contextPath);
 
         return mav;
     }
@@ -282,40 +291,51 @@ public class FrontController {
     public ModelAndView viewPost(
             @PathVariable(value = "id") int postId,
             @ModelAttribute("commentForm") final CommentForm commentForm,
-            @RequestParam(value = "success", required = false) boolean success
+            @RequestParam(value = "success", required = false) boolean success,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
     ) {
         ModelAndView mav = new ModelAndView("views/post");
 
         Optional<Post> optionalPost = ps.findPostById(postId);
         mav.addObject("post", optionalPost.orElseThrow(() -> new NotFoundException("Post Not Found")));
 
-        Optional<List<Comment>> optionalComments = cs.findCommentsByPostId(postId);
-        mav.addObject("comments", optionalComments.orElse(Collections.emptyList()));
+        String contextPath = "/posts/" + postId;
 
-        Optional<List<Tag>> optionalTags = ts.findTagsByPostId(postId);
-        List<Tag> tags = optionalTags.orElse(Collections.emptyList());
+        List<Comment> commentList = cs.findCommentsByPostId(postId, page, size);
+        int totalPages = cs.getTotalPostPages(postId, size);
+
+        mav.addObject("comments", commentList);
+        mav.addObject("page", page);
+        mav.addObject("totalPages", totalPages);
+
+        List<Tag> tags = ts.findTagsByPostId(postId);
 
         mav.addObject("tags", tags);
         mav.addObject("commentForm", commentForm);
         mav.addObject("showSuccessMessage", success);
+        mav.addObject("contextPath", contextPath);
 
         return mav;
     }
 
     @RequestMapping(value = "/posts/{id:\\d+}", method = RequestMethod.POST)
-    public ModelAndView viewPost(
+    public ModelAndView addCommentToPost(
             @PathVariable(value = "id") int postId,
             @Valid @ModelAttribute("commentForm") final CommentForm commentForm,
-            final BindingResult errors
+            final BindingResult errors,
+            @RequestParam(value = "post_page", defaultValue = "1") int postPage,
+            @RequestParam(value = "post_size", defaultValue = "10") int postSize
     ) {
         if (errors.hasErrors()) {
-            return viewPost(postId, commentForm, false);
+            return viewPost(postId, commentForm, false, postPage, postSize);
         }
         cs.createComment(commentForm.getComment(), sessionUtils.getLoggedUser().getUserId(), postId);
         ModelAndView mav = new ModelAndView("redirect:/posts/" + postId);
         mav.addObject("commentForm", new CommentForm());
         return mav;
     }
+
 
     // ------------------------------------- RESOURCES --------------------------------------
 
@@ -469,29 +489,13 @@ public class FrontController {
 
         Date selectedDate = new Date(timestamp != 0 ? timestamp : System.currentTimeMillis());
 
-
         List<Event> eventList = es.getEventsByDate(selectedDate, sessionUtils.getLoggedUser().getNeighborhoodId());
-
-        // Define arrays for month names in English and Spanish
-        String[] monthsEnglish = {
-                "January", "February", "March", "April",
-                "May", "June", "July", "August",
-                "September", "October", "November", "December"
-        };
-
-        String[] monthsSpanish = {
-                "enero", "febrero", "marzo", "abril",
-                "mayo", "junio", "julio", "agosto",
-                "septiembre", "octubre", "noviembre", "diciembre"
-        };
 
         // Get the selected day, month (word), and year directly from selectedDate
         int selectedDay = selectedDate.getDate(); // getDate() returns the day of the month
-        int selectedMonthIndex = selectedDate.getMonth(); // getMonth() returns the month as 0-based index
-        String selectedMonth = sessionUtils.getLoggedUser().getLanguage() == Language.ENGLISH
-                ? monthsEnglish[selectedMonthIndex]
-                : monthsSpanish[selectedMonthIndex];
-        int selectedYear = selectedDate.getYear() + 1900; // getYear() returns years since 1900
+        String selectedMonth = es.getSelectedMonth(selectedDate.getMonth(), sessionUtils.getLoggedUser().getLanguage());
+        int selectedYear = es.getSelectedYear(selectedDate.getYear());
+        String dateString = es.getDateString(selectedDate);
 
         ModelAndView mav = new ModelAndView("views/calendar");
         mav.addObject("isAdmin", sessionUtils.getLoggedUser().getRole() == UserRole.ADMINISTRATOR);
@@ -501,6 +505,7 @@ public class FrontController {
         mav.addObject("selectedYear", selectedYear);
         mav.addObject("selectedDate", selectedDate );
         mav.addObject("eventList", eventList);
+        mav.addObject("dateString", dateString);
         return mav;
     }
 

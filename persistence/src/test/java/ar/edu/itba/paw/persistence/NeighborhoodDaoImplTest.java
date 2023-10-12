@@ -2,21 +2,18 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.persistence.config.TestConfig;
+import enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.sql.DataSource;
-
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -36,7 +33,7 @@ public class NeighborhoodDaoImplTest {
     private DataSource ds;
 
     @Before
-    public void SetUp(){
+    public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
         neighborhoodDao = new NeighborhoodDaoImpl(ds);
         testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
@@ -56,7 +53,7 @@ public class NeighborhoodDaoImplTest {
     }
 
     @Test
-    public void testFindByNeighborhoodByInvalidId(){
+    public void testFindNeighborhoodByInvalidId() {
         // Pre Conditions
 
         // Exercise
@@ -67,15 +64,15 @@ public class NeighborhoodDaoImplTest {
     }
 
     @Test
-    public void testFindByNeighborhoodByValidId(){
+    public void testFindNeighborhoodByValidId() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
+        long nhKey = testInsertionUtils.createNeighborhood();
 
         // Exercise
-        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhoodById(nhKey.longValue());
+        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhoodById(nhKey);
 
         // Validations & Post Conditions
         assertTrue(nh.isPresent());
-        assertEquals(nhKey.longValue(), nh.get().getNeighborhoodId());
+        assertEquals(nhKey, nh.get().getNeighborhoodId());
     }
 }

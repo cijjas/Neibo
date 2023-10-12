@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Event;
 import ar.edu.itba.paw.models.User;
+import enums.Language;
 
 import java.util.Date;
 import java.util.List;
@@ -27,5 +28,11 @@ public interface EventService {
     String getEventTimestampsString(long neighborhoodId);
 
     boolean deleteEvent(long eventId);
+
+    String getSelectedMonth(int month, Language language);
+
+    int getSelectedYear(int year);
+
+    String getDateString(Date date);
 
 }

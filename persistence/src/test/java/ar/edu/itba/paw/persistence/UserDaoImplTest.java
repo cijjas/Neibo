@@ -1,28 +1,23 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.*;
-import ar.edu.itba.paw.models.Post;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import enums.Language;
+import enums.Table;
 import enums.UserRole;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -59,12 +54,12 @@ public class UserDaoImplTest {
     private static final String USER_MAIL_4 = "user4@test.com";
     private static final int BASE_PAGE = 1;
     private static final int BASE_PAGE_SIZE = 10;
-    private Number nhKey1;
-    private Number nhKey2;
-    private Number uKey1;
-    private Number uKey2;
-    private Number uKey3;
-    private Number uKey4;
+    private long nhKey1;
+    private long nhKey2;
+    private long uKey1;
+    private long uKey2;
+    private long uKey3;
+    private long uKey4;
 
     @Before
     public void setUp() {
@@ -84,28 +79,29 @@ public class UserDaoImplTest {
         nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
 
         // Exercise
-        User createdUser = userDao.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1.longValue(), LANGUAGE, DARK_MODE, ROLE, ID);
+        User createdUser = userDao.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, ROLE, ID);
 
         // Validations & Post Conditions
         assertNotNull(createdUser);
         assertEquals(USER_MAIL_1, createdUser.getMail());
         assertEquals(NAME, createdUser.getName());
         assertEquals(SURNAME, createdUser.getSurname());
-        assertEquals(nhKey1.longValue(), createdUser.getNeighborhoodId());
+        assertEquals(nhKey1, createdUser.getNeighborhoodId());
         assertEquals(LANGUAGE, createdUser.getLanguage());
         assertEquals(DARK_MODE, createdUser.isDarkMode());
         assertEquals(ROLE, createdUser.getRole());
         assertEquals(ID, createdUser.getIdentification());
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users.name()));
     }
 
     @Test
     public void testFindUserById() {
         // Pre Conditions
         nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
-        uKey1 = testInsertionUtils.createUser(nhKey1.longValue());
+        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, ROLE, ID);
 
         // Exercise
-        Optional<User> maybeUser = userDao.findUserById(uKey1.longValue());
+        Optional<User> maybeUser = userDao.findUserById(uKey1);
 
         // Validations
         assertTrue(maybeUser.isPresent());
@@ -126,7 +122,7 @@ public class UserDaoImplTest {
     public void testFindUserByMail() {
         // Pre Conditions
         nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1.longValue());
+        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, ROLE, ID);
 
         // Exercise
         Optional<User> maybeUser = userDao.findUserByMail(USER_MAIL_1);
@@ -152,7 +148,7 @@ public class UserDaoImplTest {
         populateUsers();
 
         // Exercise
-        List<User> retrievedUsers = userDao.getUsersByCriteria(null, nhKey1.longValue(), BASE_PAGE, BASE_PAGE_SIZE);
+        List<User> retrievedUsers = userDao.getUsersByCriteria(null, nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(2, retrievedUsers.size()); // Adjust based on the expected number of retrieved posts
@@ -164,7 +160,7 @@ public class UserDaoImplTest {
         populateUsers();
 
         // Exercise
-        List<User> retrievedUsers = userDao.getUsersByCriteria(UserRole.NEIGHBOR, nhKey1.longValue(), BASE_PAGE, BASE_PAGE_SIZE);
+        List<User> retrievedUsers = userDao.getUsersByCriteria(UserRole.NEIGHBOR, nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(2, retrievedUsers.size()); // Adjust based on the expected number of retrieved posts
@@ -176,7 +172,7 @@ public class UserDaoImplTest {
         populateUsers();
 
         // Exercise
-        List<User> retrievedUsers = userDao.getUsersByCriteria(UserRole.NEIGHBOR, nhKey1.longValue(), BASE_PAGE, 1);
+        List<User> retrievedUsers = userDao.getUsersByCriteria(UserRole.NEIGHBOR, nhKey1, BASE_PAGE, 1);
 
         // Validations
         assertEquals(1, retrievedUsers.size()); // Adjust based on the expected number of retrieved posts
@@ -188,7 +184,7 @@ public class UserDaoImplTest {
         populateUsers();
 
         // Exercise
-        List<User> retrievedUsers = userDao.getUsersByCriteria(UserRole.NEIGHBOR, nhKey1.longValue(), 2, 1);
+        List<User> retrievedUsers = userDao.getUsersByCriteria(UserRole.NEIGHBOR, nhKey1, 2, 1);
 
         // Validations
         assertEquals(1, retrievedUsers.size()); // Adjust based on the expected number of retrieved posts
@@ -199,13 +195,9 @@ public class UserDaoImplTest {
         nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
         nhKey2 = testInsertionUtils.createNeighborhood(NH_NAME_2);
 
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, UserRole.NEIGHBOR, nhKey1.longValue());
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_2, UserRole.NEIGHBOR, nhKey1.longValue());
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_3, UserRole.UNVERIFIED_NEIGHBOR, nhKey2.longValue());
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_4, UserRole.UNVERIFIED_NEIGHBOR, nhKey2.longValue());
+        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, UserRole.NEIGHBOR, ID);
+        uKey2 = testInsertionUtils.createUser(USER_MAIL_2, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, UserRole.NEIGHBOR, ID);
+        uKey3 = testInsertionUtils.createUser(USER_MAIL_3, PASSWORD, NAME, SURNAME, nhKey2, LANGUAGE, DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, ID);
+        uKey4 = testInsertionUtils.createUser(USER_MAIL_4, PASSWORD, NAME, SURNAME, nhKey2, LANGUAGE, DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, ID);
     }
-
-
-
-
 }

@@ -33,7 +33,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Optional<List<Tag>> findTagsByPostId(long id) {
+    public List<Tag> findTagsByPostId(long id) {
         return tagDao.findTagsByPostId(id);
     }
 

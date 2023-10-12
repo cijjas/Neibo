@@ -9,5 +9,5 @@ public interface ChannelMappingDao {
 
     // -------------------------------------------- CHANNEL MAPPING INSERT ---------------------------------------------
 
-    void createChannelMappingDao(final long channelId, final long neighborhoodId);
+    void createChannelMapping(final long channelId, final long neighborhoodId);
 }

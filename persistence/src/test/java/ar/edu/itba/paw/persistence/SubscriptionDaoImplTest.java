@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.SubscriptionDao;
-import ar.edu.itba.paw.persistence.SubscriptionDaoImpl;
-import ar.edu.itba.paw.persistence.Table;
-import ar.edu.itba.paw.persistence.TestInsertionUtils;
+import enums.Table;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +24,7 @@ public class SubscriptionDaoImplTest {
 
     private JdbcTemplate jdbcTemplate;
     private TestInsertionUtils testInsertionUtils;
-    private SubscriptionDaoImpl subscriptionDao;
+    private SubscriptionDao subscriptionDao;
 
     @Autowired
     private DataSource ds;
@@ -41,13 +39,14 @@ public class SubscriptionDaoImplTest {
     @Test
     public void testCreateSubscription() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number chKey = testInsertionUtils.createChannel();
-        Number pKey = testInsertionUtils.createPost(uKey.longValue(), chKey.longValue(), 0);
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long chKey = testInsertionUtils.createChannel();
+        long iKey = testInsertionUtils.createImage();
+        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
 
         // Exercise
-        subscriptionDao.createSubscription(uKey.longValue(), pKey.longValue());
+        subscriptionDao.createSubscription(uKey, pKey);
 
         // Validations & Post Conditions
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_subscriptions.name()));

@@ -68,13 +68,13 @@ public class ApiController {
         this.pws = pws;
     }
 
-    @RequestMapping(value = "/comment", method = RequestMethod.GET)
-    @ResponseBody
-    public String getComment(
-            @RequestParam(value = "id", required = false) int postId
-    ) {
-        return cs.findCommentsByPostId(postId).toString();
-    }
+//    @RequestMapping(value = "/comment", method = RequestMethod.GET)
+//    @ResponseBody
+//    public String getComment(
+//            @RequestParam(value = "id", required = false) int postId
+//    ) {
+//        return cs.findCommentsByPostId(postId).toString();
+//    }
 
     @RequestMapping(value = "/commentById", method = RequestMethod.GET)
     @ResponseBody

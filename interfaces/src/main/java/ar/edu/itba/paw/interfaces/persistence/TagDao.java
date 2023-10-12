@@ -13,7 +13,7 @@ public interface TagDao {
 
     // ---------------------------------------------- TAGS SELECT ------------------------------------------------------
 
-    Optional<List<Tag>> findTagsByPostId(long id);
+    List<Tag> findTagsByPostId(long id);
 
     List<Tag> getTags(long neighborhoodId);
 

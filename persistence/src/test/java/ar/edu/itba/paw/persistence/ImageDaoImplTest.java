@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.persistence.ImageDao;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.persistence.config.TestConfig;
+import enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,10 +14,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.jdbc.JdbcTestUtils;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -32,6 +31,10 @@ public class ImageDaoImplTest {
     private TestInsertionUtils testInsertionUtils;
     private ImageDao imageDao;
 
+    private String NAME = "image";
+    private String FILE_NAME = "fake.jpg";
+    private String CONTENT_TYPE = "image/jpeg";
+
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -43,23 +46,23 @@ public class ImageDaoImplTest {
     public void testStoreImageAndGetImage() {
         // Pre Conditions
         byte[] fakeImageBytes = new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
-        MockMultipartFile fakeImage = new MockMultipartFile("image", "fake.jpg", "image/jpeg", fakeImageBytes);
+        MockMultipartFile fakeImage = new MockMultipartFile(NAME, FILE_NAME, CONTENT_TYPE, fakeImageBytes);
 
         // Exercise
         Image storedImage = imageDao.storeImage(fakeImage);
 
         // Validations & Post Conditions
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "images"));
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.images.name()));
         assertArrayEquals(fakeImageBytes, storedImage.getImage());
     }
 
     @Test
     public void testFindImage(){
         // Pre Conditions
-        Number iKey = testInsertionUtils.createImage();
+        long iKey = testInsertionUtils.createImage();
 
         // Exercise
-        Optional<Image> maybeImage = imageDao.getImage(iKey.longValue());
+        Optional<Image> maybeImage = imageDao.getImage(iKey);
 
         // Validations & Post Conditions
         assertTrue(maybeImage.isPresent());

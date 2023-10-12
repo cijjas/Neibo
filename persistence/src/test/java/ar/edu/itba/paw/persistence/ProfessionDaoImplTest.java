@@ -28,6 +28,10 @@ public class ProfessionDaoImplTest {
     private TestInsertionUtils testInsertionUtils;
     private ProfessionDao professionDao;
 
+    private String PROFESSION_1 = "Profession 1";
+    private String PROFESSION_2 = "Profession 2";
+    private String PROFESSION_3 = "Profession 3";
+
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -38,9 +42,9 @@ public class ProfessionDaoImplTest {
     @Test
     public void testGetProfessions() {
         // Pre Conditions
-        testInsertionUtils.createProfession("Profession 1");
-        testInsertionUtils.createProfession("Profession 2");
-        testInsertionUtils.createProfession("Profession 3");
+        testInsertionUtils.createProfession(PROFESSION_1);
+        testInsertionUtils.createProfession(PROFESSION_2);
+        testInsertionUtils.createProfession(PROFESSION_3);
 
         // Exercise
         List<Profession> professions = professionDao.getProfessions();

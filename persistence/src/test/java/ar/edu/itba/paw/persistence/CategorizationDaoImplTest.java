@@ -1,20 +1,18 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.persistence.config.TestConfig;
+import enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -40,14 +38,14 @@ public class CategorizationDaoImplTest {
     @Test
     public void testCreateCategory() {
         // Pre Conditions
-        Number chKey = testInsertionUtils.createChannel();
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number pKey = testInsertionUtils.createPost(uKey.longValue(), chKey.longValue(), 0);
-        Number tKey = testInsertionUtils.createTag();
+        long chKey = testInsertionUtils.createChannel();
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long pKey = testInsertionUtils.createPost(uKey, chKey, 0);
+        long tKey = testInsertionUtils.createTag();
 
         // Exercise
-        categorizationDao.createCategory(tKey.longValue(), pKey.longValue());
+        categorizationDao.createCategory(tKey, pKey);
 
         // Validations & Post Conditions
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_tags.name()));
