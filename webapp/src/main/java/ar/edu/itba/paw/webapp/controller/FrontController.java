@@ -260,7 +260,7 @@ public class FrontController {
         }
         Integer channelId = publishForm.getChannel();
 
-        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), channelId, publishForm.getTags(), imageFile);
+        ps.createPost(publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), channelId, publishForm.getTags(), imageFile);
         ModelAndView mav = new ModelAndView("views/publish");
         mav.addObject("channelId", channelId);
         mav.addObject("showSuccessMessage", true);
@@ -272,7 +272,7 @@ public class FrontController {
     public ModelAndView redirectToChannel(
             @RequestParam("channelId") int channelId
     ) {
-        String channelName= chs.findChannelById(channelId).get().getChannel().toLowerCase();
+        String channelName= chs.findChannelById(channelId).orElseThrow(()-> new NotFoundException("Channel not Found")).getChannel().toLowerCase();
         if(channelName.equals(BaseChannel.FEED.toString().toLowerCase())){
             return new ModelAndView("redirect:/");
         }
@@ -285,7 +285,7 @@ public class FrontController {
     public ModelAndView publishToChannel(
             @RequestParam("channel") String channelString
     ) {
-        long channelId = chs.findChannelByName(channelString).get().getChannelId();
+        long channelId = chs.findChannelByName(channelString).orElseThrow(()-> new NotFoundException("Channel not Found")).getChannelId();
         return new ModelAndView("redirect:/publish?onChannelId=" + channelId);
     }
 
@@ -422,7 +422,7 @@ public class FrontController {
 
         mav.addObject("amenityId", amenityId);
         mav.addObject("date", date);
-        mav.addObject("amenityName", as.findAmenityById(amenityId).orElse(null).getName());
+        mav.addObject("amenityName", as.findAmenityById(amenityId).orElseThrow(()-> new NotFoundException("Amenity not Found")).getName());
         mav.addObject("bookings", shs.getShifts(amenityId,date));
         return mav;
     }
@@ -717,8 +717,7 @@ public class FrontController {
     @RequestMapping(value = "/admin/test", method = RequestMethod.GET)
     public ModelAndView adminTest() {
 
-        ModelAndView mav = new ModelAndView("admin/views/requestManager");
-        return mav;
+        return new ModelAndView("admin/views/requestManager");
     }
 
     @RequestMapping(value = "/testDuplicatedException", method = RequestMethod.GET)
