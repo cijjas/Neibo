@@ -2,10 +2,7 @@ package ar.edu.itba.paw.webapp.form.validation;
 
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.ReservationTime;
-import ar.edu.itba.paw.webapp.form.validation.constraints.TimeOrder;
-import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.sql.Time;
 

@@ -28,7 +28,7 @@
             </c:when>
             <c:otherwise>
                 <c:forEach var="event" items="${eventList}" >
-                        <jsp:include page="/WEB-INF/jsp/components/widgets/calendar/event.jsp" >
+                        <jsp:include page="/WEB-INF/jsp/components/widgets/calendar/calendarEvent.jsp" >
                             <jsp:param name="eventId" value="${event.eventId}" />
                             <jsp:param name="eventName" value="${event.name}"/>
                             <jsp:param name="eventDescription" value="${event.description}"/>

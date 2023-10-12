@@ -8,7 +8,7 @@
 </head>
 <body>
 <h1>Select Shifts</h1>
-<form name="shiftForm" action="/testAmenity" method="post">
+<form name="shiftForm" action="${pageContext.request.contextPath}/testAmenityBooking" method="post">
     <input type="hidden" name="amenityId" value="${amenityId}" />
     <input type="hidden" name="date" value="${bookingDate}" />
 

@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.services.ShiftService;
 import ar.edu.itba.paw.models.Shift;
 import enums.DayOfTheWeek;
+import enums.StandardTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +33,8 @@ public class ShiftServiceImpl implements ShiftService {
     public List<Shift> getShifts(long amenityId, Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        // Get the day of the week as an integer (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
-        return shiftDao.getShifts(amenityId, dayOfWeek-1, date);
+        return shiftDao.getShifts(amenityId, DayOfTheWeek.convertToCustomDayId(dayOfWeek), date);
     }
 
 

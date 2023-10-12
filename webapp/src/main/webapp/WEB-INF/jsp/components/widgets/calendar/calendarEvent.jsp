@@ -13,7 +13,7 @@
                 <div class="col-2">
 
                     <span class="admin-link">
-                        <a href="${pageContext.request.contextPath}/admin/deleteEvent/${param.eventId}?timestamp=${selectedTimestamp}" class="btn btn-link">
+                        <a href="${pageContext.request.contextPath}/admin/delete-event/${param.eventId}?timestamp=${selectedTimestamp}" class="btn btn-link">
                             <i class="fas fa-trash" style="color: var(--error);"></i>
                         </a>
                     </span>

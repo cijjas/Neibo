@@ -31,8 +31,8 @@
                                 />
                                 <script>
                                     (function(){
-                                        postUserProfilePictureId();
-                                        async function postUserProfilePictureId() {
+                                        getUserProfilePicture();
+                                        async function getUserProfilePicture() {
                                             let image = document.getElementById('postUserProfilePictureId-'+ ${param.postID})
                                             if("${param.postUserProfilePictureId}" === "0"){
                                                 image.src = "${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png";

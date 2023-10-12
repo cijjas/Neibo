@@ -45,7 +45,7 @@
                                     </p>
                                 </div>
                                 <div class="divider m-b-20 "></div>
-                                <%@include file="/WEB-INF/jsp/components/widgets/calendar/eventsIndex.jsp"%>
+                                <%@include file="/WEB-INF/jsp/components/widgets/calendar/calendarEventsColumn.jsp"%>
                             </div>
                         </div>
                     </div>

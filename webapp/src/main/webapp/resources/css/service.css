@@ -111,7 +111,7 @@
             position: absolute;
             border-radius: 50%;
             border: 6px solid var(--onbackground);
-            background-image: linear-gradient(-60deg, #16a085 0%, #f4d03f 100%);
+            background-image: linear-gradient(-60deg, var(--old-primary) 0%, var(--primary) 100%);
             top: 15px;
             left: 100px;
         }
@@ -158,7 +158,6 @@
         height: 100%;
         border-top-left-radius: var(--border-radius);
         border-bottom-left-radius: var(--border-radius);
-        background-image: url("https://m.media-amazon.com/images/S/aplus-media/vc/cab6b08a-dd8f-4534-b845-e33489e91240._CR75,0,300,300_PT0_SX300__.jpg");
         background-position: bottom center;
         background-size: cover;
     }
@@ -254,4 +253,17 @@ input:checked + label {
         color: var(--text);
         border-radius: var(--border-radius);
     }
+}
+
+.background-cover{
+
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.3s ease-in-out;
+
+    border-top-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+    background-position: bottom center;
+    background-size: cover;
 }
