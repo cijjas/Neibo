@@ -44,6 +44,7 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public Tag createTag(String name) {
+        LOGGER.info("Inserting Tag {}", name);
         Map<String, Object> data = new HashMap<>();
         data.put("tag", name);
 
@@ -73,16 +74,19 @@ public class TagDaoImpl implements TagDao {
     // is called through the detail of a post it cant be an invalid postId
     @Override
     public List<Tag> findTagsByPostId(long id) {
+        LOGGER.info("Selecting Tags for Post with postId {}", id);
         return jdbcTemplate.query(TAGS_JOIN_POSTS + " WHERE postid=?;", ROW_MAPPER, id);
     }
 
     @Override
     public List<Tag> getTags(long neighborhoodId) {
+        LOGGER.info("Selecting Tag List from Neighborhood {}", neighborhoodId);
         return jdbcTemplate.query(TAGS_JOIN_POSTS_JOIN_USERS_JOIN_NEIGHBORHOODS + " WHERE nh.neighborhoodid=?", ROW_MAPPER, neighborhoodId);
     }
 
     @Override
     public List<Tag> getAllTags() {
+        LOGGER.info("Selecting Complete Tag List");
         return jdbcTemplate.query(TAGS, ROW_MAPPER);
     }
 }

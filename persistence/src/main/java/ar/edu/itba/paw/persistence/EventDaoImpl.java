@@ -44,8 +44,11 @@ public class EventDaoImpl implements EventDao {
                 .withTableName("times");
     }
 
+    // ---------------------------------------------- EVENT INSERT -----------------------------------------------------
+
     @Override
     public Event createEvent(final String name, final String description, final Date date, final Time startTime, final Time endTime, final long neighborhoodId) {
+        LOGGER.info("Inserting Event {}", name);
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
         data.put("description", description);
@@ -102,6 +105,8 @@ public class EventDaoImpl implements EventDao {
         }
     }
 
+    // ---------------------------------------------- EVENT SELECT -----------------------------------------------------
+
     private static final RowMapper<Event> ROW_MAPPER = (rs, rowNum) -> new Event.Builder()
             .eventId(rs.getLong("eventid"))
             .name(rs.getString("name"))
@@ -113,27 +118,34 @@ public class EventDaoImpl implements EventDao {
 
     @Override
     public Optional<Event> findEventById(long eventId) {
+        LOGGER.info("Selecting Event with id {}", eventId);
         final List<Event> list = jdbcTemplate.query(EVENTS + " where eventid = ?", ROW_MAPPER, eventId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
     public List<Event> getEventsByDate(Date date, long neighborhoodId) {
+        LOGGER.info("Selecting Events from Date {}", date);
         return jdbcTemplate.query(EVENTS + " where date = ? and neighborhoodid = ?", ROW_MAPPER, date, neighborhoodId);
     }
 
     @Override
     public List<Event> getEventsByNeighborhoodId(long neighborhoodId) {
+        LOGGER.info("Selecting Events from Neighborhood {}", neighborhoodId);
         return jdbcTemplate.query(EVENTS + " where neighborhoodid = ?", ROW_MAPPER, neighborhoodId);
     }
 
     @Override
     public List<Date> getEventDates(long neighborhoodId) {
+        LOGGER.info("Selecting Event Dates from Neighborhood {}", neighborhoodId);
         return jdbcTemplate.queryForList("select distinct date from events where neighborhoodid = ?", Date.class, neighborhoodId);
     }
 
+    // ---------------------------------------------- EVENT DELETE -----------------------------------------------------
+
     @Override
     public boolean deleteEvent(long eventId){
+        LOGGER.info("Deleting Event with id {}", eventId);
         return jdbcTemplate.update("DELETE FROM events WHERE eventid = ?", eventId) > 0;
     }
 }

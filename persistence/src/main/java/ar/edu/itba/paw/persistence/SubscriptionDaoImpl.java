@@ -32,6 +32,7 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
 
     @Override
     public void createSubscription(long userId, long postId) {
+        LOGGER.info("Inserting Subscription");
         Map<String, Object> data = new HashMap<>();
         data.put("userid", userId);
         data.put("postid", postId);
