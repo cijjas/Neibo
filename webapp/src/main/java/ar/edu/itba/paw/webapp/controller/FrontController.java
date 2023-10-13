@@ -76,7 +76,8 @@ public class FrontController {
                            final ReviewService rws,
                            final WorkerService ws,
                            final BookingService bs,
-                           final ShiftService shs) {
+                           final ShiftService shs
+    ) {
         this.sessionUtils = sessionUtils;
         this.is = is;
         this.ps = ps;
@@ -670,8 +671,8 @@ public class FrontController {
         bs.createBooking(23, 1, new ArrayList<>(Arrays.asList(28L, 29L, 30L)), Date.valueOf("2023-10-10"));
         */
 
-
-        return new ModelAndView("views/testView");
+        System.out.println(shs.getAmenityShifts(1));
+        return new ModelAndView("views/index");
     }
 
     @RequestMapping(value = "/admin/test", method = RequestMethod.GET)
