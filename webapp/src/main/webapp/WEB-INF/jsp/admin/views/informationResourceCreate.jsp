@@ -28,7 +28,7 @@
             <div class="cool-static-container" >
                 <h2 class="card-title"><spring:message code="CreateResource"/></h2>
                 <div class="divider"></div>
-                <form:form method="post" action="createResource" modelAttribute="resourceForm" enctype="multipart/form-data">
+                <form:form method="post" action="create-resource" modelAttribute="resourceForm" enctype="multipart/form-data">
                     <form:errors cssClass="error" element="p"/>
 
                     <div class="form-column" style="margin-top:1rem;">

@@ -20,9 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
 import java.sql.Date;
-import java.util.stream.Collectors;
 
-import ar.edu.itba.paw.models.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -282,7 +280,7 @@ public class FrontController {
         }
         Integer channelId = publishForm.getChannel();
 
-        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), channelId, publishForm.getTags(), imageFile);
+        ps.createPost(publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), channelId, publishForm.getTags(), imageFile);
         ModelAndView mav = new ModelAndView("views/publish");
         mav.addObject("channelId", channelId);
         mav.addObject("showSuccessMessage", true);
@@ -294,7 +292,7 @@ public class FrontController {
     public ModelAndView redirectToChannel(
             @RequestParam("channelId") int channelId
     ) {
-        String channelName= chs.findChannelById(channelId).get().getChannel().toLowerCase();
+        String channelName= chs.findChannelById(channelId).orElseThrow(()-> new NotFoundException("Channel not Found")).getChannel().toLowerCase();
         if(channelName.equals(BaseChannel.FEED.toString().toLowerCase())){
             return new ModelAndView("redirect:/");
         }
@@ -307,7 +305,7 @@ public class FrontController {
     public ModelAndView publishToChannel(
             @RequestParam("channel") String channelString
     ) {
-        long channelId = chs.findChannelByName(channelString).get().getChannelId();
+        long channelId = chs.findChannelByName(channelString).orElseThrow(()-> new NotFoundException("Channel not Found")).getChannelId();
         return new ModelAndView("redirect:/publish?onChannelId=" + channelId);
     }
 
@@ -444,25 +442,23 @@ public class FrontController {
 
         mav.addObject("amenityId", amenityId);
         mav.addObject("date", date);
-        mav.addObject("amenityName", as.findAmenityById(amenityId).orElse(null).getName());
+        mav.addObject("amenityName", as.findAmenityById(amenityId).orElseThrow(()-> new NotFoundException("Amenity not Found")).getName());
         mav.addObject("bookings", shs.getShifts(amenityId,date));
         return mav;
     }
 
+
     @RequestMapping(value = "/reservation", method = RequestMethod.POST)
     public ModelAndView reservation(
-            @Valid @ModelAttribute("reservationTimeForm") final ReservationTimeForm reservationTimeForm,
-            final BindingResult errors
+            @RequestParam("amenityId") Long amenityId,
+            @RequestParam("date") Date date,
+            @RequestParam("selectedShifts") List<Long> selectedShifts
     ) {
-        if (errors.hasErrors()) {
-            return reservation(reservationTimeForm, reservationTimeForm.getAmenityId(), reservationTimeForm.getDate());
-        }
-        ModelAndView mav = new ModelAndView("redirect:/amenities");
-        Reservation res = rs.createReservation(reservationTimeForm.getAmenityId(), sessionUtils.getLoggedUser().getUserId(), reservationTimeForm.getDate(), reservationTimeForm.getStartTime(), reservationTimeForm.getEndTime(), sessionUtils.getLoggedUser().getNeighborhoodId());
-        mav.addObject(res == null ? "showErrorMessage" : "showSuccessMessage", true);
-
-        return mav;
+        System.out.println(selectedShifts);
+        bs.createBooking(sessionUtils.getLoggedUser().getUserId(), amenityId, selectedShifts, date);
+        return new ModelAndView("redirect:/");
     }
+
 
     @RequestMapping(value = "/amenities", method = RequestMethod.GET)
     public ModelAndView amenities(
@@ -624,65 +620,7 @@ public class FrontController {
 
     // ------------------------------------- TEST --------------------------------------
 
-    @RequestMapping(value = "/testAmenityCreation", method = RequestMethod.GET)
-    public ModelAndView amenities1() {
-        ModelAndView mav = new ModelAndView("views/amenities3");
 
-        // Create lists of pairs for DaysOfTheWeek and StandardTime
-        List<Pair<Integer, String>> daysPairs = new ArrayList<>();
-        List<Pair<Integer, String>> timesPairs = new ArrayList<>();
-
-        for (DayOfTheWeek day : DayOfTheWeek.values())
-            daysPairs.add(new Pair<>(day.getId(), day.name()));
-
-
-        for (StandardTime time : StandardTime.values())
-            timesPairs.add(new Pair<>(time.getId(), time.toString()));
-
-
-        mav.addObject("daysPairs", daysPairs);
-        mav.addObject("timesPairs", timesPairs);
-
-        return mav;
-    }
-
-
-
-
-    @RequestMapping(value = "/testAmenityCreation", method = RequestMethod.POST)
-    public ModelAndView amenities2(
-            @RequestParam("selectedShifts") List<String> selectedShifts
-    ) {
-        System.out.println(selectedShifts);
-        as.createAmenity("New Amenity", "This is a great new amenity", 1, selectedShifts);
-        return new ModelAndView("redirect:/");
-    }
-
-
-    @RequestMapping(value = "/testAmenityBooking", method = RequestMethod.GET)
-    public ModelAndView booking() {
-        ModelAndView mav = new ModelAndView("views/amenities2");
-        int amenityId = 1;
-
-        // supongo que ya sabemos la fecha y el amenity id
-        mav.addObject("bookingDate", Date.valueOf("2023-10-10"));
-        mav.addObject("amenityId", amenityId);
-        mav.addObject("bookings", shs.getShifts(amenityId,Date.valueOf("2023-10-10")));
-        mav.addObject(Date.valueOf("2023-10-10"));
-        return mav;
-    }
-
-    @RequestMapping(value = "/testAmenityBooking", method = RequestMethod.POST)
-    public ModelAndView booking2(
-            @RequestParam("amenityId") Long amenityId,
-            @RequestParam("date") Date date,
-            @RequestParam("selectedShifts") List<Long> selectedShifts
-    ) {
-        System.out.println(selectedShifts);
-        int userId = 23; // where tha fuck is getLoggedUser()?
-        bs.createBooking(userId, amenityId, selectedShifts, date);
-        return new ModelAndView("redirect:/");
-    }
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
@@ -739,8 +677,7 @@ public class FrontController {
     @RequestMapping(value = "/admin/test", method = RequestMethod.GET)
     public ModelAndView adminTest() {
 
-        ModelAndView mav = new ModelAndView("admin/views/requestManager");
-        return mav;
+        return new ModelAndView("admin/views/adminRequestHandler");
     }
 
     @RequestMapping(value = "/testDuplicatedException", method = RequestMethod.GET)
@@ -757,6 +694,9 @@ public class FrontController {
     public ModelAndView testException() {
         throw new InsertionException("An error occurred whilst creating the User");
     }
+
+    /*------------------------------------------SERVICES --------------------------------------*/
+
 
     @RequestMapping(value = "/service/profile/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView serviceProfile(@ModelAttribute("reviewForm") final ReviewForm reviewForm,

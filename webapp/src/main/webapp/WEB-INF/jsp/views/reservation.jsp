@@ -36,16 +36,13 @@
 
                 <div class="f-c-c-c">
                     <div class="shifts-reservation f-c-c-c">
-                        <form name="shiftForm" action="${pageContext.request.contextPath}/testAmenityCreation" method="post">
-                            <table>
-                                <tr>
-                                    <th>Shift</th>
-                                    <th>Status</th>
-                                </tr>
+                        <form name="shiftForm" action="${pageContext.request.contextPath}/testAmenityBooking" method="post">
+                            <input type="hidden" name="amenityId" value="${amenityId}" />
+                            <input type="hidden" name="date" value="${date}" />
+
+
                                 <c:forEach var="shift" items="${bookings}" varStatus="loopStatus">
-                                    <tr>
-                                        <td>${shift.shiftId}</td>
-                                        <td>
+
                                             <c:choose>
                                                 <c:when test="${shift.taken}">
                                                     <div class="cat">
@@ -64,8 +61,7 @@
                                                     </div>
                                                 </c:otherwise>
                                             </c:choose>
-                                        </td>
-                                    </tr>
+                                       
                                 </c:forEach>
 
                             </table>
@@ -75,8 +71,13 @@
                     </div>
                     <div class="col-md-12">
                         <div class="d-flex justify-content-end m-t-40">
-                            <button onclick="" type="submit" class="cool-button cool-small on-bg m-b-20" style="height:40px;" ><spring:message code="Reserve"/></button>
+                            <button onclick="submitShifts()" type="submit" class="cool-button cool-small on-bg m-b-20" style="height:40px;" ><spring:message code="Reserve"/></button>
                         </div>
+                        <script>
+                            function submitShifts() {
+                                document.forms["shiftForm"].submit();
+                            }
+                        </script>
                     </div>
                 </div>
 

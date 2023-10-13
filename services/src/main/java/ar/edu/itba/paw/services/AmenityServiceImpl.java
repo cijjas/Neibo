@@ -113,12 +113,13 @@ public class AmenityServiceImpl implements AmenityService {
         Amenity amenity = amenityDao.createAmenity(name, description, neighborhoodId);
 
         for (String shiftPair : selectedShifts) {
+            System.out.println("Shift pair: " + shiftPair);
             // Parse the pair into <Long dayId, Long timeId>
             String[] shiftParts = shiftPair.split(",");
             if (shiftParts.length != 2) {
                 // log error
             }
-
+            System.out.println("Shift parts: " + shiftParts[0] + " " + shiftParts[1]);
             long dayId = Long.parseLong(shiftParts[0]);
             long timeId = Long.parseLong(shiftParts[1]);
 

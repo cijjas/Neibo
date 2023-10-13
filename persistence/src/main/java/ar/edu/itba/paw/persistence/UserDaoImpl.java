@@ -7,6 +7,8 @@ import ar.edu.itba.paw.models.Booking;
 import ar.edu.itba.paw.models.User;
 import enums.Language;
 import enums.UserRole;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,35 +20,49 @@ import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static ar.edu.itba.paw.persistence.DaoUtils.*;
 
 @Repository
 public class UserDaoImpl implements UserDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
-    private BookingDao bookingDao;
-
     private final String USERS =
             "select u.* \n" +
                     "from users u";
 
     private final String USERS_JOIN_POSTS_USERS_AND_POSTS =
             "select u.*\n" +
-            "from posts p " +
+                    "from posts p " +
                     "join posts_users_subscriptions on p.postid = posts_users_subscriptions.postid " +
                     "join users u on posts_users_subscriptions.userid = u.userid ";
 
     private final String EVENTS_JOIN_USERS =
             "select u.* \n" +
-            "from events e " +
+                    "from events e " +
                     "join events_users on e.eventid = events_users.eventid " +
                     "join users u on events_users.userid = u.userid ";
+    private BookingDao bookingDao;
+    private final RowMapper<User> ROW_MAPPER = (rs, rowNum) -> {
+        List<Booking> bookings = bookingDao.getUserBookings(rs.getLong("userid"));
+        return new User.Builder()
+                .userId(rs.getLong("userid"))
+                .mail(rs.getString("mail"))
+                .name(rs.getString("name"))
+                .surname(rs.getString("surname"))
+                .password(rs.getString("password"))
+                .neighborhoodId(rs.getLong("neighborhoodid"))
+                .creationDate(rs.getDate("creationdate"))
+                .darkMode(rs.getBoolean("darkmode"))
+                .profilePictureId(rs.getLong("profilepictureid"))
+                .language(rs.getString("language") != null ? Language.valueOf(rs.getString("language")) : null)
+                .role(rs.getString("role") != null ? UserRole.valueOf(rs.getString("role")) : null)
+                .bookings(bookings)
+                .build();
+    };
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
+    // ---------------------------------------------- USERS INSERT -----------------------------------------------------
 
     @Autowired
     public UserDaoImpl(final DataSource ds, final BookingDao bookingDao) {
@@ -57,11 +73,11 @@ public class UserDaoImpl implements UserDao {
                 .withTableName("users");
     }
 
-    // ---------------------------------------------- USERS INSERT -----------------------------------------------------
+    // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
     @Override
     public User createUser(final String mail, final String password, final String name, final String surname,
-                           final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role, final int identification){
+                           final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role, final int identification) {
         Map<String, Object> data = new HashMap<>();
         data.put("mail", mail);
         data.put("password", password);
@@ -91,26 +107,6 @@ public class UserDaoImpl implements UserDao {
             throw new InsertionException("An error occurred whilst creating the User");
         }
     }
-
-    // ---------------------------------------------- USERS SELECT -----------------------------------------------------
-
-    private final RowMapper<User> ROW_MAPPER = (rs, rowNum) -> {
-        List<Booking> bookings = bookingDao.getUserBookings(rs.getLong("userid"));
-        return new User.Builder()
-                .userId(rs.getLong("userid"))
-                .mail(rs.getString("mail"))
-                .name(rs.getString("name"))
-                .surname(rs.getString("surname"))
-                .password(rs.getString("password"))
-                .neighborhoodId(rs.getLong("neighborhoodid"))
-                .creationDate(rs.getDate("creationdate"))
-                .darkMode(rs.getBoolean("darkmode"))
-                .profilePictureId(rs.getLong("profilepictureid"))
-                .language(rs.getString("language") != null ? Language.valueOf(rs.getString("language")) : null)
-                .role(rs.getString("role") != null ? UserRole.valueOf(rs.getString("role")) : null)
-                .bookings(bookings)
-                .build();
-    };
 
     @Override
     public Optional<User> findUserById(final long userId) {
@@ -144,7 +140,6 @@ public class UserDaoImpl implements UserDao {
         if (page != 0)
             appendPaginationClause(query, queryParams, page, size);
 
-
         return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
     }
 
@@ -172,11 +167,11 @@ public class UserDaoImpl implements UserDao {
                               final UserRole role, final int identification, final long neighborhoodId
     ) {
         jdbcTemplate.update("UPDATE users SET name = ?, surname = ?, password = ?, darkmode = ?, language = ?, role = ?, profilepictureid = ?, identification = ?, neighborhoodid = ? WHERE userid = ?",
-                name, surname, password, darkMode, language != null ? language.toString() : null, role != null ? role.toString() : null, profilePictureId == 0 ? null : profilePictureId,  identification, neighborhoodId, id);
+                name, surname, password, darkMode, language != null ? language.toString() : null, role != null ? role.toString() : null, profilePictureId == 0 ? null : profilePictureId, identification, neighborhoodId, id);
     }
 
     @Override
-    public List<User> getEventUsers (long eventId) {
+    public List<User> getEventUsers(long eventId) {
         return jdbcTemplate.query(EVENTS_JOIN_USERS + " WHERE e.eventid = ?", ROW_MAPPER, eventId);
     }
 
