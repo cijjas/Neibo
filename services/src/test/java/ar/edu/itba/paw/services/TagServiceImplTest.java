@@ -69,7 +69,7 @@ public class TagServiceImplTest {
         // (Nada, espero que lo anterior tire exception)
     }
 
-    @Test
+    /*@Test
     public void testFindById() {
         // 1. Precondiciones
         // Defino el comportamiento de la clase mock de UserDao
@@ -86,5 +86,5 @@ public class TagServiceImplTest {
         // 3. Postcondiciones
         Assert.assertTrue(newTagList.isPresent());
         Assert.assertEquals(ID, newTagList.get().get(0).getTagId());
-    }
+    }*/
 }

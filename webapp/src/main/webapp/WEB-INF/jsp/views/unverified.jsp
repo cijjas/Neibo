@@ -28,10 +28,10 @@
         <div class="d-flex flex-column justify-content-center align-items-center ">
             <div class="cool-static-container" style="width: 500px; margin-top: 100px">
                 <div class="d-flex flex-column justify-content-center align-items-center " style="text-align: center">
-                    <p style="color: var(--primary); font-size: 30px"><spring:message code="Welcome.frase.1"/></p><br>
-                    <spring:message code="Welcome.frase.2"/> <br>
-                    <spring:message code="Welcome.frase.3"/><br><br>
-                    <spring:message code="Welcome.frase.4"/><br>
+                    <p style="color: var(--primary); font-size: 30px"><spring:message code="Welcome.phrase.1"/></p><br>
+                    <spring:message code="Welcome.phrase.2"/> <br>
+                    <spring:message code="Welcome.phrase.3"/><br><br>
+                    <spring:message code="Welcome.phrase.4"/><br>
                     <a href="${pageContext.request.contextPath}/logout" class="cool-button m-t-40"><spring:message code="GoBackToMainPage"/></a>
                 </div>
             </div>

@@ -4,13 +4,13 @@
 <c:if test="${channel != 'Announcements'}">
     <div class="upper-feed-buttons-box ">
         <div class="f-r-s-c">
-            <a onclick="hotPosts()" class="cool-feed-button rounded" >
-                Hot
-                <i class="fa-solid fa-fire"></i>
+            <a onclick="hotPosts()" class="coolest-button ${param.postStatus == 'hot' ? 'active' : ''}">
+                <spring:message code="Hot"/>
+                <i class="fa-solid fa-fire ml-1"></i>
             </a>
-            <a onclick="trendingPosts()" class="cool-feed-button rounded" >
-                Trending
-                <i class="fa-solid fa-arrow-up-right-dots"></i>
+            <a onclick="trendingPosts()" class="cool-feed-button rounded ${param.postStatus == 'trending' ? 'active' : ''}  " >
+                <spring:message code="Trending"/>
+                <i class="fa-solid fa-arrow-trend-up ml-1"></i>
             </a>
         </div>
 
@@ -43,5 +43,29 @@
         document.body.appendChild(form);
         form.submit();
     }
+
+    function hotPosts() {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('postStatus', 'hot');
+        window.location.href = currentUrl.toString();
+    }
+
+    function trendingPosts() {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('postStatus', 'trending');
+        window.location.href = currentUrl.toString();
+    }
+
+
+    function addQueryParams(url, queryParams) {
+        if (url.includes("?")) {
+            // URL already has query parameters, so append with '&'
+            return url + "&" + queryParams;
+        } else {
+            // URL doesn't have query parameters, so append with '?'
+            return url + "?" + queryParams;
+        }
+    }
+
 
 </script>

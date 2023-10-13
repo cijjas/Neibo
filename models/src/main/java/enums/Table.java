@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.persistence;
+package enums;
 
 public enum Table {
     neighborhoods,
@@ -19,6 +19,16 @@ public enum Table {
     events,
     events_users,
     reservations,
+    amenities_shifts_availability,
+    days,
+    users_availability,
+    workers_neighborhoods,
+    workers_info,
+    workers_professions,
+    reviews,
+    professions,
+    shifts,
+    times,
     resources;
 
 }

@@ -48,13 +48,16 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/signup", "/login").anonymous()
                 .antMatchers("/admin/**").hasRole("ADMINISTRATOR")
                 .antMatchers("/unverified").hasRole("UNVERIFIED_NEIGHBOR")
+                .antMatchers("/services").hasAnyRole("WORKER", "ADMINISTRATOR", "NEIGHBOR")
+                .antMatchers("/rejected").hasRole("REJECTED")
+                .antMatchers("/profile").permitAll()
                 .antMatchers("/**").hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
                 .and().formLogin()
-                .failureUrl("/login?error=true")
+                .failureHandler(new CustomAuthenticationFailureHandler())
                 .usernameParameter("mail")
                 .passwordParameter("password")
                 .loginPage("/login")
-                .successHandler(customAuthenticationSuccessHandler()) // Use a custom success handler
+                .successHandler(customAuthenticationSuccessHandler())
                 .and().rememberMe()
                 .rememberMeParameter("rememberMe")
                 .userDetailsService(userDetails)
@@ -68,24 +71,42 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable();
     }
 
+
+
+
     @Bean
     public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
         return (request, response, authentication) -> {
             // Get the authorities of the authenticated user
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
-            // Check if the user has the role "UNVERIFIED_NEIGHBOR"
-            if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_UNVERIFIED_NEIGHBOR"))) {
-                // Redirect to the "/unverified" page for unverified neighbors
-                String redirectUrl = request.getContextPath() + "/unverified";
-                response.sendRedirect(redirectUrl);
-            } else {
-                // Redirect to the default page for other roles
-                String redirectUrl = request.getContextPath() + "/";
-                response.sendRedirect(redirectUrl);
+            for (GrantedAuthority authority : authorities) {
+                String authorityName = authority.getAuthority();
+
+                switch (authorityName) {
+                    case "ROLE_UNVERIFIED_NEIGHBOR":
+                        // Redirect to the "/unverified" page for unverified neighbors
+                        String unverifiedRedirectUrl = request.getContextPath() + "/unverified";
+                        response.sendRedirect(unverifiedRedirectUrl);
+                        return;
+                    case "ROLE_WORKER":
+                        // Redirect to the "/services" page for workers
+                        String workerRedirectUrl = request.getContextPath() + "/services";
+                        response.sendRedirect(workerRedirectUrl);
+                        return;
+                    case "ROLE_REJECTED":
+                        String rejectedRedirectUrl = request.getContextPath() + "/rejected";
+                        response.sendRedirect(rejectedRedirectUrl);
+                        return;
+                }
             }
+
+            // Default case: Redirect to the default page for other roles
+            String defaultRedirectUrl = request.getContextPath() + "/";
+            response.sendRedirect(defaultRedirectUrl);
         };
     }
+
 
 
 

@@ -38,8 +38,13 @@ public class UserDetailsService implements org.springframework.security.core.use
             case NEIGHBOR:
                 authorities.add(new SimpleGrantedAuthority("ROLE_NEIGHBOR"));
                 break;
+            case WORKER:
+                authorities.add(new SimpleGrantedAuthority("ROLE_WORKER"));
+                break;
+            case REJECTED:
+                authorities.add(new SimpleGrantedAuthority("ROLE_REJECTED"));
+                break;
             default:
-                // Handle unknown roles or add a default role
                 break;
         }
 

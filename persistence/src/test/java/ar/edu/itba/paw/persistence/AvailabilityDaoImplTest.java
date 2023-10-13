@@ -1,10 +1,12 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.*;
-import ar.edu.itba.paw.models.Amenity;
-import ar.edu.itba.paw.models.Availability;
-import ar.edu.itba.paw.models.Neighborhood;
+import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
+import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
+import ar.edu.itba.paw.interfaces.persistence.DayDao;
+import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
+import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.persistence.config.TestConfig;
+import enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,9 +15,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -50,31 +52,32 @@ public class AvailabilityDaoImplTest {
     @Test
     public void testCreateAvailability() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number aKey = testInsertionUtils.createAmenity(nhKey.longValue());
-        Number dKey = testInsertionUtils.createDay();
-        Number tKey = testInsertionUtils.createTime();
-        Number sKey = testInsertionUtils.createShift(dKey.longValue(), tKey.longValue());
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long aKey = testInsertionUtils.createAmenity(nhKey);
+        long dKey = testInsertionUtils.createDay();
+        long tKey = testInsertionUtils.createTime();
+        long sKey = testInsertionUtils.createShift(dKey, tKey);
 
         // Exercise
-        Number createdAvailability = availabilityDao.createAvailability(aKey.longValue(), sKey.longValue());
+        Number createdAvailability = availabilityDao.createAvailability(aKey, sKey);
 
         // Validations & Post Conditions
         assertNotNull(createdAvailability);
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.amenities_shifts_availability.name()));
     }
 
     @Test
     public void testFindAvailabilityId() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number aKey = testInsertionUtils.createAmenity(nhKey.longValue());
-        Number dKey = testInsertionUtils.createDay();
-        Number tKey = testInsertionUtils.createTime();
-        Number sKey = testInsertionUtils.createShift(dKey.longValue(), tKey.longValue());
-        Number availabilityKey = testInsertionUtils.createAvailability(aKey.longValue(), sKey.longValue());
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long aKey = testInsertionUtils.createAmenity(nhKey);
+        long dKey = testInsertionUtils.createDay();
+        long tKey = testInsertionUtils.createTime();
+        long sKey = testInsertionUtils.createShift(dKey, tKey);
+        long availabilityKey = testInsertionUtils.createAvailability(aKey, sKey);
 
         // Exercise
-        Optional<Long> foundAvailability = availabilityDao.findAvailabilityId(aKey.longValue(), sKey.longValue());
+        Optional<Long> foundAvailability = availabilityDao.findAvailabilityId(aKey, sKey);
 
         // Validations & Post Conditions
         assertTrue(foundAvailability.isPresent());

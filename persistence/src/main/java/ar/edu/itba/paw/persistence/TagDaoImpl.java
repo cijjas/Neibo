@@ -69,10 +69,11 @@ public class TagDaoImpl implements TagDao {
                     .tag(rs.getString("tag"))
                     .build();
 
+    // Method cant properly differentiate between not finding the post and the post having no comments, but as the function
+    // is called through the detail of a post it cant be an invalid postId
     @Override
-    public Optional<List<Tag>> findTagsByPostId(long id) {
-        final List<Tag> tags = jdbcTemplate.query(TAGS_JOIN_POSTS + " WHERE postid=?;", ROW_MAPPER, id);
-        return tags.isEmpty() ? Optional.empty() : Optional.of(tags);
+    public List<Tag> findTagsByPostId(long id) {
+        return jdbcTemplate.query(TAGS_JOIN_POSTS + " WHERE postid=?;", ROW_MAPPER, id);
     }
 
     @Override

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.Comment;
 import ar.edu.itba.paw.persistence.config.TestConfig;
+import enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +38,8 @@ public class CommentDaoImplTest {
 
 
     private static final String COMMENT_TEXT = "Sample Comment";
+    private static final int BASE_PAGE = 1;
+    private static final int BASE_PAGE_SIZE = 10;
 
     @Autowired
     private DataSource ds;
@@ -57,13 +60,14 @@ public class CommentDaoImplTest {
     @Test
     public void testCreateComment() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number chKey = testInsertionUtils.createChannel();
-        Number pKey = testInsertionUtils.createPost(uKey.longValue(), chKey.longValue(), 0);
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long chKey = testInsertionUtils.createChannel();
+        long iKey = testInsertionUtils.createImage();
+        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
 
         // Exercise
-        Comment c = commentDao.createComment(COMMENT_TEXT, uKey.longValue(), pKey.longValue());
+        Comment c = commentDao.createComment(COMMENT_TEXT, uKey, pKey);
 
         // Validations & Post Conditions
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.comments.name()));
@@ -73,18 +77,19 @@ public class CommentDaoImplTest {
     @Test
     public void testFindCommentById() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number chKey = testInsertionUtils.createChannel();
-        Number pKey = testInsertionUtils.createPost(uKey.longValue(), chKey.longValue(), 0);
-        Number cKey = testInsertionUtils.createComment(uKey.longValue(), pKey.longValue());
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long chKey = testInsertionUtils.createChannel();
+        long iKey = testInsertionUtils.createImage();
+        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
+        long cKey = testInsertionUtils.createComment(uKey, pKey);
 
         // Exercise
-        Optional<Comment> comment = commentDao.findCommentById(cKey.longValue());
+        Optional<Comment> comment = commentDao.findCommentById(cKey);
 
         // Validations & Post Conditions
         assertTrue(comment.isPresent());
-        assertEquals(cKey.longValue(), comment.get().getCommentId());
+        assertEquals(cKey, comment.get().getCommentId());
     }
 
     @Test
@@ -98,47 +103,32 @@ public class CommentDaoImplTest {
         assertFalse(comment.isPresent());
     }
 
-//    @Test
-//    public void testFindCommentsByPostId() {
-//        // Pre Conditions
-//        Number nhKey = testInsertionUtils.createNeighborhood();
-//        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-//        Number chKey = testInsertionUtils.createChannel();
-//        Number pKey = testInsertionUtils.createPost(uKey.longValue(), chKey.longValue(), 0);
-//        testInsertionUtils.createComment(uKey.longValue(), pKey.longValue());
-//
-//        // Exercise
-//        Optional<List<Comment>> comments = commentDao.findCommentsByPostId(pKey.longValue());
-//
-//        // Validations & Post Conditions
-//        assertTrue(comments.isPresent());
-//        assertEquals(1, comments.get().size());
-//    }
-
-//    @Test
-//    public void testFindCommentsByInvalidPostId() {
-//        // Pre Conditions
-//
-//        // Exercise
-//        Optional<List<Comment>> comments = commentDao.findCommentsByPostId(1);
-//
-//        // Validations & Post Conditions
-//        assertFalse(comments.isPresent());
-//    }
-
-/*    @Test
-    public void testFindNoCommentsByPostId() {
+    @Test
+    public void testFindCommentsByPostId() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number chKey = testInsertionUtils.createChannel();
-        Number pKey = testInsertionUtils.createPost(uKey.longValue(), chKey.longValue(), 0);
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long chKey = testInsertionUtils.createChannel();
+        long iKey = testInsertionUtils.createImage();
+        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
+        testInsertionUtils.createComment(uKey, pKey);
 
         // Exercise
-        Optional<List<Comment>> comments = commentDao.findCommentsByPostId(pKey.longValue());
+        List<Comment> comments = commentDao.findCommentsByPostId(pKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertTrue(comments.isPresent());
-        assertEquals(0, comments.get().size());
-    }*/
+        assertFalse(comments.isEmpty());
+        assertEquals(1, comments.size());
+    }
+
+    @Test
+    public void testFindCommentsByInvalidPostId() {
+        // Pre Conditions
+
+        // Exercise
+        List<Comment> comments = commentDao.findCommentsByPostId(1, 10, 1);
+
+        // Validations & Post Conditions
+        assertTrue(comments.isEmpty());
+    }
 }

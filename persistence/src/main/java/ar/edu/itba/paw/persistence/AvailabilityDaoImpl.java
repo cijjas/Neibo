@@ -60,6 +60,8 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
         }
     }
 
+    // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY SELECT -----------------------------------------
+
     @Override
     public Optional<Long> findAvailabilityId(long amenityId, long shiftId) {
         String query = "SELECT amenityAvailabilityId FROM amenities_shifts_availability WHERE amenityid = ? AND shiftid = ?";
@@ -76,6 +78,9 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
         }
     }
 
-    // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY SELECT -----------------------------------------
+    @Override
+    public boolean deleteAvailability(long amenityId, long shiftId) {
+        return jdbcTemplate.update("DELETE FROM amenities_shifts_availability WHERE amenityid = ? and shiftid = ?", amenityId, shiftId) > 0;
+    }
 
 }

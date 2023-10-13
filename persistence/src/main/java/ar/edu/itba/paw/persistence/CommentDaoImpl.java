@@ -85,8 +85,8 @@ public class CommentDaoImpl implements CommentDao {
 
     // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
 
-    // This method cant correctly differentiate the cases where the postId was invalid and the case where there were no comments for that post
-    // TO DO: Improve it
+    // Method cant properly differentiate between not finding the post and the post having no comments, but as the function
+    // is called through the detail of a post it cant be an invalid postId
     @Override
     public List<Comment> findCommentsByPostId(long id, int page, int size) {
         return jdbcTemplate.query(COMMENTS_JOIN_USERS + " WHERE postid = ? ORDER BY commentdate DESC LIMIT ? OFFSET ?", ROW_MAPPER, id, size, (page - 1) * size);

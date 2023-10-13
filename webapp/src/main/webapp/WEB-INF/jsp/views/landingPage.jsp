@@ -26,11 +26,13 @@
 
 <c:if test="${error == true}">
     <c:set var="errorMessage">
-        <spring:message code="Login.error.message"/>
+        <spring:message code="Login.error.message.1"/>
+        <spring:message code="Login.error.message.2"/>
     </c:set>
 
     <jsp:include page="/WEB-INF/jsp/errors/errorDialog.jsp" >
         <jsp:param name="errorMessage" value="${errorMessage}" />
+        <jsp:param name="openLoginAgain" value="${true}" />
     </jsp:include>
 </c:if>
 
@@ -46,19 +48,15 @@
         setTimeout(function() {
             const form = document.createElement('form');
             form.method = 'POST';
-            form.action = '${pageContext.request.contextPath}/redirect-to-channel'; // Replace with your desired URL
+            form.action = '${pageContext.request.contextPath}/redirect-to-channel';
 
-            // Optionally, you can add any form data or parameters here
-            // For example, adding a hidden input field with a value
             const input = document.createElement('input');
             input.type = 'hidden';
             input.name = 'channelId';
             input.value = 'login';
 
-            // Append the input field to the form
             form.appendChild(input);
 
-            // Append the form to the document and submit it
             document.body.appendChild(form);
             form.submit();
         }, 2500);
@@ -100,7 +98,8 @@
                     <div class="centered-column">
                         <label>
                             <c:set var="email"><spring:message code="Email"/></c:set>
-                            <input type="email" placeholder="${email}" name="mail" class="input">
+                            <input type="email" placeholder="${email}" name="mail" class="input" value="${param.email}">
+
                         </label>
 
                         <label>
@@ -115,9 +114,9 @@
                     </label>
                     <div class="centered-column">
 
-                        <button class="action-button" onclick="tryLogin()">
+                        <a class="action-button" onclick="tryLogin()">
                             <spring:message code="Login"/>
-                        </button>
+                        </a>
                         <span style="color:var(--lighttext); font-size: 14px;"><spring:message code="Not.a.member.question"/>
                                 <a onclick="closeLoginDialog(); openSignupDialog();" class="a-link"><spring:message code="Signup.now"/></a>
                         </span>
@@ -240,9 +239,7 @@
 
 
 <script>
-    function closeErrorDialog(){
-        document.getElementById("errorDialog").style.display = "none";
-    }
+
     function openLoginDialog() {
         document.getElementById("loginDialog").style.display = "flex";
     }

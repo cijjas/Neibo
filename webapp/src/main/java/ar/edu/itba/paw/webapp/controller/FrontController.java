@@ -20,9 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
 import java.sql.Date;
-import java.util.stream.Collectors;
 
-import ar.edu.itba.paw.models.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
@@ -54,6 +52,7 @@ public class FrontController {
     private final ProfessionWorkerService pws;
     private final ReviewService rws;
     private final WorkerService ws;
+    private final AvailabilityService avs;
 
     @Autowired
     public FrontController(SessionUtils sessionUtils,
@@ -78,7 +77,9 @@ public class FrontController {
                            final ReviewService rws,
                            final WorkerService ws,
                            final BookingService bs,
-                           final ShiftService shs) {
+                           final ShiftService shs,
+                           final AvailabilityService avs
+    ) {
         this.sessionUtils = sessionUtils;
         this.is = is;
         this.ps = ps;
@@ -102,6 +103,7 @@ public class FrontController {
         this.ws = ws;
         this.bs = bs;
         this.shs = shs;
+        this.avs = avs;
     }
 
     // ------------------------------------- FEED --------------------------------------
@@ -112,10 +114,11 @@ public class FrontController {
             String channelName,
             int page,
             int size,
-            List<String> tags
+            List<String> tags,
+            String postStatus
     ) {
-        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), 0);
-        int totalPages = ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), 0);
+        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), postStatus);
+        int totalPages = ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), postStatus, 0);
 
         String contextPath;
 
@@ -141,11 +144,12 @@ public class FrontController {
     public ModelAndView index(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "tag", required = false) List<String> tags
+            @RequestParam(value = "tag", required = false) List<String> tags,
+            @RequestParam(value = "postStatus", required = false, defaultValue = "none") String postStatus
     ) {
         LOGGER.info("Registered a new user under the id {}", sessionUtils.getLoggedUser().getUserId());
 
-        return handleChannelRequest(BaseChannel.FEED.toString(), page, size, tags);
+        return handleChannelRequest(BaseChannel.FEED.toString(), page, size, tags, postStatus);
     }
 
 
@@ -209,9 +213,10 @@ public class FrontController {
     public ModelAndView announcements(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "tag", required = false) List<String> tags
+            @RequestParam(value = "tag", required = false) List<String> tags,
+            @RequestParam(value = "postStatus", required = false, defaultValue = "none") String postStatus
     ) {
-        return handleChannelRequest(BaseChannel.ANNOUNCEMENTS.toString(), page, size, tags);
+        return handleChannelRequest(BaseChannel.ANNOUNCEMENTS.toString(), page, size, tags, postStatus);
     }
 
     // ------------------------------------- FORUM --------------------------------------
@@ -220,14 +225,37 @@ public class FrontController {
     public ModelAndView complaints(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "tag", required = false) List<String> tags
+            @RequestParam(value = "tag", required = false) List<String> tags,
+            @RequestParam(value = "postStatus", required = false, defaultValue = "none") String postStatus
     ){
-        return handleChannelRequest(BaseChannel.COMPLAINTS.toString(), page, size, tags);
+        return handleChannelRequest(BaseChannel.COMPLAINTS.toString(), page, size, tags, postStatus);
     }
 
     @RequestMapping(value = "/unverified", method = RequestMethod.GET)
     public ModelAndView unverified() {
         return  new ModelAndView("views/unverified");
+    }
+
+    @RequestMapping(value = "/rejected", method = RequestMethod.GET)
+    public ModelAndView rejectedForm(
+            @ModelAttribute("neighborhoodForm") final NeighborhoodForm neighborhoodForm
+    ) {
+        ModelAndView mav = new ModelAndView("views/rejected");
+        mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
+        return mav;
+    }
+
+    @RequestMapping(value = "/rejected", method = RequestMethod.POST)
+    public ModelAndView rejectedForm(
+            @ModelAttribute("neighborhoodForm") final NeighborhoodForm neighborhoodForm,
+            final BindingResult errors
+    ) {
+        if (errors.hasErrors()) {
+            return rejectedForm(neighborhoodForm);
+        }
+
+        us.unverifyNeighbor(sessionUtils.getLoggedUser().getUserId(), neighborhoodForm.getNeighborhoodId());
+        return new ModelAndView("redirect:/logout");
     }
 
     // ------------------------------------- PUBLISH --------------------------------------
@@ -256,7 +284,7 @@ public class FrontController {
         }
         Integer channelId = publishForm.getChannel();
 
-        Post p = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), channelId, publishForm.getTags(), imageFile);
+        ps.createPost(publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), channelId, publishForm.getTags(), imageFile);
         ModelAndView mav = new ModelAndView("views/publish");
         mav.addObject("channelId", channelId);
         mav.addObject("showSuccessMessage", true);
@@ -268,7 +296,7 @@ public class FrontController {
     public ModelAndView redirectToChannel(
             @RequestParam("channelId") int channelId
     ) {
-        String channelName= chs.findChannelById(channelId).get().getChannel().toLowerCase();
+        String channelName= chs.findChannelById(channelId).orElseThrow(()-> new NotFoundException("Channel not Found")).getChannel().toLowerCase();
         if(channelName.equals(BaseChannel.FEED.toString().toLowerCase())){
             return new ModelAndView("redirect:/");
         }
@@ -281,7 +309,7 @@ public class FrontController {
     public ModelAndView publishToChannel(
             @RequestParam("channel") String channelString
     ) {
-        long channelId = chs.findChannelByName(channelString).get().getChannelId();
+        long channelId = chs.findChannelByName(channelString).orElseThrow(()-> new NotFoundException("Channel not Found")).getChannelId();
         return new ModelAndView("redirect:/publish?onChannelId=" + channelId);
     }
 
@@ -309,8 +337,7 @@ public class FrontController {
         mav.addObject("page", page);
         mav.addObject("totalPages", totalPages);
 
-        Optional<List<Tag>> optionalTags = ts.findTagsByPostId(postId);
-        List<Tag> tags = optionalTags.orElse(Collections.emptyList());
+        List<Tag> tags = ts.findTagsByPostId(postId);
 
         mav.addObject("tags", tags);
         mav.addObject("commentForm", commentForm);
@@ -354,7 +381,8 @@ public class FrontController {
     public ModelAndView logIn(
             Model model,
             @ModelAttribute("signupForm") final SignupForm signupform,
-            @RequestParam(value = "error", required = false, defaultValue = "false") boolean error
+            @RequestParam(value = "error", required = false, defaultValue = "false") boolean error,
+            @RequestParam(value = "email", required = false) String email
     ) {
         model.addAttribute("neighbor", new User.Builder());
         ModelAndView mav = new ModelAndView("views/landingPage");
@@ -366,8 +394,6 @@ public class FrontController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ModelAndView logIn(
-            @RequestParam("mail") String mail,
-            @RequestParam("password") String password
     ) {
         return new ModelAndView("views/index");
     }
@@ -419,30 +445,30 @@ public class FrontController {
 
         mav.addObject("amenityId", amenityId);
         mav.addObject("date", date);
-        mav.addObject("amenityName", as.findAmenityById(amenityId).orElse(null).getName());
+        mav.addObject("amenityName", as.findAmenityById(amenityId).orElseThrow(()-> new NotFoundException("Amenity not Found")).getName());
         mav.addObject("bookings", shs.getShifts(amenityId,date));
         return mav;
     }
 
+
     @RequestMapping(value = "/reservation", method = RequestMethod.POST)
     public ModelAndView reservation(
-            @Valid @ModelAttribute("reservationTimeForm") final ReservationTimeForm reservationTimeForm,
-            final BindingResult errors
+            @RequestParam("amenityId") Long amenityId,
+            @RequestParam("date") Date date,
+            @RequestParam("selectedShifts") List<Long> selectedShifts
     ) {
-        if (errors.hasErrors()) {
-            return reservation(reservationTimeForm, reservationTimeForm.getAmenityId(), reservationTimeForm.getDate());
-        }
-        ModelAndView mav = new ModelAndView("redirect:/amenities");
-        Reservation res = rs.createReservation(reservationTimeForm.getAmenityId(), sessionUtils.getLoggedUser().getUserId(), reservationTimeForm.getDate(), reservationTimeForm.getStartTime(), reservationTimeForm.getEndTime(), sessionUtils.getLoggedUser().getNeighborhoodId());
-        mav.addObject(res == null ? "showErrorMessage" : "showSuccessMessage", true);
-
-        return mav;
+        System.out.println(selectedShifts);
+        bs.createBooking(sessionUtils.getLoggedUser().getUserId(), amenityId, selectedShifts, date);
+        return new ModelAndView("redirect:/");
     }
+
 
     @RequestMapping(value = "/amenities", method = RequestMethod.GET)
     public ModelAndView amenities(
             @ModelAttribute("reservationForm") final ReservationForm reservationForm
     ) {
+        System.out.println(bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));
+
         ModelAndView mav = new ModelAndView("views/amenities");
         mav.addObject("channel", BaseChannel.RESERVATIONS.toString());
 
@@ -456,7 +482,7 @@ public class FrontController {
         }
         mav.addObject("amenitiesHours", amenityHoursList);
         mav.addObject("daysOfWeek", rs.getDaysOfWeek());
-        mav.addObject("reservationsList", rs.getReservationsByUserId(sessionUtils.getLoggedUser().getUserId()));
+        mav.addObject("reservationsList", bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));
         return mav;
     }
 
@@ -534,7 +560,9 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/attend/{id:\\d+}", method = RequestMethod.POST)
-    public ModelAndView attendEvent(@PathVariable(value = "id") int eventId) {
+    public ModelAndView attendEvent(
+            @PathVariable(value = "id") int eventId
+    ) {
         ModelAndView mav = new ModelAndView("redirect:/events/" + eventId);
         ats.createAttendee(sessionUtils.getLoggedUser().getUserId(), eventId);
         return mav;
@@ -597,90 +625,32 @@ public class FrontController {
 
     // ------------------------------------- TEST --------------------------------------
 
-    @RequestMapping(value = "/testAmenityCreation", method = RequestMethod.GET)
-    public ModelAndView amenities1() {
-        ModelAndView mav = new ModelAndView("views/amenities3");
 
-        // Create lists of pairs for DaysOfTheWeek and StandardTime
-        List<Pair<Integer, String>> daysPairs = new ArrayList<>();
-        List<Pair<Integer, String>> timesPairs = new ArrayList<>();
-
-        for (DayOfTheWeek day : DayOfTheWeek.values())
-            daysPairs.add(new Pair<>(day.getId(), day.name()));
-
-
-        for (StandardTime time : StandardTime.values())
-            timesPairs.add(new Pair<>(time.getId(), time.toString()));
-
-
-        mav.addObject("daysPairs", daysPairs);
-        mav.addObject("timesPairs", timesPairs);
-
-        return mav;
-    }
-
-
-
-
-    @RequestMapping(value = "/testAmenityCreation", method = RequestMethod.POST)
-    public ModelAndView amenities2(
-            @RequestParam("selectedShifts") List<String> selectedShifts
-    ) {
-        System.out.println(selectedShifts);
-        as.createAmenity("New Amenity", "This is a great new amenity", 1, selectedShifts);
-        return new ModelAndView("redirect:/");
-    }
-
-
-    @RequestMapping(value = "/testAmenityBooking", method = RequestMethod.GET)
-    public ModelAndView booking() {
-        ModelAndView mav = new ModelAndView("views/amenities2");
-        int amenityId = 1;
-
-        // supongo que ya sabemos la fecha y el amenity id
-        mav.addObject("bookingDate", Date.valueOf("2023-10-10"));
-        mav.addObject("amenityId", amenityId);
-        mav.addObject("bookings", shs.getShifts(amenityId,Date.valueOf("2023-10-10")));
-        mav.addObject(Date.valueOf("2023-10-10"));
-        return mav;
-    }
-
-    @RequestMapping(value = "/testAmenityBooking", method = RequestMethod.POST)
-    public ModelAndView booking2(
-            @RequestParam("amenityId") Long amenityId,
-            @RequestParam("date") Date date,
-            @RequestParam("selectedShifts") List<Long> selectedShifts
-    ) {
-        System.out.println(selectedShifts);
-        int userId = 23; // where tha fuck is getLoggedUser()?
-        bs.createBooking(userId, amenityId, selectedShifts, date);
-        return new ModelAndView("redirect:/");
-    }
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-//        Random random = new Random();
-//        for (int i = 5; i < 35; i++) {
-//            String email = "worker" + i + "@test.com";
-//            String name = "WorkerName" + i;
-//            String surname = "WorkerSurname" + i;
-//            String password = "password";
-//            int identificationNumber = 1000000 + i; // Starting from 1000000
-//            String phoneNumber = "PhoneNumber" + i;
-//            String address = "Address" + i;
-//            Language language = Language.ENGLISH;
-//
-//            // Generate a random job number between 1 and 4
-//            int jobNumber = random.nextInt(4) + 1;
-//
-//            // Create the worker
-//            Worker worker = ws.createWorker(email, name, surname, password, identificationNumber, phoneNumber, address, language, jobNumber, "BusinessName");
-//
-//            // Add the worker to a neighborhood (assuming neighborhood ID is 1)
-//            nhws.addWorkerToNeighborhood(worker.getUser().getUserId(), 1);
-//        }
+        Random random = new Random();
+        for (int i = 5; i < 35; i++) {
+            String email = "worker" + i + "@test.com";
+            String name = "WorkerName" + i;
+            String surname = "WorkerSurname" + i;
+            String password = "password";
+            int identificationNumber = 1000000 + i; // Starting from 1000000
+            String phoneNumber = "PhoneNumber" + i;
+            String address = "Address" + i;
+            Language language = Language.ENGLISH;
 
-//        ps.createWorkerPost("This is a second test posttt", "Alrighty Aphrodite", 29, null);
+            // Generate a random job number between 1 and 4
+            int jobNumber = random.nextInt(4) + 1;
+
+            // Create the worker
+            Worker worker = ws.createWorker(email, name, surname, password, identificationNumber, phoneNumber, address, language, jobNumber, "BusinessName");
+
+            // Add the worker to a neighborhood (assuming neighborhood ID is 1)
+            nhws.addWorkerToNeighborhood(worker.getUser().getUserId(), 1);
+        }
+
+        ps.createWorkerPost("This is a second test posttt", "Alrighty Aphrodite", 29, null);
 
 
         /*// System.out.println(bs.createBooking(););
@@ -705,15 +675,18 @@ public class FrontController {
         bs.createBooking(23, 1, new ArrayList<>(Arrays.asList(28L, 29L, 30L)), Date.valueOf("2023-10-10"));
         */
 
-
-        return new ModelAndView("views/testView");
+        System.out.println(shs.getAmenityShifts(1));
+        avs.updateAvailability(1, new ArrayList<>(Arrays.asList(1L, 2L, 3L)));
+        System.out.println(shs.getAmenityShifts(1));
+        avs.updateAvailability(1, new ArrayList<>(Arrays.asList(4L, 5L, 6L)));
+        System.out.println(shs.getAmenityShifts(1));
+        return new ModelAndView("views/index");
     }
 
     @RequestMapping(value = "/admin/test", method = RequestMethod.GET)
     public ModelAndView adminTest() {
 
-        ModelAndView mav = new ModelAndView("admin/views/requestManager");
-        return mav;
+        return new ModelAndView("admin/views/adminRequestHandler");
     }
 
     @RequestMapping(value = "/testDuplicatedException", method = RequestMethod.GET)
@@ -731,6 +704,9 @@ public class FrontController {
         throw new InsertionException("An error occurred whilst creating the User");
     }
 
+    /*------------------------------------------SERVICES --------------------------------------*/
+
+
     @RequestMapping(value = "/service/profile/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView serviceProfile(@ModelAttribute("reviewForm") final ReviewForm reviewForm,
             @PathVariable(value = "id") int workerId
@@ -738,16 +714,16 @@ public class FrontController {
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
         Optional<Worker> optionalWorker = ws.findWorkerById(workerId);
 
-        List<Post> postList = ps.getPostsByCriteria(BaseChannel.WORKERS.toString(), 1, 10,null, 0, workerId);
-        int totalPages = ps.getTotalPages(BaseChannel.WORKERS.toString(), 10, null, 0, workerId);
+        //List<Post> postList = ps.getWorkerPostsByCriteria(BaseChannel.WORKERS.toString(), 1, 10,null, 0, null,workerId);
+        //int totalPages = ps.getTotalPages(BaseChannel.WORKERS.toString(), 10, null, 0, null, workerId);
 
         mav.addObject("worker", optionalWorker.orElseThrow(() -> new NotFoundException("Worker not found")));
-        mav.addObject("profession", pws.getWorkerProfession(workerId));
+        mav.addObject("professions", pws.getWorkerProfessions(workerId));
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
         mav.addObject("averageRating", rws.getAvgRating(workerId));
-        mav.addObject("postList", postList);
-        mav.addObject("totalPages", totalPages);
+        //mav.addObject("postList", postList);
+        //mav.addObject("totalPages", totalPages);
         return mav;
     }
 

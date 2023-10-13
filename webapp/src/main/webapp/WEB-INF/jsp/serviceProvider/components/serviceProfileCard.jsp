@@ -18,7 +18,10 @@
                     <c:out value="${worker.businessName}"/>
                 </div>
                 <div class="c-light-text c-primary" style="font-size: 13px">
-                    <c:out value="${profession}"/>
+                    <c:forEach items="${professions}" var="profession" varStatus="loopStatus">
+                        <c:out value="${profession}"/>
+                        <c:if test="${!loopStatus.last}">,</c:if>
+                    </c:forEach>
                 </div>
                 <span class="c-light-text" style="margin-left: 10px;"> <c:out value="${worker.phoneNumber}"/></span>
                 <p  class="c-light-text mr-3 ml-3" style="text-align: center">

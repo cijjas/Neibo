@@ -1,11 +1,13 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.models.Neighborhood;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +26,12 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     }
 
     @Override
-    public List<Neighborhood> getNeighborhoods() { return neighborhoodDao.getNeighborhoods(); }
+    public List<Neighborhood> getNeighborhoods() {
+        List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoods();
+        neighborhoods.removeIf(neighborhood -> neighborhood.getName().equals("Worker Neighborhood"));
+        neighborhoods.removeIf(neighborhood -> neighborhood.getName().equals("Rejected"));
+        return neighborhoods;
+    }
 
     @Override
     public Optional<Neighborhood> findNeighborhoodByName(String name) {

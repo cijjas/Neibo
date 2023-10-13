@@ -1,11 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.TagDao;
-import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.Tag;
-import ar.edu.itba.paw.persistence.TagDaoImpl;
-import ar.edu.itba.paw.persistence.Table;
-import ar.edu.itba.paw.persistence.TestInsertionUtils;
+import enums.Table;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +15,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -59,19 +54,19 @@ public class TagDaoImplTest {
     @Test
     public void testFindTagsByPostId() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number chKey = testInsertionUtils.createChannel();
-        Number pKey = testInsertionUtils.createPost(uKey.longValue(), chKey.longValue(), 0);
-        Number tKey = testInsertionUtils.createTag();
-        testInsertionUtils.createCategorization(tKey.longValue(), pKey.longValue());
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long chKey = testInsertionUtils.createChannel();
+        long pKey = testInsertionUtils.createPost(uKey, chKey, 0);
+        long tKey = testInsertionUtils.createTag();
+        testInsertionUtils.createCategorization(tKey, pKey);
 
         // Exercise
-        Optional<List<Tag>> tags = tagDao.findTagsByPostId(pKey.longValue());
+        List<Tag> tags = tagDao.findTagsByPostId(pKey);
 
         // Validations & Post Conditions
-        assertTrue(tags.isPresent());
-        assertEquals(1, tags.get().size());
+        assertFalse(tags.isEmpty());
+        assertEquals(1, tags.size());
     }
 
     @Test
@@ -79,24 +74,24 @@ public class TagDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<List<Tag>> tags = tagDao.findTagsByPostId(1);
+        List<Tag> tags = tagDao.findTagsByPostId(1);
 
         // Validations & Post Conditions
-        assertFalse(tags.isPresent());
+        assertTrue(tags.isEmpty());
     }
 
     @Test
     public void testGetTags() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number chKey = testInsertionUtils.createChannel();
-        Number pKey = testInsertionUtils.createPost(uKey.longValue(), chKey.longValue(), 0);
-        Number tKey = testInsertionUtils.createTag();
-        testInsertionUtils.createCategorization(tKey.longValue(), pKey.longValue());
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long chKey = testInsertionUtils.createChannel();
+        long pKey = testInsertionUtils.createPost(uKey, chKey, 0);
+        long tKey = testInsertionUtils.createTag();
+        testInsertionUtils.createCategorization(tKey, pKey);
 
         // Exercise
-        List<Tag> tags = tagDao.getTags(nhKey.longValue());
+        List<Tag> tags = tagDao.getTags(nhKey);
 
         // Validations & Post Conditions
         assertEquals(1, tags.size());
@@ -116,16 +111,16 @@ public class TagDaoImplTest {
     @Test
     public void testGetAllTags() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number chKey = testInsertionUtils.createChannel();
-        Number pKey = testInsertionUtils.createPost(uKey.longValue(), chKey.longValue(), 0);
-        Number tKey1 = testInsertionUtils.createTag("Tag 1");
-        Number tKey2 = testInsertionUtils.createTag("Tag 2");
-        Number tKey3 = testInsertionUtils.createTag("Tag 3");
-        testInsertionUtils.createCategorization(tKey1.longValue(), pKey.longValue());
-        testInsertionUtils.createCategorization(tKey2.longValue(), pKey.longValue());
-        testInsertionUtils.createCategorization(tKey3.longValue(), pKey.longValue());
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long chKey = testInsertionUtils.createChannel();
+        long pKey = testInsertionUtils.createPost(uKey, chKey, 0);
+        long tKey1 = testInsertionUtils.createTag("Tag 1");
+        long tKey2 = testInsertionUtils.createTag("Tag 2");
+        long tKey3 = testInsertionUtils.createTag("Tag 3");
+        testInsertionUtils.createCategorization(tKey1, pKey);
+        testInsertionUtils.createCategorization(tKey2, pKey);
+        testInsertionUtils.createCategorization(tKey3, pKey);
 
         // Exercise
         List<Tag> tags = tagDao.getAllTags();

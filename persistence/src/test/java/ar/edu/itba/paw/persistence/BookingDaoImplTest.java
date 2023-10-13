@@ -1,11 +1,13 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.*;
-import ar.edu.itba.paw.models.Amenity;
+import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
+import ar.edu.itba.paw.interfaces.persistence.BookingDao;
+import ar.edu.itba.paw.interfaces.persistence.DayDao;
+import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
+import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.models.Booking;
-import ar.edu.itba.paw.models.Day;
-import ar.edu.itba.paw.models.Shift;
 import ar.edu.itba.paw.persistence.config.TestConfig;
+import enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,11 +16,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -54,35 +56,36 @@ public class BookingDaoImplTest {
     @Test
     public void testCreateBooking() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number aKey = testInsertionUtils.createAmenity(nhKey.longValue());
-        Number dKey = testInsertionUtils.createDay();
-        Number tKey = testInsertionUtils.createTime();
-        Number sKey = testInsertionUtils.createShift(dKey.longValue(), tKey.longValue());
-        Number avKey = testInsertionUtils.createAvailability(aKey.longValue(), sKey.longValue());
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long aKey = testInsertionUtils.createAmenity(nhKey);
+        long dKey = testInsertionUtils.createDay();
+        long tKey = testInsertionUtils.createTime();
+        long sKey = testInsertionUtils.createShift(dKey, tKey);
+        long avKey = testInsertionUtils.createAvailability(aKey, sKey);
 
         // Exercise
-        Number bookingId = bookingDao.createBooking(uKey.longValue(), avKey.longValue(), RESERVATION_DATE);
+        Number bookingId = bookingDao.createBooking(uKey, avKey, RESERVATION_DATE);
 
         // Validations & Post Conditions
         assertNotNull(bookingId);
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users_availability.name()));
     }
 
     @Test
     public void testGetUserBookings() {
         // Pre Conditions
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        Number aKey = testInsertionUtils.createAmenity(nhKey.longValue());
-        Number dKey = testInsertionUtils.createDay();
-        Number tKey = testInsertionUtils.createTime();
-        Number sKey = testInsertionUtils.createShift(dKey.longValue(), tKey.longValue());
-        Number avKey = testInsertionUtils.createAvailability(aKey.longValue(), sKey.longValue());
-        Number bKey = testInsertionUtils.createBooking(uKey.longValue(), avKey.longValue(), RESERVATION_DATE);
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long aKey = testInsertionUtils.createAmenity(nhKey);
+        long dKey = testInsertionUtils.createDay();
+        long tKey = testInsertionUtils.createTime();
+        long sKey = testInsertionUtils.createShift(dKey, tKey);
+        long avKey = testInsertionUtils.createAvailability(aKey, sKey);
+        long bKey = testInsertionUtils.createBooking(uKey, avKey, RESERVATION_DATE);
 
         // Exercise
-        List<Booking> userBookings = bookingDao.getUserBookings(uKey.longValue());
+        List<Booking> userBookings = bookingDao.getUserBookings(uKey);
 
         // Validations & Post Conditions
         assertEquals(1, userBookings.size());

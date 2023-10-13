@@ -32,9 +32,8 @@
         </div>
 
         <div class="column-middle">
-
             <div class="upper-feed-buttons-box m-b-20">
-                <a class="cool-feed-button" href="${pageContext.request.contextPath}/admin/createAmenity">
+                <a class="cool-feed-button" href="${pageContext.request.contextPath}/admin/create-amenity">
                     <spring:message code="CreateNewAmenity.button"/>
                     <i class="fa-solid fa-plus"></i>
                 </a>
@@ -46,7 +45,7 @@
                             <h2><c:out value="${amenityWithHours.amenity.name}" /></h2>
                         </div>
                         <div class="col-md-4 text-right">
-                            <a href="${pageContext.request.contextPath}/admin/deleteAmenity/${amenityWithHours.amenity.amenityId}" class="btn btn-link">
+                            <a href="${pageContext.request.contextPath}/admin/delete-amenity/${amenityWithHours.amenity.amenityId}" class="btn btn-link">
                                 <i class="fas fa-trash" style="color: var(--error);"></i>
                             </a>
                         </div>
@@ -71,6 +70,9 @@
                     </div>
                 </div>
             </c:forEach>
+
+
+
         </div>
         <div class="column-right">
             <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %>

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
 import ar.edu.itba.paw.persistence.config.TestConfig;
+import enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,8 +11,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -45,7 +49,7 @@ public class ProfessionWorkerDaoImplTest {
         professionWorkerDao.addWorkerProfession(uKey.longValue(), pKey.longValue());
 
         // Validations & Post Conditions
-        // No exceptions :D
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_professions.name()));
     }
 
     @Test
@@ -58,20 +62,9 @@ public class ProfessionWorkerDaoImplTest {
         testInsertionUtils.createWorkerProfession(uKey.longValue(), pKey.longValue());
 
         // Exercise
-        String profession = professionWorkerDao.getWorkerProfession(uKey.longValue());
+        List<String> profession = professionWorkerDao.getWorkerProfessions(uKey.longValue());
 
         // Validations & Post Conditions
-        assertEquals(PROFESSION_NAME, profession);
+        assertFalse(profession.isEmpty());
     }
-
-/*    @Test
-    public void testGetNoWorkerProfession() {
-        // Pre Conditions
-
-        // Exercise
-        String profession = professionWorkerDao.getWorkerProfession(1);
-
-        // Validations & Post Conditions
-        assertNull(PROFESSION_NAME);
-    }*/
 }

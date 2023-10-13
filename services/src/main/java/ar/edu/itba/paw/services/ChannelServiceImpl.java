@@ -35,7 +35,7 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     public Channel createChannel(long neighborhoodId, String name) {
         Channel channel = channelDao.createChannel(name);
-        channelMappingDao.createChannelMappingDao(channel.getChannelId(), neighborhoodId);
+        channelMappingDao.createChannelMapping(channel.getChannelId(), neighborhoodId);
         return channel;
     }
 

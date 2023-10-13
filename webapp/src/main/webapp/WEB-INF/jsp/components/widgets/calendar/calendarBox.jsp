@@ -41,7 +41,7 @@
       <c:if test="${isAdmin}">
         <div class="f-c-c-c">
 
-          <a href="${pageContext.request.contextPath}/admin/addEvent?date=${selectedDate}" class="accept-button outlined on-background ">
+          <a href="${pageContext.request.contextPath}/admin/add-event?date=${selectedDate}" class="accept-button outlined on-background ">
             <spring:message code="CreateNewEvent.button" />
             <i class="fa-solid fa-plus"></i>
           </a>
@@ -112,7 +112,7 @@
       await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate a 2-second delay
 
       try {
-        const response = await fetch("/api/get-event-timestamps");
+        const response = await fetch("/endpoint/get-event-timestamps");
 
         if (response.ok) {
           const timestampString = await response.text();

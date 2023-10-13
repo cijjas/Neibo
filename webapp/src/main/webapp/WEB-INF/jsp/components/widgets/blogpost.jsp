@@ -29,36 +29,12 @@
                                         class="small-profile-picture placeholder"
                                         alt="profile_picture_img"
                                 />
+                                <script src ="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
+
                                 <script>
                                     (function(){
-                                        postUserProfilePictureId();
-                                        async function postUserProfilePictureId() {
-                                            let image = document.getElementById('postUserProfilePictureId-'+ ${param.postID})
-                                            if("${param.postUserProfilePictureId}" === "0"){
-                                                image.src = "${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png";
-                                                image.classList.remove('placeholder');
-                                                return;
-                                            }
-                                            try{
-                                                const response= await fetch('${pageContext.request.contextPath}/images/<c:out value="${param.postUserProfilePictureId}"/>');
-                                                if(!response.ok) {
-                                                    throw new Error('Network response was not ok');
-                                                }
-                                                const blob = await response.blob();
-
-                                                setTimeout(() => {
-                                                    image.classList.remove('placeholder');
-                                                    image.src = URL.createObjectURL(blob);
-                                                }, 3000);
-
-                                            }
-                                            catch (e) {
-                                                image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
-                                                console.log(e);
-                                            }
-                                        }
+                                        getImageInto("postUserProfilePictureId-${param.postID}", ${param.postUserProfilePictureId},"${pageContext.request.contextPath}");
                                     })();
-
                                 </script>
                                 <span class="post-author"><c:out value="${param.postNeighborMail}" /></span>
 
@@ -104,7 +80,7 @@
         });
         async function setLikeStatus(postId){
             try{
-                const response = await fetch('/api/is-liked?postId=' + postId);
+                const response = await fetch('/endpoint/is-liked?postId=' + postId);
                 const isLikedResponse = await response.text();
                 const likeButton = document.getElementById('like-button-' + postId);
                 likeButton.setAttribute('data-liked', isLikedResponse);
@@ -124,7 +100,7 @@
             likeButtonLocked = true;
             const liked = this.getAttribute('data-liked') === 'true';
             const postId = this.getAttribute('data-post-id'); // Get the post ID from the data attribute
-            const likeEndpoint = liked ? '/api/unlike?postId=' + postId : '/api/like?postId=' + postId; // Determine the appropriate API endpoint based on the like status
+            const likeEndpoint = liked ? '/endpoint/unlike?postId=' + postId : '/endpoint/like?postId=' + postId;
 
             const likeCountElement = document.getElementById('like-count-' + postId);
             const currentCount = parseInt(likeCountElement.getAttribute('data-like-count'), 10);

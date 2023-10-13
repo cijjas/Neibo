@@ -14,7 +14,7 @@
   // Function to fetch a comment from the API and update the page
   async function getComment() {
     try {
-      const response = await fetch("/api/comment?id=2");
+      const response = await fetch("/endpoint/comment?id=2");
       if (!response.ok) {
         throw new Error("Failed to fetch data from the API.");
       }
@@ -31,7 +31,7 @@
   // Function to fetch an image from the API and display it
   async function getImage() {
     try {
-      const response = await fetch("/api/image?id=1"); // Replace with the appropriate image ID
+      const response = await fetch("/endpoint/image?id=1"); // Replace with the appropriate image ID
       if (!response.ok) {
         throw new Error("Failed to fetch the image from the API.");
       }
@@ -48,9 +48,9 @@
   // Function to fetch a post from the API and display it
   async function getPost() {
     try {
-      const response = await fetch("/api/posts?id=2"); // Replace with the appropriate post ID
+      const response = await fetch("/endpoint/posts?id=2"); // Replace with the appropriate post ID
       if (!response.ok) {
-        throw new Error("Failed to fetch data from the API.");
+        throw new Error("Failed to fetch post data from the API.");
       }
       // Update the content of the <p> element with the fetched post content
       document.getElementById("postContent").textContent = await response.text();

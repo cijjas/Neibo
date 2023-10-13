@@ -13,4 +13,5 @@ public interface ShiftService {
 
     Shift createShift(long dayId, long timeId);
 
+    List<Shift> getAmenityShifts(long amenityId);
 }

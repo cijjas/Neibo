@@ -1,9 +1,11 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
+import java.util.List;
+
 public interface ProfessionWorkerDao {
     // --------------------------------------- PROFESSIONWORKERS INSERT ------------------------------------------------
     void addWorkerProfession(long workerId, long professionId);
 
     // --------------------------------------- PROFESSIONWORKERS SELECT ------------------------------------------------
-    String getWorkerProfession(long workerId);
+    List<String> getWorkerProfessions(long workerId);
 }

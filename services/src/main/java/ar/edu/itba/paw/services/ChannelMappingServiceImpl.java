@@ -19,6 +19,6 @@ public class ChannelMappingServiceImpl implements ChannelMappingService {
     }
     @Override
     public void createChannelMappingDao(long channelId, long neighborhoodId) {
-        channelMappingDao.createChannelMappingDao(channelId, neighborhoodId);
+        channelMappingDao.createChannelMapping(channelId, neighborhoodId);
     }
 }

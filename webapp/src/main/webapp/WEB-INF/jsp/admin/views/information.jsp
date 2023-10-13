@@ -53,11 +53,11 @@
                                 </tr>
                                 <c:forEach var="contact" items="${phoneNumbersList}">
                                     <tr>
-                                        <td class="day">${contact.contactName}</td>
-                                        <td>${contact.contactAddress}</td>
-                                        <td>${contact.contactPhone}</td>
+                                        <td class="day"><c:out value="${contact.contactName}"/> </td>
+                                        <td><c:out value="${contact.contactAddress}"/></td>
+                                        <td><c:out value="${contact.contactPhone}"/></td>
                                         <td>
-                                            <a href="${pageContext.request.contextPath}/admin/deleteContact/${contact.contactId}" class="btn btn-link">
+                                            <a href="${pageContext.request.contextPath}/admin/delete-contact/${contact.contactId}" class="btn btn-link">
                                                 <i class="fas fa-trash" style="color: var(--error);"></i>
                                             </a>
                                         </td>
@@ -68,7 +68,7 @@
                     </c:otherwise>
                 </c:choose>
                 <div class="add-button m-t-40">
-                    <a href="${pageContext.request.contextPath}/admin/createContact">
+                    <a href="${pageContext.request.contextPath}/admin/create-contact">
                         <button class="cool-button cool-small on-bg">
                             <spring:message code="Add"/> <i class="fas fa-plus"></i>
                         </button>
@@ -76,7 +76,7 @@
                 </div>
             </div>
             <div class="upper-feed-buttons-box m-b-20">
-                <a class="cool-feed-button" href="${pageContext.request.contextPath}/admin/createResource">
+                <a class="cool-feed-button" href="${pageContext.request.contextPath}/admin/create-resource">
                     <spring:message code="AddResource"/>
                     <i class="fa-solid fa-plus"></i>
                 </a>
@@ -89,7 +89,7 @@
                             <h2><c:out value="${resource.title}" /></h2>
                         </div>
                         <div class="col-md-4 text-right">
-                            <a href="${pageContext.request.contextPath}/admin/deleteResource/${resource.resourceId}" class="btn btn-link">
+                            <a href="${pageContext.request.contextPath}/admin/delete-resource/${resource.resourceId}" class="btn btn-link">
                                 <i class="fas fa-trash" style="color: var(--error);"></i>
                             </a>
                         </div>

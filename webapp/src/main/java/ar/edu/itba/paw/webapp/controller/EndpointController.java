@@ -7,9 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
-@RequestMapping("/api")
-public class ApiController {
+@RequestMapping("/endpoint")
+public class EndpointController {
 
     private final SessionUtils sessionUtils;
     private final PostService ps;
@@ -31,7 +33,7 @@ public class ApiController {
 
 
     @Autowired
-    public ApiController(SessionUtils sessionUtils, final PostService ps,
+    public EndpointController(SessionUtils sessionUtils, final PostService ps,
                          final UserService us,
                          final NeighborhoodService nhs,
                          final CommentService cs,
@@ -142,10 +144,18 @@ public class ApiController {
 
     @RequestMapping(value = "/profession", method = RequestMethod.GET)
     @ResponseBody
-    public String getProfession(
+    public String getProfessions(
             @RequestParam(value = "id") long workerId
     ) {
-        return pws.getWorkerProfession(workerId);
+        List<String> professions = pws.getWorkerProfessions(workerId);
+        StringBuilder professionsString = new StringBuilder();
+        for (String profession : professions) {
+            if (professionsString.length() > 0) {
+                professionsString.append(", ");
+            }
+            professionsString.append(profession);
+        }
+        return professionsString.toString();
     }
 
     @RequestMapping(value = "/userName", method = RequestMethod.GET)

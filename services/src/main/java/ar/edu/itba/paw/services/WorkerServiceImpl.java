@@ -64,7 +64,7 @@ public class WorkerServiceImpl implements WorkerService {
     public void updateWorker(long userId, String name, String surname, String password, int identification,
                              String phoneNumber, String address, Language language, boolean darkMode,
                              String businessName, long profilePictureId, long backgroundPictureId, String bio) {
-        userDao.setUserValues(userId, password, name, surname, language, darkMode, profilePictureId, UserRole.WORKER, identification);
+        userDao.setUserValues(userId, password, name, surname, language, darkMode, profilePictureId, UserRole.WORKER, identification, 0);
         workerDao.updateWorker(userId, phoneNumber, address, businessName, backgroundPictureId, bio);
     }
 }

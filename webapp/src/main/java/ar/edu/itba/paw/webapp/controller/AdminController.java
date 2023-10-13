@@ -3,6 +3,9 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.form.*;
+import enums.DayOfTheWeek;
+import enums.Pair;
+import enums.StandardTime;
 import enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,9 +36,13 @@ public class AdminController {
     private final ResourceService res;
     private final ContactService cos;
 
+    private final ShiftService shs;
+    private final AvailabilityService avs;
+
+
 
     @Autowired
-    public AdminController(SessionUtils sessionUtils, 
+    public AdminController(SessionUtils sessionUtils,
                            final PostService ps,
                            final UserService us,
                            final NeighborhoodService nhs,
@@ -49,7 +56,10 @@ public class AdminController {
                            final AmenityService as,
                            final EventService es,
                            final ResourceService res,
-                           final ContactService cos) {
+                           final ContactService cos,
+                           final ShiftService shs,
+                           final AvailabilityService avs
+    ) {
         this.sessionUtils = sessionUtils;
         this.is = is;
         this.ps = ps;
@@ -65,6 +75,8 @@ public class AdminController {
         this.es = es;
         this.res = res;
         this.cos = cos;
+        this.shs = shs;
+        this.avs = avs;
     }
 
     // ------------------------------------- INFORMATION --------------------------------------
@@ -87,7 +99,7 @@ public class AdminController {
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
 
-        final ModelAndView mav = new ModelAndView("admin/views/requestManager");
+        final ModelAndView mav = new ModelAndView("admin/views/adminRequestHandler");
 
         mav.addObject("panelOption", "Neighbors");
         mav.addObject("neighbors", true);
@@ -104,7 +116,7 @@ public class AdminController {
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
-        final ModelAndView mav = new ModelAndView("admin/views/requestManager");
+        final ModelAndView mav = new ModelAndView("admin/views/adminRequestHandler");
 
         mav.addObject("panelOption", "Requests");
         mav.addObject("neighbors", false);
@@ -114,17 +126,15 @@ public class AdminController {
         return mav;
     }
 
-    // Estos deberian ser /admin/unverifyUser... sino un plebeyo puede verificar y desverificar usuarios
-
-    @RequestMapping("/unverifyUser")
-    public ModelAndView unverifyUser(
+    @RequestMapping("/reject-user")
+    public ModelAndView rejectUser(
             @RequestParam("userId") long userId
     ) {
-        us.unverifyNeighbor(userId);
-        return new ModelAndView("redirect:/admin/neighbors");
+        us.rejectNeighbor(userId);
+        return new ModelAndView("redirect:/admin/unverified");
     }
 
-    @RequestMapping("/verifyUser")
+    @RequestMapping("/verify-user")
     public ModelAndView verifyUser(
             @RequestParam("userId") long userId
     ) {
@@ -136,10 +146,9 @@ public class AdminController {
 
     @RequestMapping(value = "/publish", method = RequestMethod.GET)
     public ModelAndView publishAdminForm(
-            @ModelAttribute("publishForm") final PublishForm publishForm,
-            @RequestParam(value = "onChannelId", required = false) Long onChannelId
+            @ModelAttribute("publishForm") final PublishForm publishForm
     ) {
-        final ModelAndView mav = new ModelAndView("admin/views/publishAdmin");
+        final ModelAndView mav = new ModelAndView("admin/views/adminPublish");
 
         mav.addObject("panelOption", "PublishAdmin");
         mav.addObject("channelList", chs.getAdminChannels(sessionUtils.getLoggedUser().getNeighborhoodId()));
@@ -148,17 +157,17 @@ public class AdminController {
 
 
     @RequestMapping(value = "/publish", method = RequestMethod.POST)
-    public ModelAndView publishAdmin(@Valid @ModelAttribute("publishForm") final PublishForm publishForm,
-                                     final BindingResult errors,
-                                     @RequestParam (value = "onChannelId", required = false) Long onChannelId
+    public ModelAndView publishAdmin(
+            @Valid @ModelAttribute("publishForm") final PublishForm publishForm,
+            final BindingResult errors
     ) {
         if (errors.hasErrors()){
-            return publishAdminForm(publishForm, onChannelId);
+            return publishAdminForm(publishForm);
         }
 
         ps.createAdminPost(sessionUtils.getLoggedUser().getNeighborhoodId(), publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), publishForm.getChannel(), publishForm.getTags(), publishForm.getImageFile());
         PublishForm clearedForm = new PublishForm();
-        ModelAndView mav = new ModelAndView("admin/views/publishAdmin");
+        ModelAndView mav = new ModelAndView("admin/views/adminPublish");
         mav.addObject("showSuccessMessage", true);
         mav.addObject("channelList", chs.getAdminChannels(sessionUtils.getLoggedUser().getNeighborhoodId()));
         mav.addObject("publishForm", clearedForm);
@@ -170,9 +179,11 @@ public class AdminController {
 
     @RequestMapping(value = "/amenities", method = RequestMethod.GET)
     public ModelAndView adminAmenities() {
-        ModelAndView mav = new ModelAndView("admin/views/amenities");
+        ModelAndView mav = new ModelAndView("admin/views/amenitiesPanel");
+
 
         List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId());
+
         List<AmenityHours> amenityHoursList = new ArrayList<>();
 
         for (Amenity amenity : amenities) {
@@ -188,44 +199,70 @@ public class AdminController {
         return mav;
     }
 
-    @RequestMapping(value = "/deleteAmenity/{id}", method = RequestMethod.GET)
-    public ModelAndView deleteAmenity(@PathVariable(value = "id") int amenityId) {
+    @RequestMapping(value = "/delete-amenity/{id}", method = RequestMethod.GET)
+    public ModelAndView deleteAmenity(
+            @PathVariable(value = "id") int amenityId
+    ) {
         ModelAndView mav = new ModelAndView("redirect:/admin/amenities");
         as.deleteAmenity(amenityId);
         return mav;
     }
 
-    @RequestMapping(value = "/createAmenity", method = RequestMethod.GET)
-    public ModelAndView createAmenityForm(@ModelAttribute("amenityForm") final AmenityForm amenityForm) {
-        ModelAndView mav = new ModelAndView("admin/views/createAmenity");
+    @RequestMapping(value = "/create-amenity", method = RequestMethod.GET)
+    public ModelAndView createAmenityForm(
+            @ModelAttribute("amenityForm") final AmenityForm amenityForm
+    ) {
+        ModelAndView mav = new ModelAndView("admin/views/amenitiesCreate");
 
-        mav.addObject("timeList", as.getAllTimes());
-        mav.addObject("daysOfWeek", rs.getDaysOfWeek());
+        // Create lists of pairs for DaysOfTheWeek and StandardTime
+        List<Pair<Integer, String>> daysPairs = new ArrayList<>();
+        List<Pair<Integer, String>> timesPairs = new ArrayList<>();
+
+        for (DayOfTheWeek day : DayOfTheWeek.values())
+            daysPairs.add(new Pair<>(day.getId(), day.name()));
+
+
+        for (StandardTime time : StandardTime.values())
+            timesPairs.add(new Pair<>(time.getId(), time.toString()));
+
+
+        mav.addObject("daysPairs", daysPairs);
+        mav.addObject("timesPairs", timesPairs);
         return mav;
     }
 
-    @RequestMapping(value = "/createAmenity", method = RequestMethod.POST)
-    public ModelAndView createAmenity(@Valid @ModelAttribute("amenityForm") final AmenityForm amenityForm,
-                                      final BindingResult errors) {
+    @RequestMapping(value = "/create-amenity", method = RequestMethod.POST)
+    public ModelAndView createAmenity(
+            @RequestParam("selectedShifts") List<String> selectedShifts,
+            @Valid @ModelAttribute("amenityForm") final AmenityForm amenityForm,
+            final BindingResult errors
+    ) {
         if (errors.hasErrors()) {
             return createAmenityForm(amenityForm);
         }
+        System.out.println("Amenity name: " + amenityForm.getName());
+        System.out.println("Amenity description: " + amenityForm.getDescription());
+        System.out.println("Amenity shifts: " + selectedShifts);
+        System.out.println("Amenity neighborhood: " + sessionUtils.getLoggedUser().getNeighborhoodId());
 
-        as.createAmenityWrapper(amenityForm.getName(), amenityForm.getDescription(), amenityForm.getMondayOpenTime(), amenityForm.getMondayCloseTime(), amenityForm.getTuesdayOpenTime(), amenityForm.getTuesdayCloseTime(), amenityForm.getWednesdayOpenTime(), amenityForm.getWednesdayCloseTime(), amenityForm.getThursdayOpenTime(), amenityForm.getThursdayCloseTime(), amenityForm.getFridayOpenTime(), amenityForm.getFridayCloseTime(), amenityForm.getSaturdayOpenTime(), amenityForm.getSaturdayCloseTime(), amenityForm.getSundayOpenTime(), amenityForm.getSundayCloseTime(), sessionUtils.getLoggedUser().getNeighborhoodId());
+        as.createAmenity(amenityForm.getName(), amenityForm.getDescription(), sessionUtils.getLoggedUser().getNeighborhoodId(), selectedShifts);
         return new ModelAndView("redirect:/admin/amenities");
     }
 
+
+
+
+
     // ------------------------------------- CALENDAR --------------------------------------
 
-    @RequestMapping(value = "/addEvent", method = RequestMethod.GET)
+    @RequestMapping(value = "/add-event", method = RequestMethod.GET)
     public ModelAndView eventForm(
             @ModelAttribute("eventForm") final EventForm eventForm
     ) {
-        final ModelAndView mav = new ModelAndView("admin/views/addEvent");
-        return mav;
+        return new ModelAndView("admin/views/eventsCreate");
     }
 
-    @RequestMapping(value = "/addEvent", method = RequestMethod.POST)
+    @RequestMapping(value = "/add-event", method = RequestMethod.POST)
     public ModelAndView addEvent(
             @Valid @ModelAttribute("eventForm") final EventForm eventForm,
             final BindingResult errors
@@ -233,16 +270,17 @@ public class AdminController {
         if (errors.hasErrors()) {
             return eventForm(eventForm);
         }
-        Event e = es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), eventForm.getStartTime(), eventForm.getEndTime(), sessionUtils.getLoggedUser().getNeighborhoodId());
-        ModelAndView mav = new ModelAndView("admin/views/addEvent");
+        es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), eventForm.getStartTime(), eventForm.getEndTime(), sessionUtils.getLoggedUser().getNeighborhoodId());
+        ModelAndView mav = new ModelAndView("redirect:/calendar?timestamp=" + eventForm.getDate().getTime());
         mav.addObject("showSuccessMessage", true);
         return mav;
     }
 
-    @RequestMapping(value = "/deleteEvent/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete-event/{id}", method = RequestMethod.GET)
     public ModelAndView deleteEvent(
             @PathVariable(value = "id") int eventId,
-            @RequestParam(required = false, defaultValue = "0") long timestamp) {
+            @RequestParam(required = false, defaultValue = "0") long timestamp
+    ) {
 
         ModelAndView mav = new ModelAndView("redirect:/calendar?timestamp=" + timestamp);
         es.deleteEvent(eventId);
@@ -251,24 +289,29 @@ public class AdminController {
 
     // ------------------------------------- CONTACT --------------------------------------
 
-    @RequestMapping(value = "/createContact", method = RequestMethod.GET)
-    public ModelAndView createContact(@ModelAttribute("contactForm") final ContactForm contactForm) {
-        ModelAndView mav = new ModelAndView("admin/views/createContact");
-        return mav;
+    @RequestMapping(value = "/create-contact", method = RequestMethod.GET)
+    public ModelAndView createContact(
+            @ModelAttribute("contactForm") final ContactForm contactForm
+    ) {
+        return new ModelAndView("admin/views/informationContactCreate");
     }
 
-    @RequestMapping(value = "/createContact", method = RequestMethod.POST)
-    public ModelAndView createContact(@Valid @ModelAttribute("contactForm") final ContactForm contactForm,
-                                      final BindingResult errors) {
+    @RequestMapping(value = "/create-contact", method = RequestMethod.POST)
+    public ModelAndView createContact(
+            @Valid @ModelAttribute("contactForm") final ContactForm contactForm,
+            final BindingResult errors
+    ) {
         if (errors.hasErrors()) {
             return createContact(contactForm);
         }
-        Contact cont = cos.createContact(sessionUtils.getLoggedUser().getNeighborhoodId(), contactForm.getContactName(), contactForm.getContactAddress(), contactForm.getContactPhone());
+        cos.createContact(sessionUtils.getLoggedUser().getNeighborhoodId(), contactForm.getContactName(), contactForm.getContactAddress(), contactForm.getContactPhone());
         return new ModelAndView("redirect:/admin/information");
     }
 
-    @RequestMapping(value = "/deleteContact/{id}", method = RequestMethod.GET)
-    public ModelAndView deleteContact(@PathVariable(value = "id") int contactId) {
+    @RequestMapping(value = "/delete-contact/{id}", method = RequestMethod.GET)
+    public ModelAndView deleteContact(
+            @PathVariable(value = "id") int contactId
+    ) {
         ModelAndView mav = new ModelAndView("redirect:/admin/information");
         cos.deleteContact(contactId);
         return mav;
@@ -277,17 +320,18 @@ public class AdminController {
 
     // ------------------------------------- CONTACT --------------------------------------
 
-    @RequestMapping(value = "/createResource", method = RequestMethod.GET)
+    @RequestMapping(value = "/create-resource", method = RequestMethod.GET)
     public ModelAndView createResourceForm(
             @ModelAttribute("resourceForm") final ResourceForm resourceForm
     ) {
-        ModelAndView mav = new ModelAndView("admin/views/createResource");
-        return mav;
+        return new ModelAndView("admin/views/informationResourceCreate");
     }
 
-    @RequestMapping(value = "/createResource", method = RequestMethod.POST)
-    public ModelAndView createResource(@Valid @ModelAttribute("resourceForm") final ResourceForm resourceForm,
-                                       final BindingResult errors) {
+    @RequestMapping(value = "/create-resource", method = RequestMethod.POST)
+    public ModelAndView createResource(
+            @Valid @ModelAttribute("resourceForm") final ResourceForm resourceForm,
+            final BindingResult errors
+    ) {
         if (errors.hasErrors()) {
             return createResourceForm(resourceForm);
         }
@@ -295,8 +339,10 @@ public class AdminController {
         return new ModelAndView("redirect:/admin/information");
     }
 
-    @RequestMapping(value = "/deleteResource/{id}", method = RequestMethod.GET)
-    public ModelAndView deleteResource(@PathVariable(value = "id") int resourceId) {
+    @RequestMapping(value = "/delete-resource/{id}", method = RequestMethod.GET)
+    public ModelAndView deleteResource(
+            @PathVariable(value = "id") int resourceId
+    ) {
         ModelAndView mav = new ModelAndView("redirect:/admin/information");
         res.deleteResource(resourceId);
         return mav;

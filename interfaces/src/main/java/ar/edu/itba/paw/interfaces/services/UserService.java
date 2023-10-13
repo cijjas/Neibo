@@ -52,7 +52,9 @@ public interface UserService {
 
     void verifyNeighbor(final long id);
 
-    void unverifyNeighbor(final long id);
+    void unverifyNeighbor(final long id, final long neighborhoodId);
+
+    void rejectNeighbor(final long id);
 
     public void toggleLanguage(long id);
 

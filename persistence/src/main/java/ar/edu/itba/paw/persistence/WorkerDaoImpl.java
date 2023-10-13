@@ -29,11 +29,11 @@ public class WorkerDaoImpl implements WorkerDao {
                     "from users w join workers_info wi on w.userid = wi.workerid ";
 
     private final String USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
-            "select *\n" +
-                    "from users w join workers_professions wp on w.userid = wp.workerid " +
-                    "join professions p on wp.professionid = p.professionid " +
-                    "join workers_neighborhoods wn on w.userid = wn.workerId " +
-                    "join workers_info wi on w.userid = wi.workerid ";
+            "select distinct w.*, wn.*, wi.* " +
+                "from users w " +
+                "join workers_neighborhoods wn on w.userid = wn.workerId " +
+                "join workers_info wi on w.userid = wi.workerid";
+
 
     private final String COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
             "select count(distinct w.userid)\n" +
