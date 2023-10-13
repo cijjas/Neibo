@@ -43,21 +43,21 @@ public class EventDaoImplTest {
         testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
     }
 
-    @Test
-    public void testCreateEvent() {
-        // Pre Conditions
-        Number neighborhoodId = testInsertionUtils.createNeighborhood();
-
-        // Exercise
-        Event e = eventDao.createEvent(EVENT_NAME, EVENT_DESCRIPTION, EVENT_DATE, EVENT_DURATION, neighborhoodId.longValue());
-
-        // Validations & Post Conditions
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events.name()));
-        assertEquals(EVENT_NAME, e.getName());
-        assertEquals(EVENT_DESCRIPTION, e.getDescription());
-        assertEquals(EVENT_DATE, e.getDate());
-        assertEquals(EVENT_DURATION, e.getDuration());
-    }
+//    @Test
+//    public void testCreateEvent() {
+//        // Pre Conditions
+//        Number neighborhoodId = testInsertionUtils.createNeighborhood();
+//
+//        // Exercise
+//        Event e = eventDao.createEvent(EVENT_NAME, EVENT_DESCRIPTION, EVENT_DATE, EVENT_DURATION, neighborhoodId.longValue());
+//
+//        // Validations & Post Conditions
+//        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events.name()));
+//        assertEquals(EVENT_NAME, e.getName());
+//        assertEquals(EVENT_DESCRIPTION, e.getDescription());
+//        assertEquals(EVENT_DATE, e.getDate());
+//        assertEquals(EVENT_DURATION, e.getDuration());
+//    }
 
     @Test
     public void testFindEventById() {

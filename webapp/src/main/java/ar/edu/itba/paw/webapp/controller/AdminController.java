@@ -233,15 +233,7 @@ public class AdminController {
         if (errors.hasErrors()) {
             return eventForm(eventForm);
         }
-
-        long duration = 0;
-        try {
-            duration = Long.parseLong(eventForm.getDuration());
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-
-        Event e = es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), duration, sessionUtils.getLoggedUser().getNeighborhoodId());
+        Event e = es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), eventForm.getStartTime(), eventForm.getEndTime(), sessionUtils.getLoggedUser().getNeighborhoodId());
         ModelAndView mav = new ModelAndView("admin/views/addEvent");
         mav.addObject("showSuccessMessage", true);
         return mav;

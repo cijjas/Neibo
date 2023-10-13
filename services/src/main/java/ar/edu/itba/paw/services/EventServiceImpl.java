@@ -3,6 +3,8 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Event;
+
+import java.sql.Time;
 import java.util.Date;
 
 import ar.edu.itba.paw.models.User;
@@ -29,7 +31,7 @@ public class EventServiceImpl implements EventService {
     public Optional<Event> findEventById(long eventId) { return eventDao.findEventById(eventId); }
 
     @Override
-    public Event createEvent(String name, String description, Date date, long duration, long neighborhoodId) { return eventDao.createEvent(name, description, date, duration, neighborhoodId); }
+    public Event createEvent(String name, String description, Date date, Time startTime, Time endTime, long neighborhoodId) { return eventDao.createEvent(name, description, date, startTime, endTime, neighborhoodId); }
 
     @Override
     public List<Event> getEventsByDate(Date date, long neighborhoodId) { return eventDao.getEventsByDate(date, neighborhoodId); }
@@ -83,11 +85,6 @@ public class EventServiceImpl implements EventService {
     @Override
     public int getSelectedYear(int year) {
         return year + 1900;
-    }
-
-    @Override
-    public String getDateString(Date date) {
-        return date.getDate() + "-" + (date.getMonth() + 1) + "-" + (date.getYear() + 1900);
     }
 
 }
