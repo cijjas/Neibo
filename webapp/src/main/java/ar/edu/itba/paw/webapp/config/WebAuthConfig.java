@@ -48,7 +48,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/signup", "/login").anonymous()
                 .antMatchers("/admin/**").hasRole("ADMINISTRATOR")
                 .antMatchers("/unverified").hasRole("UNVERIFIED_NEIGHBOR")
-                .antMatchers("/services").hasRole("WORKER")
+                .antMatchers("/services").hasAnyRole("WORKER", "ADMINISTRATOR", "NEIGHBOR")
                 .antMatchers("/rejected").hasRole("REJECTED")
                 .antMatchers("/profile").permitAll()
                 .antMatchers("/**").hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
