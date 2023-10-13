@@ -71,11 +71,10 @@
                         </div>
                     </div>
 
-                    <div class="divider"></div>
 
                     <%--Submit button --%>
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" class="cool-button cool-small on-bg" style="height:40px;" ><spring:message code="Create.verb"/></button>
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="submit" class="cool-button cool-small on-bg w-25 font-weight-bolder" style="height:40px;" ><spring:message code="Create.verb"/></button>
                     </div>
 
                 </form:form>

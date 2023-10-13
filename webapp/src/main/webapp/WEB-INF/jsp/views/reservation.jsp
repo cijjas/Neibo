@@ -36,7 +36,7 @@
 
                 <div class="f-c-c-c">
                     <div class="shifts-reservation f-c-c-c">
-                        <form name="shiftForm" action="${pageContext.request.contextPath}/testAmenityBooking" method="post">
+                        <form name="shiftForm" action="${pageContext.request.contextPath}/reservation" method="post">
                             <input type="hidden" name="amenityId" value="${amenityId}" />
                             <input type="hidden" name="date" value="${date}" />
 
@@ -63,8 +63,6 @@
                                             </c:choose>
                                        
                                 </c:forEach>
-
-                            </table>
 
 
                         </form>

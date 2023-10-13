@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.form.*;
@@ -37,8 +38,9 @@ public class AdminController {
     private final ContactService cos;
 
 
+
     @Autowired
-    public AdminController(SessionUtils sessionUtils, 
+    public AdminController(SessionUtils sessionUtils,
                            final PostService ps,
                            final UserService us,
                            final NeighborhoodService nhs,
@@ -52,7 +54,8 @@ public class AdminController {
                            final AmenityService as,
                            final EventService es,
                            final ResourceService res,
-                           final ContactService cos) {
+                           final ContactService cos
+    ) {
         this.sessionUtils = sessionUtils;
         this.is = is;
         this.ps = ps;
@@ -175,6 +178,7 @@ public class AdminController {
         ModelAndView mav = new ModelAndView("admin/views/amenitiesPanel");
 
         List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId());
+
         List<AmenityHours> amenityHoursList = new ArrayList<>();
 
         for (Amenity amenity : amenities) {

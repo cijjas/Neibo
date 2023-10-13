@@ -1060,7 +1060,7 @@ footer div {
 
 
 .cool-button.cool-small{
-    width: 120px;
+    width: 100%;
     &.dark-on-bg{
         background-color: var(--darkonbackground);
         padding: 5px 5px;

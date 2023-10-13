@@ -76,7 +76,8 @@ public class FrontController {
                            final ReviewService rws,
                            final WorkerService ws,
                            final BookingService bs,
-                           final ShiftService shs) {
+                           final ShiftService shs
+    ) {
         this.sessionUtils = sessionUtils;
         this.is = is;
         this.ps = ps;
@@ -355,7 +356,8 @@ public class FrontController {
     public ModelAndView logIn(
             Model model,
             @ModelAttribute("signupForm") final SignupForm signupform,
-            @RequestParam(value = "error", required = false, defaultValue = "false") boolean error
+            @RequestParam(value = "error", required = false, defaultValue = "false") boolean error,
+            @RequestParam(value = "email", required = false) String email
     ) {
         model.addAttribute("neighbor", new User.Builder());
         ModelAndView mav = new ModelAndView("views/landingPage");
@@ -367,8 +369,6 @@ public class FrontController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ModelAndView logIn(
-            @RequestParam("mail") String mail,
-            @RequestParam("password") String password
     ) {
         return new ModelAndView("views/index");
     }

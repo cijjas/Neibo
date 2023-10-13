@@ -5,8 +5,68 @@
     <!-- Post information -->
     <div class="post-section">
         <div class="post-info">
-            <p style="font-weight: bolder; font-size: 20px; color: var(--text)"><c:out value="${post.title}" /></p>
-            <p style="font-size: 12px; font-weight: normal" class="m-t-40 "><spring:message code="PostedBy"/> <c:out value="${post.user.name}" /></p>
+
+            <div class="f-r-sb-c " >
+                <div>
+                    <span style="font-size: 14px" class="font-weight-bold">
+
+                        <c:out value="${post.channel.channel}" />
+                    </span>
+                    <span style="font-size: 12px; font-weight: normal" class="ml-1">
+                        -
+                        <spring:message code="PostedBy"/>
+                        <img
+                                id="poster-image"
+                                src=""
+                                class="small-profile-picture placeholder"
+                                alt="poster_profile_picture_img"
+                        />
+                        <c:out value="${post.user.name}" />
+                    </span>
+
+                    <script>
+                        getPosterImage();
+                        async function getPosterImage() {
+                            let image = document.getElementById('poster-image')
+                            if("${post.user.profilePictureId}" === "0"){
+                                image.src = "${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png";
+                                image.classList.remove('placeholder');
+                                return;
+                            }
+                            try{
+                                const response= await fetch('${pageContext.request.contextPath}/images/<c:out value="${post.user.profilePictureId}"/>');
+                                if(!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                const blob = await response.blob();
+
+                                setTimeout(() => {
+                                    image.classList.remove('placeholder');
+                                    image.src = URL.createObjectURL(blob);
+                                }, 3000);
+
+                            }
+                            catch (e) {
+                                image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
+                                console.log(e);
+                            }
+                        }
+
+                    </script>
+                </div>
+
+
+                <div style="font-size: 12px; font-weight: normal">
+                    <span class="post-date" data-post-date="<c:out value="${post.date}"/>"></span>
+                </div>
+                <script src="${pageContext.request.contextPath}/resources/js/blogpost.js"></script>
+
+            </div>
+            <p style="font-size: 20px;" class="mt-2 font-weight-bolder c-text"><c:out value="${post.title}" /></p>
+
+
+
+
             <div class="divider m-b-20"></div>
             <div class="postcard-description">
                 <c:out value="${post.description}" />
@@ -189,7 +249,7 @@
                     </div>
                     <!-- Submit button -->
                     <div class="d-flex flex-column justify-content-center align-items-end">
-                        <button id="submitButton" type="submit" class="cool-button cool-small on-bg" style="margin-top:5px; font-size: 12px;" disabled>
+                        <button id="submitButton" type="submit" class="cool-button cool-small on-bg w-25 font-weight-bolder" style="margin-top:5px; font-size: 12px;" disabled>
                             <spring:message code="Comment.verb"/>
                         </button>
                     </div>
