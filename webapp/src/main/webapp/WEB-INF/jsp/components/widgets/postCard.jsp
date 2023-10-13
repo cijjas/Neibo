@@ -12,47 +12,23 @@
 
                         <c:out value="${post.channel.channel}" />
                     </span>
-                    <span style="font-size: 12px; font-weight: normal" class="ml-1">
+                    <span style="font-size: 12px; font-weight: normal" class="ml-1 placeholder-glow">
                         -
                         <spring:message code="PostedBy"/>
                         <img
                                 id="poster-image"
                                 src=""
-                                class="small-profile-picture placeholder"
+                                class="small-profile-picture placeholder mb-1"
                                 alt="poster_profile_picture_img"
                         />
+                        <script src ="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
+                        <script>
+                            getImageInto("poster-image", ${post.user.profilePictureId},"${pageContext.request.contextPath}");
+                        </script>
                         <c:out value="${post.user.name}" />
                     </span>
 
-                    <script>
-                        getPosterImage();
-                        async function getPosterImage() {
-                            let image = document.getElementById('poster-image')
-                            if("${post.user.profilePictureId}" === "0"){
-                                image.src = "${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png";
-                                image.classList.remove('placeholder');
-                                return;
-                            }
-                            try{
-                                const response= await fetch('${pageContext.request.contextPath}/images/<c:out value="${post.user.profilePictureId}"/>');
-                                if(!response.ok) {
-                                    throw new Error('Network response was not ok');
-                                }
-                                const blob = await response.blob();
 
-                                setTimeout(() => {
-                                    image.classList.remove('placeholder');
-                                    image.src = URL.createObjectURL(blob);
-                                }, 3000);
-
-                            }
-                            catch (e) {
-                                image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
-                                console.log(e);
-                            }
-                        }
-
-                    </script>
                 </div>
 
 
@@ -83,25 +59,7 @@
                      alt="post_${post.postId}_img"/>
             </div>
             <script>
-                getImage();
-                async function getImage() {
-                    let image = document.getElementById('postImage')
-                    try{
-
-                        const response= await fetch('${pageContext.request.contextPath}/images/<c:out value="${post.postPictureId}"/>');
-                        if(!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        const blob = await response.blob();
-                        image.src = URL.createObjectURL(blob);
-                        image.classList.remove('placeholder');
-                        image.style.height = 'auto';
-                    }
-                    catch (e) {
-                        image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
-                        console.log(e);
-                    }
-                }
+                getImageInto("postImage", ${post.postPictureId},"${pageContext.request.contextPath}");
             </script>
         </c:if>
 
@@ -154,7 +112,7 @@
         });
         async function setLikeStatus(postId){
             try{
-                const response = await fetch('/api/is-liked?postId=' + postId);
+                const response = await fetch('/endpoint/is-liked?postId=' + postId);
                 const isLikedResponse = await response.text();
                 const likeButton = document.getElementById('post-like-button');
                 likeButton.setAttribute('data-liked', isLikedResponse);
@@ -174,7 +132,7 @@
             likeButtonLocked = true;
             const liked = this.getAttribute('data-liked') === 'true';
             const postId = this.getAttribute('data-post-id'); // Get the post ID from the data attribute
-            const likeEndpoint = liked ? '/api/unlike?postId=' + postId : '/api/like?postId=' + postId; // Determine the appropriate API endpoint based on the like status
+            const likeEndpoint = liked ? '/endpoint/unlike?postId=' + postId : '/endpoint/like?postId=' + postId;
 
             const likeCountElement = document.getElementById('like-count');
             const currentCount = parseInt(likeCountElement.getAttribute('data-like-count'), 10);
@@ -295,34 +253,8 @@
                                 />
                                 <script>
                                     (function(){
-                                        getCommentImage();
-                                        async function getCommentImage() {
-                                            let image = document.getElementById('comment-image-'+ ${comment.commentId})
-                                            if("${comment.user.profilePictureId}" === "0"){
-                                                image.src = "${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png";
-                                                image.classList.remove('placeholder');
-                                                return;
-                                            }
-                                            try{
-                                                const response= await fetch('${pageContext.request.contextPath}/images/<c:out value="${comment.user.profilePictureId}"/>');
-                                                if(!response.ok) {
-                                                    throw new Error('Network response was not ok');
-                                                }
-                                                const blob = await response.blob();
-
-                                                setTimeout(() => {
-                                                    image.classList.remove('placeholder');
-                                                    image.src = URL.createObjectURL(blob);
-                                                }, 3000);
-
-                                            }
-                                            catch (e) {
-                                                image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
-                                                console.log(e);
-                                            }
-                                        }
+                                        getImageInto("comment-image-${comment.commentId}", ${comment.user.profilePictureId},"${pageContext.request.contextPath}");
                                     })();
-
                                 </script>
 
                                 <div class="bold"><c:out value="${comment.user.name} ${comment.user.surname}" /></div>
@@ -336,9 +268,9 @@
                             <script>
                                 async function getPostComment(commentId) {
                                     try {
-                                        const response = await fetch("/api/commentById?id=" + commentId);
+                                        const response = await fetch("/endpoint/commentById?id=" + commentId);
                                         if (!response.ok) {
-                                            throw new Error("Failed to fetch data from the API.");
+                                            throw new Error("Failed to fetch psot comment data from the endpoint.");
                                         }
                                         const commentElement = document.getElementById("comment-" + commentId);
                                         commentElement.textContent = await response.text();

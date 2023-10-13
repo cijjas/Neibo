@@ -172,14 +172,18 @@
 
                         <div class="f-c-c-c">
                             <div class="f-r-c-c" style="gap: 5px">
-                                <spring:message code="Remember.message.1"/><span class="c-primary font-weight-bolder mb-1"><spring:message code="Remember.message.2"/></span> <spring:message code="Remember.message.3"/>
+                                <spring:message code="Remember.message.1"/>
+                                <span class="c-primary font-weight-bolder ">
+                                    <spring:message code="Remember.message.2"/>
+                                </span>
+                                <spring:message code="Remember.message.3"/>
 
                             </div>
                         </div>
 
                         <%--Submit button --%>
-                        <div class="d-flex justify-content-end m-t-40">
-                            <button onclick="" type="submit" class="cool-button cool-small on-bg" style="height:40px;" ><spring:message code="Create.verb"/></button>
+                        <div class="d-flex justify-content-end m-t-40 ">
+                            <button onclick="load()" type="submit" class="cool-button cool-small on-bg w-25" style="height:40px;" ><spring:message code="Create.verb"/></button>
                         </div>
                     </form:form>
                 </div>
@@ -191,8 +195,19 @@
         </div>
     </div>
 </div>
+<script>
+    function load(){
+        document.getElementById("loader-container").style.display = "flex";
+    }
+</script>
 
 
+<div id="loader-container" class="loader-container">
+    <div class="cool-static-container medium-size-container" >
+        <div style="font-weight: bold; font-size: 16px"><spring:message code="Creating.amenity"/>...</div>
+        <div class="loader" style="margin-top: 20px"></div>
+    </div>
+</div>
 
 
 <!-- Bootstrap JS and jQuery -->

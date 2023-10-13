@@ -120,8 +120,9 @@
     box-shadow: -3px 4px 0 0 var(--lighttext);
     & .cool-feed-button{
         text-align: center;
-        font-weight: bold;
         overflow: hidden;
+
+        font-weight: bold;
         cursor: pointer;
         padding: 1em 1em;
         transition: all 0.3s ease-in-out;
@@ -129,10 +130,18 @@
         color: var(--text);
         border: 1px solid var(--text);
         border-radius: var(--border-radius);
+
+        &.active{
+            transform: translateY(-4px) ;
+            box-shadow: 0 5px 0 0 var(--primary);
+            color: var(--primary);
+            border: var(--border);
+        }
         &.rounded{
             border-radius: var(--border-hard) !important;
 
         }
+
         &:hover ,
         &:active ,
         &:focus-visible {
@@ -142,11 +151,62 @@
             border: var(--border);
         }
     }
+    & .coolest-button {
+        text-align: center;
+        font-weight: bold;
+        overflow: hidden;
+        cursor: pointer;
+        padding: 1em 1em;
+        transition: all 0.3s ;
+        background-color: var(--onbackground);
+        color: var(--text);
+        border: 1px solid var(--text);
+        position: relative;
+        border-radius: var(--border-hard);
+        &.active {
+            border: 1px solid transparent;
+            background-color: var(--error);
+            color: var(--background);
+            box-shadow: 0 5px 0 0 #f1d283;
+            transform: translateY(-4px) ;
+        }
+        &:before {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 120%;
+            background-color: #f1d283;
+            top: 50%;
+            transform: skewX(30deg) translate(-150%, -50%);
+            transition: all 0.5s;
+        }
+
+        &:hover {
+            border: 1px solid transparent;
+            background-color: var(--error);
+            color: var(--background);
+            box-shadow: 0 5px 0 0 #f1d283;
+            transform: translateY(-4px) ;
+            &::before {
+                transform: skewX(30deg) translate(150%, -50%);
+                transition-delay: 0.1s;
+            }
+        }
+
+
+
+    }
 }
 
+/*-----------COOLEST :........................*/
 
 
-.post-input {
+
+
+
+
+/*_----------------------------------------------*/
+.post-input {<
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -967,6 +1027,9 @@ footer div {
             color: var(--error);
         }
     }
+    &.on-bg{
+        background-color: var(--onbackground);
+    }
     &:hover{
         border: 1px solid var(--error);
         transform: translateY(-4px) ;
@@ -1596,7 +1659,7 @@ h6 {
     object-fit: cover;
     transition: all 0.3s ease-in-out;
 
-    & .rounded-placeholder{
+    & .placeholder{
         background-color: var(--lighttext);
     }
 }
@@ -1609,7 +1672,7 @@ h6 {
     object-fit: cover;
     transition: all 0.3s ease-in-out;
 
-    & .rounded-placeholder{
+    & .placeholder{
         background-color: var(--lighttext);
     }
 }
