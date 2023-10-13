@@ -24,19 +24,34 @@
 <%----%>
 
 <%@ include file="/WEB-INF/jsp/components/structure/backgroundDrawing.jsp" %>
-    <div class="container">
-        <div class="d-flex flex-column justify-content-center align-items-center ">
-            <div class="cool-static-container" style="width: 500px; margin-top: 100px">
-                <div class="d-flex flex-column justify-content-center align-items-center " style="text-align: center">
-                    <p style="color: var(--primary); font-size: 30px"><spring:message code="Welcome.phrase.1"/></p><br>
-                    <spring:message code="Welcome.phrase.2"/> <br>
-                    <spring:message code="Welcome.phrase.3"/><br><br>
-                    <spring:message code="Welcome.phrase.4"/><br>
-                    <a href="${pageContext.request.contextPath}/logout" class="cool-button m-t-40"><spring:message code="GoBackToMainPage"/></a>
-                </div>
+<div class="container">
+    <div class="d-flex flex-column justify-content-center align-items-center ">
+        <div class="cool-static-container" style="width: 500px; margin-top: 100px">
+            <div class="d-flex flex-column justify-content-center align-items-center " style="text-align: center">
+                <p style="color: var(--primary); font-size: 30px"><spring:message code="Rejected.phrase.1"/></p><br>
+                <spring:message code="Rejected.phrase.2"/> <br>
+
+                <form:form method="post" action="rejected" modelAttribute="neighborhoodForm" id="neighborhoodForm">
+                    <form:errors cssClass="error" element="p"/>
+                    <div class="centered-column">
+                            <%-- SELECT NEIGHBORHOOD --%>
+                        <div class="form-input">
+                            <form:select path="neighborhoodId" class="cool-select">
+                                <c:forEach var="entry" items="${neighborhoodsList}">
+                                    <form:option value="${entry.getNeighborhoodId()}"><c:out value="${entry.getName()}"/></form:option>
+                                </c:forEach>
+                            </form:select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="action-button"><spring:message code="Request"/></button>
+                </form:form>
+
+                <a href="${pageContext.request.contextPath}/logout" class="cool-button m-t-40"><spring:message code="GoBackToMainPage"/></a>
             </div>
         </div>
     </div>
+</div>
 <%----%>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </body>

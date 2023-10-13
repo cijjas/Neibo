@@ -93,10 +93,11 @@
                                     <%--Si son los neighbors solo boton de unverify--%>
                                     <c:choose >
                                         <c:when test="${neighbors}">
-                                            <button class="ignore-button" onclick="unverifyUser(${user.userId})"><spring:message code="Unverify"/></button>
+                                            <button class="ignore-button" onclick="rejectUser(${user.userId})"><spring:message code="Unverify"/></button>
                                         </c:when>
                                         <c:otherwise>
                                             <%--<button class="ignore-button" onclick=""><spring:message code="Ignore"/></button>--%>
+                                            <button class="ignore-button" onclick="rejectUser(${user.userId})"><spring:message code="Reject"/></button>
                                             <button class="cool-button cool-small" onclick="verifyUser(${user.userId})"><spring:message code="Accept"/></button>
                                         </c:otherwise>
                                     </c:choose>
@@ -107,7 +108,7 @@
                                         const verify = true;
                                         handleUserVerification(userId, verify)
                                     }
-                                    function unverifyUser(userId) {
+                                    function rejectUser(userId) {
                                         const verify = false;
                                         handleUserVerification(userId, verify)
                                     }
@@ -119,7 +120,7 @@
                                             form.action = '${pageContext.request.contextPath}/admin/verifyUser';
                                         }
                                         else{
-                                            form.action = '${pageContext.request.contextPath}/admin/unverifyUser';
+                                            form.action = '${pageContext.request.contextPath}/admin/rejectUser';
                                         }
                                         const input = document.createElement('input');
                                         input.type = 'hidden';

@@ -234,6 +234,28 @@ public class FrontController {
         return  new ModelAndView("views/unverified");
     }
 
+    @RequestMapping(value = "/rejected", method = RequestMethod.GET)
+    public ModelAndView rejectedForm(
+            @ModelAttribute("neighborhoodForm") final NeighborhoodForm neighborhoodForm
+    ) {
+        ModelAndView mav = new ModelAndView("views/rejected");
+        mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
+        return mav;
+    }
+
+    @RequestMapping(value = "/rejected", method = RequestMethod.POST)
+    public ModelAndView rejectedForm(
+            @ModelAttribute("neighborhoodForm") final NeighborhoodForm neighborhoodForm,
+            final BindingResult errors
+    ) {
+        if (errors.hasErrors()) {
+            return rejectedForm(neighborhoodForm);
+        }
+
+        us.unverifyNeighbor(sessionUtils.getLoggedUser().getUserId(), neighborhoodForm.getNeighborhoodId());
+        return new ModelAndView("redirect:/logout");
+    }
+
     // ------------------------------------- PUBLISH --------------------------------------
 
     @RequestMapping(value = "/publish", method = RequestMethod.GET)

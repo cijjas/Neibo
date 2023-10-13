@@ -168,10 +168,11 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void setUserValues(final long id, final String password, final String name, final String surname,
-                              final Language language, final boolean darkMode, final long profilePictureId, final UserRole role, final int identification
+                              final Language language, final boolean darkMode, final long profilePictureId,
+                              final UserRole role, final int identification, final long neighborhoodId
     ) {
-        jdbcTemplate.update("UPDATE users SET name = ?, surname = ?, password = ?, darkmode = ?, language = ?, role = ?, profilepictureid = ?, identification = ? WHERE userid = ?",
-                name, surname, password, darkMode, language != null ? language.toString() : null, role != null ? role.toString() : null, profilePictureId == 0 ? null : profilePictureId,  identification, id);
+        jdbcTemplate.update("UPDATE users SET name = ?, surname = ?, password = ?, darkmode = ?, language = ?, role = ?, profilepictureid = ?, identification = ?, neighborhoodid = ? WHERE userid = ?",
+                name, surname, password, darkMode, language != null ? language.toString() : null, role != null ? role.toString() : null, profilePictureId == 0 ? null : profilePictureId,  identification, neighborhoodId, id);
     }
 
     @Override
