@@ -4,5 +4,6 @@ public enum UserRole {
     ADMINISTRATOR,
     NEIGHBOR,
     UNVERIFIED_NEIGHBOR,
-    WORKER
+    WORKER,
+    REJECTED
 }

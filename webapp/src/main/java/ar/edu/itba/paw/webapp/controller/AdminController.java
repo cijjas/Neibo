@@ -120,14 +120,12 @@ public class AdminController {
         return mav;
     }
 
-    // Estos deberian ser /admin/unverifyUser... sino un plebeyo puede verificar y desverificar usuarios
-
-    @RequestMapping("/unverify-user")
-    public ModelAndView unverifyUser(
+    @RequestMapping("/reject-user")
+    public ModelAndView rejectUser(
             @RequestParam("userId") long userId
     ) {
-        us.unverifyNeighbor(userId);
-        return new ModelAndView("redirect:/admin/neighbors");
+        us.rejectNeighbor(userId);
+        return new ModelAndView("redirect:/admin/unverified");
     }
 
     @RequestMapping("/verify-user")

@@ -48,7 +48,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/signup", "/login").anonymous()
                 .antMatchers("/admin/**").hasRole("ADMINISTRATOR")
                 .antMatchers("/unverified").hasRole("UNVERIFIED_NEIGHBOR")
-                .antMatchers("/services").hasRole("WORKER")
+                .antMatchers("/services").hasAnyRole("WORKER", "ADMINISTRATOR", "NEIGHBOR")
+                .antMatchers("/rejected").hasRole("REJECTED")
                 .antMatchers("/profile").permitAll()
                 .antMatchers("/**").hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
                 .and().formLogin()
@@ -93,7 +94,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         String workerRedirectUrl = request.getContextPath() + "/services";
                         response.sendRedirect(workerRedirectUrl);
                         return;
-                    // Add more cases for other roles if needed
+                    case "ROLE_REJECTED":
+                        String rejectedRedirectUrl = request.getContextPath() + "/rejected";
+                        response.sendRedirect(rejectedRedirectUrl);
+                        return;
                 }
             }
 

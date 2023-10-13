@@ -10,4 +10,6 @@ public interface AvailabilityDao {
     Number createAvailability(long amenityId, long shiftId);
 
     Optional<Long> findAvailabilityId(long amenityId, long shiftId);
+
+    boolean deleteAvailability(long amenityId, long shiftId);
 }

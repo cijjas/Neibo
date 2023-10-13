@@ -48,19 +48,15 @@
         setTimeout(function() {
             const form = document.createElement('form');
             form.method = 'POST';
-            form.action = '${pageContext.request.contextPath}/redirect-to-channel'; // Replace with your desired URL
+            form.action = '${pageContext.request.contextPath}/redirect-to-channel';
 
-            // Optionally, you can add any form data or parameters here
-            // For example, adding a hidden input field with a value
             const input = document.createElement('input');
             input.type = 'hidden';
             input.name = 'channelId';
             input.value = 'login';
 
-            // Append the input field to the form
             form.appendChild(input);
 
-            // Append the form to the document and submit it
             document.body.appendChild(form);
             form.submit();
         }, 2500);

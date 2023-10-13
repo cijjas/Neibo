@@ -52,6 +52,7 @@ public class FrontController {
     private final ProfessionWorkerService pws;
     private final ReviewService rws;
     private final WorkerService ws;
+    private final AvailabilityService avs;
 
     @Autowired
     public FrontController(SessionUtils sessionUtils,
@@ -76,7 +77,8 @@ public class FrontController {
                            final ReviewService rws,
                            final WorkerService ws,
                            final BookingService bs,
-                           final ShiftService shs
+                           final ShiftService shs,
+                           final AvailabilityService avs
     ) {
         this.sessionUtils = sessionUtils;
         this.is = is;
@@ -101,6 +103,7 @@ public class FrontController {
         this.ws = ws;
         this.bs = bs;
         this.shs = shs;
+        this.avs = avs;
     }
 
     // ------------------------------------- FEED --------------------------------------
@@ -231,6 +234,28 @@ public class FrontController {
     @RequestMapping(value = "/unverified", method = RequestMethod.GET)
     public ModelAndView unverified() {
         return  new ModelAndView("views/unverified");
+    }
+
+    @RequestMapping(value = "/rejected", method = RequestMethod.GET)
+    public ModelAndView rejectedForm(
+            @ModelAttribute("neighborhoodForm") final NeighborhoodForm neighborhoodForm
+    ) {
+        ModelAndView mav = new ModelAndView("views/rejected");
+        mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
+        return mav;
+    }
+
+    @RequestMapping(value = "/rejected", method = RequestMethod.POST)
+    public ModelAndView rejectedForm(
+            @ModelAttribute("neighborhoodForm") final NeighborhoodForm neighborhoodForm,
+            final BindingResult errors
+    ) {
+        if (errors.hasErrors()) {
+            return rejectedForm(neighborhoodForm);
+        }
+
+        us.unverifyNeighbor(sessionUtils.getLoggedUser().getUserId(), neighborhoodForm.getNeighborhoodId());
+        return new ModelAndView("redirect:/logout");
     }
 
     // ------------------------------------- PUBLISH --------------------------------------
@@ -648,8 +673,12 @@ public class FrontController {
         bs.createBooking(23, 1, new ArrayList<>(Arrays.asList(28L, 29L, 30L)), Date.valueOf("2023-10-10"));
         */
 
-
-        return new ModelAndView("views/testView");
+        System.out.println(shs.getAmenityShifts(1));
+        avs.updateAvailability(1, new ArrayList<>(Arrays.asList(1L, 2L, 3L)));
+        System.out.println(shs.getAmenityShifts(1));
+        avs.updateAvailability(1, new ArrayList<>(Arrays.asList(4L, 5L, 6L)));
+        System.out.println(shs.getAmenityShifts(1));
+        return new ModelAndView("views/index");
     }
 
     @RequestMapping(value = "/admin/test", method = RequestMethod.GET)

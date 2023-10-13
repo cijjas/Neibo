@@ -44,4 +44,9 @@ public class ShiftServiceImpl implements ShiftService {
     public Shift createShift(long dayId, long timeId) {
         return shiftDao.createShift(dayId, timeId);
     }
+
+    @Override
+    public List<Shift> getAmenityShifts(long amenityId) {
+        return shiftDao.getAmenityShifts(amenityId);
+    }
 }

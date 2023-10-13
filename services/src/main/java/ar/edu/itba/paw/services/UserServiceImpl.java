@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
             return userDao.createUser(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, false, UserRole.UNVERIFIED_NEIGHBOR, identification);
         }else if (n.getPassword() == null){
             // n is a user from an early version where signing up was not a requirement
-            userDao.setUserValues(n.getUserId(), passwordEncoder.encode(password), n.getName(), n.getSurname(), language, false,  n.getProfilePictureId(), UserRole.UNVERIFIED_NEIGHBOR, identification);
+            userDao.setUserValues(n.getUserId(), passwordEncoder.encode(password), n.getName(), n.getSurname(), language, false,  n.getProfilePictureId(), UserRole.UNVERIFIED_NEIGHBOR, identification, n.getNeighborhoodId());
         }
         return n;
     }
@@ -97,13 +97,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateProfilePicture(long userId, MultipartFile image){
         Image i = imageService.storeImage(image);
-        findUserById(userId).ifPresent(n -> userDao.setUserValues(userId, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), i.getImageId(), n.getRole(), n.getIdentification()));
+        findUserById(userId).ifPresent(n -> userDao.setUserValues(userId, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), i.getImageId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
     }
 
 
     @Override
     public void toggleDarkMode(long id) {
-        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), !n.isDarkMode(), n.getProfilePictureId(), n.getRole(), n.getIdentification()));
+        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), !n.isDarkMode(), n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
     }
 
     @Override
@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
         User user = userDao.findUserById(id).orElse(null);
         if ( user == null )
             return;
-        userDao.setUserValues(id, user.getPassword(), user.getName(), user.getSurname(), user.getLanguage(), user.isDarkMode(), user.getProfilePictureId(), UserRole.NEIGHBOR, user.getIdentification());
+        userDao.setUserValues(id, user.getPassword(), user.getName(), user.getSurname(), user.getLanguage(), user.isDarkMode(), user.getProfilePictureId(), UserRole.NEIGHBOR, user.getIdentification(), user.getNeighborhoodId());
         String neighborhood = neighborhoodService.findNeighborhoodById(user.getNeighborhoodId()).orElse(null).getName();
         Map<String, Object> vars = new HashMap<>();
         vars.put("name", user.getName());
@@ -123,14 +123,20 @@ public class UserServiceImpl implements UserService {
             emailService.sendMessageUsingThymeleafTemplate(user.getMail(), "Verificación", "verification-template_es.html", vars);
     }
 
+    //for users that were rejected/removed from a neighborhood and have selected a new one to become a part of
     @Override
-    public void unverifyNeighbor(long id) {
-        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(),  n.getProfilePictureId(), UserRole.UNVERIFIED_NEIGHBOR, n.getIdentification()));
+    public void unverifyNeighbor(long id, long neighborhoodId) {
+        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(),  n.getProfilePictureId(), UserRole.UNVERIFIED_NEIGHBOR, n.getIdentification(), neighborhoodId));
+    }
+
+    @Override
+    public void rejectNeighbor(long id) {
+        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(),  n.getProfilePictureId(), UserRole.REJECTED, n.getIdentification(), -1));
     }
 
     @Override
     public void updateLanguage(long id, Language language) {
-        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), language, n.isDarkMode(),  n.getProfilePictureId(), n.getRole(), n.getIdentification()));
+        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), language, n.isDarkMode(),  n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
     }
 
     // Will be deprecated if more languages are included
@@ -148,12 +154,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void resetPreferenceValues(long id) {
-        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), Language.ENGLISH, false, n.getProfilePictureId(), n.getRole(), n.getIdentification()));
+        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), Language.ENGLISH, false, n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
     }
 
     @Override
     public void setNewPassword(long id, String newPassword){
-        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, passwordEncoder.encode(newPassword), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(),  n.getProfilePictureId(), n.getRole(), n.getIdentification()));
+        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, passwordEncoder.encode(newPassword), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(),  n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
     }
 
 }
