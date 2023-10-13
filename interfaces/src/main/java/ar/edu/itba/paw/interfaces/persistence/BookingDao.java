@@ -9,4 +9,6 @@ public interface BookingDao {
     Number createBooking(long userId, long amenityAvailabilityId, Date reservationDate);
 
     List<Booking> getUserBookings(long userId);
+
+    boolean deleteBooking(long bookingId);
 }

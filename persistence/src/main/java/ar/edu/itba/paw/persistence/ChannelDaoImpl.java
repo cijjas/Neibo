@@ -43,6 +43,7 @@ public class ChannelDaoImpl implements ChannelDao {
 
     @Override
     public Channel createChannel(String channel) {
+        LOGGER.info("Inserting Channel {}", channel);
         Map<String, Object> data = new HashMap<>();
         data.put("channel", channel);
 
@@ -68,18 +69,21 @@ public class ChannelDaoImpl implements ChannelDao {
 
     @Override
     public Optional<Channel> findChannelById(long channelId) {
+        LOGGER.info("Selecting Channel with channelId {}", channelId);
         final List<Channel> list = jdbcTemplate.query(CHANNELS + " WHERE channelid = ?", ROW_MAPPER, channelId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
     public Optional<Channel> findChannelByName(String channelName) {
+        LOGGER.info("Selecting Channel with Channel name {}", channelName);
         final List<Channel> list = jdbcTemplate.query(CHANNELS + " WHERE channel = ?", ROW_MAPPER, channelName);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
     public List<Channel> getChannels(final long neighborhoodId) {
+        LOGGER.info("Selecting Channels from Neighborhood {}", neighborhoodId);
         return jdbcTemplate.query(CHANNELS_JOIN_NEIGHBORHOODS + " WHERE n.neighborhoodid = ?", ROW_MAPPER, neighborhoodId);
     }
 }

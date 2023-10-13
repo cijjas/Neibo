@@ -37,4 +37,5 @@ public interface AmenityDao {
 
     List<Amenity> getAmenities2(long neighborhoodId);
 
+    boolean deleteAmenity2(long amenityId);
 }

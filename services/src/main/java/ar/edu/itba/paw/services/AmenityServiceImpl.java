@@ -52,6 +52,11 @@ public class AmenityServiceImpl implements AmenityService {
     }
 
     @Override
+    public boolean deleteAmenity2(long amenityId) {
+        return amenityDao.deleteAmenity2(amenityId);
+    }
+
+    @Override
     public DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek) {
         return amenityDao.getAmenityHoursByDay(amenityId, dayOfWeek);
     }

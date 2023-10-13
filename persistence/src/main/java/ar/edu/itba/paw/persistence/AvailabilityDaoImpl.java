@@ -8,6 +8,7 @@ import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.models.*;
 import enums.DayOfTheWeek;
 import enums.StandardTime;
+import enums.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
         this.shiftDao = shiftDao;
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName("amenities_shifts_availability")
+                .withTableName(Table.amenities_shifts_availability.name())
                 .usingGeneratedKeyColumns("amenityavailabilityid");
     }
 
@@ -49,6 +50,7 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
 
     @Override
     public Number createAvailability(long amenityId, long shiftId) {
+        LOGGER.info("Inserting Availability");
         Map<String, Object> data = new HashMap<>();
         data.put("amenityid", amenityId);
         data.put("shiftid", shiftId);
@@ -62,24 +64,22 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
 
     // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY SELECT -----------------------------------------
 
+    private static final RowMapper<Long> ROW_MAPPER = (rs, rowNum) ->{
+        return rs.getLong("amenityavailabilityid");
+    };
+
     @Override
     public Optional<Long> findAvailabilityId(long amenityId, long shiftId) {
-        String query = "SELECT amenityAvailabilityId FROM amenities_shifts_availability WHERE amenityid = ? AND shiftid = ?";
-
-        try {
-            Long amenityAvailabilityId = jdbcTemplate.queryForObject(
-                    query,
-                    new Object[]{amenityId, shiftId},
-                    Long.class
-            );
-            return Optional.ofNullable(amenityAvailabilityId);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+        LOGGER.info("Selecting Availability with amenityId {} and shiftId {}", amenityId, shiftId);
+        final List<Long> list = jdbcTemplate.query("SELECT amenityAvailabilityId FROM amenities_shifts_availability WHERE amenityid = ? AND shiftid = ?", ROW_MAPPER, amenityId, shiftId);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
+
+    // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY DELETE -----------------------------------------
 
     @Override
     public boolean deleteAvailability(long amenityId, long shiftId) {
+        LOGGER.info("Deleting Availability with amenityId {} and shiftId {}", amenityId, shiftId);
         return jdbcTemplate.update("DELETE FROM amenities_shifts_availability WHERE amenityid = ? and shiftid = ?", amenityId, shiftId) > 0;
     }
 

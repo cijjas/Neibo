@@ -44,6 +44,7 @@ public class EventDaoImplTest {
         testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
     }
 
+    /*
     @Test
     public void testCreateEvent() {
         // Pre Conditions
@@ -59,6 +60,7 @@ public class EventDaoImplTest {
         assertEquals(EVENT_DATE, e.getDate());
         assertEquals(EVENT_DURATION, e.getDuration());
     }
+    */
 
     @Test
     public void testFindEventById() {

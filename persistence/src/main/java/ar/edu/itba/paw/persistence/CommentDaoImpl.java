@@ -52,6 +52,7 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public Comment createComment(String comment, long userId, long postId) {
+        LOGGER.info("Inserting Comment {}", comment);
         Map<String, Object> data = new HashMap<>();
         data.put("comment", comment);
         data.put("commentdate", Timestamp.valueOf(LocalDateTime.now()));
@@ -71,6 +72,8 @@ public class CommentDaoImpl implements CommentDao {
         }
     }
 
+    // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
+
     private final RowMapper<Comment> ROW_MAPPER = (rs, rowNum) -> {
         User user = userDao.findUserById(rs.getLong("userid")).orElse(null);
 
@@ -83,23 +86,26 @@ public class CommentDaoImpl implements CommentDao {
                 .build();
     };
 
-    // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
+    @Override
+    public Optional<Comment> findCommentById(long commentId) {
+        LOGGER.info("Selecting Comments from with commentId {}", commentId);
+        final List<Comment> list = jdbcTemplate.query(COMMENTS + " WHERE commentid = ?", ROW_MAPPER, commentId);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+    }
 
     // Method cant properly differentiate between not finding the post and the post having no comments, but as the function
     // is called through the detail of a post it cant be an invalid postId
     @Override
     public List<Comment> findCommentsByPostId(long id, int page, int size) {
+        LOGGER.info("Selecting Comments from Post {}", id);
         return jdbcTemplate.query(COMMENTS_JOIN_USERS + " WHERE postid = ? ORDER BY commentdate DESC LIMIT ? OFFSET ?", ROW_MAPPER, id, size, (page - 1) * size);
     }
 
     @Override
     public int getCommentsCountByPostId(long id) {
+        LOGGER.info("Selecting Comments Count from Post {}", id);
         return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM comments WHERE postid = ?", Integer.class, id);
     }
 
-    @Override
-    public Optional<Comment> findCommentById(long commentId) {
-        final List<Comment> list = jdbcTemplate.query(COMMENTS + " WHERE commentid = ?", ROW_MAPPER, commentId);
-        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
-    }
+
 }

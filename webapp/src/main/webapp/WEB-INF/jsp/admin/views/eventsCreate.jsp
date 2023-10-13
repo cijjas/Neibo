@@ -55,16 +55,39 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                <form:input path="date" id="date" type="date" required="true" class="cool-input" value="${dateString}"/>
+                                <form:input path="date" id="date" type="date" required="true" class="cool-input"/>
                                 <form:errors path="date" cssClass="error" element="p" />
                             </div>
 
-
-                            <div class="col-md-6">
-                                <spring:message code="Duration" var="durationPlaceholder" />
-                                <form:input path="duration" class="cool-input" placeholder="${durationPlaceholder}" type="number" min="1" max="79999" />
+                            <div class="col-md-3">
+                                <spring:message code="Hours" var="hoursPlaceholder" />
+                                <form:input path="startTimeHours" class="cool-input" placeholder="${hoursPlaceholder}" type="number" min="0" max="23" />
                                 <div class="form-row form-error">
-                                    <form:errors path="duration" cssClass="error" element="p" />
+                                    <form:errors path="startTimeHours" cssClass="error" element="p" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <spring:message code="Minutes" var="minutesPlaceholder" />
+                                <form:input path="startTimeMinutes" class="cool-input" placeholder="${minutesPlaceholder}" type="number" min="0" max="59" />
+                                <div class="form-row form-error">
+                                    <form:errors path="startTimeMinutes" cssClass="error" element="p" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <spring:message code="Hours" var="hoursPlaceholder" />
+                                <form:input path="endTimeHours" class="cool-input" placeholder="${hoursPlaceholder}" type="number" min="0" max="23" />
+                                <div class="form-row form-error">
+                                    <form:errors path="startTimeHours" cssClass="error" element="p" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <spring:message code="Minutes" var="minutesPlaceholder" />
+                                <form:input path="endTimeMinutes" class="cool-input" placeholder="${minutesPlaceholder}" type="number" min="0" max="59" />
+                                <div class="form-row form-error">
+                                    <form:errors path="startTimeMinutes" cssClass="error" element="p" />
                                 </div>
                             </div>
 

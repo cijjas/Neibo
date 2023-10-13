@@ -284,16 +284,8 @@ public class AdminController {
         if (errors.hasErrors()) {
             return eventForm(eventForm);
         }
-
-        long duration = 0;
-        try {
-            duration = Long.parseLong(eventForm.getDuration());
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-
-        es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), duration, sessionUtils.getLoggedUser().getNeighborhoodId());
-        ModelAndView mav = new ModelAndView("admin/views/eventsCreate");
+        es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), eventForm.getStartTime(), eventForm.getEndTime(), sessionUtils.getLoggedUser().getNeighborhoodId());
+        ModelAndView mav = new ModelAndView("redirect:/calendar?timestamp=" + eventForm.getDate().getTime());
         mav.addObject("showSuccessMessage", true);
         return mav;
     }

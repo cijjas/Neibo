@@ -37,9 +37,6 @@ public class ShiftServiceImpl implements ShiftService {
         return shiftDao.getShifts(amenityId, DayOfTheWeek.convertToCustomDayId(dayOfWeek), date);
     }
 
-
-
-
     @Override
     public Shift createShift(long dayId, long timeId) {
         return shiftDao.createShift(dayId, timeId);

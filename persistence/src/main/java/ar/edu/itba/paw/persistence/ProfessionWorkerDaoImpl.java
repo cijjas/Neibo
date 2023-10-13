@@ -35,9 +35,10 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
                 .withTableName("workers_professions");
     }
 
-    // --------------------------------------- PROFESSIONWORKERS INSERT ------------------------------------------------
+    // --------------------------------------- PROFESSION_WORKERS INSERT -----------------------------------------------
     @Override
     public void addWorkerProfession(long workerId, long professionId) {
+        LOGGER.info("Inserting Worker Profession");
         Map<String, Object> data = new HashMap<>();
         data.put("workerid", workerId);
         data.put("professionid", professionId);
@@ -49,9 +50,10 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
         }
     }
 
-    // --------------------------------------- PROFESSIONWORKERS SELECT ------------------------------------------------
+    // --------------------------------------- PROFESSION_WORKERS SELECT -----------------------------------------------
     @Override
     public List<String> getWorkerProfessions(long workerId) {
+        LOGGER.info("Selecting Professions of Worker {}", workerId);
         return jdbcTemplate.queryForList(
                 WORKERS_PROFESSIONS_JOIN_PROFESSIONS +
                         "WHERE workerid = ?",
