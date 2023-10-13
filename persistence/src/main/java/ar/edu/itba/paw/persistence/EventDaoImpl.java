@@ -4,7 +4,7 @@ import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.models.Event;
 
-import ar.edu.itba.paw.models.User;
+import java.sql.Time;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,6 +22,8 @@ import java.util.*;
 public class EventDaoImpl implements EventDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
+
+    private final SimpleJdbcInsert jdbcInsertTimes;
     private final String EVENTS =
             "select e.* \n" +
                     "from events e";
@@ -37,16 +39,49 @@ public class EventDaoImpl implements EventDao {
         this.jdbcInsert = new SimpleJdbcInsert(ds)
                 .usingGeneratedKeyColumns("eventid")
                 .withTableName("events");
+        this.jdbcInsertTimes = new SimpleJdbcInsert(ds)
+                .usingGeneratedKeyColumns("timeid")
+                .withTableName("times");
     }
 
     @Override
-    public Event createEvent(final String name, final String description, final Date date, final long duration, final long neighborhoodId) {
+    public Event createEvent(final String name, final String description, final Date date, final Time startTime, final Time endTime, final long neighborhoodId) {
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
         data.put("description", description);
         data.put("date", date);
-        data.put("duration", duration);
+        data.put("duration", (endTime.getTime() - startTime.getTime())/60000);
         data.put("neighborhoodid", neighborhoodId);
+
+        // Check if the same time interval entry already exists in the 'times' table
+        List<Long> existingTimeIds = jdbcTemplate.queryForList("select timeid from times where timeinterval = ?", Long.class, startTime);
+
+        long startTimeId;
+
+        if(existingTimeIds.isEmpty()) {
+            Map<String, Object> timesData = new HashMap<>();
+            timesData.put("timeinterval", startTime);
+
+            startTimeId = jdbcInsertTimes.executeAndReturnKey(timesData).longValue();
+        } else {
+            startTimeId = existingTimeIds.get(0);
+        }
+
+        existingTimeIds = jdbcTemplate.queryForList("select timeid from times where timeinterval = ?", Long.class, endTime);
+
+        long endTimeId;
+
+        if(existingTimeIds.isEmpty()) {
+            Map<String, Object> timesData = new HashMap<>();
+            timesData.put("timeinterval", endTime);
+
+            endTimeId = jdbcInsertTimes.executeAndReturnKey(timesData).longValue();
+        } else {
+            endTimeId = existingTimeIds.get(0);
+        }
+
+        data.put("starttimeid", startTimeId);
+        data.put("endtimeid", endTimeId);
 
         try {
             final Number key = jdbcInsert.executeAndReturnKey(data);
@@ -55,10 +90,13 @@ public class EventDaoImpl implements EventDao {
                     .name(name)
                     .description(description)
                     .date(date)
-                    .duration(duration)
+                    .startTime(startTime)
+                    .endTime(endTime)
+                    .duration(endTime.getTime() - startTime.getTime())
                     .neighborhoodId(neighborhoodId)
                     .build();
         } catch (DataAccessException ex) {
+            System.out.println("\n\n\nerror");
             LOGGER.error("Error inserting the Event", ex);
             throw new InsertionException("An error occurred whilst creating the event");
         }

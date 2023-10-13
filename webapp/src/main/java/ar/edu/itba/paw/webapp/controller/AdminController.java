@@ -36,9 +36,13 @@ public class AdminController {
     private final ResourceService res;
     private final ContactService cos;
 
+    private final ShiftService shs;
+    private final AvailabilityService avs;
+
+
 
     @Autowired
-    public AdminController(SessionUtils sessionUtils, 
+    public AdminController(SessionUtils sessionUtils,
                            final PostService ps,
                            final UserService us,
                            final NeighborhoodService nhs,
@@ -52,7 +56,10 @@ public class AdminController {
                            final AmenityService as,
                            final EventService es,
                            final ResourceService res,
-                           final ContactService cos) {
+                           final ContactService cos,
+                           final ShiftService shs,
+                           final AvailabilityService avs
+    ) {
         this.sessionUtils = sessionUtils;
         this.is = is;
         this.ps = ps;
@@ -68,6 +75,8 @@ public class AdminController {
         this.es = es;
         this.res = res;
         this.cos = cos;
+        this.shs = shs;
+        this.avs = avs;
     }
 
     // ------------------------------------- INFORMATION --------------------------------------
@@ -172,7 +181,9 @@ public class AdminController {
     public ModelAndView adminAmenities() {
         ModelAndView mav = new ModelAndView("admin/views/amenitiesPanel");
 
+
         List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId());
+
         List<AmenityHours> amenityHoursList = new ArrayList<>();
 
         for (Amenity amenity : amenities) {
@@ -259,16 +270,8 @@ public class AdminController {
         if (errors.hasErrors()) {
             return eventForm(eventForm);
         }
-
-        long duration = 0;
-        try {
-            duration = Long.parseLong(eventForm.getDuration());
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-
-        es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), duration, sessionUtils.getLoggedUser().getNeighborhoodId());
-        ModelAndView mav = new ModelAndView("admin/views/eventsCreate");
+        es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), eventForm.getStartTime(), eventForm.getEndTime(), sessionUtils.getLoggedUser().getNeighborhoodId());
+        ModelAndView mav = new ModelAndView("redirect:/calendar?timestamp=" + eventForm.getDate().getTime());
         mav.addObject("showSuccessMessage", true);
         return mav;
     }

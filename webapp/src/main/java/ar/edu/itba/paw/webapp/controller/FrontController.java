@@ -381,7 +381,8 @@ public class FrontController {
     public ModelAndView logIn(
             Model model,
             @ModelAttribute("signupForm") final SignupForm signupform,
-            @RequestParam(value = "error", required = false, defaultValue = "false") boolean error
+            @RequestParam(value = "error", required = false, defaultValue = "false") boolean error,
+            @RequestParam(value = "email", required = false) String email
     ) {
         model.addAttribute("neighbor", new User.Builder());
         ModelAndView mav = new ModelAndView("views/landingPage");
@@ -393,8 +394,6 @@ public class FrontController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ModelAndView logIn(
-            @RequestParam("mail") String mail,
-            @RequestParam("password") String password
     ) {
         return new ModelAndView("views/index");
     }
@@ -468,6 +467,8 @@ public class FrontController {
     public ModelAndView amenities(
             @ModelAttribute("reservationForm") final ReservationForm reservationForm
     ) {
+        System.out.println(bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));
+
         ModelAndView mav = new ModelAndView("views/amenities");
         mav.addObject("channel", BaseChannel.RESERVATIONS.toString());
 
@@ -481,7 +482,7 @@ public class FrontController {
         }
         mav.addObject("amenitiesHours", amenityHoursList);
         mav.addObject("daysOfWeek", rs.getDaysOfWeek());
-        mav.addObject("reservationsList", rs.getReservationsByUserId(sessionUtils.getLoggedUser().getUserId()));
+        mav.addObject("reservationsList", bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));
         return mav;
     }
 
@@ -521,7 +522,6 @@ public class FrontController {
         int selectedDay = selectedDate.getDate(); // getDate() returns the day of the month
         String selectedMonth = es.getSelectedMonth(selectedDate.getMonth(), sessionUtils.getLoggedUser().getLanguage());
         int selectedYear = es.getSelectedYear(selectedDate.getYear());
-        String dateString = es.getDateString(selectedDate);
 
         ModelAndView mav = new ModelAndView("views/calendar");
         mav.addObject("isAdmin", sessionUtils.getLoggedUser().getRole() == UserRole.ADMINISTRATOR);
@@ -531,7 +531,6 @@ public class FrontController {
         mav.addObject("selectedYear", selectedYear);
         mav.addObject("selectedDate", selectedDate );
         mav.addObject("eventList", eventList);
-        mav.addObject("dateString", dateString);
         return mav;
     }
 
@@ -561,7 +560,9 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/attend/{id:\\d+}", method = RequestMethod.POST)
-    public ModelAndView attendEvent(@PathVariable(value = "id") int eventId) {
+    public ModelAndView attendEvent(
+            @PathVariable(value = "id") int eventId
+    ) {
         ModelAndView mav = new ModelAndView("redirect:/events/" + eventId);
         ats.createAttendee(sessionUtils.getLoggedUser().getUserId(), eventId);
         return mav;
@@ -628,28 +629,28 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-//        Random random = new Random();
-//        for (int i = 5; i < 35; i++) {
-//            String email = "worker" + i + "@test.com";
-//            String name = "WorkerName" + i;
-//            String surname = "WorkerSurname" + i;
-//            String password = "password";
-//            int identificationNumber = 1000000 + i; // Starting from 1000000
-//            String phoneNumber = "PhoneNumber" + i;
-//            String address = "Address" + i;
-//            Language language = Language.ENGLISH;
-//
-//            // Generate a random job number between 1 and 4
-//            int jobNumber = random.nextInt(4) + 1;
-//
-//            // Create the worker
-//            Worker worker = ws.createWorker(email, name, surname, password, identificationNumber, phoneNumber, address, language, jobNumber, "BusinessName");
-//
-//            // Add the worker to a neighborhood (assuming neighborhood ID is 1)
-//            nhws.addWorkerToNeighborhood(worker.getUser().getUserId(), 1);
-//        }
+        Random random = new Random();
+        for (int i = 5; i < 35; i++) {
+            String email = "worker" + i + "@test.com";
+            String name = "WorkerName" + i;
+            String surname = "WorkerSurname" + i;
+            String password = "password";
+            int identificationNumber = 1000000 + i; // Starting from 1000000
+            String phoneNumber = "PhoneNumber" + i;
+            String address = "Address" + i;
+            Language language = Language.ENGLISH;
 
-//        ps.createWorkerPost("This is a second test posttt", "Alrighty Aphrodite", 29, null);
+            // Generate a random job number between 1 and 4
+            int jobNumber = random.nextInt(4) + 1;
+
+            // Create the worker
+            Worker worker = ws.createWorker(email, name, surname, password, identificationNumber, phoneNumber, address, language, jobNumber, "BusinessName");
+
+            // Add the worker to a neighborhood (assuming neighborhood ID is 1)
+            nhws.addWorkerToNeighborhood(worker.getUser().getUserId(), 1);
+        }
+
+        ps.createWorkerPost("This is a second test posttt", "Alrighty Aphrodite", 29, null);
 
 
         /*// System.out.println(bs.createBooking(););
@@ -717,16 +718,16 @@ public class FrontController {
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
         Optional<Worker> optionalWorker = ws.findWorkerById(workerId);
 
-        List<Post> postList = ps.getWorkerPostsByCriteria(BaseChannel.WORKERS.toString(), 1, 10,null, 0, null,workerId);
-        int totalPages = ps.getTotalPages(BaseChannel.WORKERS.toString(), 10, null, 0, null, workerId);
+        //List<Post> postList = ps.getWorkerPostsByCriteria(BaseChannel.WORKERS.toString(), 1, 10,null, 0, null,workerId);
+        //int totalPages = ps.getTotalPages(BaseChannel.WORKERS.toString(), 10, null, 0, null, workerId);
 
         mav.addObject("worker", optionalWorker.orElseThrow(() -> new NotFoundException("Worker not found")));
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
         mav.addObject("averageRating", rws.getAvgRating(workerId));
-        mav.addObject("postList", postList);
-        mav.addObject("totalPages", totalPages);
+        //mav.addObject("postList", postList);
+        //mav.addObject("totalPages", totalPages);
         return mav;
     }
 

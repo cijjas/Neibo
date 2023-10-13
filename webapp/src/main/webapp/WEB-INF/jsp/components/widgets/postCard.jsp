@@ -5,8 +5,44 @@
     <!-- Post information -->
     <div class="post-section">
         <div class="post-info">
-            <p style="font-weight: bolder; font-size: 20px; color: var(--text)"><c:out value="${post.title}" /></p>
-            <p style="font-size: 12px; font-weight: normal" class="m-t-40 "><spring:message code="PostedBy"/> <c:out value="${post.user.name}" /></p>
+
+            <div class="f-r-sb-c " >
+                <div>
+                    <span style="font-size: 14px" class="font-weight-bold">
+
+                        <c:out value="${post.channel.channel}" />
+                    </span>
+                    <span style="font-size: 12px; font-weight: normal" class="ml-1 placeholder-glow">
+                        -
+                        <spring:message code="PostedBy"/>
+                        <img
+                                id="poster-image"
+                                src=""
+                                class="small-profile-picture placeholder mb-1"
+                                alt="poster_profile_picture_img"
+                        />
+                        <script src ="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
+                        <script>
+                            getImageInto("poster-image", ${post.user.profilePictureId},"${pageContext.request.contextPath}");
+                        </script>
+                        <c:out value="${post.user.name}" />
+                    </span>
+
+
+                </div>
+
+
+                <div style="font-size: 12px; font-weight: normal">
+                    <span class="post-date" data-post-date="<c:out value="${post.date}"/>"></span>
+                </div>
+                <script src="${pageContext.request.contextPath}/resources/js/blogpost.js"></script>
+
+            </div>
+            <p style="font-size: 20px;" class="mt-2 font-weight-bolder c-text"><c:out value="${post.title}" /></p>
+
+
+
+
             <div class="divider m-b-20"></div>
             <div class="postcard-description">
                 <c:out value="${post.description}" />
@@ -23,25 +59,7 @@
                      alt="post_${post.postId}_img"/>
             </div>
             <script>
-                getImage();
-                async function getImage() {
-                    let image = document.getElementById('postImage')
-                    try{
-
-                        const response= await fetch('${pageContext.request.contextPath}/images/<c:out value="${post.postPictureId}"/>');
-                        if(!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        const blob = await response.blob();
-                        image.src = URL.createObjectURL(blob);
-                        image.classList.remove('placeholder');
-                        image.style.height = 'auto';
-                    }
-                    catch (e) {
-                        image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
-                        console.log(e);
-                    }
-                }
+                getImageInto("postImage", ${post.postPictureId},"${pageContext.request.contextPath}");
             </script>
         </c:if>
 
@@ -94,7 +112,7 @@
         });
         async function setLikeStatus(postId){
             try{
-                const response = await fetch('/api/is-liked?postId=' + postId);
+                const response = await fetch('/endpoint/is-liked?postId=' + postId);
                 const isLikedResponse = await response.text();
                 const likeButton = document.getElementById('post-like-button');
                 likeButton.setAttribute('data-liked', isLikedResponse);
@@ -114,7 +132,7 @@
             likeButtonLocked = true;
             const liked = this.getAttribute('data-liked') === 'true';
             const postId = this.getAttribute('data-post-id'); // Get the post ID from the data attribute
-            const likeEndpoint = liked ? '/api/unlike?postId=' + postId : '/api/like?postId=' + postId; // Determine the appropriate API endpoint based on the like status
+            const likeEndpoint = liked ? '/endpoint/unlike?postId=' + postId : '/endpoint/like?postId=' + postId;
 
             const likeCountElement = document.getElementById('like-count');
             const currentCount = parseInt(likeCountElement.getAttribute('data-like-count'), 10);
@@ -189,7 +207,7 @@
                     </div>
                     <!-- Submit button -->
                     <div class="d-flex flex-column justify-content-center align-items-end">
-                        <button id="submitButton" type="submit" class="cool-button cool-small on-bg" style="margin-top:5px; font-size: 12px;" disabled>
+                        <button id="submitButton" type="submit" class="cool-button cool-small on-bg w-25 font-weight-bolder" style="margin-top:5px; font-size: 12px;" disabled>
                             <spring:message code="Comment.verb"/>
                         </button>
                     </div>
@@ -235,34 +253,8 @@
                                 />
                                 <script>
                                     (function(){
-                                        getCommentImage();
-                                        async function getCommentImage() {
-                                            let image = document.getElementById('comment-image-'+ ${comment.commentId})
-                                            if("${comment.user.profilePictureId}" === "0"){
-                                                image.src = "${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png";
-                                                image.classList.remove('placeholder');
-                                                return;
-                                            }
-                                            try{
-                                                const response= await fetch('${pageContext.request.contextPath}/images/<c:out value="${comment.user.profilePictureId}"/>');
-                                                if(!response.ok) {
-                                                    throw new Error('Network response was not ok');
-                                                }
-                                                const blob = await response.blob();
-
-                                                setTimeout(() => {
-                                                    image.classList.remove('placeholder');
-                                                    image.src = URL.createObjectURL(blob);
-                                                }, 3000);
-
-                                            }
-                                            catch (e) {
-                                                image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
-                                                console.log(e);
-                                            }
-                                        }
+                                        getImageInto("comment-image-${comment.commentId}", ${comment.user.profilePictureId},"${pageContext.request.contextPath}");
                                     })();
-
                                 </script>
 
                                 <div class="bold"><c:out value="${comment.user.name} ${comment.user.surname}" /></div>
@@ -276,9 +268,9 @@
                             <script>
                                 async function getPostComment(commentId) {
                                     try {
-                                        const response = await fetch("/api/commentById?id=" + commentId);
+                                        const response = await fetch("/endpoint/commentById?id=" + commentId);
                                         if (!response.ok) {
-                                            throw new Error("Failed to fetch data from the API.");
+                                            throw new Error("Failed to fetch psot comment data from the endpoint.");
                                         }
                                         const commentElement = document.getElementById("comment-" + commentId);
                                         commentElement.textContent = await response.text();

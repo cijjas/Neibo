@@ -98,7 +98,7 @@
 
                     <%--Submit button --%>
                     <div class="d-flex justify-content-end">
-                        <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg" style="height:40px;" ><spring:message code="Post.verb"/></button>
+                        <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg w-25 font-weight-bolder" style="height:40px;" ><spring:message code="Post.verb"/></button>
                     </div>
 
                     <%--Tags javascript logic--%>

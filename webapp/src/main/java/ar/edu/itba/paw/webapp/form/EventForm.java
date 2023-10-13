@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.ImageConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.TagsConstraint;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.web.multipart.MultipartFile;
+import java.sql.Time;
 
 import javax.validation.constraints.Size;
 import java.sql.Date;
@@ -19,8 +17,13 @@ public class EventForm {
 
     private Date date;
 
-    @NotBlank
-    private String duration;
+    private int startTimeHours;
+
+    private int startTimeMinutes;
+
+    private int endTimeHours;
+
+    private int endTimeMinutes;
 
     public String getName() {
         return name;
@@ -36,9 +39,18 @@ public class EventForm {
     }
     public Date getDate() { return date; }
     public void setDate(Date date) { this.date = date; }
-    public String getDuration() { return duration; }
+    public int getStartTimeHours() { return startTimeHours; }
+    public void setStartTimeHours(int startTimeHours) { this.startTimeHours = startTimeHours; }
+    public int getStartTimeMinutes() { return startTimeMinutes; }
+    public void setStartTimeMinutes(int startTimeMinutes) { this.startTimeMinutes = startTimeMinutes; }
+    public int getEndTimeHours() { return endTimeHours; }
+    public void setEndTimeHours(int endTimeHours) { this.endTimeHours = endTimeHours; }
+    public int getEndTimeMinutes() { return endTimeMinutes; }
+    public void setEndTimeMinutes(int endTimeMinutes) { this.endTimeMinutes = endTimeMinutes; }
 
-    public void setDuration(String duration) { this.duration = duration; }
+    public Time getStartTime() { return new Time(startTimeHours, startTimeMinutes, 0); }
+
+    public Time getEndTime() { return new Time(endTimeHours, endTimeMinutes, 0); }
 
     @Override
     public String toString() {
@@ -46,7 +58,10 @@ public class EventForm {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", date='"+ date + '\'' +
-                ", duration'"+duration + '\'' +
+                ", startTimeHours='"+ startTimeHours + '\'' +
+                ", startTimeMinutes='"+ startTimeMinutes + '\'' +
+                ", endTimeHours='"+ endTimeHours + '\'' +
+                ", endTimeMinutes='"+ endTimeMinutes + '\'' +
                 '}';
     }
 }

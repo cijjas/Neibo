@@ -4,7 +4,7 @@
     <div class="column d-flex justify-content-center align-items-start">
 
         <div class="f-r-sb-c w-100">
-            <h3 class="m-b-10"><spring:message code="Filter.by.tags"/></h3>
+            <h3 class="m-b-10 ml-2"><spring:message code="Filter.by.tags"/></h3>
 
 
         </div>
@@ -59,16 +59,14 @@
             // Call the function to initialize applied tags when the page loads
             window.addEventListener('load', initializeAppliedTags);
         </script>
-        <div class=" tags-row submit-tags ">
-            <a class="w-100 mb-2 cool-button cool-small on-bg grey " onclick="applyTagsAsFilter()" style="font-weight: bolder">
+        <div class="f-r-sb-c" >
+            <a class="cool-button cool-small on-bg font-weight-bold " onclick="applyTagsAsFilter()" >
                 <spring:message code="Apply"/>
             </a>
-
-            <a class="w-100 cool-button red " onclick="clearAllTags()" style="font-weight: bolder">
-                <spring:message code="Clear.all.tags"/>
+            <a class="cool-button red font-weight-bold" onclick="clearAllTags()">
+                <spring:message code="Clear"/>
                 <i class="fa-solid fa-xmark"></i>
             </a>
-
         </div>
 
     </div>

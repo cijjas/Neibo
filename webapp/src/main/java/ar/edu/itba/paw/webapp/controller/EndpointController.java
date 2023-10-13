@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api")
-public class ApiController {
+@RequestMapping("/endpoint")
+public class EndpointController {
 
     private final SessionUtils sessionUtils;
     private final PostService ps;
@@ -33,7 +33,7 @@ public class ApiController {
 
 
     @Autowired
-    public ApiController(SessionUtils sessionUtils, final PostService ps,
+    public EndpointController(SessionUtils sessionUtils, final PostService ps,
                          final UserService us,
                          final NeighborhoodService nhs,
                          final CommentService cs,

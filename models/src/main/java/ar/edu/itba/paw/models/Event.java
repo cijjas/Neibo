@@ -1,11 +1,14 @@
 package ar.edu.itba.paw.models;
 
 import java.util.Date;
+import java.sql.Time;
 public class Event {
     private final long eventId;
     private final String name;
     private final String description;
     private final Date date;
+    private final Time startTime;
+    private final Time endTime;
     private final long duration;
     private final long neighborhoodId;
 
@@ -14,6 +17,8 @@ public class Event {
         this.name = builder.name;
         this.description = builder.description;
         this.date = builder.date;
+        this.startTime = builder.startTime;
+        this.endTime = builder.endTime;
         this.duration = builder.duration;
         this.neighborhoodId = builder.neighborhoodId;
     }
@@ -23,6 +28,8 @@ public class Event {
         private String name;
         private String description;
         private Date date;
+        private Time startTime;
+        private Time endTime;
         private long duration;
         private long neighborhoodId;
 
@@ -43,6 +50,16 @@ public class Event {
 
         public Builder date(Date date) {
             this.date = date;
+            return this;
+        }
+
+        public Builder startTime(Time startTime) {
+            this.startTime = startTime;
+            return this;
+        }
+
+        public Builder endTime(Time endTime) {
+            this.endTime = endTime;
             return this;
         }
 
@@ -77,6 +94,14 @@ public class Event {
         return date;
     }
 
+    public Time getStartTime() {
+        return startTime;
+    }
+
+    public Time getEndTime() {
+        return endTime;
+    }
+
     public long getDuration() {
         return duration;
     }
@@ -92,6 +117,8 @@ public class Event {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", date=" + date +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
                 ", duration=" + duration +
                 ", neighborhoodId=" + neighborhoodId +
                 '}';

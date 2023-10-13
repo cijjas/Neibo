@@ -93,9 +93,9 @@
                 <script>
                     async function getProfessions(workerId) {
                         try {
-                            const response = await fetch("/api/profession?id=" + workerId);
+                            const response = await fetch("/endpoint/profession?id=" + workerId);
                             if (!response.ok) {
-                                throw new Error("Failed to fetch data from the API.");
+                                throw new Error("Failed to fetch data from the endpoint.");
                             }
                             const professionElement = document.getElementById("professionPlaceholder-${worker.user.userId}");
                             professionElement.textContent = await response.text(); // Set the response as text content

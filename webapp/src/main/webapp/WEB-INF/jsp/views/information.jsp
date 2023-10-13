@@ -82,7 +82,7 @@
         </div>
 
         <div class="column-right">
-            <%@ include file="/WEB-INF/jsp/components/displays/rightColumn.jsp" %>
+            <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %>
         </div>
 
 

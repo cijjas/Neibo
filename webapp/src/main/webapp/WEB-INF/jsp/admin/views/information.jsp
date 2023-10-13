@@ -53,9 +53,9 @@
                                 </tr>
                                 <c:forEach var="contact" items="${phoneNumbersList}">
                                     <tr>
-                                        <td class="day">${contact.contactName}</td>
-                                        <td>${contact.contactAddress}</td>
-                                        <td>${contact.contactPhone}</td>
+                                        <td class="day"><c:out value="${contact.contactName}"/> </td>
+                                        <td><c:out value="${contact.contactAddress}"/></td>
+                                        <td><c:out value="${contact.contactPhone}"/></td>
                                         <td>
                                             <a href="${pageContext.request.contextPath}/admin/delete-contact/${contact.contactId}" class="btn btn-link">
                                                 <i class="fas fa-trash" style="color: var(--error);"></i>

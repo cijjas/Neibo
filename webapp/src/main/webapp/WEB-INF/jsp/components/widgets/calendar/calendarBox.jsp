@@ -112,7 +112,7 @@
       await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate a 2-second delay
 
       try {
-        const response = await fetch("/api/get-event-timestamps");
+        const response = await fetch("/endpoint/get-event-timestamps");
 
         if (response.ok) {
           const timestampString = await response.text();
