@@ -259,6 +259,10 @@ public class AmenityDaoImpl implements AmenityDao {
         return jdbcTemplate.query("SELECT * FROM amenities WHERE neighborhoodId = ?", ROW_MAPPER2, neighborhoodId);
     }
 
+    @Override
+    public boolean deleteAmenity2(long amenityId) {
+        return jdbcTemplate.update("DELETE FROM amenities WHERE amenityid = ?", amenityId) > 0;
+    }
 
 
     // ---------------------------------------------- AMENITY DELETE ---------------------------------------------------

@@ -84,4 +84,9 @@ public class BookingDaoImpl implements BookingDao {
     public List<Booking> getUserBookings(long userId) {
         return jdbcTemplate.query(BOOKINGS_JOIN_AVAILABILITY + " WHERE userid = ?", ROW_MAPPER, userId);
     }
+
+    @Override
+    public boolean deleteBooking(long bookingId) {
+        return jdbcTemplate.update("DELETE FROM users_availability WHERE bookingid = ? ", bookingId) > 0;
+    }
 }

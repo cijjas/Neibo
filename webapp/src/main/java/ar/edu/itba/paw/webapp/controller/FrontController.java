@@ -674,11 +674,15 @@ public class FrontController {
         bs.createBooking(23, 1, new ArrayList<>(Arrays.asList(28L, 29L, 30L)), Date.valueOf("2023-10-10"));
         */
 
+        /*
         System.out.println(shs.getAmenityShifts(1));
         avs.updateAvailability(1, new ArrayList<>(Arrays.asList(1L, 2L, 3L)));
         System.out.println(shs.getAmenityShifts(1));
         avs.updateAvailability(1, new ArrayList<>(Arrays.asList(4L, 5L, 6L)));
         System.out.println(shs.getAmenityShifts(1));
+         */
+
+        as.deleteAmenity2(1);
         return new ModelAndView("views/index");
     }
 

@@ -11,4 +11,6 @@ public interface BookingService {
     void createBooking(long userId, long amenityId, List<Long> shiftIds, Date reservationDate);
 
     List<Booking> getUserBookings(long userId);
+
+    boolean deleteBooking(long bookingId);
 }
