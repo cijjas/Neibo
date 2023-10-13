@@ -34,7 +34,7 @@ public class ShiftDaoImpl implements ShiftDao {
     private String SHIFTS_JOIN_AVAILABILITY_SHIFTS =
             "select *\n" +
                     "from amenities_shifts_availability av\n" +
-                    "join shifts s on av.shiftid = av.shiftid\n" +
+                    "join shifts s on av.shiftid = s.shiftid\n" +
                     "join times t on s.starttime = t.timeid\n" +
                     "join days d on s.dayid = d.dayid";
 
@@ -131,6 +131,6 @@ public class ShiftDaoImpl implements ShiftDao {
 
     @Override
     public List<Shift> getAmenityShifts(long amenityId) {
-        return jdbcTemplate.query(SHIFTS_JOIN_AVAILABILITY_SHIFTS + " WHERE av.amenityavailabilityid = ?", ROW_MAPPER, amenityId);
+        return jdbcTemplate.query(SHIFTS_JOIN_AVAILABILITY_SHIFTS + " WHERE av.amenityid = ?", ROW_MAPPER, amenityId);
     }
 }
