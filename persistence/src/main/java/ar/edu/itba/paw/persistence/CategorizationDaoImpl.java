@@ -31,6 +31,7 @@ public class CategorizationDaoImpl implements CategorizationDao {
 
     @Override
     public void createCategory(final long tagId, final long postId) {
+        LOGGER.info("Inserting Category");
         Map<String, Object> data = new HashMap<>();
         data.put("tagid", tagId);
         data.put("postid", postId);

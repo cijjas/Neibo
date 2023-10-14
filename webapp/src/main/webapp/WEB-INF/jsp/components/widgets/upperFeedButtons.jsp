@@ -4,13 +4,13 @@
 <c:if test="${channel != 'Announcements'}">
     <div class="upper-feed-buttons-box ">
         <div class="f-r-s-c">
-            <a onclick="hotPosts()" class="cool-feed-button rounded" >
-                Hot
-                <i class="fa-solid fa-fire"></i>
+            <a onclick="hotPosts()" class="coolest-button ${param.postStatus == 'hot' ? 'active' : ''}">
+                <spring:message code="Hot"/>
+                <i class="fa-solid fa-fire ml-1"></i>
             </a>
-            <a onclick="trendingPosts()" class="cool-feed-button rounded" >
-                Trending
-                <i class="fa-solid fa-arrow-up-right-dots"></i>
+            <a onclick="trendingPosts()" class="cool-feed-button rounded ${param.postStatus == 'trending' ? 'active' : ''}  " >
+                <spring:message code="Trending"/>
+                <i class="fa-solid fa-arrow-trend-up ml-1"></i>
             </a>
         </div>
 

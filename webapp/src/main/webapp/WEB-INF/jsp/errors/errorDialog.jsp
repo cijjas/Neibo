@@ -13,7 +13,7 @@
         <div style="text-align:center;font-weight: bold; font-size: 24px; color:var(--error)">
             <c:out value="${param.errorMessage}"/>
         </div>
-        <a class="cool-button cool-small on-bg"  onclick="closeErrorDialog()">
+        <a class="cool-button cool-small on-bg w-25 font-weight-bolder"  onclick="closeErrorDialog()">
             OK
         </a>
     </div>
@@ -21,17 +21,13 @@
 <script>
     function closeErrorDialog() {
         const errorContainer = document.getElementById('errorDialog');
-        errorContainer.style.opacity = '0'; // Fade out
-        setTimeout(function() {
-            errorContainer.style.display = 'none'; // Hide the container
-        }, 300); // This delay must match the duration of the transition in the CSS file
+        if("${param.openLoginAgain}" === "true"  ){
+            openLoginDialog();
+        }
+        errorContainer.style.display = 'none'; // Hide the container
+        errorContainer.style.opacity = '0'; // Fade in
     }
-    // JavaScript to show the success message with fade-in effect
-    const successContainer = document.getElementById('error-container');
-    successContainer.style.display = 'flex'; // Show the container
-    setTimeout(function() {
-        successContainer.style.opacity = '1'; // Fade in
-    }, 10); // Delay for a very short time (e.g., 10ms) to trigger the transition
+
 
 
 </script>

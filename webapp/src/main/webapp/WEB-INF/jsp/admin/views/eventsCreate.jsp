@@ -53,29 +53,64 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <form:input path="date" id="date" type="date" required="true" class="cool-input" value="${dateString}"/>
+                            <div class="col-md-4">
+                                <form:input path="date" id="date" type="date" required="true" class="cool-input"/>
                                 <form:errors path="date" cssClass="error" element="p" />
                             </div>
 
-
-                            <div class="col-md-6">
-                                <spring:message code="Duration" var="durationPlaceholder" />
-                                <form:input path="duration" class="cool-input" placeholder="${durationPlaceholder}" type="number" min="1" max="79999" />
+                        <div class="row">
+                            <div class="col-md-2">
+                                <spring:message code="Hours" var="hoursPlaceholder" />
+                                <form:input path="startTimeHours" class="cool-input" placeholder="${hoursPlaceholder}" type="number" min="0" max="23" />
                                 <div class="form-row form-error">
-                                    <form:errors path="duration" cssClass="error" element="p" />
+                                    <form:errors path="startTimeHours" cssClass="error" element="p" />
                                 </div>
                             </div>
 
+                            <div class="col-md-1 text-center d-flex align-items-center">
+                                <h1>:</h1>
+                            </div>
+
+                            <div class="col-md-2">
+                                <spring:message code="Minutes" var="minutesPlaceholder" />
+                                <form:input path="startTimeMinutes" class="cool-input" placeholder="${minutesPlaceholder}" type="number" min="0" max="59" />
+                                <div class="form-row form-error">
+                                    <form:errors path="startTimeMinutes" cssClass="error" element="p" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-1 text-center d-flex align-items-center">
+                                <h1>-</h1>
+                            </div>
+
+                            <div class="col-md-2">
+                                <spring:message code="Hours" var="hoursPlaceholder" />
+                                <form:input path="endTimeHours" class="cool-input" placeholder="${hoursPlaceholder}" type="number" min="0" max="23" />
+                                <div class="form-row form-error">
+                                    <form:errors path="startTimeHours" cssClass="error" element="p" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-1 text-center d-flex align-items-center">
+                                <h1>:</h1>
+                            </div>
+
+                            <div class="col-md-2">
+                                <spring:message code="Minutes" var="minutesPlaceholder" />
+                                <form:input path="endTimeMinutes" class="cool-input" placeholder="${minutesPlaceholder}" type="number" min="0" max="59" />
+                                <div class="form-row form-error">
+                                    <form:errors path="startTimeMinutes" cssClass="error" element="p" />
+                                </div>
+                            </div>
                         </div>
+
+
                     </div>
 
-                    <div class="divider"></div>
 
                     <%--Submit button --%>
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" class="cool-button cool-small on-bg" style="height:40px;" ><spring:message code="Create.verb"/></button>
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="submit" class="cool-button cool-small on-bg w-25 font-weight-bolder" style="height:40px;" ><spring:message code="Create.verb"/></button>
                     </div>
 
                 </form:form>

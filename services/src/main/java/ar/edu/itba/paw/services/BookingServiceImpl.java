@@ -36,4 +36,9 @@ public class BookingServiceImpl implements BookingService {
     public List<Booking> getUserBookings(long userId){
         return bookingDao.getUserBookings(userId);
     }
+
+    @Override
+    public boolean deleteBooking(long bookingId) {
+        return bookingDao.deleteBooking(bookingId);
+    }
 }

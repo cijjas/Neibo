@@ -37,6 +37,7 @@ public class ReviewDaoImpl implements ReviewDao {
     // ---------------------------------------------- REVIEWS INSERT ---------------------------------------------------
     @Override
     public Review createReview(long workerId, long userId, float rating, String review) {
+        LOGGER.info("Inserting Review");
         Map<String, Object> data = new HashMap<>();
         data.put("workerid", workerId);
         data.put("userid", userId);
@@ -72,16 +73,19 @@ public class ReviewDaoImpl implements ReviewDao {
 
     @Override
     public Review getReview(long reviewId) {
+        LOGGER.info("Selecting Reviews with reviewId {}", reviewId);
         return jdbcTemplate.queryForObject("SELECT * FROM reviews WHERE reviewid = ?", reviewRowMapper, reviewId);
     }
 
     @Override
     public List<Review> getReviews(long workerId) {
+        LOGGER.info("Selecting Reviews from Worker {}", workerId);
         return jdbcTemplate.query("SELECT * FROM reviews WHERE workerid = ?", reviewRowMapper, workerId);
     }
 
     @Override
     public float getAvgRating(long workerId) {
+        LOGGER.info("Selecting Average Rating for Worker {}", workerId);
         return jdbcTemplate.query("SELECT AVG(rating) FROM reviews WHERE workerid = ?", rs -> {
             if (rs.next()) {
                 return rs.getFloat(1);
@@ -92,6 +96,7 @@ public class ReviewDaoImpl implements ReviewDao {
 
     @Override
     public int getReviewsCount(long workerId) {
+        LOGGER.info("Selecting Review Count for Worker {}", workerId);
         return jdbcTemplate.query("SELECT COUNT(*) FROM reviews WHERE workerid = ?", rs -> {
             if (rs.next()) {
                 return rs.getInt(1);
@@ -101,8 +106,10 @@ public class ReviewDaoImpl implements ReviewDao {
     }
 
     // ---------------------------------------------- REVIEWS DELETE ---------------------------------------------------
+
     @Override
     public boolean deleteReview(long reviewId) {
+        LOGGER.info("Deleting Review with reviewId {}", reviewId);
         return jdbcTemplate.update("DELETE FROM reviews WHERE reviewid = ?", reviewId) > 0;
     }
 }

@@ -6,10 +6,10 @@
                 <div style="display: flex; justify-content: center; align-items: center;">
                     <c:choose>
                         <c:when test="${loggedUser.profilePictureId != 0}">
-                            <img class="blogpost-image" style="border-radius: 50px;" id="output" src="${pageContext.request.contextPath}/images/<c:out value="${loggedUser.profilePictureId}"/>" alt="profile_picture_img" />
+                            <img class="big-profile-picture" style="width: 40px; height: 40px"  src="${pageContext.request.contextPath}/images/<c:out value="${loggedUser.profilePictureId}"/>" alt="profile_picture_img" />
                         </c:when>
                         <c:otherwise>
-                            <img class="blogpost-image" style="border-radius: 50px;" id="output" src="${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png" alt="default_profile_picture_img" />
+                            <img class="big-profile-picture" style=" width: 40px; height: 40px"  src="${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png" alt="default_profile_picture_img" />
                         </c:otherwise>
                     </c:choose>
                 </div>

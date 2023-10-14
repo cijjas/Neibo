@@ -1,14 +1,14 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Event;
-
+import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 public interface EventDao {
 
-    Event createEvent(String name, String description, Date date, long duration, long neighborhoodId);
+    Event createEvent(String name, String description, Date date, Time startTime, Time endTime, long neighborhoodId);
 
     Optional<Event> findEventById(long eventId);
 
@@ -19,5 +19,9 @@ public interface EventDao {
     List<Date> getEventDates(long neighborhoodId);
 
     boolean deleteEvent(long eventId);
+
+    public Optional<Long> findStartTimeIdByEventId(long eventId);
+
+    public Optional<Long> findEndTimeIdByEventId(long eventId);
 
 }

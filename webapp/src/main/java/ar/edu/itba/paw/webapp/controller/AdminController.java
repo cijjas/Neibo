@@ -36,9 +36,13 @@ public class AdminController {
     private final ResourceService res;
     private final ContactService cos;
 
+    private final ShiftService shs;
+    private final AvailabilityService avs;
+
+
 
     @Autowired
-    public AdminController(SessionUtils sessionUtils, 
+    public AdminController(SessionUtils sessionUtils,
                            final PostService ps,
                            final UserService us,
                            final NeighborhoodService nhs,
@@ -52,7 +56,10 @@ public class AdminController {
                            final AmenityService as,
                            final EventService es,
                            final ResourceService res,
-                           final ContactService cos) {
+                           final ContactService cos,
+                           final ShiftService shs,
+                           final AvailabilityService avs
+    ) {
         this.sessionUtils = sessionUtils;
         this.is = is;
         this.ps = ps;
@@ -68,6 +75,8 @@ public class AdminController {
         this.es = es;
         this.res = res;
         this.cos = cos;
+        this.shs = shs;
+        this.avs = avs;
     }
 
     // ------------------------------------- INFORMATION --------------------------------------
@@ -172,21 +181,37 @@ public class AdminController {
     public ModelAndView adminAmenities() {
         ModelAndView mav = new ModelAndView("admin/views/amenitiesPanel");
 
-        List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId());
-        List<AmenityHours> amenityHoursList = new ArrayList<>();
+        // Fetch the list of amenities
+        List<Amenity> amenityList = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId());
 
-        for (Amenity amenity : amenities) {
-            Map<String, DayTime> amenityTimes = as.getAmenityHoursByAmenityId(amenity.getAmenityId());
-
-            AmenityHours amenityHours = new AmenityHours.Builder().amenity(amenity).amenityHours(amenityTimes).build();
-
-            amenityHoursList.add(amenityHours);
+        // Create a mapping of amenity IDs to their corresponding shifts
+        Map<Long, List<Shift>> amenityShifts = new HashMap<>();
+        for (Amenity amenity : amenityList) {
+            List<Shift> shiftList = shs.getAmenityShifts(amenity.getAmenityId());
+            amenityShifts.put(amenity.getAmenityId(), shiftList);
         }
+        List<Pair<Integer, String>> daysPairs = new ArrayList<>();
+        List<Pair<Integer, String>> timesPairs = new ArrayList<>();
+
+        for (DayOfTheWeek day : DayOfTheWeek.values())
+            daysPairs.add(new Pair<>(day.getId(), day.name()));
+
+
+        for (StandardTime time : StandardTime.values())
+            timesPairs.add(new Pair<>(time.getId(), time.toString()));
+
+
+        mav.addObject("daysPairs", daysPairs);
+        mav.addObject("timesPairs", timesPairs);
+        mav.addObject("amenityList", amenityList);
+        mav.addObject("amenityShifts", amenityShifts);
+
 
         mav.addObject("panelOption", "Amenities");
-        mav.addObject("amenitiesHours", amenityHoursList);
         return mav;
     }
+
+
 
     @RequestMapping(value = "/delete-amenity/{id}", method = RequestMethod.GET)
     public ModelAndView deleteAmenity(
@@ -259,16 +284,8 @@ public class AdminController {
         if (errors.hasErrors()) {
             return eventForm(eventForm);
         }
-
-        long duration = 0;
-        try {
-            duration = Long.parseLong(eventForm.getDuration());
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-
-        es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), duration, sessionUtils.getLoggedUser().getNeighborhoodId());
-        ModelAndView mav = new ModelAndView("admin/views/eventsCreate");
+        es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), eventForm.getStartTime(), eventForm.getEndTime(), sessionUtils.getLoggedUser().getNeighborhoodId());
+        ModelAndView mav = new ModelAndView("redirect:/calendar?timestamp=" + eventForm.getDate().getTime());
         mav.addObject("showSuccessMessage", true);
         return mav;
     }

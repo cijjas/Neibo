@@ -86,6 +86,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public Post createPost(String title, String description, long userid, long channelId, long imageId) {
+        LOGGER.info("Inserting Post {}", title);
         Map<String, Object> data = new HashMap<>();
         data.put("title", title);
         data.put("description", description);
@@ -130,6 +131,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public Optional<Post> findPostById(long id) {
+        LOGGER.info("Selecting Post with id {}", id);
         final List<Post> postList = jdbcTemplate.query(POSTS_JOIN_USERS_JOIN_CHANNELS + " where p.postid=?;", ROW_MAPPER, id);
         return postList.isEmpty() ? Optional.empty() : Optional.of(postList.get(0));
     }
@@ -140,6 +142,7 @@ public class PostDaoImpl implements PostDao {
 
     @Override
     public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
+        LOGGER.info("Selecting Post from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channel, userId, tags, postStatus);
         // BASE QUERY
         StringBuilder query = new StringBuilder(FROM_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
         // PARAMS
@@ -150,16 +153,13 @@ public class PostDaoImpl implements PostDao {
         if (page != 0)
             appendPaginationClause(query, queryParams, page, size);
 
-        // Log results
-        LOGGER.info("{}", query);
-        LOGGER.info("{}", queryParams);
-
         // LAUNCH IT!
         return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
     }
 
     @Override
     public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
+        LOGGER.info("Selecting Post Count from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channel, userId, tags, postStatus);
         // Create the base SQL query string for counting
         StringBuilder query = new StringBuilder(COUNT_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
 
@@ -167,10 +167,6 @@ public class PostDaoImpl implements PostDao {
         List<Object> queryParams = new ArrayList<>();
 
         appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags, postStatus);
-
-        // Log results
-        LOGGER.info("{}", query);
-        LOGGER.info("{}", queryParams);
 
         // Execute the query and retrieve the count
         return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());

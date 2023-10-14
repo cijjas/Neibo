@@ -119,7 +119,7 @@
 
 
                         <div class="row justify-content-end m-t-40">
-                            <a href="${pageContext.request.contextPath}/logout" class=" cool-button cool-small on-bg">
+                            <a href="${pageContext.request.contextPath}/logout" class="cool-button cool-small on-bg w-25 font-weight-bolder">
                                     <spring:message code="Logout"/>
                             </a>
                         </div>

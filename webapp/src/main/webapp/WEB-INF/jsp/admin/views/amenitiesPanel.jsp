@@ -38,11 +38,11 @@
                     <i class="fa-solid fa-plus"></i>
                 </a>
             </div>
-            <c:forEach var="amenityWithHours" items="${amenitiesHours}">
+            <c:forEach var="amenity" items="${amenityList}">
                 <div  class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
                     <div class="row">
                         <div class="col-md-8">
-                            <h2><c:out value="${amenityWithHours.amenity.name}" /></h2>
+                            <h2><c:out value="${amenity.name}" /></h2>
                         </div>
                         <div class="col-md-4 text-right">
                             <a href="${pageContext.request.contextPath}/admin/delete-amenity/${amenityWithHours.amenity.amenityId}" class="btn btn-link">
@@ -50,23 +50,54 @@
                             </a>
                         </div>
                     </div>
-                    <p class="mb-3" style="color:var(--lighttext);"><c:out value="${amenityWithHours.amenity.description}" /></p>
+                    <p class="mb-3" style="color:var(--lighttext);"><c:out value="${amenity.description}" /></p>
 
                     <div class="d-flex flex-column justify-content-center align-items-center w-100">
-                        <table class="table-striped w-100">
-                            <tr>
-                                <th class="day"><spring:message code="Day"/></th>
-                                <th><spring:message code="Open"/></th>
-                                <th><spring:message code="Close"/></th>
-                            </tr>
-                            <c:forEach var="day" items="${amenityWithHours.amenityHours}">
-                                <tr>
-                                    <td class="day"><c:out value="${day.key}"/></td>
-                                    <td><c:out value="${day.value.openTime}"/></td>
-                                    <td><c:out value="${day.value.closeTime}"/></td>
-                                </tr>
-                            </c:forEach>
-                        </table>
+                        <%----%>
+                            <div class="cool-table w-100 p-4">
+                                <table class="table-striped w-100" >
+                                    <tr>
+                                        <th><spring:message code="AmenityHours"/></th>
+                                        <th><spring:message code="Monday.abbr"/></th>
+                                        <th><spring:message code="Tuesday.abbr"/></th>
+                                        <th><spring:message code="Wednesday.abbr"/></th>
+                                        <th><spring:message code="Thursday.abbr"/></th>
+                                        <th><spring:message code="Friday.abbr"/></th>
+                                        <th><spring:message code="Saturday.abbr"/></th>
+                                        <th><spring:message code="Sunday.abbr"/></th>
+                                    </tr>
+                                    <c:forEach items="${timesPairs}" var="time">
+
+                                        <tr>
+                                            <td>
+                                                <span>${time.value}</span>
+                                            </td>
+                                            <c:forEach items="${daysPairs}" var="day">
+
+                                                <td>
+                                                    <c:set var="amenityId" value="${amenity.amenityId}" />
+                                                    <c:set var="shifts" value="${amenityShifts[amenityId]}" />
+                                                    <c:set var="available" value="false" />
+                                                    <c:forEach items="${shifts}" var="shift">
+                                                        <c:if test="${shift.day.dayId == day.key && shift.startTime.timeId == time.key}">
+                                                            <c:set var="available" value="true" />
+                                                            <span style="color: var(--primary);" class="col-12">
+                                                                <i class="fa-solid fa-check"></i>
+                                                            </span>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                    <c:if test="${!available}">
+                                                        <span style="color: var(--error);" class="col-12">
+                                                            <i class="fa-solid fa-xmark"></i>
+                                                        </span>
+                                                    </c:if>
+                                                </td>
+                                            </c:forEach>
+                                        </tr>
+                                    </c:forEach>
+                                </table>
+                            </div>
+                        <%----%>
                     </div>
                 </div>
             </c:forEach>

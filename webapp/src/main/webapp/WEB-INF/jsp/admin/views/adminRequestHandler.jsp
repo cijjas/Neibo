@@ -69,23 +69,41 @@
                     <c:otherwise>
                         <c:forEach var="user" items="${users}" varStatus="loopStatus">
                             <div class="user-row">
-                                <div class="information">
+                                <div class="f-r-s-c placeholder-glow">
                                     <div>
-                                        <span style="color:var(--text)"><spring:message code="Name"/>: </span>
-                                        <span style="color:var(--primary)"><c:out value="${user.name}"/></span>
-                                    </div>
-                                    <div>
+                                        <img
+                                                id="user-profile-image-${user.userId}"
+                                                src=""
+                                                class="big-profile-picture placeholder"
+                                                style="width: 50px; height: 50px"
+                                                alt="user_picture_img_${user.userId}"
+                                        />
+                                        <script src ="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
 
-                                        <span style="color:var(--text)"><spring:message code="Surname"/>:</span>
-                                        <span style="color:var(--primary)"><c:out value="${user.surname}"/></span>
+                                        <script>
+                                            (function(){
+                                                getImageInto("user-profile-image-${user.userId}", ${user.profilePictureId},"${pageContext.request.contextPath}");
+                                            })();
+                                        </script>
                                     </div>
-                                    <div>
-                                        <span style="color:var(--text)"><spring:message code="Email"/>:</span>
-                                        <span style="color:var(--primary)"><c:out value="${user.mail}"/></span>
-                                    </div>
-                                    <div>
-                                        <span style="color:var(--text)"><spring:message code="Identification"/>:</span>
-                                        <span style="color:var(--primary)"><c:out value="${user.identification}"/></span>
+                                    <div class="information">
+                                        <div>
+                                            <span style="color:var(--text)"><spring:message code="Name"/>: </span>
+                                            <span style="color:var(--primary)"><c:out value="${user.name}"/></span>
+                                        </div>
+                                        <div>
+
+                                            <span style="color:var(--text)"><spring:message code="Surname"/>:</span>
+                                            <span style="color:var(--primary)"><c:out value="${user.surname}"/></span>
+                                        </div>
+                                        <div>
+                                            <span style="color:var(--text)"><spring:message code="Email"/>:</span>
+                                            <span style="color:var(--primary)"><c:out value="${user.mail}"/></span>
+                                        </div>
+                                        <div>
+                                            <span style="color:var(--text)"><spring:message code="Identification"/>:</span>
+                                            <span style="color:var(--primary)"><c:out value="${user.identification}"/></span>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -93,11 +111,11 @@
                                     <%--If its only neighbors display the unverify button--%>
                                     <c:choose >
                                         <c:when test="${neighbors}">
-                                            <button class="ignore-button" onclick="rejectUser(${user.userId})"><spring:message code="Unverify"/></button>
+                                            <button class="ignore-button  outlined on-bg" onclick="rejectUser(${user.userId})"><spring:message code="Unverify"/></button>
                                         </c:when>
                                         <c:otherwise>
-                                            <button class="ignore-button" onclick="rejectUser(${user.userId})"><spring:message code="Reject"/></button>
-                                            <button class="cool-button cool-small" onclick="verifyUser(${user.userId})"><spring:message code="Accept"/></button>
+                                            <button class="ignore-button outlined on-bg" onclick="rejectUser(${user.userId})"><spring:message code="Reject"/></button>
+                                            <button class="cool-button cool-small font-weight-bold on-bg p-2" onclick="verifyUser(${user.userId})"><spring:message code="Accept"/></button>
                                         </c:otherwise>
                                     </c:choose>
                                 </div>
@@ -112,7 +130,6 @@
                                         handleUserVerification(userId, verify)
                                     }
                                     function handleUserVerification(userId, verify){
-                                        console.log(verify? 'verify' : 'unverify' + ' user with id: ' + userId);
                                         const form = document.createElement('form');
                                         form.method = 'POST';
                                         if(verify){

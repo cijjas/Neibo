@@ -1,8 +1,12 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
+import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Event;
+
+import java.sql.Time;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 import ar.edu.itba.paw.models.User;
@@ -19,9 +23,14 @@ public class EventServiceImpl implements EventService {
 
     private final EventDao eventDao;
 
+    private final TimeDao timeDao;
+
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
     @Autowired
-    public EventServiceImpl(final EventDao eventDao) {
+    public EventServiceImpl(final EventDao eventDao, final TimeDao timeDao) {
         this.eventDao = eventDao;
+        this.timeDao = timeDao;
     }
 
 
@@ -29,7 +38,7 @@ public class EventServiceImpl implements EventService {
     public Optional<Event> findEventById(long eventId) { return eventDao.findEventById(eventId); }
 
     @Override
-    public Event createEvent(String name, String description, Date date, long duration, long neighborhoodId) { return eventDao.createEvent(name, description, date, duration, neighborhoodId); }
+    public Event createEvent(String name, String description, Date date, Time startTime, Time endTime, long neighborhoodId) { return eventDao.createEvent(name, description, date, startTime, endTime, neighborhoodId); }
 
     @Override
     public List<Event> getEventsByDate(Date date, long neighborhoodId) { return eventDao.getEventsByDate(date, neighborhoodId); }
@@ -86,8 +95,27 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public String getDateString(Date date) {
-        return date.getDate() + "-" + (date.getMonth() + 1) + "-" + (date.getYear() + 1900);
+    public Optional<String> getStartTime(long eventId) {
+        Optional<Long> startTimeIdOptional = eventDao.findStartTimeIdByEventId(eventId);
+        if (startTimeIdOptional.isPresent()) {
+            long startTimeId = startTimeIdOptional.get();
+            Time startTime = timeDao.findTimeById(startTimeId).get().getTimeInterval();
+            return Optional.of(formatter.format(startTime.toLocalTime()));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<String> getEndTime(long eventId) {
+        Optional<Long> endTimeIdOptional = eventDao.findEndTimeIdByEventId(eventId);
+        if (endTimeIdOptional.isPresent()) {
+            long endTimeId = endTimeIdOptional.get();
+            Time endTime = timeDao.findTimeById(endTimeId).get().getTimeInterval();
+            return Optional.of(formatter.format(endTime.toLocalTime()));
+        } else {
+            return Optional.empty();
+        }
     }
 
 }

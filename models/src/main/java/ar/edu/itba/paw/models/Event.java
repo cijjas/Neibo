@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.models;
 
 import java.util.Date;
+import java.sql.Time;
+import java.util.Optional;
+
 public class Event {
     private final long eventId;
     private final String name;
@@ -23,6 +26,8 @@ public class Event {
         private String name;
         private String description;
         private Date date;
+        private Time startTime;
+        private Time endTime;
         private long duration;
         private long neighborhoodId;
 
@@ -43,6 +48,16 @@ public class Event {
 
         public Builder date(Date date) {
             this.date = date;
+            return this;
+        }
+
+        public Builder startTime(Time startTime) {
+            this.startTime = startTime;
+            return this;
+        }
+
+        public Builder endTime(Time endTime) {
+            this.endTime = endTime;
             return this;
         }
 
@@ -77,9 +92,7 @@ public class Event {
         return date;
     }
 
-    public long getDuration() {
-        return duration;
-    }
+    public long getDuration() { return duration; }
 
     public long getNeighborhoodId() {
         return neighborhoodId;

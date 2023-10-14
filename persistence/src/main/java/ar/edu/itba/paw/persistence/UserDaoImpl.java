@@ -78,6 +78,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User createUser(final String mail, final String password, final String name, final String surname,
                            final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role, final int identification) {
+        LOGGER.info("Inserting User {}", mail);
         Map<String, Object> data = new HashMap<>();
         data.put("mail", mail);
         data.put("password", password);
@@ -110,24 +111,27 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findUserById(final long userId) {
+        LOGGER.info("Selecting User with userId {}", userId);
         final List<User> list = jdbcTemplate.query(USERS + " WHERE userid = ?", ROW_MAPPER, userId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
     public Optional<User> findUserByMail(final String mail) {
+        LOGGER.info("Selecting User with mail {}", mail);
         final List<User> list = jdbcTemplate.query(USERS + " WHERE mail = ?", ROW_MAPPER, mail);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
     public List<User> getNeighborsSubscribedByPostId(long postId) {
+        LOGGER.info("Selecting Neighbors that are subscribed to Post {}", postId);
         return jdbcTemplate.query(USERS_JOIN_POSTS_USERS_AND_POSTS + " WHERE p.postid = ? AND role = ?", ROW_MAPPER, postId, UserRole.NEIGHBOR.toString());
     }
 
     @Override
     public List<User> getUsersByCriteria(UserRole role, long neighborhoodId, int page, int size) {
-
+        LOGGER.info("Selecting Users with Role {} and from Neighborhood {}", role, neighborhoodId);
         StringBuilder query = new StringBuilder("SELECT * FROM users u WHERE 1 = 1");
         List<Object> queryParams = new ArrayList<>();
 
@@ -145,6 +149,7 @@ public class UserDaoImpl implements UserDao {
 
 
     public int getTotalUsers(UserRole role, long neighborhoodId) {
+        LOGGER.info("Selecting Users Count that have Role {} and from Neighborhood {}", role, neighborhoodId);
         StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM users u WHERE 1 = 1");
         List<Object> queryParams = new ArrayList<>();
 
@@ -159,6 +164,17 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public List<User> getEventUsers(long eventId) {
+        LOGGER.info("Selecting Users that will assist Event {}", eventId);
+        return jdbcTemplate.query(EVENTS_JOIN_USERS + " WHERE e.eventid = ?", ROW_MAPPER, eventId);
+    }
+
+    @Override
+    public boolean isAttending(long eventId, long userId) {
+        LOGGER.info("Selecting User {} that assists Event {}", userId, eventId);
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM events_users WHERE eventid = ? AND userid = ?", Integer.class, eventId, userId) == 1;
+    }
+    @Override
     public Optional<User> findAdmin(long neighborhoodId) {
         final List<User> list = jdbcTemplate.query(USERS + " WHERE neighborhoodid = ? AND role = ?", ROW_MAPPER, neighborhoodId, UserRole.ADMINISTRATOR.toString());
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
@@ -172,17 +188,8 @@ public class UserDaoImpl implements UserDao {
                               final Language language, final boolean darkMode, final long profilePictureId,
                               final UserRole role, final int identification, final long neighborhoodId
     ) {
+        LOGGER.info("Updating User {}", id);
         jdbcTemplate.update("UPDATE users SET name = ?, surname = ?, password = ?, darkmode = ?, language = ?, role = ?, profilepictureid = ?, identification = ?, neighborhoodid = ? WHERE userid = ?",
                 name, surname, password, darkMode, language != null ? language.toString() : null, role != null ? role.toString() : null, profilePictureId == 0 ? null : profilePictureId, identification, neighborhoodId, id);
-    }
-
-    @Override
-    public List<User> getEventUsers(long eventId) {
-        return jdbcTemplate.query(EVENTS_JOIN_USERS + " WHERE e.eventid = ?", ROW_MAPPER, eventId);
-    }
-
-    @Override
-    public boolean isAttending(long eventId, long userId) {
-        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM events_users WHERE eventid = ? AND userid = ?", Integer.class, eventId, userId) == 1;
     }
 }

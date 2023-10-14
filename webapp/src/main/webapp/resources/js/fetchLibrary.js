@@ -1,0 +1,31 @@
+
+
+async function getImageInto(imageElementId, imageSrcId, contextPath) {
+    console.log("getImageInto");
+    console.log("imageElementId: " + imageElementId);
+    console.log("imageSrcId: " + imageSrcId);
+    console.log("contextPath: " + contextPath);
+    let image = document.getElementById(imageElementId);
+    if(imageSrcId === 0){
+        image.src = contextPath + "/resources/images/roundedPlaceholder.png";
+        image.classList.remove('placeholder');
+        return;
+    }
+    try{
+        const response= await fetch(contextPath + '/images/' + imageSrcId);
+        if(!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const blob = await response.blob();
+
+        setTimeout(() => {
+            image.classList.remove('placeholder');
+            image.src = URL.createObjectURL(blob);
+        }, 3000);
+
+    }
+    catch (e) {
+        image.src = contextPath + "/resources/images/errorImage.png";
+        console.log(e);
+    }
+}

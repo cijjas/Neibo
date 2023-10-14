@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Event;
-import ar.edu.itba.paw.models.User;
+import java.sql.Time;
 import enums.Language;
 
 import java.util.Date;
@@ -13,7 +13,7 @@ public interface EventService {
 
     Optional<Event> findEventById(long eventId);
 
-    Event createEvent(String name, String description, Date date, long duration, long neighborhoodId);
+    Event createEvent(String name, String description, Date date, Time startTime, Time endTime, long neighborhoodId);
 
     List<Event> getEventsByDate(Date date, long neighborhoodId);
 
@@ -33,6 +33,8 @@ public interface EventService {
 
     int getSelectedYear(int year);
 
-    String getDateString(Date date);
+    Optional<String> getStartTime(long eventId);
+
+    Optional<String> getEndTime(long eventId);
 
 }
