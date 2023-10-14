@@ -182,6 +182,12 @@ public class UserDaoImpl implements UserDao {
         LOGGER.debug("Selecting User {} that assists Event {}", userId, eventId);
         return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM events_users WHERE eventid = ? AND userid = ?", Integer.class, eventId, userId) == 1;
     }
+    @Override
+    public Optional<User> findAdmin(long neighborhoodId) {
+        final List<User> list = jdbcTemplate.query(USERS + " WHERE neighborhoodid = ? AND role = ?", ROW_MAPPER, neighborhoodId, UserRole.ADMINISTRATOR.toString());
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+    }
+
 
     // ---------------------------------------------- USERS UPDATE -----------------------------------------------------
 

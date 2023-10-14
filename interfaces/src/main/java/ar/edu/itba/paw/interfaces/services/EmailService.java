@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.interfaces.services;
 
 
+import enums.UserRole;
+
 import java.util.Map;
 
 public interface EmailService {
@@ -10,4 +12,6 @@ public interface EmailService {
     public void sendHtmlMessage(String to, String subject, Map<String, Object> variables, String template) ;
 
     public void sendMessageUsingThymeleafTemplate(String to, String subject, String templateModel, Map<String, Object> variables) ;
+
+    public void sendNewUserMail(long neighborhoodId, String userName, UserRole role);
 }

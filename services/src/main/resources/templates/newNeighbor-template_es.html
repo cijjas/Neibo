@@ -102,7 +102,7 @@
                                             <td class="pad" style="padding-bottom:10px;padding-top:10px;width:100%;">
                                                 <div class="alignment" align="center" style="line-height: 10px">
                                                     <a href="http://pawserver.it.itba.edu.ar/paw-2023b-02/" target="_blank">
-                                                        <img src="https://cdn.discordapp.com/attachments/889581035195596800/1151956791417114654/mailbar.png" style="display: block; height: auto; border: 0; max-width: 268px; width: 100%;" width="268" alt="Yourlogo Light" title="Yourlogo Light">
+                                                        <img src="https://cdn.discordapp.com/attachments/889581035195596800/1151956791417114654/mailbar.png" style="display: block; height: auto; border: 0; max-width: 268px; width: 100%;" width="268" alt="Neibo logo" title="Neibo - ">
                                                     </a>
                                                 </div>
                                             </td>
@@ -128,7 +128,7 @@
                                         <tr>
                                             <td class="pad" style="padding-bottom:25px;padding-left:20px;padding-right:20px;padding-top:10px;">
                                                 <div style="color:#2f2f2f;font-family:Georgia,Times,'Times New Roman',serif;font-size:42px;line-height:120%;text-align:center;mso-line-height-alt:50.4px;">
-                                                    <p style="margin: 0;" th:text="'Hey, ' + ${name} + '!'"></p>
+                                                    <p style="margin: 0;" th:text="'Hola, ' + ${name} + '!'"></p>
                                                 </div>
                                             </td>
                                         </tr>
@@ -138,7 +138,8 @@
                                             <td class="pad" style="padding-bottom:10px;padding-left:30px;padding-right:30px;padding-top:10px;">
                                                 <div style="color:#2f2f2f;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;font-size:16px;line-height:150%;text-align:left;mso-line-height-alt:24px;">
                                                     <p style="margin: 0; word-break: break-word;">&nbsp;</p>
-                                                    <p style="margin: 0;" th:text="'Hay un nuevo anuncio: ' + ${postTitle}"></p>
+                                                    <p style="margin: 0;" th:text="'Hay un nuevo ' + ${joinerOccupation} + ' que quiere unirse a ' + ${neighborhood} + ':'"></p>
+                                                    <p style="margin: 0;" th:text="${joinerName} + '!'"></p>
                                                 </div>
                                             </td>
                                         </tr>
@@ -163,7 +164,7 @@
                                         <tr>
                                             <td class="pad" style="padding-left: 20px; padding-right: 20px; padding-top: 40px; text-align: center;"> <!-- Add text-align: center; -->
                                                 <div style="color: #2f2f2f; font-family: Arial, Helvetica Neue, Helvetica, sans-serif; font-size: 16px; letter-spacing: 0px; line-height: 150%; text-align: center; mso-line-height-alt: 24px;">
-                                                    <p style="margin: 0; word-break: break-word;"><strong><span>Haz click en el botón debajo para ver el anuncio!<br></span></strong></p>
+                                                    <p style="margin: 0; word-break: break-word;"><strong><span>Haz click en el botón debajo para ver la solicitud!<br></span></strong></p>
                                                 </div>
                                             </td>
                                         </tr>
@@ -180,7 +181,7 @@
                                     <table class="button_block block-4" width="100%" border="0" cellpadding="10" cellspacing="0" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
                                         <tr>
                                             <td class="pad">
-                                                <div class="alignment" align="center"><!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" th:href="@{${postPath}}" style="height:38px;width:195px;v-text-anchor:middle;" arcsize="0%" stroke="false" fillcolor="#9ad379"><w:anchorlock/><v:textbox inset="0px,0px,0px,0px"><center style="color:#ffffff; font-family:Arial, sans-serif; font-size:14px"><![endif]--><a th:href="@{${postPath}}" target="_blank" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#9ad379;border-radius:0px;width:auto;border-top:0px solid #8a3b8f;font-weight:bold;border-right:0px solid #8a3b8f;border-bottom:0px solid #8a3b8f;border-left:0px solid #8a3b8f;padding-top:5px;padding-bottom:5px;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;font-size:14px;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:40px;padding-right:40px;font-size:14px;display:inline-block;letter-spacing:1px;"><span style="word-break:break-word;"><span style="line-height: 28px;" data-mce-style>VER ANUNCIO<br></span></span></span></a><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>
+                                                <div class="alignment" align="center"><!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" th:href="@{${urlpath}}" style="height:38px;width:195px;v-text-anchor:middle;" arcsize="0%" stroke="false" fillcolor="#9ad379"><w:anchorlock/><v:textbox inset="0px,0px,0px,0px"><center style="color:#ffffff; font-family:Arial, sans-serif; font-size:14px"><![endif]--><a th:href="@{${urlpath}}" target="_blank" style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#9ad379;border-radius:0px;width:auto;border-top:0px solid #8a3b8f;font-weight:bold;border-right:0px solid #8a3b8f;border-bottom:0px solid #8a3b8f;border-left:0px solid #8a3b8f;padding-top:5px;padding-bottom:5px;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;font-size:14px;text-align:center;mso-border-alt:none;word-break:keep-all;"><span style="padding-left:40px;padding-right:40px;font-size:14px;display:inline-block;letter-spacing:1px;"><span style="word-break:break-word;"><span style="line-height: 28px;" data-mce-style>VER SOLICITUD<br></span></span></span></a><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>
                                             </td>
                                         </tr>
                                     </table>

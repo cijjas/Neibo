@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.sql.SQLOutput;
 import java.util.*;
 import java.sql.Date;
 
@@ -379,13 +380,16 @@ public class FrontController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView logIn(
-            Model model,
             @ModelAttribute("signupForm") final SignupForm signupform,
-            @RequestParam(value = "error", required = false, defaultValue = "false") boolean error,
-            @RequestParam(value = "email", required = false) String email
+            @ModelAttribute("workerSignupForm") final WorkerSignupForm workerSignupForm,
+            @RequestParam(value = "error", required = false, defaultValue = "false") boolean error
     ) {
-        model.addAttribute("neighbor", new User.Builder());
         ModelAndView mav = new ModelAndView("views/landingPage");
+        List<Pair<Integer, String>> professionsPairs = new ArrayList<>();
+        for (Professions profession : Professions.values())
+            professionsPairs.add(new Pair<>(profession.getId(), profession.name()));
+
+        mav.addObject("professionsPairs", professionsPairs);
         mav.addObject("error", error);
         mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
         mav.addObject("openSignupDialog", false);
@@ -401,6 +405,7 @@ public class FrontController {
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public ModelAndView signupForm(
             @ModelAttribute("signupForm") final SignupForm signupform,
+            @ModelAttribute("workerSignupForm") final WorkerSignupForm workerSignupForm,
             @RequestParam(value = "successfullySignup", required = false) boolean successfullySignup
     ) {
         ModelAndView mav = new ModelAndView("views/landingPage");
@@ -412,10 +417,11 @@ public class FrontController {
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public ModelAndView signupForm(
             @Valid @ModelAttribute("signupForm") final SignupForm signupForm,
-            final BindingResult errors
+            final BindingResult errors,
+            @ModelAttribute("workerSignupForm") final WorkerSignupForm workerSignupForm
     ) {
         if (errors.hasErrors()) {
-            ModelAndView mav = signupForm(signupForm, false);
+            ModelAndView mav =  logIn(signupForm, new WorkerSignupForm(), true);
             mav.addObject("openSignupDialog", true);
             return mav;
         }
@@ -431,11 +437,53 @@ public class FrontController {
         return mav;
     }
 
+    @RequestMapping(value = "/signup-worker", method = RequestMethod.GET)
+    public ModelAndView workerSignupForm(
+            @ModelAttribute("workerSignupForm") final WorkerSignupForm workerSignupForm,
+            @ModelAttribute("signupForm") final SignupForm signupForm,
+            @RequestParam(value = "successfullySignup", required = false) boolean successfullySignup
+    ) {
+        ModelAndView mav = new ModelAndView("views/landingPage");
+
+        List<Pair<Integer, String>> professionsPairs = new ArrayList<>();
+        for (Professions profession : Professions.values())
+            professionsPairs.add(new Pair<>(profession.getId(), profession.name()));
+
+        mav.addObject("professionsPairs", professionsPairs);
+        mav.addObject("successfullySignup", successfullySignup);
+        mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
+        return mav;
+    }
+
+    @RequestMapping(value = "/signup-worker", method = RequestMethod.POST)
+    public ModelAndView workerSignupForm(
+            @Valid @ModelAttribute("workerSignupForm") final WorkerSignupForm workerSignupForm,
+            final BindingResult errors,
+            @ModelAttribute("signupForm") final SignupForm signupForm
+    ) {
+        if (errors.hasErrors()) {
+            ModelAndView mav = logIn(new SignupForm(), workerSignupForm, true);
+            mav.addObject("openWorkerSignupDialog", true);
+            return mav;
+        }
+        int identification = 0;
+        try {
+            identification = Integer.parseInt(workerSignupForm.getW_identification());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Printing the professions chosen");
+        System.out.println(workerSignupForm.getProfessionIds());
+        ws.createWorker(workerSignupForm.getW_mail(), workerSignupForm.getW_name(), workerSignupForm.getW_surname(), workerSignupForm.getW_password(), identification, workerSignupForm.getPhoneNumber(), workerSignupForm.getAddress(), Language.ENGLISH, workerSignupForm.getProfessionIds(), workerSignupForm.getBusinessName());
+        ModelAndView mav = new ModelAndView("redirect:/signup-worker");
+        mav.addObject("successfullySignup", true);
+        return mav;
+    }
+
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public void logOut() {
         sessionUtils.clearLoggedUser();
     }
-
 
 
     //------------------------------------- USER AMENITIES & RESERVATIONS --------------------------------------
@@ -635,6 +683,7 @@ public class FrontController {
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
         Random random = new Random();
+        long[] jobNumbers = {1, 2, 3, 4}; // Define the possible job numbers
         for (int i = 5; i < 35; i++) {
             String email = "worker" + i + "@test.com";
             String name = "WorkerName" + i;
@@ -645,15 +694,25 @@ public class FrontController {
             String address = "Address" + i;
             Language language = Language.ENGLISH;
 
-            // Generate a random job number between 1 and 4
-            int jobNumber = random.nextInt(4) + 1;
+            // Generate a random number of jobs for the worker (between 1 and 4)
+            int numJobs = random.nextInt(4) + 1;
 
-            // Create the worker
-            Worker worker = ws.createWorker(email, name, surname, password, identificationNumber, phoneNumber, address, language, jobNumber, "BusinessName");
+            // Create an array to store the job numbers for this worker
+            long[] workerJobNumbers = new long[numJobs];
+
+            // Generate random job numbers for this worker
+            for (int j = 0; j < numJobs; j++) {
+                int randomIndex = random.nextInt(jobNumbers.length);
+                workerJobNumbers[j] = jobNumbers[randomIndex];
+            }
+
+            // Create the worker with multiple jobs
+            Worker worker = ws.createWorker(email, name, surname, password, identificationNumber, phoneNumber, address, language, workerJobNumbers, "BusinessName");
 
             // Add the worker to a neighborhood (assuming neighborhood ID is 1)
             nhws.addWorkerToNeighborhood(worker.getUser().getUserId(), 1);
         }
+
 
         ps.createWorkerPost("This is a second test posttt", "Alrighty Aphrodite", 29, null);
 

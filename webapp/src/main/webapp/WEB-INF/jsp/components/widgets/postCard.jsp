@@ -270,7 +270,7 @@
                                     try {
                                         const response = await fetch("/endpoint/commentById?id=" + commentId);
                                         if (!response.ok) {
-                                            throw new Error("Failed to fetch psot comment data from the endpoint.");
+                                            throw new Error("Failed to fetch post comment data from the endpoint.");
                                         }
                                         const commentElement = document.getElementById("comment-" + commentId);
                                         commentElement.textContent = await response.text();

@@ -1,11 +1,13 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.ValidTimeRange;
 import org.hibernate.validator.constraints.NotBlank;
 import java.sql.Time;
 
 import javax.validation.constraints.Size;
 import java.sql.Date;
 
+@ValidTimeRange
 public class EventForm {
     @NotBlank
     @Size(max = 100)

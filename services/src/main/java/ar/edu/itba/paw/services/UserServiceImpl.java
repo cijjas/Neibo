@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Image;
+import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.models.User;
 import enums.Language;
 import enums.UserRole;
@@ -47,7 +48,14 @@ public class UserServiceImpl implements UserService {
         LOGGER.info("Creating Neighbor with mail {}", mail);
         User n = findUserByMail(mail).orElse(null);
         if (n == null) {
-            return userDao.createUser(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, false, UserRole.UNVERIFIED_NEIGHBOR, identification);
+            User createdUser = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, false, UserRole.UNVERIFIED_NEIGHBOR, identification);
+
+            //if user created is a neighbor (not worker), send admin email notifying new neighbor
+            if(neighborhoodId != 0) {
+                System.out.println("inside email clause");
+                emailService.sendNewUserMail(neighborhoodId, name, UserRole.NEIGHBOR);
+            }
+            return createdUser;
         }else if (n.getPassword() == null){
             // n is a user from an early version where signing up was not a requirement
             userDao.setUserValues(n.getUserId(), passwordEncoder.encode(password), n.getName(), n.getSurname(), language, false,  n.getProfilePictureId(), UserRole.UNVERIFIED_NEIGHBOR, identification, n.getNeighborhoodId());
