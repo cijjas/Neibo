@@ -29,9 +29,11 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
                 .withTableName("neighborhoods_channels");
     }
 
+    // ---------------------------------- NEIGHBORHOODS_CHANNELS INSERT ------------------------------------------------
 
     @Override
     public void createChannelMapping(long channelId, long neighborhoodId) {
+        LOGGER.info("Inserting Channel Mapping");
         Map<String, Object> data = new HashMap<>();
         data.put("channelid", channelId);
         data.put("neighborhoodid", neighborhoodId);

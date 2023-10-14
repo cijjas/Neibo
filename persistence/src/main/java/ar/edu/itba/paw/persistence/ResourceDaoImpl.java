@@ -40,6 +40,7 @@ public class ResourceDaoImpl implements ResourceDao {
 
     @Override
     public Resource createResource(long neighborhoodId, String title, String description, long imageId) {
+        LOGGER.info("Inserting Resource {}", title);
         Map<String, Object> data = new HashMap<>();
         data.put("neighborhoodid", neighborhoodId);
         data.put("resourcetitle", title);
@@ -73,13 +74,18 @@ public class ResourceDaoImpl implements ResourceDao {
                     .imageId(rs.getLong("resourceimageId"))
                     .neighborhoodId(rs.getLong("neighborhoodid"))
                     .build();
+
     @Override
     public List<Resource> getResources(final long neighborhoodId) {
+        LOGGER.info("Selecting Resources from Neighborhood {}", neighborhoodId);
         return jdbcTemplate.query(RESOURCES + " WHERE rs.neighborhoodid = ?", ROW_MAPPER, neighborhoodId);
     }
 
+    // --------------------------------------------- RESOURCE DELETE ----------------------------------------------------
+
     @Override
     public boolean deleteResource(final long resourceId) {
+        LOGGER.info("Deleting Resource with resourceId {}", resourceId);
         return jdbcTemplate.update("DELETE FROM resources WHERE resourceid = ?", resourceId) > 0;
     }
 }
