@@ -44,7 +44,7 @@ public class TimeDaoImpl implements TimeDao {
 
     @Override
     public Time createTime(java.sql.Time timeInterval) {
-        LOGGER.info("Inserting Time {}", timeInterval.getTime());
+        LOGGER.debug("Inserting Time {}", timeInterval.getTime());
         Map<String, Object> data = new HashMap<>();
         data.put("timeinterval", timeInterval);
 
@@ -70,7 +70,7 @@ public class TimeDaoImpl implements TimeDao {
 
     @Override
     public Optional<Time> findTimeById(long timeId) {
-        LOGGER.info("Selecting Time with timeId {}", timeId);
+        LOGGER.debug("Selecting Time with timeId {}", timeId);
         final List<Time> list = jdbcTemplate.query(TIMES + " WHERE timeid = ?", ROW_MAPPER, timeId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }

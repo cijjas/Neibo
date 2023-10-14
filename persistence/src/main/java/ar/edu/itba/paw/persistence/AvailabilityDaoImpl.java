@@ -50,7 +50,7 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
 
     @Override
     public Number createAvailability(long amenityId, long shiftId) {
-        LOGGER.info("Inserting Availability");
+        LOGGER.debug("Inserting Availability");
         Map<String, Object> data = new HashMap<>();
         data.put("amenityid", amenityId);
         data.put("shiftid", shiftId);
@@ -70,7 +70,7 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
 
     @Override
     public Optional<Long> findAvailabilityId(long amenityId, long shiftId) {
-        LOGGER.info("Selecting Availability with amenityId {} and shiftId {}", amenityId, shiftId);
+        LOGGER.debug("Selecting Availability with amenityId {} and shiftId {}", amenityId, shiftId);
         final List<Long> list = jdbcTemplate.query("SELECT amenityAvailabilityId FROM amenities_shifts_availability WHERE amenityid = ? AND shiftid = ?", ROW_MAPPER, amenityId, shiftId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
@@ -79,7 +79,7 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
 
     @Override
     public boolean deleteAvailability(long amenityId, long shiftId) {
-        LOGGER.info("Deleting Availability with amenityId {} and shiftId {}", amenityId, shiftId);
+        LOGGER.debug("Deleting Availability with amenityId {} and shiftId {}", amenityId, shiftId);
         return jdbcTemplate.update("DELETE FROM amenities_shifts_availability WHERE amenityid = ? and shiftid = ?", amenityId, shiftId) > 0;
     }
 

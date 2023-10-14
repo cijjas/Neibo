@@ -431,7 +431,12 @@ public class FrontController {
         return mav;
     }
 
-   
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public void logOut() {
+        sessionUtils.clearLoggedUser();
+    }
+
+
 
     //------------------------------------- USER AMENITIES & RESERVATIONS --------------------------------------
 
@@ -613,7 +618,7 @@ public class FrontController {
         return mav;
     }
 
-    @ExceptionHandler({InsertionException.class})
+    @ExceptionHandler({InsertionException.class, MailingException.class})
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView insertion(RuntimeException ex) {
         ModelAndView mav = new ModelAndView("errors/errorPage");

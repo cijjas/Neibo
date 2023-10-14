@@ -33,7 +33,7 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
 
     @Override
     public void createChannelMapping(long channelId, long neighborhoodId) {
-        LOGGER.info("Inserting Channel Mapping");
+        LOGGER.debug("Inserting Channel Mapping");
         Map<String, Object> data = new HashMap<>();
         data.put("channelid", channelId);
         data.put("neighborhoodid", neighborhoodId);

@@ -36,7 +36,7 @@ public class LikeDaoImpl implements LikeDao {
 
     @Override
     public void createLike(long postId, long userId) {
-        LOGGER.info("Inserting Like");
+        LOGGER.debug("Inserting Like");
         Map<String, Object> data = new HashMap<>();
         data.put("postid", postId);
         data.put("likedate", Timestamp.valueOf(LocalDateTime.now()));
@@ -52,14 +52,14 @@ public class LikeDaoImpl implements LikeDao {
     // ---------------------------------------------- POST_USERS_LIKES SELECT ------------------------------------------
 
     public int getLikes(long postId) {
-        LOGGER.info("Selecting Likes from Post {}", postId);
+        LOGGER.debug("Selecting Likes from Post {}", postId);
         String sql = "SELECT COUNT(*) FROM posts_users_likes WHERE postid = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class, postId);
     }
 
     @Override
     public boolean isPostLiked(long postId, long userId) {
-        LOGGER.info("Selecting Likes from Post {} and userId {}", postId, userId);
+        LOGGER.debug("Selecting Likes from Post {} and userId {}", postId, userId);
         String sql = "SELECT COUNT(*) FROM posts_users_likes WHERE postid = ? AND userid = ?";
         return jdbcTemplate.queryForObject(sql, Integer.class, postId, userId) > 0;
     }
@@ -68,7 +68,7 @@ public class LikeDaoImpl implements LikeDao {
 
     @Override
     public boolean deleteLike(long postId, long userId){
-        LOGGER.info("Deleting Like from Post {} and userId {}", postId, userId);
+        LOGGER.debug("Deleting Like from Post {} and userId {}", postId, userId);
         return jdbcTemplate.update("DELETE FROM posts_users_likes WHERE postid = ? AND userid = ? ", postId, userId) > 0;
     }
 }

@@ -11,15 +11,17 @@ import ar.edu.itba.paw.models.User;
 import enums.Language;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class EventServiceImpl implements EventService {
-
     private final EventDao eventDao;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
 
     @Autowired
     public EventServiceImpl(final EventDao eventDao) {
@@ -28,19 +30,29 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
-    public Optional<Event> findEventById(long eventId) { return eventDao.findEventById(eventId); }
+    public Optional<Event> findEventById(long eventId) {
+        LOGGER.info("Finding Event {}", eventId);
+        return eventDao.findEventById(eventId); }
 
     @Override
-    public Event createEvent(String name, String description, Date date, Time startTime, Time endTime, long neighborhoodId) { return eventDao.createEvent(name, description, date, startTime, endTime, neighborhoodId); }
+    public Event createEvent(String name, String description, Date date, Time startTime, Time endTime, long neighborhoodId) {
+        LOGGER.info("Creating Event {} for Neighborhood {}", name, neighborhoodId);
+        return eventDao.createEvent(name, description, date, startTime, endTime, neighborhoodId); }
 
     @Override
-    public List<Event> getEventsByDate(Date date, long neighborhoodId) { return eventDao.getEventsByDate(date, neighborhoodId); }
+    public List<Event> getEventsByDate(Date date, long neighborhoodId) {
+        LOGGER.info("Getting Events for Neighborhood {} on Date {}", neighborhoodId, date);
+        return eventDao.getEventsByDate(date, neighborhoodId); }
 
     @Override
-    public List<Event> getEventsByNeighborhoodId(long neighborhoodId) { return eventDao.getEventsByNeighborhoodId(neighborhoodId); }
+    public List<Event> getEventsByNeighborhoodId(long neighborhoodId) {
+        LOGGER.info("Getting Events for Neighborhood {}", neighborhoodId);
+        return eventDao.getEventsByNeighborhoodId(neighborhoodId); }
 
     @Override
-    public boolean hasEvents(Date date, long neighborhoodId) { return !eventDao.getEventsByDate(date, neighborhoodId).isEmpty(); }
+    public boolean hasEvents(Date date, long neighborhoodId) {
+        LOGGER.info("Checking if Neighborhood {} has Events on {}", neighborhoodId, date);
+        return !eventDao.getEventsByDate(date, neighborhoodId).isEmpty(); }
 
     @Override
     public List<Date> getEventDates(long neighborhoodId) { return eventDao.getEventDates(neighborhoodId); }

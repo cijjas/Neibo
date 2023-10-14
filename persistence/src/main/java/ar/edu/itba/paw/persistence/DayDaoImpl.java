@@ -42,7 +42,7 @@ public class    DayDaoImpl implements DayDao {
 
     @Override
     public Day createDay(String day) {
-        LOGGER.info("Inserting Day {}", day);
+        LOGGER.debug("Inserting Day {}", day);
         Map<String, Object> data = new HashMap<>();
         data.put("dayname", day);
 
@@ -68,7 +68,7 @@ public class    DayDaoImpl implements DayDao {
 
     @Override
     public Optional<Day> findDayById(long dayId) {
-        LOGGER.info("Selecting Day with id {}", dayId);
+        LOGGER.debug("Selecting Day with id {}", dayId);
         final List<Day> list = jdbcTemplate.query(DAYS + " WHERE dayid = ?", ROW_MAPPER, dayId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }

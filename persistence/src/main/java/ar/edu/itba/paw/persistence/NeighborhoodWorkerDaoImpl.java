@@ -31,7 +31,7 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
     // ----------------------------------------- NEIGHBORHOOD_WORKERS SELECT -------------------------------------------
     @Override
     public void addWorkerToNeighborhood(long workerId, long neighborhoodId) {
-        LOGGER.info("Inserting Worker to a Neighborhood");
+        LOGGER.debug("Inserting Worker to a Neighborhood");
         Map<String, Object> data = new HashMap<>();
         data.put("workerid", workerId);
         data.put("neighborhoodid", neighborhoodId);
@@ -47,7 +47,7 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
     // ----------------------------------------- NEIGHBORHOOD_WORKERS DELETE -------------------------------------------
     @Override
     public void removeWorkerFromNeighborhood(long workerId, long neighborhoodId) {
-        LOGGER.info("Deleting Worker {} from Neighborhood {}", workerId, neighborhoodId);
+        LOGGER.debug("Deleting Worker {} from Neighborhood {}", workerId, neighborhoodId);
         jdbcTemplate.update("DELETE FROM workers_neighborhoods WHERE workerid = ? AND neighborhoodid = ?", workerId, neighborhoodId);
     }
 }

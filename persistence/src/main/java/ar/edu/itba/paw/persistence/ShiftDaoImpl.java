@@ -59,7 +59,7 @@ public class ShiftDaoImpl implements ShiftDao {
 
     @Override
     public Shift createShift(long dayId, long startTimeId) {
-        LOGGER.info("Inserting Shift");
+        LOGGER.debug("Inserting Shift");
         Map<String, Object> data = new HashMap<>();
         data.put("dayid", dayId);
         data.put("starttime", startTimeId);
@@ -100,21 +100,21 @@ public class ShiftDaoImpl implements ShiftDao {
 
     @Override
     public Optional<Shift> findShiftById(long shiftId) {
-        LOGGER.info("Selecting Shift with shiftId {}", shiftId);
+        LOGGER.debug("Selecting Shift with shiftId {}", shiftId);
         final List<Shift> list = jdbcTemplate.query(SHIFTS + " WHERE shiftid = ?", ROW_MAPPER, shiftId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
     public Optional<Shift> findShiftId(long startTime, long dayId) {
-        LOGGER.info("Selecting Shift with startTime {} and dayId {}", startTime, dayId);
+        LOGGER.debug("Selecting Shift with startTime {} and dayId {}", startTime, dayId);
         final List<Shift> list = jdbcTemplate.query(SHIFTS + " WHERE starttime = ? and dayid = ?", ROW_MAPPER, startTime, dayId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
     public List<Shift> getShifts(long amenityId, long dayId, Date date) {
-        LOGGER.info("Selecting Shifts with their status for the Amenity with amenityId {} for Day {} and Date {}", amenityId, dayId, date);
+        LOGGER.debug("Selecting Shifts with their status for the Amenity with amenityId {} for Day {} and Date {}", amenityId, dayId, date);
         String query =
                 "SELECT s.*," +
                 "       CASE" +
@@ -134,7 +134,7 @@ public class ShiftDaoImpl implements ShiftDao {
 
     @Override
     public List<Shift> getAmenityShifts(long amenityId) {
-        LOGGER.info("Selecting Weekly Available Shifts for Amenity {}", amenityId);
+        LOGGER.debug("Selecting Weekly Available Shifts for Amenity {}", amenityId);
         return jdbcTemplate.query(SHIFTS_JOIN_AVAILABILITY_SHIFTS + " WHERE av.amenityid = ?", ROW_MAPPER, amenityId);
     }
 }

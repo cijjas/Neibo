@@ -46,7 +46,7 @@ public class ImageDaoImpl implements ImageDao {
 
     @Override
     public Image storeImage(MultipartFile image) {
-        LOGGER.info("Inserting Image {}", image.getName());
+        LOGGER.debug("Inserting Image {}", image.getName());
         Map<String, Object> data = new HashMap<>();
         byte[] imageBytes;
         try {
@@ -79,7 +79,7 @@ public class ImageDaoImpl implements ImageDao {
 
     @Override
     public Optional<Image> getImage(long imageId) {
-        LOGGER.info("Selecting Image with id {}", imageId);
+        LOGGER.debug("Selecting Image with id {}", imageId);
         final List<Image> list = jdbcTemplate.query(IMAGES + " WHERE imageid = ?", ROW_MAPPER, imageId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
