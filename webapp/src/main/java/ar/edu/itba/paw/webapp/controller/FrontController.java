@@ -382,8 +382,7 @@ public class FrontController {
     public ModelAndView logIn(
             @ModelAttribute("signupForm") final SignupForm signupform,
             @ModelAttribute("workerSignupForm") final WorkerSignupForm workerSignupForm,
-            @RequestParam(value = "error", required = false, defaultValue = "false") boolean error,
-            @RequestParam(value = "email", required = false) String email
+            @RequestParam(value = "error", required = false, defaultValue = "false") boolean error
     ) {
         ModelAndView mav = new ModelAndView("views/landingPage");
         List<Pair<Integer, String>> professionsPairs = new ArrayList<>();
@@ -680,6 +679,7 @@ public class FrontController {
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
         Random random = new Random();
+        long[] jobNumbers = {1, 2, 3, 4}; // Define the possible job numbers
         for (int i = 5; i < 35; i++) {
             String email = "worker" + i + "@test.com";
             String name = "WorkerName" + i;
@@ -690,15 +690,25 @@ public class FrontController {
             String address = "Address" + i;
             Language language = Language.ENGLISH;
 
-            // Generate a random job number between 1 and 4
-            int jobNumber = random.nextInt(4) + 1;
+            // Generate a random number of jobs for the worker (between 1 and 4)
+            int numJobs = random.nextInt(4) + 1;
 
-            // Create the worker
-            Worker worker = ws.createWorker(email, name, surname, password, identificationNumber, phoneNumber, address, language, jobNumber, "BusinessName");
+            // Create an array to store the job numbers for this worker
+            long[] workerJobNumbers = new long[numJobs];
+
+            // Generate random job numbers for this worker
+            for (int j = 0; j < numJobs; j++) {
+                int randomIndex = random.nextInt(jobNumbers.length);
+                workerJobNumbers[j] = jobNumbers[randomIndex];
+            }
+
+            // Create the worker with multiple jobs
+            Worker worker = ws.createWorker(email, name, surname, password, identificationNumber, phoneNumber, address, language, workerJobNumbers, "BusinessName");
 
             // Add the worker to a neighborhood (assuming neighborhood ID is 1)
             nhws.addWorkerToNeighborhood(worker.getUser().getUserId(), 1);
         }
+
 
         ps.createWorkerPost("This is a second test posttt", "Alrighty Aphrodite", 29, null);
 
