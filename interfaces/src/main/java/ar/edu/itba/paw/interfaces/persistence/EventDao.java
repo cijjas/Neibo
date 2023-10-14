@@ -20,4 +20,8 @@ public interface EventDao {
 
     boolean deleteEvent(long eventId);
 
+    public Optional<Long> findStartTimeIdByEventId(long eventId);
+
+    public Optional<Long> findEndTimeIdByEventId(long eventId);
+
 }

@@ -90,13 +90,10 @@ public class EventDaoImpl implements EventDao {
                     .name(name)
                     .description(description)
                     .date(date)
-                    .startTime(startTime)
-                    .endTime(endTime)
                     .duration(endTime.getTime() - startTime.getTime())
                     .neighborhoodId(neighborhoodId)
                     .build();
         } catch (DataAccessException ex) {
-            System.out.println("\n\n\nerror");
             LOGGER.error("Error inserting the Event", ex);
             throw new InsertionException("An error occurred whilst creating the event");
         }
@@ -114,6 +111,18 @@ public class EventDaoImpl implements EventDao {
     @Override
     public Optional<Event> findEventById(long eventId) {
         final List<Event> list = jdbcTemplate.query(EVENTS + " where eventid = ?", ROW_MAPPER, eventId);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+    }
+
+    @Override
+    public Optional<Long> findStartTimeIdByEventId(long eventId) {
+        final List<Long> list = jdbcTemplate.queryForList("select starttimeid from events where eventid = ?", Long.class, eventId);
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+    }
+
+    @Override
+    public Optional<Long> findEndTimeIdByEventId(long eventId) {
+        final List<Long> list = jdbcTemplate.queryForList("select endtimeid from events where eventid = ?", Long.class, eventId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
