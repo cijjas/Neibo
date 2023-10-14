@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.sql.SQLOutput;
 import java.util.*;
 import java.sql.Date;
 
@@ -379,12 +380,16 @@ public class FrontController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView logIn(
-            Model model,
             @ModelAttribute("signupForm") final SignupForm signupform,
+            @ModelAttribute("workerSignupForm") final WorkerSignupForm workerSignupForm,
             @RequestParam(value = "error", required = false, defaultValue = "false") boolean error
     ) {
-        model.addAttribute("neighbor", new User.Builder());
         ModelAndView mav = new ModelAndView("views/landingPage");
+        List<Pair<Integer, String>> professionsPairs = new ArrayList<>();
+        for (Professions profession : Professions.values())
+            professionsPairs.add(new Pair<>(profession.getId(), profession.name()));
+
+        mav.addObject("professionsPairs", professionsPairs);
         mav.addObject("error", error);
         mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
         mav.addObject("openSignupDialog", false);
@@ -402,6 +407,7 @@ public class FrontController {
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public ModelAndView signupForm(
             @ModelAttribute("signupForm") final SignupForm signupform,
+            @ModelAttribute("workerSignupForm") final WorkerSignupForm workerSignupForm,
             @RequestParam(value = "successfullySignup", required = false) boolean successfullySignup
     ) {
         ModelAndView mav = new ModelAndView("views/landingPage");
@@ -413,10 +419,11 @@ public class FrontController {
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public ModelAndView signupForm(
             @Valid @ModelAttribute("signupForm") final SignupForm signupForm,
-            final BindingResult errors
+            final BindingResult errors,
+            @ModelAttribute("workerSignupForm") final WorkerSignupForm workerSignupForm
     ) {
         if (errors.hasErrors()) {
-            ModelAndView mav = signupForm(signupForm, false);
+            ModelAndView mav =  logIn(signupForm, new WorkerSignupForm(), true);
             mav.addObject("openSignupDialog", true);
             return mav;
         }
@@ -428,6 +435,49 @@ public class FrontController {
         }
         us.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), Language.ENGLISH, identification);
         ModelAndView mav = new ModelAndView("redirect:/signup");
+        mav.addObject("successfullySignup", true);
+        return mav;
+    }
+
+    @RequestMapping(value = "/signup-worker", method = RequestMethod.GET)
+    public ModelAndView workerSignupForm(
+            @ModelAttribute("workerSignupForm") final WorkerSignupForm workerSignupForm,
+            @ModelAttribute("signupForm") final SignupForm signupForm,
+            @RequestParam(value = "successfullySignup", required = false) boolean successfullySignup
+    ) {
+        ModelAndView mav = new ModelAndView("views/landingPage");
+
+        List<Pair<Integer, String>> professionsPairs = new ArrayList<>();
+        for (Professions profession : Professions.values())
+            professionsPairs.add(new Pair<>(profession.getId(), profession.name()));
+
+        mav.addObject("professionsPairs", professionsPairs);
+        mav.addObject("successfullySignup", successfullySignup);
+        mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
+        return mav;
+    }
+
+    @RequestMapping(value = "/signup-worker", method = RequestMethod.POST)
+    public ModelAndView workerSignupForm(
+            @Valid @ModelAttribute("workerSignupForm") final WorkerSignupForm workerSignupForm,
+            final BindingResult errors,
+            @ModelAttribute("signupForm") final SignupForm signupForm
+    ) {
+        if (errors.hasErrors()) {
+            ModelAndView mav = logIn(new SignupForm(), workerSignupForm, true);
+            mav.addObject("openWorkerSignupDialog", true);
+            return mav;
+        }
+        int identification = 0;
+        try {
+            identification = Integer.parseInt(workerSignupForm.getW_identification());
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Printing the professions chosen");
+        System.out.println(workerSignupForm.getProfessionIds());
+        ws.createWorker(workerSignupForm.getW_mail(), workerSignupForm.getW_name(), workerSignupForm.getW_surname(), workerSignupForm.getW_password(), identification, workerSignupForm.getPhoneNumber(), workerSignupForm.getAddress(), Language.ENGLISH, workerSignupForm.getProfessionIds(), workerSignupForm.getBusinessName());
+        ModelAndView mav = new ModelAndView("redirect:/signup-worker");
         mav.addObject("successfullySignup", true);
         return mav;
     }

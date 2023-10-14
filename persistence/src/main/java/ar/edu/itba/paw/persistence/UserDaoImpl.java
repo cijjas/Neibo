@@ -158,6 +158,12 @@ public class UserDaoImpl implements UserDao {
         return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());
     }
 
+    @Override
+    public Optional<User> findAdmin(long neighborhoodId) {
+        final List<User> list = jdbcTemplate.query(USERS + " WHERE neighborhoodid = ? AND role = ?", ROW_MAPPER, neighborhoodId, UserRole.ADMINISTRATOR.toString());
+        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+    }
+
 
     // ---------------------------------------------- USERS UPDATE -----------------------------------------------------
 

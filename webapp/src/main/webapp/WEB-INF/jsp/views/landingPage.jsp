@@ -111,9 +111,9 @@
                     </label>
                     <div class="centered-column">
 
-                        <button class="action-button" onclick="tryLogin()">
+                        <a class="action-button" onclick="tryLogin()">
                             <spring:message code="Login"/>
-                        </button>
+                        </a>
                         <span style="color:var(--lighttext); font-size: 14px;"><spring:message code="Not.a.member.question"/>
                                 <a onclick="closeLoginDialog(); openSignupDialog();" class="a-link"><spring:message code="Signup.now"/></a>
                         </span>
@@ -138,7 +138,12 @@
                 <div class="title">
                     <spring:message code="Welcome.to.neibo"/>
                     <br>
-                    <span><spring:message code="Signup.to.get.started"/></span>
+                    <span><spring:message code="Signup.to.get.started"/></span> <br/>
+                </div>
+                <div>
+                    <span style="color:var(--lighttext); font-size: 14px;"><spring:message code="Worker.signup.question"/>
+                                <a onclick="closeSignupDialog(); openWorkerSignupDialog();" class="a-link"><spring:message code="Signup.here"/></a>
+                    </span>
                 </div>
 
                 <form:form method="post" action="signup" modelAttribute="signupForm" id="signupForm">
@@ -213,7 +218,134 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="action-button"><spring:message code="Signup"/></button>
+                    <a onclick="submitSignupForm()" class="action-button"><spring:message code="Signup"/></a>
+                </form:form>
+
+            </div>
+        </div>
+
+<%--        Worker signup dialog--%>
+        <div class="dialog" id="workerSignupDialog" style="display: none">
+            <div class="dialog-content signup-content">
+                <div class="close-button" onclick="closeWorkerSignupDialog()">
+                    <i class="fas fa-close"></i>
+                </div>
+                <div class="title">
+                    <spring:message code="Welcome.to.neibo"/>
+                    <br>
+                    <span><spring:message code="Signup.to.get.started"/></span> <br/>
+                </div>
+
+                <form:form method="post" action="signup-worker" modelAttribute="workerSignupForm" id="workerSignupForm">
+                    <form:errors cssClass="error" element="p"/>
+                    <div class="centered-column">
+
+                        <div class="form-input">
+                            <form:label path="w_name">
+                                <c:set var="w_firstName"><spring:message code="First.name"/></c:set>
+                                <form:input path="w_name" placeholder="${w_firstName}" class="input"/>
+                            </form:label>
+                            <form:errors path="w_name" cssClass="landing-error" element="p"/>
+                        </div>
+                        <div class="form-input">
+                            <form:label path="w_surname">
+                                <c:set var="w_surname"><spring:message code="Surname"/></c:set>
+                                <form:input path="w_surname" placeholder="${w_surname}" class="input"/>
+                            </form:label>
+                            <form:errors path="w_surname" cssClass="landing-error" element="p"/>
+                        </div>
+                        <div class="form-input">
+                            <form:label path="w_mail">
+                                <c:set var="w_email"><spring:message code="Email"/></c:set>
+                                <form:input path="w_mail" placeholder="${w_email}" class="input"/>
+                            </form:label>
+                            <form:errors path="w_mail" cssClass="landing-error" element="p"/>
+                        </div>
+                        <div class="form-input">
+                            <form:label path="w_password">
+                                <c:set var="w_password"><spring:message code="Password"/></c:set>
+                                <form:input type="password" path="w_password" autocomplete="true" placeholder="Password" class="input"/>
+                            </form:label>
+                            <form:errors path="w_password" cssClass="landing-error" element="p"/>
+                        </div>
+
+                            <%-- ID --%>
+                        <div class="form-input">
+                            <form:label path="w_identification">
+                                <c:set var="w_identification"><spring:message code="Identification"/></c:set>
+
+                                <form:input
+                                        type="number"
+                                        pattern="[0-9]*"
+                                        inputmode="numeric"
+                                        min="1" max="99999999"
+                                        path="w_identification"
+                                        placeholder="${w_identification}"
+                                        class="input"
+                                />
+                            </form:label>
+                            <form:errors path="w_identification" cssClass="landing-error" element="p"/>
+                        </div>
+
+                        <%--Business Name--%>
+                        <div class="form-input">
+                            <form:label path="businessName">
+                                <c:set var="businessName"><spring:message code="Business.name"/></c:set>
+                                <form:input path="businessName" placeholder="${businessName}" class="input"/>
+                            </form:label>
+                            <form:errors path="businessName" cssClass="landing-error" element="p"/>
+                        </div>
+
+                        <%--Address--%>
+                        <div class="form-input">
+                            <form:label path="address">
+                                <c:set var="address"><spring:message code="Address"/></c:set>
+                                <form:input path="address" placeholder="${address}" class="input"/>
+                            </form:label>
+                            <form:errors path="address" cssClass="landing-error" element="p"/>
+                        </div>
+
+                        <%--Phone number--%>
+                        <div class="form-input">
+                            <form:label path="phoneNumber">
+                                <c:set var="phoneNumber"><spring:message code="PhoneNumber"/></c:set>
+                                <form:input path="phoneNumber" placeholder="${phoneNumber}" class="input"/>
+                            </form:label>
+                            <form:errors path="phoneNumber" cssClass="landing-error" element="p"/>
+                        </div>
+
+                            <%-- SELECT Language --%>
+                        <div class="form-input">
+                            <form:label path="w_language">
+                                <form:select path="w_language" class="cool-select" >
+                                    <form:option value="English"><spring:message code="English"/></form:option>
+                                    <form:option value="Spanish"><spring:message code="Spanish"/></form:option>
+                                </form:select>
+                            </form:label>
+                            <form:errors path="w_language" cssClass="landing-error" element="p"/>
+                        </div>
+
+                            <%-- select professions --%>
+                        <div class="form-input">
+                            <form:label path="professionIds">
+                                <form:select path="professionIds" class="cool-select" >
+                                    <c:forEach var="profession" items="${professionsPairs}">
+                                        <form:option value="${profession.key}"><c:out value="${profession.value}"/></form:option>
+                                    </c:forEach>
+                                </form:select>
+                            </form:label>
+                            <form:errors path="professionIds" cssClass="landing-error" element="p"/>
+                        </div>
+                    </div>
+                    <script>
+                        function submitWorkerSignupForm() {
+                            console.log("submitting worker form");
+                            const form = document.forms["workerSignupForm"];
+                            console.log(form);
+                            form.submit();
+                        }
+                    </script>
+                    <a onclick="submitWorkerSignupForm()" class="action-button"><spring:message code="Signup"/></a>
                 </form:form>
 
             </div>
@@ -223,6 +355,12 @@
         <c:if test="${openSignupDialog == true}">
             <script>
                 document.getElementById("signupDialog").style.display = "flex";
+            </script>
+        </c:if>
+
+        <c:if test="${openWorkerSignupDialog == true}">
+            <script>
+                document.getElementById("workerSignupDialog").style.display = "flex";
             </script>
         </c:if>
     </div>
@@ -236,6 +374,10 @@
 
 
 <script>
+    function submitSignupForm() {
+        console.log("submitting normal form");
+        document.forms["signupForm"].submit();
+    }
     function closeErrorDialog(){
         document.getElementById("errorDialog").style.display = "none";
     }
@@ -245,6 +387,14 @@
 
     function closeLoginDialog() {
         document.getElementById("loginDialog").style.display = "none";
+    }
+
+    function openWorkerSignupDialog(){
+        document.getElementById("workerSignupDialog").style.display = "flex";
+    }
+
+    function closeWorkerSignupDialog() {
+        document.getElementById("workerSignupDialog").style.display = "none";
     }
 
     function openSignupDialog(){

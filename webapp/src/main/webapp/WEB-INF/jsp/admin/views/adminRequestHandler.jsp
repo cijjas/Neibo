@@ -90,13 +90,12 @@
                                 </div>
 
                                 <div class="acceptance">
-                                    <%--Si son los neighbors solo boton de unverify--%>
+                                    <%--If its only neighbors display the unverify button--%>
                                     <c:choose >
                                         <c:when test="${neighbors}">
                                             <button class="ignore-button" onclick="rejectUser(${user.userId})"><spring:message code="Unverify"/></button>
                                         </c:when>
                                         <c:otherwise>
-                                            <%--<button class="ignore-button" onclick=""><spring:message code="Ignore"/></button>--%>
                                             <button class="ignore-button" onclick="rejectUser(${user.userId})"><spring:message code="Reject"/></button>
                                             <button class="cool-button cool-small" onclick="verifyUser(${user.userId})"><spring:message code="Accept"/></button>
                                         </c:otherwise>

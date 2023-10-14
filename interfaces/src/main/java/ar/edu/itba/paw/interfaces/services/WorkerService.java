@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface WorkerService {
 
     // ---------------------------------------------- WORKERS INSERT -----------------------------------------------------
-    Worker createWorker(String mail, String name, String surname, String password, int identification, String phoneNumber, String address, Language language, long professionId, String businessName);
+    Worker createWorker(String mail, String name, String surname, String password, int identification, String phoneNumber, String address, Language language, long[] professionIds, String businessName);
     // ---------------------------------------------- WORKERS SELECT -----------------------------------------------------
     Optional<Worker> findWorkerById(long workerId);
 
