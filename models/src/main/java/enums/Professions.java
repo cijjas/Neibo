@@ -1,11 +1,11 @@
 package enums;
 
 public enum Professions {
-    PLOMERO,
-    ELECTRICISTA,
-    PILETERO,
-    JARDINERO,
-    CARPINTERO;
+    PLUMBER,
+    ELECTRICIAN,
+    POOL_MAINTENANCE,
+    GARDENER,
+    CARPENTER;
 
     @Override
     public String toString() {

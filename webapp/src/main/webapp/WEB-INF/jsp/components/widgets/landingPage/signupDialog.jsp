@@ -1,6 +1,6 @@
 <div class="dialog" id="signupDialog" style="display: none">
     <div class="dialog-content " >
-        <div class="close-button" onclick="closeSignupDialog()">
+        <div class="close-button" onclick="closeSignupDialog(); takeToLogin()">
             <i class="fas fa-close"></i>
         </div>
         <div class="title mb-2 mt-5 f-c-c-c" style="gap:5px">
@@ -83,7 +83,7 @@
                 </div>
 
 
-                <a onclick="submitSignupForm()" class="action-button font-weight-bolder mt-3"><spring:message code="Signup"/></a>
+                <button onclick="submitSignupForm()" class="action-button font-weight-bolder mt-3"><spring:message code="Signup"/></button>
 
             </div>
             <div class="mt-3 mb-5">

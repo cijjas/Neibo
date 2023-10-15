@@ -237,7 +237,7 @@ input[type="number"],
 
 .cool-select {
     font-size: 15px;
-    font-weight: 600;
+    font-weight: bold;
     border-radius: var(--border-hard);
     border: 1px solid var(--primary);
     background-color: var(--background);
@@ -268,3 +268,132 @@ input[type="number"],
 }
 
 
+
+/*MULTI*/
+.profession-select{
+    & .container{
+        padding: 0;
+        position: relative;
+        max-width: 320px;
+        width: 100%;
+        & .select-btn{
+            display: flex;
+            height: 40px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px 0 10px;
+            border-radius: var(--border-hard);
+            border: var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            background-color: var(--background);
+
+            &:hover{
+                transform: translateY(-4px) ;
+                box-shadow: 4px 4px var(--primary);
+            }
+            & .btn-text{
+                white-space: nowrap;
+                overflow: clip;
+                text-overflow: ellipsis;
+                font-size: 15px;
+                font-weight: bold;
+                color: var(--lightertext);
+                max-width: 250px;
+                &.c-text{
+                    color: var(--text);
+                }
+            }
+            & .arrow-dwn{
+                display: flex;
+                height: 21px;
+                width: 21px;
+                color: #fff;
+                font-size: 14px;
+                border-radius: 50%;
+                background: var(--primary);
+                align-items: center;
+                justify-content: center;
+                transition: 0.3s;
+            }
+        }
+
+        & .open {
+            & .arrow-dwn {
+                transform: rotate(-180deg);
+            }
+            &  ~ .list-items{
+                display: block;
+            }
+        }
+
+    }
+
+
+    & .list-items {
+        z-index: 10;
+        position: absolute;
+        padding: 10px;
+        background-color: var(--background);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        display: none;
+        border-radius: var(--border-radius);
+        border:var(--border);
+        width: 320px;
+        max-height: 200px;
+        overflow-y: auto;
+        &::-webkit-scrollbar {
+            width: 10px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: var(--primary);
+            border-radius: 8px;
+        }
+        & .item{
+            display: flex;
+            align-items: center;
+            list-style: none;
+            height: 40px;
+            cursor: pointer;
+            transition: 0.3s;
+            padding: 0 10px;
+            border-radius: var(--border-radius);
+            color: var(--text);
+            & .item-text{
+                font-size: 16px;
+                font-weight: 400;
+            }
+            & .checkbox{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 16px;
+                width: 16px;
+                border-radius: var(--border-hard);
+                margin-right: 12px;
+                border: 1px solid var(--lighttext);
+                transition: all 0.3s ease-in-out;
+            }
+            &:hover{
+                color: var(--background);
+                border-color: var(--background);
+                background-color: var(--old-primary);
+            }
+        }
+
+    }
+
+    & .item.checked .checkbox{
+        background-color: var(--primary);
+        border-color: var(--primary);
+    }
+    & .checkbox .check-icon{
+        color: #fff;
+        font-size: 11px;
+        transform: scale(0);
+        transition: all 0.2s ease-in-out;
+    }
+    & .item.checked .check-icon{
+        transform: scale(1);
+    }
+}

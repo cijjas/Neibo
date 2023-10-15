@@ -8,6 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -74,7 +75,6 @@
         <a class="action-button font-weight-bolder"  onclick="openLoginDialog()">
             <spring:message code="Login"/>
         </a>
-
         <span style="color:var(--lighttext); font-size: 14px; mix-blend-mode: screen">
             <spring:message code="Not.a.member.question"/>
             <a onclick="openSignupDialog()" class="a-link">
@@ -128,20 +128,30 @@
         document.getElementById("loginDialog").style.display = "none";
     }
 
-    function openWorkerSignupDialog(){
-        document.getElementById("workerSignupDialog").style.display = "flex";
-    }
-
-    function closeWorkerSignupDialog() {
-        document.getElementById("workerSignupDialog").style.display = "none";
-    }
-
     function openSignupDialog(){
         document.getElementById("signupDialog").style.display = "flex";
     }
     function closeSignupDialog(){
         document.getElementById("signupDialog").style.display = "none";
 
+        clearFormErrors();
+    }
+
+    function openWorkerSignupDialog(){
+        document.getElementById("workerSignupDialog").style.display = "flex";
+    }
+
+    function closeWorkerSignupDialog() {
+        document.getElementById("workerSignupDialog").style.display = "none";
+        clearFormErrors();
+
+
+    }
+
+    function takeToLogin(){
+        window.location.href = "/login";
+    }
+    function clearFormErrors(){
         const formElements = document.querySelectorAll("#signupForm input");
         formElements.forEach(function (element) {
             element.value = "";

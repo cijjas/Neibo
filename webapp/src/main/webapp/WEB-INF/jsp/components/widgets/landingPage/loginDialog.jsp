@@ -1,7 +1,7 @@
 <%--        Login dialog--%>
 <div class="dialog" id="loginDialog" style="display: none">
     <div class="dialog-content">
-        <div class="close-button" onclick="closeLoginDialog()">
+        <div class="close-button" onclick="closeLoginDialog(); ">
             <i class="fas fa-close"></i>
         </div>
         <div class="title mb-2 mt-5 f-c-c-c" style="gap:5px">
@@ -33,11 +33,11 @@
 
                 <div class="centered-column">
 
-                <a class="action-button font-weight-bolder" onclick="tryLogin()">
+                <button class="action-button font-weight-bolder" onclick="tryLogin()">
                     <spring:message code="Login"/>
-                </a>
+                </button>
                 <span style="color:var(--lighttext); font-size: 14px;"><spring:message code="Not.a.member.question"/>
-                    <a onclick="closeLoginDialog(); openSignupDialog();" class="a-link"><spring:message code="Signup.now"/></a>
+                        <a onclick="closeLoginDialog(); openSignupDialog();" class="a-link"><spring:message code="Signup.now"/></a>
                 </span>
                 <script>
                     function tryLogin(){

@@ -21,7 +21,7 @@
 <script>
     function closeErrorDialog() {
         const errorContainer = document.getElementById('errorDialog');
-        if("${param.openLoginAgain}" === "true"  ){
+        if("${param.openLoginAgain}" === "true"){
             openLoginDialog();
         }
         errorContainer.style.display = 'none'; // Hide the container

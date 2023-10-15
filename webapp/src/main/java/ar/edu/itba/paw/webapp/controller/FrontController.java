@@ -388,8 +388,11 @@ public class FrontController {
     ) {
         ModelAndView mav = new ModelAndView("views/landingPage");
         List<Pair<Integer, String>> professionsPairs = new ArrayList<>();
-        for (Professions profession : Professions.values())
-            professionsPairs.add(new Pair<>(profession.getId(), profession.name()));
+        for (Professions profession : Professions.values()){
+            System.out.println(profession.getId());
+            System.out.println(profession.toString());
+            professionsPairs.add(new Pair<>(profession.getId(), profession.toString()));
+        }
 
         mav.addObject("email", email);
         mav.addObject("professionsPairs", professionsPairs);
@@ -448,9 +451,12 @@ public class FrontController {
     ) {
         ModelAndView mav = new ModelAndView("views/landingPage");
 
+
         List<Pair<Integer, String>> professionsPairs = new ArrayList<>();
-        for (Professions profession : Professions.values())
-            professionsPairs.add(new Pair<>(profession.getId(), profession.name()));
+        for (Professions profession : Professions.values()){
+            professionsPairs.add(new Pair<>(profession.getId(), profession.toString()));
+        }
+        System.out.println(professionsPairs);
 
         mav.addObject("professionsPairs", professionsPairs);
         mav.addObject("successfullySignup", successfullySignup);
@@ -476,7 +482,6 @@ public class FrontController {
             e.printStackTrace();
         }
         System.out.println("Printing the professions chosen");
-        System.out.println(workerSignupForm.getProfessionIds());
         ws.createWorker(workerSignupForm.getW_mail(), workerSignupForm.getW_name(), workerSignupForm.getW_surname(), workerSignupForm.getW_password(), identification, workerSignupForm.getPhoneNumber(), workerSignupForm.getAddress(), Language.ENGLISH, workerSignupForm.getProfessionIds(), workerSignupForm.getBusinessName());
         ModelAndView mav = new ModelAndView("redirect:/signup-worker");
         mav.addObject("successfullySignup", true);
