@@ -42,7 +42,7 @@ public class ContactDaoImpl implements ContactDao {
 
     @Override
     public Contact createContact(long neighborhoodId, String contactName, String contactAddress, String contactPhone) {
-        LOGGER.info("Inserting Contact {}", contactName);
+        LOGGER.debug("Inserting Contact {}", contactName);
         Map<String, Object> data = new HashMap<>();
         data.put("neighborhoodid", neighborhoodId);
         data.put("contactname", contactName);
@@ -77,7 +77,7 @@ public class ContactDaoImpl implements ContactDao {
                     .build();
     @Override
     public List<Contact> getContacts(final long neighborhoodId) {
-        LOGGER.info("Selecting Contacts from Neighborhood {}", neighborhoodId);
+        LOGGER.debug("Selecting Contacts from Neighborhood {}", neighborhoodId);
         return jdbcTemplate.query(CONTACTS + " WHERE ct.neighborhoodid = ?", ROW_MAPPER, neighborhoodId);
     }
 
@@ -85,7 +85,7 @@ public class ContactDaoImpl implements ContactDao {
 
     @Override
     public boolean deleteContact(long contactId) {
-        LOGGER.info("Deleting Contact with id {}", contactId);
+        LOGGER.debug("Deleting Contact with id {}", contactId);
         return jdbcTemplate.update("DELETE FROM contacts WHERE contactid = ?", contactId) > 0;
     }
 }

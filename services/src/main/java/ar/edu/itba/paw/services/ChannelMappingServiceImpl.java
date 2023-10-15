@@ -7,18 +7,23 @@ import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.models.Channel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class ChannelMappingServiceImpl implements ChannelMappingService {
 
     private final ChannelMappingDao channelMappingDao;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChannelMappingServiceImpl.class);
+
     @Autowired
     public ChannelMappingServiceImpl(final ChannelMappingDao channelMappingDao) {
         this.channelMappingDao = channelMappingDao;
     }
     @Override
-    public void createChannelMappingDao(long channelId, long neighborhoodId) {
+    public void createChannelMapping(long channelId, long neighborhoodId) {
+        LOGGER.info("Associating Channel {} with Neighborhood {}", channelId, neighborhoodId);
         channelMappingDao.createChannelMapping(channelId, neighborhoodId);
     }
 }

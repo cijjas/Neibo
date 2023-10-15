@@ -6,10 +6,13 @@ import ar.edu.itba.paw.interfaces.services.LikeService;
 import ar.edu.itba.paw.interfaces.services.SubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 @Service
 public class LikeServiceImpl implements LikeService {
     private final LikeDao likeDao;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(LikeServiceImpl.class);
 
     @Autowired
     public LikeServiceImpl(final LikeDao likeDao) {
@@ -19,16 +22,19 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public void addLikeToPost(long postId, long userId) {
+        LOGGER.info("Liking Post {} due to User {}", postId, userId);
         likeDao.createLike(postId, userId);
     }
 
     @Override
     public boolean isPostLiked(long postId, long userId) {
+        LOGGER.info("Checking if User {} has liked Post {}", userId, postId);
         return likeDao.isPostLiked(postId, userId);
     }
 
     @Override
     public void removeLikeFromPost(long postId, long userId) {
+        LOGGER.info("Removing Like from Post {} given by User {}", postId, userId);
         likeDao.deleteLike(postId, userId);
     }
 }

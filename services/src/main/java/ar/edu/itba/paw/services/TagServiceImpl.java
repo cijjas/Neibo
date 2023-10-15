@@ -8,7 +8,8 @@ import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,6 +21,9 @@ public class TagServiceImpl implements TagService {
     private final TagDao tagDao;
     private CategorizationDao categorizationDao;
     private ChannelService channelService;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TagServiceImpl.class);
+
     @Autowired
     public TagServiceImpl(TagDao tagDao, CategorizationDao categorizationDao, final ChannelService channelService) {
         this.channelService = channelService;
@@ -29,21 +33,25 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> getTags(long neighborhoodId) {
+        LOGGER.info("Getting All Tags from Neighborhood", neighborhoodId);
         return tagDao.getTags(neighborhoodId);
     }
 
     @Override
     public List<Tag> findTagsByPostId(long id) {
+        LOGGER.info("Finding Tags for Post {}", id);
         return tagDao.findTagsByPostId(id);
     }
 
     @Override
     public Tag createTag(String name) {
+        LOGGER.info("Creating Tag {}", name);
         return tagDao.createTag(name);
     }
 
     @Override
     public void createTagsAndCategorizePost(long postId, String tagsString) {
+        LOGGER.info("Creating Tags in {} and Associating it with the Post {}", tagsString, postId);
         if (tagsString == null || tagsString.isEmpty()) {
             return;
         }
@@ -71,6 +79,7 @@ public class TagServiceImpl implements TagService {
 
 
     public String createURLForTagFilter(String tags, String currentUrl, long neighborhoodId) {
+        LOGGER.info("Creating URL for Tag Filter");
         // Extract the base URL (path) without query parameters
         String baseUrl;
         int queryIndex = currentUrl.indexOf('?');

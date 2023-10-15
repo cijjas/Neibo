@@ -11,7 +11,8 @@ import ar.edu.itba.paw.models.Post;
 import enums.Language;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,8 @@ public class CommentServiceImpl implements CommentService {
     private final PostService postService;
     private final UserService userService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommentServiceImpl.class);
+
     @Autowired
     public CommentServiceImpl(final CommentDao commentDao, EmailService emailService, PostService postService, UserService userService){
         this.commentDao = commentDao;
@@ -33,23 +36,31 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> findCommentsByPostId(long id, int page, int size) { return commentDao.findCommentsByPostId(id,page,size); }
+    public List<Comment> findCommentsByPostId(long id, int page, int size) {
+        LOGGER.info("Finding Comments for Post {}", id);
+        return commentDao.findCommentsByPostId(id,page,size);
+    }
 
     @Override
-    public int getCommentsCountByPostId(long id) { return commentDao.getCommentsCountByPostId(id); }
+    public int getCommentsCountByPostId(long id) {
+        LOGGER.info("Getting Quantity of Comments for Post {}", id);
+        return commentDao.getCommentsCountByPostId(id);
+    }
 
     @Override
     public int getTotalPostPages(long id, int size) {
+        LOGGER.info("Getting Total Comment Pages for size {}", size);
         return (int) Math.ceil((double) commentDao.getCommentsCountByPostId(id) / size);
     }
 
     public Optional<Comment> findCommentById(long id){
+        LOGGER.info("Finding Comment {}", id);
         return commentDao.findCommentById(id);
     }
 
     @Override
     public Comment createComment(String comment, long neighborId, long postId) {
-
+        LOGGER.info("Creating Comment {} from User {} for Post {}", comment, neighborId, postId);
 
         //busco al dueno del post:
         Post post = postService.findPostById(postId).orElse(null);
@@ -69,8 +80,6 @@ public class CommentServiceImpl implements CommentService {
             vars.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
             emailService.sendMessageUsingThymeleafTemplate(user.getMail(), isEnglish? "New comment" : "Nuevo Comentario", isEnglish? "comment-template_en.html" : "comment-template_es.html", vars);
         }
-
-
 
         return commentDao.createComment(comment, neighborId, postId);
     }

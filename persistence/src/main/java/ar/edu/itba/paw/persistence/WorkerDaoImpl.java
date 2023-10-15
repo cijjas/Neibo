@@ -54,7 +54,7 @@ public class WorkerDaoImpl implements WorkerDao {
     // ---------------------------------------------- WORKERS INSERT -----------------------------------------------------
     @Override
     public Worker createWorker(long workerId, String phoneNumber, String address, String businessName) {
-        LOGGER.info("Inserting Worker");
+        LOGGER.debug("Inserting Worker");
         Map<String, Object> data = new HashMap<>();
         data.put("workerId", workerId);
         data.put("phoneNumber", phoneNumber);
@@ -93,14 +93,14 @@ public class WorkerDaoImpl implements WorkerDao {
 
     @Override
     public Optional<Worker> findWorkerById(long workerId) {
-        LOGGER.info("Selecting Worker with workerId {}", workerId);
+        LOGGER.debug("Selecting Worker with workerId {}", workerId);
         final List<Worker> list = jdbcTemplate.query(USERS_JOIN_WI + " WHERE workerid = ?", ROW_MAPPER, workerId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
     public List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long neighborhoodId) {
-        LOGGER.info("Selecting Workers from Neighborhood {} with professions {}", neighborhoodId, professions);
+        LOGGER.debug("Selecting Workers from Neighborhood {} with professions {}", neighborhoodId, professions);
         StringBuilder query = new StringBuilder(USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
 
@@ -136,15 +136,15 @@ public class WorkerDaoImpl implements WorkerDao {
             queryParams.add(offset);
         }
 
-        LOGGER.info(String.valueOf(query));
-        LOGGER.info(String.valueOf(queryParams));
+        LOGGER.debug(String.valueOf(query));
+        LOGGER.debug(String.valueOf(queryParams));
 
         return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
     }
 
     @Override
     public int getWorkersCountByCriteria(List<String> professions, long neighborhoodId) {
-        LOGGER.info("Selecting Workers Count from Neighborhood {} with professions {}", neighborhoodId, professions);
+        LOGGER.debug("Selecting Workers Count from Neighborhood {} with professions {}", neighborhoodId, professions);
         StringBuilder query = new StringBuilder(COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
 
@@ -171,8 +171,8 @@ public class WorkerDaoImpl implements WorkerDao {
         }
 
         // Log results
-        LOGGER.info(String.valueOf(query));
-        LOGGER.info(String.valueOf(queryParams));
+        LOGGER.debug(String.valueOf(query));
+        LOGGER.debug(String.valueOf(queryParams));
 
         return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());
     }
@@ -180,7 +180,7 @@ public class WorkerDaoImpl implements WorkerDao {
     // ---------------------------------------------- WORKERS UPDATE -----------------------------------------------------
     @Override
     public void updateWorker(long workerId, String phoneNumber, String address, String businessName, long backgroundPictureId, String bio) {
-        LOGGER.info("Updating Worker {}", workerId);
+        LOGGER.debug("Updating Worker {}", workerId);
         try {
             jdbcTemplate.update("UPDATE workers_info SET phoneNumber = ?, address = ?, businessName = ?, backgroundPictureId = ?, bio = ? WHERE workerId = ?",
                     phoneNumber, address, businessName, backgroundPictureId, bio, workerId);

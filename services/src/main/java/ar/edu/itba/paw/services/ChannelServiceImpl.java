@@ -8,6 +8,8 @@ import ar.edu.itba.paw.models.Channel;
 import enums.BaseChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,23 +21,27 @@ import java.util.stream.Collectors;
 @Service
 public class ChannelServiceImpl implements ChannelService {
     private final ChannelDao channelDao;
-    private final ChannelMappingDao channelMappingDao;
+    private final ChannelMappingService channelMappingService;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChannelServiceImpl.class);
 
     @Autowired
-    public ChannelServiceImpl(final ChannelDao channelDao, final ChannelMappingDao channelMappingDao) {
+    public ChannelServiceImpl(final ChannelDao channelDao, final ChannelMappingService channelMappingService) {
         this.channelDao = channelDao;
-        this.channelMappingDao = channelMappingDao;
+        this.channelMappingService = channelMappingService;
     }
 
     @Override
     public List<Channel> getChannels(long neighborhoodId) {
+        LOGGER.info("Getting Channels from Neighborhood {}", neighborhoodId);
         return channelDao.getChannels(neighborhoodId);
     }
 
     @Override
     public Channel createChannel(long neighborhoodId, String name) {
+        LOGGER.info("Creating Channel {}", name);
         Channel channel = channelDao.createChannel(name);
-        channelMappingDao.createChannelMapping(channel.getChannelId(), neighborhoodId);
+        channelMappingService.createChannelMapping(channel.getChannelId(), neighborhoodId);
         return channel;
     }
 

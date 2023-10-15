@@ -14,7 +14,8 @@ import enums.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,8 @@ public class PostServiceImpl implements PostService {
     private final TagService tagService;
     private final ImageService imageService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(PostServiceImpl.class);
+
     @Autowired
     public PostServiceImpl(final PostDao postDao, final ChannelDao channelDao, UserService userService, EmailService emailService, TagService tagService, ImageService imageService) {
         this.imageService = imageService;
@@ -42,6 +45,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post createPost(String title, String description, long neighborId, long channelId, String tags, MultipartFile imageFile) {
+        LOGGER.info("Creating Post with Title {} by User {}", title, neighborId);
         Image i = null;
         if (imageFile != null && !imageFile.isEmpty()) {
             i = imageService.storeImage(imageFile);
@@ -53,22 +57,26 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getWorkerPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, long userId) {
+        LOGGER.info("Getting Workers' Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
         return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, PostStatus.valueOf(postStatus), userId);
     }
 
     @Override
     public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus) {
+        LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
         return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, PostStatus.valueOf(postStatus), 0);
     }
 
     @Override
     public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, String postStatus, long userId) {
+        LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
         // parse de statusString into the postStatusEnum
         return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, PostStatus.valueOf(postStatus), userId);
     }
 
     @Override
     public int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId, String postStatus, long userId) {
+        LOGGER.info("Getting Total Post Pages with size {} for Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", size, neighborhoodId, channel, tags, postStatus);
         // parse de statusString into the postStatusEnum
         return (int) Math.ceil((double) getPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId) / size);
     }

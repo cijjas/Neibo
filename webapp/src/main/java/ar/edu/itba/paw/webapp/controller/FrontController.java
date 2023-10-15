@@ -483,7 +483,11 @@ public class FrontController {
         return mav;
     }
 
-   
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public void logOut() {
+        sessionUtils.clearLoggedUser();
+    }
+
 
     //------------------------------------- USER AMENITIES & RESERVATIONS --------------------------------------
 
@@ -668,7 +672,7 @@ public class FrontController {
         return mav;
     }
 
-    @ExceptionHandler({InsertionException.class})
+    @ExceptionHandler({InsertionException.class, MailingException.class})
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView insertion(RuntimeException ex) {
         ModelAndView mav = new ModelAndView("errors/errorPage");
@@ -684,7 +688,8 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-        /*Random random = new Random();
+        Random random = new Random();
+        long[] jobNumbers = {1, 2, 3, 4}; // Define the possible job numbers
         for (int i = 5; i < 35; i++) {
             String email = "worker" + i + "@test.com";
             String name = "WorkerName" + i;
@@ -695,19 +700,29 @@ public class FrontController {
             String address = "Address" + i;
             Language language = Language.ENGLISH;
 
-            // Generate a random job number between 1 and 4
-            int jobNumber = random.nextInt(4) + 1;
+            // Generate a random number of jobs for the worker (between 1 and 4)
+            int numJobs = random.nextInt(4) + 1;
 
-            // Create the worker
-            Worker worker = ws.createWorker(email, name, surname, password, identificationNumber, phoneNumber, address, language, jobNumber, "BusinessName");
+            // Create an array to store the job numbers for this worker
+            long[] workerJobNumbers = new long[numJobs];
+
+            // Generate random job numbers for this worker
+            for (int j = 0; j < numJobs; j++) {
+                int randomIndex = random.nextInt(jobNumbers.length);
+                workerJobNumbers[j] = jobNumbers[randomIndex];
+            }
+
+            // Create the worker with multiple jobs
+            Worker worker = ws.createWorker(email, name, surname, password, identificationNumber, phoneNumber, address, language, workerJobNumbers, "BusinessName");
 
             // Add the worker to a neighborhood (assuming neighborhood ID is 1)
             nhws.addWorkerToNeighborhood(worker.getUser().getUserId(), 1);
         }
 
+
         ps.createWorkerPost("This is a second test posttt", "Alrighty Aphrodite", 29, null);
 
-*/
+
         /*// System.out.println(bs.createBooking(););
         System.out.println("Shifts on Tueday 2023-10-10 for the Swimming Pool");
         System.out.println(shs.getShifts(1, DayOfTheWeek.Tuesday.getId(),Date.valueOf("2023-10-10")));

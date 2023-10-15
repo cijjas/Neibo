@@ -7,7 +7,8 @@ import ar.edu.itba.paw.models.DayTime;
 import ar.edu.itba.paw.models.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.sql.Time;
 import java.text.ParseException;
@@ -21,6 +22,8 @@ import java.util.Map;
 public class ReservationServiceImpl implements ReservationService {
     private final ReservationDao reservationDao;
     private final AmenityDao amenityDao;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReservationServiceImpl.class);
 
     @Autowired
     public ReservationServiceImpl(final ReservationDao reservationDao, AmenityDao amenityDao) {

@@ -54,7 +54,7 @@ public class BookingDaoImpl implements BookingDao {
     // BOOKING
     @Override
     public Number createBooking(long userId, long amenityAvailabilityId, Date reservationDate) {
-        LOGGER.info("Inserting Booking");
+        LOGGER.debug("Inserting Booking");
         Map<String, Object> data = new HashMap<>();
         data.put("userid", userId);
         data.put("amenityavailabilityid", amenityAvailabilityId);
@@ -83,13 +83,13 @@ public class BookingDaoImpl implements BookingDao {
 
     @Override
     public List<Booking> getUserBookings(long userId) {
-        LOGGER.info("Selecting Bookings from userId {}", userId);
+        LOGGER.debug("Selecting Bookings from userId {}", userId);
         return jdbcTemplate.query(BOOKINGS_JOIN_AVAILABILITY + " WHERE userid = ?", ROW_MAPPER, userId);
     }
 
     @Override
     public boolean deleteBooking(long bookingId) {
-        LOGGER.info("Deleting Booking with bookingId {}", bookingId);
+        LOGGER.debug("Deleting Booking with bookingId {}", bookingId);
         return jdbcTemplate.update("DELETE FROM users_availability WHERE bookingid = ? ", bookingId) > 0;
     }
 }

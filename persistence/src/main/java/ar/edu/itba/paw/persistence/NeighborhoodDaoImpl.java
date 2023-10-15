@@ -38,7 +38,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
 
     @Override
     public Neighborhood createNeighborhood(String name) {
-        LOGGER.info("Inserting Neighborhood {}", name);
+        LOGGER.debug("Inserting Neighborhood {}", name);
         Map<String, Object> data = new HashMap<>();
         data.put("neighborhoodname", name);
 
@@ -64,21 +64,21 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
 
     @Override
     public Optional<Neighborhood> findNeighborhoodById(long id) {
-        LOGGER.info("Selecting Neighborhood with id {}", id);
+        LOGGER.debug("Selecting Neighborhood with id {}", id);
         final List<Neighborhood> list = jdbcTemplate.query(NEIGHBORHOODS + " WHERE neighborhoodid = ?", ROW_MAPPER, id);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
     public Optional<Neighborhood> findNeighborhoodByName(String name) {
-        LOGGER.info("Selecting Neighborhood with name {}", name);
+        LOGGER.debug("Selecting Neighborhood with name {}", name);
         final List<Neighborhood> list = jdbcTemplate.query(NEIGHBORHOODS + " WHERE neighborhoodname = ?", ROW_MAPPER, name);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
     
     @Override
     public List<Neighborhood> getNeighborhoods() {
-        LOGGER.info("Selecting All Neighborhoods");
+        LOGGER.debug("Selecting All Neighborhoods");
         return jdbcTemplate.query(NEIGHBORHOODS, ROW_MAPPER);
     }
 }
