@@ -21,6 +21,7 @@ import javax.validation.Valid;
 import java.sql.SQLOutput;
 import java.util.*;
 import java.sql.Date;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -390,6 +391,7 @@ public class FrontController {
         for (Professions profession : Professions.values())
             professionsPairs.add(new Pair<>(profession.getId(), profession.name()));
 
+        mav.addObject("email", email);
         mav.addObject("professionsPairs", professionsPairs);
         mav.addObject("error", error);
         mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
@@ -422,7 +424,7 @@ public class FrontController {
             @ModelAttribute("workerSignupForm") final WorkerSignupForm workerSignupForm
     ) {
         if (errors.hasErrors()) {
-            ModelAndView mav =  logIn(signupForm, new WorkerSignupForm(), true);
+            ModelAndView mav =  logIn(signupForm, new WorkerSignupForm(), true, "");
             mav.addObject("openSignupDialog", true);
             return mav;
         }
@@ -463,7 +465,7 @@ public class FrontController {
             @ModelAttribute("signupForm") final SignupForm signupForm
     ) {
         if (errors.hasErrors()) {
-            ModelAndView mav = logIn(new SignupForm(), workerSignupForm, true);
+            ModelAndView mav = logIn(new SignupForm(), workerSignupForm, true, "");
             mav.addObject("openWorkerSignupDialog", true);
             return mav;
         }
@@ -497,6 +499,7 @@ public class FrontController {
         mav.addObject("date", date);
         mav.addObject("amenityName", as.findAmenityById(amenityId).orElseThrow(()-> new NotFoundException("Amenity not Found")).getName());
         mav.addObject("bookings", shs.getShifts(amenityId,date));
+        //mav.addObject("reservationsList", bs.getUserBookingsGroupedByAmenity(sessionUtils.getLoggedUser().getUserId()));
         return mav;
     }
 
@@ -517,21 +520,23 @@ public class FrontController {
     public ModelAndView amenities(
             @ModelAttribute("reservationForm") final ReservationForm reservationForm
     ) {
-        System.out.println(bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));
 
         ModelAndView mav = new ModelAndView("views/amenities");
+        Map<Amenity, List<Shift>> amenitiesWithShifts = as.getAllAmenitiesIdWithListOfShifts(sessionUtils.getLoggedUser().getNeighborhoodId());
+
+
+        List<Pair<Integer, String>> daysPairs = Arrays.stream(DayOfTheWeek.values())
+                .map(day -> new Pair<>(day.getId(), day.name()))
+                .collect(Collectors.toList());
+
+        List<Pair<Integer, String>> timesPairs = Arrays.stream(StandardTime.values())
+                .map(time -> new Pair<>(time.getId(), time.toString()))
+                .collect(Collectors.toList());
+
+        mav.addObject("daysPairs", daysPairs);
+        mav.addObject("timesPairs", timesPairs);
+        mav.addObject("amenitiesWithShifts", amenitiesWithShifts);
         mav.addObject("channel", BaseChannel.RESERVATIONS.toString());
-
-        List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId());
-
-        List<AmenityHours> amenityHoursList = new ArrayList<>();
-        for (Amenity amenity : amenities) {
-            Map<String, DayTime> amenityTimes = as.getAmenityHoursByAmenityId(amenity.getAmenityId());
-            AmenityHours amenityHours = new AmenityHours.Builder().amenity(amenity).amenityHours(amenityTimes).build();
-            amenityHoursList.add(amenityHours);
-        }
-        mav.addObject("amenitiesHours", amenityHoursList);
-        mav.addObject("daysOfWeek", rs.getDaysOfWeek());
         mav.addObject("reservationsList", bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));
         return mav;
     }
@@ -679,7 +684,7 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-        Random random = new Random();
+        /*Random random = new Random();
         for (int i = 5; i < 35; i++) {
             String email = "worker" + i + "@test.com";
             String name = "WorkerName" + i;
@@ -702,7 +707,7 @@ public class FrontController {
 
         ps.createWorkerPost("This is a second test posttt", "Alrighty Aphrodite", 29, null);
 
-
+*/
         /*// System.out.println(bs.createBooking(););
         System.out.println("Shifts on Tueday 2023-10-10 for the Swimming Pool");
         System.out.println(shs.getShifts(1, DayOfTheWeek.Tuesday.getId(),Date.valueOf("2023-10-10")));

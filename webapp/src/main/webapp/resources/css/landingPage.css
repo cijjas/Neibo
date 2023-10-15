@@ -115,13 +115,13 @@
 
 .dialog-content {
     position: relative; /* Add position relative to create a positioning context */
-    width: 400px;
-    height: 500px;
+    min-width: 400px;
+    min-height: 500px;
     padding: 20px;
     background: var(--background);
     border-radius: var(--border-radius);
     border: 2px solid var(--primary);
-    box-shadow: 4px 4px var(--primary);
+    box-shadow: -4px 4px var(--primary);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -131,9 +131,8 @@
 }
 
 .signup-content{
-    height: 700px;
+    height: 650px;
     width: 500px;
-
 }
 .close-button {
     position: absolute;
@@ -191,7 +190,6 @@ input[type="number"],
     color: var(--primary);
     font-weight: 900;
     font-size: 20px;
-    margin-bottom: 25px;
     text-align: center;
 }
 

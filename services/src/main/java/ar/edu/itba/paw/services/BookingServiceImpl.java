@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -37,8 +38,14 @@ public class BookingServiceImpl implements BookingService {
         return bookingDao.getUserBookings(userId);
     }
 
+
     @Override
     public boolean deleteBooking(long bookingId) {
         return bookingDao.deleteBooking(bookingId);
+    }
+
+    @Override
+    public List<List<Booking>> getUserBookingsGroupedByAmenity(long userId) {
+        return null;
     }
 }

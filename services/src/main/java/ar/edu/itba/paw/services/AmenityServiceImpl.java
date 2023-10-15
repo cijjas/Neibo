@@ -4,15 +4,12 @@ import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.services.AmenityService;
-import ar.edu.itba.paw.interfaces.services.ShiftService;
 import ar.edu.itba.paw.models.Amenity;
 import ar.edu.itba.paw.models.DayTime;
 import ar.edu.itba.paw.models.Shift;
-import enums.StandardTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.nio.channels.SelectableChannel;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -64,6 +61,19 @@ public class AmenityServiceImpl implements AmenityService {
     @Override
     public Map<String, DayTime> getAmenityHoursByAmenityId(long amenityId) {
         return amenityDao.getAmenityHoursByAmenityId(amenityId);
+    }
+
+    @Override
+    public Map<Amenity, List<Shift>> getAllAmenitiesIdWithListOfShifts(long neighborhoodId) {
+        List<Amenity> amenityList = amenityDao.getAmenities(neighborhoodId);
+
+        // Create a mapping of amenity IDs to their corresponding shifts
+        Map<Amenity, List<Shift>> amenityShifts = new HashMap<>();
+        for (Amenity amenity : amenityList) {
+            List<Shift> shiftList = shiftDao.getAmenityShifts(amenity.getAmenityId());
+            amenityShifts.put(amenity, shiftList);
+        }
+        return amenityShifts;
     }
 
     @Override
