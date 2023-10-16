@@ -1,24 +1,25 @@
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 
 <div class="container">
     <div class="service-card">
         <div class="card-header">
             <c:choose>
-                <c:when test="${worker.user.profilePictureId != 0}">
-                    <img class="back-image" src="${pageContext.request.contextPath}/images/<c:out value="${worker.user.profilePictureId}"/>" alt="profile_picture_img" />
+                <c:when test="${worker.backgroundPictureId != 0}">
+                    <img class="back-image" src="${pageContext.request.contextPath}/images/<c:out value="${worker.backgroundPictureId}"/>" alt="profile_picture_img" />
                 </c:when>
                 <c:otherwise>
                     <img class="back-image" src="${pageContext.request.contextPath}/resources/images/workersBackground.png" alt="default_profile_picture_img" />
                 </c:otherwise>
             </c:choose>
-
         </div>
         <div class="card-body" data-profile-image='<c:choose>
-            <c:when test="${worker.backgroundPictureId == 0}">
+            <c:when test="${worker.user.profilePictureId == 0}">
                 ${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png
             </c:when>
             <c:otherwise>
-                ${pageContext.request.contextPath}/images/<c:out value="${worker.backgroundPictureId}"/>
+                ${pageContext.request.contextPath}/images/<c:out value="${worker.user.profilePictureId}"/>
             </c:otherwise>
         </c:choose>'>
             <div class="inner">
@@ -82,45 +83,58 @@
             <i class="fas fa-close"></i>
         </div>
         <div class="title mb-2 mt-5 f-c-c-c" style="gap:5px">
-            Edit your worker profile
+            <spring:message code="EditProfile"/>
         </div>
 
-        <form>
+<%--        <form>--%>
 
             <div class="f-c-c-c pl-3 pr-3 c-text">
 
-                <label for="textInput1"><spring:message code="Business.name"/></label>
-                <input class="cool-input" type="text" id="textInput1" name="textInput1" placeholder="Enter text 1">
+                <form:form method="post" action="edit" modelAttribute="editWorkerProfileForm" enctype="multipart/form-data">
+<%--                <form:form method="post" action="calendar" modelAttribute="editWorkerProfileForm" enctype="multipart/form-data">--%>
+                    <form:errors cssClass="error" element="p"/>
 
-                <!-- Text Input 2 -->
-                <label for="textInput2"><spring:message code="Description"/></label>
-                <input class="cool-input" type="text" id="textInput2" name="textInput2" placeholder="Enter text 2">
+                    <form:label path="businessName" for="textInput1"><spring:message code="Business.name"/></form:label>
+                    <form:input path="businessName" class="cool-input" type="text" placeholder="Enter text 1"/>
+                    <form:errors path="businessName" cssClass="error" element="p"/>
 
-                <!-- Phone Number Input -->
-                <label for="phoneNumber"><spring:message code="PhoneNumber"/></label>
-                <input class="cool-input" type="tel" id="phoneNumber" name="phoneNumber" placeholder="Enter phone number">
+                    <!-- Text Input 2 -->
+                    <form:label path="bio" for="textInput2"><spring:message code="Description"/></form:label>
+                    <form:input path="bio" class="cool-input" type="text" placeholder="Enter text 2"/>
+                    <form:errors path="bio" cssClass="error" element="p"/>
 
-                <!-- Image Input 1 (for uploading an image file) -->
-                <label for="imageInput1"><spring:message code="Background.image"/></label>
-                <input class="cool-input" type="file" accept="image/*" id="imageInput1" name="imageInput1">
+<%--                    <!-- Phone Number Input -->--%>
+                    <form:label path="phoneNumber" for="phoneNumber"><spring:message code="PhoneNumber"/></form:label>
+                    <form:input path="phoneNumber" class="cool-input" type="tel" placeholder="Enter phone number"/>
+                    <form:errors path="phoneNumber" cssClass="error" element="p"/>
 
-                <!-- Image Input 2 (for uploading an image file) -->
-                <label for="imageInput2"><spring:message code="Profile.picture"/></label>
-                <input class="cool-input" type="file" accept="image/*" id="imageInput2" name="imageInput2">
+                    <%--                    <!-- Address Input -->       --%>
+                    <form:label path="address" for="address"><spring:message code="Address"/></form:label>
+                    <form:input path="address" class="cool-input" type="tel" placeholder="Enter address"/>
+                    <form:errors path="address" cssClass="error" element="p"/>
 
+<%--                    <!-- Image Input 1 (for uploading an image file) -->--%>
+                    <form:label path="imageFile" for="imageInput1"><spring:message code="Background.image"/></form:label>
+                    <form:input path="imageFile" class="cool-input" type="file" accept="image/*"/>
+                    <form:errors path="imageFile" cssClass="error" element="p"/>
 
-                <button onclick="submitSignupForm()" class="cool-button cool-small on-bg font-weight-bolder mb-4" style="width: 150px">
-                    <spring:message code="SaveChanges"/>
-                </button>
+                    <button onclick="submitEditProfileForm()" class="cool-button cool-small on-bg font-weight-bolder mb-4" style="width: 150px">
+                        <spring:message code="SaveChanges"/>
+                    </button>
+                </form:form>
 
             </div>
 
-        </form>
+<%--        </form>--%>
 
     </div>
 </div>
 
 <script>
+    function submitEditProfileForm() {
+        console.log("submitting edit profile form");
+        document.forms["editWorkerProfileForm"].submit();
+    }
     function closeEditDialog() {
         document.getElementById("editDialog").style.display = "none";
     }

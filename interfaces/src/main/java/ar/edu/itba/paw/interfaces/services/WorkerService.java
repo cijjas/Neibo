@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Worker;
 import enums.Language;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +21,6 @@ public interface WorkerService {
     int getWorkersCountByCriteria(List<String> professions, long neighborhoodId);
 
     // ---------------------------------------------- WORKERS UPDATE -----------------------------------------------------
-    void updateWorker(long userId, String name, String surname, String password, int identification, String phoneNumber,
-                      String address, Language language, boolean darkMode, String businessName, long profilePictureId,
-                      long backgroundPictureId, String bio);
+    void updateWorker(long userId, String phoneNumber, String address, String businessName,
+                      MultipartFile backgroundPicture, String bio);
 }
