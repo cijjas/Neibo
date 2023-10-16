@@ -182,8 +182,8 @@ public class FrontController {
 
     @RequestMapping (value = "/update-darkmode-preference", method = RequestMethod.POST)
     public String updateDarkModePreference() {
-        User user = sessionUtils.getLoggedUser();
-        us.toggleDarkMode(user.getUserId());
+        sessionUtils.clearLoggedUser();
+        us.toggleDarkMode(sessionUtils.getLoggedUser().getUserId());
         return "redirect:/profile";
     }
 

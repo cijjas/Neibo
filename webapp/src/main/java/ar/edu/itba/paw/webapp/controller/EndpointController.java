@@ -186,11 +186,7 @@ public class EndpointController {
     ) {
         Optional<Event> str = es.findEventById(eventId);
         Optional<String> stringOptional = es.getStartTime(eventId);
-        if (stringOptional.isPresent()) {
-            return stringOptional.get();
-        } else {
-            return "";
-        }
+        return stringOptional.orElse("");
     }
 
     @RequestMapping(value = "/eventEndTime", method = RequestMethod.GET)
@@ -199,10 +195,6 @@ public class EndpointController {
             @RequestParam(value = "id") long eventId
     ) {
         Optional<String> stringOptional = es.getEndTime(eventId);
-        if (stringOptional.isPresent()) {
-                return stringOptional.get();
-        } else {
-            return "";
-        }
+        return stringOptional.orElse("");
     }
 }
