@@ -130,6 +130,18 @@ public class EndpointController {
         return "false";
     }
 
+    @RequestMapping(value = "/toggle-dark-mode", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> toggleDarkMode() {
+        System.out.println("toggle dark mode");
+        sessionUtils.clearLoggedUser();
+        us.toggleDarkMode(sessionUtils.getLoggedUser().getUserId());
+        return ResponseEntity.ok("{\"message\": \"Dark mode toggled successfully.\"}");
+    }
+
+
+
+
     @RequestMapping(value = "/image", method = RequestMethod.GET)
     @ResponseBody
     public byte[] getImage(

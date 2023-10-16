@@ -10,7 +10,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = ReservationTimeValidator.class)
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ReservationTime {
+public @interface ReservationTimeConstraint {
     String message() default "Close time must be later than open time";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

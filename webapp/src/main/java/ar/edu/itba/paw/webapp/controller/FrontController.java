@@ -4,7 +4,8 @@ import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.form.*;
-import ar.edu.itba.paw.webapp.form.validation.ReservationTimeForm;
+import ar.edu.itba.paw.webapp.form.ReservationTimeForm;
+import ar.edu.itba.paw.webapp.form.ReviewForm;
 import enums.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -507,7 +508,7 @@ public class FrontController {
         mav.addObject("date", date);
         mav.addObject("amenityName", as.findAmenityById(amenityId).orElseThrow(()-> new NotFoundException("Amenity not Found")).getName());
         mav.addObject("bookings", shs.getShifts(amenityId,date));
-        //mav.addObject("reservationsList", bs.getUserBookingsGroupedByAmenity(sessionUtils.getLoggedUser().getUserId()));
+        mav.addObject("reservationsList", bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));
         return mav;
     }
 
@@ -518,7 +519,6 @@ public class FrontController {
             @RequestParam("date") Date date,
             @RequestParam("selectedShifts") List<Long> selectedShifts
     ) {
-        System.out.println(selectedShifts);
         bs.createBooking(sessionUtils.getLoggedUser().getUserId(), amenityId, selectedShifts, date);
         return new ModelAndView("redirect:/");
     }
@@ -565,8 +565,10 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/delete-reservation/{id}", method = RequestMethod.GET)
-    public ModelAndView deleteReservation( @PathVariable(value = "id") int reservationId) {
-        rs.deleteReservation(reservationId);
+    public ModelAndView deleteReservation(
+            @PathVariable(value = "id") int bookingId
+    ) {
+        bs.deleteBooking(bookingId);
         return new ModelAndView("redirect:/amenities");
     }
 
@@ -787,8 +789,10 @@ public class FrontController {
 
 
     @RequestMapping(value = "/service/profile/{id:\\d+}", method = RequestMethod.GET)
-    public ModelAndView serviceProfile(@ModelAttribute("reviewForm") final ReviewForm reviewForm,
-                                       @PathVariable(value = "id") int workerId
+    public ModelAndView serviceProfile(
+            @ModelAttribute("reviewForm") final ReviewForm reviewForm,
+            @PathVariable(value = "id") long workerId,
+            @ModelAttribute("editWorkerProfileForm") final EditWorkerProfileForm editWorkerProfileForm
     ) {
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
         Optional<Worker> optionalWorker = ws.findWorkerById(workerId);
@@ -804,6 +808,85 @@ public class FrontController {
         //mav.addObject("postList", postList);
         //mav.addObject("totalPages", totalPages);
         return mav;
+    }
+    @RequestMapping(value = "/service/profile/{id:\\d+}", method = RequestMethod.POST)
+    public ModelAndView serviceProfile(
+    ) {
+        System.out.println("llegando a profile/id post");
+        return new ModelAndView("serviceProvider/views/serviceProfile");
+    }
+
+    @RequestMapping(value = "/service/review/{id:\\d+}", method = RequestMethod.GET)
+    public ModelAndView createReview(
+            @ModelAttribute("reviewForm") final ReviewForm reviewForm,
+            @PathVariable(value = "id") int workerId,
+            @ModelAttribute("editWorkerProfileForm") final EditWorkerProfileForm editWorkerProfileForm
+    ) {
+        ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
+        Optional<Worker> optionalWorker = ws.findWorkerById(workerId);
+
+        mav.addObject("worker", optionalWorker.orElseThrow(() -> new NotFoundException("Worker not found")));
+        mav.addObject("professions", pws.getWorkerProfessions(workerId));
+        mav.addObject("reviews", rws.getReviews(workerId));
+        mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
+        mav.addObject("averageRating", rws.getAvgRating(workerId));
+        return mav;
+
+    }
+
+    @RequestMapping(value = "/service/review/{id:\\d+}", method = RequestMethod.POST)
+    public ModelAndView createReview(
+            @Valid @ModelAttribute("reviewForm") final ReviewForm reviewForm,
+            final BindingResult errors,
+            @PathVariable(value = "id") int workerId,
+            @ModelAttribute("editWorkerProfileForm") final EditWorkerProfileForm editWorkerProfileForm
+    ) {
+        if(errors.hasErrors()) {
+            ModelAndView mav = serviceProfile(reviewForm, workerId, new EditWorkerProfileForm());
+            mav.addObject("openReviewDialog", true);
+        }
+
+        ModelAndView mav = new ModelAndView("redirect:/service/review/" + workerId);
+
+        rws.createReview(workerId, sessionUtils.getLoggedUser().getUserId(), reviewForm.getRating(), reviewForm.getReview());
+
+        return mav;
+    }
+
+    @RequestMapping(value = "/service/profile/edit", method = RequestMethod.GET)
+    public ModelAndView editProfile(
+            @ModelAttribute("reviewForm") final ReviewForm reviewForm,
+            @ModelAttribute("editWorkerProfileForm") final EditWorkerProfileForm editWorkerProfileForm
+    ) {
+        ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
+        long workerId = sessionUtils.getLoggedUser().getUserId();
+        Optional<Worker> optionalWorker = ws.findWorkerById(workerId);
+
+        mav.addObject("worker", optionalWorker.orElseThrow(() -> new NotFoundException("Worker not found")));
+        mav.addObject("professions", pws.getWorkerProfessions(workerId));
+        mav.addObject("reviews", rws.getReviews(workerId));
+        mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
+        mav.addObject("averageRating", rws.getAvgRating(workerId));
+        return mav;
+
+    }
+
+    @RequestMapping(value = "/service/profile/edit", method = RequestMethod.POST)
+    public ModelAndView editProfile(
+//            @ModelAttribute("reviewForm") final ReviewForm reviewForm,
+            @Valid @ModelAttribute("editWorkerProfileForm") final EditWorkerProfileForm editWorkerProfileForm,
+            final BindingResult errors
+    ) {
+        long workerId = sessionUtils.getLoggedUser().getUserId();
+        if(errors.hasErrors()) {
+            ModelAndView mav = serviceProfile(new ReviewForm(), 85, editWorkerProfileForm);
+            mav.addObject("openEditProfileDialog", true);
+        }
+
+        ws.updateWorker(85, editWorkerProfileForm.getPhoneNumber(), editWorkerProfileForm.getAddress(),
+                editWorkerProfileForm.getBusinessName(), editWorkerProfileForm.getImageFile(), editWorkerProfileForm.getBio());
+
+        return new ModelAndView("redirect:/service/profile/" + 85);
     }
 
     @RequestMapping(value = "/services", method = RequestMethod.GET)

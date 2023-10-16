@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.ValidTimeRange;
+import ar.edu.itba.paw.webapp.form.validation.constraints.ValidTimeRangeConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 import java.sql.Time;
 
@@ -10,7 +10,7 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-@ValidTimeRange
+@ValidTimeRangeConstraint
 public class EventForm {
     @NotBlank
     @Size(max = 100)

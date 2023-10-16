@@ -1,12 +1,12 @@
-package ar.edu.itba.paw.webapp.form.validation;
+package ar.edu.itba.paw.webapp.form;
 
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.ReservationTime;
+import ar.edu.itba.paw.webapp.form.validation.constraints.ReservationTimeConstraint;
 
 import java.sql.Date;
 import java.sql.Time;
 
-@ReservationTime
+@ReservationTimeConstraint
 public class ReservationTimeForm {
 
     private Date date;

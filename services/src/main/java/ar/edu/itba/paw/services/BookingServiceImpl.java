@@ -53,6 +53,7 @@ public class BookingServiceImpl implements BookingService {
                 // Create a new GroupedBooking when the current one cannot be continued
                 Time endTime = calculateEndTime(booking.getShift().getStartTime());
                 currentGroupedBooking = new GroupedBooking(
+                        booking.getBookingId(),
                         booking.getAmenity().getName(),
                         booking.getBookingDate(),
                         booking.getShift().getDay(),
