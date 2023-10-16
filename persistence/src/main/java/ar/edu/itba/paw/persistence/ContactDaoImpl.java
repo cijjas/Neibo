@@ -24,9 +24,7 @@ public class ContactDaoImpl implements ContactDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private final String CONTACTS =
-            "select ct.* " +
-            "from contacts ct";
+    private final String CONTACTS = "SELECT ct.* FROM contacts ct";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactDaoImpl.class);
 

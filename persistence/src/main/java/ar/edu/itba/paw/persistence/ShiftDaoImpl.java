@@ -32,11 +32,11 @@ public class ShiftDaoImpl implements ShiftDao {
 
     private final String SHIFTS = "SELECT * FROM shifts ";
     private String SHIFTS_JOIN_AVAILABILITY_SHIFTS =
-            "select *\n" +
-                    "from amenities_shifts_availability av\n" +
-                    "join shifts s on av.shiftid = s.shiftid\n" +
-                    "join times t on s.starttime = t.timeid\n" +
-                    "join days d on s.dayid = d.dayid";
+            "SELECT *\n" +
+                    "FROM amenities_shifts_availability av\n" +
+                    "JOIN shifts s ON av.shiftid = s.shiftid\n" +
+                    "JOIN times t ON s.starttime = t.timeid\n" +
+                    "JOIN days d ON s.dayid = d.dayid";
 
     private final String SHIFTS_JOIN_AMENITIES =
             "SELECT s.* " +

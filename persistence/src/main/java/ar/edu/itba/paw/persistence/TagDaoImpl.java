@@ -22,13 +22,18 @@ public class TagDaoImpl implements TagDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private final String TAGS = "select * from tags ";
+    private final String TAGS = "SELECT * FROM tags ";
     private final String TAGS_JOIN_POSTS =
-            "select tags.tagid, tag\n" +
-            "from posts_tags join tags on posts_tags.tagid = tags.tagid ";
+            "SELECT tags.tagid, tag\n" +
+            "FROM posts_tags " +
+            "JOIN tags ON posts_tags.tagid = tags.tagid ";
     private final String TAGS_JOIN_POSTS_JOIN_USERS_JOIN_NEIGHBORHOODS =
-            "select distinct tags.tagid, tag\n" +
-            "from posts_tags join tags on posts_tags.tagid = tags.tagid join posts p on posts_tags.postid = p.postid join users u on u.userid = p.userid join neighborhoods nh on u.neighborhoodid = nh.neighborhoodid ";
+            "SELECT DISTINCT tags.tagid, tag\n" +
+            "FROM posts_tags " +
+            "JOIN tags ON posts_tags.tagid = tags.tagid " +
+            "JOIN posts p ON posts_tags.postid = p.postid " +
+            "JOIN users u ON u.userid = p.userid " +
+            "JOIN neighborhoods nh ON u.neighborhoodid = nh.neighborhoodid ";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TagDaoImpl.class);
 

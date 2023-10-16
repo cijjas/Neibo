@@ -1,5 +1,5 @@
 
-<div class="container">
+<div class="container tabbed-box">
 
     <div class="">
         <input id="tab1" type="radio" name="tabs" checked>

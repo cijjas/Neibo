@@ -24,6 +24,8 @@ public class ReviewDaoImpl implements ReviewDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
+    private final String REVIEWS = "SELECT * FROM reviews ";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewDaoImpl.class);
 
     @Autowired
@@ -74,13 +76,13 @@ public class ReviewDaoImpl implements ReviewDao {
     @Override
     public Review getReview(long reviewId) {
         LOGGER.debug("Selecting Reviews with reviewId {}", reviewId);
-        return jdbcTemplate.queryForObject("SELECT * FROM reviews WHERE reviewid = ?", reviewRowMapper, reviewId);
+        return jdbcTemplate.queryForObject(REVIEWS + " WHERE reviewid = ?", reviewRowMapper, reviewId);
     }
 
     @Override
     public List<Review> getReviews(long workerId) {
         LOGGER.debug("Selecting Reviews from Worker {}", workerId);
-        return jdbcTemplate.query("SELECT * FROM reviews WHERE workerid = ?", reviewRowMapper, workerId);
+        return jdbcTemplate.query(REVIEWS + " WHERE workerid = ?", reviewRowMapper, workerId);
     }
 
     @Override

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
+import enums.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,10 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
     public ProfessionWorkerDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName("workers_professions");
+                .withTableName(Table.workers_professions.name());
     }
 
-    // --------------------------------------- PROFESSION_WORKERS INSERT -----------------------------------------------
+    // --------------------------------------- WORKERS_PROFESSIONS INSERT ----------------------------------------------
     @Override
     public void addWorkerProfession(long workerId, long professionId) {
         LOGGER.debug("Inserting Worker Profession");
@@ -50,7 +51,7 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
         }
     }
 
-    // --------------------------------------- PROFESSION_WORKERS SELECT -----------------------------------------------
+    // --------------------------------------- WORKERS_PROFESSIONS SELECT ----------------------------------------------
     @Override
     public List<String> getWorkerProfessions(long workerId) {
         LOGGER.debug("Selecting Professions of Worker {}", workerId);

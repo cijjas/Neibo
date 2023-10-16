@@ -30,6 +30,8 @@ public class ReservationDaoImpl implements ReservationDao {
     private UserDao userDao;
     private AmenityDao amenityDao;
 
+    private final String RESERVATIONS = "SELECT * FROM reservations ";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ReservationDaoImpl.class);
 
     @Autowired
@@ -86,7 +88,7 @@ public class ReservationDaoImpl implements ReservationDao {
 
     @Override
     public Reservation findReservationById(long reservationId) {
-        return jdbcTemplate.queryForObject("SELECT * FROM reservations WHERE reservationid = ?", ROW_MAPPER, reservationId);
+        return jdbcTemplate.queryForObject(RESERVATIONS + " WHERE reservationid = ?", ROW_MAPPER, reservationId);
     }
 
     @Override
@@ -96,17 +98,17 @@ public class ReservationDaoImpl implements ReservationDao {
 
     @Override
     public List<Reservation> getReservationsByAmenityId(long amenityId) {
-        return jdbcTemplate.query("SELECT * FROM reservations WHERE amenityid = ?", ROW_MAPPER, amenityId);
+        return jdbcTemplate.query(RESERVATIONS + " WHERE amenityid = ?", ROW_MAPPER, amenityId);
     }
 
     @Override
     public List<Reservation> getReservationsByUserId(long userId) {
-        return jdbcTemplate.query("SELECT * FROM reservations WHERE userid = ?", ROW_MAPPER, userId);
+        return jdbcTemplate.query(RESERVATIONS + " WHERE userid = ?", ROW_MAPPER, userId);
     }
 
     @Override
     public List<Reservation> getReservationsByDay(long amenityId, Date date) {
-        return jdbcTemplate.query("SELECT * FROM reservations WHERE amenityid = ? AND date = ?", ROW_MAPPER, amenityId, date);
+        return jdbcTemplate.query(RESERVATIONS + " WHERE amenityid = ? AND date = ?", ROW_MAPPER, amenityId, date);
     }
 
     // ---------------------------------------------- RESERVATIONS DELETE ----------------------------------------------

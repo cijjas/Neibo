@@ -17,6 +17,9 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.*;
 
+import static ar.edu.itba.paw.persistence.DaoUtils.appendCommonWorkerConditions;
+import static ar.edu.itba.paw.persistence.DaoUtils.appendPaginationClause;
+
 @Repository
 public class WorkerDaoImpl implements WorkerDao {
     private final JdbcTemplate jdbcTemplate;
@@ -24,23 +27,23 @@ public class WorkerDaoImpl implements WorkerDao {
 
     private UserDao userDao;
 
-        private final String USERS_JOIN_WI =
-            "select * \n" +
-                    "from users w join workers_info wi on w.userid = wi.workerid ";
-
+    private final String USERS_JOIN_WI =
+            "SELECT * \n" +
+            "FROM users w JOIN workers_info wi ON w.userid = wi.workerid ";
     private final String USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
-            "select distinct w.*, wn.*, wi.* " +
-                "from users w " +
-                "join workers_neighborhoods wn on w.userid = wn.workerId " +
-                "join workers_info wi on w.userid = wi.workerid";
+            "SELECT DISTINCT w.*, wn.*, wi.* " +
+            "FROM users w " +
+            "JOIN workers_neighborhoods wn ON w.userid = wn.workerId " +
+            "JOIN workers_info wi ON w.userid = wi.workerid ";
 
 
     private final String COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
-            "select count(distinct w.userid)\n" +
-                    "from users w join workers_professions wp on w.userid = wp.workerid " +
-                    "join professions p on wp.professionid = p.professionid " +
-                    "join workers_neighborhoods wn on w.userid = wn.workerId " +
-                    "join workers_info wi on w.userid = wi.workerid ";
+            "SELECT COUNT(distinct w.userid)\n" +
+            "FROM users w " +
+            "JOIN workers_professions wp ON w.userid = wp.workerid " +
+            "JOIN professions p ON wp.professionid = p.professionid " +
+            "JOIN workers_neighborhoods wn ON w.userid = wn.workerId " +
+            "JOIN workers_info wi ON w.userid = wi.workerid ";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerDaoImpl.class);
 
@@ -104,37 +107,10 @@ public class WorkerDaoImpl implements WorkerDao {
         StringBuilder query = new StringBuilder(USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
 
-        query.append(" WHERE 1 = 1");
+        appendCommonWorkerConditions(query, queryParams, neighborhoodId, professions);
 
-        query.append(" AND wn.neighborhoodid = ?");
-        queryParams.add(neighborhoodId);
-
-
-        // Append multiple professions conditions
-        if (professions != null && !professions.isEmpty()) {
-            query.append(" AND EXISTS (");
-            query.append("SELECT 1 FROM workers_professions wp JOIN professions p ON wp.professionid = p.professionid");
-            query.append(" WHERE wp.workerid = w.userid AND p.profession IN (");
-            for (int i = 0; i < professions.size(); i++) {
-                query.append("?");
-                queryParams.add(professions.get(i)); // Use the profession name as a string
-                if (i < professions.size() - 1) {
-                    query.append(", ");
-                }
-            }
-            query.append(")");
-            query.append(" HAVING COUNT(DISTINCT wp.professionid) = ?)"); // Ensure all specified professions exist
-            queryParams.add(professions.size());
-        }
-
-        if (page != 0) {
-            // Calculate the offset based on the page and size
-            int offset = (page - 1) * size;
-            // Append the LIMIT and OFFSET clauses for pagination
-            query.append(" LIMIT ? OFFSET ?");
-            queryParams.add(size);
-            queryParams.add(offset);
-        }
+        if(page != 0)
+            appendPaginationClause(query, queryParams, page, size);
 
         LOGGER.debug(String.valueOf(query));
         LOGGER.debug(String.valueOf(queryParams));
@@ -148,29 +124,8 @@ public class WorkerDaoImpl implements WorkerDao {
         StringBuilder query = new StringBuilder(COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
 
-        query.append(" WHERE 1 = 1");
+        appendCommonWorkerConditions(query, queryParams, neighborhoodId, professions);
 
-        query.append(" AND wn.neighborhoodid = ?");
-        queryParams.add(neighborhoodId);
-
-        // Append multiple tags conditions
-        if (professions != null && !professions.isEmpty()) {
-            query.append(" AND EXISTS (");
-            query.append("SELECT 1 FROM workers_professions wp JOIN professions p ON wp.professionid = p.professionid");
-            query.append(" WHERE wp.workerid = w.userid AND p.profession IN (");
-            for (int i = 0; i < professions.size(); i++) {
-                query.append("?");
-                queryParams.add(professions.get(i)); // Use the tag name as a string
-                if (i < professions.size() - 1) {
-                    query.append(", ");
-                }
-            }
-            query.append(")");
-            query.append(" HAVING COUNT(DISTINCT wp.professionid) = ?)"); // Ensure all specified tags exist
-            queryParams.add(professions.size());
-        }
-
-        // Log results
         LOGGER.debug(String.valueOf(query));
         LOGGER.debug(String.valueOf(queryParams));
 

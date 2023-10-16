@@ -28,22 +28,34 @@ public class UserDaoImpl implements UserDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-    private final String USERS =
-            "select u.* \n" +
-                    "from users u";
 
-    private final String USERS_JOIN_POSTS_USERS_AND_POSTS =
-            "select u.*\n" +
-                    "from posts p " +
-                    "join posts_users_subscriptions on p.postid = posts_users_subscriptions.postid " +
-                    "join users u on posts_users_subscriptions.userid = u.userid ";
-
-    private final String EVENTS_JOIN_USERS =
-            "select u.* \n" +
-                    "from events e " +
-                    "join events_users on e.eventid = events_users.eventid " +
-                    "join users u on events_users.userid = u.userid ";
     private BookingDao bookingDao;
+
+    private final String USERS = "SELECT u.* FROM users u ";
+    private final String USERS_JOIN_POSTS_USERS_AND_POSTS =
+            "SELECT u.*\n" +
+            "FROM posts p " +
+            "JOIN posts_users_subscriptions ON p.postid = posts_users_subscriptions.postid " +
+            "JOIN users u ON posts_users_subscriptions.userid = u.userid ";
+    private final String EVENTS_JOIN_USERS =
+            "SELECT u.* \n" +
+            "FROM events e " +
+            "JOIN events_users ON e.eventid = events_users.eventid " +
+            "JOIN users u ON events_users.userid = u.userid ";
+
+    // ---------------------------------------------- USERS INSERT -----------------------------------------------------
+
+    @Autowired
+    public UserDaoImpl(final DataSource ds, final BookingDao bookingDao) {
+        this.bookingDao = bookingDao;
+        this.jdbcTemplate = new JdbcTemplate(ds);
+        this.jdbcInsert = new SimpleJdbcInsert(ds)
+                .usingGeneratedKeyColumns("userid")
+                .withTableName("users");
+    }
+
+    // ---------------------------------------------- USERS SELECT -----------------------------------------------------
+
     private final RowMapper<User> ROW_MAPPER = (rs, rowNum) -> {
         List<Booking> bookings = bookingDao.getUserBookings(rs.getLong("userid"));
         return new User.Builder()
@@ -61,19 +73,6 @@ public class UserDaoImpl implements UserDao {
                 .bookings(bookings)
                 .build();
     };
-
-    // ---------------------------------------------- USERS INSERT -----------------------------------------------------
-
-    @Autowired
-    public UserDaoImpl(final DataSource ds, final BookingDao bookingDao) {
-        this.bookingDao = bookingDao;
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .usingGeneratedKeyColumns("userid")
-                .withTableName("users");
-    }
-
-    // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
     @Override
     public User createUser(final String mail, final String password, final String name, final String surname,
@@ -181,11 +180,6 @@ public class UserDaoImpl implements UserDao {
     public boolean isAttending(long eventId, long userId) {
         LOGGER.debug("Selecting User {} that assists Event {}", userId, eventId);
         return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM events_users WHERE eventid = ? AND userid = ?", Integer.class, eventId, userId) == 1;
-    }
-    @Override
-    public Optional<User> findAdmin(long neighborhoodId) {
-        final List<User> list = jdbcTemplate.query(USERS + " WHERE neighborhoodid = ? AND role = ?", ROW_MAPPER, neighborhoodId, UserRole.ADMINISTRATOR.toString());
-        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
 

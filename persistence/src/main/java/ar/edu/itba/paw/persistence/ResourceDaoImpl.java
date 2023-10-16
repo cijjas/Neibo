@@ -36,7 +36,7 @@ public class ResourceDaoImpl implements ResourceDao {
                 .withTableName("resources");
     }
 
-    // --------------------------------------------- RESOURCE INSERT ----------------------------------------------------
+    // --------------------------------------------- RESOURCES INSERT --------------------------------------------------
 
     @Override
     public Resource createResource(long neighborhoodId, String title, String description, long imageId) {
@@ -64,7 +64,7 @@ public class ResourceDaoImpl implements ResourceDao {
 
     }
 
-    // --------------------------------------------- RESOURCE SELECT ----------------------------------------------------
+    // --------------------------------------------- RESOURCES SELECT --------------------------------------------------
 
     private static final RowMapper<Resource> ROW_MAPPER = (rs, rowNum) ->
             new Resource.Builder()
