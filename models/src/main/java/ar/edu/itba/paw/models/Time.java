@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models;
 
+import java.util.Objects;
+
 public class Time {
     private long timeId;
     private java.sql.Time timeInterval;
@@ -43,4 +45,13 @@ public class Time {
                 ", timeInterval=" + timeInterval +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Time time = (Time) o;
+        return timeId == time.timeId && Objects.equals(timeInterval, time.timeInterval);
+    }
+
 }

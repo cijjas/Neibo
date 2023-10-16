@@ -693,6 +693,8 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
+        System.out.println(bs.getUserBookings(23));
+        /*
         Random random = new Random();
         long[] jobNumbers = {1, 2, 3, 4}; // Define the possible job numbers
         for (int i = 5; i < 35; i++) {
@@ -726,7 +728,7 @@ public class FrontController {
 
 
         ps.createWorkerPost("This is a second test posttt", "Alrighty Aphrodite", 29, null);
-
+*/
 
         /*// System.out.println(bs.createBooking(););
         System.out.println("Shifts on Tueday 2023-10-10 for the Swimming Pool");
@@ -758,7 +760,6 @@ public class FrontController {
         System.out.println(shs.getAmenityShifts(1));
          */
 
-        as.deleteAmenity2(1);
         return new ModelAndView("views/index");
     }
 

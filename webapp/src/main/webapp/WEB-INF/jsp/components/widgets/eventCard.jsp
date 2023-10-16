@@ -79,7 +79,7 @@
     // JavaScript function to load event start time
     async function loadEventStartTime(eventId) {
         try {
-            const response = await fetch("/endpoint/eventStartTime?id=" + eventId);
+            const response = await fetch("/endpoint/event-start-time?id=" + eventId);
             if (!response.ok) {
                 throw new Error("Failed to fetch event start time from the endpoint.");
             }

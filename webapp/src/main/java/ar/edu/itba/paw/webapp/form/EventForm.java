@@ -7,6 +7,9 @@ import java.sql.Time;
 import javax.validation.constraints.Size;
 import java.sql.Date;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 @ValidTimeRange
 public class EventForm {
     @NotBlank
@@ -19,13 +22,9 @@ public class EventForm {
 
     private Date date;
 
-    private int startTimeHours;
+    private Time startTime;
 
-    private int startTimeMinutes;
-
-    private int endTimeHours;
-
-    private int endTimeMinutes;
+    private Time endTime;
 
     public String getName() {
         return name;
@@ -41,29 +40,39 @@ public class EventForm {
     }
     public Date getDate() { return date; }
     public void setDate(Date date) { this.date = date; }
-    public int getStartTimeHours() { return startTimeHours; }
-    public void setStartTimeHours(int startTimeHours) { this.startTimeHours = startTimeHours; }
-    public int getStartTimeMinutes() { return startTimeMinutes; }
-    public void setStartTimeMinutes(int startTimeMinutes) { this.startTimeMinutes = startTimeMinutes; }
-    public int getEndTimeHours() { return endTimeHours; }
-    public void setEndTimeHours(int endTimeHours) { this.endTimeHours = endTimeHours; }
-    public int getEndTimeMinutes() { return endTimeMinutes; }
-    public void setEndTimeMinutes(int endTimeMinutes) { this.endTimeMinutes = endTimeMinutes; }
+    public Time getStartTime() { return startTime; }
+    public void setStartTime(String startTimeString) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            java.util.Date parsedDate = sdf.parse(startTimeString);
+            this.startTime = new Time(parsedDate.getTime());
+        } catch (ParseException e) {
+            // Handle parsing exception
+            e.printStackTrace();
+        }
+    }
 
-    public Time getStartTime() { return new Time(startTimeHours, startTimeMinutes, 0); }
+    public Time getEndTime() { return endTime; }
+    public void setEndTime(String endTimeString){
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            java.util.Date parsedDate = sdf.parse(endTimeString);
+            this.endTime = new Time(parsedDate.getTime());
+        } catch (ParseException e) {
+            // Handle parsing exception
+            e.printStackTrace();
+        }
+    }
 
-    public Time getEndTime() { return new Time(endTimeHours, endTimeMinutes, 0); }
 
     @Override
     public String toString() {
         return "PublishForm{" +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", date='"+ date + '\'' +
-                ", startTimeHours='"+ startTimeHours + '\'' +
-                ", startTimeMinutes='"+ startTimeMinutes + '\'' +
-                ", endTimeHours='"+ endTimeHours + '\'' +
-                ", endTimeMinutes='"+ endTimeMinutes + '\'' +
+                ", date='" + date + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", endTime='" + endTime + '\'' +
                 '}';
     }
 }

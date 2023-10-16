@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models;
 
+import java.util.Objects;
+
 public class Shift {
     private long shiftId;
     private Day day;
@@ -68,5 +70,13 @@ public class Shift {
                 ", startTime=" + startTime +
                 ", taken=" + taken + // Updated the variable name in the toString method
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Shift shift = (Shift) o;
+        return shiftId == shift.shiftId && taken == shift.taken && Objects.equals(day, shift.day) && Objects.equals(startTime, shift.startTime);
     }
 }
