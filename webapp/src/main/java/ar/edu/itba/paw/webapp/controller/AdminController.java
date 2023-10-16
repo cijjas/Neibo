@@ -182,22 +182,10 @@ public class AdminController {
     public ModelAndView adminAmenities() {
         ModelAndView mav = new ModelAndView("admin/views/amenitiesPanel");
 
-
-
         Map<Amenity, List<Shift>> amenitiesWithShifts = as.getAllAmenitiesIdWithListOfShifts(sessionUtils.getLoggedUser().getNeighborhoodId());
 
-
-        List<Pair<Integer, String>> daysPairs = Arrays.stream(DayOfTheWeek.values())
-                .map(day -> new Pair<>(day.getId(), day.name()))
-                .collect(Collectors.toList());
-
-        List<Pair<Integer, String>> timesPairs = Arrays.stream(StandardTime.values())
-                .map(time -> new Pair<>(time.getId(), time.toString()))
-                .collect(Collectors.toList());
-
-        mav.addObject("daysPairs", daysPairs);
-        mav.addObject("timesPairs", timesPairs);
-
+        mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
+        mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
         mav.addObject("amenitiesWithShifts", amenitiesWithShifts);
         mav.addObject("panelOption", "Amenities");
 

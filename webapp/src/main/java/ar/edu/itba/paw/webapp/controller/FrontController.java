@@ -533,16 +533,8 @@ public class FrontController {
         Map<Amenity, List<Shift>> amenitiesWithShifts = as.getAllAmenitiesIdWithListOfShifts(sessionUtils.getLoggedUser().getNeighborhoodId());
 
 
-        List<Pair<Integer, String>> daysPairs = Arrays.stream(DayOfTheWeek.values())
-                .map(day -> new Pair<>(day.getId(), day.name()))
-                .collect(Collectors.toList());
-
-        List<Pair<Integer, Pair<String, java.sql.Time>>> timesPairs = Arrays.stream(StandardTime.values())
-                .map(time -> new Pair<>(time.getId(), new Pair<>(time.toString(), time.toSqlTime())))
-                .collect(Collectors.toList());
-
-        mav.addObject("daysPairs", daysPairs);
-        mav.addObject("timesPairs", timesPairs);
+        mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
+        mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
         mav.addObject("amenitiesWithShifts", amenitiesWithShifts);
         mav.addObject("channel", BaseChannel.RESERVATIONS.toString());
         mav.addObject("reservationsList", bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));

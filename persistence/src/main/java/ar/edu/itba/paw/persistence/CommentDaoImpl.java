@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.CommentDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Channel;
@@ -75,7 +76,7 @@ public class CommentDaoImpl implements CommentDao {
     // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
 
     private final RowMapper<Comment> ROW_MAPPER = (rs, rowNum) -> {
-        User user = userDao.findUserById(rs.getLong("userid")).orElse(null);
+        User user = userDao.findUserById(rs.getLong("userid")).orElseThrow(() -> new NotFoundException("User Not Found"));
 
         return new Comment.Builder()
                 .commentId(rs.getLong("commentid"))

@@ -31,16 +31,16 @@ public class ShiftDaoImpl implements ShiftDao {
     private TimeDao timeDao;
 
     private final String SHIFTS =
-            "SELECT s.*, d.dayname, t.timeinterval\n" +
-                    "FROM shifts s\n" +
-                    "INNER JOIN days d ON s.dayid = d.dayid\n" +
-                    "INNER JOIN times t ON s.starttime = t.timeid ";
+            "SELECT s.*, d.dayname, t.timeinterval, d.dayid\n" +
+            "FROM shifts s\n" +
+            "INNER JOIN days d ON s.dayid = d.dayid\n" +
+            "INNER JOIN times t ON s.starttime = t.timeid ";
     private String SHIFTS_JOIN_AVAILABILITY_SHIFTS =
             "SELECT s.shiftid, t.timeinterval, d.dayname, asa.amenityid\n" +
-                    "FROM shifts s\n" +
-                    "JOIN amenities_shifts_availability asa ON asa.shiftid = s.shiftid\n" +
-                    "INNER JOIN days d ON s.dayid = d.dayid\n" +
-                    "INNER JOIN times t ON s.starttime = t.timeid ";
+            "FROM shifts s\n" +
+            "JOIN amenities_shifts_availability asa ON asa.shiftid = s.shiftid\n" +
+            "INNER JOIN days d ON s.dayid = d.dayid\n" +
+            "INNER JOIN times t ON s.starttime = t.timeid ";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShiftDaoImpl.class);
 
@@ -97,14 +97,14 @@ public class ShiftDaoImpl implements ShiftDao {
     @Override
     public Optional<Shift> findShiftById(long shiftId) {
         LOGGER.debug("Selecting Shift with shiftId {}", shiftId);
-        final List<Shift> list = jdbcTemplate.query(SHIFTS + " WHERE shiftid = ?", ROW_MAPPER, shiftId);
+        final List<Shift> list = jdbcTemplate.query(SHIFTS + " WHERE s.shiftid = ?", ROW_MAPPER, shiftId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 
     @Override
     public Optional<Shift> findShiftId(long startTime, long dayId) {
         LOGGER.debug("Selecting Shift with startTime {} and dayId {}", startTime, dayId);
-        final List<Shift> list = jdbcTemplate.query(SHIFTS + " WHERE starttime = ? and dayid = ?", ROW_MAPPER, startTime, dayId);
+        final List<Shift> list = jdbcTemplate.query(SHIFTS + " WHERE s.starttime = ? and d.dayid = ?", ROW_MAPPER, startTime, dayId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
 

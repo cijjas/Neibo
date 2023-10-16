@@ -70,13 +70,13 @@
 
                                         <tr>
                                             <td>
-                                                <span>${time.value}</span>
+                                                <span>${time.value.key}</span>
                                             </td>
                                             <c:forEach items="${daysPairs}" var="day">
                                                 <td>
                                                     <c:set var="available" value="false" />
                                                     <c:forEach items="${amenity.value}" var="shift">
-                                                        <c:if test="${shift.day.dayId == day.key && shift.startTime.timeId == time.key}">
+                                                        <c:if test="${shift.day == day.value && shift.startTime == time.value.value}">
                                                             <c:set var="available" value="true" />
                                                             <span style="color: var(--primary);" class="col-12">
                                                                 <i class="fa-solid fa-check"></i>

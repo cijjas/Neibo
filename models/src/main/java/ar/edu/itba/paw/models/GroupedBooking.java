@@ -71,15 +71,15 @@ public class GroupedBooking {
 
     public boolean canCombine(Booking booking) {
         // Check if the endTime is one hour after the next booking's startTime
-        return this.amenityName.equals(booking.getAmenity().getName()) &&
+        return this.amenityName.equals(booking.getAmenityName()) &&
                 this.date.equals(booking.getBookingDate()) &&
-                this.day.equals(booking.getShift().getDay()) &&
-                this.endTime.equals(booking.getShift().getStartTime());
+                this.day.equals(booking.getDayName()) &&
+                this.endTime.equals(booking.getStartTime());
     }
 
     public void combine(Booking booking) {
         // Calculate endTime by adding one hour to the next booking's startTime
-        long startTimeMillis = booking.getShift().getStartTime().getTime();
+        long startTimeMillis = booking.getStartTime().getTime();
         long endTimeMillis = startTimeMillis + 60 * 60 * 1000; // 60 minutes * 60 seconds * 1000 milliseconds
         this.endTime = new Time(endTimeMillis);
     }
