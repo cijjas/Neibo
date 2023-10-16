@@ -20,12 +20,17 @@ public class WorkerSignupForm {
     private long[] professionIds;
 
     @NotBlank
+    @Size(max = 64)
     private String phoneNumber;
 
     @NotBlank
+    @Pattern(regexp = "^[a-zA-Z0-9 -]+")
+    @Size(max = 128)
     private String businessName;
 
     @NotBlank
+    @Pattern(regexp = "^[a-zA-Z0-9 -]+")
+    @Size(max = 128)
     private String address;
 
     @NotBlank
