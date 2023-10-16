@@ -33,8 +33,4 @@ public interface EventService {
 
     int getSelectedYear(int year);
 
-    Optional<String> getStartTime(long eventId);
-
-    Optional<String> getEndTime(long eventId);
-
 }

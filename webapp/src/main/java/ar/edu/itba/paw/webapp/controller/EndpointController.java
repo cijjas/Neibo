@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/endpoint")
@@ -179,30 +177,4 @@ public class EndpointController {
                         .getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
     }
 
-    @RequestMapping(value = "/event-start-time", method = RequestMethod.GET)
-    @ResponseBody
-    public String getEventStartTime(
-            @RequestParam(value = "id") long eventId
-    ) {
-        Optional<Event> str = es.findEventById(eventId);
-        Optional<String> stringOptional = es.getStartTime(eventId);
-        if (stringOptional.isPresent()) {
-            return stringOptional.get();
-        } else {
-            return "";
-        }
-    }
-
-    @RequestMapping(value = "/eventEndTime", method = RequestMethod.GET)
-    @ResponseBody
-    public String getEventEndTime(
-            @RequestParam(value = "id") long eventId
-    ) {
-        Optional<String> stringOptional = es.getEndTime(eventId);
-        if (stringOptional.isPresent()) {
-                return stringOptional.get();
-        } else {
-            return "";
-        }
-    }
 }

@@ -34,6 +34,8 @@
                             <jsp:param name="eventDescription" value="${event.description}"/>
                             <jsp:param name="eventDate" value="${event.date}"/>
                             <jsp:param name="eventDuration" value="${event.duration}"/>
+                            <jsp:param name="eventStartTime" value="${event.getStartTimeString()}"/>
+                            <jsp:param name="eventEndTime" value="${event.getEndTimeString()}"/>
                         </jsp:include>
                 </c:forEach>
             </c:otherwise>

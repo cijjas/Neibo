@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface EventDao {
 
-    Event createEvent(String name, String description, Date date, Time startTime, Time endTime, long neighborhoodId);
+    Event createEvent(String name, String description, Date date, Time startTime, Time endTime, long startTimeId, long endTimeId, long duration, long neighborhoodId);
 
     Optional<Event> findEventById(long eventId);
 
@@ -19,9 +19,5 @@ public interface EventDao {
     List<Date> getEventDates(long neighborhoodId);
 
     boolean deleteEvent(long eventId);
-
-    public Optional<Long> findStartTimeIdByEventId(long eventId);
-
-    public Optional<Long> findEndTimeIdByEventId(long eventId);
 
 }

@@ -6,10 +6,8 @@ import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Event;
 
 import java.sql.Time;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-import ar.edu.itba.paw.models.User;
 import enums.Language;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +22,6 @@ public class EventServiceImpl implements EventService {
     private final EventDao eventDao;
 
     private final TimeDao timeDao;
-
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
 
@@ -44,7 +40,10 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event createEvent(String name, String description, Date date, Time startTime, Time endTime, long neighborhoodId) {
         LOGGER.info("Creating Event {} for Neighborhood {}", name, neighborhoodId);
-        return eventDao.createEvent(name, description, date, startTime, endTime, neighborhoodId); }
+        long duration = (endTime.getTime() - startTime.getTime())/60000;
+        long startTimeId = timeDao.createTime(startTime).getTimeId();
+        long endTimeId = timeDao.createTime(endTime).getTimeId();
+        return eventDao.createEvent(name, description, date, startTime, endTime, startTimeId, endTimeId, duration, neighborhoodId); }
 
     @Override
     public List<Event> getEventsByDate(Date date, long neighborhoodId) {
@@ -112,32 +111,6 @@ public class EventServiceImpl implements EventService {
     public int getSelectedYear(int year) {
         LOGGER.info("Getting selected Years {}", year);
         return year + 1900;
-    }
-
-    @Override
-    public Optional<String> getStartTime(long eventId) {
-        LOGGER.info("Getting Start Time for Event {}", eventId);
-        Optional<Long> startTimeIdOptional = eventDao.findStartTimeIdByEventId(eventId);
-        if (startTimeIdOptional.isPresent()) {
-            long startTimeId = startTimeIdOptional.get();
-            Time startTime = timeDao.findTimeById(startTimeId).get().getTimeInterval();
-            return Optional.of(formatter.format(startTime.toLocalTime()));
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public Optional<String> getEndTime(long eventId) {
-        LOGGER.info("Getting End Time for Event {}", eventId);
-        Optional<Long> endTimeIdOptional = eventDao.findEndTimeIdByEventId(eventId);
-        if (endTimeIdOptional.isPresent()) {
-            long endTimeId = endTimeIdOptional.get();
-            Time endTime = timeDao.findTimeById(endTimeId).get().getTimeInterval();
-            return Optional.of(formatter.format(endTime.toLocalTime()));
-        } else {
-            return Optional.empty();
-        }
     }
 
 }

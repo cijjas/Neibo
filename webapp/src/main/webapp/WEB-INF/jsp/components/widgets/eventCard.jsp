@@ -10,7 +10,7 @@
             <div class="postcard-description">
                 <spring:message code="Date"/>: <c:out value="${event.date}" />
             <br>
-                <span id="eventStartTime"></span> - <span id="eventEndTime"></span>
+                <c:out value="${event.getStartTimeString()}"/> - <c:out value="${event.getEndTimeString()}"/>
             </div>
             <div class="divider"></div>
             <div class="postcard-description">
@@ -74,37 +74,3 @@
     </div>
 
 </div>
-
-<script>
-    // JavaScript function to load event start time
-    async function loadEventStartTime(eventId) {
-        try {
-            const response = await fetch("/endpoint/event-start-time?id=" + eventId);
-            if (!response.ok) {
-                throw new Error("Failed to fetch event start time from the endpoint.");
-            }
-            const startTimeElement = document.getElementById("eventStartTime");
-            startTimeElement.textContent = await response.text();
-        } catch (error) {
-            console.error(error.message);
-        }
-    }
-
-    // JavaScript function to load event end time
-    async function loadEventEndTime(eventId) {
-        try {
-            const response = await fetch("/endpoint/eventEndTime?id=" + eventId);
-            if (!response.ok) {
-                throw Error("Failed to fetch event end time from the endpoint.");
-            }
-            const endTimeElement = document.getElementById("eventEndTime");
-            endTimeElement.textContent = await response.text();
-        } catch (error) {
-            console.error(error.message);
-        }
-    }
-
-    // Call the functions with the event ID (replace '123' with the actual value)
-    loadEventStartTime(${event.eventId});
-    loadEventEndTime(${event.eventId});
-</script>
