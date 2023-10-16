@@ -19,6 +19,7 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -89,26 +90,28 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendNewUserMail(long neighborhoodId, String userName, UserRole role) {
         Map<String, Object> variables = new HashMap<>();
-        User admin = userDao.findAdmin(neighborhoodId).orElse(null);
+        List<User> admins = userDao.getUsersByCriteria(UserRole.ADMINISTRATOR, neighborhoodId, 1, 10);
         Neighborhood neighborhood = neighborhoodDao.findNeighborhoodById(neighborhoodId).orElse(null);
-
-        assert admin != null;
         assert neighborhood != null;
-        boolean isEnglish = admin.getLanguage() == Language.ENGLISH;
 
-        String joinerType = (role == UserRole.NEIGHBOR) ? "neighbor" : "worker";
+        for(User admin : admins) {
+            boolean isEnglish = admin.getLanguage() == Language.ENGLISH;
 
-        if (!isEnglish) {
-            joinerType = (joinerType.equals("neighbor")) ? "vecino" : "trabajador";
+            String joinerType = (role == UserRole.NEIGHBOR) ? "neighbor" : "worker";
+
+            if (!isEnglish) {
+                joinerType = (joinerType.equals("neighbor")) ? "vecino" : "trabajador";
+            }
+
+            variables.put("joinerOccupation", joinerType);
+            variables.put("name", admin.getName());
+            variables.put("joinerName", userName);
+            variables.put("neighborhood", neighborhood.getName());
+            variables.put("urlpath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/admin/unverified");
+
+            sendMessageUsingThymeleafTemplate(admin.getMail(), isEnglish? "New User" : "Nuevo Usuario", isEnglish? "newNeighbor-template_en.html" : "newNeighbor-template_es.html", variables);
         }
 
-        variables.put("joinerOccupation", joinerType);
-        variables.put("name", admin.getName());
-        variables.put("joinerName", userName);
-        variables.put("neighborhood", neighborhood.getName());
-        variables.put("urlpath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/admin/unverified");
-
-        sendMessageUsingThymeleafTemplate(admin.getMail(), isEnglish? "New User" : "Nuevo Usuario", isEnglish? "newNeighbor-template_en.html" : "newNeighbor-template_es.html", variables);
     }
 
 }

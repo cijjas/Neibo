@@ -17,6 +17,9 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.*;
 
+import static ar.edu.itba.paw.persistence.DaoUtils.appendCommonWorkerConditions;
+import static ar.edu.itba.paw.persistence.DaoUtils.appendPaginationClause;
+
 @Repository
 public class WorkerDaoImpl implements WorkerDao {
     private final JdbcTemplate jdbcTemplate;
@@ -32,7 +35,7 @@ public class WorkerDaoImpl implements WorkerDao {
             "select distinct w.*, wn.*, wi.* " +
                 "from users w " +
                 "join workers_neighborhoods wn on w.userid = wn.workerId " +
-                "join workers_info wi on w.userid = wi.workerid";
+                "join workers_info wi on w.userid = wi.workerid ";
 
 
     private final String COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
@@ -104,37 +107,10 @@ public class WorkerDaoImpl implements WorkerDao {
         StringBuilder query = new StringBuilder(USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
 
-        query.append(" WHERE 1 = 1");
+        appendCommonWorkerConditions(query, queryParams, neighborhoodId, professions);
 
-        query.append(" AND wn.neighborhoodid = ?");
-        queryParams.add(neighborhoodId);
-
-
-        // Append multiple professions conditions
-        if (professions != null && !professions.isEmpty()) {
-            query.append(" AND EXISTS (");
-            query.append("SELECT 1 FROM workers_professions wp JOIN professions p ON wp.professionid = p.professionid");
-            query.append(" WHERE wp.workerid = w.userid AND p.profession IN (");
-            for (int i = 0; i < professions.size(); i++) {
-                query.append("?");
-                queryParams.add(professions.get(i)); // Use the profession name as a string
-                if (i < professions.size() - 1) {
-                    query.append(", ");
-                }
-            }
-            query.append(")");
-            query.append(" HAVING COUNT(DISTINCT wp.professionid) = ?)"); // Ensure all specified professions exist
-            queryParams.add(professions.size());
-        }
-
-        if (page != 0) {
-            // Calculate the offset based on the page and size
-            int offset = (page - 1) * size;
-            // Append the LIMIT and OFFSET clauses for pagination
-            query.append(" LIMIT ? OFFSET ?");
-            queryParams.add(size);
-            queryParams.add(offset);
-        }
+        if(page != 0)
+            appendPaginationClause(query, queryParams, page, size);
 
         LOGGER.info(String.valueOf(query));
         LOGGER.info(String.valueOf(queryParams));
@@ -148,29 +124,8 @@ public class WorkerDaoImpl implements WorkerDao {
         StringBuilder query = new StringBuilder(COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
 
-        query.append(" WHERE 1 = 1");
+        appendCommonWorkerConditions(query, queryParams, neighborhoodId, professions);
 
-        query.append(" AND wn.neighborhoodid = ?");
-        queryParams.add(neighborhoodId);
-
-        // Append multiple tags conditions
-        if (professions != null && !professions.isEmpty()) {
-            query.append(" AND EXISTS (");
-            query.append("SELECT 1 FROM workers_professions wp JOIN professions p ON wp.professionid = p.professionid");
-            query.append(" WHERE wp.workerid = w.userid AND p.profession IN (");
-            for (int i = 0; i < professions.size(); i++) {
-                query.append("?");
-                queryParams.add(professions.get(i)); // Use the tag name as a string
-                if (i < professions.size() - 1) {
-                    query.append(", ");
-                }
-            }
-            query.append(")");
-            query.append(" HAVING COUNT(DISTINCT wp.professionid) = ?)"); // Ensure all specified tags exist
-            queryParams.add(professions.size());
-        }
-
-        // Log results
         LOGGER.info(String.valueOf(query));
         LOGGER.info(String.valueOf(queryParams));
 

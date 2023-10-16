@@ -30,8 +30,6 @@ public interface UserDao {
 
     Optional<User> findUserByMail(final String mail);
 
-    Optional<User> findAdmin(final long neighborhoodId);
-
     List<User> getUsersByCriteria(UserRole role, long neighborhoodId, int page, int size);
 
     List<User> getNeighborsSubscribedByPostId(long id);

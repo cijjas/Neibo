@@ -32,6 +32,14 @@ class DaoUtils {
         }
     }
 
+    static void appendCommonWorkerConditions(StringBuilder query, List<Object> queryParams, long neighborhoodId, List<String> professions) {
+        appendInitialWhereClause(query);
+        appendWorkerNeighborhoodIdCondition(query, queryParams, neighborhoodId);
+
+        if(professions != null && !professions.isEmpty()) {
+            appendProfessionsCondition(query, queryParams, professions);
+        }
+    }
 
     static void appendInitialWhereClause(StringBuilder query) {
         query.append(" WHERE 1 = 1");
@@ -58,21 +66,44 @@ class DaoUtils {
         queryParams.add(neighborhoodId);
     }
 
+    static void appendWorkerNeighborhoodIdCondition(StringBuilder query, List<Object> queryParams, long neighborhoodId) {
+        query.append(" AND wn.neighborhoodid = ?");
+        queryParams.add(neighborhoodId);
+    }
+
+    static void appendProfessionsCondition(StringBuilder query, List<Object> queryParams, List<String> professions) {
+        query.append(" AND EXISTS (");
+        query.append("SELECT 1 FROM workers_professions wp JOIN professions p ON wp.professionid = p.professionid");
+        query.append(" WHERE wp.workerid = w.userid AND p.profession IN (");
+
+        appendParams(query, queryParams, professions);
+
+        query.append(")");
+        query.append(" HAVING COUNT(DISTINCT wp.professionid) = ?)"); // Ensure all specified professions exist
+        queryParams.add(professions.size());
+    }
+
     static void appendTagsCondition(StringBuilder query, List<Object> queryParams, List<String> tags) {
         query.append(" AND EXISTS (");
         query.append("SELECT 1 FROM posts_tags pt JOIN tags t ON pt.tagid = t.tagid");
         query.append(" WHERE pt.postid = p.postid AND t.tag IN (");
 
+        appendParams(query, queryParams, tags);
+
+        query.append(")");
+        query.append(" HAVING COUNT(DISTINCT pt.tagid) = ?)"); // Ensure all specified tags exist
+        queryParams.add(tags.size());
+    }
+
+    static void appendParams(StringBuilder query, List<Object> queryParams, List<String> tags) {
+        //third parameter will either be tags or professions
         for (int i = 0; i < tags.size(); i++) {
             query.append("?");
-            queryParams.add(tags.get(i)); // Use the tag name as a string
+            queryParams.add(tags.get(i)); // Use the tag/profession name as a string
             if (i < tags.size() - 1) {
                 query.append(", ");
             }
         }
-        query.append(")");
-        query.append(" HAVING COUNT(DISTINCT pt.tagid) = ?)"); // Ensure all specified tags exist
-        queryParams.add(tags.size());
     }
 
     static void appendPaginationClause(StringBuilder query, List<Object> queryParams, int page, int size) {

@@ -678,39 +678,44 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-        Random random = new Random();
-        long[] jobNumbers = {1, 2, 3, 4}; // Define the possible job numbers
-        for (int i = 5; i < 35; i++) {
-            String email = "worker" + i + "@test.com";
-            String name = "WorkerName" + i;
-            String surname = "WorkerSurname" + i;
-            String password = "password";
-            int identificationNumber = 1000000 + i; // Starting from 1000000
-            String phoneNumber = "PhoneNumber" + i;
-            String address = "Address" + i;
-            Language language = Language.ENGLISH;
+//        Random random = new Random();
+//        long[] jobNumbers = {1, 2, 3, 4}; // Define the possible job numbers
+//        for (int i = 5; i < 35; i++) {
+//            String email = "worker" + i + "@test.com";
+//            String name = "WorkerName" + i;
+//            String surname = "WorkerSurname" + i;
+//            String password = "password";
+//            int identificationNumber = 1000000 + i; // Starting from 1000000
+//            String phoneNumber = "PhoneNumber" + i;
+//            String address = "Address" + i;
+//            Language language = Language.ENGLISH;
+//
+//            // Generate a random number of jobs for the worker (between 1 and 4)
+//            int numJobs = random.nextInt(4) + 1;
+//
+//            // Create an array to store the job numbers for this worker
+//            long[] workerJobNumbers = new long[numJobs];
+//
+//            // Generate random job numbers for this worker
+//            for (int j = 0; j < numJobs; j++) {
+//                int randomIndex = random.nextInt(jobNumbers.length);
+//                workerJobNumbers[j] = jobNumbers[randomIndex];
+//            }
+//
+//            // Create the worker with multiple jobs
+//            Worker worker = ws.createWorker(email, name, surname, password, identificationNumber, phoneNumber, address, language, workerJobNumbers, "BusinessName");
+//
+//            // Add the worker to a neighborhood (assuming neighborhood ID is 1)
+//            nhws.addWorkerToNeighborhood(worker.getUser().getUserId(), 1);
+//        }
 
-            // Generate a random number of jobs for the worker (between 1 and 4)
-            int numJobs = random.nextInt(4) + 1;
+//        nhws.addWorkerToNeighborhood(29, 1);
+//        nhws.addWorkerToNeighborhood(29, 3);
 
-            // Create an array to store the job numbers for this worker
-            long[] workerJobNumbers = new long[numJobs];
-
-            // Generate random job numbers for this worker
-            for (int j = 0; j < numJobs; j++) {
-                int randomIndex = random.nextInt(jobNumbers.length);
-                workerJobNumbers[j] = jobNumbers[randomIndex];
-            }
-
-            // Create the worker with multiple jobs
-            Worker worker = ws.createWorker(email, name, surname, password, identificationNumber, phoneNumber, address, language, workerJobNumbers, "BusinessName");
-
-            // Add the worker to a neighborhood (assuming neighborhood ID is 1)
-            nhws.addWorkerToNeighborhood(worker.getUser().getUserId(), 1);
-        }
-
-
-        ps.createWorkerPost("This is a second test posttt", "Alrighty Aphrodite", 29, null);
+        ps.createWorkerPost("This is a second test posttt", "Alrighty Aphrodite", 30, null);
+        ps.createWorkerPost("This is a third test posttt", "Alrighty rewrwfwe", 30, null);
+        ps.createWorkerPost("This is a sefewcond test posttt", "Alfefwefwerighty Aphrodite", 30, null);
+        ps.createWorkerPost("This is a secfewefond test pofefwesttt", "Alrighty Aphrodite", 30, null);
 
 
         /*// System.out.println(bs.createBooking(););
@@ -743,7 +748,7 @@ public class FrontController {
         System.out.println(shs.getAmenityShifts(1));
          */
 
-        as.deleteAmenity2(1);
+//        as.deleteAmenity2(1);
         return new ModelAndView("views/index");
     }
 
