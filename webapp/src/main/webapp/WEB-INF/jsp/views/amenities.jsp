@@ -1,3 +1,4 @@
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -83,13 +84,13 @@
 
                                     <tr>
                                         <td>
-                                            <span>${time.value}</span>
+                                            <span>${time.value.key}</span>
                                         </td>
                                         <c:forEach items="${daysPairs}" var="day">
                                             <td>
                                                 <c:set var="available" value="false" />
                                                 <c:forEach items="${amenity.value}" var="shift">
-                                                    <c:if test="${shift.day.dayId == day.key && shift.startTime.timeId == time.key}">
+                                                    <c:if test="${shift.day == day.value && shift.startTime == time.value.value}">
                                                         <c:set var="available" value="true" />
                                                         <span style="color: var(--primary);" class="col-12">
                                                                 <i class="fa-solid fa-check"></i>
@@ -114,27 +115,27 @@
 
         <div class="column-right">
             <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %>
-<%--            <div class="grey-static-container m-t-40">--%>
-<%--                <div class="column d-flex justify-content-center align-items-start">--%>
-<%--                    <h3 class="m-b-20"><spring:message code="MyReservations"/></h3>--%>
-<%--                    <c:forEach var="reservation" items="${reservationsList}">--%>
-<%--                        <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">--%>
-<%--                            <div class="f-c-c-c">--%>
-<%--                                <div class="f-r-sb-c w-100">--%>
-<%--                                    <h5><c:out value="${reservation.amenity.name}" /></h5>--%>
-<%--                                    <a href="${pageContext.request.contextPath}/delete-reservation/${reservation.bookingId}" class="f-c-c-c">--%>
-<%--                                        <i class="fas fa-trash" style="color: var(--error);"></i>--%>
-<%--                                    </a>--%>
-<%--                                </div>--%>
-<%--                                <div>--%>
-<%--                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="Date"/> <c:out value="${reservation.bookingDate}" /></h6>--%>
-<%--                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="StartTime"/> <c:out value="${reservation.shift.startTime.timeInterval}" /></h6>--%>
-<%--                                </div>--%>
-<%--                            </div>--%>
-<%--                        </div>--%>
-<%--                    </c:forEach>--%>
-<%--                </div>--%>
-<%--            </div>--%>
+            <%--            <div class="grey-static-container m-t-40">--%>
+            <%--                <div class="column d-flex justify-content-center align-items-start">--%>
+            <%--                    <h3 class="m-b-20"><spring:message code="MyReservations"/></h3>--%>
+            <%--                    <c:forEach var="reservation" items="${reservationsList}">--%>
+            <%--                        <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">--%>
+            <%--                            <div class="f-c-c-c">--%>
+            <%--                                <div class="f-r-sb-c w-100">--%>
+            <%--                                    <h5><c:out value="${reservation.amenity.name}" /></h5>--%>
+            <%--                                    <a href="${pageContext.request.contextPath}/delete-reservation/${reservation.bookingId}" class="f-c-c-c">--%>
+            <%--                                        <i class="fas fa-trash" style="color: var(--error);"></i>--%>
+            <%--                                    </a>--%>
+            <%--                                </div>--%>
+            <%--                                <div>--%>
+            <%--                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="Date"/> <c:out value="${reservation.bookingDate}" /></h6>--%>
+            <%--                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="StartTime"/> <c:out value="${reservation.shift.startTime.timeInterval}" /></h6>--%>
+            <%--                                </div>--%>
+            <%--                            </div>--%>
+            <%--                        </div>--%>
+            <%--                    </c:forEach>--%>
+            <%--                </div>--%>
+            <%--            </div>--%>
         </div>
         <c:if test="${param.showSuccessMessage == true}">
             <c:set var="successMessage">

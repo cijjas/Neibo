@@ -8,16 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserDao {
-    /*
-    Use descriptive names that include the entity or data type being manipulated.
-    Prefix DAO methods with verbs like "save," "find," "update," or "delete" to indicate their primary action.
-    Use camelCase for method names.
-    Examples:
-        saveUser
-        findProductById
-        updateOrderStatus
-        deleteCustomer
-     */
 
     // ---------------------------------------------- USERS INSERT -----------------------------------------------------
 

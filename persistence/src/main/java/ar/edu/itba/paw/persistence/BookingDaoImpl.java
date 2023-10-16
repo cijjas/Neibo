@@ -82,6 +82,14 @@ public class BookingDaoImpl implements BookingDao {
                 .build();
     };
 
+    /*
+                        booking id
+                        booking.getAmenity().getName(),
+                        booking.getBookingDate(),
+                        booking.getShift().getDay(),
+                        booking.getShift().getStartTime(),
+                        endTime
+                );*/
     @Override
     public List<Booking> getUserBookings(long userId) {
         LOGGER.debug("Selecting Bookings from userId {}", userId);

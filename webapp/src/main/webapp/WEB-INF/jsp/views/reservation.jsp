@@ -67,7 +67,7 @@
                                                 <div class="cat">
                                                     <label class="w-100">
                                                         <input type="checkbox" name="selectedShifts" value="${shift.shiftId}" disabled/>
-                                                        <span>${shift.startTime.timeInterval} - ${bookings[loopStatus.index + 1].startTime.timeInterval}</span>
+                                                        <span>${shift.startTime} - ${bookings[loopStatus.index + 1].startTime}</span>
                                                     </label>
                                                 </div>
                                             </c:when>
@@ -75,7 +75,7 @@
                                                 <div class="cat">
                                                     <label class="w-100">
                                                         <input type="checkbox" name="selectedShifts" value="${shift.shiftId}" />
-                                                        <span>${shift.startTime.timeInterval} - ${bookings[loopStatus.index + 1].startTime.timeInterval}</span>
+                                                        <span>${shift.startTime} - ${bookings[loopStatus.index + 1].startTime}</span>
                                                     </label>
                                                 </div>
                                             </c:otherwise>

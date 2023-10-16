@@ -1,22 +1,20 @@
+
 package ar.edu.itba.paw.models;
 
 import java.sql.Time;
 import java.util.Date;
-import java.time.DayOfWeek;
-
-
 
 public class GroupedBooking {
     private String amenityName;
     private Date date;
-    private Day day;
+    private String day; // Change the type from Day to String
     private Time startTime;
     private Time endTime;
 
-    public GroupedBooking(String amenityName, Date date, Day day, Time startTime, Time endTime) {
+    public GroupedBooking(String amenityName, Date date, String day, Time startTime, Time endTime) { // Change the constructor parameter type
         this.amenityName = amenityName;
         this.date = date;
-        this.day = day;
+        this.day = day; // Change the type
         this.startTime = startTime;
         this.endTime = endTime;
     }
@@ -29,7 +27,7 @@ public class GroupedBooking {
         return date;
     }
 
-    public Day getDay() {
+    public String getDay() { // Change the return type from Day to String
         return day;
     }
 
@@ -49,7 +47,7 @@ public class GroupedBooking {
         this.date = date;
     }
 
-    public void setDay(Day day) {
+    public void setDay(String day) { // Change the parameter type from Day to String
         this.day = day;
     }
 
@@ -66,12 +64,12 @@ public class GroupedBooking {
         return this.amenityName.equals(booking.getAmenity().getName()) &&
                 this.date.equals(booking.getBookingDate()) &&
                 this.day.equals(booking.getShift().getDay()) &&
-                this.endTime.equals(booking.getShift().getStartTime().getTimeInterval());
+                this.endTime.equals(booking.getShift().getStartTime());
     }
 
     public void combine(Booking booking) {
         // Calculate endTime by adding one hour to the next booking's startTime
-        long startTimeMillis = booking.getShift().getStartTime().getTimeInterval().getTime();
+        long startTimeMillis = booking.getShift().getStartTime().getTime();
         long endTimeMillis = startTimeMillis + 60 * 60 * 1000; // 60 minutes * 60 seconds * 1000 milliseconds
         this.endTime = new Time(endTimeMillis);
     }
@@ -81,11 +79,9 @@ public class GroupedBooking {
         return "GroupedBooking{" +
                 "amenityName='" + amenityName + '\'' +
                 ", date=" + date +
-                ", day=" + day +
+                ", day='" + day + '\'' +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
                 '}';
     }
 }
-
-

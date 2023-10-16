@@ -30,18 +30,17 @@ public class ShiftDaoImpl implements ShiftDao {
     private DayDao dayDao;
     private TimeDao timeDao;
 
-    private final String SHIFTS = "SELECT * FROM shifts ";
+    private final String SHIFTS =
+            "SELECT s.*, d.dayname, t.timeinterval\n" +
+                    "FROM shifts s\n" +
+                    "INNER JOIN days d ON s.dayid = d.dayid\n" +
+                    "INNER JOIN times t ON s.starttime = t.timeid ";
     private String SHIFTS_JOIN_AVAILABILITY_SHIFTS =
-            "SELECT *\n" +
-                    "FROM amenities_shifts_availability av\n" +
-                    "JOIN shifts s ON av.shiftid = s.shiftid\n" +
-                    "JOIN times t ON s.starttime = t.timeid\n" +
-                    "JOIN days d ON s.dayid = d.dayid";
-
-    private final String SHIFTS_JOIN_AMENITIES =
-            "SELECT s.* " +
-            "FROM shifts s " +
-            "JOIN amenities_shifts_availability a ON s.shiftid = a.shiftid ";
+            "SELECT s.shiftid, t.timeinterval, d.dayname, asa.amenityid\n" +
+                    "FROM shifts s\n" +
+                    "JOIN amenities_shifts_availability asa ON asa.shiftid = s.shiftid\n" +
+                    "INNER JOIN days d ON s.dayid = d.dayid\n" +
+                    "INNER JOIN times t ON s.starttime = t.timeid ";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShiftDaoImpl.class);
 
@@ -78,22 +77,19 @@ public class ShiftDaoImpl implements ShiftDao {
     // ----------------------------------------------- SHIFTS SELECT ---------------------------------------------------
 
     private final RowMapper<Shift> ROW_MAPPER = (rs, rowNum) -> {
-        Day day =  dayDao.findDayById(rs.getLong("dayid")).orElseThrow(()-> new NotFoundException("Day not found"));
-        Time startTime =  timeDao.findTimeById(rs.getLong("starttime")).orElseThrow(()-> new NotFoundException("Time not found"));
         return new Shift.Builder()
                 .shiftId(rs.getLong("shiftid"))
-                .day(day)
-                .startTime(startTime)
+                .startTime(rs.getTime("timeinterval"))
+                .day(rs.getString("dayname"))
                 .build();
     };
 
     private final RowMapper<Shift> ROW_MAPPER_2 = (rs, rowNum) -> {
         Day day =  dayDao.findDayById(rs.getLong("dayid")).orElseThrow(()-> new NotFoundException("Day not found"));
-        Time startTime =  timeDao.findTimeById(rs.getLong("starttime")).orElseThrow(()-> new NotFoundException("Time not found"));
         return new Shift.Builder()
                 .shiftId(rs.getLong("shiftid"))
-                .day(day)
-                .startTime(startTime)
+                .day(day.getDayName())
+                .startTime(rs.getTime("timeinterval"))
                 .taken(rs.getBoolean("taken"))
                 .build();
     };
@@ -116,25 +112,26 @@ public class ShiftDaoImpl implements ShiftDao {
     public List<Shift> getShifts(long amenityId, long dayId, Date date) {
         LOGGER.debug("Selecting Shifts with their status for the Amenity with amenityId {} for Day {} and Date {}", amenityId, dayId, date);
         String query =
-                "SELECT s.*," +
-                "       CASE" +
-                "           WHEN (" +
-                "               a.amenityavailabilityid IN" +
-                "               (SELECT ua.amenityavailabilityid" +
-                "                FROM users_availability ua" +
-                "                WHERE date = ?)" +
-                "            )  THEN TRUE" +
-                "           ELSE FALSE" +
-                "       END AS taken" +
-                " FROM shifts s" +
-                " JOIN amenities_shifts_availability a ON s.shiftId = a.shiftId" +
-                " WHERE amenityid = ? AND dayid = ?;";
+                "SELECT s.*, t.timeinterval," +
+                        "       CASE" +
+                        "           WHEN (" +
+                        "               a.amenityavailabilityid IN" +
+                        "               (SELECT ua.amenityavailabilityid" +
+                        "                FROM users_availability ua" +
+                        "                WHERE date = ?)" +
+                        "            )  THEN TRUE" +
+                        "           ELSE FALSE" +
+                        "       END AS taken" +
+                        " FROM shifts s" +
+                        " INNER JOIN times t ON s.starttime = t.timeid" +
+                        " JOIN amenities_shifts_availability a ON s.shiftId = a.shiftId" +
+                        " WHERE amenityid = ? AND dayid = ?;";
         return jdbcTemplate.query(query, ROW_MAPPER_2, date, amenityId, dayId);
     }
 
     @Override
     public List<Shift> getAmenityShifts(long amenityId) {
         LOGGER.debug("Selecting Weekly Available Shifts for Amenity {}", amenityId);
-        return jdbcTemplate.query(SHIFTS_JOIN_AVAILABILITY_SHIFTS + " WHERE av.amenityid = ?", ROW_MAPPER, amenityId);
+        return jdbcTemplate.query(SHIFTS_JOIN_AVAILABILITY_SHIFTS + " WHERE asa.amenityid = ?", ROW_MAPPER, amenityId);
     }
 }

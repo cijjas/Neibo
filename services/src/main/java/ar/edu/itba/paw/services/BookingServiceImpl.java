@@ -1,3 +1,4 @@
+
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
@@ -50,18 +51,18 @@ public class BookingServiceImpl implements BookingService {
         for (Booking booking : userBookings) {
             if (currentGroupedBooking == null || !currentGroupedBooking.canCombine(booking)) {
                 // Create a new GroupedBooking when the current one cannot be continued
-                Time endTime = calculateEndTime(booking.getShift().getStartTime().getTimeInterval());
+                Time endTime = calculateEndTime(booking.getShift().getStartTime());
                 currentGroupedBooking = new GroupedBooking(
                         booking.getAmenity().getName(),
                         booking.getBookingDate(),
                         booking.getShift().getDay(),
-                        booking.getShift().getStartTime().getTimeInterval(),
+                        booking.getShift().getStartTime(),
                         endTime
                 );
                 groupedBookings.add(currentGroupedBooking);
             } else {
                 // Use the combine method to update the current GroupedBooking
-                Time endTime = calculateEndTime(booking.getShift().getStartTime().getTimeInterval());
+                Time endTime = calculateEndTime(booking.getShift().getStartTime());
                 currentGroupedBooking.combine(booking);
             }
         }
