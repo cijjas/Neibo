@@ -8,11 +8,11 @@ public class GroupedBooking {
     private long bookingId; // Add the bookingId
     private String amenityName;
     private Date date;
-    private Day day;
+    private String day;
     private Time startTime;
     private Time endTime;
 
-    public GroupedBooking(long bookingId, String amenityName, Date date, Day day, Time startTime, Time endTime) {
+    public GroupedBooking(long bookingId, String amenityName, Date date, String day, Time startTime, Time endTime) {
         this.bookingId = bookingId;
         this.amenityName = amenityName;
         this.date = date;
@@ -33,7 +33,7 @@ public class GroupedBooking {
         return date;
     }
 
-    public Day getDay() {
+    public String getDay() {
         return day;
     }
 
@@ -57,7 +57,7 @@ public class GroupedBooking {
         this.date = date;
     }
 
-    public void setDay(Day day) {
+    public void setDay(String day) {
         this.day = day;
     }
 
@@ -74,12 +74,12 @@ public class GroupedBooking {
         return this.amenityName.equals(booking.getAmenity().getName()) &&
                 this.date.equals(booking.getBookingDate()) &&
                 this.day.equals(booking.getShift().getDay()) &&
-                this.endTime.equals(booking.getShift().getStartTime().getTimeInterval());
+                this.endTime.equals(booking.getShift().getStartTime());
     }
 
     public void combine(Booking booking) {
         // Calculate endTime by adding one hour to the next booking's startTime
-        long startTimeMillis = booking.getShift().getStartTime().getTimeInterval().getTime();
+        long startTimeMillis = booking.getShift().getStartTime().getTime();
         long endTimeMillis = startTimeMillis + 60 * 60 * 1000; // 60 minutes * 60 seconds * 1000 milliseconds
         this.endTime = new Time(endTimeMillis);
     }
