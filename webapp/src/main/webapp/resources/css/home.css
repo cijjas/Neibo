@@ -163,6 +163,7 @@
         border: 1px solid var(--text);
         position: relative;
         border-radius: var(--border-hard);
+
         &.active {
             border: 1px solid transparent;
             background-color: var(--error);
@@ -192,7 +193,6 @@
                 transition-delay: 0.1s;
             }
         }
-
 
 
     }

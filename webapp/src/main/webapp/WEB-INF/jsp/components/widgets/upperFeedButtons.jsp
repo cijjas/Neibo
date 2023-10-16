@@ -4,7 +4,7 @@
 <c:if test="${channel != 'Announcements'}">
     <div class="upper-feed-buttons-box ">
         <div class="f-r-s-c">
-            <a onclick="hotPosts()" class="coolest-button ${param.postStatus == 'hot' ? 'active' : ''}">
+            <a onclick="hotPosts()" class="coolest-button ${param.postStatus == 'hot' ? 'active' : ''}" >
                 <spring:message code="Hot"/>
                 <i class="fa-solid fa-fire ml-1"></i>
             </a>

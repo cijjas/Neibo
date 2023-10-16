@@ -4,13 +4,12 @@ import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.form.*;
-import ar.edu.itba.paw.webapp.form.validation.ReservationTimeForm;
-import ar.edu.itba.paw.webapp.form.validation.ReviewForm;
+import ar.edu.itba.paw.webapp.form.ReservationTimeForm;
+import ar.edu.itba.paw.webapp.form.ReviewForm;
 import enums.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.sql.SQLOutput;
 import java.util.*;
 import java.sql.Date;
 import java.util.stream.Collectors;
@@ -508,7 +506,7 @@ public class FrontController {
         mav.addObject("date", date);
         mav.addObject("amenityName", as.findAmenityById(amenityId).orElseThrow(()-> new NotFoundException("Amenity not Found")).getName());
         mav.addObject("bookings", shs.getShifts(amenityId,date));
-        //mav.addObject("reservationsList", bs.getUserBookingsGroupedByAmenity(sessionUtils.getLoggedUser().getUserId()));
+        mav.addObject("reservationsList", bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));
         return mav;
     }
 
@@ -519,7 +517,6 @@ public class FrontController {
             @RequestParam("date") Date date,
             @RequestParam("selectedShifts") List<Long> selectedShifts
     ) {
-        System.out.println(selectedShifts);
         bs.createBooking(sessionUtils.getLoggedUser().getUserId(), amenityId, selectedShifts, date);
         return new ModelAndView("redirect:/");
     }
@@ -566,8 +563,10 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/delete-reservation/{id}", method = RequestMethod.GET)
-    public ModelAndView deleteReservation( @PathVariable(value = "id") int reservationId) {
-        rs.deleteReservation(reservationId);
+    public ModelAndView deleteReservation(
+            @PathVariable(value = "id") int bookingId
+    ) {
+        bs.deleteBooking(bookingId);
         return new ModelAndView("redirect:/amenities");
     }
 

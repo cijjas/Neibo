@@ -4,21 +4,25 @@ import java.sql.Time;
 import java.util.Date;
 import java.time.DayOfWeek;
 
-
-
 public class GroupedBooking {
+    private long bookingId; // Add the bookingId
     private String amenityName;
     private Date date;
     private Day day;
     private Time startTime;
     private Time endTime;
 
-    public GroupedBooking(String amenityName, Date date, Day day, Time startTime, Time endTime) {
+    public GroupedBooking(long bookingId, String amenityName, Date date, Day day, Time startTime, Time endTime) {
+        this.bookingId = bookingId;
         this.amenityName = amenityName;
         this.date = date;
         this.day = day;
         this.startTime = startTime;
         this.endTime = endTime;
+    }
+
+    public long getBookingId() {
+        return bookingId;
     }
 
     public String getAmenityName() {
@@ -39,6 +43,10 @@ public class GroupedBooking {
 
     public Time getEndTime() {
         return endTime;
+    }
+
+    public void setBookingId(long bookingId) {
+        this.bookingId = bookingId;
     }
 
     public void setAmenityName(String amenityName) {
@@ -79,7 +87,8 @@ public class GroupedBooking {
     @Override
     public String toString() {
         return "GroupedBooking{" +
-                "amenityName='" + amenityName + '\'' +
+                "bookingId=" + bookingId +
+                ", amenityName='" + amenityName + '\'' +
                 ", date=" + date +
                 ", day=" + day +
                 ", startTime=" + startTime +
@@ -87,5 +96,3 @@ public class GroupedBooking {
                 '}';
     }
 }
-
-

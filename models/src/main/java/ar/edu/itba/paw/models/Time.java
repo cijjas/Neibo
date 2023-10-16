@@ -54,4 +54,10 @@ public class Time {
         return timeId == time.timeId && Objects.equals(timeInterval, time.timeInterval);
     }
 
+    public Time plusHours(int hours) {
+        return new Time.Builder()
+                .timeId(this.timeId)
+                .timeInterval(new java.sql.Time(this.timeInterval.getTime() + hours * 3600000L))
+                .build();
+    }
 }
