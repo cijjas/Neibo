@@ -9,6 +9,7 @@ import java.sql.Time;
 import java.util.Date;
 
 import enums.Language;
+import enums.Month;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
@@ -88,23 +89,14 @@ public class EventServiceImpl implements EventService {
         LOGGER.info("Delete Event {}", eventId);
         return eventDao.deleteEvent(eventId); }
 
-    @Override
     public String getSelectedMonth(int month, Language language) {
         LOGGER.info("Getting Selected Month {}", month);
-        // Define arrays for month names in English and Spanish
-        String[] monthsEnglish = {
-                "January", "February", "March", "April",
-                "May", "June", "July", "August",
-                "September", "October", "November", "December"
-        };
 
-        String[] monthsSpanish = {
-                "enero", "febrero", "marzo", "abril",
-                "mayo", "junio", "julio", "agosto",
-                "septiembre", "octubre", "noviembre", "diciembre"
-        };
+        if (month < 0 || month >= Month.values().length) {
+            throw new IllegalArgumentException("Invalid month index");
+        }
 
-        return language == Language.ENGLISH ? monthsEnglish[month] : monthsSpanish[month];
+        return Month.values()[month].getName(language);
     }
 
     @Override
