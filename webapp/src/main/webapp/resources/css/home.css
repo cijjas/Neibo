@@ -1676,3 +1676,34 @@ h6 {
         background-color: var(--lighttext);
     }
 }
+
+
+/*TIME----------------------------------*/
+input[type=time] {
+    position: relative;
+    padding: 10px;
+    height: 1.5em;
+    color: var(--primary);
+    background-color: var(--darkonbackground);
+    border: 1px solid var(--primary);
+    border-radius: var(--border-radius);
+    appearance: none;
+    outline: 0;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    &::-webkit-calendar-picker-indicator {
+        color: var(--text);
+        appearance: none;
+        outline: 0;
+        cursor: pointer;
+
+    }
+
+
+    &:active,
+    &:focus-visible,
+    &:hover{
+        transform: translateY(-4px) ;
+        box-shadow: -4px 4px var(--primary);
+    }
+}

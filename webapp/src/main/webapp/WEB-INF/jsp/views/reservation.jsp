@@ -50,48 +50,59 @@
                         <p class="c-light-text mt-2"><c:out value="${date}"/></p>
                         <div class="divider"></div>
 
-                        <div class="f-c-c-c">
+                        <div class="f-c-c-c mt-4">
+                            <div class="shifts-reservation f-c-c-c w-50">
+                                <span class="font-weight-bold font-size-16">
+                                    <spring:message code="Available.times"/>
+                                </span>
+                                <form name="shiftForm" action="${pageContext.request.contextPath}/reservation" method="post">
+                                    <input type="hidden" name="amenityId" value="${amenityId}" />
+                                    <input type="hidden" name="date" value="${date}" />
 
-                                    <div class="shifts-reservation f-c-c-c">
-                                        <form name="shiftForm" action="${pageContext.request.contextPath}/reservation" method="post">
-                                            <input type="hidden" name="amenityId" value="${amenityId}" />
-                                            <input type="hidden" name="date" value="${date}" />
 
+                                    <c:forEach var="shift" items="${bookings}" varStatus="loopStatus">
 
-                                            <c:forEach var="shift" items="${bookings}" varStatus="loopStatus">
+                                        <c:choose>
+                                            <c:when test="${shift.taken}">
+                                                <div class="cat">
+                                                    <label class="w-100">
+                                                        <input type="checkbox" name="selectedShifts" value="${shift.shiftId}" disabled/>
+                                                        <span>${shift.startTime.timeInterval} - ${bookings[loopStatus.index + 1].startTime.timeInterval}</span>
+                                                    </label>
+                                                </div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div class="cat">
+                                                    <label class="w-100">
+                                                        <input type="checkbox" name="selectedShifts" value="${shift.shiftId}" />
+                                                        <span>${shift.startTime.timeInterval} - ${bookings[loopStatus.index + 1].startTime.timeInterval}</span>
+                                                    </label>
+                                                </div>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:forEach>
+                                </form>
+                            </div>
+                            <div class="f-c-c-c">
+                                <div class="f-r-c-c" style="gap: 5px">
+                                    <spring:message code="Remember.message.1"/>
+                                    <span class="c-primary font-weight-bolder ">
+                                    <spring:message code="Remember.message.2"/>
+                                </span>
+                                    <spring:message code="Remember.message.3"/>
 
-                                                <c:choose>
-                                                    <c:when test="${shift.taken}">
-                                                        <div class="cat">
-                                                            <label class="w-100">
-                                                                <input type="checkbox" name="selectedShifts" value="${shift.shiftId}" disabled/>
-                                                                <span>${shift.startTime.timeInterval} - ${bookings[loopStatus.index + 1].startTime.timeInterval}</span>
-                                                            </label>
-                                                        </div>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <div class="cat">
-                                                            <label class="w-100">
-                                                                <input type="checkbox" name="selectedShifts" value="${shift.shiftId}" />
-                                                                <span>${shift.startTime.timeInterval} - ${bookings[loopStatus.index + 1].startTime.timeInterval}</span>
-                                                            </label>
-                                                        </div>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </c:forEach>
-                                        </form>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="d-flex justify-content-end m-t-40">
-                                            <button onclick="submitShifts()" type="submit" class="cool-button cool-small on-bg m-b-20" style="height:40px;" ><spring:message code="Reserve"/></button>
-                                        </div>
-                                        <script>
-                                            function submitShifts() {
-                                                document.forms["shiftForm"].submit();
-                                            }
-                                        </script>
-                                    </div>
-
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="d-flex justify-content-end m-t-40">
+                                    <button onclick="submitShifts()" type="submit" class="cool-button cool-small on-bg w-25 "  style="height:40px;"><spring:message code="Reserve"/></button>
+                                </div>
+                                <script>
+                                    function submitShifts() {
+                                        document.forms["shiftForm"].submit();
+                                    }
+                                </script>
+                            </div>
                         </div>
                     </c:otherwise>
                 </c:choose>
@@ -104,29 +115,29 @@
 
         <div class="column-right">
             <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %>
-            <div class="grey-static-container m-t-40">
-                <div class="column d-flex justify-content-center align-items-start">
-                    <h3 class="m-b-20"><spring:message code="MyReservations"/></h3>
-                    <c:forEach var="reservation" items="${reservationsList}">
-                        <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
-                            <div class="f-c-c-c">
-                                <div class="f-r-sb-c w-100">
-                                    <h5><c:out value="${reservation.amenity.name}" /></h5>
-                                    <a href="${pageContext.request.contextPath}/delete-reservation/${reservation.reservationId}" class="f-c-c-c">
-                                        <i class="fas fa-trash" style="color: var(--error);"></i>
-                                    </a>
-                                </div>
-                                <div>
-                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="Date"/> <c:out value="${reservation.date}" /></h6>
-                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="StartTime"/> <c:out value="${reservation.startTime}" /></h6>
-                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="EndTime"/> <c:out value="${reservation.endTime}" /></h6>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-            </div>
+<%--            <div class="grey-static-container m-t-40">--%>
+<%--                <div class="column d-flex justify-content-center align-items-start">--%>
+<%--                    <h3 class="m-b-20"><spring:message code="MyReservations"/></h3>--%>
+<%--                    <c:forEach var="reservation" items="${reservationsList}">--%>
+<%--                        <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">--%>
+<%--                            <div class="f-c-c-c">--%>
+<%--                                <div class="f-r-sb-c w-100">--%>
+<%--                                    <h5><c:out value="${reservation.amenity.name}" /></h5>--%>
+<%--                                    <a href="${pageContext.request.contextPath}/delete-reservation/${reservation.bookingId}" class="f-c-c-c">--%>
+<%--                                        <i class="fas fa-trash" style="color: var(--error);"></i>--%>
+<%--                                    </a>--%>
+<%--                                </div>--%>
+<%--                                <div>--%>
+<%--                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="Date"/> <c:out value="${reservation.bookingDate}" /></h6>--%>
+<%--                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="StartTime"/> <c:out value="${reservation.shift.startTime.timeInterval}" /></h6>--%>
+<%--                                </div>--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
+<%--                    </c:forEach>--%>
+<%--                </div>--%>
+<%--            </div>--%>
         </div>
+
     </div>
 </div>
 

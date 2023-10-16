@@ -16,6 +16,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -42,10 +43,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<GroupedBooking> getUserBookings(long userId) {
         LOGGER.info("Getting Bookings for User {}", userId);
-        return processUserBookings(bookingDao.getUserBookings(userId));
-    }
-
-    public List<GroupedBooking> processUserBookings(List<Booking> userBookings) {
+        List<Booking> userBookings = bookingDao.getUserBookings(userId);
         List<GroupedBooking> groupedBookings = new ArrayList<>();
         GroupedBooking currentGroupedBooking = null;
 
@@ -71,8 +69,6 @@ public class BookingServiceImpl implements BookingService {
         return groupedBookings;
     }
 
-
-
     private Time calculateEndTime(Time startTime) {
         // Calculate end time by adding an hour to the start time
         long startTimeMillis = startTime.getTime();
@@ -80,11 +76,14 @@ public class BookingServiceImpl implements BookingService {
         return new Time(endTimeMillis);
     }
 
-
-
     @Override
     public boolean deleteBooking(long bookingId) {
         LOGGER.info("Deleting Booking {}", bookingId);
         return bookingDao.deleteBooking(bookingId);
+    }
+
+    @Override
+    public List<List<Booking>> getUserBookingsGroupedByAmenity(long userId) {
+        return null;
     }
 }

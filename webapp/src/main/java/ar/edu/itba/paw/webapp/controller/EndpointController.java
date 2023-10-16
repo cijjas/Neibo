@@ -162,7 +162,7 @@ public class EndpointController {
         return professionsString.toString();
     }
 
-    @RequestMapping(value = "/userName", method = RequestMethod.GET)
+    @RequestMapping(value = "/user-name", method = RequestMethod.GET)
     @ResponseBody
     public String getUserName(
             @RequestParam(value = "id") long userId
@@ -170,7 +170,7 @@ public class EndpointController {
         return us.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found")).getName();
     }
 
-    @RequestMapping(value = "/neighborhoodName", method = RequestMethod.GET)
+    @RequestMapping(value = "/neighborhood-name", method = RequestMethod.GET)
     @ResponseBody
     public String getNeighborhoodName(
             @RequestParam(value = "id") long userId
@@ -179,7 +179,7 @@ public class EndpointController {
                         .getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
     }
 
-    @RequestMapping(value = "/eventStartTime", method = RequestMethod.GET)
+    @RequestMapping(value = "/event-start-time", method = RequestMethod.GET)
     @ResponseBody
     public String getEventStartTime(
             @RequestParam(value = "id") long eventId

@@ -21,6 +21,7 @@ import javax.validation.Valid;
 import java.sql.SQLOutput;
 import java.util.*;
 import java.sql.Date;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -382,13 +383,18 @@ public class FrontController {
     public ModelAndView logIn(
             @ModelAttribute("signupForm") final SignupForm signupform,
             @ModelAttribute("workerSignupForm") final WorkerSignupForm workerSignupForm,
-            @RequestParam(value = "error", required = false, defaultValue = "false") boolean error
+            @RequestParam(value = "error", required = false, defaultValue = "false") boolean error,
+            @RequestParam(value = "email", required = false) String email
     ) {
         ModelAndView mav = new ModelAndView("views/landingPage");
         List<Pair<Integer, String>> professionsPairs = new ArrayList<>();
-        for (Professions profession : Professions.values())
-            professionsPairs.add(new Pair<>(profession.getId(), profession.name()));
+        for (Professions profession : Professions.values()){
+            System.out.println(profession.getId());
+            System.out.println(profession.toString());
+            professionsPairs.add(new Pair<>(profession.getId(), profession.toString()));
+        }
 
+        mav.addObject("email", email);
         mav.addObject("professionsPairs", professionsPairs);
         mav.addObject("error", error);
         mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
@@ -421,7 +427,7 @@ public class FrontController {
             @ModelAttribute("workerSignupForm") final WorkerSignupForm workerSignupForm
     ) {
         if (errors.hasErrors()) {
-            ModelAndView mav =  logIn(signupForm, new WorkerSignupForm(), true);
+            ModelAndView mav =  logIn(signupForm, new WorkerSignupForm(), true, "");
             mav.addObject("openSignupDialog", true);
             return mav;
         }
@@ -445,9 +451,12 @@ public class FrontController {
     ) {
         ModelAndView mav = new ModelAndView("views/landingPage");
 
+
         List<Pair<Integer, String>> professionsPairs = new ArrayList<>();
-        for (Professions profession : Professions.values())
-            professionsPairs.add(new Pair<>(profession.getId(), profession.name()));
+        for (Professions profession : Professions.values()){
+            professionsPairs.add(new Pair<>(profession.getId(), profession.toString()));
+        }
+        System.out.println(professionsPairs);
 
         mav.addObject("professionsPairs", professionsPairs);
         mav.addObject("successfullySignup", successfullySignup);
@@ -462,7 +471,7 @@ public class FrontController {
             @ModelAttribute("signupForm") final SignupForm signupForm
     ) {
         if (errors.hasErrors()) {
-            ModelAndView mav = logIn(new SignupForm(), workerSignupForm, true);
+            ModelAndView mav = logIn(new SignupForm(), workerSignupForm, true, "");
             mav.addObject("openWorkerSignupDialog", true);
             return mav;
         }
@@ -473,7 +482,6 @@ public class FrontController {
             e.printStackTrace();
         }
         System.out.println("Printing the professions chosen");
-        System.out.println(workerSignupForm.getProfessionIds());
         ws.createWorker(workerSignupForm.getW_mail(), workerSignupForm.getW_name(), workerSignupForm.getW_surname(), workerSignupForm.getW_password(), identification, workerSignupForm.getPhoneNumber(), workerSignupForm.getAddress(), Language.ENGLISH, workerSignupForm.getProfessionIds(), workerSignupForm.getBusinessName());
         ModelAndView mav = new ModelAndView("redirect:/signup-worker");
         mav.addObject("successfullySignup", true);
@@ -500,6 +508,7 @@ public class FrontController {
         mav.addObject("date", date);
         mav.addObject("amenityName", as.findAmenityById(amenityId).orElseThrow(()-> new NotFoundException("Amenity not Found")).getName());
         mav.addObject("bookings", shs.getShifts(amenityId,date));
+        //mav.addObject("reservationsList", bs.getUserBookingsGroupedByAmenity(sessionUtils.getLoggedUser().getUserId()));
         return mav;
     }
 
@@ -520,21 +529,23 @@ public class FrontController {
     public ModelAndView amenities(
             @ModelAttribute("reservationForm") final ReservationForm reservationForm
     ) {
-        System.out.println(bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));
 
         ModelAndView mav = new ModelAndView("views/amenities");
+        Map<Amenity, List<Shift>> amenitiesWithShifts = as.getAllAmenitiesIdWithListOfShifts(sessionUtils.getLoggedUser().getNeighborhoodId());
+
+
+        List<Pair<Integer, String>> daysPairs = Arrays.stream(DayOfTheWeek.values())
+                .map(day -> new Pair<>(day.getId(), day.name()))
+                .collect(Collectors.toList());
+
+        List<Pair<Integer, String>> timesPairs = Arrays.stream(StandardTime.values())
+                .map(time -> new Pair<>(time.getId(), time.toString()))
+                .collect(Collectors.toList());
+
+        mav.addObject("daysPairs", daysPairs);
+        mav.addObject("timesPairs", timesPairs);
+        mav.addObject("amenitiesWithShifts", amenitiesWithShifts);
         mav.addObject("channel", BaseChannel.RESERVATIONS.toString());
-
-        List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId());
-
-        List<AmenityHours> amenityHoursList = new ArrayList<>();
-        for (Amenity amenity : amenities) {
-            Map<String, DayTime> amenityTimes = as.getAmenityHoursByAmenityId(amenity.getAmenityId());
-            AmenityHours amenityHours = new AmenityHours.Builder().amenity(amenity).amenityHours(amenityTimes).build();
-            amenityHoursList.add(amenityHours);
-        }
-        mav.addObject("amenitiesHours", amenityHoursList);
-        mav.addObject("daysOfWeek", rs.getDaysOfWeek());
         mav.addObject("reservationsList", bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));
         return mav;
     }

@@ -14,4 +14,5 @@ public interface BookingService {
     List<GroupedBooking> getUserBookings(long userId);
 
     boolean deleteBooking(long bookingId);
+    public List<List<Booking>> getUserBookingsGroupedByAmenity(long userId);
 }

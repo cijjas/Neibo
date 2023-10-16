@@ -57,6 +57,19 @@ public class AmenityServiceImpl implements AmenityService {
     }
 
     @Override
+    public Map<Amenity, List<Shift>> getAllAmenitiesIdWithListOfShifts(long neighborhoodId) {
+        List<Amenity> amenityList = amenityDao.getAmenities(neighborhoodId);
+
+        // Create a mapping of amenity IDs to their corresponding shifts
+        Map<Amenity, List<Shift>> amenityShifts = new HashMap<>();
+        for (Amenity amenity : amenityList) {
+            List<Shift> shiftList = shiftDao.getAmenityShifts(amenity.getAmenityId());
+            amenityShifts.put(amenity, shiftList);
+        }
+        return amenityShifts;
+    }
+
+    @Override
     public Amenity createAmenityWrapper(String name, String description, Time mondayOpenTime, Time mondayCloseTime, Time tuesdayOpenTime, Time tuesdayCloseTime, Time wednesdayOpenTime, Time wednesdayCloseTime, Time thursdayOpenTime, Time thursdayCloseTime, Time fridayOpenTime, Time fridayCloseTime, Time saturdayOpenTime, Time saturdayCloseTime, Time sundayOpenTime, Time sundayCloseTime, long neighborhoodId) {
         Map<String, DayTime> timeMap = new HashMap<>();
 
