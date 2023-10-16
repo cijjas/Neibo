@@ -32,7 +32,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
 
     @Override
     public void createAttendee(long userId, long eventId) {
-        LOGGER.info("Inserting Attendance");
+        LOGGER.debug("Inserting Attendance");
         Map<String, Object> data = new HashMap<>();
         data.put("userid", userId);
         data.put("eventid", eventId);
@@ -43,7 +43,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
 
     @Override
     public boolean deleteAttendee(long userId, long eventId) {
-        LOGGER.info("Deleting Attendance with userId {} and eventId {}", userId, eventId);
+        LOGGER.debug("Deleting Attendance with userId {} and eventId {}", userId, eventId);
         final String sql = "delete from events_users where userid = ? and eventid = ?";
         return jdbcTemplate.update(sql, userId, eventId) > 0;
     }

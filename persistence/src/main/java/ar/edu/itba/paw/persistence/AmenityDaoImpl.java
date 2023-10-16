@@ -223,7 +223,7 @@ public class AmenityDaoImpl implements AmenityDao {
 
     @Override
     public Amenity createAmenity(String name, String description, long neighborhoodId) {
-        LOGGER.info("Inserting Amenity {}", name);
+        LOGGER.debug("Inserting Amenity {}", name);
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
         data.put("description", description);
@@ -250,14 +250,14 @@ public class AmenityDaoImpl implements AmenityDao {
 
     @Override
     public Optional<Amenity> findAmenityById2(long amenityId) {
-        LOGGER.info("Selecting Amenity with id {}", amenityId);
+        LOGGER.debug("Selecting Amenity with id {}", amenityId);
         List<Amenity> amenities = jdbcTemplate.query("SELECT * FROM amenities WHERE amenityid = ?", ROW_MAPPER2, amenityId);
         return amenities.isEmpty() ? Optional.empty() : Optional.of(amenities.get(0));
     }
 
     @Override
     public List<Amenity> getAmenities2(long neighborhoodId) {
-        LOGGER.info("Selecting Amenities from Neighborhood {}", neighborhoodId);
+        LOGGER.debug("Selecting Amenities from Neighborhood {}", neighborhoodId);
         return jdbcTemplate.query("SELECT * FROM amenities WHERE neighborhoodId = ?", ROW_MAPPER2, neighborhoodId);
     }
 
@@ -265,7 +265,7 @@ public class AmenityDaoImpl implements AmenityDao {
 
     @Override
     public boolean deleteAmenity2(long amenityId) {
-        LOGGER.info("Deleting Amenity with id {}", amenityId);
+        LOGGER.debug("Deleting Amenity with id {}", amenityId);
         return jdbcTemplate.update("DELETE FROM amenities WHERE amenityid = ?", amenityId) > 0;
     }
 }

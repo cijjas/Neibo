@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Amenity;
 import ar.edu.itba.paw.models.DayTime;
+import ar.edu.itba.paw.models.Shift;
 import enums.StandardTime;
 
 import java.sql.Time;
@@ -29,6 +30,8 @@ public interface AmenityService {
     DayTime getAmenityHoursByDay(long amenityId, String dayOfWeek);
 
     Map<String, DayTime> getAmenityHoursByAmenityId(long amenityId);
+
+    Map<Amenity, List<Shift>> getAllAmenitiesIdWithListOfShifts(long neighborhoodId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

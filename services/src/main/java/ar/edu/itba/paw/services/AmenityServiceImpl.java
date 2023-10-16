@@ -11,7 +11,8 @@ import ar.edu.itba.paw.models.Shift;
 import enums.StandardTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.nio.channels.SelectableChannel;
 import java.sql.Time;
 import java.text.ParseException;
@@ -24,6 +25,8 @@ public class AmenityServiceImpl implements AmenityService {
     private final ShiftDao shiftDao;
     private final AvailabilityDao availabilityDao;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AmenityServiceImpl.class);
+
     @Autowired
     public AmenityServiceImpl(final AmenityDao amenityDao, final ShiftDao shiftDao, final AvailabilityDao availabilityDao) {
         this.availabilityDao = availabilityDao;
@@ -31,29 +34,16 @@ public class AmenityServiceImpl implements AmenityService {
         this.amenityDao = amenityDao;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public Amenity createAmenity(String name, String description, Map<String, DayTime> dayHourData, long neighborhoodId){
         return amenityDao.createAmenity(name, description, dayHourData, neighborhoodId);
     }
 
     @Override
-    public List<Amenity> getAmenities(long neighborhoodId) {
-        return amenityDao.getAmenities(neighborhoodId);
-    }
-
-    @Override
-    public Optional<Amenity> findAmenityById(long amenityId) {
-        return amenityDao.findAmenityById(amenityId);
-    }
-
-    @Override
     public boolean deleteAmenity(long amenityId) {
         return amenityDao.deleteAmenity(amenityId);
-    }
-
-    @Override
-    public boolean deleteAmenity2(long amenityId) {
-        return amenityDao.deleteAmenity2(amenityId);
     }
 
     @Override
@@ -64,6 +54,19 @@ public class AmenityServiceImpl implements AmenityService {
     @Override
     public Map<String, DayTime> getAmenityHoursByAmenityId(long amenityId) {
         return amenityDao.getAmenityHoursByAmenityId(amenityId);
+    }
+
+    @Override
+    public Map<Amenity, List<Shift>> getAllAmenitiesIdWithListOfShifts(long neighborhoodId) {
+        List<Amenity> amenityList = amenityDao.getAmenities(neighborhoodId);
+
+        // Create a mapping of amenity IDs to their corresponding shifts
+        Map<Amenity, List<Shift>> amenityShifts = new HashMap<>();
+        for (Amenity amenity : amenityList) {
+            List<Shift> shiftList = shiftDao.getAmenityShifts(amenity.getAmenityId());
+            amenityShifts.put(amenity, shiftList);
+        }
+        return amenityShifts;
     }
 
     @Override
@@ -82,7 +85,6 @@ public class AmenityServiceImpl implements AmenityService {
 
         return createAmenity(name, description, timeMap, neighborhoodId);
     }
-
 
     private DayTime createDayTime(Time openTime, Time closeTime) {
         DayTime dayTime = new DayTime();
@@ -113,17 +115,18 @@ public class AmenityServiceImpl implements AmenityService {
         return timeList;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public Amenity createAmenity(String name, String description, long neighborhoodId, List<String> selectedShifts) {
+        LOGGER.info("Creating Amenity {}", name);
         Amenity amenity = amenityDao.createAmenity(name, description, neighborhoodId);
 
         for (String shiftPair : selectedShifts) {
             System.out.println("Shift pair: " + shiftPair);
             // Parse the pair into <Long dayId, Long timeId>
             String[] shiftParts = shiftPair.split(",");
-            if (shiftParts.length != 2) {
-                // log error
-            }
+
             System.out.println("Shift parts: " + shiftParts[0] + " " + shiftParts[1]);
             long dayId = Long.parseLong(shiftParts[0]);
             long timeId = Long.parseLong(shiftParts[1]);
@@ -142,8 +145,22 @@ public class AmenityServiceImpl implements AmenityService {
         return amenity;
     }
 
+    @Override
+    public Optional<Amenity> findAmenityById(long amenityId) {
+        return amenityDao.findAmenityById2(amenityId);
+    }
 
+    @Override
+    public List<Amenity> getAmenities(long neighborhoodId) {
+        LOGGER.info("Getting Amenities from Neighborhood {}", neighborhoodId);
+        return amenityDao.getAmenities(neighborhoodId);
+    }
 
+    @Override
+    public boolean deleteAmenity2(long amenityId) {
+        LOGGER.info("Deleting Amenity {}", amenityId);
+        return amenityDao.deleteAmenity2(amenityId);
+    }
 
     /*
     Se usa asi:

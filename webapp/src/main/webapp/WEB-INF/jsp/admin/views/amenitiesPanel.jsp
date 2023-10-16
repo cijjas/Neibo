@@ -38,19 +38,19 @@
                     <i class="fa-solid fa-plus"></i>
                 </a>
             </div>
-            <c:forEach var="amenity" items="${amenityList}">
+            <c:forEach var="amenity" items="${amenitiesWithShifts}">
                 <div  class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
                     <div class="row">
                         <div class="col-md-8">
-                            <h2><c:out value="${amenity.name}" /></h2>
+                            <h2><c:out value="${amenity.key.name}" /></h2>
                         </div>
                         <div class="col-md-4 text-right">
-                            <a href="${pageContext.request.contextPath}/admin/delete-amenity/${amenityWithHours.amenity.amenityId}" class="btn btn-link">
+                            <a href="${pageContext.request.contextPath}/admin/delete-amenity/${amenity.key.amenityId}" class="btn btn-link">
                                 <i class="fas fa-trash" style="color: var(--error);"></i>
                             </a>
                         </div>
                     </div>
-                    <p class="mb-3" style="color:var(--lighttext);"><c:out value="${amenity.description}" /></p>
+                    <p class="mb-3" style="color:var(--lighttext);"><c:out value="${amenity.key.description}" /></p>
 
                     <div class="d-flex flex-column justify-content-center align-items-center w-100">
                         <%----%>
@@ -73,12 +73,9 @@
                                                 <span>${time.value}</span>
                                             </td>
                                             <c:forEach items="${daysPairs}" var="day">
-
                                                 <td>
-                                                    <c:set var="amenityId" value="${amenity.amenityId}" />
-                                                    <c:set var="shifts" value="${amenityShifts[amenityId]}" />
                                                     <c:set var="available" value="false" />
-                                                    <c:forEach items="${shifts}" var="shift">
+                                                    <c:forEach items="${amenity.value}" var="shift">
                                                         <c:if test="${shift.day.dayId == day.key && shift.startTime.timeId == time.key}">
                                                             <c:set var="available" value="true" />
                                                             <span style="color: var(--primary);" class="col-12">

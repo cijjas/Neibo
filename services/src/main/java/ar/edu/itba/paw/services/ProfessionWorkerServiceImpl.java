@@ -4,12 +4,15 @@ import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
 import ar.edu.itba.paw.interfaces.services.ProfessionWorkerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
 
 @Service
 public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
     private final ProfessionWorkerDao professionWorkerDao;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProfessionWorkerServiceImpl.class);
 
     @Autowired
     public ProfessionWorkerServiceImpl(ProfessionWorkerDao professionWorkerDao) {
@@ -19,12 +22,14 @@ public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
     // --------------------------------------- PROFESSIONWORKERS INSERT ------------------------------------------------
     @Override
     public void addWorkerProfession(long workerId, long professionId) {
+        LOGGER.info("Adding Profession {} to Worker {}", professionId, workerId);
         professionWorkerDao.addWorkerProfession(workerId, professionId);
     }
 
     // --------------------------------------- PROFESSIONWORKERS SELECT ------------------------------------------------
     @Override
     public List<String> getWorkerProfessions(long workerId) {
+        LOGGER.info("Adding Professions for Worker {}", workerId);
         return professionWorkerDao.getWorkerProfessions(workerId);
     }
 }

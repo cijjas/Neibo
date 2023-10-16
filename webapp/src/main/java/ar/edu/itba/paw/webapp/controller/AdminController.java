@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -114,7 +115,7 @@ public class AdminController {
     @RequestMapping("/unverified")
     public ModelAndView unverified(
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size
+            @RequestParam(value = "size", defaultValue = "3") int size
     ) {
         final ModelAndView mav = new ModelAndView("admin/views/adminRequestHandler");
 
@@ -181,33 +182,25 @@ public class AdminController {
     public ModelAndView adminAmenities() {
         ModelAndView mav = new ModelAndView("admin/views/amenitiesPanel");
 
-        // Fetch the list of amenities
-        List<Amenity> amenityList = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId());
-
-        // Create a mapping of amenity IDs to their corresponding shifts
-        Map<Long, List<Shift>> amenityShifts = new HashMap<>();
-        for (Amenity amenity : amenityList) {
-            List<Shift> shiftList = shs.getAmenityShifts(amenity.getAmenityId());
-            amenityShifts.put(amenity.getAmenityId(), shiftList);
-        }
-        List<Pair<Integer, String>> daysPairs = new ArrayList<>();
-        List<Pair<Integer, String>> timesPairs = new ArrayList<>();
-
-        for (DayOfTheWeek day : DayOfTheWeek.values())
-            daysPairs.add(new Pair<>(day.getId(), day.name()));
 
 
-        for (StandardTime time : StandardTime.values())
-            timesPairs.add(new Pair<>(time.getId(), time.toString()));
+        Map<Amenity, List<Shift>> amenitiesWithShifts = as.getAllAmenitiesIdWithListOfShifts(sessionUtils.getLoggedUser().getNeighborhoodId());
 
+
+        List<Pair<Integer, String>> daysPairs = Arrays.stream(DayOfTheWeek.values())
+                .map(day -> new Pair<>(day.getId(), day.name()))
+                .collect(Collectors.toList());
+
+        List<Pair<Integer, String>> timesPairs = Arrays.stream(StandardTime.values())
+                .map(time -> new Pair<>(time.getId(), time.toString()))
+                .collect(Collectors.toList());
 
         mav.addObject("daysPairs", daysPairs);
         mav.addObject("timesPairs", timesPairs);
-        mav.addObject("amenityList", amenityList);
-        mav.addObject("amenityShifts", amenityShifts);
 
-
+        mav.addObject("amenitiesWithShifts", amenitiesWithShifts);
         mav.addObject("panelOption", "Amenities");
+
         return mav;
     }
 

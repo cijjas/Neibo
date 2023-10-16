@@ -24,7 +24,6 @@
 <div class="container">
     <div class="row">
 
-
         <div class="column-publish" >
             <div class="cool-static-container" >
                 <h2 class="card-title"><spring:message code="CreateNewEvent.title"/></h2>
@@ -53,59 +52,26 @@
                             </div>
                         </div>
 
-                            <div class="col-md-4">
-                                <form:input path="date" id="date" type="date" required="true" class="cool-input"/>
-                                <form:errors path="date" cssClass="error" element="p" />
-                            </div>
-
-                        <div class="row">
-                            <div class="col-md-2">
-                                <spring:message code="Hours" var="hoursPlaceholder" />
-                                <form:input path="startTimeHours" class="cool-input" placeholder="${hoursPlaceholder}" type="number" min="0" max="23" />
-                                <div class="form-row form-error">
-                                    <form:errors path="startTimeHours" cssClass="error" element="p" />
-                                </div>
-                            </div>
-
-                            <div class="col-md-1 text-center d-flex align-items-center">
-                                <h1>:</h1>
-                            </div>
-
-                            <div class="col-md-2">
-                                <spring:message code="Minutes" var="minutesPlaceholder" />
-                                <form:input path="startTimeMinutes" class="cool-input" placeholder="${minutesPlaceholder}" type="number" min="0" max="59" />
-                                <div class="form-row form-error">
-                                    <form:errors path="startTimeMinutes" cssClass="error" element="p" />
-                                </div>
-                            </div>
-
-                            <div class="col-md-1 text-center d-flex align-items-center">
-                                <h1>-</h1>
-                            </div>
-
-                            <div class="col-md-2">
-                                <spring:message code="Hours" var="hoursPlaceholder" />
-                                <form:input path="endTimeHours" class="cool-input" placeholder="${hoursPlaceholder}" type="number" min="0" max="23" />
-                                <div class="form-row form-error">
-                                    <form:errors path="startTimeHours" cssClass="error" element="p" />
-                                </div>
-                            </div>
-
-                            <div class="col-md-1 text-center d-flex align-items-center">
-                                <h1>:</h1>
-                            </div>
-
-                            <div class="col-md-2">
-                                <spring:message code="Minutes" var="minutesPlaceholder" />
-                                <form:input path="endTimeMinutes" class="cool-input" placeholder="${minutesPlaceholder}" type="number" min="0" max="59" />
-                                <div class="form-row form-error">
-                                    <form:errors path="startTimeMinutes" cssClass="error" element="p" />
-                                </div>
-                            </div>
+                        <div class="col-md-4">
+                            <form:input path="date" id="date" type="date" required="true" class="cool-input"/>
+                            <form:errors path="date" cssClass="error" element="p" />
                         </div>
 
-
+                        <div class="col-md-4 row">
+                            <div class="col-6 pl-0">
+                                <form:label path="startTime" class="c-light-text font-weight-normal mb-1"><spring:message code="Time.start"/></form:label>
+                                <form:input path="startTime" type="time" id="startTime" required="required" />
+                                <form:errors path="startTime" cssClass="error" element="p" />
+                            </div>
+                            <div class="col-6 pr-0">
+                                <form:label path="endTime" class="c-light-text font-weight-normal mb-1"><spring:message code="Time.end"/></form:label>
+                                <form:input path="endTime" type="time" id="endTime" required="required" />
+                                <form:errors path="endTime" cssClass="error" element="p" />
+                            </div>
+                        </div>
                     </div>
+
+
 
 
                     <%--Submit button --%>

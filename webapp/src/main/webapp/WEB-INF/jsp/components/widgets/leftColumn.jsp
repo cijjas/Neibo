@@ -36,12 +36,13 @@
                 <a id="servicesButton" href="${pageContext.request.contextPath}/services" class="cool-left-button f-r-sb-c" >
                     <i class="fa-solid fa-handshake-angle"></i> <spring:message code="Services"/>
                 </a>
-                <a id="informationButton" href="${pageContext.request.contextPath}/information" class="cool-left-button ${channel == 'Information' ? 'active' : ''} f-r-sb-c" >
-                    <i class="fa-solid fa-circle-info"></i><spring:message code="Information"/>
-                </a>
                 <a id="reservationsButton" href="${pageContext.request.contextPath}/amenities" class="cool-left-button ${channel == 'Reservations' ? 'active' : ''} f-r-sb-c" >
                     <i class="fas fa-calendar-days"></i> <spring:message code="Reservations"/>
                 </a>
+                <a id="informationButton" href="${pageContext.request.contextPath}/information" class="cool-left-button ${channel == 'Information' ? 'active' : ''} f-r-sb-c" >
+                    <i class="fa-solid fa-circle-info"></i><spring:message code="Information"/>
+                </a>
+
             </div>
 
         </div>
