@@ -114,7 +114,7 @@ public class AdminController {
     @RequestMapping("/unverified")
     public ModelAndView unverified(
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size
+            @RequestParam(value = "size", defaultValue = "3") int size
     ) {
         final ModelAndView mav = new ModelAndView("admin/views/adminRequestHandler");
 

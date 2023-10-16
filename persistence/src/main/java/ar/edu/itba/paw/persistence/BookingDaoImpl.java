@@ -84,7 +84,7 @@ public class BookingDaoImpl implements BookingDao {
     @Override
     public List<Booking> getUserBookings(long userId) {
         LOGGER.debug("Selecting Bookings from userId {}", userId);
-        return jdbcTemplate.query(BOOKINGS_JOIN_AVAILABILITY + " WHERE userid = ?", ROW_MAPPER, userId);
+        return jdbcTemplate.query(BOOKINGS_JOIN_AVAILABILITY + " WHERE userid = ? ORDER BY uav.date, asa.amenityid, asa.shiftid;", ROW_MAPPER, userId);
     }
 
     @Override

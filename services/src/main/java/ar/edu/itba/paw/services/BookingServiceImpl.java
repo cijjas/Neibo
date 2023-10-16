@@ -6,12 +6,14 @@ import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.interfaces.persistence.CategorizationDao;
 import ar.edu.itba.paw.interfaces.services.BookingService;
 import ar.edu.itba.paw.models.Booking;
+import ar.edu.itba.paw.models.GroupedBooking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,10 +40,47 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<Booking> getUserBookings(long userId){
+    public List<GroupedBooking> getUserBookings(long userId) {
         LOGGER.info("Getting Bookings for User {}", userId);
-        return bookingDao.getUserBookings(userId);
+        return processUserBookings(bookingDao.getUserBookings(userId));
     }
+
+    public List<GroupedBooking> processUserBookings(List<Booking> userBookings) {
+        List<GroupedBooking> groupedBookings = new ArrayList<>();
+        GroupedBooking currentGroupedBooking = null;
+
+        for (Booking booking : userBookings) {
+            if (currentGroupedBooking == null || !currentGroupedBooking.canCombine(booking)) {
+                // Create a new GroupedBooking when the current one cannot be continued
+                Time endTime = calculateEndTime(booking.getShift().getStartTime().getTimeInterval());
+                currentGroupedBooking = new GroupedBooking(
+                        booking.getAmenity().getName(),
+                        booking.getBookingDate(),
+                        booking.getShift().getDay(),
+                        booking.getShift().getStartTime().getTimeInterval(),
+                        endTime
+                );
+                groupedBookings.add(currentGroupedBooking);
+            } else {
+                // Use the combine method to update the current GroupedBooking
+                Time endTime = calculateEndTime(booking.getShift().getStartTime().getTimeInterval());
+                currentGroupedBooking.combine(booking);
+            }
+        }
+
+        return groupedBookings;
+    }
+
+
+
+    private Time calculateEndTime(Time startTime) {
+        // Calculate end time by adding an hour to the start time
+        long startTimeMillis = startTime.getTime();
+        long endTimeMillis = startTimeMillis + 60 * 60 * 1000; // 60 minutes * 60 seconds * 1000 milliseconds
+        return new Time(endTimeMillis);
+    }
+
+
 
     @Override
     public boolean deleteBooking(long bookingId) {

@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models;
 
+import java.util.Objects;
+
 public class Day {
     private long dayId;
     private String dayName;
@@ -45,4 +47,13 @@ public class Day {
                 ", dayName='" + dayName + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Day day = (Day) o;
+        return dayId == day.dayId && Objects.equals(dayName, day.dayName);
+    }
+
 }
