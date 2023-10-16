@@ -37,7 +37,6 @@ public class    DayDaoImpl implements DayDao {
                 .usingGeneratedKeyColumns("dayid");
     }
 
-
     // ------------------------------------------------ DAYS INSERT ----------------------------------------------------
 
     @Override

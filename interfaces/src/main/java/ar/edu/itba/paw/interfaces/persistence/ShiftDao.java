@@ -9,9 +9,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ShiftDao {
+
+    // ----------------------------------------------- SHIFTS INSERT ---------------------------------------------------
+
     Shift createShift(long day, long startTimeId);
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ----------------------------------------------- SHIFTS SELECT ---------------------------------------------------
 
     Optional<Shift> findShiftById(long shiftId);
 

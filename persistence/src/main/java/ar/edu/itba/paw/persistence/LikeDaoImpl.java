@@ -23,6 +23,8 @@ public class LikeDaoImpl implements LikeDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
+    private final String COUNT_LIKES = "SELECT COUNT(*) FROM posts_users_likes";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(LikeDaoImpl.class);
 
     @Autowired
@@ -53,15 +55,13 @@ public class LikeDaoImpl implements LikeDao {
 
     public int getLikes(long postId) {
         LOGGER.debug("Selecting Likes from Post {}", postId);
-        String sql = "SELECT COUNT(*) FROM posts_users_likes WHERE postid = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, postId);
+        return jdbcTemplate.queryForObject(COUNT_LIKES + " WHERE postid = ?", Integer.class, postId);
     }
 
     @Override
     public boolean isPostLiked(long postId, long userId) {
         LOGGER.debug("Selecting Likes from Post {} and userId {}", postId, userId);
-        String sql = "SELECT COUNT(*) FROM posts_users_likes WHERE postid = ? AND userid = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, postId, userId) > 0;
+        return jdbcTemplate.queryForObject(COUNT_LIKES +" WHERE postid = ? AND userid = ?", Integer.class, postId, userId) > 0;
     }
 
     // ---------------------------------------------- POST_USERS_LIKES DELETE ------------------------------------------

@@ -8,7 +8,11 @@ import java.util.Optional;
 
 public interface EventDao {
 
+    // ---------------------------------------------- EVENTS INSERT ----------------------------------------------------
+
     Event createEvent(String name, String description, Date date, Time startTime, Time endTime, long neighborhoodId);
+
+    // ---------------------------------------------- EVENTS SELECT ----------------------------------------------------
 
     Optional<Event> findEventById(long eventId);
 
@@ -18,10 +22,11 @@ public interface EventDao {
 
     List<Date> getEventDates(long neighborhoodId);
 
+    Optional<Long> findStartTimeIdByEventId(long eventId);
+
+    Optional<Long> findEndTimeIdByEventId(long eventId);
+
+    // ---------------------------------------------- EVENTS DELETE ----------------------------------------------------
+
     boolean deleteEvent(long eventId);
-
-    public Optional<Long> findStartTimeIdByEventId(long eventId);
-
-    public Optional<Long> findEndTimeIdByEventId(long eventId);
-
 }

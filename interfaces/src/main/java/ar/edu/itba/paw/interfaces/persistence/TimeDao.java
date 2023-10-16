@@ -6,8 +6,13 @@ import enums.StandardTime;
 import java.util.Optional;
 
 public interface TimeDao {
+
+    // ----------------------------------------------- TIMES INSERT ----------------------------------------------------
+
     // Should not be used, as we can manually manipulate the DB
     Time createTime(java.sql.Time timeInterval);
+
+    // ----------------------------------------------- TIMES SELECT ----------------------------------------------------
 
     Optional<Time> findTimeById(long timeId);
 }

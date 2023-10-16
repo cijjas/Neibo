@@ -34,8 +34,8 @@ public class CommentDaoImpl implements CommentDao {
     private final String COMMENTS_JOIN_USERS =
             "SELECT postid, commentid, comment, commentdate, u.userid, name, surname, mail \n" +
             "FROM comments JOIN public.users u ON comments.userid = u.userid ";
-    private final String COMMENTS =
-            "SELECT * FROM comments ";
+    private final String COMMENTS = "SELECT * FROM comments ";
+    private final String COUNT_COMMENTS = "SELECT COUNT(*) FROM comments";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentDaoImpl.class);
 
@@ -104,7 +104,7 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public int getCommentsCountByPostId(long id) {
         LOGGER.debug("Selecting Comments Count from Post {}", id);
-        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM comments WHERE postid = ?", Integer.class, id);
+        return jdbcTemplate.queryForObject(COUNT_COMMENTS + " WHERE postid = ?", Integer.class, id);
     }
 
 

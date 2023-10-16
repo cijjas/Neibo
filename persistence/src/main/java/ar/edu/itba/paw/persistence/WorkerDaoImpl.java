@@ -24,23 +24,21 @@ public class WorkerDaoImpl implements WorkerDao {
 
     private UserDao userDao;
 
-        private final String USERS_JOIN_WI =
-            "select * \n" +
-                    "from users w join workers_info wi on w.userid = wi.workerid ";
-
+    private final String USERS_JOIN_WI =
+            "SELECT * \n" +
+            "FROM users w JOIN workers_info wi ON w.userid = wi.workerid ";
     private final String USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
-            "select distinct w.*, wn.*, wi.* " +
-                "from users w " +
-                "join workers_neighborhoods wn on w.userid = wn.workerId " +
-                "join workers_info wi on w.userid = wi.workerid";
-
-
+            "SELECT DISTINCT w.*, wn.*, wi.* " +
+            "FROM users w " +
+            "JOIN workers_neighborhoods wn ON w.userid = wn.workerId " +
+            "JOIN workers_info wi ON w.userid = wi.workerid";
     private final String COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
-            "select count(distinct w.userid)\n" +
-                    "from users w join workers_professions wp on w.userid = wp.workerid " +
-                    "join professions p on wp.professionid = p.professionid " +
-                    "join workers_neighborhoods wn on w.userid = wn.workerId " +
-                    "join workers_info wi on w.userid = wi.workerid ";
+            "SELECT COUNT(distinct w.userid)\n" +
+            "FROM users w " +
+            "JOIN workers_professions wp ON w.userid = wp.workerid " +
+            "JOIN professions p ON wp.professionid = p.professionid " +
+            "JOIN workers_neighborhoods wn ON w.userid = wn.workerId " +
+            "JOIN workers_info wi ON w.userid = wi.workerid ";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerDaoImpl.class);
 

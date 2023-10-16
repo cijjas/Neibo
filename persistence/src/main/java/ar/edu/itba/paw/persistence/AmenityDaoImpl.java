@@ -26,9 +26,12 @@ import java.util.Optional;
 public class AmenityDaoImpl implements AmenityDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-    private ShiftDao shiftDao;
     private SimpleJdbcInsert jdbcInsertHours;
     private SimpleJdbcInsert jdbcInsertAmenityHours;
+
+    private ShiftDao shiftDao;
+
+    private String AMENITIES = "SELECT * FROM amenities";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AmenityDaoImpl.class);
 
@@ -251,14 +254,14 @@ public class AmenityDaoImpl implements AmenityDao {
     @Override
     public Optional<Amenity> findAmenityById2(long amenityId) {
         LOGGER.debug("Selecting Amenity with id {}", amenityId);
-        List<Amenity> amenities = jdbcTemplate.query("SELECT * FROM amenities WHERE amenityid = ?", ROW_MAPPER2, amenityId);
+        List<Amenity> amenities = jdbcTemplate.query(AMENITIES + " WHERE amenityid = ?", ROW_MAPPER2, amenityId);
         return amenities.isEmpty() ? Optional.empty() : Optional.of(amenities.get(0));
     }
 
     @Override
     public List<Amenity> getAmenities2(long neighborhoodId) {
         LOGGER.debug("Selecting Amenities from Neighborhood {}", neighborhoodId);
-        return jdbcTemplate.query("SELECT * FROM amenities WHERE neighborhoodId = ?", ROW_MAPPER2, neighborhoodId);
+        return jdbcTemplate.query(AMENITIES + " WHERE neighborhoodId = ?", ROW_MAPPER2, neighborhoodId);
     }
 
     // ---------------------------------------------- AMENITY DELETE ---------------------------------------------------

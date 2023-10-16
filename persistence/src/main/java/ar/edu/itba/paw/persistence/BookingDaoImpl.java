@@ -9,6 +9,7 @@ import ar.edu.itba.paw.models.Amenity;
 import ar.edu.itba.paw.models.Booking;
 import ar.edu.itba.paw.models.Day;
 import ar.edu.itba.paw.models.Shift;
+import enums.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +34,10 @@ public class BookingDaoImpl implements BookingDao {
     private AmenityDao amenityDao;
 
     private final String BOOKINGS_JOIN_AVAILABILITY =
-            "select * " +
-            "from users_availability uav " +
-            "join amenities_shifts_availability asa " +
-            "on uav.amenityavailabilityid = asa.amenityavailabilityid ";
+            "SELECT * " +
+            "FROM users_availability uav " +
+            "JOIN amenities_shifts_availability asa " +
+            "ON uav.amenityavailabilityid = asa.amenityavailabilityid ";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingDaoImpl.class);
 
@@ -46,12 +47,12 @@ public class BookingDaoImpl implements BookingDao {
         this.shiftDao = shiftDao;
         this.jdbcTemplate = new JdbcTemplate(ds);
         this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName("users_availability")
+                .withTableName(Table.users_availability.name())
                 .usingGeneratedKeyColumns("bookingid");
     }
 
-    // ----------------------------------------------- AMENITIES_SHIFTS INSERT -----------------------------------------
-    // BOOKING
+    // ---------------------------------------- USERS_AVAILABILITY CREATE ----------------------------------------------
+
     @Override
     public Number createBooking(long userId, long amenityAvailabilityId, Date reservationDate) {
         LOGGER.debug("Inserting Booking");
@@ -67,7 +68,7 @@ public class BookingDaoImpl implements BookingDao {
         }
     }
 
-    // ----------------------------------------------- AMENITIES_SHIFTS SELECT -----------------------------------------
+    // ---------------------------------------- USERS_AVAILABILITY SELECT ----------------------------------------------
 
     private final RowMapper<Booking> ROW_MAPPER = (rs, rowNum) -> {
         Shift shift = shiftDao.findShiftById(rs.getLong("shiftid")).orElseThrow(() -> new NotFoundException("Shift Not Found"));
@@ -86,6 +87,8 @@ public class BookingDaoImpl implements BookingDao {
         LOGGER.debug("Selecting Bookings from userId {}", userId);
         return jdbcTemplate.query(BOOKINGS_JOIN_AVAILABILITY + " WHERE userid = ? ORDER BY uav.date, asa.amenityid, asa.shiftid;", ROW_MAPPER, userId);
     }
+
+    // ---------------------------------------- USERS_AVAILABILITY DELETE ----------------------------------------------
 
     @Override
     public boolean deleteBooking(long bookingId) {
