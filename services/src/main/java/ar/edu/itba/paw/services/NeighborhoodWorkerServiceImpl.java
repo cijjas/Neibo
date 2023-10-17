@@ -15,7 +15,10 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
+@Transactional
 public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService {
     private final NeighborhoodWorkerDao neighborhoodWorkerDao;
     private final UserDao userDao;
@@ -33,7 +36,8 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
         this.neighborhoodDao = neighborhoodDao;
     }
 
-    // --------------------------------------- NIEGHBORHOODWORKERS INSERT ------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public void addWorkerToNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Adding Worker {} to Neighborhood {}", workerId, neighborhoodId);
@@ -45,14 +49,17 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
         emailService.sendNewUserMail(neighborhoodId, worker.getName(), UserRole.WORKER);
     }
 
-    // --------------------------------------- NIEGHBORHOODWORKERS SELECT ------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
+    @Transactional(readOnly = true)
     public List<Neighborhood> getNeighborhoods(long workerId) {
         LOGGER.info("Getting Neighborhoods for Worker {}", workerId);
         return neighborhoodWorkerDao.getNeighborhoods(workerId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Neighborhood> getOtherNeighborhoods(long workerId) {
         LOGGER.info("Getting Other Neighborhoods for Worker {}", workerId);
         List<Neighborhood> allNeighborhoods = neighborhoodDao.getNeighborhoods();
@@ -66,7 +73,8 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
         return allNeighborhoods;
     }
 
-    // --------------------------------------- NIEGHBORHOODWORKERS DELETE ------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public void removeWorkerFromNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Removing Worker {} from Neighborhood {}", workerId, neighborhoodId);

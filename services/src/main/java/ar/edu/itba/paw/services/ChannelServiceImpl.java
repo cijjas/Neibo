@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class ChannelServiceImpl implements ChannelService {
     private final ChannelDao channelDao;
     private final ChannelMappingService channelMappingService;
@@ -30,11 +32,7 @@ public class ChannelServiceImpl implements ChannelService {
         this.channelMappingService = channelMappingService;
     }
 
-    @Override
-    public List<Channel> getChannels(long neighborhoodId) {
-        LOGGER.info("Getting Channels from Neighborhood {}", neighborhoodId);
-        return channelDao.getChannels(neighborhoodId);
-    }
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public Channel createChannel(long neighborhoodId, String name) {
@@ -44,18 +42,29 @@ public class ChannelServiceImpl implements ChannelService {
         return channel;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
+    @Transactional(readOnly = true)
     public Optional<Channel> findChannelById(long id) {
         return channelDao.findChannelById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Channel> findChannelByName(String name) {
         return channelDao.findChannelByName(name);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<Channel> getChannels(long neighborhoodId) {
+        LOGGER.info("Getting Channels from Neighborhood {}", neighborhoodId);
+        return channelDao.getChannels(neighborhoodId);
+    }
 
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Channel> getNeighborChannels(long neighborhoodId, long neighborId) {
         Map<String, Channel> channelMap = channelDao.getChannels(neighborhoodId).stream()
                 .collect(Collectors.toMap(Channel::getChannel, Function.identity()));
@@ -64,6 +73,7 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Map<String, Channel> getAdminChannels(long neighborhoodId) {
         try {
             List<Channel> allChannels = channelDao.getChannels(neighborhoodId);

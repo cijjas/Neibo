@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
+@Transactional
 public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
     private final ProfessionWorkerDao professionWorkerDao;
 
@@ -19,15 +22,18 @@ public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
         this.professionWorkerDao = professionWorkerDao;
     }
 
-    // --------------------------------------- PROFESSIONWORKERS INSERT ------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public void addWorkerProfession(long workerId, long professionId) {
         LOGGER.info("Adding Profession {} to Worker {}", professionId, workerId);
         professionWorkerDao.addWorkerProfession(workerId, professionId);
     }
 
-    // --------------------------------------- PROFESSIONWORKERS SELECT ------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
+    @Transactional(readOnly = true)
     public List<String> getWorkerProfessions(long workerId) {
         LOGGER.info("Adding Professions for Worker {}", workerId);
         return professionWorkerDao.getWorkerProfessions(workerId);

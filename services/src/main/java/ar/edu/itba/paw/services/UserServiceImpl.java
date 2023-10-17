@@ -12,6 +12,7 @@ import ar.edu.itba.paw.enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     private final ImageService imageService;
@@ -39,7 +41,7 @@ public class UserServiceImpl implements UserService {
         this.neighborhoodService = neighborhoodService;
     }
 
-    // ---------------------------------------------- USER CREATION ----------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public User createNeighbor(final String mail, final String password, final String name, final String surname,
@@ -61,56 +63,66 @@ public class UserServiceImpl implements UserService {
         return n;
     }
 
-    // ---------------------------------------------- USER GETTERS -----------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<User> findUserById(long neighborId) {
         LOGGER.info("Finding User with id {}", neighborId);
         return userDao.findUserById(neighborId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<User> findUserByMail(String mail) {
         LOGGER.info("Finding User with mail {}", mail);
         return userDao.findUserByMail(mail);
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public boolean isAttending(long eventId, long userId) {
+        LOGGER.info("Checking if User {} is attending Event {}", userId,eventId);
+        return userDao.isAttending(eventId, userId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<User> getNeighborsSubscribedByPostId(long id) {
         LOGGER.info("Getting Neighbors Subscribed to Post {}", id);
         return userDao.getNeighborsSubscribedByPostId(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> getNeighbors(long neighborhoodId) {
         LOGGER.info("Getting Neighbors from Neighborhood {}", neighborhoodId);
         return userDao.getUsersByCriteria(UserRole.NEIGHBOR, neighborhoodId, 0, 0);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> getUsersPage(UserRole role, long neighborhoodId, int page, int size){
         LOGGER.info("Getting Users from Neighborhood {} with Role {}", neighborhoodId, role);
         return userDao.getUsersByCriteria(role, neighborhoodId, page, size);
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public int getTotalPages(UserRole role, long neighborhoodId, int size ){
         LOGGER.info("Getting Pages of Users with size {} from Neighborhood {} with Role {}", size, neighborhoodId, role);
         return userDao.getTotalUsers(role, neighborhoodId)/size;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> getEventUsers (long eventId) {
         LOGGER.info("Getting User attending Event {}", eventId);
         return userDao.getEventUsers(eventId);
     }
 
-    @Override
-    public boolean isAttending(long eventId, long userId) {
-        LOGGER.info("Checking if User {} is attending Event {}", userId,eventId);
-        return userDao.isAttending(eventId, userId);
-    }
 
-    // ---------------------------------------------- USER SETTERS -----------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public void updateProfilePicture(long userId, MultipartFile image){

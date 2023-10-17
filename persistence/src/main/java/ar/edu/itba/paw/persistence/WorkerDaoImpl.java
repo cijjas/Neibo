@@ -103,12 +103,12 @@ public class WorkerDaoImpl implements WorkerDao {
     }
 
     @Override
-    public List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long neighborhoodId) {
-        LOGGER.debug("Selecting Workers from Neighborhood {} with professions {}", neighborhoodId, professions);
+    public List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long[] neighborhoodIds) {
+        LOGGER.debug("Selecting Workers from Neighborhoods {} with professions {}", neighborhoodIds, professions);
         StringBuilder query = new StringBuilder(USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
 
-        appendCommonWorkerConditions(query, queryParams, neighborhoodId, professions);
+        appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions);
 
         if(page != 0)
             appendPaginationClause(query, queryParams, page, size);
@@ -120,12 +120,12 @@ public class WorkerDaoImpl implements WorkerDao {
     }
 
     @Override
-    public int getWorkersCountByCriteria(List<String> professions, long neighborhoodId) {
-        LOGGER.debug("Selecting Workers Count from Neighborhood {} with professions {}", neighborhoodId, professions);
+    public int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds) {
+        LOGGER.debug("Selecting Workers Count from Neighborhood {} with professions {}", neighborhoodIds, professions);
         StringBuilder query = new StringBuilder(COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
 
-        appendCommonWorkerConditions(query, queryParams, neighborhoodId, professions);
+        appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions);
 
         LOGGER.debug("{}", query);
         LOGGER.debug("{}", queryParams);

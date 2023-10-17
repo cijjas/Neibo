@@ -41,17 +41,17 @@
                             <p><spring:message code="No.new.neighborhoods"/></p>
                         </c:when>
                         <c:otherwise>
-                            <form:form id="neighborhood-form" action="${pageContext.request.contextPath}/services/neighborhoods" method="post" modelAttribute="neighborhoodForm">
-                                <spring:message code="Neighborhood" var="neighborhoodPlaceholder"/>
-                                <form:select id="neighborhood-select" path="neighborhoodId" class="cool-input" placeholder="${neighborhoodPlaceholder}">
-                                    <c:forEach var="entry" items="${otherNeighborhoods}">
-                                        <form:option value="${entry.neighborhoodId}">${entry.name}</form:option>
-                                    </c:forEach>
-                                </form:select>
-                                <div class="d-flex justify-content-end m-t-40 ">
-                                    <button type="submit" class="cool-button cool-small on-bg w-25" style="height:40px;" ><spring:message code="Request"/></button>
-                                </div>
-                            </form:form>
+<%--                            <form:form id="neighborhood-form" action="${pageContext.request.contextPath}/services/neighborhoods" method="post" modelAttribute="neighborhoodForm">--%>
+<%--                                <spring:message code="Neighborhood" var="neighborhoodPlaceholder"/>--%>
+<%--                                <form:select id="neighborhood-select" path="neighborhoodId" class="cool-input" placeholder="${neighborhoodPlaceholder}">--%>
+<%--                                    <c:forEach var="entry" items="${otherNeighborhoods}">--%>
+<%--                                        <form:option value="${entry.neighborhoodId}">${entry.name}</form:option>--%>
+<%--                                    </c:forEach>--%>
+<%--                                </form:select>--%>
+<%--                                <div class="d-flex justify-content-end m-t-40 ">--%>
+<%--                                    <button type="submit" class="cool-button cool-small on-bg w-25" style="height:40px;" ><spring:message code="Request"/></button>--%>
+<%--                                </div>--%>
+<%--                            </form:form>--%>
                         </c:otherwise>
                     </c:choose>
 

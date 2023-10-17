@@ -869,15 +869,14 @@ public class FrontController {
     @RequestMapping(value = "/services", method = RequestMethod.GET)
     public ModelAndView services() {
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
-        System.out.println(ws.getWorkersByCriteria(1,10, null, sessionUtils.getLoggedUser().getNeighborhoodId()));
-        List<Worker> workerList = ws.getWorkersByCriteria(1,10, null, sessionUtils.getLoggedUser().getNeighborhoodId());
+        List<Worker> workerList = ws.getWorkersByCriteria(1,10, null, sessionUtils.getLoggedUser().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId());
         mav.addObject("workersList", workerList);
         return mav;
     }
 
     @RequestMapping(value = "/services/neighborhoods", method = RequestMethod.GET)
     public ModelAndView workersNeighborhoods(
-            @ModelAttribute("neighborhoodForm") final NeighborhoodForm neighborhoodForm
+            @ModelAttribute("neighborhoodForm") final NeighborhoodsForm neighborhoodForm
     ) {
         ModelAndView mav = new ModelAndView("serviceProvider/views/neighborhoods");
         long workerId = sessionUtils.getLoggedUser().getUserId();
@@ -890,14 +889,16 @@ public class FrontController {
 
     @RequestMapping(value = "/services/neighborhoods", method = RequestMethod.POST)
     public ModelAndView addWorkerToNeighborhood(
-            @Valid @ModelAttribute("neighborhoodForm") final NeighborhoodForm neighborhoodForm,
+            @Valid @ModelAttribute("neighborhoodForm") final NeighborhoodsForm neighborhoodForm,
             final BindingResult errors
     ) {
         if(errors.hasErrors()) {
             return workersNeighborhoods(neighborhoodForm);
         }
         long workerId = sessionUtils.getLoggedUser().getUserId();
-        nhws.addWorkerToNeighborhood(workerId, neighborhoodForm.getNeighborhoodId());
+        for(long neighborhoodId : neighborhoodForm.getNeighborhoodIds()) {
+            nhws.addWorkerToNeighborhood(workerId, neighborhoodId);
+        }
         return new ModelAndView("redirect:/services/neighborhoods");
     }
 

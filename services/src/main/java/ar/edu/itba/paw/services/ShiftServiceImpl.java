@@ -8,12 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Calendar;
 
 @Service
+@Transactional
 public class ShiftServiceImpl implements ShiftService {
     private final ShiftDao shiftDao;
 
@@ -24,13 +27,25 @@ public class ShiftServiceImpl implements ShiftService {
         this.shiftDao = shiftDao;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
+    public Shift createShift(long dayId, long timeId) {
+        LOGGER.info("Creating Shift for Day {} on Time {}", dayId, timeId);
+        return shiftDao.createShift(dayId, timeId);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    @Transactional(readOnly = true)
     public Optional<Shift> findShift(long startTime, long dayId) {
         LOGGER.info("Finding Shift with Day Id {} and Start Time {}", dayId, startTime);
         return shiftDao.findShiftId(startTime, dayId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Shift> getShifts(long amenityId, Date date) {
         LOGGER.info("Getting Shifts for Amenity {} on date", amenityId, date);
         Calendar calendar = Calendar.getInstance();
@@ -40,12 +55,7 @@ public class ShiftServiceImpl implements ShiftService {
     }
 
     @Override
-    public Shift createShift(long dayId, long timeId) {
-        LOGGER.info("Creating Shift for Day {} on Time {}", dayId, timeId);
-        return shiftDao.createShift(dayId, timeId);
-    }
-
-    @Override
+    @Transactional(readOnly = true)
     public List<Shift> getAmenityShifts(long amenityId) {
         return shiftDao.getAmenityShifts(amenityId);
     }

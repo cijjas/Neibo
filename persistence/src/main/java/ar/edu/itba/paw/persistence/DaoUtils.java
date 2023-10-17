@@ -32,9 +32,9 @@ class DaoUtils {
         }
     }
 
-    static void appendCommonWorkerConditions(StringBuilder query, List<Object> queryParams, long neighborhoodId, List<String> professions) {
+    static void appendCommonWorkerConditions(StringBuilder query, List<Object> queryParams, long[] neighborhoodIds, List<String> professions) {
         appendInitialWhereClause(query);
-        appendWorkerNeighborhoodIdCondition(query, queryParams, neighborhoodId);
+        appendWorkerNeighborhoodIdCondition(query, queryParams, neighborhoodIds);
 
         if(professions != null && !professions.isEmpty()) {
             appendProfessionsCondition(query, queryParams, professions);
@@ -66,9 +66,18 @@ class DaoUtils {
         queryParams.add(neighborhoodId);
     }
 
-    static void appendWorkerNeighborhoodIdCondition(StringBuilder query, List<Object> queryParams, long neighborhoodId) {
-        query.append(" AND wn.neighborhoodid = ?");
-        queryParams.add(neighborhoodId);
+    static void appendWorkerNeighborhoodIdCondition(StringBuilder query, List<Object> queryParams, long[] neighborhoodIds) {
+        if (neighborhoodIds.length > 0) {
+            query.append(" AND wn.neighborhoodid IN (");
+            for (int i = 0; i < neighborhoodIds.length; i++) {
+                query.append("?");
+                queryParams.add(neighborhoodIds[i]);
+                if (i < neighborhoodIds.length - 1) {
+                    query.append(", ");
+                }
+            }
+            query.append(")");
+        }
     }
 
     static void appendProfessionsCondition(StringBuilder query, List<Object> queryParams, List<String> professions) {
@@ -124,7 +133,7 @@ class DaoUtils {
     }
 
     static void appendDateClause(StringBuilder query) {
-        query.append(" ORDER BY date DESC");
+        query.append(" ORDER BY postdate DESC");
     }
 
 }

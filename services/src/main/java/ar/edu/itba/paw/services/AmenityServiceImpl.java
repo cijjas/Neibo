@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Service
+@Transactional
 public class AmenityServiceImpl implements AmenityService {
     private final AmenityDao amenityDao;
     private final ShiftDao shiftDao;
@@ -57,21 +59,26 @@ public class AmenityServiceImpl implements AmenityService {
         return amenity;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
+    @Transactional(readOnly = true)
     public Optional<Amenity> findAmenityById(long amenityId) {
         return amenityDao.findAmenityById(amenityId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Amenity> getAmenities(long neighborhoodId) {
         LOGGER.info("Getting Amenities from Neighborhood {}", neighborhoodId);
         return amenityDao.getAmenities(neighborhoodId);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public boolean deleteAmenity(long amenityId) {
         LOGGER.info("Deleting Amenity {}", amenityId);
         return amenityDao.deleteAmenity(amenityId);
     }
-
 }
