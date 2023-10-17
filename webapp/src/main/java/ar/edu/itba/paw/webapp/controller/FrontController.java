@@ -1,16 +1,15 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.form.*;
 import ar.edu.itba.paw.webapp.form.ReservationTimeForm;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
-import enums.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,10 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.sql.SQLOutput;
 import java.util.*;
 import java.sql.Date;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -529,6 +526,8 @@ public class FrontController {
         ModelAndView mav = new ModelAndView("views/amenities");
         List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId());
 
+        System.out.println(bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));
+
         mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
         mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
         mav.addObject("amenities", amenities);
@@ -554,9 +553,9 @@ public class FrontController {
 
     @RequestMapping(value = "/delete-reservation/{id}", method = RequestMethod.GET)
     public ModelAndView deleteReservation(
-            @PathVariable(value = "id") int bookingId
+            @PathVariable(value = "id") List<Long> bookingId
     ) {
-        bs.deleteBooking(bookingId);
+        bs.deleteBookings(bookingId);
         return new ModelAndView("redirect:/amenities");
     }
 

@@ -33,14 +33,14 @@ public class ShiftDaoImpl implements ShiftDao {
     private final String SHIFTS =
             "SELECT s.*, d.dayname, t.timeinterval, d.dayid\n" +
             "FROM shifts s\n" +
-            "INNER JOIN days d ON s.dayid = d.dayid\n" +
-            "INNER JOIN times t ON s.starttime = t.timeid ";
+                    "INNER JOIN days d ON s.dayid = d.dayid\n" +
+                    "INNER JOIN times t ON s.starttime = t.timeid ";
     private String SHIFTS_JOIN_AVAILABILITY_SHIFTS =
             "SELECT s.shiftid, t.timeinterval, d.dayname, asa.amenityid\n" +
             "FROM shifts s\n" +
-            "JOIN amenities_shifts_availability asa ON asa.shiftid = s.shiftid\n" +
-            "INNER JOIN days d ON s.dayid = d.dayid\n" +
-            "INNER JOIN times t ON s.starttime = t.timeid ";
+                    "INNER JOIN amenities_shifts_availability asa ON asa.shiftid = s.shiftid\n" +
+                    "INNER JOIN days d ON s.dayid = d.dayid\n" +
+                    "INNER JOIN times t ON s.starttime = t.timeid ";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShiftDaoImpl.class);
 

@@ -111,7 +111,33 @@
         </div>
 
         <div class="column-right">
+<<<<<<< HEAD
             <%@ include file="/WEB-INF/jsp/components/widgets/amenitiesRightColumn.jsp" %>
+=======
+            <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %>
+            <div class="grey-static-container m-t-40">
+                <div class="column d-flex justify-content-center align-items-start">
+                    <h3 class="m-b-20"><spring:message code="MyReservations"/></h3>
+                    <c:forEach var="reservation" items="${reservationsList}">
+                        <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
+                            <div class="f-c-c-c">
+                                <div class="f-r-sb-c w-100">
+                                    <h5><c:out value="${reservation.amenityName}" /></h5>
+                                    <a href="${pageContext.request.contextPath}/delete-reservation/${reservation.bookingIds}" class="f-c-c-c">
+                                        <i class="fas fa-trash" style="color: var(--error);"></i>
+                                    </a>
+                                </div>
+                                <div>
+                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="Date"/> <c:out value="${reservation.date}" /></h6>
+                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="StartTime"/> <c:out value="${reservation.startTime}" /></h6>
+                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="StartTime"/> <c:out value="${reservation.endTime}" /></h6>
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
+>>>>>>> 310d909a1c6f3d42998d9c048bd1245d7655b771
         </div>
 
         <c:if test="${param.showSuccessMessage == true}">

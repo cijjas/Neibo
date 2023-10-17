@@ -1,4 +1,4 @@
-package enums;
+package ar.edu.itba.paw.enums;
 
 import java.util.Arrays;
 import java.util.Calendar;

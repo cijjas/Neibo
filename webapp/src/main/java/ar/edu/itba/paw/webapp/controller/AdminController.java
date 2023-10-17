@@ -3,10 +3,9 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.form.*;
-import enums.DayOfTheWeek;
-import enums.Pair;
-import enums.StandardTime;
-import enums.UserRole;
+import ar.edu.itba.paw.enums.DayOfTheWeek;
+import ar.edu.itba.paw.enums.StandardTime;
+import ar.edu.itba.paw.enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -15,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")

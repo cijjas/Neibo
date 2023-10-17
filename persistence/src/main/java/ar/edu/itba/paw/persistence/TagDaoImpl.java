@@ -26,14 +26,14 @@ public class TagDaoImpl implements TagDao {
     private final String TAGS_JOIN_POSTS =
             "SELECT tags.tagid, tag\n" +
             "FROM posts_tags " +
-            "JOIN tags ON posts_tags.tagid = tags.tagid ";
+                "INNER JOIN tags ON posts_tags.tagid = tags.tagid ";
     private final String TAGS_JOIN_POSTS_JOIN_USERS_JOIN_NEIGHBORHOODS =
             "SELECT DISTINCT tags.tagid, tag\n" +
             "FROM posts_tags " +
-            "JOIN tags ON posts_tags.tagid = tags.tagid " +
-            "JOIN posts p ON posts_tags.postid = p.postid " +
-            "JOIN users u ON u.userid = p.userid " +
-            "JOIN neighborhoods nh ON u.neighborhoodid = nh.neighborhoodid ";
+                "INNER JOIN tags ON posts_tags.tagid = tags.tagid " +
+                "INNER JOIN posts p ON posts_tags.postid = p.postid " +
+                "INNER JOIN users u ON u.userid = p.userid " +
+                "INNER JOIN neighborhoods nh ON u.neighborhoodid = nh.neighborhoodid ";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TagDaoImpl.class);
 

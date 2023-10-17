@@ -1,14 +1,11 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.models.Amenity;
-import ar.edu.itba.paw.models.DayTime;
 import ar.edu.itba.paw.models.Shift;
-import enums.Table;
+import ar.edu.itba.paw.enums.Table;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -17,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
-import java.sql.Time;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -246,8 +242,6 @@ public class AmenityDaoImpl implements AmenityDao {
 
     private final RowMapper<Amenity> ROW_MAPPER = (rs, rowNum) -> {
         List<Shift> availableShifts = shiftDao.getAmenityShifts(rs.getLong("amenityid"));
-        System.out.println("NAKAKANAKA");
-        System.out.println(availableShifts);
         return new Amenity.Builder()
                 .amenityId(rs.getLong("amenityid"))
                 .name(rs.getString("name"))

@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
-import enums.Language;
-import enums.Table;
-import enums.UserRole;
+import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.Table;
+import ar.edu.itba.paw.enums.UserRole;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.mock.web.MockMultipartFile;

@@ -1,15 +1,11 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
-import ar.edu.itba.paw.models.Amenity;
 import ar.edu.itba.paw.models.Booking;
-import ar.edu.itba.paw.models.Day;
-import ar.edu.itba.paw.models.Shift;
-import enums.Table;
+import ar.edu.itba.paw.enums.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

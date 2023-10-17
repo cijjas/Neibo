@@ -2,18 +2,19 @@ package ar.edu.itba.paw.models;
 
 import java.sql.Time;
 import java.util.Date;
-import java.time.DayOfWeek;
+import java.util.List;
+import java.util.ArrayList;
 
 public class GroupedBooking {
-    private long bookingId;
+    private List<Long> bookingIds;
     private String amenityName;
     private Date date;
     private String day;
     private Time startTime;
     private Time endTime;
 
-    public GroupedBooking(long bookingId, String amenityName, Date date, String day, Time startTime, Time endTime) {
-        this.bookingId = bookingId;
+    public GroupedBooking(String amenityName, Date date, String day, Time startTime, Time endTime) {
+        this.bookingIds = new ArrayList<>();
         this.amenityName = amenityName;
         this.date = date;
         this.day = day;
@@ -21,8 +22,8 @@ public class GroupedBooking {
         this.endTime = endTime;
     }
 
-    public long getBookingId() {
-        return bookingId;
+    public List<Long> getBookingIds() {
+        return bookingIds;
     }
 
     public String getAmenityName() {
@@ -45,49 +46,27 @@ public class GroupedBooking {
         return endTime;
     }
 
-    public void setBookingId(long bookingId) {
-        this.bookingId = bookingId;
-    }
-
-    public void setAmenityName(String amenityName) {
-        this.amenityName = amenityName;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public void setDay(String day) {
-        this.day = day;
-    }
-
-    public void setStartTime(Time startTime) {
-        this.startTime = startTime;
-    }
-
-    public void setEndTime(Time endTime) {
-        this.endTime = endTime;
+    public void addBookingId(long bookingId) {
+        bookingIds.add(bookingId);
     }
 
     public boolean canCombine(Booking booking) {
-        // Check if the endTime is one hour after the next booking's startTime
-        return this.amenityName.equals(booking.getAmenityName()) &&
-                this.date.equals(booking.getBookingDate()) &&
-                this.day.equals(booking.getDayName()) &&
-                this.endTime.equals(booking.getStartTime());
+        return amenityName.equals(booking.getAmenityName()) &&
+                date.equals(booking.getBookingDate()) &&
+                day.equals(booking.getDayName()) &&
+                endTime.equals(booking.getStartTime());
     }
 
     public void combine(Booking booking) {
-        // Calculate endTime by adding one hour to the next booking's startTime
         long startTimeMillis = booking.getStartTime().getTime();
-        long endTimeMillis = startTimeMillis + 60 * 60 * 1000; // 60 minutes * 60 seconds * 1000 milliseconds
+        long endTimeMillis = startTimeMillis + 60 * 60 * 1000;
         this.endTime = new Time(endTimeMillis);
     }
 
     @Override
     public String toString() {
         return "GroupedBooking{" +
-                "bookingId=" + bookingId +
+                "bookingIds=" + bookingIds +
                 ", amenityName='" + amenityName + '\'' +
                 ", date=" + date +
                 ", day=" + day +
