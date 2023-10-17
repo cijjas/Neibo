@@ -37,7 +37,6 @@
 
 <script>
     function submitReviewForm() {
-        console.log("submitting review form");
         document.forms["reviewForm"].submit();
     }
     function closeReviewDialog() {

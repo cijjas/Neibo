@@ -34,9 +34,6 @@
            href="${baseUrl}${contextPath}/${pageUrl}">
                 ${pageNumber}
         </a>
-        <script>
-            console.log("pageUrl ${pageUrl}");
-        </script>
     </c:forEach>
 
     <c:url var="nextUrl" value="${pageContext.request.contextPath}">

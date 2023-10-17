@@ -17,7 +17,6 @@ public class ImageValidator implements ConstraintValidator<ImageConstraint, Mult
     @Override
     public boolean isValid(MultipartFile multipartFile, ConstraintValidatorContext constraintValidatorContext) {
         return true ;
-//        System.out.println("ImageValidator: " + multipartFile);
 //        if (multipartFile.isEmpty() ) {
 //            return true ;
 //        }

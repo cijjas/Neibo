@@ -118,11 +118,6 @@
                     method: 'POST'
                 });
 
-                if (response.ok) {
-                    console.log('Successfully liked/unliked the post.');
-                } else {
-                    console.error('Failed to like/unlike the post.');
-                }
             } catch (error) {
                 // If the response is not OK, revert the like button to its original state
                 this.setAttribute('data-liked', originalLiked.toString());

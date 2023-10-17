@@ -383,8 +383,6 @@ public class FrontController {
         ModelAndView mav = new ModelAndView("views/landingPage");
         List<Pair<Integer, String>> professionsPairs = new ArrayList<>();
         for (Professions profession : Professions.values()){
-            System.out.println(profession.getId());
-            System.out.println(profession.toString());
             professionsPairs.add(new Pair<>(profession.getId(), profession.toString()));
         }
 
@@ -450,7 +448,6 @@ public class FrontController {
         for (Professions profession : Professions.values()){
             professionsPairs.add(new Pair<>(profession.getId(), profession.toString()));
         }
-        System.out.println(professionsPairs);
 
         mav.addObject("professionsPairs", professionsPairs);
         mav.addObject("successfullySignup", successfullySignup);
@@ -475,7 +472,6 @@ public class FrontController {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        System.out.println("Printing the professions chosen");
         ws.createWorker(workerSignupForm.getW_mail(), workerSignupForm.getW_name(), workerSignupForm.getW_surname(), workerSignupForm.getW_password(), identification, workerSignupForm.getPhoneNumber(), workerSignupForm.getAddress(), Language.ENGLISH, workerSignupForm.getProfessionIds(), workerSignupForm.getBusinessName());
         ModelAndView mav = new ModelAndView("redirect:/signup-worker");
         mav.addObject("successfullySignup", true);
@@ -526,7 +522,6 @@ public class FrontController {
         ModelAndView mav = new ModelAndView("views/amenities");
         List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId());
 
-        System.out.println(bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));
 
         mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
         mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
@@ -551,11 +546,11 @@ public class FrontController {
         return mav;
     }
 
-    @RequestMapping(value = "/delete-reservation/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete-reservation", method = RequestMethod.POST)
     public ModelAndView deleteReservation(
-            @PathVariable(value = "id") List<Long> bookingId
+            @RequestParam("bookingIds") List<Long> bookingIds
     ) {
-        bs.deleteBookings(bookingId);
+        bs.deleteBookings(bookingIds);
         return new ModelAndView("redirect:/amenities");
     }
 
@@ -681,7 +676,6 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-        System.out.println(shs.getAmenityShifts(4));
         /*
         Random random = new Random();
         long[] jobNumbers = {1, 2, 3, 4}; // Define the possible job numbers
@@ -799,7 +793,6 @@ public class FrontController {
     @RequestMapping(value = "/service/profile/{id:\\d+}", method = RequestMethod.POST)
     public ModelAndView serviceProfile(
     ) {
-        System.out.println("llegando a profile/id post");
         return new ModelAndView("serviceProvider/views/serviceProfile");
     }
 

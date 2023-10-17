@@ -117,7 +117,6 @@
 
 <script>
     function submitSignupForm() {
-        console.log("submitting normal form");
         document.forms["signupForm"].submit();
     }
     function openLoginDialog() {

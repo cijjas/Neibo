@@ -51,7 +51,6 @@ public class UserServiceImpl implements UserService {
 
             //if user created is a neighbor (not worker), send admin email notifying new neighbor
             if(neighborhoodId != 0) {
-                System.out.println("inside email clause");
                 emailService.sendNewUserMail(neighborhoodId, name, UserRole.NEIGHBOR);
             }
             return createdUser;

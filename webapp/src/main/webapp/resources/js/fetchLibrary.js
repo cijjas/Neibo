@@ -1,10 +1,6 @@
 
 
 async function getImageInto(imageElementId, imageSrcId, contextPath) {
-    console.log("getImageInto");
-    console.log("imageElementId: " + imageElementId);
-    console.log("imageSrcId: " + imageSrcId);
-    console.log("contextPath: " + contextPath);
     let image = document.getElementById(imageElementId);
     if(imageSrcId === 0){
         image.src = contextPath + "/resources/images/roundedPlaceholder.png";
@@ -26,6 +22,5 @@ async function getImageInto(imageElementId, imageSrcId, contextPath) {
     }
     catch (e) {
         image.src = contextPath + "/resources/images/errorImage.png";
-        console.log(e);
     }
 }

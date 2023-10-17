@@ -61,83 +61,11 @@
 
             <%@ include file="/WEB-INF/jsp/components/widgets/amenitiesSchedule.jsp" %>
 
-<<<<<<< HEAD
-                    <div class="d-flex flex-column justify-content-center align-items-center w-100">
-                        <div class="cool-table w-100 ">
-                            <table class="table-striped w-100" >
-                                <tr>
-                                    <th><spring:message code="AmenityHours"/></th>
-                                    <th><spring:message code="Monday.abbr"/></th>
-                                    <th><spring:message code="Tuesday.abbr"/></th>
-                                    <th><spring:message code="Wednesday.abbr"/></th>
-                                    <th><spring:message code="Thursday.abbr"/></th>
-                                    <th><spring:message code="Friday.abbr"/></th>
-                                    <th><spring:message code="Saturday.abbr"/></th>
-                                    <th><spring:message code="Sunday.abbr"/></th>
-                                </tr>
-                                <c:forEach items="${timesPairs}" var="time">
-
-                                    <tr>
-                                        <td>
-                                            <span>${time.value.key}</span>
-                                        </td>
-                                        <c:forEach items="${daysPairs}" var="day">
-                                            <td>
-                                                <c:set var="available" value="false" />
-                                                <c:forEach items="${amenity.value}" var="shift">
-                                                    <c:if test="${shift.day == day.value && shift.startTime == time.value.value}">
-                                                        <c:set var="available" value="true" />
-                                                        <span style="color: var(--primary);" class="col-12">
-                                                            <i class="fa-solid fa-check"></i>
-                                                        </span>
-                                                    </c:if>
-                                                </c:forEach>
-                                                <c:if test="${!available}">
-                                                        <span style="color: var(--error);" class="col-12">
-                                                            <i class="fa-solid fa-xmark"></i>
-                                                        </span>
-                                                </c:if>
-                                            </td>
-                                        </c:forEach>
-                                    </tr>
-                                </c:forEach>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </c:forEach>
-=======
->>>>>>> de64f2dd997be1d9dbc6bd76831340a025493792
         </div>
 
         <div class="column-right">
-<<<<<<< HEAD
-            <%@ include file="/WEB-INF/jsp/components/widgets/amenitiesRightColumn.jsp" %>
-=======
             <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %>
-            <div class="grey-static-container m-t-40">
-                <div class="column d-flex justify-content-center align-items-start">
-                    <h3 class="m-b-20"><spring:message code="MyReservations"/></h3>
-                    <c:forEach var="reservation" items="${reservationsList}">
-                        <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
-                            <div class="f-c-c-c">
-                                <div class="f-r-sb-c w-100">
-                                    <h5><c:out value="${reservation.amenityName}" /></h5>
-                                    <a href="${pageContext.request.contextPath}/delete-reservation/${reservation.bookingIds}" class="f-c-c-c">
-                                        <i class="fas fa-trash" style="color: var(--error);"></i>
-                                    </a>
-                                </div>
-                                <div>
-                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="Date"/> <c:out value="${reservation.date}" /></h6>
-                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="StartTime"/> <c:out value="${reservation.startTime}" /></h6>
-                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="StartTime"/> <c:out value="${reservation.endTime}" /></h6>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-            </div>
->>>>>>> 310d909a1c6f3d42998d9c048bd1245d7655b771
+            <%@ include file="/WEB-INF/jsp/components/widgets/amenitiesRightColumn.jsp" %>
         </div>
 
         <c:if test="${param.showSuccessMessage == true}">

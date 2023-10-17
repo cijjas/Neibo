@@ -45,7 +45,6 @@ public class AmenityHours {
         Map<String, DayTime> sortedMap = new LinkedHashMap<>();
         for (String day : customOrder) {
             if (amenityHours.containsKey(day)) {
-                System.out.println("Adding day: " + day + " to the sorted map" +amenityHours.get(day)   );
                 sortedMap.put(day, amenityHours.get(day));
             }
         }

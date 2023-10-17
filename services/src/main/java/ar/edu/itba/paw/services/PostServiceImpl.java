@@ -98,7 +98,7 @@ public class PostServiceImpl implements PostService {
                 emailService.sendMessageUsingThymeleafTemplate(n.getMail(), isEnglish? "New Announcement" : "Nuevo Anuncio", isEnglish? "announcement-template_en.html" : "announcement-template_es.html", vars);
             }
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            LOGGER.error("Admin Post Email could not be sent");
         }
 
         return post;

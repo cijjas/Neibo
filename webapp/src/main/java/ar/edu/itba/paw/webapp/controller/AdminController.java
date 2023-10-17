@@ -192,11 +192,7 @@ public class AdminController {
             @PathVariable(value = "id") int amenityId
     ) {
         ModelAndView mav = new ModelAndView("redirect:/admin/amenities");
-<<<<<<< HEAD
-        as.deleteAmenity2(amenityId);
-=======
         as.deleteAmenity(amenityId); //JOAAAAAAAAAAAAAAAAAAAEWQDSAFEDAs
->>>>>>> de64f2dd997be1d9dbc6bd76831340a025493792
         return mav;
     }
 
@@ -220,10 +216,7 @@ public class AdminController {
         if (errors.hasErrors()) {
             return createAmenityForm(amenityForm);
         }
-        System.out.println("Amenity name: " + amenityForm.getName());
-        System.out.println("Amenity description: " + amenityForm.getDescription());
-        System.out.println("Amenity shifts: " + selectedShifts);
-        System.out.println("Amenity neighborhood: " + sessionUtils.getLoggedUser().getNeighborhoodId());
+
 
         as.createAmenity(amenityForm.getName(), amenityForm.getDescription(), sessionUtils.getLoggedUser().getNeighborhoodId(), selectedShifts);
         return new ModelAndView("redirect:/admin/amenities");

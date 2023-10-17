@@ -1518,13 +1518,8 @@ h6 {
     color: var(--lighttext);
     cursor: pointer;
 
-
-
-
-
     &.liked{
-        color: var(--primary);
-        background-color: var(--old-primary);
+        color: var(--old-primary);
 
 
     }

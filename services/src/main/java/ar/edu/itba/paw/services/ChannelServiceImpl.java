@@ -81,7 +81,7 @@ public class ChannelServiceImpl implements ChannelService {
 
             return adminChannelMap;
         } catch (Exception e) {
-            System.out.println(e);
+            LOGGER.error("Error getting admin channels", e);
         }
         return null;
     }

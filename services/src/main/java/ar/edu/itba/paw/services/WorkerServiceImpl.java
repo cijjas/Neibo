@@ -40,7 +40,6 @@ public class WorkerServiceImpl implements WorkerService {
     public Worker createWorker(String mail, String name, String surname, String password, int identification, String phoneNumber, String address, Language language, long[] professionIds, String businessName) {
         LOGGER.info("Creating Worker with mail {}", mail);
         User user = userDao.createUser(mail, password, name, surname, 0, language, false, UserRole.WORKER, identification);
-        System.out.println("CREATED THE USER: " + user.getUserId());
         Worker worker = workerDao.createWorker(user.getUserId(), phoneNumber, address, businessName);
         for (long professionId : professionIds) {
             professionWorkerDao.addWorkerProfession(user.getUserId(), professionId);

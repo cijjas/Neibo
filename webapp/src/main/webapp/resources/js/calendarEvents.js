@@ -1,7 +1,6 @@
 async function assignEventTimestamps() {
     eventTimestamps = await getEventTimestamps();
     loadCalendar();
-    console.log("Timestamps:", eventTimestamps);
 }
 
 async function getEventTimestamps() {
@@ -11,7 +10,6 @@ async function getEventTimestamps() {
         if (response.ok) {
             const timestampString = await response.text();
             const eventTimestamps = timestampString.split(',').map(Number); // Parse values as numbers
-            console.log(eventTimestamps);
 
             return eventTimestamps;
         } else {
