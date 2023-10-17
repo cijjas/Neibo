@@ -120,7 +120,6 @@ public class PostDaoImplTest {
     @Test
     public void testFindPostById() {
         // Pre Conditions
-        // Insert a test post into the database
         long nhKey = testInsertionUtils.createNeighborhood();
         long uKey = testInsertionUtils.createUser(nhKey);
         long chKey = testInsertionUtils.createChannel();
@@ -145,7 +144,6 @@ public class PostDaoImplTest {
         assertFalse(maybePost.isPresent());
     }
 
-    // Retrieval of all posts in a certain neighborhood
     @Test
     public void testGetPostsByCriteriaNeighborhood() {
         // Pre Conditions
@@ -158,7 +156,6 @@ public class PostDaoImplTest {
         assertEquals(2, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts
     }
 
-    // Retrieval of all posts in a certain neighborhood's channel
     @Test
     public void testGetPostsByCriteriaChannelAndNeighborhood() {
         // Pre Conditions
@@ -169,7 +166,7 @@ public class PostDaoImplTest {
 
 
         // Validations
-        assertEquals(2, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts
+        assertEquals(2, retrievedPosts.size());
     }
 
     @Test
@@ -183,7 +180,7 @@ public class PostDaoImplTest {
         List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_1, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey1, PostStatus.none, 0);
 
         // Validations
-        assertEquals(1, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts
+        assertEquals(1, retrievedPosts.size());
     }
 
     @Test
@@ -197,7 +194,7 @@ public class PostDaoImplTest {
         List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey2, PostStatus.none, 0);
 
         // Validations
-        assertEquals(2, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts
+        assertEquals(2, retrievedPosts.size());
     }
 
     @Test
@@ -211,7 +208,7 @@ public class PostDaoImplTest {
         List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, BASE_PAGE, 1, TAG_LIST, nhKey2, PostStatus.none, 0);
 
         // Validations
-        assertEquals(1, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts
+        assertEquals(1, retrievedPosts.size());
     }
 
     @Test
@@ -225,7 +222,7 @@ public class PostDaoImplTest {
         List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, 2, 1, TAG_LIST, nhKey2, PostStatus.none, 0);
 
         // Validations
-        assertEquals(1, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts
+        assertEquals(1, retrievedPosts.size());
     }
 
 

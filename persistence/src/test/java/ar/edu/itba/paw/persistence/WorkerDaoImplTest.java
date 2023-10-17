@@ -15,6 +15,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -138,6 +141,55 @@ public class WorkerDaoImplTest {
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_info.name()));
     }
 
+    @Test
+    public void testGetWorkersByNeighborhood() {
+        // Pre Conditions
+        populateWorkers();
+
+        // Exercise
+        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1);
+
+        // Validations
+        assertEquals(2, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
+    }
+
+    @Test
+    public void testGetWorkersByNeighborhoodAndProfessions() {
+        // Pre Conditions
+        populateWorkers();
+
+        // Exercise
+        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, BASE_PAGE_SIZE, Collections.singletonList(PROFESSION_1), nhKey1);
+
+        // Validations
+        assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
+    }
+
+
+    @Test
+    public void testGetWorkersByNeighborhoodAndSize() {
+        // Pre Conditions
+        populateWorkers();
+
+        // Exercise
+        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, 1, null, nhKey1);
+
+        // Validations
+        assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
+    }
+
+    @Test
+    public void testGetWorkersByNeighborhoodAndSizeAndPage() {
+        // Pre Conditions
+        populateWorkers();
+
+        // Exercise
+        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(2, 1, null, nhKey1);
+
+        // Validations
+        assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
+    }
+
     private void populateWorkers() {
 
         /*
@@ -155,6 +207,11 @@ public class WorkerDaoImplTest {
         uKey2 = testInsertionUtils.createUser(WORKER_MAIL_2, nhKey1);
         uKey3 = testInsertionUtils.createUser(WORKER_MAIL_3, nhKey2);
         uKey4 = testInsertionUtils.createUser(WORKER_MAIL_4, nhKey2);
+
+        testInsertionUtils.addWorkerToNeighborhood(uKey1, nhKey1);
+        testInsertionUtils.addWorkerToNeighborhood(uKey2, nhKey1);
+        testInsertionUtils.addWorkerToNeighborhood(uKey3, nhKey2);
+        testInsertionUtils.addWorkerToNeighborhood(uKey4, nhKey2);
 
         pKey1 = testInsertionUtils.createProfession(PROFESSION_1);
         pKey2 = testInsertionUtils.createProfession(PROFESSION_2);

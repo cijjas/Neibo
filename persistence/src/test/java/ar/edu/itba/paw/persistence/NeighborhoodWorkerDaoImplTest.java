@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
+import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.enums.Table;
 import org.junit.Before;
@@ -14,6 +15,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -63,4 +66,31 @@ public class NeighborhoodWorkerDaoImplTest {
         // Validations & Post Conditions
         assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_neighborhoods.name()));
     }
+
+    @Test
+    public void testGetNeighborhoods(){
+        // Pre Conditions
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        testInsertionUtils.createWorker(uKey);
+        neighborhoodWorkerDao.addWorkerToNeighborhood(uKey, nhKey);
+
+        // Exercise
+        neighborhoodWorkerDao.getNeighborhoods(uKey);
+
+        // Validations & Post Conditions
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_neighborhoods.name()));
+    }
+
+    @Test
+    public void testGetNoNeighborhoods(){
+        // Pre Conditions
+
+        // Exercise
+        neighborhoodWorkerDao.getNeighborhoods(1);
+
+        // Validations & Post Conditions
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_neighborhoods.name()));
+    }
+
 }

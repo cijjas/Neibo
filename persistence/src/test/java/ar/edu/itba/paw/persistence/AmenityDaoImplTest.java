@@ -100,4 +100,30 @@ public class AmenityDaoImplTest {
         // Validations & Post Conditions
         assertEquals(1, amenities.size());
     }
+
+    @Test
+    public void testDeleteAmenity() {
+        // Pre Conditions
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long aKey = testInsertionUtils.createAmenity(nhKey);
+
+        // Exercise
+        boolean deleted = amenityDao.deleteAmenity(aKey);
+
+        // Validations & Post Conditions
+        assertTrue(deleted);
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.amenities.name()));
+    }
+
+    @Test
+    public void testDeleteInvalidAmenity() {
+        // Pre Conditions
+
+        // Exercise
+        boolean deleted = amenityDao.deleteAmenity(1);
+
+        // Validations & Post Conditions
+        assertFalse(deleted);
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.amenities.name()));
+    }
 }

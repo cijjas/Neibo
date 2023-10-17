@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.Review;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ReviewService {
     // -------------------------------------------- REVIEWS INSERT -----------------------------------------------------
@@ -13,7 +14,7 @@ public interface ReviewService {
 
     List<Review> getReviews(long workerId);
 
-    float getAvgRating(long workerId);
+    Optional<Float> getAvgRating(long workerId);
 
     int getReviewsCount(long workerId);
 

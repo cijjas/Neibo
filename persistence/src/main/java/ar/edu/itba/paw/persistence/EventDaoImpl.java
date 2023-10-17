@@ -41,7 +41,7 @@ public class EventDaoImpl implements EventDao {
     // ---------------------------------------------- EVENT INSERT -----------------------------------------------------
 
     @Override
-    public Event createEvent(final String name, final String description, final Date date, final Time startTime, final Time endTime, final long startTimeId, final long endTimeId, final long duration, final long neighborhoodId) {
+    public Event createEvent(final String name, final String description, final Date date, final long startTimeId, final long endTimeId, final long duration, final long neighborhoodId) {
         LOGGER.debug("Inserting Event {}", name);
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
@@ -59,8 +59,6 @@ public class EventDaoImpl implements EventDao {
                     .name(name)
                     .description(description)
                     .date(date)
-                    .startTime(startTime)
-                    .endTime(endTime)
                     .duration(duration)
                     .neighborhoodId(neighborhoodId)
                     .build();

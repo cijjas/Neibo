@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 import ar.edu.itba.paw.models.Review;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ReviewDao {
     // -------------------------------------------- REVIEWS INSERT -----------------------------------------------------
@@ -13,7 +14,7 @@ public interface ReviewDao {
 
     List<Review> getReviews(long workerId);
 
-    float getAvgRating(long workerId);
+    Optional<Float> getAvgRating(long workerId);
 
     int getReviewsCount(long workerId);
 

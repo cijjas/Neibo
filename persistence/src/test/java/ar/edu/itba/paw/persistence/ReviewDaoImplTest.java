@@ -16,6 +16,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -120,10 +121,11 @@ public class ReviewDaoImplTest {
         testInsertionUtils.createReview(uKey, uKey2, RATING_2, REVIEW_2);
 
         // Exercise
-        float avgRating = reviewDao.getAvgRating(uKey);
+        Optional<Float> maybeAvgRating = reviewDao.getAvgRating(uKey);
 
         // Validations & Post Conditions
-        assertEquals((RATING_1+RATING_2)/2, avgRating, DELTA); // Average of 4.0 and 4.5
+        assertTrue(maybeAvgRating.isPresent());
+        assertEquals((RATING_1+RATING_2)/2, maybeAvgRating.get(), DELTA); // Average of 4.0 and 4.5
     }
 
     @Test

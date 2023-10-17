@@ -131,4 +131,39 @@ public class CommentDaoImplTest {
         // Validations & Post Conditions
         assertTrue(comments.isEmpty());
     }
+
+    @Test
+    public void testGetCommentsCountByPostId(){
+        // Pre Conditions
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long chKey = testInsertionUtils.createChannel();
+        long iKey = testInsertionUtils.createImage();
+        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
+        testInsertionUtils.createComment(uKey, pKey);
+
+        // Exercise
+        int comments = commentDao.getCommentsCountByPostId(pKey);
+
+        // Validations & Post Conditions
+        assertEquals(1, comments);
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.comments.name()));
+    }
+
+    @Test
+    public void testGetCommentsCountByPostInvalidId(){
+        // Pre Conditions
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long chKey = testInsertionUtils.createChannel();
+        long iKey = testInsertionUtils.createImage();
+        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
+
+        // Exercise
+        int comments = commentDao.getCommentsCountByPostId(pKey);
+
+        // Validations & Post Conditions
+        assertEquals(0, comments);
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.comments.name()));
+    }
 }

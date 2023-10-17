@@ -33,13 +33,24 @@ public class BookingServiceImpl implements BookingService {
         this.bookingDao = bookingDao;
     }
 
-    public void createBooking(long userId,long amenityId, List<Long> shiftIds,  Date reservationDate) {
+    public long[] createBooking(long userId, long amenityId, List<Long> shiftIds, Date reservationDate) {
         LOGGER.info("Creating a Booking for Amenity {} on {} for User {}", amenityId, reservationDate, userId);
+
+        List<Long> bookingIds = new ArrayList<>();
+
         for (Long shiftId : shiftIds) {
-            Long availabilityId = availabilityDao.findAvailabilityId(amenityId, shiftId).orElseThrow(()-> new NotFoundException("Availability not found.")); // DB guarantees the combination is unique
-            bookingDao.createBooking(userId, availabilityId, reservationDate);
+            Long availabilityId = availabilityDao.findAvailabilityId(amenityId, shiftId)
+                    .orElseThrow(() -> new NotFoundException("Availability not found.")); // DB guarantees the combination is unique
+
+            long bookingId = bookingDao.createBooking(userId, availabilityId, reservationDate).longValue();
+            bookingIds.add(bookingId);
         }
+
+        return bookingIds.stream()
+                .mapToLong(Long::longValue)
+                .toArray();
     }
+
 
     @Override
     public List<GroupedBooking> getUserBookings(long userId) {

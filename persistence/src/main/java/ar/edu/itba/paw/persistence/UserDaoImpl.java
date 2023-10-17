@@ -141,8 +141,8 @@ public class UserDaoImpl implements UserDao {
             appendPaginationClause(query, queryParams, page, size);
 
         // Log results
-        LOGGER.debug(String.valueOf(query));
-        LOGGER.debug(String.valueOf(queryParams));
+        LOGGER.debug("{}", query);
+        LOGGER.debug("{}", queryParams);
 
         return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
     }
@@ -160,8 +160,8 @@ public class UserDaoImpl implements UserDao {
             appendNeighborhoodIdCondition(query, queryParams, neighborhoodId);
 
         // Log results
-        LOGGER.debug(String.valueOf(query));
-        LOGGER.debug(String.valueOf(queryParams));
+        LOGGER.debug("{}", query);
+        LOGGER.debug("{}", queryParams);
 
         // Use queryForObject to retrieve the count as an integer
         return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());

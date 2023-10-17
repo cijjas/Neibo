@@ -44,7 +44,7 @@ public class EventServiceImpl implements EventService {
         long duration = (endTime.getTime() - startTime.getTime())/60000;
         long startTimeId = timeDao.createTime(startTime).getTimeId();
         long endTimeId = timeDao.createTime(endTime).getTimeId();
-        return eventDao.createEvent(name, description, date, startTime, endTime, startTimeId, endTimeId, duration, neighborhoodId); }
+        return eventDao.createEvent(name, description, date, startTimeId, endTimeId, duration, neighborhoodId); }
 
     @Override
     public List<Event> getEventsByDate(Date date, long neighborhoodId) {

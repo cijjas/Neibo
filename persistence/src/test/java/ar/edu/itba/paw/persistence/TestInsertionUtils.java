@@ -4,9 +4,11 @@ import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.enums.UserRole;
+import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.sql.DataSource;
@@ -49,7 +51,6 @@ class TestInsertionUtils {
     private final SimpleJdbcInsert imageInsert;
     private final SimpleJdbcInsert professionInsertion;
 
-    // private final SimpleJdbcInsert professionInsert; no insertion in this dao
 
     public TestInsertionUtils(JdbcTemplate jdbcTemplate, DataSource dataSource) {
         this.jdbcTemplate = jdbcTemplate;
@@ -155,13 +156,15 @@ class TestInsertionUtils {
         likeInsert.execute(data);
     }
 
-    public long createEvent(String name, String description, Date date, long duration, long neighborhoodId) {
+    public long createEvent(String name, String description, Date date, long startTimeId, long endTimeId, long duration, long neighborhoodId) {
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
         data.put("description", description);
         data.put("date", date);
         data.put("duration", duration);
         data.put("neighborhoodid", neighborhoodId);
+        data.put("starttimeid", startTimeId);
+        data.put("endtimeid", endTimeId);
         return eventInsert.executeAndReturnKey(data).longValue();
     }
 
@@ -380,12 +383,12 @@ class TestInsertionUtils {
     }
 
 
-    public long createEvent(long neighborhoodId) {
+    public long createEvent(long neighborhoodId, long startTime, long endTime) {
         String name = "Dummy Event Name";
         String description = "Me estoy volviendo loco";
         Date date = java.sql.Date.valueOf("2001-3-14");
         long duration = 90;
-        return createEvent(name, description, date, duration, neighborhoodId);
+        return createEvent(name, description, date, startTime, endTime, duration, neighborhoodId);
     }
 
     public long createNeighborhood() {

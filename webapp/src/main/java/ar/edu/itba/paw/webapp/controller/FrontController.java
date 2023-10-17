@@ -785,7 +785,7 @@ public class FrontController {
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
-        mav.addObject("averageRating", rws.getAvgRating(workerId));
+        mav.addObject("averageRating", rws.getAvgRating(workerId).orElseThrow(() -> new NotFoundException("Average Rating not found")));
         //mav.addObject("postList", postList);
         //mav.addObject("totalPages", totalPages);
         return mav;
@@ -809,7 +809,7 @@ public class FrontController {
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
-        mav.addObject("averageRating", rws.getAvgRating(workerId));
+        mav.addObject("averageRating", rws.getAvgRating(workerId).orElseThrow(() -> new NotFoundException("Average Rating not found")));
         return mav;
 
     }
@@ -845,7 +845,7 @@ public class FrontController {
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
-        mav.addObject("averageRating", rws.getAvgRating(workerId));
+        mav.addObject("averageRating", rws.getAvgRating(workerId).orElseThrow(() -> new NotFoundException("Average Rating not found")));
         return mav;
 
     }
@@ -871,6 +871,7 @@ public class FrontController {
     @RequestMapping(value = "/services", method = RequestMethod.GET)
     public ModelAndView services() {
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
+        System.out.println(ws.getWorkersByCriteria(1,10, null, sessionUtils.getLoggedUser().getNeighborhoodId()));
         List<Worker> workerList = ws.getWorkersByCriteria(1,10, null, sessionUtils.getLoggedUser().getNeighborhoodId());
         mav.addObject("workersList", workerList);
         return mav;

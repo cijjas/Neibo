@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -41,7 +42,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public float getAvgRating(long workerId) {
+    public Optional<Float> getAvgRating(long workerId) {
         LOGGER.info("Getting Average Rating for Worker {}", workerId);
         return reviewDao.getAvgRating(workerId);
     }

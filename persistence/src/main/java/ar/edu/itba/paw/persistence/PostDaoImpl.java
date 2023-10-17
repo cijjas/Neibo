@@ -171,8 +171,8 @@ public class PostDaoImpl implements PostDao {
             appendPaginationClause(query, queryParams, page, size);
 
         // Log results
-        LOGGER.debug(String.valueOf(query));
-        LOGGER.debug(String.valueOf(queryParams));
+        LOGGER.debug("{}", query);
+        LOGGER.debug("{}", queryParams);
 
         // LAUNCH IT!
         return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
@@ -190,8 +190,8 @@ public class PostDaoImpl implements PostDao {
         appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags, postStatus);
 
         // Log results
-        LOGGER.debug(String.valueOf(query));
-        LOGGER.debug(String.valueOf(queryParams));
+        LOGGER.debug("{}", query);
+        LOGGER.debug("{}", queryParams);
 
         // Execute the query and retrieve the count
         return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());

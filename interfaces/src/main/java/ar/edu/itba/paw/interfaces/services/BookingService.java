@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface BookingService {
 
-    void createBooking(long userId, long amenityId, List<Long> shiftIds, Date reservationDate);
+    long[] createBooking(long userId, long amenityId, List<Long> shiftIds, Date reservationDate);
 
     List<GroupedBooking> getUserBookings(long userId);
 
