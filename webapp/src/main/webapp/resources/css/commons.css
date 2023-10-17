@@ -55,6 +55,8 @@ body {
     --on-onbackground: rgb(238, 236, 231);
     --green: #328d3d;
     --light-green: #9ad379;
+    --star-background: #dedad4;
+    --star-active: #ff9c1a;
 
     --border-light: 5px;
     --border-radius: 10px;
@@ -83,6 +85,8 @@ body {
     --on-onbackground: rgb(63, 68, 75);
     --green: #1b6926;
     --light-green:  #9ad379;
+    --star-background: #4b4f4f;
+    --star-active: #ff9c1a;
 
 }
 html {

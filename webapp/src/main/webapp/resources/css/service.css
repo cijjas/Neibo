@@ -256,11 +256,14 @@
             margin: 0;
         }
         & .review-box {
-            padding: 1.5rem;
-            margin: 1.5rem;
+            padding: 1rem;
+            margin: 1rem;
             background-color: var(--darkonbackground);
             color: var(--text);
             border-radius: var(--border-radius);
+            overflow: hidden;
+            white-space: normal;
+            text-overflow: ellipsis;
         }
     }
 
@@ -275,5 +278,28 @@
         border-bottom-left-radius: var(--border-radius);
         background-position: bottom center;
         background-size: cover;
+    }
+}
+
+
+.stars {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    & i {
+        color: var(--star-background);
+        font-size: 35px;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        &.active {
+            color: var(--star-active);
+        }
+    }
+}
+
+.cool-star {
+    color: var(--star-background);
+    &.active {
+        color: var(--star-active);
     }
 }

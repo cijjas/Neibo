@@ -40,16 +40,22 @@
 
 
             <div class="container">
-                <div class="f-c-c-c">
+                <div class="f-c-c-c" style="gap:0">
                     <c:forEach var="review" items="${reviews}" varStatus="loopStatus">
-                        <div class="review-box f-c-s-s w-100">
-                            <span class="font-size-16 font-weight-bold" id="userNamePlaceholder-${loopStatus.index}"><spring:message code="Loading."/></span>
+                        <div class="review-box f-c-s-s w-100" >
+                            <div class="f-r-sb-c w-100">
+                                <span class="font-size-16 font-weight-bold" id="userNamePlaceholder-${loopStatus.index}">
+                                    <spring:message code="Loading."/>
+                                </span>
+                                <div>
+                                    <span class="post-date" data-post-date="<c:out value="${review.date}"/>"></span>
+                                    <script src="${pageContext.request.contextPath}/resources/js/dateFormatter.js"></script>
+                                </div>
+                            </div>
                             <span class="font-size-12" id="neighborhoodNamePlaceholder-${loopStatus.index}"><spring:message code="Loading."/></span>
                             <div class="f-r-c-c">
                                 <div id="starsContainer-${loopStatus.index}">
-                                    <!-- Container for stars -->
                                 </div>
-
                             </div>
                             <p class="font-size-12"> <c:out value="${review.review}"/></p>
                         </div>
@@ -79,7 +85,7 @@
                                     starsContainer.innerHTML = "";
 
                                     for (let i = 1; i <= fullStars; i++) {
-                                        starsContainer.innerHTML += '<i class="fa-solid fa-star"></i>';
+                                        starsContainer.innerHTML += '<i class="fa-solid fa-star cool-star active"></i>';
                                     }
 
                                     if (halfStar > 0) {
@@ -87,7 +93,7 @@
                                     }
 
                                     for (let i = 1; i <= emptyStars; i++) {
-                                        starsContainer.innerHTML += '<i class="fa-regular fa-star"></i>';
+                                        starsContainer.innerHTML += '<i class="fa-regular fa-star cool-star "></i>';
                                     }
                                 } catch (error) {
                                     console.error(error.message);

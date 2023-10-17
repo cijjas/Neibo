@@ -34,7 +34,6 @@
       <div class="column-left">
         <%@ include file="/WEB-INF/jsp/components/widgets/leftColumn.jsp" %>
       </div>
-
       <div class="column-middle">
         <div class="upper-feed-buttons-box">
         </div>
