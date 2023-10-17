@@ -35,9 +35,9 @@
                     <div class="col-md-12">
                         <form:label path="amenityId" class="mt-3 mb-1"><spring:message code="SelectAmenity"/></form:label>
                         <form:select path="amenityId" id="amenityId" required="true" class="cool-input">
-                            <c:forEach var="entry" items="${amenitiesWithShifts}">
-                                <form:option value="${entry.key.amenityId}">
-                                    <c:out value="${entry.key.name}" />
+                            <c:forEach var="entry" items="${amenities}">
+                                <form:option value="${entry.amenityId}">
+                                    <c:out value="${entry.name}" />
                                 </form:option>
                             </c:forEach>
                         </form:select>
@@ -59,13 +59,9 @@
 
             </div>
 
-            <c:forEach var="amenity" items="${amenitiesWithShifts}">
-                <div  class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
-                    <div >
-                        <h2 ><c:out value="${amenity.key.name}" /></h2>
-                    </div>
-                    <p class="mb-3" style="color:var(--lighttext);"><c:out value="${amenity.key.description}" /></p>
+            <%@ include file="/WEB-INF/jsp/components/widgets/amenitiesSchedule.jsp" %>
 
+<<<<<<< HEAD
                     <div class="d-flex flex-column justify-content-center align-items-center w-100">
                         <div class="cool-table w-100 ">
                             <table class="table-striped w-100" >
@@ -110,6 +106,8 @@
                     </div>
                 </div>
             </c:forEach>
+=======
+>>>>>>> de64f2dd997be1d9dbc6bd76831340a025493792
         </div>
 
         <div class="column-right">

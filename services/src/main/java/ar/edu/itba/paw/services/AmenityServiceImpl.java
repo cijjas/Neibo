@@ -34,6 +34,7 @@ public class AmenityServiceImpl implements AmenityService {
         this.amenityDao = amenityDao;
     }
 
+<<<<<<< HEAD
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
@@ -113,6 +114,8 @@ public class AmenityServiceImpl implements AmenityService {
         }
         return timeList;
     }
+=======
+>>>>>>> de64f2dd997be1d9dbc6bd76831340a025493792
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -122,15 +125,13 @@ public class AmenityServiceImpl implements AmenityService {
         Amenity amenity = amenityDao.createAmenity(name, description, neighborhoodId);
 
         for (String shiftPair : selectedShifts) {
-            System.out.println("Shift pair: " + shiftPair);
             // Parse the pair into <Long dayId, Long timeId>
             String[] shiftParts = shiftPair.split(",");
 
-            System.out.println("Shift parts: " + shiftParts[0] + " " + shiftParts[1]);
             long dayId = Long.parseLong(shiftParts[0]);
             long timeId = Long.parseLong(shiftParts[1]);
 
-            Optional<Shift> existingShift = shiftDao.findShiftId(dayId, timeId);
+            Optional<Shift> existingShift = shiftDao.findShiftId(timeId, dayId);
 
             if (existingShift.isPresent()) {
                 availabilityDao.createAvailability(amenity.getAmenityId(), existingShift.get().getShiftId());
@@ -146,7 +147,7 @@ public class AmenityServiceImpl implements AmenityService {
 
     @Override
     public Optional<Amenity> findAmenityById(long amenityId) {
-        return amenityDao.findAmenityById2(amenityId);
+        return amenityDao.findAmenityById(amenityId);
     }
 
     @Override
@@ -156,26 +157,9 @@ public class AmenityServiceImpl implements AmenityService {
     }
 
     @Override
-    public boolean deleteAmenity2(long amenityId) {
+    public boolean deleteAmenity(long amenityId) {
         LOGGER.info("Deleting Amenity {}", amenityId);
-        return amenityDao.deleteAmenity2(amenityId);
+        return amenityDao.deleteAmenity(amenityId);
     }
 
-    /*
-    Se usa asi:
-
-    AmenityDao amenityDao; // Inject or create an instance of AmenityDao
-
-    long amenityId = 1; // Replace with the desired amenity ID
-    String dayOfWeek = "Monday"; // Replace with the desired day of the week
-
-    Map<Time, Time> openingClosingHours = amenityDao.getAmenityByDay(amenityId, dayOfWeek);
-
-    // Now you can use the openingClosingHours map as needed in your application.
-*/
-
-//    @Override
-//    public boolean updateAmenity(long amenityId, String name, String description) {
-//        return amenityDao.updateAmenity(amenityId, name, description);
-//    }
 }

@@ -6,9 +6,9 @@ public class NeighborPostNeighborhoodWrapper {
     private Post post;
 
     public NeighborPostNeighborhoodWrapper() {
-        this.user = new User.Builder().build(); // Initialize Neighbor object
-        this.post = new Post.Builder().build(); // Initialize Post object
-        this.neighborhood = new Neighborhood.Builder().build(); // Initialize Neighborhood object
+        this.user = new User.Builder().build();
+        this.post = new Post.Builder().build();
+        this.neighborhood = new Neighborhood.Builder().build();
     }
 
     public User getNeighbor() {

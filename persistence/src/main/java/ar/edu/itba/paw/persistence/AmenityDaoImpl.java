@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.models.Amenity;
 import ar.edu.itba.paw.models.DayTime;
+import ar.edu.itba.paw.models.Shift;
 import enums.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -26,8 +27,6 @@ import java.util.Optional;
 public class AmenityDaoImpl implements AmenityDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-    private SimpleJdbcInsert jdbcInsertHours;
-    private SimpleJdbcInsert jdbcInsertAmenityHours;
 
     private ShiftDao shiftDao;
 
@@ -35,6 +34,7 @@ public class AmenityDaoImpl implements AmenityDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AmenityDaoImpl.class);
 
+<<<<<<< HEAD
 /*    @Autowired
     public AmenityDaoImpl(final DataSource ds) {
         this.jdbcTemplate = new JdbcTemplate(ds);
@@ -213,6 +213,8 @@ public class AmenityDaoImpl implements AmenityDao {
     // ---------------------------------------------- JOACO ---------------------------------------------------
 
 
+=======
+>>>>>>> de64f2dd997be1d9dbc6bd76831340a025493792
     @Autowired
     public AmenityDaoImpl(final DataSource ds, final ShiftDao shiftDao) {
         this.shiftDao = shiftDao;
@@ -242,32 +244,36 @@ public class AmenityDaoImpl implements AmenityDao {
 
     // ---------------------------------------------- AMENITY SELECT ---------------------------------------------------
 
-    private final RowMapper<Amenity> ROW_MAPPER2 = (rs, rowNum) -> {
+    private final RowMapper<Amenity> ROW_MAPPER = (rs, rowNum) -> {
+        List<Shift> availableShifts = shiftDao.getAmenityShifts(rs.getLong("amenityid"));
+        System.out.println("NAKAKANAKA");
+        System.out.println(availableShifts);
         return new Amenity.Builder()
                 .amenityId(rs.getLong("amenityid"))
                 .name(rs.getString("name"))
                 .description(rs.getString("description"))
                 .neighborhoodId(rs.getLong("neighborhoodid"))
+                .availableShifts(availableShifts)
                 .build();
     };
 
     @Override
-    public Optional<Amenity> findAmenityById2(long amenityId) {
+    public Optional<Amenity> findAmenityById(long amenityId) {
         LOGGER.debug("Selecting Amenity with id {}", amenityId);
-        List<Amenity> amenities = jdbcTemplate.query(AMENITIES + " WHERE amenityid = ?", ROW_MAPPER2, amenityId);
+        List<Amenity> amenities = jdbcTemplate.query(AMENITIES + " WHERE amenityid = ?", ROW_MAPPER, amenityId);
         return amenities.isEmpty() ? Optional.empty() : Optional.of(amenities.get(0));
     }
 
     @Override
-    public List<Amenity> getAmenities2(long neighborhoodId) {
+    public List<Amenity> getAmenities(long neighborhoodId) {
         LOGGER.debug("Selecting Amenities from Neighborhood {}", neighborhoodId);
-        return jdbcTemplate.query(AMENITIES + " WHERE neighborhoodId = ?", ROW_MAPPER2, neighborhoodId);
+        return jdbcTemplate.query(AMENITIES + " WHERE neighborhoodId = ?", ROW_MAPPER, neighborhoodId);
     }
 
     // ---------------------------------------------- AMENITY DELETE ---------------------------------------------------
 
     @Override
-    public boolean deleteAmenity2(long amenityId) {
+    public boolean deleteAmenity(long amenityId) {
         LOGGER.debug("Deleting Amenity with id {}", amenityId);
         return jdbcTemplate.update("DELETE FROM amenities WHERE amenityid = ?", amenityId) > 0;
     }
