@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,6 +19,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class TagServiceImpl implements TagService {
     private final TagDao tagDao;
     private CategorizationDao categorizationDao;
@@ -31,17 +34,7 @@ public class TagServiceImpl implements TagService {
         this.categorizationDao = categorizationDao;
     }
 
-    @Override
-    public List<Tag> getTags(long neighborhoodId) {
-        LOGGER.info("Getting All Tags from Neighborhood", neighborhoodId);
-        return tagDao.getTags(neighborhoodId);
-    }
-
-    @Override
-    public List<Tag> findTagsByPostId(long id) {
-        LOGGER.info("Finding Tags for Post {}", id);
-        return tagDao.findTagsByPostId(id);
-    }
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public Tag createTag(String name) {
@@ -76,7 +69,6 @@ public class TagServiceImpl implements TagService {
             categorizationDao.createCategory(tag.getTagId(), postId);
         }
     }
-
 
     public String createURLForTagFilter(String tags, String currentUrl, long neighborhoodId) {
         LOGGER.info("Creating URL for Tag Filter");
@@ -113,5 +105,19 @@ public class TagServiceImpl implements TagService {
         }
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<Tag> findTagsByPostId(long id) {
+        LOGGER.info("Finding Tags for Post {}", id);
+        return tagDao.findTagsByPostId(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Tag> getTags(long neighborhoodId) {
+        LOGGER.info("Getting All Tags from Neighborhood", neighborhoodId);
+        return tagDao.getTags(neighborhoodId);
+    }
 }

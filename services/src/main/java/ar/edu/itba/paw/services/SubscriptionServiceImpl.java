@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
+@Transactional
 public class SubscriptionServiceImpl implements SubscriptionService {
     private final SubscriptionDao subscriptionDao;
 
@@ -16,6 +19,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public SubscriptionServiceImpl(final SubscriptionDao subscriptionDao) {
         this.subscriptionDao = subscriptionDao;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public void createSubscription(long neighborId, long postId) {

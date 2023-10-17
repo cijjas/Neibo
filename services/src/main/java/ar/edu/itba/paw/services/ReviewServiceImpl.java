@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewDao reviewDao;
 
@@ -21,38 +24,45 @@ public class ReviewServiceImpl implements ReviewService {
         this.reviewDao = reviewDao;
     }
 
-    // -------------------------------------------- REVIEWS INSERT -----------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public Review createReview(long workerId, long userId, float rating, String review) {
         LOGGER.info("Creating Review for Worker {} from User {}", workerId, userId);
         return reviewDao.createReview(workerId, userId, rating, review);
     }
 
-    // -------------------------------------------- REVIEWS SELECT -----------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
+    @Transactional(readOnly = true)
     public Review getReview(long reviewId) {
         LOGGER.info("Finding Review with id {}", reviewId);
         return reviewDao.getReview(reviewId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Review> getReviews(long workerId) {
         LOGGER.info("Getting reviews for Worker {}", workerId);
         return reviewDao.getReviews(workerId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Float> getAvgRating(long workerId) {
         LOGGER.info("Getting Average Rating for Worker {}", workerId);
         return reviewDao.getAvgRating(workerId);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int getReviewsCount(long workerId) {
         return reviewDao.getReviewsCount(workerId);
     }
 
-    // -------------------------------------------- REVIEWS DELETE -----------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public void deleteReview(long reviewId) {
         reviewDao.deleteReview(reviewId);

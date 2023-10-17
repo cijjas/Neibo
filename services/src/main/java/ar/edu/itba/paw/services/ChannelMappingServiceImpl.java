@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class ChannelMappingServiceImpl implements ChannelMappingService {
 
     private final ChannelMappingDao channelMappingDao;
@@ -21,6 +23,9 @@ public class ChannelMappingServiceImpl implements ChannelMappingService {
     public ChannelMappingServiceImpl(final ChannelMappingDao channelMappingDao) {
         this.channelMappingDao = channelMappingDao;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public void createChannelMapping(long channelId, long neighborhoodId) {
         LOGGER.info("Associating Channel {} with Neighborhood {}", channelId, neighborhoodId);

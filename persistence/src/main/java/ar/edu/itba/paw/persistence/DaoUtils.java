@@ -124,7 +124,7 @@ class DaoUtils {
     }
 
     static void appendDateClause(StringBuilder query) {
-        query.append(" ORDER BY date DESC");
+        query.append(" ORDER BY postdate DESC");
     }
 
 }

@@ -12,7 +12,7 @@ public interface BookingService {
 
     List<GroupedBooking> getUserBookings(long userId);
 
-    List<List<Booking>> getUserBookingsGroupedByAmenity(long userId);
+
     boolean deleteBooking(long bookingId);
 
     boolean deleteBookings(List<Long> bookingIds);

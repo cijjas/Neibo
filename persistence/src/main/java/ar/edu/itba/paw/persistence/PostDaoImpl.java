@@ -22,8 +22,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static ar.edu.itba.paw.persistence.DaoUtils.appendCommonConditions;
-import static ar.edu.itba.paw.persistence.DaoUtils.appendPaginationClause;
+import static ar.edu.itba.paw.persistence.DaoUtils.*;
 
 @Repository
 public class PostDaoImpl implements PostDao {
@@ -167,8 +166,11 @@ public class PostDaoImpl implements PostDao {
 
         appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags, postStatus);
 
-        if (page != 0)
+        appendDateClause(query);
+
+        if (page != 0) {
             appendPaginationClause(query, queryParams, page, size);
+        }
 
         // Log results
         LOGGER.debug("{}", query);
