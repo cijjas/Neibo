@@ -27,7 +27,6 @@ public class EndpointController {
     private final CategorizationService cas;
     private final ImageService is;
     private final AmenityService as;
-    private final ReservationService rs;
     private final EventService es;
     private final ResourceService res;
     private final ContactService cos;
@@ -45,7 +44,6 @@ public class EndpointController {
                          final SubscriptionService ss,
                          final CategorizationService cas,
                          final ImageService is,
-                         final ReservationService rs,
                          final AmenityService as,
                          final EventService es,
                          final ResourceService res,
@@ -63,7 +61,6 @@ public class EndpointController {
         this.ss = ss;
         this.cas = cas;
         this.as = as;
-        this.rs = rs;
         this.es = es;
         this.res = res;
         this.cos = cos;

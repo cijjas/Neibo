@@ -32,7 +32,6 @@ public class AdminController {
     private final CategorizationService cas;
     private final ImageService is;
     private final AmenityService as;
-    private final ReservationService rs;
     private final EventService es;
     private final ResourceService res;
     private final ContactService cos;
@@ -53,7 +52,6 @@ public class AdminController {
                            final SubscriptionService ss,
                            final CategorizationService cas,
                            final ImageService is,
-                           final ReservationService rs,
                            final AmenityService as,
                            final EventService es,
                            final ResourceService res,
@@ -72,7 +70,6 @@ public class AdminController {
         this.ss = ss;
         this.cas = cas;
         this.as = as;
-        this.rs = rs;
         this.es = es;
         this.res = res;
         this.cos = cos;
@@ -182,24 +179,22 @@ public class AdminController {
     public ModelAndView adminAmenities() {
         ModelAndView mav = new ModelAndView("admin/views/amenitiesPanel");
 
-        Map<Amenity, List<Shift>> amenitiesWithShifts = as.getAllAmenitiesIdWithListOfShifts(sessionUtils.getLoggedUser().getNeighborhoodId());
+        List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId());
 
         mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
         mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
-        mav.addObject("amenitiesWithShifts", amenitiesWithShifts);
+        mav.addObject("amenities", amenities);
         mav.addObject("panelOption", "Amenities");
 
         return mav;
     }
-
-
 
     @RequestMapping(value = "/delete-amenity/{id}", method = RequestMethod.GET)
     public ModelAndView deleteAmenity(
             @PathVariable(value = "id") int amenityId
     ) {
         ModelAndView mav = new ModelAndView("redirect:/admin/amenities");
-        as.deleteAmenity2(amenityId); //JOAAAAAAAAAAAAAAAAAAAEWQDSAFEDAs
+        as.deleteAmenity(amenityId); //JOAAAAAAAAAAAAAAAAAAAEWQDSAFEDAs
         return mav;
     }
 
@@ -209,20 +204,8 @@ public class AdminController {
     ) {
         ModelAndView mav = new ModelAndView("admin/views/amenitiesCreate");
 
-        // Create lists of pairs for DaysOfTheWeek and StandardTime
-        List<Pair<Integer, String>> daysPairs = new ArrayList<>();
-        List<Pair<Integer, String>> timesPairs = new ArrayList<>();
-
-        for (DayOfTheWeek day : DayOfTheWeek.values())
-            daysPairs.add(new Pair<>(day.getId(), day.name()));
-
-
-        for (StandardTime time : StandardTime.values())
-            timesPairs.add(new Pair<>(time.getId(), time.toString()));
-
-
-        mav.addObject("daysPairs", daysPairs);
-        mav.addObject("timesPairs", timesPairs);
+        mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
+        mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
         return mav;
     }
 

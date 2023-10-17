@@ -42,7 +42,6 @@ public class FrontController {
     private final CategorizationService cas;
     private final ImageService is;
     private final AmenityService as;
-    private final ReservationService rs;
     private final EventService es;
     private final ResourceService res;
     private final ContactService cos;
@@ -67,7 +66,6 @@ public class FrontController {
                            final SubscriptionService ss,
                            final CategorizationService cas,
                            final ImageService is,
-                           final ReservationService rs,
                            final AmenityService as,
                            final EventService es,
                            final ResourceService res,
@@ -93,7 +91,6 @@ public class FrontController {
         this.ss = ss;
         this.cas = cas;
         this.as = as;
-        this.rs = rs;
         this.es = es;
         this.res = res;
         this.cos = cos;
@@ -530,12 +527,11 @@ public class FrontController {
     ) {
 
         ModelAndView mav = new ModelAndView("views/amenities");
-        Map<Amenity, List<Shift>> amenitiesWithShifts = as.getAllAmenitiesIdWithListOfShifts(sessionUtils.getLoggedUser().getNeighborhoodId());
-
+        List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId());
 
         mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
         mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
-        mav.addObject("amenitiesWithShifts", amenitiesWithShifts);
+        mav.addObject("amenities", amenities);
         mav.addObject("channel", BaseChannel.RESERVATIONS.toString());
         mav.addObject("reservationsList", bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));
         return mav;
@@ -686,7 +682,7 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-        System.out.println(bs.getUserBookings(23));
+        System.out.println(shs.getAmenityShifts(4));
         /*
         Random random = new Random();
         long[] jobNumbers = {1, 2, 3, 4}; // Define the possible job numbers

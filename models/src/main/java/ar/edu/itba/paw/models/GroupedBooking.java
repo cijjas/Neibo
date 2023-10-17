@@ -5,7 +5,7 @@ import java.util.Date;
 import java.time.DayOfWeek;
 
 public class GroupedBooking {
-    private long bookingId; // Add the bookingId
+    private long bookingId;
     private String amenityName;
     private Date date;
     private String day;

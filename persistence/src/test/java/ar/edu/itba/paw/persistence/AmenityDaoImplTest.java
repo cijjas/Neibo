@@ -73,7 +73,7 @@ public class AmenityDaoImplTest {
         long aKey = testInsertionUtils.createAmenity(nhKey);
 
         // Exercise
-        Optional<Amenity> foundAmenity = amenityDao.findAmenityById2(aKey);
+        Optional<Amenity> foundAmenity = amenityDao.findAmenityById(aKey);
 
         // Validations & Post Conditions
         assertTrue(foundAmenity.isPresent());
@@ -82,7 +82,7 @@ public class AmenityDaoImplTest {
     @Test
     public void testFindAmenityByInvalidId() {
         // Exercise
-        Optional<Amenity> foundAmenity = amenityDao.findAmenityById2(1);
+        Optional<Amenity> foundAmenity = amenityDao.findAmenityById(1);
 
         // Validations & Post Conditions
         assertFalse(foundAmenity.isPresent());
@@ -95,7 +95,7 @@ public class AmenityDaoImplTest {
         long aKey = testInsertionUtils.createAmenity(nhKey);
 
         // Exercise
-        List<Amenity> amenities = amenityDao.getAmenities2(nhKey);
+        List<Amenity> amenities = amenityDao.getAmenities(nhKey);
 
         // Validations & Post Conditions
         assertEquals(1, amenities.size());

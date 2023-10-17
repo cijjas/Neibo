@@ -96,7 +96,7 @@
                                                 <div class="cat creation">
                                                     <label class="w-100">
                                                         <input type="checkbox" name="selectedShifts" value="${day.key},${time.key}" />
-                                                        <span>${time.value}</span>
+                                                        <span>${time.value.key}</span>
                                                     </label>
                                                 </div>
                                             </td>
