@@ -113,8 +113,8 @@ public class FrontController {
             List<String> tags,
             String postStatus
     ) {
-        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), postStatus);
-        int totalPages = ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), postStatus, 0);
+        List<Post> postList = ps.getPostsByCriteria(channelName, page, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), PostStatus.valueOf(postStatus));
+        int totalPages = ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), PostStatus.valueOf(postStatus), 0);
 
         String contextPath;
 
@@ -776,16 +776,16 @@ public class FrontController {
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
         Optional<Worker> optionalWorker = ws.findWorkerById(workerId);
 
-        //List<Post> postList = ps.getWorkerPostsByCriteria(BaseChannel.WORKERS.toString(), 1, 10,null, 0, null,workerId);
-        //int totalPages = ps.getTotalPages(BaseChannel.WORKERS.toString(), 10, null, 0, null, workerId);
+        List<Post> postList = ps.getWorkerPostsByCriteria(BaseChannel.WORKERS.toString(), 1, 10,null, 0, PostStatus.none, workerId);
+        int totalPages = ps.getTotalPages(BaseChannel.WORKERS.toString(), 10, null, 0, PostStatus.none, workerId);
 
         mav.addObject("worker", optionalWorker.orElseThrow(() -> new NotFoundException("Worker not found")));
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
         mav.addObject("averageRating", rws.getAvgRating(workerId).orElseThrow(() -> new NotFoundException("Average Rating not found")));
-        //mav.addObject("postList", postList);
-        //mav.addObject("totalPages", totalPages);
+        mav.addObject("postList", postList);
+        mav.addObject("totalPages", totalPages);
         return mav;
     }
     @RequestMapping(value = "/service/profile/{id:\\d+}", method = RequestMethod.POST)
