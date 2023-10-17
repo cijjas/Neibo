@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Shift;
-import enums.DayOfTheWeek;
-import enums.StandardTime;
 
 import java.sql.Date;
 import java.util.List;

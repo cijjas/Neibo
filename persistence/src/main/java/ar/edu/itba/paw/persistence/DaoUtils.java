@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
-import enums.PostStatus;
-import enums.UserRole;
+import ar.edu.itba.paw.enums.PostStatus;
+import ar.edu.itba.paw.enums.UserRole;
 
 import java.util.List;
 

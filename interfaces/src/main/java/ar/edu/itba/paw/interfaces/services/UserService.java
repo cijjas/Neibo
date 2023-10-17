@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.User;
-import enums.Language;
-import enums.UserRole;
+import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.UserRole;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

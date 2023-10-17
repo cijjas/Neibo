@@ -29,21 +29,22 @@ public class WorkerDaoImpl implements WorkerDao {
 
     private final String USERS_JOIN_WI =
             "SELECT * \n" +
-            "FROM users w JOIN workers_info wi ON w.userid = wi.workerid ";
+            "FROM users w " +
+                    "JOIN workers_info wi ON w.userid = wi.workerid ";
     private final String USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
             "SELECT DISTINCT w.*, wn.*, wi.* " +
             "FROM users w " +
-            "JOIN workers_neighborhoods wn ON w.userid = wn.workerId " +
-            "JOIN workers_info wi ON w.userid = wi.workerid ";
+                    "JOIN workers_neighborhoods wn ON w.userid = wn.workerId " +
+                    "JOIN workers_info wi ON w.userid = wi.workerid ";
 
 
     private final String COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
             "SELECT COUNT(distinct w.userid)\n" +
             "FROM users w " +
-            "JOIN workers_professions wp ON w.userid = wp.workerid " +
-            "JOIN professions p ON wp.professionid = p.professionid " +
-            "JOIN workers_neighborhoods wn ON w.userid = wn.workerId " +
-            "JOIN workers_info wi ON w.userid = wi.workerid ";
+                    "JOIN workers_professions wp ON w.userid = wp.workerid " +
+                    "JOIN professions p ON wp.professionid = p.professionid " +
+                    "JOIN workers_neighborhoods wn ON w.userid = wn.workerId " +
+                    "JOIN workers_info wi ON w.userid = wi.workerid ";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerDaoImpl.class);
 

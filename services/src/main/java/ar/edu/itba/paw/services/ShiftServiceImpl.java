@@ -1,11 +1,9 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.services.ShiftService;
 import ar.edu.itba.paw.models.Shift;
-import enums.DayOfTheWeek;
-import enums.StandardTime;
+import ar.edu.itba.paw.enums.DayOfTheWeek;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;

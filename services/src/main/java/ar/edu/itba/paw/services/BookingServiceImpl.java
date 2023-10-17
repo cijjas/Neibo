@@ -53,23 +53,25 @@ public class BookingServiceImpl implements BookingService {
                 // Create a new GroupedBooking when the current one cannot be continued
                 Time endTime = calculateEndTime(booking.getStartTime());
                 currentGroupedBooking = new GroupedBooking(
-                        booking.getBookingId(),
                         booking.getAmenityName(),
                         booking.getBookingDate(),
                         booking.getDayName(),
                         booking.getStartTime(),
                         endTime
                 );
+                currentGroupedBooking.addBookingId(booking.getBookingId());
                 groupedBookings.add(currentGroupedBooking);
             } else {
                 // Use the combine method to update the current GroupedBooking
                 Time endTime = calculateEndTime(booking.getStartTime());
                 currentGroupedBooking.combine(booking);
+                currentGroupedBooking.addBookingId(booking.getBookingId());
             }
         }
 
         return groupedBookings;
     }
+
 
     private Time calculateEndTime(Time startTime) {
         // Calculate end time by adding an hour to the start time
@@ -82,6 +84,14 @@ public class BookingServiceImpl implements BookingService {
     public boolean deleteBooking(long bookingId) {
         LOGGER.info("Deleting Booking {}", bookingId);
         return bookingDao.deleteBooking(bookingId);
+    }
+
+    @Override
+    public boolean deleteBookings(List<Long> bookingIds) {
+        LOGGER.info("Deleting Bookings {}", bookingIds);
+        for (long booking : bookingIds)
+            bookingDao.deleteBooking(booking);
+        return true;
     }
 
     @Override

@@ -4,19 +4,13 @@ import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.services.AmenityService;
-import ar.edu.itba.paw.interfaces.services.ShiftService;
 import ar.edu.itba.paw.models.Amenity;
-import ar.edu.itba.paw.models.DayTime;
 import ar.edu.itba.paw.models.Shift;
-import enums.StandardTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.nio.channels.SelectableChannel;
-import java.sql.Time;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.util.*;
 
 @Service

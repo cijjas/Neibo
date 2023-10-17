@@ -5,15 +5,10 @@ import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodWorkerService;
-import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.models.User;
-import enums.Language;
-import enums.UserRole;
+import ar.edu.itba.paw.enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

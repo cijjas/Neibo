@@ -22,9 +22,7 @@ public class ResourceDaoImpl implements ResourceDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
-    private final String RESOURCES =
-            "select rs.* " +
-            "from resources rs";
+    private final String RESOURCES = "SELECT rs.* FROM resources rs";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceDaoImpl.class);
 

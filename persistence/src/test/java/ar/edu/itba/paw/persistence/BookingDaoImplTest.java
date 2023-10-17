@@ -7,7 +7,7 @@ import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.models.Booking;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import enums.Table;
+import ar.edu.itba.paw.enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +37,7 @@ public class BookingDaoImplTest {
     private DayDao dayDao;
     private TimeDao timeDao;
 
-    private Date RESERVATION_DATE = new Date(System.currentTimeMillis()); // Replace with a valid date
+    private Date RESERVATION_DATE = Date.valueOf("2024-12-12");
 
     @Autowired
     private DataSource ds;

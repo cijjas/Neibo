@@ -8,7 +8,7 @@ import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.Comment;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Post;
-import enums.Language;
+import ar.edu.itba.paw.enums.Language;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;

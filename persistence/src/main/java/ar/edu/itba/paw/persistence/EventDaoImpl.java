@@ -20,14 +20,13 @@ import java.util.*;
 public class EventDaoImpl implements EventDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-    private final String EVENTS =
-            "select e.* \n" +
-                    "from events e";
 
+    private final String EVENTS = "SELECT e.* FROM events e";
     private final String EVENTS_JOIN_TIMES =
-            "select e.*, t1.timeinterval as starttime, t2.timeinterval as endtime\n" +
-                    "from events e join times t1 on e.starttimeid = t1.timeid\n" +
-                    "join times t2 on e.endtimeid = t2.timeid ";
+            "SELECT e.*, t1.timeinterval AS starttime, t2.timeinterval AS endtime\n" +
+            "FROM events e\n" +
+                    "INNER JOIN times t1 ON e.starttimeid = t1.timeid\n" +
+                    "INNER JOIN times t2 ON e.endtimeid = t2.timeid ";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EventDaoImpl.class);
 

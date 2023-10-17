@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 
-import enums.UserRole;
+import ar.edu.itba.paw.enums.UserRole;
 
 import java.util.Map;
 

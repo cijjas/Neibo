@@ -27,7 +27,9 @@ public class ChannelDaoImpl implements ChannelDao {
     private final String CHANNELS = "SELECT * FROM channels ";
     private final String CHANNELS_JOIN_NEIGHBORHOODS =
             "SELECT distinct c.* \n" +
-            "FROM channels c JOIN neighborhoods_channels nc ON c.channelid = nc.channelid JOIN neighborhoods n ON n.neighborhoodid = nc.neighborhoodid ";
+            "FROM channels c " +
+                    "INNER JOIN neighborhoods_channels nc ON c.channelid = nc.channelid " +
+                    "INNER JOIN neighborhoods n ON n.neighborhoodid = nc.neighborhoodid ";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelDaoImpl.class);
 

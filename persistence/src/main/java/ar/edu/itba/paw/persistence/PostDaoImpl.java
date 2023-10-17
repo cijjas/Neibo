@@ -1,14 +1,14 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Post;
-import enums.PostStatus;
-import enums.SortOrder;
+import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.PostStatus;
+import ar.edu.itba.paw.enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,18 +38,18 @@ public class PostDaoImpl implements PostDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(PostDaoImpl.class);
 
     private final String POSTS_JOIN_USERS_JOIN_CHANNELS =
-            "SELECT DISTINCT p.* " +
+            "SELECT DISTINCT p.*, channel, u.* " +
             "FROM posts p  " +
-                    "JOIN users u ON p.userid = u.userid  " +
-                    "JOIN channels c ON p.channelid = c.channelid  " +
+                    "INNER JOIN users u ON p.userid = u.userid  " +
+                    "INNER JOIN channels c ON p.channelid = c.channelid  " +
                     "LEFT JOIN posts_tags pt ON p.postid = pt.postid  " +
                     "LEFT JOIN tags t ON pt.tagid = t.tagid ";
 
     private final String FROM_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES =
-        "SELECT DISTINCT p.* " +
+        "SELECT DISTINCT p.*, channel, u.* " +
         "FROM posts p  " +
-                "JOIN users u ON p.userid = u.userid  " +
-                "JOIN channels c ON p.channelid = c.channelid  " +
+                "INNER JOIN users u ON p.userid = u.userid  " +
+                "INNER JOIN channels c ON p.channelid = c.channelid  " +
                 "LEFT JOIN posts_tags pt ON p.postid = pt.postid  " +
                 "LEFT JOIN tags t ON pt.tagid = t.tagid " +
                 "LEFT JOIN comments cm ON p.postid = cm.postid " +
@@ -57,8 +57,8 @@ public class PostDaoImpl implements PostDao {
     private final String COUNT_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES =
         "SELECT COUNT(DISTINCT p.*) " +
         "FROM posts p  " +
-                "JOIN users u ON p.userid = u.userid  " +
-                "JOIN channels c ON p.channelid = c.channelid  " +
+                "INNER JOIN users u ON p.userid = u.userid  " +
+                "INNER JOIN channels c ON p.channelid = c.channelid  " +
                 "LEFT JOIN posts_tags pt ON p.postid = pt.postid  " +
                 "LEFT JOIN tags t ON pt.tagid = t.tagid " +
                 "LEFT JOIN comments cm ON p.postid = cm.postid " +
@@ -112,8 +112,6 @@ public class PostDaoImpl implements PostDao {
     // ------------------------------------------------ POSTS SELECT ---------------------------------------------------
 
     private final RowMapper<Post> ROW_MAPPER = (rs, rowNum) -> {
-        User user = userDao.findUserById(rs.getLong("userid")).orElseThrow(() -> new NotFoundException("User not Found"));
-        Channel channel = channelDao.findChannelById(rs.getLong("channelid")).orElseThrow(()-> new NotFoundException("Channel not Found"));
         List<Tag> tags = tagDao.findTagsByPostId(rs.getLong("postid"));
 
         return new Post.Builder()
@@ -123,8 +121,27 @@ public class PostDaoImpl implements PostDao {
                 .date(rs.getTimestamp("postdate"))
                 .postPictureId(rs.getLong("postpictureid"))
                 .tags(tags)
-                .user(user)
-                .channel(channel)
+                .user(
+                        new User.Builder()
+                                .userId(rs.getLong("userid"))
+                                .mail(rs.getString("mail"))
+                                .name(rs.getString("name"))
+                                .surname(rs.getString("surname"))
+                                .password(rs.getString("password"))
+                                .neighborhoodId(rs.getLong("neighborhoodid"))
+                                .creationDate(rs.getDate("creationdate"))
+                                .darkMode(rs.getBoolean("darkmode"))
+                                .profilePictureId(rs.getLong("profilepictureid"))
+                                .language(rs.getString("language") != null ? Language.valueOf(rs.getString("language")) : null)
+                                .role(rs.getString("role") != null ? UserRole.valueOf(rs.getString("role")) : null)
+                                .build()
+                )
+                .channel(
+                        new Channel.Builder()
+                                .channelId(rs.getLong("channelid"))
+                                .channel(rs.getString("channel"))
+                                .build()
+                )
                 .likes(likeDao.getLikes(rs.getLong("postid")))
                 .build();
     };
