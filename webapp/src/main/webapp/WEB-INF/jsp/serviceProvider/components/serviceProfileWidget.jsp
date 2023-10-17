@@ -11,33 +11,8 @@
                 />
                 <script>
                     (function(){
-                        getWorkerProfilePicture();
-                        async function getWorkerProfilePicture() {
-                            let image = document.getElementById('worker-profile-image-'+ ${worker.user.userId})
-                            if("${worker.user.profilePictureId}" === "0"){
-                                image.src = "${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png";
-                                image.classList.remove('placeholder');
-                                return;
-                            }
-                            try{
-                                const response= await fetch('${pageContext.request.contextPath}/images/<c:out value="${worker.user.profilePictureId}"/>');
-                                if(!response.ok) {
-                                    throw new Error('Network response was not ok');
-                                }
-                                const blob = await response.blob();
-
-                                setTimeout(() => {
-                                    image.classList.remove('placeholder');
-                                    image.src = URL.createObjectURL(blob);
-                                }, 3000);
-
-                            }
-                            catch (e) {
-                                image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
-                            }
-                        }
+                        getImageInto('worker-profile-image-'+ ${worker.user.userId}, ${worker.user.profilePictureId}, "${pageContext.request.contextPath}")
                     })();
-
                 </script>
             </div>
 
@@ -51,31 +26,7 @@
                 />
                 <script>
                     (function(){
-                        getWorkerBackgroundPicture();
-                        async function getWorkerBackgroundPicture() {
-                            let image = document.getElementById('worker-background-image-'+ ${worker.user.userId})
-                            if("${worker.backgroundPictureId}" === "0"){
-                                image.src = "${pageContext.request.contextPath}/resources/images/workersBackground.png";
-                                image.classList.remove('placeholder');
-                                return;
-                            }
-                            try{
-                                const response= await fetch('${pageContext.request.contextPath}/images/<c:out value="${worker.backgroundPictureId}"/>');
-                                if(!response.ok) {
-                                    throw new Error('Network response was not ok');
-                                }
-                                const blob = await response.blob();
-
-                                setTimeout(() => {
-                                    image.classList.remove('placeholder');
-                                    image.src = URL.createObjectURL(blob);
-                                }, 3000);
-
-                            }
-                            catch (e) {
-                                image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
-                            }
-                        }
+                        getImageInto('worker-background-image-'+ ${worker.user.userId}, ${worker.user.backgroundPictureId}, "${pageContext.request.contextPath}");
                     })();
 
                 </script>
