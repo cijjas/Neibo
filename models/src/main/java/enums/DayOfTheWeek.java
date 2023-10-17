@@ -1,6 +1,9 @@
 package enums;
 
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
+import java.util.stream.Collectors;
 
 // DayOfTheWeek.java
 public enum DayOfTheWeek {
@@ -22,4 +25,8 @@ public enum DayOfTheWeek {
     public int getId() {
         return ordinal() + 1;
     }
+
+    public static final List<Pair<Integer, String>> DAY_PAIRS = Arrays.stream(values())
+            .map(day -> new Pair<>(day.getId(), day.name()))
+            .collect(Collectors.toList());
 }

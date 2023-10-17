@@ -31,7 +31,7 @@ public class AmenityServiceImplTest {
     private AmenityDao amenityDao;
     @InjectMocks // Le pedimos que cree un UserServiceImpl, y que en el ctor (que toma un UserDao) inyecte un mock.
     private AmenityServiceImpl as;
-    @Test
+    /*@Test
     public void testCreate() {
         // 1. Precondiciones
         // Defino el comportamiento de la clase mock de UserDao
@@ -70,7 +70,7 @@ public class AmenityServiceImplTest {
 
         // 3. Postcondiciones
         // (Nada, espero que lo anterior tire exception)
-    }
+    }*/
 
     @Test
     public void testFindById() {

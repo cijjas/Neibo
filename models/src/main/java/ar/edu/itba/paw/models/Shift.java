@@ -15,7 +15,9 @@ public class Shift {
         this.day = builder.day;
         this.startTime = builder.startTime;
         this.taken = builder.taken;
-        this.endTime = calculateEndTime(builder.startTime); // Calculate endTime
+        if (builder.startTime != null) {
+            this.endTime = calculateEndTime(builder.startTime);
+        }
     }
 
     private Time calculateEndTime(Time startTime) {

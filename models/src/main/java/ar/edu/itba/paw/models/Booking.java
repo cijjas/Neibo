@@ -1,28 +1,32 @@
 package ar.edu.itba.paw.models;
 
 import java.util.Date;
+import java.sql.Time;
 
 public class Booking {
     private final long bookingId;
-    private final long userId; // Represent user as a long
-    private final Amenity amenity;
-    private final Shift shift;
-    private final Date bookingDate; // Renamed from shiftDate
+    private final long userId;
+    private final String amenityName;
+    private final String dayName;
+    private final Time startTime;
+    private final Date bookingDate;
 
     private Booking(Builder builder) {
         this.bookingId = builder.bookingId;
-        this.userId = builder.userId; // Represent user as a long
-        this.amenity = builder.amenity;
-        this.shift = builder.shift;
-        this.bookingDate = builder.bookingDate; // Renamed from shiftDate
+        this.userId = builder.userId;
+        this.amenityName = builder.amenityName;
+        this.dayName = builder.dayName;
+        this.startTime = builder.startTime;
+        this.bookingDate = builder.bookingDate;
     }
 
     public static class Builder {
         private long bookingId;
-        private long userId; // Represent user as a long
-        private Amenity amenity;
-        private Shift shift;
-        private Date bookingDate; // Renamed from shiftDate
+        private long userId;
+        private String amenityName;
+        private String dayName;
+        private Time startTime;
+        private Date bookingDate;
 
         public Builder bookingId(long bookingId) {
             this.bookingId = bookingId;
@@ -30,22 +34,27 @@ public class Booking {
         }
 
         public Builder userId(long userId) {
-            this.userId = userId; // Represent user as a long
+            this.userId = userId;
             return this;
         }
 
-        public Builder amenity(Amenity amenity) {
-            this.amenity = amenity;
+        public Builder amenityName(String amenityName) {
+            this.amenityName = amenityName;
             return this;
         }
 
-        public Builder shift(Shift shift) {
-            this.shift = shift;
+        public Builder dayName(String dayName) {
+            this.dayName = dayName;
+            return this;
+        }
+
+        public Builder startTime(Time startTime) {
+            this.startTime = startTime;
             return this;
         }
 
         public Builder bookingDate(Date bookingDate) {
-            this.bookingDate = bookingDate; // Renamed from shiftDate
+            this.bookingDate = bookingDate;
             return this;
         }
 
@@ -59,29 +68,34 @@ public class Booking {
     }
 
     public long getUserId() {
-        return userId; // Represent user as a long
+        return userId;
     }
 
-    public Amenity getAmenity() {
-        return amenity;
+    public String getAmenityName() {
+        return amenityName;
     }
 
-    public Shift getShift() {
-        return shift;
+    public String getDayName() {
+        return dayName;
+    }
+
+    public Time getStartTime() {
+        return startTime;
     }
 
     public Date getBookingDate() {
-        return bookingDate; // Renamed from shiftDate
+        return bookingDate;
     }
 
     @Override
     public String toString() {
         return "Booking{" +
                 "bookingId=" + bookingId +
-                ", userId=" + userId + // Represent user as a long
-                ", amenity=" + amenity +
-                ", shift=" + shift +
-                ", bookingDate=" + bookingDate + // Renamed from shiftDate
+                ", userId=" + userId +
+                ", amenityName='" + amenityName + '\'' +
+                ", dayName='" + dayName + '\'' +
+                ", startTime=" + startTime +
+                ", bookingDate=" + bookingDate +
                 '}';
     }
 }

@@ -34,10 +34,13 @@ public class BookingDaoImpl implements BookingDao {
     private AmenityDao amenityDao;
 
     private final String BOOKINGS_JOIN_AVAILABILITY =
-            "SELECT * " +
-            "FROM users_availability uav " +
-            "JOIN amenities_shifts_availability asa " +
-            "ON uav.amenityavailabilityid = asa.amenityavailabilityid ";
+            "SELECT bookingid, date, a.amenityid, s.shiftid, userid, a.name, dayname, timeinterval\n" +
+            "FROM users_availability uav\n" +
+            "INNER JOIN amenities_shifts_availability asa ON uav.amenityavailabilityid = asa.amenityavailabilityid\n" +
+            "INNER JOIN amenities a ON asa.amenityid = a.amenityid\n" +
+            "INNER JOIN shifts s ON s.shiftid = asa.shiftid\n" +
+            "INNER JOIN days d ON s.dayid = d.dayid\n" +
+            "INNER JOIN times t ON s.starttime = t.timeid";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingDaoImpl.class);
 
@@ -71,25 +74,16 @@ public class BookingDaoImpl implements BookingDao {
     // ---------------------------------------- USERS_AVAILABILITY SELECT ----------------------------------------------
 
     private final RowMapper<Booking> ROW_MAPPER = (rs, rowNum) -> {
-        Shift shift = shiftDao.findShiftById(rs.getLong("shiftid")).orElseThrow(() -> new NotFoundException("Shift Not Found"));
-        Amenity amenity = amenityDao.findAmenityById(rs.getLong("amenityid")).orElseThrow(() -> new NotFoundException("Amenity Not Found"));
         return new Booking.Builder()
                 .bookingId(rs.getLong("bookingid"))
                 .userId(rs.getLong("userid"))
+                .amenityName(rs.getString("name"))
                 .bookingDate(rs.getDate("date"))
-                .shift(shift)
-                .amenity(amenity)
+                .dayName(rs.getString("dayname"))
+                .startTime(rs.getTime("timeinterval"))
                 .build();
     };
 
-    /*
-                        booking id
-                        booking.getAmenity().getName(),
-                        booking.getBookingDate(),
-                        booking.getShift().getDay(),
-                        booking.getShift().getStartTime(),
-                        endTime
-                );*/
     @Override
     public List<Booking> getUserBookings(long userId) {
         LOGGER.debug("Selecting Bookings from userId {}", userId);

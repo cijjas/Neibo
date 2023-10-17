@@ -2,6 +2,9 @@ package enums;
 
 
 import java.sql.Time;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public enum StandardTime {
     TIME_00_00("00:00:00"),
@@ -60,4 +63,8 @@ public enum StandardTime {
         }
         return value; // Return the original value if splitting fails
     }
+
+    public static final List<Pair<Integer, Pair<String, Time>>> TIME_PAIRS = Arrays.stream(values())
+            .map(time -> new Pair<>(time.getId(), new Pair<>(time.toString(), time.toSqlTime())))
+            .collect(Collectors.toList());
 }

@@ -91,7 +91,6 @@ public class UserDaoImpl implements UserDao {
     // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
     private final RowMapper<User> ROW_MAPPER = (rs, rowNum) -> {
-        List<Booking> bookings = bookingDao.getUserBookings(rs.getLong("userid"));
         return new User.Builder()
                 .userId(rs.getLong("userid"))
                 .mail(rs.getString("mail"))
@@ -104,7 +103,6 @@ public class UserDaoImpl implements UserDao {
                 .profilePictureId(rs.getLong("profilepictureid"))
                 .language(rs.getString("language") != null ? Language.valueOf(rs.getString("language")) : null)
                 .role(rs.getString("role") != null ? UserRole.valueOf(rs.getString("role")) : null)
-                .bookings(bookings)
                 .build();
     };
 
