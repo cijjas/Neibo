@@ -60,7 +60,6 @@ public class AmenityServiceImpl implements AmenityService {
     public Map<Amenity, List<Shift>> getAllAmenitiesIdWithListOfShifts(long neighborhoodId) {
         List<Amenity> amenityList = amenityDao.getAmenities(neighborhoodId);
 
-        // Create a mapping of amenity IDs to their corresponding shifts
         Map<Amenity, List<Shift>> amenityShifts = new HashMap<>();
         for (Amenity amenity : amenityList) {
             List<Shift> shiftList = shiftDao.getAmenityShifts(amenity.getAmenityId());

@@ -32,15 +32,21 @@
                 <c:choose>
                 <c:when test="${bookings.size() == 0}">
                     <div>
-                        <div class="f-c-c-c w-100">
-                            <span><spring:message code="Unavailable.times.message.1"/> <c:out value="${date}"/> <c:out value="${amenityName}"/></span>
+                        <div class="f-c-c-c " style="text-align: center">
+                            <span class="w-75 mb-2">
+                                <spring:message code="Unavailable.times.message.1"/>
+                                <span class="font-weight-bolder c-primary"><c:out value="${amenityName}"/></span>
+                                <spring:message code="Unavailable.times.message.2"/>
+                                <c:out value="${date}"/>.
+                            </span>
+                            <span class="w-75 mb-2">
+                                <spring:message code="Unavailable.times.message.3"/>
+                            </span>
                         </div>
                         <div class="col-md-12">
                             <div class="d-flex justify-content-center m-t-40">
                                 <a href="javascript:history.go(-1);" class="cool-button cool-small on-bg w-25 font-weight-bold" ><spring:message code="Go.back"/></a>
                             </div>
-
-
                         </div>
                     </div>
                 </c:when>
@@ -95,7 +101,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="d-flex justify-content-end m-t-40">
-                                    <button onclick="submitShifts()" type="submit" class="cool-button cool-small on-bg w-25 "  style="height:40px;"><spring:message code="Reserve"/></button>
+                                    <button onclick="submitShifts()" type="submit" class="cool-button cool-small on-bg w-25 font-weight-bold"  style="height:40px;"><spring:message code="Reserve"/></button>
                                 </div>
                                 <script>
                                     function submitShifts() {
@@ -114,30 +120,7 @@
         </div>
 
         <div class="column-right">
-            <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %>
-            <div class="grey-static-container m-t-40">
-                <div class="column d-flex justify-content-center align-items-start">
-                    <h3 class="m-b-20"><spring:message code="MyReservations"/></h3>
-                    <c:forEach var="reservation" items="${reservationsList}">
-                        <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
-                            <div class="f-c-c-c">
-                                <div class="f-r-sb-c w-100">
-                                    <h5><c:out value="${reservation.amenityName}"/> </h5>
-
-                                    <a href="${pageContext.request.contextPath}/delete-reservation/${reservation.bookingId}" class="f-c-c-c">
-                                        <i class="fas fa-trash" style="color: var(--error);"></i>
-                                    </a>
-                                </div>
-                                <div>
-                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="Date"/> <c:out value="${reservation.date}" /></h6>
-                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="StartTime"/> <c:out value="${reservation.startTime}" /></h6>
-                                    <h6 class="mb-3" style="color:var(--lighttext);"><spring:message code="StartTime"/> <c:out value="${reservation.endTime}" /></h6>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-            </div>
+            <%@ include file="/WEB-INF/jsp/components/widgets/amenitiesRightColumn.jsp" %>
         </div>
 
     </div>

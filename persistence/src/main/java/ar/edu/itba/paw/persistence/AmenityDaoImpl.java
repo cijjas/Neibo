@@ -126,7 +126,7 @@ public class AmenityDaoImpl implements AmenityDao {
 
     @Override
     public List<Amenity> getAmenities(long neighborhoodId) {
-        return jdbcTemplate.query("SELECT * FROM amenities WHERE neighborhoodId = ?", ROW_MAPPER, neighborhoodId);
+        return jdbcTemplate.query("SELECT * FROM amenities WHERE neighborhoodId = ? ORDER BY name", ROW_MAPPER, neighborhoodId);
     }
 
     @Override

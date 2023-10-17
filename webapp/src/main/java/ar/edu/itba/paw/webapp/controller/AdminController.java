@@ -199,7 +199,7 @@ public class AdminController {
             @PathVariable(value = "id") int amenityId
     ) {
         ModelAndView mav = new ModelAndView("redirect:/admin/amenities");
-        as.deleteAmenity2(amenityId); //JOAAAAAAAAAAAAAAAAAAAEWQDSAFEDAs
+        as.deleteAmenity2(amenityId);
         return mav;
     }
 

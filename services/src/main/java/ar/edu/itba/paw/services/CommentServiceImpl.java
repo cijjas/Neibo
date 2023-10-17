@@ -62,7 +62,6 @@ public class CommentServiceImpl implements CommentService {
     public Comment createComment(String comment, long neighborId, long postId) {
         LOGGER.info("Creating Comment {} from User {} for Post {}", comment, neighborId, postId);
 
-        //busco al dueno del post:
         Post post = postService.findPostById(postId).orElse(null);
         assert post != null;
         User user = post.getUser();

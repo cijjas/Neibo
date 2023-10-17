@@ -520,7 +520,7 @@ public class FrontController {
             @RequestParam("selectedShifts") List<Long> selectedShifts
     ) {
         bs.createBooking(sessionUtils.getLoggedUser().getUserId(), amenityId, selectedShifts, date);
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/amenities");
     }
 
 
