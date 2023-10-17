@@ -816,7 +816,7 @@ public class FrontController {
         return new ModelAndView("serviceProvider/views/serviceProfile");
     }
 
-    @RequestMapping(value = "/service/review/{id:\\d+}", method = RequestMethod.GET)
+    @RequestMapping(value = "/service/profile/{id:\\d+}/review", method = RequestMethod.GET)
     public ModelAndView createReview(
             @ModelAttribute("reviewForm") final ReviewForm reviewForm,
             @PathVariable(value = "id") int workerId,
@@ -834,7 +834,7 @@ public class FrontController {
 
     }
 
-    @RequestMapping(value = "/service/review/{id:\\d+}", method = RequestMethod.POST)
+    @RequestMapping(value = "/service/profile/{id:\\d+}/review", method = RequestMethod.POST)
     public ModelAndView createReview(
             @Valid @ModelAttribute("reviewForm") final ReviewForm reviewForm,
             final BindingResult errors,
@@ -844,13 +844,12 @@ public class FrontController {
         if(errors.hasErrors()) {
             ModelAndView mav = serviceProfile(reviewForm, workerId, new EditWorkerProfileForm());
             mav.addObject("openReviewDialog", true);
+            return mav;
         }
-
-        ModelAndView mav = new ModelAndView("redirect:/service/review/" + workerId);
 
         rws.createReview(workerId, sessionUtils.getLoggedUser().getUserId(), reviewForm.getRating(), reviewForm.getReview());
 
-        return mav;
+        return new ModelAndView("redirect:/service/profile/" + workerId);
     }
 
     @RequestMapping(value = "/service/profile/edit", method = RequestMethod.GET)
@@ -879,14 +878,14 @@ public class FrontController {
     ) {
         long workerId = sessionUtils.getLoggedUser().getUserId();
         if(errors.hasErrors()) {
-            ModelAndView mav = serviceProfile(new ReviewForm(), 85, editWorkerProfileForm);
+            ModelAndView mav = serviceProfile(new ReviewForm(), workerId, editWorkerProfileForm);
             mav.addObject("openEditProfileDialog", true);
         }
 
-        ws.updateWorker(85, editWorkerProfileForm.getPhoneNumber(), editWorkerProfileForm.getAddress(),
+        ws.updateWorker(workerId, editWorkerProfileForm.getPhoneNumber(), editWorkerProfileForm.getAddress(),
                 editWorkerProfileForm.getBusinessName(), editWorkerProfileForm.getImageFile(), editWorkerProfileForm.getBio());
 
-        return new ModelAndView("redirect:/service/profile/" + 85);
+        return new ModelAndView("redirect:/service/profile/" + workerId);
     }
 
     @RequestMapping(value = "/services", method = RequestMethod.GET)
