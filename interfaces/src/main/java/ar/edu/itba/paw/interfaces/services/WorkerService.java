@@ -16,9 +16,9 @@ public interface WorkerService {
 
     Optional<Worker> findWorkerByMail(String mail);
 
-    List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long neighborhoodId);
+    List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long neighborhoodId, long loggedUserId);
 
-    int getWorkersCountByCriteria(List<String> professions, long neighborhoodId);
+    int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds);
 
     // ---------------------------------------------- WORKERS UPDATE -----------------------------------------------------
     void updateWorker(long userId, String phoneNumber, String address, String businessName,

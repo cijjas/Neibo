@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.form;
 
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 
 public class NeighborhoodForm {

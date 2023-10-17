@@ -1,11 +1,13 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.persistence.WorkerDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Image;
+import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Worker;
 import ar.edu.itba.paw.enums.Language;
@@ -27,16 +29,18 @@ public class WorkerServiceImpl implements WorkerService {
     private final UserDao userDao;
     private final ImageService imageService;
     private final PasswordEncoder passwordEncoder;
+    private final NeighborhoodWorkerDao neighborhoodWorkerDao;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerServiceImpl.class);
 
     @Autowired
-    public WorkerServiceImpl(WorkerDao workerDao, ProfessionWorkerDao professionWorkerDao, UserDao userDao, ImageService imageService, PasswordEncoder passwordEncoder) {
+    public WorkerServiceImpl(WorkerDao workerDao, ProfessionWorkerDao professionWorkerDao, UserDao userDao, ImageService imageService, PasswordEncoder passwordEncoder, NeighborhoodWorkerDao neighborhoodWorkerDao) {
         this.workerDao = workerDao;
         this.professionWorkerDao = professionWorkerDao;
         this.userDao = userDao;
         this.imageService = imageService;
         this.passwordEncoder = passwordEncoder;
+        this.neighborhoodWorkerDao = neighborhoodWorkerDao;
     }
     // ---------------------------------------------- WORKERS INSERT -----------------------------------------------------
     @Override
@@ -66,15 +70,26 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
-    public List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long neighborhoodId) {
-        LOGGER.info("Getting Workers from Neighborhood {} with professions {}", neighborhoodId, professions);
-        return workerDao.getWorkersByCriteria(page, size, professions, neighborhoodId);
+    public List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long neighborhoodId, long loggedUserId) {
+        LOGGER.info("Getting Workers from Neighborhoods {} with professions {}", neighborhoodId, professions);
+        if(neighborhoodId != 0)
+            return workerDao.getWorkersByCriteria(page, size, professions, new long[]{neighborhoodId});
+
+        // If the user is a worker, display workers from every neighborhood they are in
+        List<Neighborhood> neighborhoods = neighborhoodWorkerDao.getNeighborhoods(loggedUserId);
+
+        // Transform the list of neighborhoods into an array of longs
+        long[] neighborhoodIds = neighborhoods.stream()
+                .mapToLong(Neighborhood::getNeighborhoodId)
+                .toArray();
+
+        return workerDao.getWorkersByCriteria(page, size, professions, neighborhoodIds);
     }
 
     @Override
-    public int getWorkersCountByCriteria(List<String> professions, long neighborhoodId) {
-        LOGGER.info("Getting Workers Count for Neighborhood {} with professions {}", neighborhoodId, professions);
-        return workerDao.getWorkersCountByCriteria(professions, neighborhoodId);
+    public int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds) {
+        LOGGER.info("Getting Workers Count for Neighborhood {} with professions {}", neighborhoodIds, professions);
+        return workerDao.getWorkersCountByCriteria(professions, neighborhoodIds);
     }
 
     // ---------------------------------------------- WORKERS UPDATE -----------------------------------------------------
