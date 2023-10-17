@@ -1,18 +1,18 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.ImageDao;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
@@ -21,24 +21,25 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ImageDaoImplTest {
 
     @Autowired
     private DataSource ds;
-    private JdbcTemplate jdbcTemplate;
+    @Autowired
     private TestInsertionUtils testInsertionUtils;
+    private JdbcTemplate jdbcTemplate;
     private ImageDao imageDao;
 
-    private String NAME = "image";
-    private String FILE_NAME = "fake.jpg";
-    private String CONTENT_TYPE = "image/jpeg";
+    private final String NAME = "image";
+    private final String FILE_NAME = "fake.jpg";
+    private final String CONTENT_TYPE = "image/jpeg";
+
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
         imageDao = new ImageDaoImpl(ds);
     }
 
@@ -57,7 +58,7 @@ public class ImageDaoImplTest {
     }
 
     @Test
-    public void testFindImage(){
+    public void testFindImage() {
         // Pre Conditions
         long iKey = testInsertionUtils.createImage();
 

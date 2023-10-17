@@ -1,13 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
-import ar.edu.itba.paw.interfaces.persistence.BookingDao;
-import ar.edu.itba.paw.interfaces.persistence.DayDao;
-import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
-import ar.edu.itba.paw.interfaces.persistence.TimeDao;
+import ar.edu.itba.paw.enums.Table;
+import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.Booking;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,27 +21,27 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class BookingDaoImplTest {
 
-    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private DataSource ds;
+    @Autowired
     private TestInsertionUtils testInsertionUtils;
+    private JdbcTemplate jdbcTemplate;
     private BookingDao bookingDao;
     private ShiftDao shiftDao;
     private AmenityDao amenityDao;
     private DayDao dayDao;
     private TimeDao timeDao;
 
-    private Date RESERVATION_DATE = Date.valueOf("2024-12-12");
+    private final Date RESERVATION_DATE = Date.valueOf("2024-12-12");
 
-    @Autowired
-    private DataSource ds;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
         dayDao = new DayDaoImpl(ds);
         timeDao = new TimeDaoImpl(ds);
         shiftDao = new ShiftDaoImpl(ds, dayDao, timeDao);

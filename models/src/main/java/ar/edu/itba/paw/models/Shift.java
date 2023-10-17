@@ -96,4 +96,9 @@ public class Shift {
         Shift shift = (Shift) o;
         return shiftId == shift.shiftId && taken == shift.taken && Objects.equals(day, shift.day) && Objects.equals(startTime, shift.startTime);
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(shiftId, day, startTime, endTime, taken);
+    }
 }

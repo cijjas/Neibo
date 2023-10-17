@@ -1,8 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.Table;
+import ar.edu.itba.paw.interfaces.persistence.DayDao;
 import ar.edu.itba.paw.models.Day;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +13,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
-import ar.edu.itba.paw.interfaces.persistence.DayDao;
 
 import javax.sql.DataSource;
 import java.util.Optional;
@@ -20,24 +20,24 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class DayDaoImplTest {
 
-    private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
-    private DayDao dayDao;
-
-    private String DAY_NAME = "TestDay";
-
     @Autowired
     private DataSource ds;
+    @Autowired
+    private TestInsertionUtils testInsertionUtils;
+    private JdbcTemplate jdbcTemplate;
+    private DayDao dayDao;
+
+    private final String DAY_NAME = "TestDay";
+
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
         dayDao = new DayDaoImpl(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
     }
 
     @Test

@@ -60,4 +60,9 @@ public class Time {
                 .timeInterval(new java.sql.Time(this.timeInterval.getTime() + hours * 3600000L))
                 .build();
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(timeId, timeInterval);
+    }
 }

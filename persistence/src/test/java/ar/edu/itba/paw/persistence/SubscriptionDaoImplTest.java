@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.SubscriptionDao;
 import ar.edu.itba.paw.enums.Table;
+import ar.edu.itba.paw.interfaces.persistence.SubscriptionDao;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,25 +15,25 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class SubscriptionDaoImplTest {
 
-    private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
-    private SubscriptionDao subscriptionDao;
-
     @Autowired
     private DataSource ds;
+    @Autowired
+    private TestInsertionUtils testInsertionUtils;
+    private JdbcTemplate jdbcTemplate;
+    private SubscriptionDao subscriptionDao;
+
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
         subscriptionDao = new SubscriptionDaoImpl(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
     }
 
     @Test

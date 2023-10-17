@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.Comment;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,14 +21,19 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class CommentDaoImplTest {
 
-    private JdbcTemplate jdbcTemplate;
+    private static final String COMMENT_TEXT = "Sample Comment";
+    private static final int BASE_PAGE = 1;
+    private static final int BASE_PAGE_SIZE = 10;
+    @Autowired
+    private DataSource ds;
+    @Autowired
     private TestInsertionUtils testInsertionUtils;
+    private JdbcTemplate jdbcTemplate;
     private CommentDaoImpl commentDao;
-
     private UserDao userDao;
     private BookingDao bookingDao;
     private ShiftDao shiftDao;
@@ -36,18 +41,9 @@ public class CommentDaoImplTest {
     private DayDao dayDao;
     private TimeDao timeDao;
 
-
-    private static final String COMMENT_TEXT = "Sample Comment";
-    private static final int BASE_PAGE = 1;
-    private static final int BASE_PAGE_SIZE = 10;
-
-    @Autowired
-    private DataSource ds;
-
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
         dayDao = new DayDaoImpl(ds);
         timeDao = new TimeDaoImpl(ds);
         shiftDao = new ShiftDaoImpl(ds, dayDao, timeDao);
@@ -133,7 +129,7 @@ public class CommentDaoImplTest {
     }
 
     @Test
-    public void testGetCommentsCountByPostId(){
+    public void testGetCommentsCountByPostId() {
         // Pre Conditions
         long nhKey = testInsertionUtils.createNeighborhood();
         long uKey = testInsertionUtils.createUser(nhKey);
@@ -151,7 +147,7 @@ public class CommentDaoImplTest {
     }
 
     @Test
-    public void testGetCommentsCountByPostInvalidId(){
+    public void testGetCommentsCountByPostInvalidId() {
         // Pre Conditions
         long nhKey = testInsertionUtils.createNeighborhood();
         long uKey = testInsertionUtils.createUser(nhKey);

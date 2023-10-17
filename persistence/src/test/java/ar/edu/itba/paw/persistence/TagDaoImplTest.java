@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.enums.Table;
+import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,24 +19,23 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class TagDaoImplTest {
 
-    private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
-    private TagDaoImpl tagDao;
-
-    private String TAG_NAME = "Sample Tag";
-
     @Autowired
     private DataSource ds;
+    @Autowired
+    private TestInsertionUtils testInsertionUtils;
+    private JdbcTemplate jdbcTemplate;
+    private TagDaoImpl tagDao;
+
+    private final String TAG_NAME = "Sample Tag";
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
         tagDao = new TagDaoImpl(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
     }
 
     @Test

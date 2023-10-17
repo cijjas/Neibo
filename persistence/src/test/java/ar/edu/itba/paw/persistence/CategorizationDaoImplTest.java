@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.enums.Table;
+import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,25 +14,25 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class CategorizationDaoImplTest {
 
-    private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
-    private CategorizationDaoImpl categorizationDao;
-
     @Autowired
     private DataSource ds;
+    @Autowired
+    private TestInsertionUtils testInsertionUtils;
+    private JdbcTemplate jdbcTemplate;
+    private CategorizationDaoImpl categorizationDao;
+
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
         categorizationDao = new CategorizationDaoImpl(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
     }
 
     @Test

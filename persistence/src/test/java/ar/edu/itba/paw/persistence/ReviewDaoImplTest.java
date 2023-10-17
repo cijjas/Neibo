@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.ReviewDao;
 import ar.edu.itba.paw.models.Review;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,30 +21,30 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ReviewDaoImplTest {
 
     @Autowired
     private DataSource ds;
-    private JdbcTemplate jdbcTemplate;
+    @Autowired
     private TestInsertionUtils testInsertionUtils;
+    private JdbcTemplate jdbcTemplate;
     private ReviewDao reviewDao;
 
-    private float RATING = 4.5f;
-    private double DELTA = 0.001;
-    private String REVIEW_TEXT = "Great service!";
-    private String WORKER_MAIL = "worker@test.com";
-    private String REVIEWER_MAIL = "reviewer@test.com";
-    private float RATING_1 = 4.0f;
-    private float RATING_2 = 4.5f;
-    private String REVIEW_1 = "Great service";
-    private String REVIEW_2 = "Good service";
+    private final float RATING = 4.5f;
+    private final double DELTA = 0.001;
+    private final String REVIEW_TEXT = "Great service!";
+    private final String WORKER_MAIL = "worker@test.com";
+    private final String REVIEWER_MAIL = "reviewer@test.com";
+    private final float RATING_1 = 4.0f;
+    private final float RATING_2 = 4.5f;
+    private final String REVIEW_1 = "Great service";
+    private final String REVIEW_2 = "Good service";
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
         reviewDao = new ReviewDaoImpl(ds);
     }
 
@@ -125,7 +125,7 @@ public class ReviewDaoImplTest {
 
         // Validations & Post Conditions
         assertTrue(maybeAvgRating.isPresent());
-        assertEquals((RATING_1+RATING_2)/2, maybeAvgRating.get(), DELTA); // Average of 4.0 and 4.5
+        assertEquals((RATING_1 + RATING_2) / 2, maybeAvgRating.get(), DELTA); // Average of 4.0 and 4.5
     }
 
     @Test

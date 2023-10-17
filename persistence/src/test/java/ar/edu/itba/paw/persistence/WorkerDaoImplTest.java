@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.Worker;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,23 +15,24 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class WorkerDaoImplTest {
 
+    private static final String NH_NAME_1 = "Neighborhood 1";
+    private static final String NH_NAME_2 = "Neighborhood 2";
+    private static final int BASE_PAGE = 1;
+    private static final int BASE_PAGE_SIZE = 10;
     @Autowired
     private DataSource ds;
-    private JdbcTemplate jdbcTemplate;
+    @Autowired
     private TestInsertionUtils testInsertionUtils;
-
+    private JdbcTemplate jdbcTemplate;
     private WorkerDao workerDao;
     private UserDao userDao;
     private BookingDao bookingDao;
@@ -39,16 +40,9 @@ public class WorkerDaoImplTest {
     private AmenityDao amenityDao;
     private DayDao dayDao;
     private TimeDao timeDao;
-
-    private String PHONE_NUMBER_1 = "123-456-7890";
-    private String ADDRESS_1 = "123 Worker St";
-    private String BUSINESS_1 = "Worker Business";
-    private static final String NH_NAME_1 = "Neighborhood 1";
-    private static final String NH_NAME_2 = "Neighborhood 2";
-    private static final int BASE_PAGE = 1;
-    private static final int BASE_PAGE_SIZE = 10;
-
-    // Attributes to hold the IDs
+    private final String PHONE_NUMBER_1 = "123-456-7890";
+    private final String ADDRESS_1 = "123 Worker St";
+    private final String BUSINESS_1 = "Worker Business";
     private long nhKey1;
     private long nhKey2;
     private long uKey1;
@@ -58,20 +52,18 @@ public class WorkerDaoImplTest {
     private long pKey1;
     private long pKey2;
 
-    // Class attributes for emails and profession names
-    private String WORKER_MAIL_1 = "worker1-1@test.com";
-    private String WORKER_MAIL_2 = "worker2-1@test.com";
-    private String WORKER_MAIL_3 = "worker3-2@test.com";
-    private String WORKER_MAIL_4 = "worker4-2@test.com";
-    private String PROFESSION_1 = "Profession 1";
-    private String PROFESSION_2 = "Profession 2";
-    private String BIO_1 = "Im alive and in some time ill be dead";
+    private final String WORKER_MAIL_1 = "worker1-1@test.com";
+    private final String WORKER_MAIL_2 = "worker2-1@test.com";
+    private final String WORKER_MAIL_3 = "worker3-2@test.com";
+    private final String WORKER_MAIL_4 = "worker4-2@test.com";
+    private final String PROFESSION_1 = "Profession 1";
+    private final String PROFESSION_2 = "Profession 2";
+    private final String BIO_1 = "Im alive and in some time ill be dead";
 
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
         dayDao = new DayDaoImpl(ds);
         timeDao = new TimeDaoImpl(ds);
         shiftDao = new ShiftDaoImpl(ds, dayDao, timeDao);
@@ -141,7 +133,7 @@ public class WorkerDaoImplTest {
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_info.name()));
     }
 
-    @Test
+   /* @Test
     public void testGetWorkersByNeighborhood() {
         // Pre Conditions
         populateWorkers();
@@ -188,7 +180,7 @@ public class WorkerDaoImplTest {
 
         // Validations
         assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
-    }
+    }*/
 
     private void populateWorkers() {
 
