@@ -101,4 +101,36 @@ public class BookingDaoImplTest {
         // Validations & Post Conditions
         assertEquals(0, userBookings.size());
     }
+
+    @Test
+    public void testDeleteBooking() {
+        // Pre Conditions
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long uKey = testInsertionUtils.createUser(nhKey);
+        long aKey = testInsertionUtils.createAmenity(nhKey);
+        long dKey = testInsertionUtils.createDay();
+        long tKey = testInsertionUtils.createTime();
+        long sKey = testInsertionUtils.createShift(dKey, tKey);
+        long avKey = testInsertionUtils.createAvailability(aKey, sKey);
+        long bKey = testInsertionUtils.createBooking(uKey, avKey, RESERVATION_DATE);
+
+        // Exercise
+        boolean deleted = bookingDao.deleteBooking(bKey);
+
+        // Validations & Post Conditions
+        assertTrue(deleted);
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users_availability.name()));
+    }
+
+    @Test
+    public void testDeleteInvalidBooking() {
+        // Pre Conditions
+
+        // Exercise
+        boolean deleted = bookingDao.deleteBooking(1);
+
+        // Validations & Post Conditions
+        assertFalse(deleted);
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users_availability.name()));
+    }
 }

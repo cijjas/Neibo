@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -27,7 +28,7 @@ public class NeighborhoodDaoImplTest {
     private TestInsertionUtils testInsertionUtils;
     private NeighborhoodDaoImpl neighborhoodDao;
 
-    private String NEIGHBORHOODS_NAME = "Testing Create Neighborhood";
+    private String NEIGHBORHOOD_NAME = "Testing Create Neighborhood";
 
     @Autowired
     private DataSource ds;
@@ -44,12 +45,25 @@ public class NeighborhoodDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Neighborhood nh = neighborhoodDao.createNeighborhood(NEIGHBORHOODS_NAME);
+        Neighborhood nh = neighborhoodDao.createNeighborhood(NEIGHBORHOOD_NAME);
 
         // Validations & Post Conditions
         assertNotNull(nh);
-        assertEquals(NEIGHBORHOODS_NAME, nh.getName());
+        assertEquals(NEIGHBORHOOD_NAME, nh.getName());
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods.name()));
+    }
+
+    @Test
+    public void testFindNeighborhoodByValidId() {
+        // Pre Conditions
+        long nhKey = testInsertionUtils.createNeighborhood();
+
+        // Exercise
+        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhoodById(nhKey);
+
+        // Validations & Post Conditions
+        assertTrue(nh.isPresent());
+        assertEquals(nhKey, nh.get().getNeighborhoodId());
     }
 
     @Test
@@ -64,15 +78,49 @@ public class NeighborhoodDaoImplTest {
     }
 
     @Test
-    public void testFindNeighborhoodByValidId() {
+    public void testFindNeighborhoodByValidName() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
+        long nhKey = testInsertionUtils.createNeighborhood(NEIGHBORHOOD_NAME);
 
         // Exercise
-        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhoodById(nhKey);
+        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhoodByName(NEIGHBORHOOD_NAME);
 
         // Validations & Post Conditions
         assertTrue(nh.isPresent());
         assertEquals(nhKey, nh.get().getNeighborhoodId());
+    }
+
+    @Test
+    public void testFindNeighborhoodByInvalidName() {
+        // Pre Conditions
+
+        // Exercise
+        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhoodByName(NEIGHBORHOOD_NAME);
+
+        // Validations & Post Conditions
+        assertFalse(nh.isPresent());
+    }
+
+    @Test
+    public void testGetNeighborhoods() {
+        // Pre Conditions
+        testInsertionUtils.createNeighborhood();
+
+        // Exercise
+        neighborhoodDao.getNeighborhoods();
+
+        // Validations & Post Conditions
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods.name()));
+    }
+
+    @Test
+    public void testGetNoNeighborhoods() {
+        // Pre Conditions
+
+        // Exercise
+        neighborhoodDao.getNeighborhoods();
+
+        // Validations & Post Conditions
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods.name()));
     }
 }

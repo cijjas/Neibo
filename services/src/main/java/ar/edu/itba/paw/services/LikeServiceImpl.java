@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
+@Transactional
 public class LikeServiceImpl implements LikeService {
     private final LikeDao likeDao;
 
@@ -19,6 +22,7 @@ public class LikeServiceImpl implements LikeService {
         this.likeDao = likeDao;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public void addLikeToPost(long postId, long userId) {
@@ -26,11 +30,16 @@ public class LikeServiceImpl implements LikeService {
         likeDao.createLike(postId, userId);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
+    @Transactional(readOnly = true)
     public boolean isPostLiked(long postId, long userId) {
         LOGGER.info("Checking if User {} has liked Post {}", userId, postId);
         return likeDao.isPostLiked(postId, userId);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public void removeLikeFromPost(long postId, long userId) {

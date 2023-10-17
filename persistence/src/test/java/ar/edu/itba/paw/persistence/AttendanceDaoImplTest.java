@@ -39,7 +39,9 @@ public class AttendanceDaoImplTest {
         // Pre Conditions
         long nhKey = testInsertionUtils.createNeighborhood();
         long uKey = testInsertionUtils.createUser(nhKey);
-        long eKey = testInsertionUtils.createEvent(nhKey);
+        long tKey1 = testInsertionUtils.createTime();
+        long tKey2 = testInsertionUtils.createTime();
+        long eKey = testInsertionUtils.createEvent(nhKey, tKey1, tKey2);
 
         // Exercise
         attendanceDao.createAttendee(uKey, eKey);
@@ -53,7 +55,9 @@ public class AttendanceDaoImplTest {
         // Pre Conditions
         long nhKey = testInsertionUtils.createNeighborhood();
         long uKey = testInsertionUtils.createUser(nhKey);
-        long eKey = testInsertionUtils.createEvent(nhKey);
+        long tKey1 = testInsertionUtils.createTime();
+        long tKey2 = testInsertionUtils.createTime();
+        long eKey = testInsertionUtils.createEvent(nhKey, tKey1, tKey2);
         testInsertionUtils.createAttendance(uKey, eKey);
 
         // Exercise

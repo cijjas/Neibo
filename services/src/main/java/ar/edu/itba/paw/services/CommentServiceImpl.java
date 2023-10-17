@@ -13,12 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class CommentServiceImpl implements CommentService {
     private final CommentDao commentDao;
     private final EmailService emailService;
@@ -35,28 +38,7 @@ public class CommentServiceImpl implements CommentService {
         this.userService = userService;
     }
 
-    @Override
-    public List<Comment> findCommentsByPostId(long id, int page, int size) {
-        LOGGER.info("Finding Comments for Post {}", id);
-        return commentDao.findCommentsByPostId(id,page,size);
-    }
-
-    @Override
-    public int getCommentsCountByPostId(long id) {
-        LOGGER.info("Getting Quantity of Comments for Post {}", id);
-        return commentDao.getCommentsCountByPostId(id);
-    }
-
-    @Override
-    public int getTotalPostPages(long id, int size) {
-        LOGGER.info("Getting Total Comment Pages for size {}", size);
-        return (int) Math.ceil((double) commentDao.getCommentsCountByPostId(id) / size);
-    }
-
-    public Optional<Comment> findCommentById(long id){
-        LOGGER.info("Finding Comment {}", id);
-        return commentDao.findCommentById(id);
-    }
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public Comment createComment(String comment, long neighborId, long postId) {
@@ -82,4 +64,38 @@ public class CommentServiceImpl implements CommentService {
 
         return commentDao.createComment(comment, neighborId, postId);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Comment> findCommentById(long id){
+        LOGGER.info("Finding Comment {}", id);
+        return commentDao.findCommentById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Comment> findCommentsByPostId(long id, int page, int size) {
+        LOGGER.info("Finding Comments for Post {}", id);
+        return commentDao.findCommentsByPostId(id,page,size);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public int getCommentsCountByPostId(long id) {
+        LOGGER.info("Getting Quantity of Comments for Post {}", id);
+        return commentDao.getCommentsCountByPostId(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public int getTotalPostPages(long id, int size) {
+        LOGGER.info("Getting Total Comment Pages for size {}", size);
+        return (int) Math.ceil((double) commentDao.getCommentsCountByPostId(id) / size);
+    }
+
+
+
+
 }

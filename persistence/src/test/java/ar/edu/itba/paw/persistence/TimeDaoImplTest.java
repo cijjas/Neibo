@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
+import java.sql.Date;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -45,7 +46,7 @@ public class TimeDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        long timeKey = testInsertionUtils.createTime();
+        Time timeKey = timeDao.createTime(TIME_INTERVAL);
 
         // Validations & Post Conditions
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.times.name()));

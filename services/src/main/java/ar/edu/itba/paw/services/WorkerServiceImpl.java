@@ -17,12 +17,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class WorkerServiceImpl implements WorkerService {
     private final WorkerDao workerDao;
     private final ProfessionWorkerDao professionWorkerDao;
@@ -42,7 +44,9 @@ public class WorkerServiceImpl implements WorkerService {
         this.passwordEncoder = passwordEncoder;
         this.neighborhoodWorkerDao = neighborhoodWorkerDao;
     }
-    // ---------------------------------------------- WORKERS INSERT -----------------------------------------------------
+
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public Worker createWorker(String mail, String name, String surname, String password, int identification, String phoneNumber, String address, Language language, long[] professionIds, String businessName) {
         LOGGER.info("Creating Worker with mail {}", mail);
@@ -54,8 +58,10 @@ public class WorkerServiceImpl implements WorkerService {
         return worker;
     }
 
-    // ---------------------------------------------- WORKERS SELECT -----------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
+    @Transactional(readOnly = true)
     public Optional<Worker> findWorkerById(long userId) {
         LOGGER.info("Finding Worker with id {}", userId);
         Optional<User> optionalUser = userDao.findUserById(userId);
@@ -63,6 +69,7 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Worker> findWorkerByMail(String mail) {
         LOGGER.info("Finding Worker with mail {}", mail);
         Optional<User> optionalUser = userDao.findUserByMail(mail);
@@ -70,6 +77,7 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long neighborhoodId, long loggedUserId) {
         LOGGER.info("Getting Workers from Neighborhoods {} with professions {}", neighborhoodId, professions);
         if(neighborhoodId != 0)
@@ -87,20 +95,13 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds) {
         LOGGER.info("Getting Workers Count for Neighborhood {} with professions {}", neighborhoodIds, professions);
         return workerDao.getWorkersCountByCriteria(professions, neighborhoodIds);
     }
 
-    // ---------------------------------------------- WORKERS UPDATE -----------------------------------------------------
-//    @Override
-//    public void updateWorker(long userId, String name, String surname, String password, int identification,
-//                             String phoneNumber, String address, Language language, boolean darkMode,
-//                             String businessName, long profilePictureId, long backgroundPictureId, String bio) {
-//        LOGGER.info("Updating Worker {}", userId);
-//        userDao.setUserValues(userId, password, name, surname, language, darkMode, profilePictureId, UserRole.WORKER, identification, 0);
-//        workerDao.updateWorker(userId, phoneNumber, address, businessName, backgroundPictureId, bio);
-//    }
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public void updateWorker(long userId, String phoneNumber, String address, String businessName,
@@ -109,6 +110,4 @@ public class WorkerServiceImpl implements WorkerService {
         Image i = imageService.storeImage(backgroundPicture);
         workerDao.updateWorker(userId, phoneNumber, address, businessName, i.getImageId(), bio);
     }
-
-
 }

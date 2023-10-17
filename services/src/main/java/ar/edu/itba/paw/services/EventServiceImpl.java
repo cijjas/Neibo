@@ -14,11 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class EventServiceImpl implements EventService {
     private final EventDao eventDao;
 
@@ -32,11 +35,7 @@ public class EventServiceImpl implements EventService {
         this.timeDao = timeDao;
     }
 
-
-    @Override
-    public Optional<Event> findEventById(long eventId) {
-        LOGGER.info("Finding Event {}", eventId);
-        return eventDao.findEventById(eventId); }
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public Event createEvent(String name, String description, Date date, Time startTime, Time endTime, long neighborhoodId) {
@@ -44,29 +43,43 @@ public class EventServiceImpl implements EventService {
         long duration = (endTime.getTime() - startTime.getTime())/60000;
         long startTimeId = timeDao.createTime(startTime).getTimeId();
         long endTimeId = timeDao.createTime(endTime).getTimeId();
-        return eventDao.createEvent(name, description, date, startTime, endTime, startTimeId, endTimeId, duration, neighborhoodId); }
+        return eventDao.createEvent(name, description, date, startTimeId, endTimeId, duration, neighborhoodId);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Event> getEventsByDate(Date date, long neighborhoodId) {
-        LOGGER.info("Getting Events for Neighborhood {} on Date {}", neighborhoodId, date);
-        return eventDao.getEventsByDate(date, neighborhoodId); }
+    @Transactional(readOnly = true)
+    public Optional<Event> findEventById(long eventId) {
+        LOGGER.info("Finding Event {}", eventId);
+        return eventDao.findEventById(eventId); }
 
     @Override
-    public List<Event> getEventsByNeighborhoodId(long neighborhoodId) {
-        LOGGER.info("Getting Events for Neighborhood {}", neighborhoodId);
-        return eventDao.getEventsByNeighborhoodId(neighborhoodId); }
-
-    @Override
+    @Transactional(readOnly = true)
     public boolean hasEvents(Date date, long neighborhoodId) {
         LOGGER.info("Checking if Neighborhood {} has Events on {}", neighborhoodId, date);
         return !eventDao.getEventsByDate(date, neighborhoodId).isEmpty(); }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Event> getEventsByDate(Date date, long neighborhoodId) {
+        LOGGER.info("Getting Events for Neighborhood {} on Date {}", neighborhoodId, date);
+        return eventDao.getEventsByDate(date, neighborhoodId); }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Event> getEventsByNeighborhoodId(long neighborhoodId) {
+        LOGGER.info("Getting Events for Neighborhood {}", neighborhoodId);
+        return eventDao.getEventsByNeighborhoodId(neighborhoodId); }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<Date> getEventDates(long neighborhoodId) {
         LOGGER.info("Getting Event Dates for Neighborhood {}", neighborhoodId);
         return eventDao.getEventDates(neighborhoodId); }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Long> getEventTimestamps(long neighborhoodId) {
         LOGGER.info("Getting Event Timestamps for Neighborhood {}", neighborhoodId);
         List<Date> eventDates = getEventDates(neighborhoodId);
@@ -77,6 +90,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public String getEventTimestampsString(long neighborhoodId) {
         LOGGER.info("Getting Event Timestamps as String for Neighborhood {}", neighborhoodId);
         return getEventTimestamps(neighborhoodId).stream()
@@ -85,10 +99,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public boolean deleteEvent(long eventId) {
-        LOGGER.info("Delete Event {}", eventId);
-        return eventDao.deleteEvent(eventId); }
-
+    @Transactional(readOnly = true)
     public String getSelectedMonth(int month, Language language) {
         LOGGER.info("Getting Selected Month {}", month);
 
@@ -100,9 +111,17 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public int getSelectedYear(int year) {
         LOGGER.info("Getting selected Years {}", year);
         return year + 1900;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean deleteEvent(long eventId) {
+        LOGGER.info("Delete Event {}", eventId);
+        return eventDao.deleteEvent(eventId); }
 
 }

@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class AvailabilityServiceImpl implements AvailabilityService {
     private final ShiftDao shiftDao;
     private final AvailabilityDao availabilityDao;
@@ -25,6 +27,9 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         this.availabilityDao = availabilityDao;
         this.shiftDao = shiftDao;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public boolean updateAvailability(long amenityId, List<Long> newShifts) {
         LOGGER.info("Updating the Availability for Amenity", amenityId);

@@ -7,12 +7,14 @@ import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.List;
 
 @Service
+@Transactional
 public class ResourceServiceImpl implements ResourceService {
     private final ResourceDao resourceDao;
     private final ImageService imageService;
@@ -25,6 +27,8 @@ public class ResourceServiceImpl implements ResourceService {
         this.imageService = imageService;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public Resource createResource(long neighborhoodId, String title, String description, MultipartFile imageFile) {
         LOGGER.info("Creating Resource {} for Neighborhood {}", title, neighborhoodId);
@@ -35,11 +39,16 @@ public class ResourceServiceImpl implements ResourceService {
         return resourceDao.createResource(neighborhoodId, title, description, i == null ? 0 : i.getImageId());
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
+    @Transactional(readOnly = true)
     public List<Resource> getResources(final long neighborhoodId) {
         LOGGER.info("Getting Resources from Neighborhood {}", neighborhoodId);
         return resourceDao.getResources(neighborhoodId);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public boolean deleteResource(final long resourceId) {

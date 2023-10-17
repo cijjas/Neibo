@@ -113,8 +113,8 @@ public class WorkerDaoImpl implements WorkerDao {
         if(page != 0)
             appendPaginationClause(query, queryParams, page, size);
 
-        LOGGER.debug(String.valueOf(query));
-        LOGGER.debug(String.valueOf(queryParams));
+        LOGGER.debug("{}", query);
+        LOGGER.debug("{}", queryParams);
 
         return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
     }
@@ -127,8 +127,8 @@ public class WorkerDaoImpl implements WorkerDao {
 
         appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions);
 
-        LOGGER.debug(String.valueOf(query));
-        LOGGER.debug(String.valueOf(queryParams));
+        LOGGER.debug("{}", query);
+        LOGGER.debug("{}", queryParams);
 
         return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());
     }

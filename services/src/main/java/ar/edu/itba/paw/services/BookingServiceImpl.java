@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class BookingServiceImpl implements BookingService {
 
     private final BookingDao bookingDao;
@@ -33,15 +35,30 @@ public class BookingServiceImpl implements BookingService {
         this.bookingDao = bookingDao;
     }
 
-    public void createBooking(long userId,long amenityId, List<Long> shiftIds,  Date reservationDate) {
+    // -----------------------------------------------------------------------------------------------------------------
+
+    public long[] createBooking(long userId, long amenityId, List<Long> shiftIds, Date reservationDate) {
         LOGGER.info("Creating a Booking for Amenity {} on {} for User {}", amenityId, reservationDate, userId);
+
+        List<Long> bookingIds = new ArrayList<>();
+
         for (Long shiftId : shiftIds) {
-            Long availabilityId = availabilityDao.findAvailabilityId(amenityId, shiftId).orElseThrow(()-> new NotFoundException("Availability not found.")); // DB guarantees the combination is unique
-            bookingDao.createBooking(userId, availabilityId, reservationDate);
+            Long availabilityId = availabilityDao.findAvailabilityId(amenityId, shiftId)
+                    .orElseThrow(() -> new NotFoundException("Availability not found.")); // DB guarantees the combination is unique
+
+            long bookingId = bookingDao.createBooking(userId, availabilityId, reservationDate).longValue();
+            bookingIds.add(bookingId);
         }
+
+        return bookingIds.stream()
+                .mapToLong(Long::longValue)
+                .toArray();
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
+    @Transactional(readOnly = true)
     public List<GroupedBooking> getUserBookings(long userId) {
         LOGGER.info("Getting Bookings for User {}", userId);
         List<Booking> userBookings = bookingDao.getUserBookings(userId);
@@ -80,6 +97,8 @@ public class BookingServiceImpl implements BookingService {
         return new Time(endTimeMillis);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public boolean deleteBooking(long bookingId) {
         LOGGER.info("Deleting Booking {}", bookingId);
@@ -92,10 +111,5 @@ public class BookingServiceImpl implements BookingService {
         for (long booking : bookingIds)
             bookingDao.deleteBooking(booking);
         return true;
-    }
-
-    @Override
-    public List<List<Booking>> getUserBookingsGroupedByAmenity(long userId) {
-        return null;
     }
 }

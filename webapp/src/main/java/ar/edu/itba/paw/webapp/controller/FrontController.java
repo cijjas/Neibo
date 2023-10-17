@@ -783,7 +783,7 @@ public class FrontController {
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
-        mav.addObject("averageRating", rws.getAvgRating(workerId));
+        mav.addObject("averageRating", rws.getAvgRating(workerId).orElseThrow(() -> new NotFoundException("Average Rating not found")));
         //mav.addObject("postList", postList);
         //mav.addObject("totalPages", totalPages);
         return mav;
@@ -807,7 +807,7 @@ public class FrontController {
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
-        mav.addObject("averageRating", rws.getAvgRating(workerId));
+        mav.addObject("averageRating", rws.getAvgRating(workerId).orElseThrow(() -> new NotFoundException("Average Rating not found")));
         return mav;
 
     }
@@ -843,7 +843,7 @@ public class FrontController {
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
-        mav.addObject("averageRating", rws.getAvgRating(workerId));
+        mav.addObject("averageRating", rws.getAvgRating(workerId).orElseThrow(() -> new NotFoundException("Average Rating not found")));
         return mav;
 
     }

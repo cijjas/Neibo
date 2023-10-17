@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class ReviewDaoImpl implements ReviewDao {
@@ -63,7 +64,7 @@ public class ReviewDaoImpl implements ReviewDao {
     }
 
     // ---------------------------------------------- REVIEWS SELECT ---------------------------------------------------
-    private static final RowMapper<Review> reviewRowMapper = (rs, rowNum) ->
+    private static final RowMapper<Review> ROW_MAPPER = (rs, rowNum) ->
             new Review.Builder()
                     .reviewId(rs.getLong("reviewid"))
                     .workerId(rs.getLong("workerid"))
@@ -73,38 +74,32 @@ public class ReviewDaoImpl implements ReviewDao {
                     .date(rs.getTimestamp("date"))
                     .build();
 
+    private static final RowMapper<Float> ROW_MAPPER_2 = (rs, rowNum) ->
+            rs.getFloat(1);
+
     @Override
     public Review getReview(long reviewId) {
         LOGGER.debug("Selecting Reviews with reviewId {}", reviewId);
-        return jdbcTemplate.queryForObject(REVIEWS + " WHERE reviewid = ?", reviewRowMapper, reviewId);
+        return jdbcTemplate.queryForObject(REVIEWS + " WHERE reviewid = ?", ROW_MAPPER, reviewId);
     }
 
     @Override
     public List<Review> getReviews(long workerId) {
         LOGGER.debug("Selecting Reviews from Worker {}", workerId);
-        return jdbcTemplate.query(REVIEWS + " WHERE workerid = ?", reviewRowMapper, workerId);
+        return jdbcTemplate.query(REVIEWS + " WHERE workerid = ?", ROW_MAPPER, workerId);
     }
 
     @Override
-    public float getAvgRating(long workerId) {
+    public Optional<Float> getAvgRating(long workerId) {
         LOGGER.debug("Selecting Average Rating for Worker {}", workerId);
-        return jdbcTemplate.query("SELECT AVG(rating) FROM reviews WHERE workerid = ?", rs -> {
-            if (rs.next()) {
-                return rs.getFloat(1);
-            }
-            return 0f;
-        }, workerId);
+        List<Float> rating = jdbcTemplate.query("SELECT AVG(rating) FROM reviews WHERE workerid = ?", ROW_MAPPER_2, workerId);
+        return rating.isEmpty() ? Optional.empty() : Optional.of(rating.get(0));
     }
 
     @Override
     public int getReviewsCount(long workerId) {
         LOGGER.debug("Selecting Review Count for Worker {}", workerId);
-        return jdbcTemplate.query("SELECT COUNT(*) FROM reviews WHERE workerid = ?", rs -> {
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-            return 0;
-        }, workerId);
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM reviews WHERE workerid = ?", Integer.class, workerId);
     }
 
     // ---------------------------------------------- REVIEWS DELETE ---------------------------------------------------

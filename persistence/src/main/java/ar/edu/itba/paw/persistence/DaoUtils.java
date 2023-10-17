@@ -131,4 +131,9 @@ class DaoUtils {
         query.append(" AND (SELECT COUNT(userid) FROM posts_users_likes as pul WHERE pul.postid = p.postid AND pul.likedate >= NOW() - INTERVAL '72 HOURS') >= 1");
         query.append(" AND (SELECT COUNT(commentid) FROM comments as cm WHERE cm.postid = p.postid AND cm.commentdate >= NOW() - INTERVAL '72 HOURS') >= 1");
     }
+
+    static void appendDateClause(StringBuilder query) {
+        query.append(" ORDER BY postdate DESC");
+    }
+
 }

@@ -91,4 +91,33 @@ public class AvailabilityDaoImplTest {
         // Validations & Post Conditions
         assertFalse(foundAvailability.isPresent());
     }
+
+    @Test
+    public void testDeleteAvailability(){
+        // Pre Conditions
+        long nhKey = testInsertionUtils.createNeighborhood();
+        long aKey = testInsertionUtils.createAmenity(nhKey);
+        long dKey = testInsertionUtils.createDay();
+        long tKey = testInsertionUtils.createTime();
+        long sKey = testInsertionUtils.createShift(dKey, tKey);
+        long availabilityKey = testInsertionUtils.createAvailability(aKey, sKey);
+
+        // Exercise
+        boolean deleted = availabilityDao.deleteAvailability(aKey, sKey);
+
+        // Validations & Post Conditions
+        assertTrue(deleted);
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.amenities_shifts_availability.name()));
+    }
+
+    @Test
+    public void testDeleteInvalidAvailability(){
+        // Pre Conditions
+
+        // Exercise
+        boolean deleted = availabilityDao.deleteAvailability(1, 1);
+
+        // Validations & Post Conditions
+        assertFalse(deleted);
+    }
 }

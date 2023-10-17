@@ -122,7 +122,7 @@ public class UserDaoImplTest {
     public void testFindUserByMail() {
         // Pre Conditions
         nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, ROLE, ID);
+        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
 
         // Exercise
         Optional<User> maybeUser = userDao.findUserByMail(USER_MAIL_1);
@@ -140,6 +140,115 @@ public class UserDaoImplTest {
 
         // Validations
         assertFalse(maybeUser.isPresent());
+    }
+
+    @Test
+    public void testSetUserValues(){
+        // Pre Conditions
+        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
+        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
+        long iKey = testInsertionUtils.createImage();
+
+        // Exercise
+        userDao.setUserValues(uKey1,  PASSWORD, NAME, SURNAME,  LANGUAGE, DARK_MODE, iKey,ROLE, ID, nhKey1);
+
+        // Validations
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users.name()));
+    }
+
+    /*@Test
+    public void testIsAttending() {
+        // Pre Conditions
+        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
+        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
+        long eId = testInsertionUtils.createEvent(nhKey1);
+        testInsertionUtils.createAttendance(uKey1, nhKey1);
+
+        // Exercise
+        boolean isAttending = userDao.isAttending(eId, uKey1);
+
+        // Validations
+        assertTrue(isAttending);
+    }*/
+
+    @Test
+    public void testIsNotAttending() {
+        // Pre Conditions
+        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
+        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
+        long tKey1 = testInsertionUtils.createTime();
+        long tKey2 = testInsertionUtils.createTime();
+        long eKey = testInsertionUtils.createEvent(nhKey1, tKey1, tKey2);
+
+        // Exercise
+        boolean isAttending = userDao.isAttending(eKey, uKey1);
+
+        // Validations
+        assertFalse(isAttending);
+    }
+
+    /*@Test
+    public void testGetEventUsers(){
+        // Pre Conditions
+        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
+        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
+        long eId = testInsertionUtils.createEvent(nhKey1);
+        testInsertionUtils.createAttendance(uKey1, nhKey1);
+
+        // Exercise
+        List<User> attendees = userDao.getEventUsers(eId);
+
+        // Validations
+        assertFalse(attendees.isEmpty());
+        assertEquals(1, attendees.size());
+    }*/
+
+    /*@Test
+    public void testGetNoEventUsers(){
+        // Pre Conditions
+        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
+        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
+        long eId = testInsertionUtils.createEvent(nhKey1);
+
+        // Exercise
+        List<User> attendees = userDao.getEventUsers(eId);
+
+        // Validations
+        assertTrue(attendees.isEmpty());
+    }*/
+
+    @Test
+    public void testGetNeighborsSubscribedByPostId(){
+        // Pre Conditions
+        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
+        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
+        long chKey = testInsertionUtils.createChannel();
+        long iKey = testInsertionUtils.createImage();
+        long pKey = testInsertionUtils.createPost(uKey1, chKey, iKey);
+        testInsertionUtils.createSubscription(uKey1, pKey);
+
+        // Exercise
+        List<User> subscribers = userDao.getNeighborsSubscribedByPostId(pKey);
+
+        // Validations
+        assertFalse(subscribers.isEmpty());
+        assertEquals(1, subscribers.size());
+    }
+
+    @Test
+    public void testGetNoNeighborsSubscribedByPostId(){
+        // Pre Conditions
+        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
+        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
+        long chKey = testInsertionUtils.createChannel();
+        long iKey = testInsertionUtils.createImage();
+        long pKey = testInsertionUtils.createPost(uKey1, chKey, iKey);
+
+        // Exercise
+        List<User> subscribers = userDao.getNeighborsSubscribedByPostId(pKey);
+
+        // Validations
+        assertTrue(subscribers.isEmpty());
     }
 
     @Test
@@ -189,6 +298,8 @@ public class UserDaoImplTest {
         // Validations
         assertEquals(1, retrievedUsers.size()); // Adjust based on the expected number of retrieved posts
     }
+
+
 
     private void populateUsers() {
         // Pre Conditions

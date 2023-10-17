@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class AttendanceServiceImpl implements AttendanceService {
     private final AttendanceDao attendanceDao;
 
@@ -18,11 +20,15 @@ public class AttendanceServiceImpl implements AttendanceService {
         this.attendanceDao = attendanceDao;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public void createAttendee(long userId, long eventId) {
         LOGGER.info("Adding User {} as Attendee for Event {}", userId, eventId);
         attendanceDao.createAttendee(userId, eventId);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public void deleteAttendee(long userId, long eventId) {
