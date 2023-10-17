@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.PostStatus;
+import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.Post;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.enums.PostStatus;
-import ar.edu.itba.paw.enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,28 +23,10 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes =TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class PostDaoImplTest {
 
-    @Autowired
-    private DataSource ds;
-    private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
-
-
-    private ChannelDao channelDao;
-    private UserDao userDao;
-    private TagDao tagDao;
-    private LikeDao likeDao;
-    private PostDao postDao;
-    private BookingDao bookingDao;
-    private ShiftDao shiftDao;
-    private AmenityDao amenityDao;
-    private DayDao dayDao;
-    private TimeDao timeDao;
-
-    // Variables for test data
     private static final String TITLE_1 = "Title 1";
     private static final String TITLE_2 = "Title 2";
     private static final String TITLE_3 = "Title 3";
@@ -72,6 +54,21 @@ public class PostDaoImplTest {
     private static final int BASE_PAGE_SIZE = 10;
     private static final boolean NOT_HOT = false;
     private static final boolean HOT = true;
+    @Autowired
+    private DataSource ds;
+    @Autowired
+    private TestInsertionUtils testInsertionUtils;
+    private JdbcTemplate jdbcTemplate;
+    private ChannelDao channelDao;
+    private UserDao userDao;
+    private TagDao tagDao;
+    private LikeDao likeDao;
+    private PostDao postDao;
+    private BookingDao bookingDao;
+    private ShiftDao shiftDao;
+    private AmenityDao amenityDao;
+    private DayDao dayDao;
+    private TimeDao timeDao;
     private long nhKey1;
     private long nhKey2;
     private long tKey1;
@@ -86,7 +83,6 @@ public class PostDaoImplTest {
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
         channelDao = new ChannelDaoImpl(ds);
         dayDao = new DayDaoImpl(ds);
         timeDao = new TimeDaoImpl(ds);

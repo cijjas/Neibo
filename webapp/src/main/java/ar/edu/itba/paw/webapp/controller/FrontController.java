@@ -381,13 +381,9 @@ public class FrontController {
             @RequestParam(value = "email", required = false) String email
     ) {
         ModelAndView mav = new ModelAndView("views/landingPage");
-        List<Pair<Integer, String>> professionsPairs = new ArrayList<>();
-        for (Professions profession : Professions.values()){
-            professionsPairs.add(new Pair<>(profession.getId(), profession.toString()));
-        }
 
         mav.addObject("email", email);
-        mav.addObject("professionsPairs", professionsPairs);
+        mav.addObject("professionsPairs", Professions.PROF_PAIRS);
         mav.addObject("error", error);
         mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
         mav.addObject("openSignupDialog", false);
@@ -443,13 +439,7 @@ public class FrontController {
     ) {
         ModelAndView mav = new ModelAndView("views/landingPage");
 
-
-        List<Pair<Integer, String>> professionsPairs = new ArrayList<>();
-        for (Professions profession : Professions.values()){
-            professionsPairs.add(new Pair<>(profession.getId(), profession.toString()));
-        }
-
-        mav.addObject("professionsPairs", professionsPairs);
+        mav.addObject("professionsPairs", Professions.PROF_PAIRS);
         mav.addObject("successfullySignup", successfullySignup);
         mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
         return mav;

@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.ResourceDao;
 import ar.edu.itba.paw.models.Resource;
-import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,25 +20,25 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ResourceDaoImplTest {
 
-    private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
-    private ResourceDao resourceDao;
-
-    private String SAMPLE_TITLE = "Sample Title";
-    private String SAMPLE_DESC = "Sample Desc";
-
     @Autowired
     private DataSource ds;
+    @Autowired
+    private TestInsertionUtils testInsertionUtils;
+    private JdbcTemplate jdbcTemplate;
+    private ResourceDao resourceDao;
+
+    private final String SAMPLE_TITLE = "Sample Title";
+    private final String SAMPLE_DESC = "Sample Desc";
+
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
         resourceDao = new ResourceDaoImpl(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
     }
 
     @Test

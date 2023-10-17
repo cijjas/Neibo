@@ -1,12 +1,12 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.DayDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.models.Amenity;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,27 +24,28 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class AmenityDaoImplTest {
 
-    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private DataSource ds;
+    @Autowired
     private TestInsertionUtils testInsertionUtils;
+    private JdbcTemplate jdbcTemplate;
     private ShiftDao shiftDao;
     private AmenityDao amenityDao;
     private DayDao dayDao;
     private TimeDao timeDao;
 
-    private String AMENITY_NAME = "Amenity Name";
-    private String AMENITY_DESCRIPTION = "Amenity Description";
 
-    @Autowired
-    private DataSource ds;
+    private final String AMENITY_NAME = "Amenity Name";
+    private final String AMENITY_DESCRIPTION = "Amenity Description";
+
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
         dayDao = new DayDaoImpl(ds);
         timeDao = new TimeDaoImpl(ds);
         shiftDao = new ShiftDaoImpl(ds, dayDao, timeDao);

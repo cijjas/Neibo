@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.enums.Table;
+import ar.edu.itba.paw.models.Contact;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,27 +19,25 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ContactDaoImplTest {
 
-    private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
-    private ContactDaoImpl contactDao;
 
     private static final String CONTACT_NAME = "Sample Contact";
     private static final String ADDRESS = "Sample Address";
     private static final String NUMBER = "123456789";
-
-
     @Autowired
     private DataSource ds;
+    @Autowired
+    private TestInsertionUtils testInsertionUtils;
+    private JdbcTemplate jdbcTemplate;
+    private ContactDaoImpl contactDao;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
         contactDao = new ContactDaoImpl(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
     }
 
     @Test

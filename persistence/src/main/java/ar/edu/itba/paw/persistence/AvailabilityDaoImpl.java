@@ -15,10 +15,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class AvailabilityDaoImpl implements AvailabilityDao {
@@ -63,11 +60,12 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
     };
 
     @Override
-    public Optional<Long> findAvailabilityId(long amenityId, long shiftId) {
+    public OptionalLong findAvailabilityId(long amenityId, long shiftId) {
         LOGGER.debug("Selecting Availability with amenityId {} and shiftId {}", amenityId, shiftId);
         final List<Long> list = jdbcTemplate.query("SELECT amenityAvailabilityId FROM amenities_shifts_availability WHERE amenityid = ? AND shiftid = ?", ROW_MAPPER, amenityId, shiftId);
-        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+        return list.isEmpty() ? OptionalLong.empty() : OptionalLong.of(list.get(0));
     }
+
 
     // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY DELETE -----------------------------------------
 

@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Availability;
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalLong;
 
 public interface AvailabilityDao {
 
@@ -14,7 +15,7 @@ public interface AvailabilityDao {
 
     // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY SELECT -----------------------------------------
 
-    Optional<Long> findAvailabilityId(long amenityId, long shiftId);
+    OptionalLong findAvailabilityId(long amenityId, long shiftId);
 
     // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY DELETE -----------------------------------------
 

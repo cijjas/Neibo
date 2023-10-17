@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.enums.UserRole;
-import org.springframework.context.annotation.Bean;
+import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.mock.web.MockMultipartFile;
@@ -20,7 +20,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-class TestInsertionUtils {
+@Component
+public class TestInsertionUtils {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert channelInsert;
@@ -51,9 +52,9 @@ class TestInsertionUtils {
     private final SimpleJdbcInsert imageInsert;
     private final SimpleJdbcInsert professionInsertion;
 
-
-    public TestInsertionUtils(JdbcTemplate jdbcTemplate, DataSource dataSource) {
-        this.jdbcTemplate = jdbcTemplate;
+    @Autowired
+    public TestInsertionUtils(DataSource dataSource) {
+        jdbcTemplate = new JdbcTemplate(dataSource);
         this.channelInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName(Table.channels.name())
                 .usingGeneratedKeyColumns("channelid");
@@ -212,7 +213,7 @@ class TestInsertionUtils {
     }
 
     public long createUser(String mail, String password, String name, String surname,
-                             long neighborhoodId, Language language, boolean darkMode, UserRole role, int identification) {
+                           long neighborhoodId, Language language, boolean darkMode, UserRole role, int identification) {
         Map<String, Object> data = new HashMap<>();
         data.put("mail", mail);
         data.put("password", password);
@@ -490,7 +491,7 @@ class TestInsertionUtils {
         return createAmenity(name, description, neighborhoodId);
     }
 
-    public long createImage(){
+    public long createImage() {
         // Create a small byte array for a fake image (e.g., a 1x1 white pixel)
         byte[] fakeImageBytes = new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
 

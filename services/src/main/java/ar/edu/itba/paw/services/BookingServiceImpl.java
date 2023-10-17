@@ -4,7 +4,6 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
-import ar.edu.itba.paw.interfaces.persistence.CategorizationDao;
 import ar.edu.itba.paw.interfaces.services.BookingService;
 import ar.edu.itba.paw.models.Booking;
 import ar.edu.itba.paw.models.GroupedBooking;
@@ -18,7 +17,6 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -43,7 +41,7 @@ public class BookingServiceImpl implements BookingService {
         List<Long> bookingIds = new ArrayList<>();
 
         for (Long shiftId : shiftIds) {
-            Long availabilityId = availabilityDao.findAvailabilityId(amenityId, shiftId)
+            long availabilityId = availabilityDao.findAvailabilityId(amenityId, shiftId)
                     .orElseThrow(() -> new NotFoundException("Availability not found.")); // DB guarantees the combination is unique
 
             long bookingId = bookingDao.createBooking(userId, availabilityId, reservationDate).longValue();

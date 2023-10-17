@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.*;
-import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.interfaces.persistence.*;
+import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,28 +23,9 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class UserDaoImplTest {
-
-    @Autowired
-    private DataSource ds;
-    private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
-    private UserDao userDao;
-    private BookingDao bookingDao;
-    private ShiftDao shiftDao;
-    private AmenityDao amenityDao;
-    private DayDao dayDao;
-    private TimeDao timeDao;
-
-    private String PASSWORD = "password";
-    private String NAME = "John";
-    private String SURNAME = "Doe";
-    private Language LANGUAGE = Language.ENGLISH;
-    private boolean DARK_MODE = false;
-    private UserRole ROLE = UserRole.NEIGHBOR;
-    private int ID = 12345;
 
     private static final String NH_NAME_1 = "Neighborhood 1";
     private static final String NH_NAME_2 = "Neighborhood 2";
@@ -54,6 +35,24 @@ public class UserDaoImplTest {
     private static final String USER_MAIL_4 = "user4@test.com";
     private static final int BASE_PAGE = 1;
     private static final int BASE_PAGE_SIZE = 10;
+    @Autowired
+    private DataSource ds;
+    @Autowired
+    private TestInsertionUtils testInsertionUtils;
+    private JdbcTemplate jdbcTemplate;
+    private UserDao userDao;
+    private BookingDao bookingDao;
+    private ShiftDao shiftDao;
+    private AmenityDao amenityDao;
+    private DayDao dayDao;
+    private TimeDao timeDao;
+    private final String PASSWORD = "password";
+    private final String NAME = "John";
+    private final String SURNAME = "Doe";
+    private final Language LANGUAGE = Language.ENGLISH;
+    private final boolean DARK_MODE = false;
+    private final UserRole ROLE = UserRole.NEIGHBOR;
+    private final int ID = 12345;
     private long nhKey1;
     private long nhKey2;
     private long uKey1;
@@ -64,7 +63,6 @@ public class UserDaoImplTest {
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
         dayDao = new DayDaoImpl(ds);
         timeDao = new TimeDaoImpl(ds);
         shiftDao = new ShiftDaoImpl(ds, dayDao, timeDao);
@@ -143,14 +141,14 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void testSetUserValues(){
+    public void testSetUserValues() {
         // Pre Conditions
         nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
         uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
         long iKey = testInsertionUtils.createImage();
 
         // Exercise
-        userDao.setUserValues(uKey1,  PASSWORD, NAME, SURNAME,  LANGUAGE, DARK_MODE, iKey,ROLE, ID, nhKey1);
+        userDao.setUserValues(uKey1, PASSWORD, NAME, SURNAME, LANGUAGE, DARK_MODE, iKey, ROLE, ID, nhKey1);
 
         // Validations
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users.name()));
@@ -218,7 +216,7 @@ public class UserDaoImplTest {
     }*/
 
     @Test
-    public void testGetNeighborsSubscribedByPostId(){
+    public void testGetNeighborsSubscribedByPostId() {
         // Pre Conditions
         nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
         uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
@@ -236,7 +234,7 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void testGetNoNeighborsSubscribedByPostId(){
+    public void testGetNoNeighborsSubscribedByPostId() {
         // Pre Conditions
         nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
         uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
@@ -252,7 +250,7 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void testGetUsersByNeighborhood(){
+    public void testGetUsersByNeighborhood() {
         // Pre Conditions
         populateUsers();
 
@@ -264,7 +262,7 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void testGetUsersByNeighborhoodAndRole(){
+    public void testGetUsersByNeighborhoodAndRole() {
         // Pre Conditions
         populateUsers();
 
@@ -276,7 +274,7 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void testGetUsersByNeighborhoodAndSize(){
+    public void testGetUsersByNeighborhoodAndSize() {
         // Pre Conditions
         populateUsers();
 
@@ -288,7 +286,7 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void testGetUsersByNeighborhoodAndSizeAndPage(){
+    public void testGetUsersByNeighborhoodAndSizeAndPage() {
         // Pre Conditions
         populateUsers();
 
@@ -298,7 +296,6 @@ public class UserDaoImplTest {
         // Validations
         assertEquals(1, retrievedUsers.size()); // Adjust based on the expected number of retrieved posts
     }
-
 
 
     private void populateUsers() {

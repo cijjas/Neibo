@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.DayDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.models.Shift;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,25 +24,25 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ShiftDaoImplTest {
 
-    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private DataSource ds;
+    @Autowired
     private TestInsertionUtils testInsertionUtils;
+    private JdbcTemplate jdbcTemplate;
     private ShiftDao shiftDao;
     private DayDao dayDao;
     private TimeDao timeDao;
 
-    private String DATE = "2022-12-12";
 
-    @Autowired
-    private DataSource ds;
+    private final String DATE = "2022-12-12";
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
         dayDao = new DayDaoImpl(ds);
         timeDao = new TimeDaoImpl(ds);
         shiftDao = new ShiftDaoImpl(ds, dayDao, timeDao);
@@ -118,7 +118,7 @@ public class ShiftDaoImplTest {
         long aKey = testInsertionUtils.createAmenity(nhKey);
         long dKey = testInsertionUtils.createDay();
         long tKey = testInsertionUtils.createTime();
-        long sKey =  testInsertionUtils.createShift(dKey, tKey);
+        long sKey = testInsertionUtils.createShift(dKey, tKey);
         testInsertionUtils.createAvailability(aKey, sKey);
 
         // Exercise

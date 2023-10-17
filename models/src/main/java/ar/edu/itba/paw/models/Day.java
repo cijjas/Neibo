@@ -56,4 +56,8 @@ public class Day {
         return dayId == day.dayId && Objects.equals(dayName, day.dayName);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(dayId, dayName);
+    }
 }
