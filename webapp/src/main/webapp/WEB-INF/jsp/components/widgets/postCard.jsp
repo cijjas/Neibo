@@ -35,7 +35,7 @@
                 <div style="font-size: 12px; font-weight: normal">
                     <span class="post-date" data-post-date="<c:out value="${post.date}"/>"></span>
                 </div>
-                <script src="${pageContext.request.contextPath}/resources/js/blogpost.js"></script>
+                <script src="${pageContext.request.contextPath}/resources/js/dateFormatter.js"></script>
 
             </div>
             <p style="font-size: 20px;" class="mt-2 font-weight-bolder c-text"><c:out value="${post.title}" /></p>

@@ -108,9 +108,7 @@
             this.setAttribute('data-liked', (!liked).toString());
             this.classList.toggle('liked', !liked);
             const originalLiked = liked;
-            // Simulate a false count-up/down animation
             animateCount(likeCountElement, currentCount, newCount);
-            // Update the like count attribute
             likeCountElement.setAttribute('data-like-count', newCount);
 
             try {
@@ -150,5 +148,5 @@
 
 </script>
 
-<script src="${pageContext.request.contextPath}/resources/js/blogpost.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/dateFormatter.js"></script>
 

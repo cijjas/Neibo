@@ -40,7 +40,8 @@
             <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileCard.jsp" %>
             <c:choose>
               <c:when test='${loggedUser.role.toString() != "WORKER"}'>
-                <%@ include file="/WEB-INF/jsp/serviceProvider/components/reviewButton.jsp" %>
+                <button class="cool-button font-weight-bold" onclick="openReviewDialog()"><spring:message code="CreateReview"/></button>
+                <%@ include file="/WEB-INF/jsp/serviceProvider/components/reviewDialog.jsp" %>
               </c:when>
               <c:otherwise>
                 <a class="cool-button" href="${pageContext.request.contextPath}/services/neighborhoods"><spring:message code="Post.verb"/></a>
@@ -58,7 +59,6 @@
                 document.getElementById("reviewDialog").style.display = "flex";
               </script>
             </c:if>
-
           </div>
         </div>
         <div class="column-right">
