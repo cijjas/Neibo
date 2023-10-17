@@ -132,7 +132,6 @@
 
 <script>
     function submitEditProfileForm() {
-        console.log("submitting edit profile form");
         document.forms["editWorkerProfileForm"].submit();
     }
     function closeEditDialog() {

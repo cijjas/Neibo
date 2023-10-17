@@ -6,10 +6,9 @@ import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Image;
-import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.models.User;
-import enums.Language;
-import enums.UserRole;
+import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,7 +51,6 @@ public class UserServiceImpl implements UserService {
 
             //if user created is a neighbor (not worker), send admin email notifying new neighbor
             if(neighborhoodId != 0) {
-                System.out.println("inside email clause");
                 emailService.sendNewUserMail(neighborhoodId, name, UserRole.NEIGHBOR);
             }
             return createdUser;

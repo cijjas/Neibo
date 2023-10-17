@@ -34,7 +34,8 @@ public class CommentDaoImpl implements CommentDao {
 
     private final String COMMENTS_JOIN_USERS =
             "SELECT postid, commentid, comment, commentdate, u.userid, name, surname, mail \n" +
-            "FROM comments JOIN public.users u ON comments.userid = u.userid ";
+            "FROM comments " +
+                    "INNER JOIN public.users u ON comments.userid = u.userid ";
     private final String COMMENTS = "SELECT * FROM comments ";
     private final String COUNT_COMMENTS = "SELECT COUNT(*) FROM comments";
 

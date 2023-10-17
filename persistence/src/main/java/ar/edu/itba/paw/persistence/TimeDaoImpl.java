@@ -1,13 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
-import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
-import ar.edu.itba.paw.models.Channel;
-import ar.edu.itba.paw.models.Day;
-import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.Time;
-import enums.StandardTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

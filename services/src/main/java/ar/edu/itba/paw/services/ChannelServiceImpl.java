@@ -1,11 +1,10 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
-import ar.edu.itba.paw.interfaces.persistence.ChannelMappingDao;
 import ar.edu.itba.paw.interfaces.services.ChannelMappingService;
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.models.Channel;
-import enums.BaseChannel;
+import ar.edu.itba.paw.enums.BaseChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
@@ -82,7 +81,7 @@ public class ChannelServiceImpl implements ChannelService {
 
             return adminChannelMap;
         } catch (Exception e) {
-            System.out.println(e);
+            LOGGER.error("Error getting admin channels", e);
         }
         return null;
     }

@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Post;
-import enums.PostStatus;
-import enums.SortOrder;
+import ar.edu.itba.paw.enums.PostStatus;
 
 import java.util.List;
 import java.util.Optional;

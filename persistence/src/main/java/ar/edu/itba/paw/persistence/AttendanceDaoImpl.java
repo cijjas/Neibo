@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.persistence.AttendanceDao;
-import ar.edu.itba.paw.interfaces.persistence.SubscriptionDao;
-import enums.Table;
+import ar.edu.itba.paw.enums.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

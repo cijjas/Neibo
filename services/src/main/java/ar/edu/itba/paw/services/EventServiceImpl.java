@@ -8,8 +8,8 @@ import ar.edu.itba.paw.models.Event;
 import java.sql.Time;
 import java.util.Date;
 
-import enums.Language;
-import enums.Month;
+import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.Month;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;

@@ -34,7 +34,6 @@
                             }
                             catch (e) {
                                 image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
-                                console.log(e);
                             }
                         }
                     })();
@@ -75,7 +74,6 @@
                             }
                             catch (e) {
                                 image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
-                                console.log(e);
                             }
                         }
                     })();

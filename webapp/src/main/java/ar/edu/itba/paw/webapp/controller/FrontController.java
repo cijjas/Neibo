@@ -1,16 +1,15 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.*;
 import ar.edu.itba.paw.webapp.form.*;
 import ar.edu.itba.paw.webapp.form.ReservationTimeForm;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
-import enums.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,10 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.sql.SQLOutput;
 import java.util.*;
 import java.sql.Date;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -386,8 +383,6 @@ public class FrontController {
         ModelAndView mav = new ModelAndView("views/landingPage");
         List<Pair<Integer, String>> professionsPairs = new ArrayList<>();
         for (Professions profession : Professions.values()){
-            System.out.println(profession.getId());
-            System.out.println(profession.toString());
             professionsPairs.add(new Pair<>(profession.getId(), profession.toString()));
         }
 
@@ -453,7 +448,6 @@ public class FrontController {
         for (Professions profession : Professions.values()){
             professionsPairs.add(new Pair<>(profession.getId(), profession.toString()));
         }
-        System.out.println(professionsPairs);
 
         mav.addObject("professionsPairs", professionsPairs);
         mav.addObject("successfullySignup", successfullySignup);
@@ -478,7 +472,6 @@ public class FrontController {
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
-        System.out.println("Printing the professions chosen");
         ws.createWorker(workerSignupForm.getW_mail(), workerSignupForm.getW_name(), workerSignupForm.getW_surname(), workerSignupForm.getW_password(), identification, workerSignupForm.getPhoneNumber(), workerSignupForm.getAddress(), Language.ENGLISH, workerSignupForm.getProfessionIds(), workerSignupForm.getBusinessName());
         ModelAndView mav = new ModelAndView("redirect:/signup-worker");
         mav.addObject("successfullySignup", true);
@@ -517,7 +510,7 @@ public class FrontController {
             @RequestParam("selectedShifts") List<Long> selectedShifts
     ) {
         bs.createBooking(sessionUtils.getLoggedUser().getUserId(), amenityId, selectedShifts, date);
-        return new ModelAndView("redirect:/");
+        return new ModelAndView("redirect:/amenities");
     }
 
 
@@ -528,6 +521,7 @@ public class FrontController {
 
         ModelAndView mav = new ModelAndView("views/amenities");
         List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId());
+
 
         mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
         mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
@@ -552,11 +546,11 @@ public class FrontController {
         return mav;
     }
 
-    @RequestMapping(value = "/delete-reservation/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete-reservation", method = RequestMethod.POST)
     public ModelAndView deleteReservation(
-            @PathVariable(value = "id") int bookingId
+            @RequestParam("bookingIds") List<Long> bookingIds
     ) {
-        bs.deleteBooking(bookingId);
+        bs.deleteBookings(bookingIds);
         return new ModelAndView("redirect:/amenities");
     }
 
@@ -682,7 +676,6 @@ public class FrontController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public ModelAndView test() {
-        System.out.println(shs.getAmenityShifts(4));
         /*
         Random random = new Random();
         long[] jobNumbers = {1, 2, 3, 4}; // Define the possible job numbers
@@ -800,7 +793,6 @@ public class FrontController {
     @RequestMapping(value = "/service/profile/{id:\\d+}", method = RequestMethod.POST)
     public ModelAndView serviceProfile(
     ) {
-        System.out.println("llegando a profile/id post");
         return new ModelAndView("serviceProvider/views/serviceProfile");
     }
 

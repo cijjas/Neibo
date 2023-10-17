@@ -3,10 +3,9 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
-import ar.edu.itba.paw.models.Booking;
 import ar.edu.itba.paw.models.User;
-import enums.Language;
-import enums.UserRole;
+import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +34,13 @@ public class UserDaoImpl implements UserDao {
     private final String USERS_JOIN_POSTS_USERS_AND_POSTS =
             "SELECT u.*\n" +
             "FROM posts p " +
-            "JOIN posts_users_subscriptions ON p.postid = posts_users_subscriptions.postid " +
-            "JOIN users u ON posts_users_subscriptions.userid = u.userid ";
+                    "INNER JOIN posts_users_subscriptions ON p.postid = posts_users_subscriptions.postid " +
+                    "INNER JOIN users u ON posts_users_subscriptions.userid = u.userid ";
     private final String EVENTS_JOIN_USERS =
             "SELECT u.* \n" +
             "FROM events e " +
-            "JOIN events_users ON e.eventid = events_users.eventid " +
-            "JOIN users u ON events_users.userid = u.userid ";
+                    "INNER JOIN events_users ON e.eventid = events_users.eventid " +
+                    "INNER JOIN users u ON events_users.userid = u.userid ";
 
     @Autowired
     public UserDaoImpl(final DataSource ds, final BookingDao bookingDao) {

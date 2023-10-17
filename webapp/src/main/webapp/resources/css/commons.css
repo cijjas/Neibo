@@ -376,3 +376,6 @@ p{
     font-weight: normal;
 }
 
+.pointer{
+    cursor: pointer;
+}

@@ -8,7 +8,7 @@ import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.Comment;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Post;
-import enums.Language;
+import ar.edu.itba.paw.enums.Language;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
@@ -62,7 +62,6 @@ public class CommentServiceImpl implements CommentService {
     public Comment createComment(String comment, long neighborId, long postId) {
         LOGGER.info("Creating Comment {} from User {} for Post {}", comment, neighborId, postId);
 
-        //busco al dueno del post:
         Post post = postService.findPostById(postId).orElse(null);
         assert post != null;
         User user = post.getUser();

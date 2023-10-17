@@ -177,9 +177,7 @@
                 </div>
                 <script>
                     function submitWorkerSignupForm() {
-                        console.log("submitting worker form");
                         const form = document.forms["workerSignupForm"];
-                        console.log(form);
                         form.submit();
                     }
                 </script>

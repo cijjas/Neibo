@@ -4,7 +4,6 @@ import ar.edu.itba.paw.models.Booking;
 import ar.edu.itba.paw.models.GroupedBooking;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 public interface BookingService {
@@ -13,6 +12,8 @@ public interface BookingService {
 
     List<GroupedBooking> getUserBookings(long userId);
 
+    List<List<Booking>> getUserBookingsGroupedByAmenity(long userId);
     boolean deleteBooking(long bookingId);
-    public List<List<Booking>> getUserBookingsGroupedByAmenity(long userId);
+
+    boolean deleteBookings(List<Long> bookingIds);
 }

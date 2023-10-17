@@ -1,10 +1,9 @@
 package ar.edu.itba.paw.models;
 
-import enums.Language;
-import enums.UserRole;
+import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.UserRole;
 
 import java.util.Date;
-import java.util.List;
 
 public class User {
     private final long userId;
