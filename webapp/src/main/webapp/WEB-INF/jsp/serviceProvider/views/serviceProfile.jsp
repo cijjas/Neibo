@@ -38,7 +38,14 @@
           <div class="f-c-c-c">
 
             <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileCard.jsp" %>
-            <%@ include file="/WEB-INF/jsp/serviceProvider/components/reviewButton.jsp" %>
+            <c:choose>
+              <c:when test='${loggedUser.role.toString() != "WORKER"}'>
+                <%@ include file="/WEB-INF/jsp/serviceProvider/components/reviewButton.jsp" %>
+              </c:when>
+              <c:otherwise>
+                <a class="cool-button" href="${pageContext.request.contextPath}/services/neighborhoods"><spring:message code="Post.verb"/></a>
+              </c:otherwise>
+            </c:choose>
             <%@ include file="/WEB-INF/jsp/serviceProvider/components/tabbedBox.jsp" %>
 
             <c:if test="${openEditProfileDialog == true}">

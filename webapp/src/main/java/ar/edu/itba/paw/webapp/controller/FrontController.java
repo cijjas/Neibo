@@ -874,4 +874,38 @@ public class FrontController {
         return mav;
     }
 
+    @RequestMapping(value = "/services/neighborhoods", method = RequestMethod.GET)
+    public ModelAndView workersNeighborhoods(
+            @ModelAttribute("neighborhoodForm") final NeighborhoodForm neighborhoodForm
+    ) {
+        ModelAndView mav = new ModelAndView("serviceProvider/views/neighborhoods");
+        long workerId = sessionUtils.getLoggedUser().getUserId();
+        mav.addObject("associatedNeighborhoods", nhws.getNeighborhoods(workerId));
+        mav.addObject("otherNeighborhoods", nhws.getOtherNeighborhoods(workerId));
+        System.out.println("associated hoods: " + nhws.getNeighborhoods(workerId));
+        System.out.println("other hoods: " + nhws.getOtherNeighborhoods(workerId));
+        return mav;
+    }
+
+    @RequestMapping(value = "/services/neighborhoods", method = RequestMethod.POST)
+    public ModelAndView addWorkerToNeighborhood(
+            @Valid @ModelAttribute("neighborhoodForm") final NeighborhoodForm neighborhoodForm,
+            final BindingResult errors
+    ) {
+        if(errors.hasErrors()) {
+            return workersNeighborhoods(neighborhoodForm);
+        }
+        long workerId = sessionUtils.getLoggedUser().getUserId();
+        nhws.addWorkerToNeighborhood(workerId, neighborhoodForm.getNeighborhoodId());
+        return new ModelAndView("redirect:/services/neighborhoods");
+    }
+
+    @RequestMapping(value = "/services/neighborhoods/remove/{id:\\d+}", method = RequestMethod.GET)
+    public ModelAndView removeWorkerFromNeighborhood(
+            @PathVariable(value = "id") long neighborhoodId
+    ) {
+        long workerId = sessionUtils.getLoggedUser().getUserId();
+        nhws.removeWorkerFromNeighborhood(workerId, neighborhoodId);
+        return new ModelAndView("redirect:/services/neighborhoods");
+    }
 }

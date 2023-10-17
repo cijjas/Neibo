@@ -11,6 +11,7 @@ import ar.edu.itba.paw.models.Worker;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,21 +26,23 @@ public class WorkerServiceImpl implements WorkerService {
     private final ProfessionWorkerDao professionWorkerDao;
     private final UserDao userDao;
     private final ImageService imageService;
+    private final PasswordEncoder passwordEncoder;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerServiceImpl.class);
 
     @Autowired
-    public WorkerServiceImpl(WorkerDao workerDao, ProfessionWorkerDao professionWorkerDao, UserDao userDao, ImageService imageService) {
+    public WorkerServiceImpl(WorkerDao workerDao, ProfessionWorkerDao professionWorkerDao, UserDao userDao, ImageService imageService, PasswordEncoder passwordEncoder) {
         this.workerDao = workerDao;
         this.professionWorkerDao = professionWorkerDao;
         this.userDao = userDao;
         this.imageService = imageService;
+        this.passwordEncoder = passwordEncoder;
     }
     // ---------------------------------------------- WORKERS INSERT -----------------------------------------------------
     @Override
     public Worker createWorker(String mail, String name, String surname, String password, int identification, String phoneNumber, String address, Language language, long[] professionIds, String businessName) {
         LOGGER.info("Creating Worker with mail {}", mail);
-        User user = userDao.createUser(mail, password, name, surname, 0, language, false, UserRole.WORKER, identification);
+        User user = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, 0, language, false, UserRole.WORKER, identification);
         Worker worker = workerDao.createWorker(user.getUserId(), phoneNumber, address, businessName);
         for (long professionId : professionIds) {
             professionWorkerDao.addWorkerProfession(user.getUserId(), professionId);

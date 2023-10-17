@@ -5,10 +5,13 @@ import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodWorkerService;
+import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.enums.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +33,7 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
         this.neighborhoodDao = neighborhoodDao;
     }
 
-    // --------------------------------------- NIEGHBORHOODWORKERS SELECT ------------------------------------------
+    // --------------------------------------- NIEGHBORHOODWORKERS INSERT ------------------------------------------
     @Override
     public void addWorkerToNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Adding Worker {} to Neighborhood {}", workerId, neighborhoodId);
@@ -40,6 +43,27 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
         User worker = userDao.findUserById(workerId).orElse(null);
         assert worker != null;
         emailService.sendNewUserMail(neighborhoodId, worker.getName(), UserRole.WORKER);
+    }
+
+    // --------------------------------------- NIEGHBORHOODWORKERS SELECT ------------------------------------------
+    @Override
+    public List<Neighborhood> getNeighborhoods(long workerId) {
+        LOGGER.info("Getting Neighborhoods for Worker {}", workerId);
+        return neighborhoodWorkerDao.getNeighborhoods(workerId);
+    }
+
+    @Override
+    public List<Neighborhood> getOtherNeighborhoods(long workerId) {
+        LOGGER.info("Getting Other Neighborhoods for Worker {}", workerId);
+        List<Neighborhood> allNeighborhoods = neighborhoodDao.getNeighborhoods();
+        List<Neighborhood> workerNeighborhoods = neighborhoodWorkerDao.getNeighborhoods(workerId);
+
+        for(Neighborhood neighborhood : workerNeighborhoods){
+            allNeighborhoods.removeIf(neighborhoodName -> neighborhoodName.getName().equals(neighborhood.getName()));
+        }
+        allNeighborhoods.removeIf(neighborhood -> neighborhood.getName().equals("Worker Neighborhood"));
+        allNeighborhoods.removeIf(neighborhood -> neighborhood.getName().equals("Rejected"));
+        return allNeighborhoods;
     }
 
     // --------------------------------------- NIEGHBORHOODWORKERS DELETE ------------------------------------------
