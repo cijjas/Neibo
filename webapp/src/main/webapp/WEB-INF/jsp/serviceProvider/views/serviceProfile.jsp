@@ -38,7 +38,19 @@
           <div class="f-c-c-c">
 
             <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileCard.jsp" %>
+            <%@ include file="/WEB-INF/jsp/serviceProvider/components/reviewButton.jsp" %>
             <%@ include file="/WEB-INF/jsp/serviceProvider/components/tabbedBox.jsp" %>
+
+            <c:if test="${openEditProfileDialog == true}">
+              <script>
+                document.getElementById("editDialog").style.display = "flex";
+              </script>
+            </c:if>
+            <c:if test="${openReviewDialog == true}">
+              <script>
+                document.getElementById("reviewDialog").style.display = "flex";
+              </script>
+            </c:if>
 
           </div>
         </div>
