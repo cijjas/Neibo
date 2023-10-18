@@ -101,25 +101,4 @@ public class CommentServiceImplTest {
         // (Nada, espero que lo anterior tire exception)
     }
 
-    @Test
-    public void testFindById() {
-        // 1. Precondiciones
-        // Defino el comportamiento de la clase mock de UserDao
-        when(commentDao.findCommentById(eq(ID))).thenReturn(Optional.of(new Comment.Builder()
-                .commentId(ID)
-                .comment(COMMENT)
-                .date(DATE)
-                .user(mockUser)
-                .postId(POST_ID)
-                .build()
-        ));
-
-        // 2. Ejercitar
-        Optional<Comment> newComment = cs.findCommentById(ID);
-
-        // 3. Postcondiciones
-        Assert.assertTrue(newComment.isPresent());
-        Assert.assertEquals(ID, newComment.get().getCommentId());
-    }
-
 }

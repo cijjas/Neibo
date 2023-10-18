@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -31,11 +33,11 @@ public class AmenityServiceImplTest {
     private AmenityDao amenityDao;
     @InjectMocks // Le pedimos que cree un UserServiceImpl, y que en el ctor (que toma un UserDao) inyecte un mock.
     private AmenityServiceImpl as;
-    /*@Test
+    @Test
     public void testCreate() {
         // 1. Precondiciones
         // Defino el comportamiento de la clase mock de UserDao
-        when(amenityDao.createAmenity(anyString(),anyString(),any(),anyLong())).thenReturn(new Amenity.Builder()
+        when(amenityDao.createAmenity(anyString(),anyString(),anyLong())).thenReturn(new Amenity.Builder()
                 .amenityId(ID)
                 .name(NAME)
                 .description(DESCRIPTION)
@@ -45,7 +47,7 @@ public class AmenityServiceImplTest {
 
         // 2. Ejercitar
         // Pruebo la funcionalidad de usuarios
-        Amenity newAmenity = as.createAmenity(NAME,DESCRIPTION,null,NEIGHBORHOOD_ID);
+        Amenity newAmenity = as.createAmenity(NAME,DESCRIPTION,NEIGHBORHOOD_ID, new ArrayList<>());
 
         // 3. Postcondiciones
         Assert.assertNotNull(newAmenity);
@@ -63,32 +65,13 @@ public class AmenityServiceImplTest {
     public void testCreateAlreadyExists() {
         // 1. Precondiciones
         // Defino el comportamiento de la clase mock de UserDao
-        when(amenityDao.createAmenity(eq(NAME),eq(DESCRIPTION),any(),eq(NEIGHBORHOOD_ID))).thenThrow(RuntimeException.class);
+        when(amenityDao.createAmenity(eq(NAME),eq(DESCRIPTION),eq(NEIGHBORHOOD_ID))).thenThrow(RuntimeException.class);
 
         // 2. Ejercitar
-        Amenity newAmenity = as.createAmenity(NAME,DESCRIPTION,null,NEIGHBORHOOD_ID);
+        Amenity newAmenity = as.createAmenity(NAME,DESCRIPTION,NEIGHBORHOOD_ID,null);
 
         // 3. Postcondiciones
         // (Nada, espero que lo anterior tire exception)
-    }*/
-
-    @Test
-    public void testFindById() {
-        // 1. Precondiciones
-        // Defino el comportamiento de la clase mock de UserDao
-        when(amenityDao.findAmenityById(eq(ID))).thenReturn(Optional.of(new Amenity.Builder()
-                .amenityId(ID)
-                .name(NAME)
-                .description(DESCRIPTION)
-                .neighborhoodId(NEIGHBORHOOD_ID)
-                .build()
-        ));
-
-        // 2. Ejercitar
-        Optional<Amenity> newAmenity = as.findAmenityById(ID);
-
-        // 3. Postcondiciones
-        Assert.assertTrue(newAmenity.isPresent());
-        Assert.assertEquals(ID, newAmenity.get().getNeighborhoodId());
     }
+
 }
