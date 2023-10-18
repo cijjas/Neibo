@@ -90,21 +90,24 @@
                         </div>
 
 
-                        <div class="w-50">
-                            <div class="tags-input w-100">
-                                <c:set var="val"><spring:message code="EnterATag"/></c:set>
-                                <input id="niakaniaka" type="hidden" value="${val}"/>
-                                <label for="tag-input1" class="w-100">
-                                    <input type="text" id="tag-input1">
-                                </label>
-                                <form:label path="tags">
-                                    <form:input type="hidden" name="tags" id="tags-input" value="" path="tags"/>
-                                    <div style="text-align: center">
-                                        <form:errors path="tags" cssClass="error" element="p"/>
-                                    </div>
-                                </form:label>
+                        <c:if test="${loggedUser.role.toString() != 'WORKER'}">
+                            <div class="w-50">
+                                <div class="tags-input w-100">
+                                    <c:set var="val"><spring:message code="EnterATag"/></c:set>
+                                    <input id="niakaniaka" type="hidden" value="${val}"/>
+                                    <label for="tag-input1" class="w-100">
+                                        <input type="text" id="tag-input1">
+                                    </label>
+                                    <form:label path="tags">
+                                        <form:input type="hidden" name="tags" id="tags-input" value="" path="tags"/>
+                                        <div style="text-align: center">
+                                            <form:errors path="tags" cssClass="error" element="p"/>
+                                        </div>
+                                    </form:label>
+                                </div>
                             </div>
-                        </div>
+                        </c:if>
+
 
                     </div>
 
