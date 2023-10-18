@@ -38,7 +38,7 @@ Iñaki Bengolea
 > Estas son algunas de las utilidades más grandes que ofrece la aplicación para conocerla mejor utilice las credenciales de abajo para ingresar y probarla.
 
 
-# User credentials
+# User credentials by neighborhood
 
 > [!INFO]
 > There are 4 access levels
@@ -47,18 +47,41 @@ Iñaki Bengolea
 > - Unverified neighbors
 > - Service providers/ workers
 >
-> The accounts provided are from the Martindale neighborhood.
+> The accounts provided are from the Martindale neighborhood. Each of the accounts has a corresponding gmail account for actual mails.
 
-## Martindale
 
+## g-mail accounts
+
+### 1
+- **Email**: verifiedneibo@gmail.com
+- **Password**: verifiedneibo2023b-02
+---
+### 2
+- **Email**: unverifiedneibo@gmail.com
+- **Password**: unverifiedneibo2023b-02
+---
+### 3
+- **Email**: moderatorneibo@gmail.com
+- **Password**: moderatorneibo2023b-02
+---
+### 4
+- **Email**: workerneibo@gmail.com
+- **Password**: workerneibo2023b-02
+
+## neibo accounts ( in Martindale)
+
+### 1
 - **Email**: verifiedneibo@gmail.com
 - **Password**: verifiedneibo
-
+--- 
+### 2
 - **Email**: unverifiedneibo@gmail.com
 - **Password**: unverifiedneibo
-
+---
+### 3
 - **Email**: moderatorneibo@gmail.com
 - **Password**: moderatorneibo
-
+---
+### 4
 - **Email**: workerneibo@gmail.com
 - **Password**: workerneibo
