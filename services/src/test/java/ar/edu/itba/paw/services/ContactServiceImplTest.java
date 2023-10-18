@@ -75,22 +75,4 @@ public class ContactServiceImplTest {
         // (Nada, espero que lo anterior tire exception)
     }
 
-//    @Test
-//    public void testFindById() {
-//        // 1. Precondiciones
-//        // Defino el comportamiento de la clase mock de UserDao
-//        when(contactDao.(eq(ID))).thenReturn(Optional.of(new Neighborhood.Builder()
-//                .neighborhoodId(ID)
-//                .name(NAME)
-//                .build()
-//        ));
-//
-//        // 2. Ejercitar
-//        Optional<Neighborhood> newNeighborhood = ns.findNeighborhoodById(ID);
-//
-//        // 3. Postcondiciones
-//        Assert.assertTrue(newNeighborhood.isPresent());
-//        Assert.assertEquals(ID, newNeighborhood.get().getNeighborhoodId());
-//    }
-
 }
