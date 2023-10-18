@@ -19,14 +19,14 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class NeighborhoodDaoImplTest {
 
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
 
     private JdbcTemplate jdbcTemplate;
     private NeighborhoodDaoImpl neighborhoodDao;
@@ -56,7 +56,7 @@ public class NeighborhoodDaoImplTest {
     @Test
     public void testFindNeighborhoodByValidId() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
+        long nhKey = testInserter.createNeighborhood();
 
         // Exercise
         Optional<Neighborhood> nh = neighborhoodDao.findNeighborhoodById(nhKey);
@@ -80,7 +80,7 @@ public class NeighborhoodDaoImplTest {
     @Test
     public void testFindNeighborhoodByValidName() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood(NEIGHBORHOOD_NAME);
+        long nhKey = testInserter.createNeighborhood(NEIGHBORHOOD_NAME);
 
         // Exercise
         Optional<Neighborhood> nh = neighborhoodDao.findNeighborhoodByName(NEIGHBORHOOD_NAME);
@@ -104,7 +104,7 @@ public class NeighborhoodDaoImplTest {
     @Test
     public void testGetNeighborhoods() {
         // Pre Conditions
-        testInsertionUtils.createNeighborhood();
+        testInserter.createNeighborhood();
 
         // Exercise
         neighborhoodDao.getNeighborhoods();

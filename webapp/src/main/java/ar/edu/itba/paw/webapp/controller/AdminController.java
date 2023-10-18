@@ -174,11 +174,17 @@ public class AdminController {
     // ------------------------------------- AMENITIES --------------------------------------
 
     @RequestMapping(value = "/amenities", method = RequestMethod.GET)
-    public ModelAndView adminAmenities() {
+    public ModelAndView adminAmenities(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
         ModelAndView mav = new ModelAndView("admin/views/amenitiesPanel");
 
-        List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId());
+        List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId(), page, size);
 
+        System.out.println(as.getTotalAmenitiesPages(sessionUtils.getLoggedUser().getNeighborhoodId(), size));
+
+        mav.addObject("totalPages", as.getTotalAmenitiesPages(sessionUtils.getLoggedUser().getNeighborhoodId(), size));
         mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
         mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
         mav.addObject("amenities", amenities);

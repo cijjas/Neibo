@@ -326,8 +326,8 @@ public class FrontController {
 
         String contextPath = "/posts/" + postId;
 
-        List<Comment> commentList = cs.findCommentsByPostId(postId, page, size);
-        int totalPages = cs.getTotalPostPages(postId, size);
+        List<Comment> commentList = cs.getCommentsByPostId(postId, page, size);
+        int totalPages = cs.getTotalCommentPages(postId, size);
 
         mav.addObject("comments", commentList);
         mav.addObject("page", page);
@@ -506,13 +506,16 @@ public class FrontController {
 
     @RequestMapping(value = "/amenities", method = RequestMethod.GET)
     public ModelAndView amenities(
-            @ModelAttribute("reservationForm") final ReservationForm reservationForm
+            @ModelAttribute("reservationForm") final ReservationForm reservationForm,
+            @RequestParam(value = "page", defaultValue = "1", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) int size
     ) {
 
         ModelAndView mav = new ModelAndView("views/amenities");
-        List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId());
+        List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId(), page, size);
 
 
+        mav.addObject("totalPages", as.getTotalAmenitiesPages(sessionUtils.getLoggedUser().getNeighborhoodId(), size));
         mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
         mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
         mav.addObject("amenities", amenities);
@@ -524,10 +527,12 @@ public class FrontController {
     @RequestMapping(value = "/amenities", method = RequestMethod.POST)
     public ModelAndView amenities(
             @Valid @ModelAttribute("reservationForm") final ReservationForm reservationForm,
-            final BindingResult errors
+            final BindingResult errors,
+            @RequestParam(value = "page", defaultValue = "1", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) int size
     ) {
         if (errors.hasErrors()) {
-            return amenities(reservationForm);
+            return amenities(reservationForm, page, size);
         }
         ModelAndView mav = new ModelAndView("redirect:/reservation");
         mav.addObject("amenityId", reservationForm.getAmenityId());

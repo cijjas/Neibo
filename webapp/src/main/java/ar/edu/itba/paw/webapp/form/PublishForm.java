@@ -56,7 +56,7 @@ public class PublishForm {
         return imageFile;
     }
 
-    public void setImage(MultipartFile image) {
+    public void setImageFile(MultipartFile image) {
         this.imageFile = image;
     }
 

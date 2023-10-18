@@ -23,7 +23,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class UserDaoImplTest {
 
@@ -38,7 +38,7 @@ public class UserDaoImplTest {
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private UserDao userDao;
     private BookingDao bookingDao;
@@ -74,7 +74,7 @@ public class UserDaoImplTest {
     @Test
     public void testCreateUser() {
         // Pre Conditions
-        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
 
         // Exercise
         User createdUser = userDao.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, ROLE, ID);
@@ -95,8 +95,8 @@ public class UserDaoImplTest {
     @Test
     public void testFindUserById() {
         // Pre Conditions
-        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, ROLE, ID);
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
+        uKey1 = testInserter.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, ROLE, ID);
 
         // Exercise
         Optional<User> maybeUser = userDao.findUserById(uKey1);
@@ -119,8 +119,8 @@ public class UserDaoImplTest {
     @Test
     public void testFindUserByMail() {
         // Pre Conditions
-        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
+        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
 
         // Exercise
         Optional<User> maybeUser = userDao.findUserByMail(USER_MAIL_1);
@@ -143,9 +143,9 @@ public class UserDaoImplTest {
     @Test
     public void testSetUserValues() {
         // Pre Conditions
-        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
-        long iKey = testInsertionUtils.createImage();
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
+        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
+        long iKey = testInserter.createImage();
 
         // Exercise
         userDao.setUserValues(uKey1, PASSWORD, NAME, SURNAME, LANGUAGE, DARK_MODE, iKey, ROLE, ID, nhKey1);
@@ -172,11 +172,11 @@ public class UserDaoImplTest {
     @Test
     public void testIsNotAttending() {
         // Pre Conditions
-        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
-        long tKey1 = testInsertionUtils.createTime();
-        long tKey2 = testInsertionUtils.createTime();
-        long eKey = testInsertionUtils.createEvent(nhKey1, tKey1, tKey2);
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
+        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
+        long tKey1 = testInserter.createTime();
+        long tKey2 = testInserter.createTime();
+        long eKey = testInserter.createEvent(nhKey1, tKey1, tKey2);
 
         // Exercise
         boolean isAttending = userDao.isAttending(eKey, uKey1);
@@ -218,12 +218,12 @@ public class UserDaoImplTest {
     @Test
     public void testGetNeighborsSubscribedByPostId() {
         // Pre Conditions
-        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
-        long chKey = testInsertionUtils.createChannel();
-        long iKey = testInsertionUtils.createImage();
-        long pKey = testInsertionUtils.createPost(uKey1, chKey, iKey);
-        testInsertionUtils.createSubscription(uKey1, pKey);
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
+        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey1, chKey, iKey);
+        testInserter.createSubscription(uKey1, pKey);
 
         // Exercise
         List<User> subscribers = userDao.getNeighborsSubscribedByPostId(pKey);
@@ -236,11 +236,11 @@ public class UserDaoImplTest {
     @Test
     public void testGetNoNeighborsSubscribedByPostId() {
         // Pre Conditions
-        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
-        long chKey = testInsertionUtils.createChannel();
-        long iKey = testInsertionUtils.createImage();
-        long pKey = testInsertionUtils.createPost(uKey1, chKey, iKey);
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
+        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey1, chKey, iKey);
 
         // Exercise
         List<User> subscribers = userDao.getNeighborsSubscribedByPostId(pKey);
@@ -300,12 +300,12 @@ public class UserDaoImplTest {
 
     private void populateUsers() {
         // Pre Conditions
-        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
-        nhKey2 = testInsertionUtils.createNeighborhood(NH_NAME_2);
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
+        nhKey2 = testInserter.createNeighborhood(NH_NAME_2);
 
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, UserRole.NEIGHBOR, ID);
-        uKey2 = testInsertionUtils.createUser(USER_MAIL_2, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, UserRole.NEIGHBOR, ID);
-        uKey3 = testInsertionUtils.createUser(USER_MAIL_3, PASSWORD, NAME, SURNAME, nhKey2, LANGUAGE, DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, ID);
-        uKey4 = testInsertionUtils.createUser(USER_MAIL_4, PASSWORD, NAME, SURNAME, nhKey2, LANGUAGE, DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, ID);
+        uKey1 = testInserter.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, UserRole.NEIGHBOR, ID);
+        uKey2 = testInserter.createUser(USER_MAIL_2, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, UserRole.NEIGHBOR, ID);
+        uKey3 = testInserter.createUser(USER_MAIL_3, PASSWORD, NAME, SURNAME, nhKey2, LANGUAGE, DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, ID);
+        uKey4 = testInserter.createUser(USER_MAIL_4, PASSWORD, NAME, SURNAME, nhKey2, LANGUAGE, DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, ID);
     }
 }

@@ -18,14 +18,14 @@ import javax.sql.DataSource;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class SubscriptionDaoImplTest {
 
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private SubscriptionDao subscriptionDao;
 
@@ -39,11 +39,11 @@ public class SubscriptionDaoImplTest {
     @Test
     public void testCreateSubscription() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        long chKey = testInsertionUtils.createChannel();
-        long iKey = testInsertionUtils.createImage();
-        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
         subscriptionDao.createSubscription(uKey, pKey);

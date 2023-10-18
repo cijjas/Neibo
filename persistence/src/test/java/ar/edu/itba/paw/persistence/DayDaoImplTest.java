@@ -20,14 +20,14 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class DayDaoImplTest {
 
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private DayDao dayDao;
 
@@ -55,7 +55,7 @@ public class DayDaoImplTest {
     @Test
     public void testFindDayById() {
         // Pre Conditions
-        long dayKey = testInsertionUtils.createDay();
+        long dayKey = testInserter.createDay();
 
         // Exercise
         Optional<Day> foundDay = dayDao.findDayById(dayKey);

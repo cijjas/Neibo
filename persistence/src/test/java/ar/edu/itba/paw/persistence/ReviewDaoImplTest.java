@@ -21,14 +21,14 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ReviewDaoImplTest {
 
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private ReviewDao reviewDao;
 
@@ -51,12 +51,12 @@ public class ReviewDaoImplTest {
     @Test
     public void testCreateReview() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInsertionUtils.createUser(REVIEWER_MAIL, nhKey);
-        long pKey = testInsertionUtils.createProfession();
-        testInsertionUtils.createWorker(uKey);
-        testInsertionUtils.createWorkerProfession(uKey, pKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
+        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long pKey = testInserter.createProfession();
+        testInserter.createWorker(uKey);
+        testInserter.createWorkerProfession(uKey, pKey);
 
         // Exercise
         Review createdReview = reviewDao.createReview(uKey, uKey2, RATING, REVIEW_TEXT);
@@ -73,13 +73,13 @@ public class ReviewDaoImplTest {
     @Test
     public void testGetReview() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInsertionUtils.createUser(REVIEWER_MAIL, nhKey);
-        long pKey = testInsertionUtils.createProfession();
-        testInsertionUtils.createWorker(uKey);
-        testInsertionUtils.createWorkerProfession(uKey, pKey);
-        long rKey = testInsertionUtils.createReview(uKey, uKey2);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
+        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long pKey = testInserter.createProfession();
+        testInserter.createWorker(uKey);
+        testInserter.createWorkerProfession(uKey, pKey);
+        long rKey = testInserter.createReview(uKey, uKey2);
 
         // Exercise
         Review retrievedReview = reviewDao.getReview(rKey);
@@ -91,14 +91,14 @@ public class ReviewDaoImplTest {
     @Test
     public void testGetReviews() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInsertionUtils.createUser(REVIEWER_MAIL, nhKey);
-        long pKey = testInsertionUtils.createProfession();
-        testInsertionUtils.createWorker(uKey);
-        testInsertionUtils.createWorkerProfession(uKey, pKey);
-        testInsertionUtils.createReview(uKey, uKey2, RATING_1, REVIEW_1);
-        testInsertionUtils.createReview(uKey, uKey2, RATING_2, REVIEW_2);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
+        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long pKey = testInserter.createProfession();
+        testInserter.createWorker(uKey);
+        testInserter.createWorkerProfession(uKey, pKey);
+        testInserter.createReview(uKey, uKey2, RATING_1, REVIEW_1);
+        testInserter.createReview(uKey, uKey2, RATING_2, REVIEW_2);
 
         // Exercise
         List<Review> reviews = reviewDao.getReviews(uKey);
@@ -111,14 +111,14 @@ public class ReviewDaoImplTest {
     @Test
     public void testGetAvgRating() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInsertionUtils.createUser(REVIEWER_MAIL, nhKey);
-        long pKey = testInsertionUtils.createProfession();
-        testInsertionUtils.createWorker(uKey);
-        testInsertionUtils.createWorkerProfession(uKey, pKey);
-        testInsertionUtils.createReview(uKey, uKey2, RATING_1, REVIEW_1);
-        testInsertionUtils.createReview(uKey, uKey2, RATING_2, REVIEW_2);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
+        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long pKey = testInserter.createProfession();
+        testInserter.createWorker(uKey);
+        testInserter.createWorkerProfession(uKey, pKey);
+        testInserter.createReview(uKey, uKey2, RATING_1, REVIEW_1);
+        testInserter.createReview(uKey, uKey2, RATING_2, REVIEW_2);
 
         // Exercise
         Optional<Float> maybeAvgRating = reviewDao.getAvgRating(uKey);
@@ -131,14 +131,14 @@ public class ReviewDaoImplTest {
     @Test
     public void testGetReviewsCount() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInsertionUtils.createUser(REVIEWER_MAIL, nhKey);
-        long pKey = testInsertionUtils.createProfession();
-        testInsertionUtils.createWorker(uKey);
-        testInsertionUtils.createWorkerProfession(uKey, pKey);
-        testInsertionUtils.createReview(uKey, uKey2, RATING_1, REVIEW_1);
-        testInsertionUtils.createReview(uKey, uKey2, RATING_2, REVIEW_2);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
+        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long pKey = testInserter.createProfession();
+        testInserter.createWorker(uKey);
+        testInserter.createWorkerProfession(uKey, pKey);
+        testInserter.createReview(uKey, uKey2, RATING_1, REVIEW_1);
+        testInserter.createReview(uKey, uKey2, RATING_2, REVIEW_2);
 
         // Exercise
         int count = reviewDao.getReviewsCount(uKey);
@@ -150,13 +150,13 @@ public class ReviewDaoImplTest {
     @Test
     public void testDeleteReview() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInsertionUtils.createUser(REVIEWER_MAIL, nhKey);
-        long pKey = testInsertionUtils.createProfession();
-        testInsertionUtils.createWorker(uKey);
-        testInsertionUtils.createWorkerProfession(uKey, pKey);
-        long rKey = testInsertionUtils.createReview(uKey, uKey2, RATING_1, REVIEW_1);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
+        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long pKey = testInserter.createProfession();
+        testInserter.createWorker(uKey);
+        testInserter.createWorkerProfession(uKey, pKey);
+        long rKey = testInserter.createReview(uKey, uKey2, RATING_1, REVIEW_1);
 
         // Exercise
         boolean deleted = reviewDao.deleteReview(rKey);

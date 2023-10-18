@@ -20,7 +20,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class WorkerDaoImplTest {
 
@@ -31,7 +31,7 @@ public class WorkerDaoImplTest {
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private WorkerDao workerDao;
     private UserDao userDao;
@@ -76,8 +76,8 @@ public class WorkerDaoImplTest {
     @Test
     public void testCreateWorker() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(WORKER_MAIL_1, nhKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(WORKER_MAIL_1, nhKey);
 
         // Exercise
         Worker createdWorker = workerDao.createWorker(uKey, PHONE_NUMBER_1, ADDRESS_1, BUSINESS_1);
@@ -94,11 +94,11 @@ public class WorkerDaoImplTest {
     @Test
     public void testFindWorkerById() {
         // Pre Conditions
-        long pKey = testInsertionUtils.createProfession();
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(WORKER_MAIL_1, nhKey);
-        testInsertionUtils.createWorker(uKey);
-        testInsertionUtils.createWorkerProfession(uKey, pKey);
+        long pKey = testInserter.createProfession();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(WORKER_MAIL_1, nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createWorkerProfession(uKey, pKey);
 
         // Exercise
         Optional<Worker> foundWorker = workerDao.findWorkerById(uKey);
@@ -121,10 +121,10 @@ public class WorkerDaoImplTest {
     @Test
     public void testUpdateWorker() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(WORKER_MAIL_1, nhKey);
-        long iKey = testInsertionUtils.createImage();
-        testInsertionUtils.createWorker(uKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(WORKER_MAIL_1, nhKey);
+        long iKey = testInserter.createImage();
+        testInserter.createWorker(uKey);
 
         // Exercise
         workerDao.updateWorker(uKey, PHONE_NUMBER_1, ADDRESS_1, BUSINESS_1, iKey, BIO_1);
@@ -192,29 +192,29 @@ public class WorkerDaoImplTest {
          * Worker 4 -> Neighborhood 2, Profession 1  & Profession 2
          */
 
-        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
-        nhKey2 = testInsertionUtils.createNeighborhood(NH_NAME_2);
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
+        nhKey2 = testInserter.createNeighborhood(NH_NAME_2);
 
-        uKey1 = testInsertionUtils.createUser(WORKER_MAIL_1, nhKey1);
-        uKey2 = testInsertionUtils.createUser(WORKER_MAIL_2, nhKey1);
-        uKey3 = testInsertionUtils.createUser(WORKER_MAIL_3, nhKey2);
-        uKey4 = testInsertionUtils.createUser(WORKER_MAIL_4, nhKey2);
+        uKey1 = testInserter.createUser(WORKER_MAIL_1, nhKey1);
+        uKey2 = testInserter.createUser(WORKER_MAIL_2, nhKey1);
+        uKey3 = testInserter.createUser(WORKER_MAIL_3, nhKey2);
+        uKey4 = testInserter.createUser(WORKER_MAIL_4, nhKey2);
 
-        testInsertionUtils.addWorkerToNeighborhood(uKey1, nhKey1);
-        testInsertionUtils.addWorkerToNeighborhood(uKey2, nhKey1);
-        testInsertionUtils.addWorkerToNeighborhood(uKey3, nhKey2);
-        testInsertionUtils.addWorkerToNeighborhood(uKey4, nhKey2);
+        testInserter.addWorkerToNeighborhood(uKey1, nhKey1);
+        testInserter.addWorkerToNeighborhood(uKey2, nhKey1);
+        testInserter.addWorkerToNeighborhood(uKey3, nhKey2);
+        testInserter.addWorkerToNeighborhood(uKey4, nhKey2);
 
-        pKey1 = testInsertionUtils.createProfession(PROFESSION_1);
-        pKey2 = testInsertionUtils.createProfession(PROFESSION_2);
+        pKey1 = testInserter.createProfession(PROFESSION_1);
+        pKey2 = testInserter.createProfession(PROFESSION_2);
 
-        testInsertionUtils.createWorker(uKey1);
-        testInsertionUtils.createWorker(uKey2);
-        testInsertionUtils.createWorkerProfession(uKey2, pKey1);
-        testInsertionUtils.createWorker(uKey3);
-        testInsertionUtils.createWorkerProfession(uKey3, pKey2);
-        testInsertionUtils.createWorker(uKey4);
-        testInsertionUtils.createWorkerProfession(uKey4, pKey1);
-        testInsertionUtils.createWorkerProfession(uKey4, pKey2);
+        testInserter.createWorker(uKey1);
+        testInserter.createWorker(uKey2);
+        testInserter.createWorkerProfession(uKey2, pKey1);
+        testInserter.createWorker(uKey3);
+        testInserter.createWorkerProfession(uKey3, pKey2);
+        testInserter.createWorker(uKey4);
+        testInserter.createWorkerProfession(uKey4, pKey1);
+        testInserter.createWorkerProfession(uKey4, pKey2);
     }
 }

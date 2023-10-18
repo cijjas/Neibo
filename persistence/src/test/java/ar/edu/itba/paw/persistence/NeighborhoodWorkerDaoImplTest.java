@@ -18,14 +18,14 @@ import javax.sql.DataSource;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class NeighborhoodWorkerDaoImplTest {
 
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private NeighborhoodWorkerDao neighborhoodWorkerDao;
 
@@ -39,9 +39,9 @@ public class NeighborhoodWorkerDaoImplTest {
     @Test
     public void testAddWorkerToNeighborhood() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        testInsertionUtils.createWorker(uKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
 
         // Exercise
         neighborhoodWorkerDao.addWorkerToNeighborhood(uKey, nhKey);
@@ -53,9 +53,9 @@ public class NeighborhoodWorkerDaoImplTest {
     @Test
     public void testRemoveWorkerFromNeighborhood() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        testInsertionUtils.createWorker(uKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
         neighborhoodWorkerDao.addWorkerToNeighborhood(uKey, nhKey);
 
         // Exercise
@@ -68,9 +68,9 @@ public class NeighborhoodWorkerDaoImplTest {
     @Test
     public void testGetNeighborhoods() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        testInsertionUtils.createWorker(uKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
         neighborhoodWorkerDao.addWorkerToNeighborhood(uKey, nhKey);
 
         // Exercise

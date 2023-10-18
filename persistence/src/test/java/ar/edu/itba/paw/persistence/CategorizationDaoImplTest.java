@@ -17,14 +17,14 @@ import javax.sql.DataSource;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class CategorizationDaoImplTest {
 
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private CategorizationDaoImpl categorizationDao;
 
@@ -38,11 +38,11 @@ public class CategorizationDaoImplTest {
     @Test
     public void testCreateCategory() {
         // Pre Conditions
-        long chKey = testInsertionUtils.createChannel();
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        long pKey = testInsertionUtils.createPost(uKey, chKey, 0);
-        long tKey = testInsertionUtils.createTag();
+        long chKey = testInserter.createChannel();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long pKey = testInserter.createPost(uKey, chKey, 0);
+        long tKey = testInserter.createTag();
 
         // Exercise
         categorizationDao.createCategory(tKey, pKey);

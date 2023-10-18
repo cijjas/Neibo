@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class TestInsertionUtils {
+public class TestInserter {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert channelInsert;
@@ -53,7 +53,7 @@ public class TestInsertionUtils {
     private final SimpleJdbcInsert professionInsertion;
 
     @Autowired
-    public TestInsertionUtils(DataSource dataSource) {
+    public TestInserter(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
         this.channelInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName(Table.channels.name())

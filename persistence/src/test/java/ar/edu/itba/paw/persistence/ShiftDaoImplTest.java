@@ -24,14 +24,14 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ShiftDaoImplTest {
 
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private ShiftDao shiftDao;
     private DayDao dayDao;
@@ -51,8 +51,8 @@ public class ShiftDaoImplTest {
     @Test
     public void testCreateShift() {
         // Pre Conditions
-        long dKey = testInsertionUtils.createDay();
-        long tKey = testInsertionUtils.createTime();
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
 
         // Exercise
         Shift createdShift = shiftDao.createShift(dKey, tKey);
@@ -64,9 +64,9 @@ public class ShiftDaoImplTest {
     @Test
     public void testFindShiftById() {
         // Pre Conditions
-        long dKey = testInsertionUtils.createDay();
-        long tKey = testInsertionUtils.createTime();
-        long shiftKey = testInsertionUtils.createShift(dKey, tKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long shiftKey = testInserter.createShift(dKey, tKey);
 
         // Exercise
         Optional<Shift> foundShift = shiftDao.findShiftById(shiftKey);
@@ -89,9 +89,9 @@ public class ShiftDaoImplTest {
     @Test
     public void testFindShiftId() {
         // Pre Conditions
-        long dKey = testInsertionUtils.createDay();
-        long tKey = testInsertionUtils.createTime();
-        testInsertionUtils.createShift(dKey, tKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        testInserter.createShift(dKey, tKey);
 
         // Exercise
         Optional<Shift> foundShift = shiftDao.findShiftId(tKey, dKey);
@@ -114,12 +114,12 @@ public class ShiftDaoImplTest {
     @Test
     public void testGetShifts() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long aKey = testInsertionUtils.createAmenity(nhKey);
-        long dKey = testInsertionUtils.createDay();
-        long tKey = testInsertionUtils.createTime();
-        long sKey = testInsertionUtils.createShift(dKey, tKey);
-        testInsertionUtils.createAvailability(aKey, sKey);
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        testInserter.createAvailability(aKey, sKey);
 
         // Exercise
         List<Shift> shifts = shiftDao.getShifts(aKey, dKey, Date.valueOf(DATE));

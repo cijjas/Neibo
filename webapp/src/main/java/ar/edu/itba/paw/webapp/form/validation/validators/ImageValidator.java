@@ -16,19 +16,17 @@ public class ImageValidator implements ConstraintValidator<ImageConstraint, Mult
 
     @Override
     public boolean isValid(MultipartFile multipartFile, ConstraintValidatorContext constraintValidatorContext) {
-        return true ;
-//        if (multipartFile.isEmpty() ) {
-//            return true ;
-//        }
-//
-//
-//        if(multipartFile.getContentType().startsWith("image/")){
-//            return true;
-//        }
-//        constraintValidatorContext.disableDefaultConstraintViolation();
-//        constraintValidatorContext.buildConstraintViolationWithTemplate("Invalid imageddddd format")
-//                .addConstraintViolation();
-//        return false;
+        if (multipartFile.isEmpty() ) {
+            return true ;
+        }
+
+        if(multipartFile.getContentType().startsWith("image/")){
+            return true;
+        }
+        constraintValidatorContext.disableDefaultConstraintViolation();
+       constraintValidatorContext.buildConstraintViolationWithTemplate("Invalid image format")
+                .addConstraintViolation();
+        return false;
     }
 
 

@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 import java.sql.Date;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class EventDaoImplTest {
 
@@ -25,7 +25,7 @@ public class EventDaoImplTest {
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private EventDaoImpl eventDao;
 

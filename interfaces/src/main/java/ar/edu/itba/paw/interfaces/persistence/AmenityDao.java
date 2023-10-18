@@ -18,7 +18,9 @@ public interface AmenityDao {
 
     Optional<Amenity> findAmenityById(long amenityId);
 
-    List<Amenity> getAmenities(long neighborhoodId);
+    List<Amenity> getAmenities(long neighborhoodId, int page, int size);
+
+    int getAmenitiesCount(long neighborhoodId);
 
     // --------------------------------------------- AMENITIES DELETE --------------------------------------------------
 
