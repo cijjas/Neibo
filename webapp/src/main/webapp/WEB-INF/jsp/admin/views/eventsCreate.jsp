@@ -31,7 +31,6 @@
                 <div class="divider"></div>
                 <!-- Post Creation Form -->
                 <form:form method="post" action="add-event" modelAttribute="eventForm" enctype="multipart/form-data">
-                    <form:errors cssClass="error" element="p"/>
 
                     <div class="form-column" style="margin-top:1rem;">
                         <div class="form-group">
@@ -73,6 +72,8 @@
                                 <form:input path="endTime" type="time" id="endTime" required="required"/>
                                 <form:errors path="endTime" cssClass="error" element="p"/>
                             </div>
+                            <form:errors cssClass="error" element="p"/>
+
                         </div>
                     </div>
 

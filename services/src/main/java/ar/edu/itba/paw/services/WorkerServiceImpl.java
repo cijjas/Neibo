@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.interfaces.exceptions.UnexpectedException;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
@@ -47,9 +48,18 @@ public class WorkerServiceImpl implements WorkerService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Worker createWorker(String mail, String name, String surname, String password, int identification, String phoneNumber, String address, Language language, long[] professionIds, String businessName) {
+    public Worker createWorker(String mail, String name, String surname, String password, String identification, String phoneNumber, String address, Language language, long[] professionIds, String businessName) {
         LOGGER.info("Creating Worker with mail {}", mail);
-        User user = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, 0, language, false, UserRole.WORKER, identification);
+
+        int id = 0;
+        try {
+            id = Integer.parseInt(identification);
+        } catch (NumberFormatException e) {
+            LOGGER.error("Unexpected error while parsing the identification");
+            throw new UnexpectedException("Error while creating worker");
+        }
+
+        User user = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, 0, language, false, UserRole.WORKER, id);
         Worker worker = workerDao.createWorker(user.getUserId(), phoneNumber, address, businessName);
         for (long professionId : professionIds) {
             professionWorkerDao.addWorkerProfession(user.getUserId(), professionId);

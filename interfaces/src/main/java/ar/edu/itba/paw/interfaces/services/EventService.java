@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface EventService {
 
-    Event createEvent(String name, String description, Date date, Time startTime, Time endTime, long neighborhoodId);
+    Event createEvent(String name, String description, Date date, String startTime, String endTime, long neighborhoodId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

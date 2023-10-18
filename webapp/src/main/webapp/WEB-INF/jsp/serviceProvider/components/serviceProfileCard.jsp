@@ -54,6 +54,11 @@
         <div class="card-footer">
             <c:set var="averageRating" value="${averageRating}" />
             <fmt:formatNumber var="formattedRating" value="${averageRating}" pattern="#,##0.00" />
+            <c:choose>
+                <c:when test="${averageRating == 0}">
+                    <c:set var="formattedRating" value="--" />
+                </c:when>
+            </c:choose>
             <div class="inner">
                 <div class="c-primary"><c:out value="${formattedRating}" /></div>
                 <div class="c-light-text"><spring:message code="Rating" /></div>

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -35,21 +37,34 @@ public class EventServiceImpl implements EventService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Event createEvent(String name, String description, Date date, Time startTime, Time endTime, long neighborhoodId) {
+    public Event createEvent(String name, String description, Date date, String startTime, String endTime, long neighborhoodId) {
         LOGGER.info("Creating Event {} for Neighborhood {}", name, neighborhoodId);
 
-        OptionalLong startTimeId = getTimeId(startTime);
-        OptionalLong endTimeId = getTimeId(endTime);
+        Time startTimeInTime = null;
+        Time endTimeInTime = null;
+        
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            java.util.Date parsedStartTime = sdf.parse(startTime);
+            java.util.Date parsedEndTime = sdf.parse(endTime);
+            startTimeInTime = new Time(parsedStartTime.getTime());
+            endTimeInTime = new Time(parsedEndTime.getTime());
+        } catch (ParseException e) {
+            // Handle parsing exception
+            e.printStackTrace();
+        }
+        OptionalLong startTimeId = getTimeId(startTimeInTime);
+        OptionalLong endTimeId = getTimeId(endTimeInTime);
 
         if (startTimeId.isPresent() && endTimeId.isPresent()) {
             return eventDao.createEvent(name, description, date, startTimeId.getAsLong(), endTimeId.getAsLong(), neighborhoodId);
         } else {
             // Handle the case where one or both Time objects were not found
             if (!startTimeId.isPresent()) {
-                startTimeId = OptionalLong.of(timeDao.createTime(startTime).getTimeId());
+                startTimeId = OptionalLong.of(timeDao.createTime(startTimeInTime).getTimeId());
             }
             if (!endTimeId.isPresent()) {
-                endTimeId = OptionalLong.of(timeDao.createTime(endTime).getTimeId());
+                endTimeId = OptionalLong.of(timeDao.createTime(endTimeInTime).getTimeId());
             }
 
             return eventDao.createEvent(name, description, date, startTimeId.getAsLong(), endTimeId.getAsLong(), neighborhoodId);

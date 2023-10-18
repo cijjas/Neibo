@@ -175,6 +175,7 @@ public class MainController {
     @RequestMapping(value = "/update-darkmode-preference", method = RequestMethod.POST)
     public String updateDarkModePreference() {
         sessionUtils.clearLoggedUser();
+        sessionUtils.getLoggedUser();
         us.toggleDarkMode(sessionUtils.getLoggedUser().getUserId());
         return "redirect:/profile";
     }
@@ -185,6 +186,7 @@ public class MainController {
             HttpServletRequest request
     ) {
         sessionUtils.clearLoggedUser();
+        sessionUtils.getLoggedUser();
         request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, new Locale(language));
         us.toggleLanguage(sessionUtils.getLoggedUser().getUserId());
         String referer = request.getHeader("Referer");
@@ -457,13 +459,8 @@ public class MainController {
             mav.addObject("openWorkerSignupDialog", true);
             return mav;
         }
-        int identification = 0;
-        try {
-            identification = Integer.parseInt(workerSignupForm.getW_identification());
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        ws.createWorker(workerSignupForm.getW_mail(), workerSignupForm.getW_name(), workerSignupForm.getW_surname(), workerSignupForm.getW_password(), identification, workerSignupForm.getPhoneNumber(), workerSignupForm.getAddress(), Language.ENGLISH, workerSignupForm.getProfessionIds(), workerSignupForm.getBusinessName());
+
+        ws.createWorker(workerSignupForm.getW_mail(), workerSignupForm.getW_name(), workerSignupForm.getW_surname(), workerSignupForm.getW_password(), signupForm.getIdentification(), workerSignupForm.getPhoneNumber(), workerSignupForm.getAddress(), Language.ENGLISH, workerSignupForm.getProfessionIds(), workerSignupForm.getBusinessName());
         ModelAndView mav = new ModelAndView("redirect:/signup-worker");
         mav.addObject("successfullySignup", true);
         return mav;

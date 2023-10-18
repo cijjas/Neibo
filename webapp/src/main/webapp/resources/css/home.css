@@ -262,6 +262,7 @@
 .worker-blogpost {
     margin-bottom: 1.25rem;
     padding: 0;
+    max-height: 600px;
     width: 100%;
     background-color: var(--onbackground);
     border: 1px solid var(--text);
@@ -270,7 +271,6 @@
     overflow: hidden;
     transform: translateY(-4px);
     box-shadow: -3px 5px 0 0 var(--lighttext);
-
 }
 
 
@@ -318,10 +318,11 @@
 }
 
 .worker-post-description {
-    white-space: pre-wrap;
+    width: 100%;
     position: relative;
     color: var(--lighttext);
 }
+
 
 
 .post-header {

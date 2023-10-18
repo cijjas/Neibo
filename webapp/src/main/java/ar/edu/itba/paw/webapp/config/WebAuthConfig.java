@@ -55,7 +55,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/rejected").hasRole("REJECTED")
                 .antMatchers("/profile").permitAll()
                 .antMatchers("/").hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
-                .antMatchers("/complaints", "/announcements", "/amenities", "/information", "/reservation").hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
+                .antMatchers("/complaints", "/announcements", "/amenities", "/information", "/reservation", "/posts/**").hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
                 .antMatchers("/**").hasAnyRole("NEIGHBOR", "ADMINISTRATOR", "WORKER")
                 .and().formLogin()
                 .failureHandler(new CustomAuthenticationFailureHandler())

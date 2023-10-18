@@ -38,7 +38,7 @@ public class WorkerServiceImplTest {
     private final Language LANGUAGE = Language.ENGLISH;
     private final UserRole ROLE = UserRole.NEIGHBOR;
     private final Date CREATION_DATE = new Date(2023, 9, 11);
-    private final int IDENTIFICATION = 123456789;
+    private final String IDENTIFICATION = "123456789";
     private User mockUser;
     @Mock
     private WorkerDao workerDao;

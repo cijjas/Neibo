@@ -21,9 +21,9 @@ public class EventForm {
 
     private Date date;
 
-    private Time startTime;
+    private String startTime;
 
-    private Time endTime;
+    private String endTime;
 
     public String getName() {
         return name;
@@ -49,34 +49,20 @@ public class EventForm {
         this.date = date;
     }
 
-    public Time getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTimeString) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            java.util.Date parsedDate = sdf.parse(startTimeString);
-            this.startTime = new Time(parsedDate.getTime());
-        } catch (ParseException e) {
-            // Handle parsing exception
-            e.printStackTrace();
-        }
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
-    public Time getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTimeString) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            java.util.Date parsedDate = sdf.parse(endTimeString);
-            this.endTime = new Time(parsedDate.getTime());
-        } catch (ParseException e) {
-            // Handle parsing exception
-            e.printStackTrace();
-        }
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
 
