@@ -8,24 +8,26 @@
     <div class="f-c-c-c sticky" >
 
 
-        <div class="left-box " >
 
             <c:choose>
                 <c:when test='${loggedUser.role.toString() == "WORKER"}'>
-                    <div class="f-c-c-c">
-                        <a id="profileButton" href="${pageContext.request.contextPath}/service/profile/${loggedUser.userId}" class="cool-left-button  ${channel == 'Profile' ? 'active' : ''} f-r-sb-c">
-                            <i class="fas fa-bullhorn"></i>
-                            <spring:message code="Profile"/>
-                        </a>
-                        <a id="workerServicesButton" href="${pageContext.request.contextPath}/services" class="cool-left-button f-r-sb-c" >
-                            <i class="fa-solid fa-handshake-angle"></i> <spring:message code="Services"/>
-                        </a>
-                        <a id="neighborhoodsButton" href="${pageContext.request.contextPath}/services/neighborhoods" class="cool-left-button ${channel == 'Neighborhoods' ? 'active' : ''} f-r-sb-c" >
-                            <i class="fas fa-envelope"></i> <spring:message code="My.Neighborhoods"/>
-                        </a>
+                    <div class="left-box" >
+                        <div class="f-c-c-c">
+                            <a id="profileButton" href="${pageContext.request.contextPath}/service/profile/${loggedUser.userId}" class="cool-left-button  ${channel == 'Profile' ? 'active' : ''} f-r-sb-c">
+                                <i class="fas fa-bullhorn"></i>
+                                <spring:message code="Profile"/>
+                            </a>
+                            <a id="workerServicesButton" href="${pageContext.request.contextPath}/services" class="cool-left-button f-r-sb-c" >
+                                <i class="fa-solid fa-handshake-angle"></i> <spring:message code="Services"/>
+                            </a>
+                            <a id="neighborhoodsButton" href="${pageContext.request.contextPath}/services/neighborhoods" class="cool-left-button ${channel == 'Neighborhoods' ? 'active' : ''} f-r-sb-c" >
+                                <i class="fas fa-envelope"></i> <spring:message code="My.Neighborhoods"/>
+                            </a>
+                        </div>
                     </div>
                 </c:when>
                 <c:otherwise>
+                <div class="left-box" >
                     <div class="f-c-c-c">
                         <c:if test='${loggedUser.role.toString() == "ADMINISTRATOR"}'>
                             <a href="${pageContext.request.contextPath}/admin/publish">
@@ -61,11 +63,12 @@
                         </a>
 
                     </div>
+                </div>
+
                 </c:otherwise>
             </c:choose>
 
 
-        </div>
     </div>
 
 </div>

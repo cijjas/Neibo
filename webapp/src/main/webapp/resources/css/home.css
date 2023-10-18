@@ -469,7 +469,12 @@
     border-radius: var(--border-radius);
     transform: translateY(-4px) ;
     box-shadow: -3px 5px 0 0 var(--lighttext);
+    & .worker{
+        height: 400px;
+    }
 }
+
+
 
 .left-column-button {
     width: 100%;
