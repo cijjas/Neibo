@@ -38,6 +38,7 @@
                     </c:forEach>
                 </div>
                 <span class="c-light-text" style="margin-left: 10px;"> <c:out value="${worker.phoneNumber}"/></span>
+                <span class="c-light-text" style="margin-left: 10px;"> <c:out value="${worker.address}"/></span>
                 <p class="c-light-text mr-3 ml-3" style="text-align: center">
                     <c:out value="${worker.bio}"/>
                 </p>
@@ -105,22 +106,22 @@
                 <div class="w-75 f-c-c-c" style="gap: 10px">
                     <spring:message code="Business.name" var="businessPlaceholder"/>
                     <form:input path="businessName" class="cool-input" type="text"
-                                placeholder="${businessPlaceholder}"/>
+                                placeholder="${businessPlaceholder}" value="${worker.businessName}"/>
                     <form:errors path="businessName" cssClass="error" element="p"/>
 
                     <!-- Text Input 2 -->
                     <spring:message code="Description" var="descriptionPlaceholder"/>
-                    <form:input path="bio" class="cool-input" type="text" placeholder="${descriptionPlaceholder}"/>
+                    <form:input path="bio" class="cool-input" type="text" placeholder="${descriptionPlaceholder}" value="${worker.bio}"/>
                     <form:errors path="bio" cssClass="error" element="p"/>
 
                         <%--                    <!-- Phone Number Input -->--%>
                     <spring:message code="PhoneNumber" var="phonePlaceholder"/>
-                    <form:input path="phoneNumber" class="cool-input" type="tel" placeholder="${phonePlaceholder}"/>
+                    <form:input path="phoneNumber" class="cool-input" type="tel" placeholder="${phonePlaceholder}" value="${worker.phoneNumber}"/>
                     <form:errors path="phoneNumber" cssClass="error" element="p"/>
 
                         <%--                    <!-- Address Input -->       --%>
                     <spring:message code="Address" var="addressPlaceholder"/>
-                    <form:input path="address" class="cool-input" type="tel" placeholder="${addressPlaceholder}"/>
+                    <form:input path="address" class="cool-input" type="tel" placeholder="${addressPlaceholder}" value="${worker.address}"/>
                     <form:errors path="address" cssClass="error" element="p"/>
                 </div>
 
