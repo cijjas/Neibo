@@ -4,7 +4,7 @@
 
 <c:set var="currentUrl" value=""/>
 <c:set var="baseUrl"
-       value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}"/>
+       value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}"/>
 
 <div class="pagination">
     <c:url var="prevUrl" value="">
