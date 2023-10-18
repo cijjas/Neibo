@@ -27,6 +27,8 @@ public class EventServiceImplTest {
     private static final String NEIGHBORHOOD_NAME = "Varsovia";
     private static final Time START_TIME = new Time(12, 0, 0);
     private static final Time END_TIME = new Time(15, 0, 0);
+    private static final String START_TIME_STRING ="12:00";
+    private static final String END_TIME_STRING = "15:00";
     private static final long START_TIME_ID = 1;
     private static final long END_TIME_ID = 2;
 
@@ -62,7 +64,7 @@ public class EventServiceImplTest {
         );
 
         // 2. Exercise
-        Event newEvent = es.createEvent(NAME, DESCRIPTION, DATE, START_TIME, END_TIME, NEIGHBORHOOD_ID);
+        Event newEvent = es.createEvent(NAME, DESCRIPTION, DATE, START_TIME_STRING, END_TIME_STRING, NEIGHBORHOOD_ID);
 
         // 3. Postconditions
         Assert.assertNotNull(newEvent);
@@ -82,7 +84,7 @@ public class EventServiceImplTest {
         //when(eventDao.createEvent(eq(NAME),eq(DESCRIPTION),eq(DATE),eq(START_TIME_ID),eq(END_TIME_ID),eq(NEIGHBORHOOD_ID))).thenThrow(RuntimeException.class);
 
         // 2. Exercise
-        Event newEvent = es.createEvent(NAME, DESCRIPTION, DATE, START_TIME, END_TIME, NEIGHBORHOOD_ID);
+        Event newEvent = es.createEvent(NAME, DESCRIPTION, DATE, START_TIME_STRING, END_TIME_STRING, NEIGHBORHOOD_ID);
 
         // 3. Postconditions
     }
