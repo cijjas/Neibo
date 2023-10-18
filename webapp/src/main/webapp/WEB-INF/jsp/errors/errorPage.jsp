@@ -42,22 +42,49 @@
         </div>
 
         <p class="error-message m-b-20 m-t-40">
-            <span class="font-weight-bold"><spring:message code="Error"/>: </span>
+            <span class="font-weight-bold">
+                <c:out value="${errorCodeMessage}" />
+            </span>
             <c:choose>
                 <c:when test="${not empty errorMsg}">
                     <c:out value="${errorMsg}" />
-
                 </c:when>
                 <c:otherwise>
-                    <%= request.getAttribute("javax.servlet.error.message") %>
+                    <spring:message code="${requestScope['javax.servlet.error.status_code']}" />
                 </c:otherwise>
             </c:choose>
         </p>
 
 
-        <a href="${pageContext.request.contextPath}/" class="goback-button font-weight-bold"><spring:message code="GoBackToMainPage"/></a>
+        <a id="goback-button" class="goback-button font-weight-bold"><spring:message code="GoBackToMainPage"/></a>
 
     </div>
+
+<script>
+    async function getUserRole() {
+        try{
+            const response = await fetch('${pageContext.request.contextPath}/endpoint/role');
+            const role = await response.text();
+            if (response.status === 200) {
+                if (role === 'WORKER') {
+                    document.getElementById('goback-button').href = '${pageContext.request.contextPath}/services';
+                } else {
+                    document.getElementById('goback-button').href = '${pageContext.request.contextPath}/';
+                }
+            } else {
+                document.getElementById('goback-button').href = '${pageContext.request.contextPath}/';
+            }
+            return role;
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
+    // Call the async function when the page is loaded
+    window.addEventListener('load', () => {
+        getUserRole();
+    });
+</script>
 
 <%----%>
 </body>

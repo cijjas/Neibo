@@ -1,6 +1,5 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 
 <div class="container">
@@ -37,21 +36,22 @@
                 <p  class="c-light-text mr-3 ml-3" style="text-align: center">
                     <c:out value="${worker.bio}"/>
                 </p>
-                <a id="editProfileButton" onclick="openEditDialog()" class="cool-button cool-small on-bg font-weight-bold" style="width: 100px">
-                    <spring:message code="Edit"/>
-                    <i class="fa-solid fa-user-pen ml-1"></i>
-                </a>
+                <c:if test="${loggedUser.userId == worker.user.userId}">
+                    <a id="editProfileButton" onclick="openEditDialog()" class="cool-button cool-small on-bg font-weight-bold" style="width: 100px">
+                        <spring:message code="Edit"/>
+                        <i class="fa-solid fa-user-pen ml-1"></i>
+                    </a>
+                </c:if>
             </div>
 
         </div>
         <div class="card-footer">
             <div class="inner">
-                <c:set var="averageRating" value="${averageRating}" />
-                <fmt:formatNumber var="formattedRating" value="${averageRating}" pattern="#,##0.00" />
-                <div class="inner">
-                    <div class="c-primary"><c:out value="${formattedRating}" /></div>
-                    <div class="c-light-text"><spring:message code="Rating" /></div>
-                </div>
+                <div id="average-rating" class="c-primary"><c:out value="${averageRating}"/></div>
+                <div class="c-light-text"><spring:message code="Rating"/></div>
+                <script>
+                    const averageRating = document.getElementById('average-rating');
+                </script>
             </div>
             <div class="inner">
                 <div class="c-primary"><c:out value="${reviewsCount}"/></div>
@@ -82,55 +82,57 @@
 
 
 
+
 <div class="dialog" id="editDialog" style="display: none; ">
     <div class="dialog-content " style="background-color: var(--onbackground)">
         <div class="close-button" onclick="closeEditDialog()">
             <i class="fas fa-close"></i>
         </div>
-        <div class="title mb-2 mt-5 f-c-c-c" style="gap:5px">
+        <div class="title mb-2 mt-3 f-c-c-c" style="font-size: 20px">
             <spring:message code="EditProfile"/>
         </div>
 
-<%--        <form>--%>
+        <form:form method="post" action="edit" modelAttribute="editWorkerProfileForm" enctype="multipart/form-data">
+            <%--                <form:form method="post" action="calendar" modelAttribute="editWorkerProfileForm" enctype="multipart/form-data">--%>
+            <div class="f-c-c-c pl-3 pr-3 c-text" style="width:500px">
 
-            <div class="f-c-c-c pl-3 pr-3 c-text">
-
-                <form:form method="post" action="edit" modelAttribute="editWorkerProfileForm" enctype="multipart/form-data">
-<%--                <form:form method="post" action="calendar" modelAttribute="editWorkerProfileForm" enctype="multipart/form-data">--%>
-                    <form:errors cssClass="error" element="p"/>
-
-                    <form:label path="businessName" for="textInput1"><spring:message code="Business.name"/></form:label>
-                    <form:input path="businessName" class="cool-input" type="text" placeholder="Enter text 1"/>
+                <form:errors cssClass="error" element="p"/>
+                <div class="w-75 f-c-c-c" style="gap: 10px">
+                    <spring:message code="Business.name" var="businessPlaceholder"/>
+                    <form:input path="businessName" class="cool-input" type="text" placeholder="${businessPlaceholder}"/>
                     <form:errors path="businessName" cssClass="error" element="p"/>
 
                     <!-- Text Input 2 -->
-                    <form:label path="bio" for="textInput2"><spring:message code="Description"/></form:label>
-                    <form:input path="bio" class="cool-input" type="text" placeholder="Enter text 2"/>
+                    <spring:message code="Description" var="descriptionPlaceholder"/>
+                    <form:input path="bio" class="cool-input" type="text" placeholder="${descriptionPlaceholder}"/>
                     <form:errors path="bio" cssClass="error" element="p"/>
 
-<%--                    <!-- Phone Number Input -->--%>
-                    <form:label path="phoneNumber" for="phoneNumber"><spring:message code="PhoneNumber"/></form:label>
-                    <form:input path="phoneNumber" class="cool-input" type="tel" placeholder="Enter phone number"/>
+                        <%--                    <!-- Phone Number Input -->--%>
+                    <spring:message code="PhoneNumber" var="phonePlaceholder"/>
+                    <form:input path="phoneNumber" class="cool-input" type="tel" placeholder="${phonePlaceholder}"/>
                     <form:errors path="phoneNumber" cssClass="error" element="p"/>
 
-                    <%--                    <!-- Address Input -->       --%>
-                    <form:label path="address" for="address"><spring:message code="Address"/></form:label>
-                    <form:input path="address" class="cool-input" type="tel" placeholder="Enter address"/>
+                        <%--                    <!-- Address Input -->       --%>
+                    <spring:message code="Address" var="addressPlaceholder"/>
+                    <form:input path="address" class="cool-input" type="tel" placeholder="${addressPlaceholder}"/>
                     <form:errors path="address" cssClass="error" element="p"/>
+                </div>
 
-<%--                    <!-- Image Input 1 (for uploading an image file) -->--%>
-                    <form:label path="imageFile" for="imageInput1"><spring:message code="Background.image"/></form:label>
-                    <form:input path="imageFile" class="cool-input" type="file" accept="image/*"/>
-                    <form:errors path="imageFile" cssClass="error" element="p"/>
 
-                    <button onclick="submitEditProfileForm()" class="cool-button cool-small on-bg font-weight-bolder mb-4" style="width: 150px">
-                        <spring:message code="SaveChanges"/>
-                    </button>
-                </form:form>
+                    <%--                    <!-- Image Input 1 (for uploading an image file) -->--%>
+                <form:label path="imageFile" for="imageInput1"><spring:message code="Background.image"/></form:label>
+                <form:input path="imageFile" class="cool-input" type="file" accept="image/*"/>
+                <form:errors path="imageFile" cssClass="error" element="p"/>
 
+                <button onclick="submitEditProfileForm()" class="cool-button cool-small on-bg font-weight-bolder mb-4 mt-3" style="width: 150px">
+                    <spring:message code="SaveChanges"/>
+                </button>
             </div>
 
-<%--        </form>--%>
+        </form:form>
+
+
+        <%--        </form>--%>
 
     </div>
 </div>

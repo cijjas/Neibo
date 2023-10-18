@@ -17,7 +17,7 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class) // Le decimos a JUnit que corra los tests con el runner de Mockito
+@RunWith(MockitoJUnitRunner.class)
 public class ResourceServiceImplTest {
 
     MultipartFile mockImageFile;
@@ -27,22 +27,15 @@ public class ResourceServiceImplTest {
     private static final String TITLE = "Varsovia";
     private static final long NEIGHBORHOOD_ID = 1;
 
-
-    // private final UserServiceImpl us = new UserServiceImpl(null);
-    // Qué usamos como UserDao para el UserServiceImpl? No queremos conectarlo al Postgres de verdad, es una pérdida de
-    // tiempo escribir un propio, por ejemplo, InMemoryTestUserDao que guarde los usuarios en un mapa en memoria...
-    // Para esto generamos un mock con Mockito, y le pedimos que nos cree el UserServiceImpl inyectando la clase
-    // mock-eada:
-    @Mock // Le pedimos que nos genere una clase mock de UserDao
+    @Mock
     private ResourceDao resourceDao;
     @Mock
     private ImageService imageService;
-    @InjectMocks // Le pedimos que cree un UserServiceImpl, y que en el ctor (que toma un UserDao) inyecte un mock.
+    @InjectMocks
     private ResourceServiceImpl rs;
     @Test
     public void testCreate() {
-        // 1. Precondiciones
-        // Defino el comportamiento de la clase mock de UserDao
+        // 1. Preconditions
         when(resourceDao.createResource(anyLong(),anyString(),anyString(),anyLong())).thenReturn(new Resource.Builder()
                 .resourceId(ID)
                 .description(DESCRIPTION)
@@ -52,11 +45,10 @@ public class ResourceServiceImplTest {
                 .build()
         );
 
-        // 2. Ejercitar
-        // Pruebo la funcionalidad de usuarios
+        // 2. Exercise
         Resource newResource = rs.createResource(NEIGHBORHOOD_ID,TITLE,DESCRIPTION,mockImageFile);
 
-        // 3. Postcondiciones
+        // 3. Postconditions
         Assert.assertNotNull(newResource);
         Assert.assertEquals(newResource.getResourceId(), ID);
         Assert.assertEquals(newResource.getDescription(), DESCRIPTION);
@@ -64,9 +56,6 @@ public class ResourceServiceImplTest {
         Assert.assertEquals(newResource.getTitle(), TITLE);
         Assert.assertEquals(newResource.getNeighborhoodId(), NEIGHBORHOOD_ID);
 
-        // Verifico que se haya llamado create del UserDao una vez
-        // NUNCA HAGAN ESTO, PORQUE ESTAS PROBANDO EL UserServiceImpl QUE TE IMPORTA CÓMO EL USA EL UserDao
-        // Mockito.verify(userDao, times(1)).create(EMAIL, PASSWORD);
     }
 
 }

@@ -5,6 +5,7 @@ import ar.edu.itba.paw.enums.BaseNeighborhood;
 import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.Worker;
 import ar.edu.itba.paw.webapp.form.EditWorkerProfileForm;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
 import org.slf4j.Logger;
@@ -100,7 +101,7 @@ public class ServiceController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceController.class);
 
-    @RequestMapping(value = "/services/profile/{id:\\d+}", method = RequestMethod.GET)
+    @RequestMapping(value = "/profile/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView serviceProfile(
             @ModelAttribute("reviewForm") final ReviewForm reviewForm,
             @PathVariable(value = "id") long workerId,
@@ -121,13 +122,13 @@ public class ServiceController {
         mav.addObject("totalPages", ps.getTotalPages(BaseChannel.WORKERS.toString(), size, null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId));
         return mav;
     }
-    @RequestMapping(value = "/services/profile/{id:\\d+}", method = RequestMethod.POST)
+    @RequestMapping(value = "/profile/{id:\\d+}", method = RequestMethod.POST)
     public ModelAndView serviceProfile(
     ) {
         return new ModelAndView("serviceProvider/views/serviceProfile");
     }
 
-    @RequestMapping(value = "/services/profile/{id:\\d+}/review", method = RequestMethod.GET)
+    @RequestMapping(value = "/profile/{id:\\d+}/review", method = RequestMethod.GET)
     public ModelAndView createReview(
             @ModelAttribute("reviewForm") final ReviewForm reviewForm,
             @PathVariable(value = "id") int workerId,
@@ -146,7 +147,7 @@ public class ServiceController {
 
     }
 
-    @RequestMapping(value = "/services/profile/{id:\\d+}/review", method = RequestMethod.POST)
+    @RequestMapping(value = "/profile/{id:\\d+}/review", method = RequestMethod.POST)
     public ModelAndView createReview(
             @Valid @ModelAttribute("reviewForm") final ReviewForm reviewForm,
             final BindingResult errors,
@@ -167,7 +168,7 @@ public class ServiceController {
         return new ModelAndView("redirect:/services/profile/" + workerId);
     }
 
-    @RequestMapping(value = "/services/profile/edit", method = RequestMethod.GET)
+    @RequestMapping(value = "/profile/edit", method = RequestMethod.GET)
     public ModelAndView editProfile(
             @ModelAttribute("reviewForm") final ReviewForm reviewForm,
             @ModelAttribute("editWorkerProfileForm") final EditWorkerProfileForm editWorkerProfileForm
@@ -186,7 +187,7 @@ public class ServiceController {
 
     }
 
-    @RequestMapping(value = "/services/profile/edit", method = RequestMethod.POST)
+    @RequestMapping(value = "/profile/edit", method = RequestMethod.POST)
     public ModelAndView editProfile(
             @Valid @ModelAttribute("editWorkerProfileForm") final EditWorkerProfileForm editWorkerProfileForm,
             @RequestParam(value = "page", defaultValue = "1", required = false) int page,
@@ -206,18 +207,21 @@ public class ServiceController {
         return new ModelAndView("redirect:/services/profile/" + workerId);
     }
 
-    @RequestMapping(value = "/services", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public ModelAndView services(
-            @RequestParam(value = "page", defaultValue = "1", required = false) int page,
-            @RequestParam(value = "size", defaultValue = "10", required = false) int size
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
     ) {
-        LOGGER.info("User arriving at '/services'");
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
-        mav.addObject("workersList", ws.getWorkersByCriteria(page, size, null, sessionUtils.getLoggedUser().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId()));
+        List<Worker> workerList = ws.getWorkersByCriteria(page,size, null, sessionUtils.getLoggedUser().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId());
+        mav.addObject("workersList", workerList);
+        mav.addObject("totalPages", ws.getTotalWorkerPages(sessionUtils.getLoggedUser().getNeighborhoodId(), size));
+        mav.addObject("contextPath", "/services");
+        mav.addObject("page", page);
         return mav;
     }
 
-    @RequestMapping(value = "/services/neighborhoods", method = RequestMethod.GET)
+    @RequestMapping(value = "/neighborhoods", method = RequestMethod.GET)
     public ModelAndView workersNeighborhoods() {
         LOGGER.info("User arriving at '/services/neighborhoods'");
         ModelAndView mav = new ModelAndView("serviceProvider/views/neighborhoods");
@@ -226,7 +230,7 @@ public class ServiceController {
         return mav;
     }
 
-    @RequestMapping(value = "/services/neighborhoods", method = RequestMethod.POST)
+    @RequestMapping(value = "/neighborhoods", method = RequestMethod.POST)
     public ModelAndView addWorkerToNeighborhood(
             @RequestParam("neighborhoodIds") List<Long> neighborhoodIds
     ) {
@@ -235,7 +239,7 @@ public class ServiceController {
         return new ModelAndView("redirect:/services/neighborhoods");
     }
 
-    @RequestMapping(value = "/services/neighborhoods/remove/{id:\\d+}", method = RequestMethod.GET)
+    @RequestMapping(value = "/neighborhoods/remove/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView removeWorkerFromNeighborhood(
             @PathVariable(value = "id") long neighborhoodId
     ) {

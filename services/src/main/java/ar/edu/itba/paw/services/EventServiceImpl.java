@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalLong;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,11 +41,30 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event createEvent(String name, String description, Date date, Time startTime, Time endTime, long neighborhoodId) {
         LOGGER.info("Creating Event {} for Neighborhood {}", name, neighborhoodId);
-        // find, if not exist -> create
-        long startTimeId = timeDao.createTime(startTime).getTimeId();
-        long endTimeId = timeDao.createTime(endTime).getTimeId();
-        return eventDao.createEvent(name, description, date, startTimeId, endTimeId, neighborhoodId);
+
+        OptionalLong startTimeId = getTimeId(startTime);
+        OptionalLong endTimeId = getTimeId(endTime);
+
+        if (startTimeId.isPresent() && endTimeId.isPresent()) {
+            return eventDao.createEvent(name, description, date, startTimeId.getAsLong(), endTimeId.getAsLong(), neighborhoodId);
+        } else {
+            // Handle the case where one or both Time objects were not found
+            if (!startTimeId.isPresent()) {
+                startTimeId = OptionalLong.of(timeDao.createTime(startTime).getTimeId());
+            }
+            if (!endTimeId.isPresent()) {
+                endTimeId = OptionalLong.of(timeDao.createTime(endTime).getTimeId());
+            }
+
+            return eventDao.createEvent(name, description, date, startTimeId.getAsLong(), endTimeId.getAsLong(), neighborhoodId);
+        }
     }
+
+    private OptionalLong getTimeId(Time time) {
+        return timeDao.findIdByTime(time);
+    }
+
+
 
     // -----------------------------------------------------------------------------------------------------------------
 

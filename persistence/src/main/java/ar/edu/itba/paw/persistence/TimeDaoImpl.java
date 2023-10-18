@@ -13,10 +13,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class TimeDaoImpl implements TimeDao {
@@ -63,10 +60,20 @@ public class TimeDaoImpl implements TimeDao {
                     .timeInterval(rs.getTime("timeinterval"))
                     .build();
 
+    private static final RowMapper<Long> ROW_MAPPER_2 =
+            (rs, rowNum) -> rs.getLong("timeid");
+
     @Override
     public Optional<Time> findTimeById(long timeId) {
         LOGGER.debug("Selecting Time with timeId {}", timeId);
         final List<Time> list = jdbcTemplate.query(TIMES + " WHERE timeid = ?", ROW_MAPPER, timeId);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+    }
+
+    @Override
+    public OptionalLong findIdByTime(java.sql.Time time) {
+        LOGGER.debug("Selecting Id with time {}", time);
+        final List<Long> list = jdbcTemplate.query(TIMES + " WHERE timeinterval = ?", ROW_MAPPER_2, time);
+        return list.isEmpty() ? OptionalLong.empty() : OptionalLong.of(list.get(0));
     }
 }

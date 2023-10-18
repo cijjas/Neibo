@@ -11,7 +11,7 @@
 
             <c:choose>
                 <c:when test='${loggedUser.role.toString() == "WORKER"}'>
-                    <div class="left-box" >
+                    <div class="left-box worker" >
                         <div class="f-c-c-c">
                             <a id="profileButton" href="${pageContext.request.contextPath}/services/profile/${loggedUser.userId}" class="cool-left-button  ${channel == 'Profile' ? 'active' : ''} f-r-sb-c">
                                 <i class="fas fa-bullhorn"></i>
