@@ -60,6 +60,11 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewDao.getReviewsCount(workerId);
     }
 
+    @Override
+    public int getReviewsTotalPages(long workerId, int size) {
+        return (int) Math.ceil((double) getReviewsCount(workerId) / size);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

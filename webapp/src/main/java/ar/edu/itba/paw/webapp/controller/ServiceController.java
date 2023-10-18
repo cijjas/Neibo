@@ -105,11 +105,28 @@ public class ServiceController {
             @PathVariable(value = "id") long workerId,
             @ModelAttribute("editWorkerProfileForm") final EditWorkerProfileForm editWorkerProfileForm,
             @RequestParam(value = "page", defaultValue = "1", required = false) int page,
-            @RequestParam(value = "size", defaultValue = "10", required = false) int size
+            @RequestParam(value = "size", defaultValue = "10", required = false) int size,
+            @RequestParam(value = "tab", defaultValue = "reviews", required = false) String tab
     ) {
         LOGGER.info("User arriving at '/services/profile/{}'", workerId);
 
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
+
+        System.out.println(ws.findWorkerById(42));
+
+        int totalPages;
+
+        if(tab == "posts") {
+            totalPages = ps.getWorkerTotalPages(BaseChannel.WORKERS.toString(), size, null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId);
+        }
+        else{
+            totalPages = rws.getReviewsTotalPages(workerId, size);
+        }
+
+        int postsSize = ps.getWorkerPostsCountByCriteria(BaseChannel.WORKERS.toString(), null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId);
+        System.out.println(postsSize);
+
+        int reviewsSize = rws.getReviewsCount(workerId);
 
         mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found")));
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
@@ -117,8 +134,10 @@ public class ServiceController {
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("channel", "Profile");
         mav.addObject("averageRating", rws.getAvgRating(workerId).orElseThrow(() -> new NotFoundException("Average Rating not found")));
-        mav.addObject("postList", ps.getWorkerPostsByCriteria(BaseChannel.WORKERS.toString(), page, size, null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId));
-        mav.addObject("totalPages", ps.getTotalPages(BaseChannel.WORKERS.toString(), size, null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId));
+        mav.addObject("postList", ps.getWorkerPostsByCriteria(BaseChannel.WORKERS.toString(), page, postsSize, null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId));
+        mav.addObject("totalPages", totalPages);
+        mav.addObject("contextPath", "/services/profile/" + workerId);
+        mav.addObject("page", page);
         return mav;
     }
 
@@ -159,7 +178,7 @@ public class ServiceController {
     ) {
         if (errors.hasErrors()) {
             LOGGER.error("Error in Review Form");
-            ModelAndView mav = serviceProfile(reviewForm, workerId, new EditWorkerProfileForm(), page, size);
+            ModelAndView mav = serviceProfile(reviewForm, workerId, new EditWorkerProfileForm(), page, size, "reviews");
             mav.addObject("openReviewDialog", true);
             return mav;
         }
@@ -198,7 +217,7 @@ public class ServiceController {
         long workerId = sessionUtils.getLoggedUser().getUserId();
         if (errors.hasErrors()) {
             LOGGER.error("Error in Edit Form");
-            ModelAndView mav = serviceProfile(new ReviewForm(), workerId, editWorkerProfileForm, page, size);
+            ModelAndView mav = serviceProfile(new ReviewForm(), workerId, editWorkerProfileForm, page, size, "reviews");
             mav.addObject("openEditProfileDialog", true);
         }
 

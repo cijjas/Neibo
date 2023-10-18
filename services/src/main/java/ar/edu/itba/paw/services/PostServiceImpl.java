@@ -57,15 +57,6 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post createWorkerPost(final String title, final String description, final long neighborId, final MultipartFile imageFile) {
-        Image i = null;
-        if (imageFile != null && !imageFile.isEmpty()) {
-            i = imageService.storeImage(imageFile);
-        }
-        return postDao.createPost(title, description, neighborId, BaseChannel.WORKERS.getId(), i == null ? 0 : i.getImageId());
-    }
-
-    @Override
     public Post createAdminPost(final long neighborhoodId, final String title, final String description, final long neighborId, final int channelId, final String tags, final MultipartFile imageFile) {
         Post post = createPost(title, description, neighborId, channelId, tags, imageFile);
         assert post != null;
@@ -92,6 +83,20 @@ public class PostServiceImpl implements PostService {
     public List<Post> getWorkerPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         LOGGER.info("Getting Workers' Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
         return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, postStatus, userId);
+    }
+
+    @Override
+    public int getWorkerPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
+        LOGGER.info("Getting Workers' Posts Count from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
+        // parse de statusString into the postStatusEnum
+        return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId);
+    }
+
+    @Override
+    public int getWorkerTotalPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
+        LOGGER.info("Getting Workers' Total Post Pages with size {} for Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", size, neighborhoodId, channel, tags, postStatus);
+        // parse de statusString into the postStatusEnum
+        return (int) Math.ceil((double) getWorkerPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId) / size);
     }
 
     @Override

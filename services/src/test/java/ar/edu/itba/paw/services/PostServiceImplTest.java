@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.BaseChannel;
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
@@ -36,7 +37,6 @@ public class PostServiceImplTest {
     private static final int LIKES = 500;
     private User mockUser;
     private Channel mockChannel;
-    private Channel mockWorkerChannel;
     private List mockTagList;
     private Tag mockTag;
     @Mock
@@ -62,8 +62,6 @@ public class PostServiceImplTest {
         when(mockChannel.getChannelId()).thenReturn(CHANNEL_ID);
         mockTagList = mock(List.class);
         mockTag = mock(Tag.class);
-
-        mockWorkerChannel = mock(Channel.class);
 
     }
 
@@ -108,37 +106,6 @@ public class PostServiceImplTest {
 
         // 3. Postconditions
     }
-
-//    @Test
-//    public void testCreateWorkerPost(){
-//        // 1. Preconditions
-//        when(postDao.createPost(anyString(), anyString(), anyLong(), eq(BaseChannel.WORKERS.getId()), anyLong())).thenReturn(new Post.Builder()
-//                .postId(ID)
-//                .title(TITLE)
-//                .description(DESCRIPTION)
-//                .date(DATE)
-//                .user(mockUser)
-//                .channel(mockWorkerChannel)
-//                .postPictureId(POST_PICTURE_ID)
-//                .likes(LIKES)
-//                .build()
-//        );
-//
-//        // 2. Exercise
-//        Post newWorkerPost = ps.createWorkerPost(TITLE, DESCRIPTION, mockUser.getUserId(), null);
-//
-//        // 3. Postconditions
-//        Assert.assertNotNull(newWorkerPost);
-//        Assert.assertEquals(newWorkerPost.getPostId(), ID);
-//        Assert.assertEquals(newWorkerPost.getTitle(), TITLE);
-//        Assert.assertEquals(newWorkerPost.getDescription(), DESCRIPTION);
-//        Assert.assertEquals(newWorkerPost.getDate(), DATE);
-//        Assert.assertEquals(newWorkerPost.getUser(), mockUser);
-//        Assert.assertEquals(newWorkerPost.getChannel(), mockWorkerChannel);
-//        Assert.assertEquals(newWorkerPost.getChannel().getChannelId(), BaseChannel.WORKERS.getId());
-//        Assert.assertEquals(newWorkerPost.getPostPictureId(), POST_PICTURE_ID);
-//
-//    }
 
 }
 

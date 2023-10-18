@@ -53,6 +53,7 @@
                             </div>
                         </c:when>
                         <c:otherwise>
+
                             <c:forEach var="review" items="${reviews}" varStatus="loopStatus">
                                 <div class="review-box f-c-s-s w-100">
                                     <div class="f-r-sb-c w-100">
@@ -142,13 +143,6 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <!-- Include the page selector -->
-                        <c:if test="${totalPages >  1}">
-                            <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
-                                <jsp:param name="page" value="${page}"/>
-                                <jsp:param name="totalPages" value="${totalPages}"/>
-                            </jsp:include>
-                        </c:if>
 
                         <c:forEach var="post" items="${postList}">
                             <jsp:include page="/WEB-INF/jsp/serviceProvider/components/workerBlogpost.jsp">
@@ -162,13 +156,6 @@
                             </jsp:include>
                         </c:forEach>
 
-
-                        <c:if test="${totalPages >  1}">
-                            <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
-                                <jsp:param name="page" value="${page}"/>
-                                <jsp:param name="totalPages" value="${totalPages}"/>
-                            </jsp:include>
-                        </c:if>
                     </c:otherwise>
                 </c:choose>
             </div>

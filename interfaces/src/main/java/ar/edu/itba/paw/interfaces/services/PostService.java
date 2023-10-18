@@ -13,13 +13,15 @@ public interface PostService {
 
     Post createAdminPost(final long neighborhoodId, final String title, final String description, final long neighborId, final int channelId, String tags, final MultipartFile imageFile);
 
-    Post createWorkerPost(final String title, final String description, final long neighborId, final MultipartFile imageFile);
-
     // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Post> findPostById(long id);
 
     List<Post> getWorkerPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
+
+    public int getWorkerPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
+
+public int getWorkerTotalPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
 
     List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus);
 
