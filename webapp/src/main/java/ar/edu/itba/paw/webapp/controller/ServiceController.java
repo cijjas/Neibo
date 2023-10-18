@@ -123,13 +123,18 @@ public class ServiceController {
             totalPages = rws.getReviewsTotalPages(workerId, size);
         }
 
+        int postsSize = ps.getWorkerPostsCountByCriteria(BaseChannel.WORKERS.toString(), null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId);
+        System.out.println(postsSize);
+
+        int reviewsSize = rws.getReviewsCount(workerId);
+
         mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found")));
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("channel", "Profile");
         mav.addObject("averageRating", rws.getAvgRating(workerId).orElseThrow(() -> new NotFoundException("Average Rating not found")));
-        mav.addObject("postList", ps.getWorkerPostsByCriteria(BaseChannel.WORKERS.toString(), page, size, null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId));
+        mav.addObject("postList", ps.getWorkerPostsByCriteria(BaseChannel.WORKERS.toString(), page, postsSize, null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId));
         mav.addObject("totalPages", totalPages);
         mav.addObject("contextPath", "/services/profile/" + workerId);
         mav.addObject("page", page);
