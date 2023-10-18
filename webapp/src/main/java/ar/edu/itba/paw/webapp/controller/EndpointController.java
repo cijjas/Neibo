@@ -187,4 +187,10 @@ public class EndpointController {
                         .getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
     }
 
+    @RequestMapping(value = "/role", method = RequestMethod.GET)
+    @ResponseBody
+    public String getUserRole() {
+        return sessionUtils.getLoggedUser().getRole().toString();
+    }
+
 }

@@ -54,10 +54,35 @@
             </c:choose>
         </p>
 
-
-        <a href="${pageContext.request.contextPath}/" class="goback-button font-weight-bold"><spring:message code="GoBackToMainPage"/></a>
+        <a id="goback-button" class="goback-button font-weight-bold"><spring:message code="GoBackToMainPage"/></a>
 
     </div>
+
+<script>
+    async function getUserRole() {
+        try{
+            const response = await fetch('${pageContext.request.contextPath}/endpoint/role');
+            const role = await response.text();
+            if (response.status === 200) {
+                if (role === 'WORKER') {
+                    document.getElementById('goback-button').href = '${pageContext.request.contextPath}/services';
+                } else {
+                    document.getElementById('goback-button').href = '${pageContext.request.contextPath}/';
+                }
+            } else {
+                document.getElementById('goback-button').href = '${pageContext.request.contextPath}/';
+            }
+            return role;
+        } catch (error) {
+            console.log(error.message);
+        }
+    }
+
+    // Call the async function when the page is loaded
+    window.addEventListener('load', () => {
+        getUserRole();
+    });
+</script>
 
 <%----%>
 </body>
