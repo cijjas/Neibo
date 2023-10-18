@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.models.Worker;
 import ar.edu.itba.paw.enums.Language;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,4 +24,6 @@ public interface WorkerService {
     // ---------------------------------------------- WORKERS UPDATE -----------------------------------------------------
     void updateWorker(long userId, String phoneNumber, String address, String businessName,
                       MultipartFile backgroundPicture, String bio);
+
+    int getTotalWorkerPages(long neighborhoodId, int size);
 }

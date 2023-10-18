@@ -110,4 +110,12 @@ public class WorkerServiceImpl implements WorkerService {
         Image i = imageService.storeImage(backgroundPicture);
         workerDao.updateWorker(userId, phoneNumber, address, businessName, i.getImageId(), bio);
     }
+
+    @Override
+    public int getTotalWorkerPages(long neighborhoodId, int size) {
+        LOGGER.info("Getting Pages of Workers with size {} from Neighborhood {}", size, neighborhoodId);
+        long[] neighborhoodIds = {neighborhoodId};
+        return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(null, neighborhoodIds)/size);
+    }
+
 }

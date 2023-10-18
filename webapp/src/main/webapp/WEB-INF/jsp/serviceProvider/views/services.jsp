@@ -36,9 +36,35 @@
       </div>
       <div class="column-middle">
         <div class="f-c-c-c">
-          <c:forEach var="worker" items="${workersList}" >
-            <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileWidget.jsp" %>
-          </c:forEach>
+          <c:choose>
+            <c:when test="${empty workersList}">
+              <div class="no-posts-found">
+                <i class="circle-icon fa-solid fa-magnifying-glass" style="color:var(--text)"></i>
+                <spring:message code="Workers.notFound"/>
+              </div>
+            </c:when>
+            <c:otherwise>
+              <!-- Include the page selector -->
+              <c:if test="${totalPages >  1}">
+                <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                  <jsp:param name="page" value="${page}" />
+                  <jsp:param name="totalPages" value="${totalPages}" />
+                </jsp:include>
+              </c:if>
+
+              <c:forEach var="worker" items="${workersList}" >
+                <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileWidget.jsp" %>
+              </c:forEach>
+
+              <c:if test="${totalPages >  1}">
+                <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                  <jsp:param name="page" value="${page}" />
+                  <jsp:param name="totalPages" value="${totalPages}" />
+                </jsp:include>
+              </c:if>
+            </c:otherwise>
+          </c:choose>
+
         </div>
       </div>
 

@@ -862,10 +862,16 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/services", method = RequestMethod.GET)
-    public ModelAndView services() {
+    public ModelAndView services(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
-        List<Worker> workerList = ws.getWorkersByCriteria(1,10, null, sessionUtils.getLoggedUser().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId());
+        List<Worker> workerList = ws.getWorkersByCriteria(page,size, null, sessionUtils.getLoggedUser().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId());
         mav.addObject("workersList", workerList);
+        mav.addObject("totalPages", ws.getTotalWorkerPages(sessionUtils.getLoggedUser().getNeighborhoodId(), size));
+        mav.addObject("contextPath", "/services");
+        mav.addObject("page", page);
         return mav;
     }
 
