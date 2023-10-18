@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,30 +14,30 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class NeighborhoodDaoImplTest {
 
-    private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
-    private NeighborhoodDaoImpl neighborhoodDao;
-
-    private String NEIGHBORHOOD_NAME = "Testing Create Neighborhood";
-
     @Autowired
     private DataSource ds;
+    @Autowired
+    private TestInserter testInserter;
+
+    private JdbcTemplate jdbcTemplate;
+    private NeighborhoodDaoImpl neighborhoodDao;
+
+    private final String NEIGHBORHOOD_NAME = "Testing Create Neighborhood";
+
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
         neighborhoodDao = new NeighborhoodDaoImpl(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class NeighborhoodDaoImplTest {
     @Test
     public void testFindNeighborhoodByValidId() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
+        long nhKey = testInserter.createNeighborhood();
 
         // Exercise
         Optional<Neighborhood> nh = neighborhoodDao.findNeighborhoodById(nhKey);
@@ -80,7 +80,7 @@ public class NeighborhoodDaoImplTest {
     @Test
     public void testFindNeighborhoodByValidName() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood(NEIGHBORHOOD_NAME);
+        long nhKey = testInserter.createNeighborhood(NEIGHBORHOOD_NAME);
 
         // Exercise
         Optional<Neighborhood> nh = neighborhoodDao.findNeighborhoodByName(NEIGHBORHOOD_NAME);
@@ -104,7 +104,7 @@ public class NeighborhoodDaoImplTest {
     @Test
     public void testGetNeighborhoods() {
         // Pre Conditions
-        testInsertionUtils.createNeighborhood();
+        testInserter.createNeighborhood();
 
         // Exercise
         neighborhoodDao.getNeighborhoods();

@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.ResourceDao;
 import ar.edu.itba.paw.models.Resource;
-import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,31 +20,31 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ResourceDaoImplTest {
 
-    private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
-    private ResourceDao resourceDao;
-
-    private String SAMPLE_TITLE = "Sample Title";
-    private String SAMPLE_DESC = "Sample Desc";
-
     @Autowired
     private DataSource ds;
+    @Autowired
+    private TestInserter testInserter;
+    private JdbcTemplate jdbcTemplate;
+    private ResourceDao resourceDao;
+
+    private final String SAMPLE_TITLE = "Sample Title";
+    private final String SAMPLE_DESC = "Sample Desc";
+
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
         resourceDao = new ResourceDaoImpl(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
     }
 
     @Test
     public void testCreateResource() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
+        long nhKey = testInserter.createNeighborhood();
 
         // Exercise
         resourceDao.createResource(nhKey, SAMPLE_TITLE, SAMPLE_DESC, 0);
@@ -56,9 +56,9 @@ public class ResourceDaoImplTest {
     @Test
     public void testGetResources() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long iKey = testInsertionUtils.createImage();
-        testInsertionUtils.createResource(nhKey, iKey);
+        long nhKey = testInserter.createNeighborhood();
+        long iKey = testInserter.createImage();
+        testInserter.createResource(nhKey, iKey);
 
         // Exercise
         List<Resource> resources = resourceDao.getResources(nhKey);
@@ -70,7 +70,7 @@ public class ResourceDaoImplTest {
     @Test
     public void testGetNoResources() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
+        long nhKey = testInserter.createNeighborhood();
 
         // Exercise
         List<Resource> resources = resourceDao.getResources(nhKey);
@@ -82,9 +82,9 @@ public class ResourceDaoImplTest {
     @Test
     public void testDeleteResource() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long iKey = testInsertionUtils.createImage();
-        long rKey = testInsertionUtils.createResource(nhKey, iKey);
+        long nhKey = testInserter.createNeighborhood();
+        long iKey = testInserter.createImage();
+        long rKey = testInserter.createResource(nhKey, iKey);
 
         // Exercise
         boolean deleted = resourceDao.deleteResource(rKey);

@@ -27,6 +27,7 @@ public class AmenityDaoImpl implements AmenityDao {
     private ShiftDao shiftDao;
 
     private String AMENITIES = "SELECT * FROM amenities";
+    private String COUNT_AMENITIES = "SELECT COUNT(*) FROM amenities";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AmenityDaoImpl.class);
 
@@ -78,9 +79,15 @@ public class AmenityDaoImpl implements AmenityDao {
     }
 
     @Override
-    public List<Amenity> getAmenities(long neighborhoodId) {
+    public List<Amenity> getAmenities(long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Amenities from Neighborhood {}", neighborhoodId);
-        return jdbcTemplate.query(AMENITIES + " WHERE neighborhoodId = ?", ROW_MAPPER, neighborhoodId);
+        return jdbcTemplate.query(AMENITIES + " WHERE neighborhoodId = ? ORDER BY name  LIMIT ? OFFSET ?", ROW_MAPPER, neighborhoodId, size, (page - 1) * size);
+    }
+
+    @Override
+    public int getAmenitiesCount(long neighborhoodId) {
+        LOGGER.debug("Selecting Amenities from Neighborhood {}", neighborhoodId);
+        return jdbcTemplate.queryForObject(COUNT_AMENITIES + " WHERE neighborhoodId = ?", Integer.class, neighborhoodId);
     }
 
     // ---------------------------------------------- AMENITY DELETE ---------------------------------------------------

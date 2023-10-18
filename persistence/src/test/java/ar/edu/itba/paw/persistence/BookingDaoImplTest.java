@@ -1,13 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
-import ar.edu.itba.paw.interfaces.persistence.BookingDao;
-import ar.edu.itba.paw.interfaces.persistence.DayDao;
-import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
-import ar.edu.itba.paw.interfaces.persistence.TimeDao;
+import ar.edu.itba.paw.enums.Table;
+import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.Booking;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,27 +21,27 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class BookingDaoImplTest {
 
+    @Autowired
+    private DataSource ds;
+    @Autowired
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
     private BookingDao bookingDao;
     private ShiftDao shiftDao;
     private AmenityDao amenityDao;
     private DayDao dayDao;
     private TimeDao timeDao;
 
-    private Date RESERVATION_DATE = Date.valueOf("2024-12-12");
+    private final Date RESERVATION_DATE = Date.valueOf("2024-12-12");
 
-    @Autowired
-    private DataSource ds;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
         dayDao = new DayDaoImpl(ds);
         timeDao = new TimeDaoImpl(ds);
         shiftDao = new ShiftDaoImpl(ds, dayDao, timeDao);
@@ -56,13 +52,13 @@ public class BookingDaoImplTest {
     @Test
     public void testCreateBooking() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        long aKey = testInsertionUtils.createAmenity(nhKey);
-        long dKey = testInsertionUtils.createDay();
-        long tKey = testInsertionUtils.createTime();
-        long sKey = testInsertionUtils.createShift(dKey, tKey);
-        long avKey = testInsertionUtils.createAvailability(aKey, sKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long avKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
         Number bookingId = bookingDao.createBooking(uKey, avKey, RESERVATION_DATE);
@@ -75,14 +71,14 @@ public class BookingDaoImplTest {
     @Test
     public void testGetUserBookings() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        long aKey = testInsertionUtils.createAmenity(nhKey);
-        long dKey = testInsertionUtils.createDay();
-        long tKey = testInsertionUtils.createTime();
-        long sKey = testInsertionUtils.createShift(dKey, tKey);
-        long avKey = testInsertionUtils.createAvailability(aKey, sKey);
-        long bKey = testInsertionUtils.createBooking(uKey, avKey, RESERVATION_DATE);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long avKey = testInserter.createAvailability(aKey, sKey);
+        long bKey = testInserter.createBooking(uKey, avKey, RESERVATION_DATE);
 
         // Exercise
         List<Booking> userBookings = bookingDao.getUserBookings(uKey);
@@ -105,14 +101,14 @@ public class BookingDaoImplTest {
     @Test
     public void testDeleteBooking() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        long aKey = testInsertionUtils.createAmenity(nhKey);
-        long dKey = testInsertionUtils.createDay();
-        long tKey = testInsertionUtils.createTime();
-        long sKey = testInsertionUtils.createShift(dKey, tKey);
-        long avKey = testInsertionUtils.createAvailability(aKey, sKey);
-        long bKey = testInsertionUtils.createBooking(uKey, avKey, RESERVATION_DATE);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long avKey = testInserter.createAvailability(aKey, sKey);
+        long bKey = testInserter.createBooking(uKey, avKey, RESERVATION_DATE);
 
         // Exercise
         boolean deleted = bookingDao.deleteBooking(bKey);

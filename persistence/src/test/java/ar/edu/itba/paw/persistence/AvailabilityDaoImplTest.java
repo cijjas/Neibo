@@ -1,12 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
-import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
-import ar.edu.itba.paw.interfaces.persistence.DayDao;
-import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
-import ar.edu.itba.paw.interfaces.persistence.TimeDao;
-import ar.edu.itba.paw.persistence.config.TestConfig;
 import ar.edu.itba.paw.enums.Table;
+import ar.edu.itba.paw.interfaces.persistence.*;
+import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,30 +14,31 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
-import java.util.Optional;
+import java.util.OptionalLong;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class AvailabilityDaoImplTest {
 
+
+    @Autowired
+    private DataSource ds;
+    @Autowired
+    private TestInserter testInserter;
+
     private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
     private AmenityDao amenityDao;
     private ShiftDao shiftDao;
     private AvailabilityDao availabilityDao;
     private DayDao dayDao;
     private TimeDao timeDao;
 
-    @Autowired
-    private DataSource ds;
-
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
         dayDao = new DayDaoImpl(ds);
         timeDao = new TimeDaoImpl(ds);
         shiftDao = new ShiftDaoImpl(ds, dayDao, timeDao);
@@ -52,11 +49,11 @@ public class AvailabilityDaoImplTest {
     @Test
     public void testCreateAvailability() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long aKey = testInsertionUtils.createAmenity(nhKey);
-        long dKey = testInsertionUtils.createDay();
-        long tKey = testInsertionUtils.createTime();
-        long sKey = testInsertionUtils.createShift(dKey, tKey);
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
 
         // Exercise
         Number createdAvailability = availabilityDao.createAvailability(aKey, sKey);
@@ -69,15 +66,15 @@ public class AvailabilityDaoImplTest {
     @Test
     public void testFindAvailabilityId() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long aKey = testInsertionUtils.createAmenity(nhKey);
-        long dKey = testInsertionUtils.createDay();
-        long tKey = testInsertionUtils.createTime();
-        long sKey = testInsertionUtils.createShift(dKey, tKey);
-        long availabilityKey = testInsertionUtils.createAvailability(aKey, sKey);
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long availabilityKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        Optional<Long> foundAvailability = availabilityDao.findAvailabilityId(aKey, sKey);
+        OptionalLong foundAvailability = availabilityDao.findAvailabilityId(aKey, sKey);
 
         // Validations & Post Conditions
         assertTrue(foundAvailability.isPresent());
@@ -86,21 +83,21 @@ public class AvailabilityDaoImplTest {
     @Test
     public void testFindInvalidAvailabilityId() {
         // Exercise
-        Optional<Long> foundAvailability = availabilityDao.findAvailabilityId(1, 1); // Invalid ID
+        OptionalLong foundAvailability = availabilityDao.findAvailabilityId(1, 1); // Invalid ID
 
         // Validations & Post Conditions
         assertFalse(foundAvailability.isPresent());
     }
 
     @Test
-    public void testDeleteAvailability(){
+    public void testDeleteAvailability() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long aKey = testInsertionUtils.createAmenity(nhKey);
-        long dKey = testInsertionUtils.createDay();
-        long tKey = testInsertionUtils.createTime();
-        long sKey = testInsertionUtils.createShift(dKey, tKey);
-        long availabilityKey = testInsertionUtils.createAvailability(aKey, sKey);
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long availabilityKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
         boolean deleted = availabilityDao.deleteAvailability(aKey, sKey);
@@ -111,7 +108,7 @@ public class AvailabilityDaoImplTest {
     }
 
     @Test
-    public void testDeleteInvalidAvailability(){
+    public void testDeleteInvalidAvailability() {
         // Pre Conditions
 
         // Exercise

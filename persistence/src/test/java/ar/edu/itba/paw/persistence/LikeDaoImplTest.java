@@ -17,32 +17,32 @@ import javax.sql.DataSource;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class LikeDaoImplTest {
 
-    private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
-    private LikeDaoImpl likeDao;
-
     @Autowired
     private DataSource ds;
+    @Autowired
+    private TestInserter testInserter;
+    private JdbcTemplate jdbcTemplate;
+    private LikeDaoImpl likeDao;
+
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
         likeDao = new LikeDaoImpl(ds);
     }
 
     @Test
     public void testCreateLike() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        long chKey = testInsertionUtils.createChannel();
-        long iKey = testInsertionUtils.createImage();
-        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
         likeDao.createLike(pKey, uKey);
@@ -55,12 +55,12 @@ public class LikeDaoImplTest {
     @Test
     public void testGetLikes() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        long chKey = testInsertionUtils.createChannel();
-        long iKey = testInsertionUtils.createImage();
-        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
-        testInsertionUtils.createLike(pKey, uKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        testInserter.createLike(pKey, uKey);
 
         // Exercise
         int likes = likeDao.getLikes(pKey);
@@ -83,12 +83,12 @@ public class LikeDaoImplTest {
     @Test
     public void testIsPostLiked() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        long chKey = testInsertionUtils.createChannel();
-        long iKey = testInsertionUtils.createImage();
-        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
-        testInsertionUtils.createLike(pKey, uKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        testInserter.createLike(pKey, uKey);
 
         // Exercise
         boolean liked = likeDao.isPostLiked(pKey, uKey);
@@ -111,12 +111,12 @@ public class LikeDaoImplTest {
     @Test
     public void testDeleteLike() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        long chKey = testInsertionUtils.createChannel();
-        long iKey = testInsertionUtils.createImage();
-        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
-        testInsertionUtils.createLike(pKey, uKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        testInserter.createLike(pKey, uKey);
 
         // Exercise
         boolean deleted = likeDao.deleteLike(pKey, uKey);

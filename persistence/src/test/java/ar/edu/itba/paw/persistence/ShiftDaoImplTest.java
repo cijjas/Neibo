@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.DayDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.models.Shift;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,25 +24,25 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ShiftDaoImplTest {
 
+    @Autowired
+    private DataSource ds;
+    @Autowired
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
     private ShiftDao shiftDao;
     private DayDao dayDao;
     private TimeDao timeDao;
 
-    private String DATE = "2022-12-12";
 
-    @Autowired
-    private DataSource ds;
+    private final String DATE = "2022-12-12";
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
         dayDao = new DayDaoImpl(ds);
         timeDao = new TimeDaoImpl(ds);
         shiftDao = new ShiftDaoImpl(ds, dayDao, timeDao);
@@ -51,8 +51,8 @@ public class ShiftDaoImplTest {
     @Test
     public void testCreateShift() {
         // Pre Conditions
-        long dKey = testInsertionUtils.createDay();
-        long tKey = testInsertionUtils.createTime();
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
 
         // Exercise
         Shift createdShift = shiftDao.createShift(dKey, tKey);
@@ -64,9 +64,9 @@ public class ShiftDaoImplTest {
     @Test
     public void testFindShiftById() {
         // Pre Conditions
-        long dKey = testInsertionUtils.createDay();
-        long tKey = testInsertionUtils.createTime();
-        long shiftKey = testInsertionUtils.createShift(dKey, tKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long shiftKey = testInserter.createShift(dKey, tKey);
 
         // Exercise
         Optional<Shift> foundShift = shiftDao.findShiftById(shiftKey);
@@ -89,9 +89,9 @@ public class ShiftDaoImplTest {
     @Test
     public void testFindShiftId() {
         // Pre Conditions
-        long dKey = testInsertionUtils.createDay();
-        long tKey = testInsertionUtils.createTime();
-        testInsertionUtils.createShift(dKey, tKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        testInserter.createShift(dKey, tKey);
 
         // Exercise
         Optional<Shift> foundShift = shiftDao.findShiftId(tKey, dKey);
@@ -114,12 +114,12 @@ public class ShiftDaoImplTest {
     @Test
     public void testGetShifts() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long aKey = testInsertionUtils.createAmenity(nhKey);
-        long dKey = testInsertionUtils.createDay();
-        long tKey = testInsertionUtils.createTime();
-        long sKey =  testInsertionUtils.createShift(dKey, tKey);
-        testInsertionUtils.createAvailability(aKey, sKey);
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        testInserter.createAvailability(aKey, sKey);
 
         // Exercise
         List<Shift> shifts = shiftDao.getShifts(aKey, dKey, Date.valueOf(DATE));

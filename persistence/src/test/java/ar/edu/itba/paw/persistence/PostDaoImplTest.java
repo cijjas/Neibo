@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.PostStatus;
+import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.Post;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.enums.PostStatus;
-import ar.edu.itba.paw.enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,28 +23,10 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes =TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class PostDaoImplTest {
 
-    @Autowired
-    private DataSource ds;
-    private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
-
-
-    private ChannelDao channelDao;
-    private UserDao userDao;
-    private TagDao tagDao;
-    private LikeDao likeDao;
-    private PostDao postDao;
-    private BookingDao bookingDao;
-    private ShiftDao shiftDao;
-    private AmenityDao amenityDao;
-    private DayDao dayDao;
-    private TimeDao timeDao;
-
-    // Variables for test data
     private static final String TITLE_1 = "Title 1";
     private static final String TITLE_2 = "Title 2";
     private static final String TITLE_3 = "Title 3";
@@ -72,6 +54,21 @@ public class PostDaoImplTest {
     private static final int BASE_PAGE_SIZE = 10;
     private static final boolean NOT_HOT = false;
     private static final boolean HOT = true;
+    @Autowired
+    private DataSource ds;
+    @Autowired
+    private TestInserter testInserter;
+    private JdbcTemplate jdbcTemplate;
+    private ChannelDao channelDao;
+    private UserDao userDao;
+    private TagDao tagDao;
+    private LikeDao likeDao;
+    private PostDao postDao;
+    private BookingDao bookingDao;
+    private ShiftDao shiftDao;
+    private AmenityDao amenityDao;
+    private DayDao dayDao;
+    private TimeDao timeDao;
     private long nhKey1;
     private long nhKey2;
     private long tKey1;
@@ -86,7 +83,6 @@ public class PostDaoImplTest {
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
         channelDao = new ChannelDaoImpl(ds);
         dayDao = new DayDaoImpl(ds);
         timeDao = new TimeDaoImpl(ds);
@@ -102,10 +98,10 @@ public class PostDaoImplTest {
     @Test
     public void testCreatePost() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        long chKey = testInsertionUtils.createChannel();
-        long iKey = testInsertionUtils.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
 
         // Exercise
         Post createdPost = postDao.createPost(TITLE_1, DESC_1, uKey, chKey, iKey);
@@ -120,11 +116,11 @@ public class PostDaoImplTest {
     @Test
     public void testFindPostById() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        long chKey = testInsertionUtils.createChannel();
-        long iKey = testInsertionUtils.createImage();
-        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
         Optional<Post> maybePost = postDao.findPostById(pKey);
@@ -240,34 +236,34 @@ public class PostDaoImplTest {
          */
 
         // Pre Conditions
-        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
-        nhKey2 = testInsertionUtils.createNeighborhood(NH_NAME_2);
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
+        nhKey2 = testInserter.createNeighborhood(NH_NAME_2);
 
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
-        uKey2 = testInsertionUtils.createUser(USER_MAIL_2, nhKey1);
-        uKey3 = testInsertionUtils.createUser(USER_MAIL_3, nhKey2);
-        uKey4 = testInsertionUtils.createUser(USER_MAIL_4, nhKey2);
+        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
+        uKey2 = testInserter.createUser(USER_MAIL_2, nhKey1);
+        uKey3 = testInserter.createUser(USER_MAIL_3, nhKey2);
+        uKey4 = testInserter.createUser(USER_MAIL_4, nhKey2);
 
-        chKey1 = testInsertionUtils.createChannel(CHANNEL_NAME_1);
-        chKey2 = testInsertionUtils.createChannel(CHANNEL_NAME_2);
+        chKey1 = testInserter.createChannel(CHANNEL_NAME_1);
+        chKey2 = testInserter.createChannel(CHANNEL_NAME_2);
 
-        tKey1 = testInsertionUtils.createTag(TAG_NAME_1);
-        tKey2 = testInsertionUtils.createTag(TAG_NAME_2);
+        tKey1 = testInserter.createTag(TAG_NAME_1);
+        tKey2 = testInserter.createTag(TAG_NAME_2);
 
-        long pKey1 = testInsertionUtils.createPost(TITLE_1, DESC_1, uKey1, chKey1, 0);
-        long pKey2 = testInsertionUtils.createPost(TITLE_2, DESC_2, uKey2, chKey1, 0);
-        testInsertionUtils.createCategorization(tKey1, pKey2);
-        long pKey3 = testInsertionUtils.createPost(TITLE_3, DESC_3, uKey3, chKey2, 0);
-        testInsertionUtils.createCategorization(tKey2, pKey3);
-        long pKey4 = testInsertionUtils.createPost(TITLE_4, DESC_4, uKey4, chKey2, 0);
-        testInsertionUtils.createCategorization(tKey1, pKey4);
-        testInsertionUtils.createCategorization(tKey2, pKey4);
+        long pKey1 = testInserter.createPost(TITLE_1, DESC_1, uKey1, chKey1, 0);
+        long pKey2 = testInserter.createPost(TITLE_2, DESC_2, uKey2, chKey1, 0);
+        testInserter.createCategorization(tKey1, pKey2);
+        long pKey3 = testInserter.createPost(TITLE_3, DESC_3, uKey3, chKey2, 0);
+        testInserter.createCategorization(tKey2, pKey3);
+        long pKey4 = testInserter.createPost(TITLE_4, DESC_4, uKey4, chKey2, 0);
+        testInserter.createCategorization(tKey1, pKey4);
+        testInserter.createCategorization(tKey2, pKey4);
 
         // Comments to become hot
-        testInsertionUtils.createComment(uKey4, pKey4);
-        testInsertionUtils.createComment(uKey4, pKey4);
-        testInsertionUtils.createComment(uKey4, pKey4);
-        testInsertionUtils.createComment(uKey4, pKey4);
-        testInsertionUtils.createComment(uKey4, pKey4);
+        testInserter.createComment(uKey4, pKey4);
+        testInserter.createComment(uKey4, pKey4);
+        testInserter.createComment(uKey4, pKey4);
+        testInserter.createComment(uKey4, pKey4);
+        testInserter.createComment(uKey4, pKey4);
     }
 }

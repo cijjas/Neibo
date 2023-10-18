@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.models.Post;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
@@ -20,11 +21,11 @@ public interface PostService {
 
     Optional<Post> findPostById(long id);
 
-    List<Post> getWorkerPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, long userId);
+    List<Post> getWorkerPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
 
-    List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus);
+    List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus);
 
-    int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, String postStatus, long userId);
+    int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
 
-    int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId, String postStatus, long userId);
+    int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
 }

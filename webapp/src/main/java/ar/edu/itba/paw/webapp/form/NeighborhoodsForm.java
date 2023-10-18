@@ -4,7 +4,6 @@ import org.hibernate.validator.constraints.Range;
 
 public class NeighborhoodsForm {
 
-    @Range(min = 1)
     private long[] neighborhoodIds;
 
     public long[] getNeighborhoodIds() {

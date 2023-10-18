@@ -69,9 +69,20 @@ public class AmenityServiceImpl implements AmenityService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Amenity> getAmenities(long neighborhoodId) {
+    public List<Amenity> getAmenities(long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Amenities from Neighborhood {}", neighborhoodId);
-        return amenityDao.getAmenities(neighborhoodId);
+
+        return amenityDao.getAmenities(neighborhoodId, page, size);
+    }
+
+    @Override
+    public int getAmenitiesCount(long neighborhoodId) {
+        return amenityDao.getAmenitiesCount(neighborhoodId);
+    }
+
+    @Override
+    public int getTotalAmenitiesPages(long neighborhoodId, int size) {
+        return (int) Math.ceil((double) amenityDao.getAmenitiesCount(neighborhoodId) / size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

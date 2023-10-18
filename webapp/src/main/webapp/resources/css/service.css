@@ -257,7 +257,7 @@
         }
         & .review-box {
             padding: 1rem;
-            margin: 1rem;
+            margin: 0 0 10px 0;
             background-color: var(--darkonbackground);
             color: var(--text);
             border-radius: var(--border-radius);

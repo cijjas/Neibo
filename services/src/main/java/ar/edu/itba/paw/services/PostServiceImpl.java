@@ -90,29 +90,29 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Post> getWorkerPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, long userId) {
+    public List<Post> getWorkerPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         LOGGER.info("Getting Workers' Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
-        return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, PostStatus.valueOf(postStatus), userId);
+        return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, postStatus, userId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus) {
+    public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus) {
         LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
-        return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, PostStatus.valueOf(postStatus), 0);
+        return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, postStatus, 0);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, String postStatus, long userId) {
+    public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
         // parse de statusString into the postStatusEnum
-        return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, PostStatus.valueOf(postStatus), userId);
+        return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId, String postStatus, long userId) {
+    public int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         LOGGER.info("Getting Total Post Pages with size {} for Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", size, neighborhoodId, channel, tags, postStatus);
         // parse de statusString into the postStatusEnum
         return (int) Math.ceil((double) getPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId) / size);

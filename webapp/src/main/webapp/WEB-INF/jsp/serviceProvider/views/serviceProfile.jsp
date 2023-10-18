@@ -38,32 +38,31 @@
           <div class="f-c-c-c">
 
             <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileCard.jsp" %>
-            <c:choose>
-              <c:when test='${loggedUser.role.toString() != "WORKER"}'>
-                <button class="cool-button font-weight-bold" onclick="openReviewDialog()"><spring:message code="CreateReview"/></button>
-                <%@ include file="/WEB-INF/jsp/serviceProvider/components/reviewDialog.jsp" %>
-              </c:when>
-              <c:otherwise>
-                <a class="cool-button" href="${pageContext.request.contextPath}/services/neighborhoods"><spring:message code="Post.verb"/></a>
-              </c:otherwise>
-            </c:choose>
+            <c:if test='${loggedUser.role.toString() == "WORKER"}'>
+              <a class="cool-button" href="${pageContext.request.contextPath}/services/neighborhoods"><spring:message code="Post.verb"/></a>
+            </c:if>
+
             <%@ include file="/WEB-INF/jsp/serviceProvider/components/tabbedBox.jsp" %>
 
-            <c:if test="${openEditProfileDialog == true}">
-              <script>
-                document.getElementById("editDialog").style.display = "flex";
-              </script>
-            </c:if>
-            <c:if test="${openReviewDialog == true}">
-              <script>
-                document.getElementById("reviewDialog").style.display = "flex";
-              </script>
-            </c:if>
+
           </div>
         </div>
         <div class="column-right">
           <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %>
         </div>
+
+        <%@ include file="/WEB-INF/jsp/serviceProvider/components/reviewDialog.jsp" %>
+        <%-- Dialog logic --%>
+        <c:if test="${openEditProfileDialog == true}">
+          <script>
+            document.getElementById("editDialog").style.display = "flex";
+          </script>
+        </c:if>
+        <c:if test="${openReviewDialog == true}">
+          <script>
+            document.getElementById("reviewDialog").style.display = "flex";
+          </script>
+        </c:if>
 
 
       </div>

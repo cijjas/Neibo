@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.models.Event;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,33 +12,27 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.sql.DataSource;
 import java.sql.Date;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class EventDaoImplTest {
-
-    private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
-    private EventDaoImpl eventDao;
 
     private static final String EVENT_NAME = "Sample Event";
     private static final String EVENT_DESCRIPTION = "Sample Description";
     private static final Date EVENT_DATE = Date.valueOf("2022-12-12");
     private static final long EVENT_DURATION = 60; // Minutes
-
     @Autowired
     private DataSource ds;
+    @Autowired
+    private TestInserter testInserter;
+    private JdbcTemplate jdbcTemplate;
+    private EventDaoImpl eventDao;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
         eventDao = new EventDaoImpl(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
     }
 
 

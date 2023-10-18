@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,24 +20,24 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ChannelDaoImplTest {
 
-    private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
-    private ChannelDaoImpl channelDao;
-
-    private String CHANNEL_NAME = "Not Default Name";
-
     @Autowired
     private DataSource ds;
+    @Autowired
+    private TestInserter testInserter;
+    private JdbcTemplate jdbcTemplate;
+    private ChannelDaoImpl channelDao;
+
+    private final String CHANNEL_NAME = "Not Default Name";
+
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
         channelDao = new ChannelDaoImpl(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
     }
 
     @Test
@@ -55,7 +55,7 @@ public class ChannelDaoImplTest {
     @Test
     public void testFindChannelById() {
         // Pre Conditions
-        long chKey = testInsertionUtils.createChannel();
+        long chKey = testInserter.createChannel();
 
         // Exercise
         Optional<Channel> ch = channelDao.findChannelById(chKey);
@@ -79,7 +79,7 @@ public class ChannelDaoImplTest {
     @Test
     public void testFindChannelByName() {
         // Pre Conditions
-        testInsertionUtils.createChannel(CHANNEL_NAME);
+        testInserter.createChannel(CHANNEL_NAME);
 
         // Exercise
         Optional<Channel> ch = channelDao.findChannelByName(CHANNEL_NAME);
@@ -104,9 +104,9 @@ public class ChannelDaoImplTest {
     @Test
     public void testGetChannels() {
         // Pre Conditions
-        long chKey = testInsertionUtils.createChannel();
-        long nhKey = testInsertionUtils.createNeighborhood();
-        testInsertionUtils.createNeighborhoodChannelMapping(nhKey, chKey);
+        long chKey = testInserter.createChannel();
+        long nhKey = testInserter.createNeighborhood();
+        testInserter.createNeighborhoodChannelMapping(nhKey, chKey);
 
         // Exercise
         List<Channel> channels = channelDao.getChannels(nhKey);
@@ -118,7 +118,7 @@ public class ChannelDaoImplTest {
     @Test
     public void testGetNoChannels() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
+        long nhKey = testInserter.createNeighborhood();
 
         // Exercise
         List<Channel> channels = channelDao.getChannels(nhKey);

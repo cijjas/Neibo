@@ -35,42 +35,168 @@
                 <%@ include file="/WEB-INF/jsp/components/widgets/leftColumn.jsp" %>
             </div>
             <div class="column-middle">
-                <div class="f-c-c">
+                <div class="cool-static-container mb-4" style="overflow: visible">
                     <c:choose>
                         <c:when test="${otherNeighborhoods.isEmpty()}">
-                            <p><spring:message code="No.new.neighborhoods"/></p>
+                            <div class="f-c-c-c w-100 mb-3" style="text-align: center">
+                                <div class="w-75">
+                                    <spring:message code="No.new.neighborhoods"/>
+                                </div>
+                            </div>
                         </c:when>
                         <c:otherwise>
-<%--                            <form:form id="neighborhood-form" action="${pageContext.request.contextPath}/services/neighborhoods" method="post" modelAttribute="neighborhoodForm">--%>
-<%--                                <spring:message code="Neighborhood" var="neighborhoodPlaceholder"/>--%>
-<%--                                <form:select id="neighborhood-select" path="neighborhoodId" class="cool-input" placeholder="${neighborhoodPlaceholder}">--%>
-<%--                                    <c:forEach var="entry" items="${otherNeighborhoods}">--%>
-<%--                                        <form:option value="${entry.neighborhoodId}">${entry.name}</form:option>--%>
-<%--                                    </c:forEach>--%>
-<%--                                </form:select>--%>
-<%--                                <div class="d-flex justify-content-end m-t-40 ">--%>
-<%--                                    <button type="submit" class="cool-button cool-small on-bg w-25" style="height:40px;" ><spring:message code="Request"/></button>--%>
-<%--                                </div>--%>
-<%--                            </form:form>--%>
+                            <div class="f-c-c-c w-100">
+                                <span class="font-weight-bold " style="font-size: 20px">
+                                    <spring:message code="Join.neighborhoods"/>
+                                </span>
+
+                                <div class="neighborhoods-select mb-4 w-100">
+                                    <input type="hidden"  id="selectedNeighborhoods" name="neighborhoodIds"/>
+                                    <div class="f-r-c-c w-100" >
+                                        <div class="container" style="margin:0 ">
+                                            <div class="select-btn n-workers" style="width: 100%;">
+                                                <span class="btn-text" id="neighborhoods-button"><spring:message code="Select.neighborhood"/></span>
+                                                <span class="arrow-dwn">
+                                            <i class="fa-solid fa-chevron-down"></i>
+                                        </span>
+                                            </div>
+                                            <ul class="list-items n-workers">
+                                                <c:forEach var="neighborhood" items="${otherNeighborhoods}">
+                                                    <li class="item" data-neighborhood-id="${neighborhood.neighborhoodId}">
+                                                <span class="checkbox ">
+                                                    <i class="fa-solid fa-check check-icon"></i>
+                                                </span>
+                                                        <span class="item-text"><c:out value="${neighborhood.name}"/></span>
+                                                    </li>
+                                                </c:forEach>
+                                            </ul>
+                                        </div>
+                                        <button type="submit"  onclick="submitNeighborhoods()" class="cool-button cool-small on-bg font-weight-bold w-25" >
+                                            <spring:message code="Add"/>
+                                            <i class="fa-solid fa-share ml-1"></i>
+                                        </button>
+                                    </div>
+                                    <script>
+                                        function submitNeighborhoods() {
+                                            const form = document.createElement("form");
+                                            form.method = "POST";
+                                            form.action = "${pageContext.request.contextPath}/services/neighborhoods";
+                                            const hiddenField = document.createElement("input");
+                                            hiddenField.type = "hidden";
+                                            hiddenField.name = "neighborhoodIds";
+                                            hiddenField.value = document.getElementById("selectedNeighborhoods").value;
+                                            form.appendChild(hiddenField);
+                                            document.body.appendChild(form);
+                                            form.submit();
+                                        }
+                                    </script>
+                                    <script>
+                                        const btnText = document.querySelector(".btn-text");
+                                        const arrow = document.querySelector(".arrow-dwn");
+                                        const arrowIcon = document.querySelector(".arrow-dwn i");
+
+                                        const selectBtn = document.querySelector(".select-btn"),
+                                            items = document.querySelectorAll(".item"),
+                                            selectedProfessions = document.getElementById("selectedNeighborhoods");
+                                        const listContainer = document.querySelector(".list-items");
+
+                                        items.forEach(item => {
+                                            item.addEventListener("click", () => {
+                                                item.classList.toggle("checked");
+                                                updateSelectedProfessions();
+                                            });
+                                        });
+
+                                        function updateSelectedProfessions() {
+                                            const checkedItems = document.querySelectorAll(".item.checked");
+                                            const selectedProfessionIds = Array.from(checkedItems).map(item => item.getAttribute("data-neighborhood-id"));
+                                            const selectedProfessionTexts = Array.from(checkedItems).map(item => item.querySelector(".item-text").innerText);
+
+                                            selectedProfessions.value = selectedProfessionIds.join(",");
+
+                                            const btnText = document.querySelector(".btn-text");
+                                            if (selectedProfessionIds.length > 0) {
+                                                if(selectedProfessionTexts.length > 1){
+                                                    btnText.innerText = "("+ selectedProfessionIds.length + ") " + selectedProfessionTexts.join(", ");
+                                                }
+                                                else {
+                                                    btnText.innerText =  selectedProfessionTexts.join(", ");
+                                                }
+                                                btnText.classList.add("c-text");
+
+                                            } else {
+                                                btnText.classList.remove("c-text");
+                                                btnText.innerText = `<spring:message code="Select.neighborhood"/>`;
+                                            }
+                                        }
+
+                                        selectBtn.addEventListener("click", () => {
+                                            selectBtn.classList.toggle("open");
+                                        });
+
+                                        // Close the list when clicking outside
+                                        document.addEventListener("click", (event) => {
+                                            if (!listContainer.contains(event.target) && event.target !== selectBtn && event.target !== btnText && event.target !== arrow && event.target !== arrowIcon) {
+                                                selectBtn.classList.remove("open");
+                                            }
+                                        });
+
+                                        selectBtn.addEventListener("focus", () => {
+                                            selectBtn.classList.add("open");
+                                        });
+
+
+                                        // Initial update of selected professions on page load
+                                        updateSelectedProfessions();
+                                    </script>
+                                </div>
+
+                                <div class="w-100 f-c-c-c" style="font-size: 14px; text-align: center">
+
+                                    <span class="font-weight-normal">
+                                        <spring:message code="Select.neighborhood.message.1"/>
+                                    </span>
+                                </div>
+                            </div>
+
+
                         </c:otherwise>
                     </c:choose>
 
                 </div>
-
-                <div class="grey-container">
+                <div class="cool-static-container" >
                     <c:choose>
                         <c:when test="${associatedNeighborhoods.isEmpty()}">
-                            <p><spring:message code="No.associated.neighborhoods"/></p>
+                            <div class="f-c-c-c w-100 mt-3" style="text-align: center">
+                                <div class="w-75">
+                                    <spring:message code="No.associated.neighborhoods"/>
+                                </div>
+                            </div>
                         </c:when>
                         <c:otherwise>
-                            <c:forEach var="entry" items="${associatedNeighborhoods}">
-                                <div class="cool-static-container">
-                                    <p><c:out value="${entry.name}"/></p>
-                                    <a href="${pageContext.request.contextPath}/services/neighborhoods/remove/${entry.neighborhoodId}" class="btn btn-link">
-                                        <i class="fas fa-trash" style="color: var(--error);"></i>
-                                    </a>
-                                </div>
-                            </c:forEach>
+                            <div class="f-c-s-c mt-2 w-100">
+                                <span class="font-weight-bold " style="font-size: 20px"><spring:message code="My.Neighborhoods"/></span>
+                                <table class="table-striped w-100 mt-3">
+                                    <thead>
+                                    <tr>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <c:forEach var="entry" items="${associatedNeighborhoods}">
+                                        <tr>
+                                            <td style="text-align: start;" ><span class="pl-2"><c:out value="${entry.name}" /></span></td>
+                                            <td>
+                                                <a href="${pageContext.request.contextPath}/services/neighborhoods/remove/${entry.neighborhoodId}" class="btn btn-link">
+                                                    <i class="fas fa-trash" style="color: var(--error);"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
                         </c:otherwise>
                     </c:choose>
 

@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.models.Time;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import ar.edu.itba.paw.enums.Table;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,29 +15,27 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
-import java.sql.Date;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestConfig.class)
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class TimeDaoImplTest {
 
-    private JdbcTemplate jdbcTemplate;
-    private TestInsertionUtils testInsertionUtils;
-    private TimeDao timeDao;
-
-    private java.sql.Time TIME_INTERVAL = new java.sql.Time(System.currentTimeMillis());
-
     @Autowired
     private DataSource ds;
+    @Autowired
+    private TestInserter testInserter;
+    private JdbcTemplate jdbcTemplate;
+    private TimeDao timeDao;
+
+    private final java.sql.Time TIME_INTERVAL = new java.sql.Time(System.currentTimeMillis());
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        testInsertionUtils = new TestInsertionUtils(jdbcTemplate, ds);
         timeDao = new TimeDaoImpl(ds);
     }
 
@@ -55,7 +53,7 @@ public class TimeDaoImplTest {
     @Test
     public void testFindTimeById() {
         // Pre Conditions
-        long timeKey = testInsertionUtils.createTime();
+        long timeKey = testInserter.createTime();
 
         // Exercise
         Optional<Time> foundTime = timeDao.findTimeById(timeKey);
