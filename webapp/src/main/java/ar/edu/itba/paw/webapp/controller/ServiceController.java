@@ -207,9 +207,10 @@ public class ServiceController {
     @RequestMapping(value = "/profile/edit", method = RequestMethod.POST)
     public ModelAndView editProfile(
             @Valid @ModelAttribute("editWorkerProfileForm") final EditWorkerProfileForm editWorkerProfileForm,
+            final BindingResult errors,
             @RequestParam(value = "page", defaultValue = "1", required = false) int page,
             @RequestParam(value = "size", defaultValue = "10", required = false) int size,
-            final BindingResult errors
+            @ModelAttribute("reviewForm") final ReviewForm reviewForm
     ) {
         long workerId = sessionUtils.getLoggedUser().getUserId();
         if (errors.hasErrors()) {
