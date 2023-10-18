@@ -64,23 +64,16 @@ public class BookingServiceImplTest {
     private static final Time START_TIME_4 = new Time(13, 0, 0);
     private static final Date BOOKING_DATE_4 = new Date(2021, 9, 12);
 
-
-    // private final UserServiceImpl us = new UserServiceImpl(null);
-    // Qué usamos como UserDao para el UserServiceImpl? No queremos conectarlo al Postgres de verdad, es una pérdida de
-    // tiempo escribir un propio, por ejemplo, InMemoryTestUserDao que guarde los usuarios en un mapa en memoria...
-    // Para esto generamos un mock con Mockito, y le pedimos que nos cree el UserServiceImpl inyectando la clase
-    // mock-eada:
-    @Mock // Le pedimos que nos genere una clase mock de UserDao
+    @Mock
     private BookingDao bookingDao;
     @Mock
     private AvailabilityDao availabilityDao;
-    @InjectMocks // Le pedimos que cree un UserServiceImpl, y que en el ctor (que toma un UserDao) inyecte un mock.
+    @InjectMocks
     private BookingServiceImpl bs;
 
     @Test
     public void testCreate() {
-        // 1. Precondiciones
-        // Defino el comportamiento de la clase mock de UserDao
+        // 1. Preconditions
         when(availabilityDao.findAvailabilityId(AMENITY_ID,SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
         when(availabilityDao.findAvailabilityId(AMENITY_ID,SHIFT_ID_2)).thenReturn(OptionalLong.of(AVAILABILITY_ID_2));
         when(availabilityDao.findAvailabilityId(AMENITY_ID,SHIFT_ID_3)).thenReturn(OptionalLong.of(AVAILABILITY_ID_3));
@@ -94,42 +87,35 @@ public class BookingServiceImplTest {
         shiftIds.add(SHIFT_ID_2);
         shiftIds.add(SHIFT_ID_3);
 
-        // 2. Ejercitar
-        // Pruebo la funcionalidad de usuarios
+        // 2. Exercise
         long[] bookingIds = bs.createBooking(USER_ID, AMENITY_ID, shiftIds, BOOKING_DATE);
 
-        // 3. Postcondiciones
+        // 3. Postconditions
         Assert.assertNotNull(bookingIds);
         Assert.assertEquals(bookingIds.length, 3);
         Assert.assertEquals(bookingIds[0], ID);
         Assert.assertEquals(bookingIds[1], ID_2);
         Assert.assertEquals(bookingIds[2], ID_3);
 
-        // Verifico que se haya llamado create del UserDao una vez
-        // NUNCA HAGAN ESTO, PORQUE ESTAS PROBANDO EL UserServiceImpl QUE TE IMPORTA CÓMO EL USA EL UserDao
-        // Mockito.verify(userDao, times(1)).create(EMAIL, PASSWORD);
     }
-    @Test(expected = RuntimeException.class) // "Espero que este test lance y falle con una exception tal"
+    @Test(expected = RuntimeException.class)
     public void testCreateAlreadyExists() {
-        // 1. Precondiciones
-        // Defino el comportamiento de la clase mock de UserDao
+        // 1. Preconditions
         when(availabilityDao.findAvailabilityId(AMENITY_ID,SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
         when(bookingDao.createBooking(eq(USER_ID), eq(AMENITY_AVAILABILITY_ID), eq(BOOKING_DATE))).thenThrow(RuntimeException.class);
 
         List<Long> shiftIds = new ArrayList<>();
         shiftIds.add(SHIFT_ID_1);
 
-        // 2. Ejercitar
+        // 2. Exercise
         long[] bookingIds = bs.createBooking(USER_ID, AMENITY_ID, shiftIds, BOOKING_DATE);
 
-        // 3. Postcondiciones
-        // (Nada, espero que lo anterior tire exception)
+        // 3. Postconditions
     }
 
     @Test
     public void testGetUserBookings() {
-        // 1. Precondiciones
-        // Defino el comportamiento de la clase mock de UserDao
+        // 1. Preconditions
         mockBooking1 = mock(Booking.class);
         mockBooking2 = mock(Booking.class);
         mockBooking3 = mock(Booking.class);
@@ -163,10 +149,10 @@ public class BookingServiceImplTest {
 
         when(bookingDao.getUserBookings(USER_ID)).thenReturn(bookings);
 
-        // 2. Ejercitar
+        // 2. Exercise
         List<GroupedBooking> groupedBookings = bs.getUserBookings(USER_ID);
 
-        // 3. Postcondiciones
+        // 3. Postconditions
         Assert.assertEquals(groupedBookings.size(), 3);
         Assert.assertEquals(groupedBookings.get(0).getAmenityName(), AMENITY_NAME);
         Assert.assertEquals(groupedBookings.get(0).getDate(), BOOKING_DATE);

@@ -26,7 +26,7 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class) // Le decimos a JUnit que corra los tests con el runner de Mockito
+@RunWith(MockitoJUnitRunner.class)
 public class PostServiceImplTest {
 
     private User mockUser;
@@ -43,11 +43,6 @@ public class PostServiceImplTest {
     private static final long  POST_PICTURE_ID = 0;
     private static final int LIKES = 500;
 
-    // private final UserServiceImpl us = new UserServiceImpl(null);
-    // Qué usamos como UserDao para el UserServiceImpl? No queremos conectarlo al Postgres de verdad, es una pérdida de
-    // tiempo escribir un propio, por ejemplo, InMemoryTestUserDao que guarde los usuarios en un mapa en memoria...
-    // Para esto generamos un mock con Mockito, y le pedimos que nos cree el UserServiceImpl inyectando la clase
-    // mock-eada:
     @Mock
     private PostDao postDao;
     @Mock
@@ -60,12 +55,11 @@ public class PostServiceImplTest {
     private TagService tagService;
     @Mock
     private ImageService imageService;
-    @InjectMocks // Le pedimos que cree un UserServiceImpl, y que en el ctor (que toma un UserDao) inyecte un mock.
+    @InjectMocks
     private PostServiceImpl ps;
 
     @Before
     public void setUp() {
-        // Create and set up the mock Neighborhood object
         mockUser = mock(User.class);
         when(mockUser.getUserId()).thenReturn(USER_ID);
         mockChannel = mock(Channel.class);
@@ -80,8 +74,7 @@ public class PostServiceImplTest {
 
     @Test
     public void testCreate() {
-        // 1. Precondiciones
-        // Defino el comportamiento de la clase mock de UserDao
+        // 1. Preconditions
         when(postDao.createPost(anyString(), anyString(), anyLong(), anyLong(), anyLong())).thenReturn(new Post.Builder()
                 .postId(ID)
                 .title(TITLE)
@@ -94,11 +87,10 @@ public class PostServiceImplTest {
                 .build()
         );
 
-        // 2. Ejercitar
-        // Pruebo la funcionalidad de usuarios
+        // 2. Exercise
         Post newPost = ps.createPost(TITLE, DESCRIPTION, mockUser.getUserId(), mockChannel.getChannelId(), null, null);
 
-        // 3. Postcondiciones
+        // 3. Postconditions
         Assert.assertNotNull(newPost);
         Assert.assertEquals(newPost.getPostId(), ID);
         Assert.assertEquals(newPost.getTitle(), TITLE);
@@ -107,27 +99,22 @@ public class PostServiceImplTest {
         Assert.assertEquals(newPost.getUser(), mockUser);
         Assert.assertEquals(newPost.getChannel(), mockChannel);
         Assert.assertEquals(newPost.getPostPictureId(), POST_PICTURE_ID);
-        // Verifico que se haya llamado create del UserDao una vez
-        // NUNCA HAGAN ESTO, PORQUE ESTAS PROBANDO EL UserServiceImpl QUE TE IMPORTA CÓMO EL USA EL UserDao
-        // Mockito.verify(userDao, times(1)).create(EMAIL, PASSWORD);
+
     }
-    @Test(expected = RuntimeException.class) // "Espero que este test lance y falle con una exception tal"
+    @Test(expected = RuntimeException.class)
     public void testCreateAlreadyExists() {
-        // 1. Precondiciones
-        // Defino el comportamiento de la clase mock de UserDao
+        // 1. Preconditions
         when(postDao.createPost(eq(TITLE), eq(DESCRIPTION), eq(mockUser.getUserId()), eq(mockChannel.getChannelId()), eq(POST_PICTURE_ID))).thenThrow(RuntimeException.class);
 
-        // 2. Ejercitar
+        // 2. Exercise
         Post newPost = ps.createPost(TITLE, DESCRIPTION, mockUser.getUserId(), mockChannel.getChannelId(), mockTagList.toString(), null);
 
-        // 3. Postcondiciones
-        // (Nada, espero que lo anterior tire exception)
+        // 3. Postconditions
     }
 
 //    @Test
 //    public void testCreateWorkerPost(){
-//        // 1. Precondiciones
-//        // Defino el comportamiento de la clase mock de UserDao
+//        // 1. Preconditions
 //        when(postDao.createPost(anyString(), anyString(), anyLong(), eq(BaseChannel.WORKERS.getId()), anyLong())).thenReturn(new Post.Builder()
 //                .postId(ID)
 //                .title(TITLE)
@@ -140,11 +127,10 @@ public class PostServiceImplTest {
 //                .build()
 //        );
 //
-//        // 2. Ejercitar
-//        // Pruebo la funcionalidad de usuarios
+//        // 2. Exercise
 //        Post newWorkerPost = ps.createWorkerPost(TITLE, DESCRIPTION, mockUser.getUserId(), null);
 //
-//        // 3. Postcondiciones
+//        // 3. Postconditions
 //        Assert.assertNotNull(newWorkerPost);
 //        Assert.assertEquals(newWorkerPost.getPostId(), ID);
 //        Assert.assertEquals(newWorkerPost.getTitle(), TITLE);
@@ -154,9 +140,7 @@ public class PostServiceImplTest {
 //        Assert.assertEquals(newWorkerPost.getChannel(), mockWorkerChannel);
 //        Assert.assertEquals(newWorkerPost.getChannel().getChannelId(), BaseChannel.WORKERS.getId());
 //        Assert.assertEquals(newWorkerPost.getPostPictureId(), POST_PICTURE_ID);
-//        // Verifico que se haya llamado create del UserDao una vez
-//        // NUNCA HAGAN ESTO, PORQUE ESTAS PROBANDO EL UserServiceImpl QUE TE IMPORTA CÓMO EL USA EL UserDao
-//        // Mockito.verify(userDao, times(1)).create(EMAIL, PASSWORD);
+//
 //    }
 
 }

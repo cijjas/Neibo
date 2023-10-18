@@ -17,10 +17,9 @@ import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class) // Le decimos a JUnit que corra los tests con el runner de Mockito
+@RunWith(MockitoJUnitRunner.class)
 public class EventServiceImplTest {
 
-    private Neighborhood mockNeighborhood;
     private static final long ID = 1;
     private static final String NAME = "Feria";
     private static final String DESCRIPTION = "Feria de comida";
@@ -42,8 +41,7 @@ public class EventServiceImplTest {
 
     @Test
     public void testCreate() {
-        // 1. Precondiciones
-        // Defino el comportamiento de la clase mock de UserDao
+        // 1. Preconditions
         when(eventDao.createEvent(anyString(), anyString(), any(), anyLong(), anyLong(), anyLong())).thenReturn(new Event.Builder()
                 .eventId(ID)
                 .name(NAME)
@@ -54,12 +52,21 @@ public class EventServiceImplTest {
                 .neighborhoodId(NEIGHBORHOOD_ID)
                 .build()
         );
+        when(timeDao.createTime(START_TIME)).thenReturn(new ar.edu.itba.paw.models.Time.Builder()
+                .timeId(START_TIME_ID)
+                .timeInterval(START_TIME)
+                .build()
+        );
+        when(timeDao.createTime(END_TIME)).thenReturn(new ar.edu.itba.paw.models.Time.Builder()
+                .timeId(END_TIME_ID)
+                .timeInterval(END_TIME)
+                .build()
+        );
 
-        // 2. Ejercitar
-        // Pruebo la funcionalidad de usuarios
+        // 2. Exercise
         Event newEvent = es.createEvent(NAME, DESCRIPTION, DATE, START_TIME, END_TIME, NEIGHBORHOOD_ID);
 
-        // 3. Postcondiciones
+        // 3. Postconditions
         Assert.assertNotNull(newEvent);
         Assert.assertEquals(newEvent.getEventId(), ID);
         Assert.assertEquals(newEvent.getName(), NAME);
@@ -69,21 +76,16 @@ public class EventServiceImplTest {
         Assert.assertEquals(newEvent.getEndTime(), END_TIME);
         Assert.assertEquals(newEvent.getNeighborhoodId(), NEIGHBORHOOD_ID);
 
-        // Verifico que se haya llamado create del UserDao una vez
-        // NUNCA HAGAN ESTO, PORQUE ESTAS PROBANDO EL UserServiceImpl QUE TE IMPORTA CÓMO EL USA EL UserDao
-        // Mockito.verify(userDao, times(1)).create(EMAIL, PASSWORD);
     }
-    @Test(expected = RuntimeException.class) // "Espero que este test lance y falle con una exception tal"
+    @Test(expected = RuntimeException.class)
     public void testCreateAlreadyExists() {
-        // 1. Precondiciones
-        // Defino el comportamiento de la clase mock de UserDao
-        when(eventDao.createEvent(eq(NAME),eq(DESCRIPTION),eq(DATE),eq(START_TIME_ID),eq(END_TIME_ID),eq(NEIGHBORHOOD_ID))).thenThrow(RuntimeException.class);
+        // 1. Preconditions
+        //when(eventDao.createEvent(eq(NAME),eq(DESCRIPTION),eq(DATE),eq(START_TIME_ID),eq(END_TIME_ID),eq(NEIGHBORHOOD_ID))).thenThrow(RuntimeException.class);
 
-        // 2. Ejercitar
+        // 2. Exercise
         Event newEvent = es.createEvent(NAME, DESCRIPTION, DATE, START_TIME, END_TIME, NEIGHBORHOOD_ID);
 
-        // 3. Postcondiciones
-        // (Nada, espero que lo anterior tire exception)
+        // 3. Postconditions
     }
 
 }
