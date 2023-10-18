@@ -42,9 +42,9 @@
             <div class="container">
                 <div class="f-c-c-c" style="gap:0">
                         <c:if test='${loggedUser.role.toString() != "WORKER"}'>
-                            <button class="cool-button cool-small on-bg font-weight-bold mb-4" onclick="openReviewDialog()">
+                            <button class="cool-button cool-small on-bg font-weight-bold mb-4 " style="width: 200px" onclick="openReviewDialog()">
                                 <spring:message code="CreateReview"/>
-                                <i class="fa-regular fa-star ml-1 "></i>
+                                <i class="fa-solid fa-star  ml-1"></i>
                             </button>
                         </c:if>
                     <c:forEach var="review" items="${reviews}" varStatus="loopStatus">

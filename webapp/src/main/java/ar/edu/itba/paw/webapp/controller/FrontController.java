@@ -865,9 +865,7 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/services/neighborhoods", method = RequestMethod.GET)
-    public ModelAndView workersNeighborhoods(
-            @ModelAttribute("neighborhoodForm") final NeighborhoodsForm neighborhoodForm
-    ) {
+    public ModelAndView workersNeighborhoods() {
         ModelAndView mav = new ModelAndView("serviceProvider/views/neighborhoods");
         long workerId = sessionUtils.getLoggedUser().getUserId();
         mav.addObject("associatedNeighborhoods", nhws.getNeighborhoods(workerId));
@@ -879,14 +877,11 @@ public class FrontController {
 
     @RequestMapping(value = "/services/neighborhoods", method = RequestMethod.POST)
     public ModelAndView addWorkerToNeighborhood(
-            @Valid @ModelAttribute("neighborhoodForm") final NeighborhoodsForm neighborhoodForm,
-            final BindingResult errors
+            @RequestParam("neighborhoodIds") List<Long> neighborhoodIds
     ) {
-        if(errors.hasErrors()) {
-            return workersNeighborhoods(neighborhoodForm);
-        }
         long workerId = sessionUtils.getLoggedUser().getUserId();
-        for(long neighborhoodId : neighborhoodForm.getNeighborhoodIds()) {
+        System.out.println("neighborhoods: " + neighborhoodIds);
+        for(long neighborhoodId : neighborhoodIds) {
             nhws.addWorkerToNeighborhood(workerId, neighborhoodId);
         }
         return new ModelAndView("redirect:/services/neighborhoods");
