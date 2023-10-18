@@ -7,7 +7,7 @@
        value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}"/>
 
 <div class="pagination">
-    <c:url var="prevUrl" value="${pageContext.request.contextPath}">
+    <c:url var="prevUrl" value="">
         <c:param name="page" value="${page - 1}"/>
         <c:if test="${param.tag ne null}">
             <c:forEach var="tag" items="${paramValues.tag}">
@@ -23,7 +23,7 @@
     </a>
 
     <c:forEach begin="1" end="${totalPages}" var="pageNumber">
-        <c:url var="pageUrl" value="${pageContext.request.contextPath}">
+        <c:url var="pageUrl" value="">
             <c:param name="page" value="${pageNumber}"/>
             <c:if test="${param.tag ne null}">
                 <c:forEach var="tag" items="${paramValues.tag}">
@@ -37,7 +37,7 @@
         </a>
     </c:forEach>
 
-    <c:url var="nextUrl" value="${pageContext.request.contextPath}">
+    <c:url var="nextUrl" value="">
         <c:param name="page" value="${page + 1}"/>
         <c:if test="${param.tag ne null}">
             <c:forEach var="tag" items="${paramValues.tag}">

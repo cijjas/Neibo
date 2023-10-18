@@ -53,22 +53,4 @@ public class TagServiceImplTest {
         // 3. Postconditions
     }
 
-    /*@Test
-    public void testFindById() {
-        // 1. Precondiciones
-        // Defino el comportamiento de la clase mock de UserDao
-        List<Tag> tagsList = Collections.singletonList(new Tag.Builder()
-                .tagId(ID)
-                .tag(TAG)
-                .build());
-
-        when(tagDao.findTagsByPostId(eq(POST_ID))).thenReturn(Optional.of(tagsList));
-
-        // 2. Ejercitar
-        Optional<List<Tag>> newTagList = ts.findTagsByPostId(POST_ID);
-
-        // 3. Postcondiciones
-        Assert.assertTrue(newTagList.isPresent());
-        Assert.assertEquals(ID, newTagList.get().get(0).getTagId());
-    }*/
 }
