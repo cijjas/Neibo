@@ -11,7 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-  <title>Neibo - ${channel}</title>
+  <title><spring:message code="Profile"/></title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
@@ -38,32 +38,31 @@
           <div class="f-c-c-c">
 
             <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileCard.jsp" %>
-            <c:choose>
-              <c:when test='${loggedUser.role.toString() != "WORKER"}'>
-                <button class="cool-button font-weight-bold" onclick="openReviewDialog()"><spring:message code="CreateReview"/></button>
-                <%@ include file="/WEB-INF/jsp/serviceProvider/components/reviewDialog.jsp" %>
-              </c:when>
-              <c:otherwise>
-                <a class="cool-button" href="${pageContext.request.contextPath}/services/neighborhoods"><spring:message code="Post.verb"/></a>
-              </c:otherwise>
-            </c:choose>
+            <c:if test='${loggedUser.role.toString() == "WORKER"}'>
+              <a class="cool-button" href="${pageContext.request.contextPath}/services/neighborhoods"><spring:message code="Post.verb"/></a>
+            </c:if>
+
             <%@ include file="/WEB-INF/jsp/serviceProvider/components/tabbedBox.jsp" %>
 
-            <c:if test="${openEditProfileDialog == true}">
-              <script>
-                document.getElementById("editDialog").style.display = "flex";
-              </script>
-            </c:if>
-            <c:if test="${openReviewDialog == true}">
-              <script>
-                document.getElementById("reviewDialog").style.display = "flex";
-              </script>
-            </c:if>
+
           </div>
         </div>
         <div class="column-right">
           <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %>
         </div>
+
+        <%@ include file="/WEB-INF/jsp/serviceProvider/components/reviewDialog.jsp" %>
+        <%-- Dialog logic --%>
+        <c:if test="${openEditProfileDialog == true}">
+          <script>
+            document.getElementById("editDialog").style.display = "flex";
+          </script>
+        </c:if>
+        <c:if test="${openReviewDialog == true}">
+          <script>
+            document.getElementById("reviewDialog").style.display = "flex";
+          </script>
+        </c:if>
 
 
       </div>

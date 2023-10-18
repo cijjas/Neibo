@@ -55,7 +55,7 @@
         </p>
 
 
-        <a href="${pageContext.request.contextPath}/" class="goback-button"><spring:message code="GoBackToMainPage"/></a>
+        <a href="${pageContext.request.contextPath}/" class="goback-button font-weight-bold"><spring:message code="GoBackToMainPage"/></a>
 
     </div>
 

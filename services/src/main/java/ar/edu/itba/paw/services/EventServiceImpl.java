@@ -40,6 +40,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event createEvent(String name, String description, Date date, Time startTime, Time endTime, long neighborhoodId) {
         LOGGER.info("Creating Event {} for Neighborhood {}", name, neighborhoodId);
+        // find, if not exist -> create
         long startTimeId = timeDao.createTime(startTime).getTimeId();
         long endTimeId = timeDao.createTime(endTime).getTimeId();
         return eventDao.createEvent(name, description, date, startTimeId, endTimeId, neighborhoodId);

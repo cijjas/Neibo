@@ -18,7 +18,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title><spring:message code="CreateNewAmenity.button"/></title>
+    <title><spring:message code="Amenities"/></title>
 </head>
 
 
