@@ -1,10 +1,5 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.Availability;
-
-import java.sql.Date;
-import java.util.List;
-import java.util.Optional;
 import java.util.OptionalLong;
 
 public interface AvailabilityDao {

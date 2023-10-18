@@ -23,8 +23,8 @@ import java.util.List;
 @RequestMapping("/services")
 public class ServiceController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceController.class);
     private final SessionUtils sessionUtils;
-
     private final PostService ps;
     private final UserService us;
     private final NeighborhoodService nhs;
@@ -48,30 +48,31 @@ public class ServiceController {
     private final WorkerService ws;
     private final AvailabilityService avs;
 
+
     @Autowired
     public ServiceController(SessionUtils sessionUtils,
-                          final PostService ps,
-                          final UserService us,
-                          final NeighborhoodService nhs,
-                          final CommentService cs,
-                          final TagService ts,
-                          final ChannelService chs,
-                          final SubscriptionService ss,
-                          final CategorizationService cas,
-                          final ImageService is,
-                          final AmenityService as,
-                          final EventService es,
-                          final ResourceService res,
-                          final ContactService cos,
-                          final AttendanceService ats,
-                          final LikeService ls,
-                          final NeighborhoodWorkerService nhws,
-                          final ProfessionWorkerService pws,
-                          final ReviewService rws,
-                          final WorkerService ws,
-                          final BookingService bs,
-                          final ShiftService shs,
-                          final AvailabilityService avs
+                             final PostService ps,
+                             final UserService us,
+                             final NeighborhoodService nhs,
+                             final CommentService cs,
+                             final TagService ts,
+                             final ChannelService chs,
+                             final SubscriptionService ss,
+                             final CategorizationService cas,
+                             final ImageService is,
+                             final AmenityService as,
+                             final EventService es,
+                             final ResourceService res,
+                             final ContactService cos,
+                             final AttendanceService ats,
+                             final LikeService ls,
+                             final NeighborhoodWorkerService nhws,
+                             final ProfessionWorkerService pws,
+                             final ReviewService rws,
+                             final WorkerService ws,
+                             final BookingService bs,
+                             final ShiftService shs,
+                             final AvailabilityService avs
     ) {
         this.sessionUtils = sessionUtils;
         this.is = is;
@@ -98,9 +99,6 @@ public class ServiceController {
         this.avs = avs;
     }
 
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceController.class);
-
     @RequestMapping(value = "/profile/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView serviceProfile(
             @ModelAttribute("reviewForm") final ReviewForm reviewForm,
@@ -118,10 +116,11 @@ public class ServiceController {
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
         mav.addObject("averageRating", rws.getAvgRating(workerId).orElseThrow(() -> new NotFoundException("Average Rating not found")));
-        mav.addObject("postList", ps.getWorkerPostsByCriteria(BaseChannel.WORKERS.toString(), page, size,null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId));
+        mav.addObject("postList", ps.getWorkerPostsByCriteria(BaseChannel.WORKERS.toString(), page, size, null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId));
         mav.addObject("totalPages", ps.getTotalPages(BaseChannel.WORKERS.toString(), size, null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId));
         return mav;
     }
+
     @RequestMapping(value = "/profile/{id:\\d+}", method = RequestMethod.POST)
     public ModelAndView serviceProfile(
     ) {
@@ -156,7 +155,7 @@ public class ServiceController {
             @RequestParam(value = "page", defaultValue = "1", required = false) int page,
             @RequestParam(value = "size", defaultValue = "10", required = false) int size
     ) {
-        if(errors.hasErrors()) {
+        if (errors.hasErrors()) {
             LOGGER.error("Error in Review Form");
             ModelAndView mav = serviceProfile(reviewForm, workerId, new EditWorkerProfileForm(), page, size);
             mav.addObject("openReviewDialog", true);
@@ -195,7 +194,7 @@ public class ServiceController {
             final BindingResult errors
     ) {
         long workerId = sessionUtils.getLoggedUser().getUserId();
-        if(errors.hasErrors()) {
+        if (errors.hasErrors()) {
             LOGGER.error("Error in Edit Form");
             ModelAndView mav = serviceProfile(new ReviewForm(), workerId, editWorkerProfileForm, page, size);
             mav.addObject("openEditProfileDialog", true);
@@ -213,7 +212,7 @@ public class ServiceController {
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
-        List<Worker> workerList = ws.getWorkersByCriteria(page,size, null, sessionUtils.getLoggedUser().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId());
+        List<Worker> workerList = ws.getWorkersByCriteria(page, size, null, sessionUtils.getLoggedUser().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId());
         mav.addObject("workersList", workerList);
         mav.addObject("totalPages", ws.getTotalWorkerPages(sessionUtils.getLoggedUser().getNeighborhoodId(), size));
         mav.addObject("contextPath", "/services");

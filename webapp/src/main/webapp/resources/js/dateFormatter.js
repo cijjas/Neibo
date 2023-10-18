@@ -1,5 +1,5 @@
 // Wrap the entire script in a function
-(function() {
+(function () {
     const postDateElements = document.querySelectorAll('.post-date');
     console.log(postDateElements);
 // Iterate through each element and update the date
@@ -7,12 +7,13 @@
         const dateString = postDateElement.getAttribute('data-post-date');
         postDateElement.textContent = formatDateToRelativeTime(dateString);
     });
+
     function formatDateToRelativeTime(dateString) {
         const currentDate = new Date();
         const currenDateTime = currentDate.getTime();
         const providedDate = new Date(dateString);
         const providedDateTime = providedDate.getTime();
-        const timeDifferenceInSeconds = (currenDateTime - providedDateTime)/1000 ;
+        const timeDifferenceInSeconds = (currenDateTime - providedDateTime) / 1000;
         let result;
 
         if (timeDifferenceInSeconds < 60) {
@@ -28,6 +29,6 @@
             result = daysAgo + ' day' + (daysAgo !== 1 ? 's' : '') + ' ago';
         }
 
-        return result  ;
+        return result;
     }
 })();

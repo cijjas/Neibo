@@ -24,16 +24,14 @@ import static org.junit.Assert.*;
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ResourceDaoImplTest {
 
+    private final String SAMPLE_TITLE = "Sample Title";
+    private final String SAMPLE_DESC = "Sample Desc";
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private ResourceDao resourceDao;
-
-    private final String SAMPLE_TITLE = "Sample Title";
-    private final String SAMPLE_DESC = "Sample Desc";
-
 
     @Before
     public void setUp() {

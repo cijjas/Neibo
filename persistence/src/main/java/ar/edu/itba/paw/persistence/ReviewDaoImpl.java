@@ -22,12 +22,22 @@ import java.util.Optional;
 
 @Repository
 public class ReviewDaoImpl implements ReviewDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReviewDaoImpl.class);
+    // ---------------------------------------------- REVIEWS SELECT ---------------------------------------------------
+    private static final RowMapper<Review> ROW_MAPPER = (rs, rowNum) ->
+            new Review.Builder()
+                    .reviewId(rs.getLong("reviewid"))
+                    .workerId(rs.getLong("workerid"))
+                    .userId(rs.getLong("userid"))
+                    .rating(rs.getFloat("rating"))
+                    .review(rs.getString("review"))
+                    .date(rs.getTimestamp("date"))
+                    .build();
+    private static final RowMapper<Float> ROW_MAPPER_2 = (rs, rowNum) ->
+            rs.getFloat(1);
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
     private final String REVIEWS = "SELECT * FROM reviews ";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReviewDaoImpl.class);
 
     @Autowired
     public ReviewDaoImpl(final DataSource ds) {
@@ -62,20 +72,6 @@ public class ReviewDaoImpl implements ReviewDao {
             throw new InsertionException("An error occurred whilst creating the Review");
         }
     }
-
-    // ---------------------------------------------- REVIEWS SELECT ---------------------------------------------------
-    private static final RowMapper<Review> ROW_MAPPER = (rs, rowNum) ->
-            new Review.Builder()
-                    .reviewId(rs.getLong("reviewid"))
-                    .workerId(rs.getLong("workerid"))
-                    .userId(rs.getLong("userid"))
-                    .rating(rs.getFloat("rating"))
-                    .review(rs.getString("review"))
-                    .date(rs.getTimestamp("date"))
-                    .build();
-
-    private static final RowMapper<Float> ROW_MAPPER_2 = (rs, rowNum) ->
-            rs.getFloat(1);
 
     @Override
     public Review getReview(long reviewId) {

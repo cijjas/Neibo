@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -9,7 +9,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -22,8 +23,7 @@
 </head>
 
 
-
-<body  class="body ${loggedUser.darkMode ? 'dark-mode' : ''}">
+<body class="body ${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
 <div class="container">
     <div class="row">
@@ -31,12 +31,13 @@
             <%@ include file="/WEB-INF/jsp/admin/components/controlPanelLeftButtons.jsp" %>
         </div>
 
-        <div class="column-middle" >
-            <div class="cool-static-container shifts-reservation " >
+        <div class="column-middle">
+            <div class="cool-static-container shifts-reservation ">
                 <h2 class="card-title"><spring:message code="CreateNewAmenity.button"/></h2>
                 <div class="divider"></div>
                 <div>
-                    <form:form  method="post" action="${pageContext.request.contextPath}/admin/create-amenity" modelAttribute="amenityForm">
+                    <form:form method="post" action="${pageContext.request.contextPath}/admin/create-amenity"
+                               modelAttribute="amenityForm">
                         <div class="d-flex flex-column justify-content-between align-items-center mb-2 mt-2">
                             <div class="form-row">
                                 <spring:message code="Name" var="namePlaceholder"/>
@@ -49,12 +50,13 @@
 
                         <div class="d-flex flex-column justify-content-between align-items-center">
                             <spring:message code="Description" var="descriptionPlaceholder"/>
-                            <form:textarea path="description" class="cool-input" rows="5" placeholder="${descriptionPlaceholder}"/>
+                            <form:textarea path="description" class="cool-input" rows="5"
+                                           placeholder="${descriptionPlaceholder}"/>
                             <div class="form-row form-error">
                                 <form:errors path="description" cssClass="error" element="p"/>
                             </div>
                         </div>
-                        <p class="m-t-40"> <spring:message code="AmenityHours"/> </p>
+                        <p class="m-t-40"><spring:message code="AmenityHours"/></p>
                         <div class="divider"></div>
 
 
@@ -62,15 +64,17 @@
                             <form:errors cssClass="error" element="p"/>
                         </div>
 
-                            <!-- Your other form elements here -->
+                        <!-- Your other form elements here -->
                         <div class="f-r-sb-c w-100 pl-3 pr-3">
                             <a onclick="check9to5()" class="w-100 cool-button cool-small on-bg">9-17</a>
-                            <a onclick="uncheckWeekends()" class="w-100 cool-button red "><spring:message code="Clear.weekend"/></a>
+                            <a onclick="uncheckWeekends()" class="w-100 cool-button red "><spring:message
+                                    code="Clear.weekend"/></a>
 
-                            <a onclick="clearAllCheckedHours()" class="w-100 cool-button red "><spring:message code="Clear.all"/></a>
+                            <a onclick="clearAllCheckedHours()" class="w-100 cool-button red "><spring:message
+                                    code="Clear.all"/></a>
                         </div>
 
-                        <div class="cool-table w-100 p-4" >
+                        <div class="cool-table w-100 p-4">
 
                             <table>
                                 <tr>
@@ -88,14 +92,15 @@
                                     <tr>
                                         <td>
                                             <label class="container">
-                                                <input type="checkbox" onclick="toggleRow(this)" />
+                                                <input type="checkbox" onclick="toggleRow(this)"/>
                                             </label>
                                         </td>
                                         <c:forEach items="${daysPairs}" var="day">
                                             <td>
                                                 <div class="cat creation">
                                                     <label class="w-100">
-                                                        <input type="checkbox" name="selectedShifts" value="${day.key}-${time.key}" />
+                                                        <input type="checkbox" name="selectedShifts"
+                                                               value="${day.key}-${time.key}"/>
                                                         <span>${time.value.key}</span>
                                                     </label>
                                                 </div>
@@ -119,7 +124,7 @@
                                     var checkboxes = document.querySelectorAll('input[name="selectedShifts"]');
                                     checkboxes.forEach(function (checkbox, index) {
                                         if (index >= monday9am && index <= sunday5pm) {
-                                            if(index % daysInAWeek === 5 || index % daysInAWeek === 6) {
+                                            if (index % daysInAWeek === 5 || index % daysInAWeek === 6) {
                                                 return;
                                             }
                                             checkbox.checked = true;
@@ -161,10 +166,10 @@
                                     checkCheckboxes()
                                 }
 
-                                function uncheckWeekends(){
+                                function uncheckWeekends() {
                                     var checkboxes = document.querySelectorAll('input[name="selectedShifts"]');
                                     checkboxes.forEach(function (checkbox, index) {
-                                        if(index % daysInAWeek === 5 || index % daysInAWeek === 6) {
+                                        if (index % daysInAWeek === 5 || index % daysInAWeek === 6) {
                                             checkbox.checked = false;
                                         }
                                     });
@@ -210,27 +215,29 @@
 
                         <%--Submit button --%>
                         <div class="d-flex justify-content-end m-t-40 ">
-                            <button id="submit-checks" onclick="load()" type="submit" class="cool-button cool-small on-bg w-25" disabled style="height:40px;" ><spring:message code="Create.verb"/></button>
+                            <button id="submit-checks" onclick="load()" type="submit"
+                                    class="cool-button cool-small on-bg w-25" disabled style="height:40px;">
+                                <spring:message code="Create.verb"/></button>
                         </div>
                     </form:form>
                 </div>
             </div>
         </div>
 
-        <div class="column-right" >
+        <div class="column-right">
             <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %>
         </div>
     </div>
 </div>
 <script>
-    function load(){
+    function load() {
         document.getElementById("loader-container").style.display = "flex";
     }
 </script>
 
 
 <div id="loader-container" class="loader-container">
-    <div class="cool-static-container medium-size-container" >
+    <div class="cool-static-container medium-size-container">
         <div style="font-weight: bold; font-size: 16px"><spring:message code="Creating.amenity"/>...</div>
         <div class="loader" style="margin-top: 20px"></div>
     </div>
@@ -238,7 +245,9 @@
 
 
 <!-- Bootstrap JS and jQuery -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
 <%@ include file="/WEB-INF/jsp/components/displays/footer.jsp" %>
 
 </body>

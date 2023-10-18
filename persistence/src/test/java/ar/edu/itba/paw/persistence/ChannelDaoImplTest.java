@@ -24,15 +24,13 @@ import static org.junit.Assert.*;
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ChannelDaoImplTest {
 
+    private final String CHANNEL_NAME = "Not Default Name";
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private ChannelDaoImpl channelDao;
-
-    private final String CHANNEL_NAME = "Not Default Name";
-
 
     @Before
     public void setUp() {

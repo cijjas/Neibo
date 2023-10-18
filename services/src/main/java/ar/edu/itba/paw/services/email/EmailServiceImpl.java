@@ -1,13 +1,15 @@
 package ar.edu.itba.paw.services.email;
 
+import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.exceptions.MailingException;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.enums.Language;
-import ar.edu.itba.paw.enums.UserRole;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,8 +18,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.HashMap;
@@ -26,14 +27,13 @@ import java.util.Map;
 
 @Component
 public class EmailServiceImpl implements EmailService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
     private final UserDao userDao;
     private final NeighborhoodDao neighborhoodDao;
-
-
     @Autowired
     private JavaMailSender emailSender;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
+    @Autowired
+    private SpringTemplateEngine thymeleafTemplateEngine;
 
     @Autowired
     public EmailServiceImpl(UserDao userDao, NeighborhoodDao neighborhoodDao) {
@@ -72,15 +72,11 @@ public class EmailServiceImpl implements EmailService {
             helper.setSubject(subject);
             helper.setText(htmlContext, true);
             emailSender.send(message);
-        }
-        catch (MessagingException e) {
+        } catch (MessagingException e) {
             LOGGER.error("Error whilst sending HTML message to {}", to);
             throw new MailingException("An error occurred whilst sending the mail");
         }
     }
-
-    @Autowired
-    private SpringTemplateEngine thymeleafTemplateEngine;
 
     @Override
     @Async
@@ -103,7 +99,7 @@ public class EmailServiceImpl implements EmailService {
         Neighborhood neighborhood = neighborhoodDao.findNeighborhoodById(neighborhoodId).orElse(null);
         assert neighborhood != null;
 
-        for(User admin : admins) {
+        for (User admin : admins) {
             boolean isEnglish = admin.getLanguage() == Language.ENGLISH;
 
             String joinerType = (role == UserRole.NEIGHBOR) ? "neighbor" : "worker";
@@ -118,7 +114,7 @@ public class EmailServiceImpl implements EmailService {
             variables.put("neighborhood", neighborhood.getName());
             variables.put("urlpath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/admin/unverified");
 
-            sendMessageUsingThymeleafTemplate(admin.getMail(), isEnglish? "New User" : "Nuevo Usuario", isEnglish? "newNeighbor-template_en.html" : "newNeighbor-template_es.html", variables);
+            sendMessageUsingThymeleafTemplate(admin.getMail(), isEnglish ? "New User" : "Nuevo Usuario", isEnglish ? "newNeighbor-template_en.html" : "newNeighbor-template_es.html", variables);
         }
 
     }

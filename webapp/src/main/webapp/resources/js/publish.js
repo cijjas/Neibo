@@ -1,6 +1,3 @@
-
-
-
 const tagInput1 = new TagsInput({
     selector: 'tag-input1',
     wrapperClass: 'tags-input-wrapper',
@@ -19,7 +16,6 @@ function submitForm() {
     document.getElementById('tags-input').value = tagsString;
 
 }
-
 
 
 // UPLOAD IMAGE JS
@@ -50,13 +46,14 @@ dropContainer.addEventListener("drop", (e) => {
 function preview() {
 
     let frame = document.getElementById('frame');
-    if(!frame.src || frame.src === "") {
+    if (!frame.src || frame.src === "") {
         frame.style.display = "none";
     } else {
         frame.src = URL.createObjectURL(event.target.files[0]);
         frame.style.display = "block";
     }
 }
+
 function clearImage() {
     document.getElementById('frame').value = null;
     let frame = document.getElementById('frame');

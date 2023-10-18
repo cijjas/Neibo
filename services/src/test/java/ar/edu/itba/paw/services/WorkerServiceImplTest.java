@@ -1,16 +1,13 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.persistence.WorkerDao;
-import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
-import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.Neighborhood;
-import ar.edu.itba.paw.enums.Language;
-import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.models.Worker;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,14 +19,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Date;
-import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WorkerServiceImplTest {
 
-    private User mockUser;
     private static final long USER_ID = 1;
     private static final String PHONE_NUMBER = "123456789";
     private static final String BUSINESS_NAME = "Paw";
@@ -44,7 +39,7 @@ public class WorkerServiceImplTest {
     private final UserRole ROLE = UserRole.NEIGHBOR;
     private final Date CREATION_DATE = new Date(2023, 9, 11);
     private final int IDENTIFICATION = 123456789;
-
+    private User mockUser;
     @Mock
     private WorkerDao workerDao;
     @Mock
@@ -92,11 +87,12 @@ public class WorkerServiceImplTest {
         Assert.assertEquals(newWorker.getBio(), BIO);
 
     }
+
     @Test(expected = RuntimeException.class)
     public void testCreateAlreadyExists() {
         // 1. Preconditions
         when(userDao.createUser(anyString(), any(), anyString(), anyString(), anyLong(), any(), anyBoolean(), any(), anyInt())).thenReturn(mockUser);
-        when(workerDao.createWorker(eq(mockUser.getUserId()),eq(PHONE_NUMBER),eq(ADDRESS),eq(BUSINESS_NAME))).thenThrow(RuntimeException.class);
+        when(workerDao.createWorker(eq(mockUser.getUserId()), eq(PHONE_NUMBER), eq(ADDRESS), eq(BUSINESS_NAME))).thenThrow(RuntimeException.class);
 
         // 2. Exercise
         Worker newWorker = ws.createWorker(EMAIL, NAME, SURNAME, PASSWORD, IDENTIFICATION, PHONE_NUMBER, ADDRESS, LANGUAGE, new long[]{1}, BUSINESS_NAME);

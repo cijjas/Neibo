@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.enums.Language;
-import ar.edu.itba.paw.enums.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,20 +27,35 @@ public class UserDaoImpl implements UserDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
-    private BookingDao bookingDao;
-
     private final String USERS = "SELECT u.* FROM users u ";
     private final String USERS_JOIN_POSTS_USERS_AND_POSTS =
             "SELECT u.*\n" +
-            "FROM posts p " +
+                    "FROM posts p " +
                     "INNER JOIN posts_users_subscriptions ON p.postid = posts_users_subscriptions.postid " +
                     "INNER JOIN users u ON posts_users_subscriptions.userid = u.userid ";
     private final String EVENTS_JOIN_USERS =
             "SELECT u.* \n" +
-            "FROM events e " +
+                    "FROM events e " +
                     "INNER JOIN events_users ON e.eventid = events_users.eventid " +
                     "INNER JOIN users u ON events_users.userid = u.userid ";
+    private final RowMapper<User> ROW_MAPPER = (rs, rowNum) -> {
+        return new User.Builder()
+                .userId(rs.getLong("userid"))
+                .mail(rs.getString("mail"))
+                .name(rs.getString("name"))
+                .surname(rs.getString("surname"))
+                .password(rs.getString("password"))
+                .neighborhoodId(rs.getLong("neighborhoodid"))
+                .creationDate(rs.getDate("creationdate"))
+                .darkMode(rs.getBoolean("darkmode"))
+                .profilePictureId(rs.getLong("profilepictureid"))
+                .language(rs.getString("language") != null ? Language.valueOf(rs.getString("language")) : null)
+                .role(rs.getString("role") != null ? UserRole.valueOf(rs.getString("role")) : null)
+                .build();
+    };
+    private BookingDao bookingDao;
+
+    // ---------------------------------------------- USERS INSERT -----------------------------------------------------
 
     @Autowired
     public UserDaoImpl(final DataSource ds, final BookingDao bookingDao) {
@@ -51,7 +66,7 @@ public class UserDaoImpl implements UserDao {
                 .withTableName("users");
     }
 
-    // ---------------------------------------------- USERS INSERT -----------------------------------------------------
+    // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
     @Override
     public User createUser(final String mail, final String password, final String name, final String surname,
@@ -86,24 +101,6 @@ public class UserDaoImpl implements UserDao {
             throw new InsertionException("An error occurred whilst creating the User");
         }
     }
-
-    // ---------------------------------------------- USERS SELECT -----------------------------------------------------
-
-    private final RowMapper<User> ROW_MAPPER = (rs, rowNum) -> {
-        return new User.Builder()
-                .userId(rs.getLong("userid"))
-                .mail(rs.getString("mail"))
-                .name(rs.getString("name"))
-                .surname(rs.getString("surname"))
-                .password(rs.getString("password"))
-                .neighborhoodId(rs.getLong("neighborhoodid"))
-                .creationDate(rs.getDate("creationdate"))
-                .darkMode(rs.getBoolean("darkmode"))
-                .profilePictureId(rs.getLong("profilepictureid"))
-                .language(rs.getString("language") != null ? Language.valueOf(rs.getString("language")) : null)
-                .role(rs.getString("role") != null ? UserRole.valueOf(rs.getString("role")) : null)
-                .build();
-    };
 
     @Override
     public Optional<User> findUserById(final long userId) {

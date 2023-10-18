@@ -11,12 +11,10 @@ import java.util.Locale;
 public class TagsValidator implements
         ConstraintValidator<TagsConstraint, String> {
 
-    @Autowired
-    private MessageSource messageSource;
-
     private static final String TAG_PATTERN = "^[A-Za-z0-9_]+$";
     private static final int MAX_TAG_LENGTH = 20;
-
+    @Autowired
+    private MessageSource messageSource;
 
     @Override
     public void initialize(TagsConstraint imageConstraint) {
@@ -41,10 +39,10 @@ public class TagsValidator implements
                         .disableDefaultConstraintViolation();
                 return false; // If any tag is invalid, return false
             }
-            if(tag.length() > MAX_TAG_LENGTH) {
+            if (tag.length() > MAX_TAG_LENGTH) {
                 String tagError3 = messageSource.getMessage("TagError3", null, Locale.getDefault());
 
-                String errorMessage = tag + tagError3 ;
+                String errorMessage = tag + tagError3;
                 context.buildConstraintViolationWithTemplate(errorMessage)
                         .addConstraintViolation()
                         .disableDefaultConstraintViolation();

@@ -13,25 +13,6 @@ public class Day {
 
     // Getter methods
 
-    public static class Builder {
-        private long dayId;
-        private String dayName;
-
-        public Builder dayId(long dayId) {
-            this.dayId = dayId;
-            return this;
-        }
-
-        public Builder dayName(String dayName) {
-            this.dayName = dayName;
-            return this;
-        }
-
-        public Day build() {
-            return new Day(this);
-        }
-    }
-
     public long getDayId() {
         return dayId;
     }
@@ -59,5 +40,24 @@ public class Day {
     @Override
     public int hashCode() {
         return Objects.hash(dayId, dayName);
+    }
+
+    public static class Builder {
+        private long dayId;
+        private String dayName;
+
+        public Builder dayId(long dayId) {
+            this.dayId = dayId;
+            return this;
+        }
+
+        public Builder dayName(String dayName) {
+            this.dayName = dayName;
+            return this;
+        }
+
+        public Day build() {
+            return new Day(this);
+        }
     }
 }

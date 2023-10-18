@@ -3,30 +3,37 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
-import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.Contact;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Repository
 public class ContactDaoImpl implements ContactDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ContactDaoImpl.class);
+    private static final RowMapper<Contact> ROW_MAPPER = (rs, rowNum) ->
+            new Contact.Builder()
+                    .contactId(rs.getLong("contactid"))
+                    .contactAddress(rs.getString("contactaddress"))
+                    .contactName(rs.getString("contactname"))
+                    .contactPhone(rs.getString("contactphone"))
+                    .neighborhoodId(rs.getLong("neighborhoodid"))
+                    .build();
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
     private final String CONTACTS = "SELECT ct.* FROM contacts ct";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ContactDaoImpl.class);
+    // --------------------------------------------- CONTACT INSERT ----------------------------------------------------
 
     @Autowired
     public ContactDaoImpl(final DataSource ds) {
@@ -36,7 +43,7 @@ public class ContactDaoImpl implements ContactDao {
                 .withTableName("contacts");
     }
 
-    // --------------------------------------------- CONTACT INSERT ----------------------------------------------------
+    // --------------------------------------------- CONTACT SELECT ----------------------------------------------------
 
     @Override
     public Contact createContact(long neighborhoodId, String contactName, String contactAddress, String contactPhone) {
@@ -63,16 +70,6 @@ public class ContactDaoImpl implements ContactDao {
 
     }
 
-    // --------------------------------------------- CONTACT SELECT ----------------------------------------------------
-
-    private static final RowMapper<Contact> ROW_MAPPER = (rs, rowNum) ->
-            new Contact.Builder()
-                    .contactId(rs.getLong("contactid"))
-                    .contactAddress(rs.getString("contactaddress"))
-                    .contactName(rs.getString("contactname"))
-                    .contactPhone(rs.getString("contactphone"))
-                    .neighborhoodId(rs.getLong("neighborhoodid"))
-                    .build();
     @Override
     public List<Contact> getContacts(final long neighborhoodId) {
         LOGGER.debug("Selecting Contacts from Neighborhood {}", neighborhoodId);

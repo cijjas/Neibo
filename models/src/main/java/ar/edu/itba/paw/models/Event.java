@@ -1,13 +1,10 @@
 package ar.edu.itba.paw.models;
 
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.sql.Time;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.sql.Time;
 
 public class Event {
     private final long eventId;
@@ -28,6 +25,73 @@ public class Event {
         this.startTime = builder.startTime;
         this.endTime = builder.endTime;
         this.neighborhoodId = builder.neighborhoodId;
+    }
+
+    public long getEventId() {
+        return eventId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public Time getStartTime() {
+        return startTime;
+    }
+
+    public Time getEndTime() {
+        return endTime;
+    }
+
+    public long getNeighborhoodId() {
+        return neighborhoodId;
+    }
+
+    public String getStartTimeString() {
+        if (startTime == null) {
+            return "";
+        } else {
+            return startTime.toLocalTime().format(formatter);
+        }
+    }
+
+    public String getEndTimeString() {
+        if (endTime == null) {
+            return "";
+        } else {
+            return endTime.toLocalTime().format(formatter);
+        }
+    }
+
+    public String getDuration() {
+        if (startTime != null && endTime != null) {
+            LocalTime start = startTime.toLocalTime();
+            LocalTime end = endTime.toLocalTime();
+            long minutes = ChronoUnit.MINUTES.between(start, end);
+            return String.valueOf(minutes);
+        }
+        return "N/A";
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "eventId=" + eventId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", date=" + date +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", neighborhoodId=" + neighborhoodId +
+                '}';
     }
 
     public static class Builder {
@@ -77,68 +141,5 @@ public class Event {
         public Event build() {
             return new Event(this);
         }
-    }
-
-    public long getEventId() {
-        return eventId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public Time getStartTime() { return startTime; }
-
-    public Time getEndTime() { return endTime; }
-
-    public long getNeighborhoodId() {
-        return neighborhoodId;
-    }
-
-    public String getStartTimeString() {
-        if(startTime == null) {
-            return "";
-        }   else {
-            return startTime.toLocalTime().format(formatter);
-        }
-    }
-
-    public String getEndTimeString() {
-        if(endTime == null) {
-            return "";
-        }   else {
-            return endTime.toLocalTime().format(formatter);
-        }
-    }
-
-    public String getDuration() {
-        if (startTime != null && endTime != null) {
-            LocalTime start = startTime.toLocalTime();
-            LocalTime end = endTime.toLocalTime();
-            long minutes = ChronoUnit.MINUTES.between(start, end);
-            return String.valueOf(minutes);
-        }
-        return "N/A";
-    }
-
-    @Override
-    public String toString() {
-        return "Event{" +
-                "eventId=" + eventId +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", date=" + date +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", neighborhoodId=" + neighborhoodId +
-                '}';
     }
 }

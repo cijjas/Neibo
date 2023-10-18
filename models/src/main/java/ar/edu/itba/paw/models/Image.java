@@ -10,6 +10,14 @@ public class Image {
         this.image = builder.image;
     }
 
+    public long getImageId() {
+        return imageId;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
     public static class Builder {
         private long imageId;
         private byte[] image;
@@ -27,13 +35,5 @@ public class Image {
         public Image build() {
             return new Image(this);
         }
-    }
-
-    public long getImageId() {
-        return imageId;
-    }
-
-    public byte[] getImage() {
-        return image;
     }
 }

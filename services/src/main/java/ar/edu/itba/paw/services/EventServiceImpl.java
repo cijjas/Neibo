@@ -1,21 +1,19 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.Month;
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Event;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Time;
 import java.util.Date;
-
-import ar.edu.itba.paw.enums.Language;
-import ar.edu.itba.paw.enums.Month;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalLong;
@@ -24,11 +22,9 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class EventServiceImpl implements EventService {
-    private final EventDao eventDao;
-
-    private final TimeDao timeDao;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
+    private final EventDao eventDao;
+    private final TimeDao timeDao;
 
     @Autowired
     public EventServiceImpl(final EventDao eventDao, final TimeDao timeDao) {
@@ -65,38 +61,42 @@ public class EventServiceImpl implements EventService {
     }
 
 
-
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Event> findEventById(long eventId) {
         LOGGER.info("Finding Event {}", eventId);
-        return eventDao.findEventById(eventId); }
+        return eventDao.findEventById(eventId);
+    }
 
     @Override
     @Transactional(readOnly = true)
     public boolean hasEvents(Date date, long neighborhoodId) {
         LOGGER.info("Checking if Neighborhood {} has Events on {}", neighborhoodId, date);
-        return !eventDao.getEventsByDate(date, neighborhoodId).isEmpty(); }
+        return !eventDao.getEventsByDate(date, neighborhoodId).isEmpty();
+    }
 
     @Override
     @Transactional(readOnly = true)
     public List<Event> getEventsByDate(Date date, long neighborhoodId) {
         LOGGER.info("Getting Events for Neighborhood {} on Date {}", neighborhoodId, date);
-        return eventDao.getEventsByDate(date, neighborhoodId); }
+        return eventDao.getEventsByDate(date, neighborhoodId);
+    }
 
     @Override
     @Transactional(readOnly = true)
     public List<Event> getEventsByNeighborhoodId(long neighborhoodId) {
         LOGGER.info("Getting Events for Neighborhood {}", neighborhoodId);
-        return eventDao.getEventsByNeighborhoodId(neighborhoodId); }
+        return eventDao.getEventsByNeighborhoodId(neighborhoodId);
+    }
 
     @Override
     @Transactional(readOnly = true)
     public List<Date> getEventDates(long neighborhoodId) {
         LOGGER.info("Getting Event Dates for Neighborhood {}", neighborhoodId);
-        return eventDao.getEventDates(neighborhoodId); }
+        return eventDao.getEventDates(neighborhoodId);
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -142,6 +142,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public boolean deleteEvent(long eventId) {
         LOGGER.info("Delete Event {}", eventId);
-        return eventDao.deleteEvent(eventId); }
+        return eventDao.deleteEvent(eventId);
+    }
 
 }

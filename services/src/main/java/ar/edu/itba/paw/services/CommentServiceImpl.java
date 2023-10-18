@@ -1,18 +1,18 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.interfaces.persistence.CommentDao;
 import ar.edu.itba.paw.interfaces.services.CommentService;
 import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.PostService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Comment;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Post;
-import ar.edu.itba.paw.enums.Language;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import ar.edu.itba.paw.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -23,15 +23,14 @@ import java.util.Optional;
 @Service
 @Transactional
 public class CommentServiceImpl implements CommentService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommentServiceImpl.class);
     private final CommentDao commentDao;
     private final EmailService emailService;
     private final PostService postService;
     private final UserService userService;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommentServiceImpl.class);
-
     @Autowired
-    public CommentServiceImpl(final CommentDao commentDao, EmailService emailService, PostService postService, UserService userService){
+    public CommentServiceImpl(final CommentDao commentDao, EmailService emailService, PostService postService, UserService userService) {
         this.commentDao = commentDao;
         this.emailService = emailService;
         this.postService = postService;
@@ -52,14 +51,14 @@ public class CommentServiceImpl implements CommentService {
         variables.put("postTitle", post.getTitle());
         variables.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
         boolean isEnglish = user.getLanguage() == Language.ENGLISH;
-        emailService.sendMessageUsingThymeleafTemplate(user.getMail(), isEnglish? "New comment" : "Nuevo Comentario", isEnglish? "comment-template_en.html" : "comment-template_es.html", variables);
+        emailService.sendMessageUsingThymeleafTemplate(user.getMail(), isEnglish ? "New comment" : "Nuevo Comentario", isEnglish ? "comment-template_en.html" : "comment-template_es.html", variables);
 
-        for(User n : userService.getNeighborsSubscribedByPostId(postId)) {
+        for (User n : userService.getNeighborsSubscribedByPostId(postId)) {
             Map<String, Object> vars = new HashMap<>();
             vars.put("name", n.getName());
             vars.put("postTitle", post.getTitle());
             vars.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
-            emailService.sendMessageUsingThymeleafTemplate(user.getMail(), isEnglish? "New comment" : "Nuevo Comentario", isEnglish? "comment-template_en.html" : "comment-template_es.html", vars);
+            emailService.sendMessageUsingThymeleafTemplate(user.getMail(), isEnglish ? "New comment" : "Nuevo Comentario", isEnglish ? "comment-template_en.html" : "comment-template_es.html", vars);
         }
 
         return commentDao.createComment(comment, neighborId, postId);
@@ -69,7 +68,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Comment> findCommentById(long id){
+    public Optional<Comment> findCommentById(long id) {
         LOGGER.info("Finding Comment {}", id);
         return commentDao.findCommentById(id);
     }
@@ -78,7 +77,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public List<Comment> getCommentsByPostId(long id, int page, int size) {
         LOGGER.info("Finding Comments for Post {}", id);
-        return commentDao.getCommentsByPostId(id,page,size);
+        return commentDao.getCommentsByPostId(id, page, size);
     }
 
     @Override
@@ -93,8 +92,6 @@ public class CommentServiceImpl implements CommentService {
         LOGGER.info("Getting Total Comment Pages for size {}", size);
         return (int) Math.ceil((double) commentDao.getCommentsCountByPostId(id) / size);
     }
-
-
 
 
 }

@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.models.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +12,7 @@ public interface UserDao {
     // ---------------------------------------------- USERS INSERT -----------------------------------------------------
 
     User createUser(final String mail, final String password, final String name, final String surname,
-                    final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role, final int identification) ;
+                    final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role, final int identification);
 
     // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 

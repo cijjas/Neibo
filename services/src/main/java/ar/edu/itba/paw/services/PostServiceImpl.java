@@ -1,20 +1,20 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.BaseChannel;
+import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Image;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Post;
-import ar.edu.itba.paw.enums.BaseChannel;
-import ar.edu.itba.paw.enums.Language;
-import ar.edu.itba.paw.enums.PostStatus;
+import ar.edu.itba.paw.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,14 +24,13 @@ import java.util.Optional;
 @Service
 @Transactional
 public class PostServiceImpl implements PostService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PostServiceImpl.class);
     private final PostDao postDao;
     private final ChannelDao channelDao;
     private final UserService userService;
     private final EmailService emailService;
     private final TagService tagService;
     private final ImageService imageService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PostServiceImpl.class);
 
     @Autowired
     public PostServiceImpl(final PostDao postDao, final ChannelDao channelDao, UserService userService, EmailService emailService, TagService tagService, ImageService imageService) {
@@ -67,19 +66,19 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post createAdminPost(final long neighborhoodId, final String title, final String description, final long neighborId, final int channelId, final String tags, final MultipartFile imageFile){
-        Post post = createPost(title, description, neighborId, channelId, tags,  imageFile);
+    public Post createAdminPost(final long neighborhoodId, final String title, final String description, final long neighborId, final int channelId, final String tags, final MultipartFile imageFile) {
+        Post post = createPost(title, description, neighborId, channelId, tags, imageFile);
         assert post != null;
         try {
-            for(User n : userService.getNeighbors(neighborhoodId)) {
+            for (User n : userService.getNeighbors(neighborhoodId)) {
                 boolean isEnglish = n.getLanguage() == Language.ENGLISH;
                 Map<String, Object> vars = new HashMap<>();
                 vars.put("name", n.getName());
                 vars.put("postTitle", post.getTitle());
                 vars.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
-                emailService.sendMessageUsingThymeleafTemplate(n.getMail(), isEnglish? "New Announcement" : "Nuevo Anuncio", isEnglish? "announcement-template_en.html" : "announcement-template_es.html", vars);
+                emailService.sendMessageUsingThymeleafTemplate(n.getMail(), isEnglish ? "New Announcement" : "Nuevo Anuncio", isEnglish ? "announcement-template_en.html" : "announcement-template_es.html", vars);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOGGER.error("Admin Post Email could not be sent");
         }
 

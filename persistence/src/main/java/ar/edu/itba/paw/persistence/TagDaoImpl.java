@@ -3,39 +3,44 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.TagDao;
 import ar.edu.itba.paw.models.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Repository
 public class TagDaoImpl implements TagDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TagDaoImpl.class);
+    private static final RowMapper<Tag> ROW_MAPPER =
+            (rs, rowNum) -> new Tag.Builder()
+                    .tagId(rs.getLong("tagid"))
+                    .tag(rs.getString("tag"))
+                    .build();
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
     private final String TAGS = "SELECT * FROM tags ";
     private final String TAGS_JOIN_POSTS =
             "SELECT tags.tagid, tag\n" +
-            "FROM posts_tags " +
-                "INNER JOIN tags ON posts_tags.tagid = tags.tagid ";
+                    "FROM posts_tags " +
+                    "INNER JOIN tags ON posts_tags.tagid = tags.tagid ";
     private final String TAGS_JOIN_POSTS_JOIN_USERS_JOIN_NEIGHBORHOODS =
             "SELECT DISTINCT tags.tagid, tag\n" +
-            "FROM posts_tags " +
-                "INNER JOIN tags ON posts_tags.tagid = tags.tagid " +
-                "INNER JOIN posts p ON posts_tags.postid = p.postid " +
-                "INNER JOIN users u ON u.userid = p.userid " +
-                "INNER JOIN neighborhoods nh ON u.neighborhoodid = nh.neighborhoodid ";
+                    "FROM posts_tags " +
+                    "INNER JOIN tags ON posts_tags.tagid = tags.tagid " +
+                    "INNER JOIN posts p ON posts_tags.postid = p.postid " +
+                    "INNER JOIN users u ON u.userid = p.userid " +
+                    "INNER JOIN neighborhoods nh ON u.neighborhoodid = nh.neighborhoodid ";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TagDaoImpl.class);
+    // ---------------------------------------------- TAGS INSERT ------------------------------------------------------
 
     @Autowired
     public TagDaoImpl(final DataSource ds) {
@@ -45,7 +50,8 @@ public class TagDaoImpl implements TagDao {
                 .withTableName("tags");
     }
 
-    // ---------------------------------------------- TAGS INSERT ------------------------------------------------------
+
+    // ---------------------------------------------- TAGS SELECT ------------------------------------------------------
 
     @Override
     public Tag createTag(String name) {
@@ -65,15 +71,6 @@ public class TagDaoImpl implements TagDao {
         }
 
     }
-
-
-    // ---------------------------------------------- TAGS SELECT ------------------------------------------------------
-
-    private static final RowMapper<Tag> ROW_MAPPER =
-            (rs, rowNum) -> new Tag.Builder()
-                    .tagId(rs.getLong("tagid"))
-                    .tag(rs.getString("tag"))
-                    .build();
 
     // Method cant properly differentiate between not finding the post and the post having no comments, but as the function
     // is called through the detail of a post it cant be an invalid postId

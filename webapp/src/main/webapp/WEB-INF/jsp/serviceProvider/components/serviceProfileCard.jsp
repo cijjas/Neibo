@@ -7,10 +7,14 @@
         <div class="card-header">
             <c:choose>
                 <c:when test="${worker.backgroundPictureId != 0}">
-                    <img class="back-image" src="${pageContext.request.contextPath}/images/<c:out value="${worker.backgroundPictureId}"/>" alt="profile_picture_img" />
+                    <img class="back-image"
+                         src="${pageContext.request.contextPath}/images/<c:out value="${worker.backgroundPictureId}"/>"
+                         alt="profile_picture_img"/>
                 </c:when>
                 <c:otherwise>
-                    <img class="back-image" src="${pageContext.request.contextPath}/resources/images/workersBackground.png" alt="default_profile_picture_img" />
+                    <img class="back-image"
+                         src="${pageContext.request.contextPath}/resources/images/workersBackground.png"
+                         alt="default_profile_picture_img"/>
                 </c:otherwise>
             </c:choose>
         </div>
@@ -33,11 +37,12 @@
                     </c:forEach>
                 </div>
                 <span class="c-light-text" style="margin-left: 10px;"> <c:out value="${worker.phoneNumber}"/></span>
-                <p  class="c-light-text mr-3 ml-3" style="text-align: center">
+                <p class="c-light-text mr-3 ml-3" style="text-align: center">
                     <c:out value="${worker.bio}"/>
                 </p>
                 <c:if test="${loggedUser.userId == worker.user.userId}">
-                    <a id="editProfileButton" onclick="openEditDialog()" class="cool-button cool-small on-bg font-weight-bold" style="width: 100px">
+                    <a id="editProfileButton" onclick="openEditDialog()"
+                       class="cool-button cool-small on-bg font-weight-bold" style="width: 100px">
                         <spring:message code="Edit"/>
                         <i class="fa-solid fa-user-pen ml-1"></i>
                     </a>
@@ -79,10 +84,6 @@
 </script>
 
 
-
-
-
-
 <div class="dialog" id="editDialog" style="display: none; ">
     <div class="dialog-content " style="background-color: var(--onbackground)">
         <div class="close-button" onclick="closeEditDialog()">
@@ -99,7 +100,8 @@
                 <form:errors cssClass="error" element="p"/>
                 <div class="w-75 f-c-c-c" style="gap: 10px">
                     <spring:message code="Business.name" var="businessPlaceholder"/>
-                    <form:input path="businessName" class="cool-input" type="text" placeholder="${businessPlaceholder}"/>
+                    <form:input path="businessName" class="cool-input" type="text"
+                                placeholder="${businessPlaceholder}"/>
                     <form:errors path="businessName" cssClass="error" element="p"/>
 
                     <!-- Text Input 2 -->
@@ -124,7 +126,8 @@
                 <form:input path="imageFile" class="cool-input" type="file" accept="image/*"/>
                 <form:errors path="imageFile" cssClass="error" element="p"/>
 
-                <button onclick="submitEditProfileForm()" class="cool-button cool-small on-bg font-weight-bolder mb-4 mt-3" style="width: 150px">
+                <button onclick="submitEditProfileForm()"
+                        class="cool-button cool-small on-bg font-weight-bolder mb-4 mt-3" style="width: 150px">
                     <spring:message code="SaveChanges"/>
                 </button>
             </div>
@@ -141,9 +144,11 @@
     function submitEditProfileForm() {
         document.forms["editWorkerProfileForm"].submit();
     }
+
     function closeEditDialog() {
         document.getElementById("editDialog").style.display = "none";
     }
+
     function openEditDialog() {
         document.getElementById("editDialog").style.display = "flex";
     }

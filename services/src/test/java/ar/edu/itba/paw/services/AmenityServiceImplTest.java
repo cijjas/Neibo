@@ -10,8 +10,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -26,10 +24,11 @@ public class AmenityServiceImplTest {
     private AmenityDao amenityDao;
     @InjectMocks
     private AmenityServiceImpl as;
+
     @Test
     public void testCreate() {
         // 1. Preconditions
-        when(amenityDao.createAmenity(anyString(),anyString(),anyLong())).thenReturn(new Amenity.Builder()
+        when(amenityDao.createAmenity(anyString(), anyString(), anyLong())).thenReturn(new Amenity.Builder()
                 .amenityId(ID)
                 .name(NAME)
                 .description(DESCRIPTION)
@@ -38,7 +37,7 @@ public class AmenityServiceImplTest {
         );
 
         // 2. Exercise
-        Amenity newAmenity = as.createAmenity(NAME,DESCRIPTION,NEIGHBORHOOD_ID, new ArrayList<>());
+        Amenity newAmenity = as.createAmenity(NAME, DESCRIPTION, NEIGHBORHOOD_ID, new ArrayList<>());
 
         // 3. Postconditions
         Assert.assertNotNull(newAmenity);
@@ -48,13 +47,14 @@ public class AmenityServiceImplTest {
         Assert.assertEquals(newAmenity.getNeighborhoodId(), NEIGHBORHOOD_ID);
 
     }
+
     @Test(expected = RuntimeException.class)
     public void testCreateAlreadyExists() {
         // 1. Preconditions
-        when(amenityDao.createAmenity(eq(NAME),eq(DESCRIPTION),eq(NEIGHBORHOOD_ID))).thenThrow(RuntimeException.class);
+        when(amenityDao.createAmenity(eq(NAME), eq(DESCRIPTION), eq(NEIGHBORHOOD_ID))).thenThrow(RuntimeException.class);
 
         // 2. Exercise
-        Amenity newAmenity = as.createAmenity(NAME,DESCRIPTION,NEIGHBORHOOD_ID,null);
+        Amenity newAmenity = as.createAmenity(NAME, DESCRIPTION, NEIGHBORHOOD_ID, null);
 
         // 3. Postconditions
     }

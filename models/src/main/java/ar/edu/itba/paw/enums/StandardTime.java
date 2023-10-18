@@ -32,10 +32,17 @@ public enum StandardTime {
     TIME_22_00("22:00:00"),
     TIME_23_00("23:00:00");
 
+    public static final List<Pair<Integer, Pair<String, Time>>> TIME_PAIRS = Arrays.stream(values())
+            .map(time -> new Pair<>(time.getId(), new Pair<>(time.toString(), time.toSqlTime())))
+            .collect(Collectors.toList());
     private final String value;
 
     StandardTime(String value) {
         this.value = value;
+    }
+
+    public static StandardTime fromSqlTime(Time sqlTime) {
+        return StandardTime.valueOf(sqlTime.toString());
     }
 
     public String getValue() {
@@ -44,10 +51,6 @@ public enum StandardTime {
 
     public Time toSqlTime() {
         return Time.valueOf(value);
-    }
-
-    public static StandardTime fromSqlTime(Time sqlTime) {
-        return StandardTime.valueOf(sqlTime.toString());
     }
 
     public int getId() {
@@ -63,8 +66,4 @@ public enum StandardTime {
         }
         return value; // Return the original value if splitting fails
     }
-
-    public static final List<Pair<Integer, Pair<String, Time>>> TIME_PAIRS = Arrays.stream(values())
-            .map(time -> new Pair<>(time.getId(), new Pair<>(time.toString(), time.toSqlTime())))
-            .collect(Collectors.toList());
 }

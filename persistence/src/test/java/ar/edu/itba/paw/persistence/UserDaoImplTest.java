@@ -35,6 +35,13 @@ public class UserDaoImplTest {
     private static final String USER_MAIL_4 = "user4@test.com";
     private static final int BASE_PAGE = 1;
     private static final int BASE_PAGE_SIZE = 10;
+    private final String PASSWORD = "password";
+    private final String NAME = "John";
+    private final String SURNAME = "Doe";
+    private final Language LANGUAGE = Language.ENGLISH;
+    private final boolean DARK_MODE = false;
+    private final UserRole ROLE = UserRole.NEIGHBOR;
+    private final int ID = 12345;
     @Autowired
     private DataSource ds;
     @Autowired
@@ -46,13 +53,6 @@ public class UserDaoImplTest {
     private AmenityDao amenityDao;
     private DayDao dayDao;
     private TimeDao timeDao;
-    private final String PASSWORD = "password";
-    private final String NAME = "John";
-    private final String SURNAME = "Doe";
-    private final Language LANGUAGE = Language.ENGLISH;
-    private final boolean DARK_MODE = false;
-    private final UserRole ROLE = UserRole.NEIGHBOR;
-    private final int ID = 12345;
     private long nhKey1;
     private long nhKey2;
     private long uKey1;

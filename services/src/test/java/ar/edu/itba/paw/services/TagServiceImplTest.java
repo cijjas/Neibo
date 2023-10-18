@@ -9,10 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -26,6 +22,7 @@ public class TagServiceImplTest {
     private TagDao tagDao;
     @InjectMocks
     private TagServiceImpl ts;
+
     @Test
     public void testCreate() {
         // 1. Preconditions
@@ -44,6 +41,7 @@ public class TagServiceImplTest {
         Assert.assertEquals(newTag.getTag(), TAG);
 
     }
+
     @Test(expected = RuntimeException.class)
     public void testCreateAlreadyExists() {
         // 1. Preconditions

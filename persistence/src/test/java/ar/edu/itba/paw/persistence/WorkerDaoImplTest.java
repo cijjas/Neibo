@@ -30,6 +30,16 @@ public class WorkerDaoImplTest {
     private static final String NH_NAME_2 = "Neighborhood 2";
     private static final int BASE_PAGE = 1;
     private static final int BASE_PAGE_SIZE = 10;
+    private final String PHONE_NUMBER_1 = "123-456-7890";
+    private final String ADDRESS_1 = "123 Worker St";
+    private final String BUSINESS_1 = "Worker Business";
+    private final String WORKER_MAIL_1 = "worker1-1@test.com";
+    private final String WORKER_MAIL_2 = "worker2-1@test.com";
+    private final String WORKER_MAIL_3 = "worker3-2@test.com";
+    private final String WORKER_MAIL_4 = "worker4-2@test.com";
+    private final String PROFESSION_1 = "Profession 1";
+    private final String PROFESSION_2 = "Profession 2";
+    private final String BIO_1 = "Im alive and in some time ill be dead";
     @Autowired
     private DataSource ds;
     @Autowired
@@ -42,9 +52,6 @@ public class WorkerDaoImplTest {
     private AmenityDao amenityDao;
     private DayDao dayDao;
     private TimeDao timeDao;
-    private final String PHONE_NUMBER_1 = "123-456-7890";
-    private final String ADDRESS_1 = "123 Worker St";
-    private final String BUSINESS_1 = "Worker Business";
     private long nhKey1;
     private long nhKey2;
     private long uKey1;
@@ -53,15 +60,6 @@ public class WorkerDaoImplTest {
     private long uKey4;
     private long pKey1;
     private long pKey2;
-
-    private final String WORKER_MAIL_1 = "worker1-1@test.com";
-    private final String WORKER_MAIL_2 = "worker2-1@test.com";
-    private final String WORKER_MAIL_3 = "worker3-2@test.com";
-    private final String WORKER_MAIL_4 = "worker4-2@test.com";
-    private final String PROFESSION_1 = "Profession 1";
-    private final String PROFESSION_2 = "Profession 2";
-    private final String BIO_1 = "Im alive and in some time ill be dead";
-
 
     @Before
     public void setUp() {

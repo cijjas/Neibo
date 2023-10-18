@@ -3,32 +3,40 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.models.Event;
-
-import java.sql.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import javax.sql.DataSource;
 import java.util.*;
 
 @Repository
 public class EventDaoImpl implements EventDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EventDaoImpl.class);
+    private static final RowMapper<Event> ROW_MAPPER = (rs, rowNum) -> new Event.Builder()
+            .eventId(rs.getLong("eventid"))
+            .name(rs.getString("name"))
+            .description(rs.getString("description"))
+            .date(rs.getDate("date"))
+            .startTime(rs.getTime("starttime"))
+            .endTime(rs.getTime("endtime"))
+            .neighborhoodId(rs.getLong("neighborhoodid"))
+            .build();
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
     private final String EVENTS = "SELECT e.* FROM events e";
     private final String EVENTS_JOIN_TIMES =
             "SELECT e.*, t1.timeinterval AS starttime, t2.timeinterval AS endtime\n" +
-            "FROM events e\n" +
+                    "FROM events e\n" +
                     "INNER JOIN times t1 ON e.starttimeid = t1.timeid\n" +
                     "INNER JOIN times t2 ON e.endtimeid = t2.timeid ";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EventDaoImpl.class);
+    // ---------------------------------------------- EVENT INSERT -----------------------------------------------------
 
     @Autowired
     public EventDaoImpl(final DataSource ds) {
@@ -38,7 +46,7 @@ public class EventDaoImpl implements EventDao {
                 .withTableName("events");
     }
 
-    // ---------------------------------------------- EVENT INSERT -----------------------------------------------------
+    // ---------------------------------------------- EVENT SELECT -----------------------------------------------------
 
     @Override
     public Event createEvent(final String name, final String description, final Date date, final long startTimeId, final long endTimeId, final long neighborhoodId) {
@@ -65,18 +73,6 @@ public class EventDaoImpl implements EventDao {
             throw new InsertionException("An error occurred whilst creating the event");
         }
     }
-
-    // ---------------------------------------------- EVENT SELECT -----------------------------------------------------
-
-    private static final RowMapper<Event> ROW_MAPPER = (rs, rowNum) -> new Event.Builder()
-            .eventId(rs.getLong("eventid"))
-            .name(rs.getString("name"))
-            .description(rs.getString("description"))
-            .date(rs.getDate("date"))
-            .startTime(rs.getTime("starttime"))
-            .endTime(rs.getTime("endtime"))
-            .neighborhoodId(rs.getLong("neighborhoodid"))
-            .build();
 
     @Override
     public Optional<Event> findEventById(long eventId) {
@@ -106,7 +102,7 @@ public class EventDaoImpl implements EventDao {
     // ---------------------------------------------- EVENT DELETE -----------------------------------------------------
 
     @Override
-    public boolean deleteEvent(long eventId){
+    public boolean deleteEvent(long eventId) {
         LOGGER.debug("Deleting Event with id {}", eventId);
         return jdbcTemplate.update("DELETE FROM events WHERE eventid = ?", eventId) > 0;
     }

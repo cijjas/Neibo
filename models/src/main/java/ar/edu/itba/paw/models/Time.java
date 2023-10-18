@@ -11,25 +11,6 @@ public class Time {
         this.timeInterval = builder.timeInterval;
     }
 
-    public static class Builder {
-        private long timeId;
-        private java.sql.Time timeInterval;
-
-        public Builder timeId(long timeId) {
-            this.timeId = timeId;
-            return this;
-        }
-
-        public Builder timeInterval(java.sql.Time timeInterval) {
-            this.timeInterval = timeInterval;
-            return this;
-        }
-
-        public Time build() {
-            return new Time(this);
-        }
-    }
-
     public long getTimeId() {
         return timeId;
     }
@@ -64,5 +45,24 @@ public class Time {
     @Override
     public int hashCode() {
         return Objects.hash(timeId, timeInterval);
+    }
+
+    public static class Builder {
+        private long timeId;
+        private java.sql.Time timeInterval;
+
+        public Builder timeId(long timeId) {
+            this.timeId = timeId;
+            return this;
+        }
+
+        public Builder timeInterval(java.sql.Time timeInterval) {
+            this.timeInterval = timeInterval;
+            return this;
+        }
+
+        public Time build() {
+            return new Time(this);
+        }
     }
 }

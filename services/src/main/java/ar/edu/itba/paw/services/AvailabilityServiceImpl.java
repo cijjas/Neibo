@@ -1,14 +1,14 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.StandardTime;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.services.AvailabilityService;
 import ar.edu.itba.paw.models.Shift;
-import ar.edu.itba.paw.enums.StandardTime;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -17,10 +17,9 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class AvailabilityServiceImpl implements AvailabilityService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AvailabilityServiceImpl.class);
     private final ShiftDao shiftDao;
     private final AvailabilityDao availabilityDao;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AvailabilityServiceImpl.class);
 
     @Autowired
     public AvailabilityServiceImpl(final ShiftDao shiftDao, final AvailabilityDao availabilityDao) {

@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.interfaces.persistence.AttendanceDao;
 import ar.edu.itba.paw.enums.Table;
+import ar.edu.itba.paw.interfaces.persistence.AttendanceDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +15,9 @@ import java.util.Map;
 
 @Repository
 public class AttendanceDaoImpl implements AttendanceDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AttendanceDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AttendanceDaoImpl.class);
 
     @Autowired
     public AttendanceDaoImpl(final DataSource ds) {

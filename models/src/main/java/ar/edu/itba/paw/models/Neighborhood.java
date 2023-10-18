@@ -9,6 +9,22 @@ public class Neighborhood {
         this.name = builder.name;
     }
 
+    public long getNeighborhoodId() {
+        return neighborhoodId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return "Neighborhood{" +
+                "neighborhoodId=" + neighborhoodId +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
     public static class Builder {
         private long neighborhoodId;
         private String name;
@@ -26,21 +42,5 @@ public class Neighborhood {
         public Neighborhood build() {
             return new Neighborhood(this);
         }
-    }
-
-    public long getNeighborhoodId() {
-        return neighborhoodId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public String toString() {
-        return "Neighborhood{" +
-                "neighborhoodId=" + neighborhoodId +
-                ", name='" + name + '\'' +
-                '}';
     }
 }

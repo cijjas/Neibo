@@ -46,7 +46,6 @@ public class EventDaoImplTest {
     }
 
 
-
     @Test
     public void testCreateEvent() {
         // Pre Conditions
@@ -63,7 +62,6 @@ public class EventDaoImplTest {
         assertEquals(EVENT_DESCRIPTION, e.getDescription());
         assertEquals(EVENT_DATE, e.getDate());
     }
-
 
 
     @Test

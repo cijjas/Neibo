@@ -19,6 +19,42 @@ public class Review {
         this.date = builder.date;
     }
 
+    public long getWorkerId() {
+        return workerId;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public String getReview() {
+        return review;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public long getReviewId() {
+        return reviewId;
+    }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "reviewId=" + reviewId +
+                "workerId=" + workerId +
+                ", userId=" + userId +
+                ", rating=" + rating +
+                ", review='" + review + '\'' +
+                ", date=" + date +
+                '}';
+    }
+
     public static class Builder {
         private long reviewId;
         private long workerId;
@@ -60,41 +96,5 @@ public class Review {
         public Review build() {
             return new Review(this);
         }
-    }
-
-    public long getWorkerId() {
-        return workerId;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public float getRating() {
-        return rating;
-    }
-
-    public String getReview() {
-        return review;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public long getReviewId() {
-        return reviewId;
-    }
-
-    @Override
-    public String toString() {
-        return "Review{" +
-                "reviewId=" + reviewId +
-                "workerId=" + workerId +
-                ", userId=" + userId +
-                ", rating=" + rating +
-                ", review='" + review + '\'' +
-                ", date=" + date +
-                '}';
     }
 }

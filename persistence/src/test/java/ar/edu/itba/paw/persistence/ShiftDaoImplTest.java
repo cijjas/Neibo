@@ -28,6 +28,7 @@ import static org.junit.Assert.*;
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ShiftDaoImplTest {
 
+    private final String DATE = "2022-12-12";
     @Autowired
     private DataSource ds;
     @Autowired
@@ -36,9 +37,6 @@ public class ShiftDaoImplTest {
     private ShiftDao shiftDao;
     private DayDao dayDao;
     private TimeDao timeDao;
-
-
-    private final String DATE = "2022-12-12";
 
     @Before
     public void setUp() {

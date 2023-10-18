@@ -8,8 +8,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag/dist/css/multi-select-tag.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -31,9 +33,9 @@
         <spring:message code="Login.error.message.2"/>
     </c:set>
 
-    <jsp:include page="/WEB-INF/jsp/errors/errorDialog.jsp" >
-        <jsp:param name="errorMessage" value="${errorMessage}" />
-        <jsp:param name="openLoginAgain" value="${true}" />
+    <jsp:include page="/WEB-INF/jsp/errors/errorDialog.jsp">
+        <jsp:param name="errorMessage" value="${errorMessage}"/>
+        <jsp:param name="openLoginAgain" value="${true}"/>
     </jsp:include>
 </c:if>
 
@@ -42,11 +44,11 @@
         <spring:message code="Successfully.signup"/>
     </c:set>
 
-    <jsp:include page="/WEB-INF/jsp/components/widgets/successDialog.jsp" >
-        <jsp:param name="successMessage" value="${successMessage}" />
+    <jsp:include page="/WEB-INF/jsp/components/widgets/successDialog.jsp">
+        <jsp:param name="successMessage" value="${successMessage}"/>
     </jsp:include>
     <script>
-        setTimeout(function() {
+        setTimeout(function () {
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = '${pageContext.request.contextPath}/redirect-to-channel';
@@ -65,14 +67,14 @@
 </c:if>
 
 <div class="content-container ">
-    <div class="container f-c-c-c" >
+    <div class="container f-c-c-c">
         <%@ include file="/WEB-INF/jsp/components/displays/landingNavbar.jsp" %>
         <div class="landing-neibo ">
             neibo
         </div>
         <p class="landing-description" style="mix-blend-mode: screen"><spring:message code="Landing.page.desc"/></p>
 
-        <a class="action-button font-weight-bolder"  onclick="openLoginDialog()">
+        <a class="action-button font-weight-bolder" onclick="openLoginDialog()">
             <spring:message code="Login"/>
         </a>
         <span style="color:var(--lighttext); font-size: 14px; mix-blend-mode: screen">
@@ -81,7 +83,6 @@
                 <spring:message code="Signup.now"/>
             </a>
         </span>
-
 
 
         <%-- Login dialog--%>
@@ -119,6 +120,7 @@
     function submitSignupForm() {
         document.forms["signupForm"].submit();
     }
+
     function openLoginDialog() {
         document.getElementById("loginDialog").style.display = "flex";
     }
@@ -127,16 +129,17 @@
         document.getElementById("loginDialog").style.display = "none";
     }
 
-    function openSignupDialog(){
+    function openSignupDialog() {
         document.getElementById("signupDialog").style.display = "flex";
     }
-    function closeSignupDialog(){
+
+    function closeSignupDialog() {
         document.getElementById("signupDialog").style.display = "none";
 
         clearFormErrors();
     }
 
-    function openWorkerSignupDialog(){
+    function openWorkerSignupDialog() {
         document.getElementById("workerSignupDialog").style.display = "flex";
     }
 
@@ -147,10 +150,11 @@
 
     }
 
-    function takeToLogin(){
+    function takeToLogin() {
         window.location.href = "/login";
     }
-    function clearFormErrors(){
+
+    function clearFormErrors() {
         const formElements = document.querySelectorAll("#signupForm input");
         formElements.forEach(function (element) {
             element.value = "";
@@ -165,9 +169,9 @@
 </script>
 
 
-
-
 <%----%>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
 </body>
 </html>

@@ -6,22 +6,22 @@ import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.models.Amenity;
 import ar.edu.itba.paw.models.Shift;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
 public class AmenityServiceImpl implements AmenityService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AmenityServiceImpl.class);
     private final AmenityDao amenityDao;
     private final ShiftDao shiftDao;
     private final AvailabilityDao availabilityDao;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AmenityServiceImpl.class);
 
     @Autowired
     public AmenityServiceImpl(final AmenityDao amenityDao, final ShiftDao shiftDao, final AvailabilityDao availabilityDao) {

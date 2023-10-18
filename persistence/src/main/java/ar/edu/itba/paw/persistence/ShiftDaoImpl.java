@@ -5,7 +5,8 @@ import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.DayDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
-import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.Day;
+import ar.edu.itba.paw.models.Shift;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,25 +25,42 @@ import java.util.Optional;
 
 @Repository
 public class ShiftDaoImpl implements ShiftDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShiftDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
-    private DayDao dayDao;
-    private TimeDao timeDao;
-
     private final String SHIFTS =
             "SELECT s.*, d.dayname, t.timeinterval, d.dayid\n" +
-            "FROM shifts s\n" +
+                    "FROM shifts s\n" +
                     "INNER JOIN days d ON s.dayid = d.dayid\n" +
                     "INNER JOIN times t ON s.starttime = t.timeid ";
+    private final RowMapper<Shift> ROW_MAPPER = (rs, rowNum) -> {
+        return new Shift.Builder()
+                .shiftId(rs.getLong("shiftid"))
+                .startTime(rs.getTime("timeinterval"))
+                .day(rs.getString("dayname"))
+                .build();
+    };
+    private DayDao dayDao;
+    private final RowMapper<Shift> ROW_MAPPER_2 = (rs, rowNum) -> {
+        Day day = dayDao.findDayById(rs.getLong("dayid")).orElseThrow(() -> new NotFoundException("Day not found"));
+        return new Shift.Builder()
+                .shiftId(rs.getLong("shiftid"))
+                .day(day.getDayName())
+                .startTime(rs.getTime("timeinterval"))
+                .taken(rs.getBoolean("taken"))
+                .build();
+    };
+    private TimeDao timeDao;
+
+    // ----------------------------------------------- SHIFTS INSERT ---------------------------------------------------
     private String SHIFTS_JOIN_AVAILABILITY_SHIFTS =
             "SELECT s.shiftid, t.timeinterval, d.dayname, asa.amenityid\n" +
-            "FROM shifts s\n" +
+                    "FROM shifts s\n" +
                     "INNER JOIN amenities_shifts_availability asa ON asa.shiftid = s.shiftid\n" +
                     "INNER JOIN days d ON s.dayid = d.dayid\n" +
                     "INNER JOIN times t ON s.starttime = t.timeid ";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ShiftDaoImpl.class);
+    // ----------------------------------------------- SHIFTS SELECT ---------------------------------------------------
 
     @Autowired
     public ShiftDaoImpl(final DataSource ds, final DayDao dayDao, final TimeDao timeDao) {
@@ -53,8 +71,6 @@ public class ShiftDaoImpl implements ShiftDao {
                 .withTableName("shifts")
                 .usingGeneratedKeyColumns("shiftid");
     }
-
-    // ----------------------------------------------- SHIFTS INSERT ---------------------------------------------------
 
     @Override
     public Shift createShift(long dayId, long startTimeId) {
@@ -73,26 +89,6 @@ public class ShiftDaoImpl implements ShiftDao {
             throw new InsertionException("An error occurred whilst creating the shift corresponding to the Amenity");
         }
     }
-
-    // ----------------------------------------------- SHIFTS SELECT ---------------------------------------------------
-
-    private final RowMapper<Shift> ROW_MAPPER = (rs, rowNum) -> {
-        return new Shift.Builder()
-                .shiftId(rs.getLong("shiftid"))
-                .startTime(rs.getTime("timeinterval"))
-                .day(rs.getString("dayname"))
-                .build();
-    };
-
-    private final RowMapper<Shift> ROW_MAPPER_2 = (rs, rowNum) -> {
-        Day day =  dayDao.findDayById(rs.getLong("dayid")).orElseThrow(()-> new NotFoundException("Day not found"));
-        return new Shift.Builder()
-                .shiftId(rs.getLong("shiftid"))
-                .day(day.getDayName())
-                .startTime(rs.getTime("timeinterval"))
-                .taken(rs.getBoolean("taken"))
-                .build();
-    };
 
     @Override
     public Optional<Shift> findShiftById(long shiftId) {

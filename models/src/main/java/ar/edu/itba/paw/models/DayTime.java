@@ -27,7 +27,6 @@ public class DayTime {
     }
 
 
-
     @Override
     public String toString() {
         return "DayTime {" +

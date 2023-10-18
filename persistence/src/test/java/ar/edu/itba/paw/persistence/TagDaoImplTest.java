@@ -23,14 +23,13 @@ import static org.junit.Assert.*;
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class TagDaoImplTest {
 
+    private final String TAG_NAME = "Sample Tag";
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private TagDaoImpl tagDao;
-
-    private final String TAG_NAME = "Sample Tag";
 
     @Before
     public void setUp() {

@@ -19,11 +19,10 @@ import java.util.Date;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
+
 @RunWith(MockitoJUnitRunner.class)
 public class CommentServiceImplTest {
 
-    private User mockUser;
-    private Post mockPost;
     private static final long ID = 1;
     private static final String COMMENT = "aguante pescado rabioso";
     private static final Date DATE = new Date();
@@ -32,7 +31,8 @@ public class CommentServiceImplTest {
     private static final String NEIGHBOR_NAME = "Pepe";
     private static final String POST_TITLE = "Pescado rabioso";
     private static final String NEIGHBOR_MAIL = "neighbor@mail.com";
-
+    private User mockUser;
+    private Post mockPost;
     @Mock
     private CommentDao commentDao;
     @Mock
@@ -43,6 +43,7 @@ public class CommentServiceImplTest {
     private UserService userService;
     @InjectMocks
     private CommentServiceImpl cs;
+
     @Before
     public void setUp() {
         mockUser = mock(User.class);
@@ -53,10 +54,11 @@ public class CommentServiceImplTest {
         when(mockUser.getMail()).thenReturn(NEIGHBOR_MAIL);
         when(mockPost.getTitle()).thenReturn(POST_TITLE);
     }
+
     @Test
     public void testCreate() {
         // 1. Preconditions
-        when(commentDao.createComment(anyString(),anyLong(),anyLong())).thenReturn(new Comment.Builder()
+        when(commentDao.createComment(anyString(), anyLong(), anyLong())).thenReturn(new Comment.Builder()
                 .commentId(ID)
                 .comment(COMMENT)
                 .date(DATE)
@@ -77,10 +79,11 @@ public class CommentServiceImplTest {
         Assert.assertEquals(newComment.getPostId(), POST_ID);
 
     }
+
     @Test(expected = RuntimeException.class)
     public void testCreateAlreadyExists() {
         // 1. Preconditions
-        when(commentDao.createComment(eq(COMMENT),eq(NEIGHBOR_ID),eq(POST_ID))).thenThrow(RuntimeException.class);
+        when(commentDao.createComment(eq(COMMENT), eq(NEIGHBOR_ID), eq(POST_ID))).thenThrow(RuntimeException.class);
 
         // 2. Exercise
         Comment newComment = cs.createComment(COMMENT, NEIGHBOR_ID, POST_ID);

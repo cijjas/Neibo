@@ -2,9 +2,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 
-
-
-
 <div class="dialog" id="reviewDialog" style="display: none; ">
     <div class="dialog-content " style="background-color: var(--onbackground)">
         <div class="close-button" onclick="closeReviewDialog()">
@@ -17,7 +14,9 @@
             </span>
         </div>
 
-        <form:form method="post" action="${pageContext.request.contextPath}/services/profile/${worker.user.userId}/review" modelAttribute="reviewForm" enctype="multipart/form-data">
+        <form:form method="post"
+                   action="${pageContext.request.contextPath}/services/profile/${worker.user.userId}/review"
+                   modelAttribute="reviewForm" enctype="multipart/form-data">
             <div class="f-c-c-c pl-3 pr-3 c-text">
                 <form:errors cssClass="error" element="p"/>
 
@@ -50,7 +49,8 @@
                     <form:errors path="review" cssClass="error" element="p"/>
                 </div>
 
-                <button onclick="submitReviewForm()" class="cool-button cool-small on-bg font-weight-bolder mt-4" style="width: 150px">
+                <button onclick="submitReviewForm()" class="cool-button cool-small on-bg font-weight-bolder mt-4"
+                        style="width: 150px">
                     <spring:message code="Send"/>
                 </button>
             </div>
@@ -62,6 +62,7 @@
     function submitReviewForm() {
         document.forms["reviewForm"].submit();
     }
+
     function closeReviewDialog() {
         document.getElementById("reviewDialog").style.display = "none";
         const reviewForm = document.forms["reviewForm"];
@@ -73,6 +74,7 @@
         const ratingInput = reviewForm.querySelector("#ratingInput");
         ratingInput.value = "1";
     }
+
     function openReviewDialog() {
         document.getElementById("reviewDialog").style.display = "flex";
     }

@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.models.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public interface UserService {
 
     List<User> getUsersPage(UserRole role, long neighborhoodId, int page, int size);
 
-    int getTotalPages(UserRole role, long neighborhoodId, int size );
+    int getTotalPages(UserRole role, long neighborhoodId, int size);
 
     List<User> getEventUsers(long eventId);
 

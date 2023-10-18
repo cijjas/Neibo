@@ -25,13 +25,6 @@ import static org.junit.Assert.*;
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ReviewDaoImplTest {
 
-    @Autowired
-    private DataSource ds;
-    @Autowired
-    private TestInserter testInserter;
-    private JdbcTemplate jdbcTemplate;
-    private ReviewDao reviewDao;
-
     private final float RATING = 4.5f;
     private final double DELTA = 0.001;
     private final String REVIEW_TEXT = "Great service!";
@@ -41,6 +34,12 @@ public class ReviewDaoImplTest {
     private final float RATING_2 = 4.5f;
     private final String REVIEW_1 = "Great service";
     private final String REVIEW_2 = "Good service";
+    @Autowired
+    private DataSource ds;
+    @Autowired
+    private TestInserter testInserter;
+    private JdbcTemplate jdbcTemplate;
+    private ReviewDao reviewDao;
 
     @Before
     public void setUp() {

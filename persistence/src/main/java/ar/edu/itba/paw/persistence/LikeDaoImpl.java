@@ -2,8 +2,6 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.LikeDao;
-import ar.edu.itba.paw.interfaces.persistence.SubscriptionDao;
-import ar.edu.itba.paw.models.Neighborhood;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +18,10 @@ import java.util.Map;
 
 @Repository
 public class LikeDaoImpl implements LikeDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LikeDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
     private final String COUNT_LIKES = "SELECT COUNT(*) FROM posts_users_likes";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(LikeDaoImpl.class);
 
     @Autowired
     public LikeDaoImpl(final DataSource ds) {
@@ -61,13 +57,13 @@ public class LikeDaoImpl implements LikeDao {
     @Override
     public boolean isPostLiked(long postId, long userId) {
         LOGGER.debug("Selecting Likes from Post {} and userId {}", postId, userId);
-        return jdbcTemplate.queryForObject(COUNT_LIKES +" WHERE postid = ? AND userid = ?", Integer.class, postId, userId) > 0;
+        return jdbcTemplate.queryForObject(COUNT_LIKES + " WHERE postid = ? AND userid = ?", Integer.class, postId, userId) > 0;
     }
 
     // ---------------------------------------------- POST_USERS_LIKES DELETE ------------------------------------------
 
     @Override
-    public boolean deleteLike(long postId, long userId){
+    public boolean deleteLike(long postId, long userId) {
         LOGGER.debug("Deleting Like from Post {} and userId {}", postId, userId);
         return jdbcTemplate.update("DELETE FROM posts_users_likes WHERE postid = ? AND userid = ? ", postId, userId) > 0;
     }

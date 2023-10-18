@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -9,7 +9,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <title><spring:message code="Join.neighborhoods"/></title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -28,7 +29,7 @@
 <div style=" position: absolute; width: 100%; height: 100%; top:0; left:0; z-index: 1">
 
     <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
-    <div class="container" >
+    <div class="container">
 
         <div class="row">
             <div class="column-left">
@@ -51,27 +52,31 @@
                                 </span>
 
                                 <div class="neighborhoods-select mb-4 w-100">
-                                    <input type="hidden"  id="selectedNeighborhoods" name="neighborhoodIds"/>
-                                    <div class="f-r-c-c w-100" >
+                                    <input type="hidden" id="selectedNeighborhoods" name="neighborhoodIds"/>
+                                    <div class="f-r-c-c w-100">
                                         <div class="container" style="margin:0 ">
                                             <div class="select-btn n-workers" style="width: 100%;">
-                                                <span class="btn-text" id="neighborhoods-button"><spring:message code="Select.neighborhood"/></span>
+                                                <span class="btn-text" id="neighborhoods-button"><spring:message
+                                                        code="Select.neighborhood"/></span>
                                                 <span class="arrow-dwn">
                                             <i class="fa-solid fa-chevron-down"></i>
                                         </span>
                                             </div>
                                             <ul class="list-items n-workers">
                                                 <c:forEach var="neighborhood" items="${otherNeighborhoods}">
-                                                    <li class="item" data-neighborhood-id="${neighborhood.neighborhoodId}">
+                                                    <li class="item"
+                                                        data-neighborhood-id="${neighborhood.neighborhoodId}">
                                                 <span class="checkbox ">
                                                     <i class="fa-solid fa-check check-icon"></i>
                                                 </span>
-                                                        <span class="item-text"><c:out value="${neighborhood.name}"/></span>
+                                                        <span class="item-text"><c:out
+                                                                value="${neighborhood.name}"/></span>
                                                     </li>
                                                 </c:forEach>
                                             </ul>
                                         </div>
-                                        <button type="submit"  onclick="submitNeighborhoods()" class="cool-button cool-small on-bg font-weight-bold w-25" >
+                                        <button type="submit" onclick="submitNeighborhoods()"
+                                                class="cool-button cool-small on-bg font-weight-bold w-25">
                                             <spring:message code="Add"/>
                                             <i class="fa-solid fa-share ml-1"></i>
                                         </button>
@@ -116,11 +121,10 @@
 
                                             const btnText = document.querySelector(".btn-text");
                                             if (selectedProfessionIds.length > 0) {
-                                                if(selectedProfessionTexts.length > 1){
-                                                    btnText.innerText = "("+ selectedProfessionIds.length + ") " + selectedProfessionTexts.join(", ");
-                                                }
-                                                else {
-                                                    btnText.innerText =  selectedProfessionTexts.join(", ");
+                                                if (selectedProfessionTexts.length > 1) {
+                                                    btnText.innerText = "(" + selectedProfessionIds.length + ") " + selectedProfessionTexts.join(", ");
+                                                } else {
+                                                    btnText.innerText = selectedProfessionTexts.join(", ");
                                                 }
                                                 btnText.classList.add("c-text");
 
@@ -164,7 +168,7 @@
                     </c:choose>
 
                 </div>
-                <div class="cool-static-container" >
+                <div class="cool-static-container">
                     <c:choose>
                         <c:when test="${associatedNeighborhoods.isEmpty()}">
                             <div class="f-c-c-c w-100 mt-3" style="text-align: center">
@@ -175,7 +179,8 @@
                         </c:when>
                         <c:otherwise>
                             <div class="f-c-s-c mt-2 w-100">
-                                <span class="font-weight-bold " style="font-size: 20px"><spring:message code="My.Neighborhoods"/></span>
+                                <span class="font-weight-bold " style="font-size: 20px"><spring:message
+                                        code="My.Neighborhoods"/></span>
                                 <table class="table-striped w-100 mt-3">
                                     <thead>
                                     <tr>
@@ -184,9 +189,11 @@
                                     <tbody>
                                     <c:forEach var="entry" items="${associatedNeighborhoods}">
                                         <tr>
-                                            <td style="text-align: start;" ><span class="pl-2"><c:out value="${entry.name}" /></span></td>
+                                            <td style="text-align: start;"><span class="pl-2"><c:out
+                                                    value="${entry.name}"/></span></td>
                                             <td>
-                                                <a href="${pageContext.request.contextPath}/services/neighborhoods/remove/${entry.neighborhoodId}" class="btn btn-link">
+                                                <a href="${pageContext.request.contextPath}/services/neighborhoods/remove/${entry.neighborhoodId}"
+                                                   class="btn btn-link">
                                                     <i class="fas fa-trash" style="color: var(--error);"></i>
                                                 </a>
                                             </td>
@@ -209,7 +216,9 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+            crossorigin="anonymous"></script>
 
     <%@ include file="/WEB-INF/jsp/components/displays/footer.jsp" %>
 </div>

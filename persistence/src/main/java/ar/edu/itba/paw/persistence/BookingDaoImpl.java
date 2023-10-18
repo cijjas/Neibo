@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.models.Booking;
-import ar.edu.itba.paw.enums.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,22 +23,31 @@ import java.util.Map;
 
 @Repository
 public class BookingDaoImpl implements BookingDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookingDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
+    private final String BOOKINGS_JOIN_AVAILABILITY =
+            "SELECT bookingid, date, a.amenityid, s.shiftid, userid, a.name, dayname, timeinterval\n" +
+                    "FROM users_availability uav\n" +
+                    "INNER JOIN amenities_shifts_availability asa ON uav.amenityavailabilityid = asa.amenityavailabilityid\n" +
+                    "INNER JOIN amenities a ON asa.amenityid = a.amenityid\n" +
+                    "INNER JOIN shifts s ON s.shiftid = asa.shiftid\n" +
+                    "INNER JOIN days d ON s.dayid = d.dayid\n" +
+                    "INNER JOIN times t ON s.starttime = t.timeid";
+    private final RowMapper<Booking> ROW_MAPPER = (rs, rowNum) -> {
+        return new Booking.Builder()
+                .bookingId(rs.getLong("bookingid"))
+                .userId(rs.getLong("userid"))
+                .amenityName(rs.getString("name"))
+                .bookingDate(rs.getDate("date"))
+                .dayName(rs.getString("dayname"))
+                .startTime(rs.getTime("timeinterval"))
+                .build();
+    };
     private ShiftDao shiftDao;
     private AmenityDao amenityDao;
 
-    private final String BOOKINGS_JOIN_AVAILABILITY =
-            "SELECT bookingid, date, a.amenityid, s.shiftid, userid, a.name, dayname, timeinterval\n" +
-            "FROM users_availability uav\n" +
-            "INNER JOIN amenities_shifts_availability asa ON uav.amenityavailabilityid = asa.amenityavailabilityid\n" +
-            "INNER JOIN amenities a ON asa.amenityid = a.amenityid\n" +
-            "INNER JOIN shifts s ON s.shiftid = asa.shiftid\n" +
-            "INNER JOIN days d ON s.dayid = d.dayid\n" +
-            "INNER JOIN times t ON s.starttime = t.timeid";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(BookingDaoImpl.class);
+    // ---------------------------------------- USERS_AVAILABILITY CREATE ----------------------------------------------
 
     @Autowired
     public BookingDaoImpl(final DataSource ds, final ShiftDao shiftDao, final AmenityDao amenityDao) {
@@ -50,7 +59,7 @@ public class BookingDaoImpl implements BookingDao {
                 .usingGeneratedKeyColumns("bookingid");
     }
 
-    // ---------------------------------------- USERS_AVAILABILITY CREATE ----------------------------------------------
+    // ---------------------------------------- USERS_AVAILABILITY SELECT ----------------------------------------------
 
     @Override
     public Number createBooking(long userId, long amenityAvailabilityId, Date reservationDate) {
@@ -66,19 +75,6 @@ public class BookingDaoImpl implements BookingDao {
             throw new InsertionException("An error occurred whilst creating the Booking for the User");
         }
     }
-
-    // ---------------------------------------- USERS_AVAILABILITY SELECT ----------------------------------------------
-
-    private final RowMapper<Booking> ROW_MAPPER = (rs, rowNum) -> {
-        return new Booking.Builder()
-                .bookingId(rs.getLong("bookingid"))
-                .userId(rs.getLong("userid"))
-                .amenityName(rs.getString("name"))
-                .bookingDate(rs.getDate("date"))
-                .dayName(rs.getString("dayname"))
-                .startTime(rs.getTime("timeinterval"))
-                .build();
-    };
 
     @Override
     public List<Booking> getUserBookings(long userId) {

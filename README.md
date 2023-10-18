@@ -1,5 +1,7 @@
 # Neibo
+
 ### Group
+
 Felix Lopez Menardi
 
 Christian Tomas Ijjas
@@ -8,12 +10,10 @@ Joaquin Girod
 
 Iñaki Bengolea
 
-
-
-
 ### Credentials
 
 ##### Verified User
+
 verifiedneibo@gmail.com
 
 verifiedneibo2023b-02

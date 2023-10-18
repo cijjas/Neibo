@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.webapp.controller.SessionUserCache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,7 +42,7 @@ public class SessionUtils {
         return user;
     }
 
-    public void clearLoggedUser(){
+    public void clearLoggedUser() {
         sessionUserCache.clearCache();
     }
 }

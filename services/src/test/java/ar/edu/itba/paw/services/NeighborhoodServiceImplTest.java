@@ -9,8 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Optional;
-
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -23,6 +21,7 @@ public class NeighborhoodServiceImplTest {
     private NeighborhoodDao neighborhoodDao;
     @InjectMocks
     private NeighborhoodServiceImpl ns;
+
     @Test
     public void testCreate() {
         // 1. Preconditions
@@ -41,6 +40,7 @@ public class NeighborhoodServiceImplTest {
         Assert.assertEquals(newNeighborhood.getName(), NAME);
 
     }
+
     @Test(expected = RuntimeException.class)
     public void testCreateAlreadyExists() {
         // 1. Preconditions

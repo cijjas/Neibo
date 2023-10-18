@@ -15,6 +15,36 @@ public class Resource {
         this.neighborhoodId = builder.neighborhoodId;
     }
 
+    public long getResourceId() {
+        return resourceId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public long getImageId() {
+        return imageId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public long getNeighborhoodId() {
+        return neighborhoodId;
+    }
+
+    @Override
+    public String toString() {
+        return "Resource{" +
+                "resourceId=" + resourceId +
+                "description='" + description + '\'' +
+                ", image='" + imageId + '\'' +
+                ", title='" + title + '\'' +
+                '}';
+    }
+
     public static class Builder {
         private long resourceId;
         private String description;
@@ -50,36 +80,6 @@ public class Resource {
         public Resource build() {
             return new Resource(this);
         }
-    }
-
-    public long getResourceId() {
-        return resourceId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public long getImageId() {
-        return imageId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public long getNeighborhoodId() {
-        return neighborhoodId;
-    }
-
-    @Override
-    public String toString() {
-        return "Resource{" +
-                "resourceId=" + resourceId +
-                "description='" + description + '\'' +
-                ", image='" + imageId + '\'' +
-                ", title='" + title + '\'' +
-                '}';
     }
 }
 

@@ -12,6 +12,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ReservationTimeConstraint {
     String message() default "Close time must be later than open time";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

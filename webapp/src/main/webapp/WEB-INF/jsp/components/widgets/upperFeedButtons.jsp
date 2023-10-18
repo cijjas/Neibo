@@ -1,21 +1,22 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 
 <c:if test="${channel != 'Announcements'}">
     <div class="upper-feed-buttons-box ">
         <div class="f-r-s-c">
-            <a onclick="hotPosts()" class="coolest-button ${param.postStatus == 'hot' ? 'active' : ''}" >
+            <a onclick="hotPosts()" class="coolest-button ${param.postStatus == 'hot' ? 'active' : ''}">
                 <spring:message code="Hot"/>
                 <i class="fa-solid fa-fire ml-1"></i>
             </a>
-            <a onclick="trendingPosts()" class="cool-feed-button rounded ${param.postStatus == 'trending' ? 'active' : ''}  " >
+            <a onclick="trendingPosts()"
+               class="cool-feed-button rounded ${param.postStatus == 'trending' ? 'active' : ''}  ">
                 <spring:message code="Trending"/>
                 <i class="fa-solid fa-arrow-trend-up ml-1"></i>
             </a>
         </div>
 
 
-        <a onclick="publishInChannel()" class="cool-feed-button" >
+        <a onclick="publishInChannel()" class="cool-feed-button">
             <spring:message code="CreateNewPost.button"/>
             <i class="fa-solid fa-plus"></i>
         </a>
@@ -24,7 +25,7 @@
 
 
 <script>
-    function publishInChannel(){
+    function publishInChannel() {
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = '${pageContext.request.contextPath}/publish-to-channel'; // Replace with your desired URL

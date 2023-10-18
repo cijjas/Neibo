@@ -1,12 +1,13 @@
 
-.header-content{
+.header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 10px;
     width: 100%;
 }
-.wrapper{
+
+.wrapper {
     padding: 15px;
     display: flex;
     flex-direction: column;
@@ -19,24 +20,27 @@
     color: var(--primary);
     border: 1px solid var(--lighttext);
     border-radius: var(--border-radius);
-    transform: translateY(-4px) ;
+    transform: translateY(-4px);
     box-shadow: -3px 5px 0 0 var(--lighttext);
-    & header{
+
+    & header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        & .icons span:hover{
+
+        & .icons span:hover {
             background: var(--secondary);
         }
-        & .current-date{
+
+        & .current-date {
             font-size: 1rem;
-            font-weight: bolder!important;
+            font-weight: bolder !important;
             color: var(--text);
             cursor: pointer;
         }
     }
 
-    & .icons{
+    & .icons {
         display: flex;
 
         & span {
@@ -61,10 +65,10 @@
 }
 
 
-
-.calendar{
+.calendar {
     padding: 0;
     transition: all 0.3s ease-in-out;
+
     & ul {
         display: flex;
         flex-wrap: wrap;
@@ -82,42 +86,50 @@
         text-align: center; /* Center the text within each day */
         padding: 5px; /* Add some padding to space out the days */
     }
+
     & .weeks {
         margin-bottom: -5px;
         width: 100%; /* Make the weeks take up the full width of the container */
-        & li{
+
+        & li {
             font-weight: 550;
             cursor: default;
             color: var(--primary);
         }
     }
-    & .days li{
+
+    & .days li {
         z-index: 1;
         cursor: default;
         position: relative;
         margin-top: 15px;
         transition: all 0.3s ease-in-out;
+
         &.today {
             color: var(--always-background); /* Set the text color to white */
 
-            &::before{
+            &::before {
                 background: var(--primary);
 
             }
-            &:hover{
+
+            &:hover {
                 transform: translateY(-2px);
 
             }
         }
+
         &.event {
             color: var(--always-background); /* Set the text color to white */
+
             &::before {
 
                 background: var(--old-primary);
             }
 
         }
-        &.inactive{ /*dias posteriores al mes*/
+
+        &.inactive { /*dias posteriores al mes*/
             color: var(--lighttext);
         }
 
@@ -126,6 +138,7 @@
                 background: var(--secondary);
             }
         }
+
         &::before {
             transition: all 0.3s ease-in-out;
             position: absolute;
@@ -138,7 +151,8 @@
             border-radius: 50%;
             transform: translate(-50%, -50%);
         }
-        &:hover{
+
+        &:hover {
             transform: translateY(-2px);
             cursor: pointer;
         }

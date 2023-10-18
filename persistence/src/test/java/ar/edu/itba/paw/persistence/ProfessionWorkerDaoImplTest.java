@@ -24,16 +24,13 @@ import static org.junit.Assert.assertFalse;
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ProfessionWorkerDaoImplTest {
 
+    private final String PROFESSION_NAME = "Argentinian President";
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
-
     private JdbcTemplate jdbcTemplate;
     private ProfessionWorkerDao professionWorkerDao;
-
-
-    private final String PROFESSION_NAME = "Argentinian President";
 
     @Before
     public void setUp() {

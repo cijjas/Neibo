@@ -2,22 +2,23 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/endpoint")
 public class EndpointController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(EndpointController.class);
     private final SessionUtils sessionUtils;
     private final PostService ps;
     private final UserService us;
@@ -35,23 +36,22 @@ public class EndpointController {
     private final LikeService ls;
     private final ProfessionWorkerService pws;
 
-
     @Autowired
     public EndpointController(SessionUtils sessionUtils, final PostService ps,
-                         final UserService us,
-                         final NeighborhoodService nhs,
-                         final CommentService cs,
-                         final TagService ts,
-                         final ChannelService chs,
-                         final SubscriptionService ss,
-                         final CategorizationService cas,
-                         final ImageService is,
-                         final AmenityService as,
-                         final EventService es,
-                         final ResourceService res,
-                         final ContactService cos,
-                         final LikeService ls,
-                         final ProfessionWorkerService pws) {
+                              final UserService us,
+                              final NeighborhoodService nhs,
+                              final CommentService cs,
+                              final TagService ts,
+                              final ChannelService chs,
+                              final SubscriptionService ss,
+                              final CategorizationService cas,
+                              final ImageService is,
+                              final AmenityService as,
+                              final EventService es,
+                              final ResourceService res,
+                              final ContactService cos,
+                              final LikeService ls,
+                              final ProfessionWorkerService pws) {
         this.sessionUtils = sessionUtils;
         this.is = is;
         this.ps = ps;
@@ -70,8 +70,6 @@ public class EndpointController {
         this.pws = pws;
     }
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EndpointController.class);
-
     @RequestMapping(value = "/commentById", method = RequestMethod.GET)
     @ResponseBody
     public String getPostComment(
@@ -81,7 +79,7 @@ public class EndpointController {
         LOGGER.debug("Requesting information from '/endpoint/commentById'");
         response.setCharacterEncoding("UTF-8"); // Set the character encoding for the response
         response.setContentType("text/plain; charset=UTF-8");
-        return cs.findCommentById(commentId).orElseThrow(()-> new NotFoundException("Comment Not Found")).getComment();
+        return cs.findCommentById(commentId).orElseThrow(() -> new NotFoundException("Comment Not Found")).getComment();
     }
 
     @RequestMapping(value = "/get-event-timestamps", method = RequestMethod.GET)
@@ -120,7 +118,7 @@ public class EndpointController {
     ) {
         LOGGER.debug("Requesting information from '/endpoint/is-liked'");
         long userId = sessionUtils.getLoggedUser().getUserId();
-        if(ls.isPostLiked(postId, userId)){
+        if (ls.isPostLiked(postId, userId)) {
             return "true";
         }
         return "false";
@@ -141,7 +139,7 @@ public class EndpointController {
             @RequestParam(value = "id", required = false) int imageId
     ) {
         LOGGER.debug("Requesting information from '/endpoint/image'");
-        return is.getImage(imageId).orElseThrow(()-> new NotFoundException("Image Not Found")).getImage();
+        return is.getImage(imageId).orElseThrow(() -> new NotFoundException("Image Not Found")).getImage();
     }
 
     @RequestMapping(value = "/posts", method = RequestMethod.GET)
@@ -150,7 +148,7 @@ public class EndpointController {
             @RequestParam(value = "id", required = false) int postId
     ) {
         LOGGER.debug("Requesting information from '/endpoint/posts'");
-        return ps.findPostById(postId).orElseThrow(()-> new NotFoundException("Post Not Found")).toString();
+        return ps.findPostById(postId).orElseThrow(() -> new NotFoundException("Post Not Found")).toString();
     }
 
     @RequestMapping(value = "/profession", method = RequestMethod.GET)
@@ -178,7 +176,7 @@ public class EndpointController {
     ) {
         LOGGER.debug("Requesting information from '/endpoint/neighborhood-name'");
         return nhs.findNeighborhoodById(us.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found"))
-                        .getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
+                .getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
     }
 
     @RequestMapping(value = "/role", method = RequestMethod.GET)

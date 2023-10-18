@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.Booking;
 import ar.edu.itba.paw.models.GroupedBooking;
 
 import java.sql.Date;

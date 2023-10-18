@@ -1,21 +1,18 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.LikeDao;
-import ar.edu.itba.paw.interfaces.persistence.SubscriptionDao;
 import ar.edu.itba.paw.interfaces.services.LikeService;
-import ar.edu.itba.paw.interfaces.services.SubscriptionService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
 public class LikeServiceImpl implements LikeService {
-    private final LikeDao likeDao;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(LikeServiceImpl.class);
+    private final LikeDao likeDao;
 
     @Autowired
     public LikeServiceImpl(final LikeDao likeDao) {

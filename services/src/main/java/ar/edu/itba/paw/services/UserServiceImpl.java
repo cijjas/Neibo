@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.BaseNeighborhood;
+import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
@@ -8,15 +10,14 @@ import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.enums.Language;
-import ar.edu.itba.paw.enums.UserRole;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,13 +26,12 @@ import java.util.Optional;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserDao userDao;
     private final ImageService imageService;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final NeighborhoodService neighborhoodService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     public UserServiceImpl(final UserDao userDao, final ImageService imageService, final PasswordEncoder passwordEncoder, final EmailService emailService, final NeighborhoodService neighborhoodService) {
@@ -53,13 +53,13 @@ public class UserServiceImpl implements UserService {
             User createdUser = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, false, UserRole.UNVERIFIED_NEIGHBOR, identification);
 
             //if user created is a neighbor (not worker), send admin email notifying new neighbor
-            if(neighborhoodId != 0) {
+            if (neighborhoodId != 0) {
                 emailService.sendNewUserMail(neighborhoodId, name, UserRole.NEIGHBOR);
             }
             return createdUser;
-        }else if (n.getPassword() == null){
+        } else if (n.getPassword() == null) {
             // n is a user from an early version where signing up was not a requirement
-            userDao.setUserValues(n.getUserId(), passwordEncoder.encode(password), n.getName(), n.getSurname(), language, false,  n.getProfilePictureId(), UserRole.UNVERIFIED_NEIGHBOR, identification, n.getNeighborhoodId());
+            userDao.setUserValues(n.getUserId(), passwordEncoder.encode(password), n.getName(), n.getSurname(), language, false, n.getProfilePictureId(), UserRole.UNVERIFIED_NEIGHBOR, identification, n.getNeighborhoodId());
         }
         return n;
     }
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public boolean isAttending(long eventId, long userId) {
-        LOGGER.info("Checking if User {} is attending Event {}", userId,eventId);
+        LOGGER.info("Checking if User {} is attending Event {}", userId, eventId);
         return userDao.isAttending(eventId, userId);
     }
 
@@ -103,21 +103,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> getUsersPage(UserRole role, long neighborhoodId, int page, int size){
+    public List<User> getUsersPage(UserRole role, long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Users from Neighborhood {} with Role {}", neighborhoodId, role);
         return userDao.getUsersByCriteria(role, neighborhoodId, page, size);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int getTotalPages(UserRole role, long neighborhoodId, int size ){
+    public int getTotalPages(UserRole role, long neighborhoodId, int size) {
         LOGGER.info("Getting Pages of Users with size {} from Neighborhood {} with Role {}", size, neighborhoodId, role);
-        return userDao.getTotalUsers(role, neighborhoodId)/size;
+        return userDao.getTotalUsers(role, neighborhoodId) / size;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> getEventUsers (long eventId) {
+    public List<User> getEventUsers(long eventId) {
         LOGGER.info("Getting User attending Event {}", eventId);
         return userDao.getEventUsers(eventId);
     }
@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void updateProfilePicture(long userId, MultipartFile image){
+    public void updateProfilePicture(long userId, MultipartFile image) {
         LOGGER.info("Updating User {} profile picture", userId);
         Image i = imageService.storeImage(image);
         findUserById(userId).ifPresent(n -> userDao.setUserValues(userId, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), i.getImageId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
@@ -143,7 +143,7 @@ public class UserServiceImpl implements UserService {
     public void verifyNeighbor(long id) {
         LOGGER.info("Verifying User {}", id);
         User user = userDao.findUserById(id).orElse(null);
-        if ( user == null )
+        if (user == null)
             return;
         userDao.setUserValues(id, user.getPassword(), user.getName(), user.getSurname(), user.getLanguage(), user.isDarkMode(), user.getProfilePictureId(), UserRole.NEIGHBOR, user.getIdentification(), user.getNeighborhoodId());
         String neighborhood = neighborhoodService.findNeighborhoodById(user.getNeighborhoodId()).orElse(null).getName();
@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
         vars.put("name", user.getName());
         vars.put("neighborhood", neighborhood);
         vars.put("loginPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/");
-        if(user.getLanguage() == Language.ENGLISH)
+        if (user.getLanguage() == Language.ENGLISH)
             emailService.sendMessageUsingThymeleafTemplate(user.getMail(), "Verification", "verification-template_en.html", vars);
         else
             emailService.sendMessageUsingThymeleafTemplate(user.getMail(), "Verificación", "verification-template_es.html", vars);
@@ -161,19 +161,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void unverifyNeighbor(long id, long neighborhoodId) {
         LOGGER.info("Un-verifying User {}", id);
-        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(),  n.getProfilePictureId(), UserRole.UNVERIFIED_NEIGHBOR, n.getIdentification(), neighborhoodId));
+        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), n.getProfilePictureId(), UserRole.UNVERIFIED_NEIGHBOR, n.getIdentification(), neighborhoodId));
     }
 
     @Override
     public void rejectNeighbor(long id) {
         LOGGER.info("Rejecting User {}", id);
-        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(),  n.getProfilePictureId(), UserRole.REJECTED, n.getIdentification(), BaseNeighborhood.REJECTED_NEIGHBORHOOD.getId()));
+        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), n.getProfilePictureId(), UserRole.REJECTED, n.getIdentification(), BaseNeighborhood.REJECTED_NEIGHBORHOOD.getId()));
     }
 
     @Override
     public void updateLanguage(long id, Language language) {
         LOGGER.info("Updating Language for User {} to {}", id, language);
-        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), language, n.isDarkMode(),  n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
+        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), language, n.isDarkMode(), n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
     }
 
     // Will be deprecated if more languages are included
@@ -197,9 +197,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void setNewPassword(long id, String newPassword){
+    public void setNewPassword(long id, String newPassword) {
         LOGGER.info("Setting new password for User {}", id);
-        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, passwordEncoder.encode(newPassword), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(),  n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
+        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, passwordEncoder.encode(newPassword), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
     }
 
 }

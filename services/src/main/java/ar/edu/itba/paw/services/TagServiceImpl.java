@@ -4,28 +4,25 @@ import ar.edu.itba.paw.interfaces.persistence.CategorizationDao;
 import ar.edu.itba.paw.interfaces.persistence.TagDao;
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.interfaces.services.TagService;
-import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class TagServiceImpl implements TagService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TagServiceImpl.class);
     private final TagDao tagDao;
     private CategorizationDao categorizationDao;
     private ChannelService channelService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TagServiceImpl.class);
 
     @Autowired
     public TagServiceImpl(TagDao tagDao, CategorizationDao categorizationDao, final ChannelService channelService) {

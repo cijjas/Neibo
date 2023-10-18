@@ -19,11 +19,15 @@ import java.util.Map;
 
 @Repository
 public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodWorkerDaoImpl.class);
+    // --------------------------------------- NIEGHBORHOODWORKERS SELECT ------------------------------------------
+    private static final RowMapper<Neighborhood> ROW_MAPPER = (rs, rowNum) ->
+            new Neighborhood.Builder()
+                    .neighborhoodId(rs.getLong("neighborhoodid"))
+                    .name(rs.getString("neighborhoodname"))
+                    .build();
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodWorkerDaoImpl.class);
-
     private final String NEIGHBORHOODS_JOIN_WORKERS_NEIGHBORHOODS =
             "SELECT * FROM workers_neighborhoods wn JOIN neighborhoods n ON wn.neighborhoodId = n.neighborhoodId";
 
@@ -49,13 +53,6 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
             throw new InsertionException("An error occurred whilst adding the Worker to the neighborhood");
         }
     }
-
-    // --------------------------------------- NIEGHBORHOODWORKERS SELECT ------------------------------------------
-    private static final RowMapper<Neighborhood> ROW_MAPPER = (rs, rowNum) ->
-            new Neighborhood.Builder()
-                    .neighborhoodId(rs.getLong("neighborhoodid"))
-                    .name(rs.getString("neighborhoodname"))
-                    .build();
 
     @Override
     public List<Neighborhood> getNeighborhoods(long workerId) {

@@ -1,4 +1,4 @@
-    (function(){
+(function () {
 
     "use strict"
 
@@ -9,13 +9,13 @@
     };
 
     // Initialize the plugin
-    TagsInput.prototype.init = function(opts){
+    TagsInput.prototype.init = function (opts) {
         this.options = opts ? Object.assign(this.options, opts) : this.options;
 
-        if(this.initialized)
+        if (this.initialized)
             this.destroy();
 
-        if(!(this.orignal_input = document.getElementById(this.options.selector)) ){
+        if (!(this.orignal_input = document.getElementById(this.options.selector))) {
             console.error("tags-input couldn't find an element with the specified ID");
             return this;
         }
@@ -26,13 +26,13 @@
         init(this);
         initEvents(this);
 
-        this.initialized =  true;
+        this.initialized = true;
         return this;
     }
 
     // Add Tags
     // Add Tags
-    TagsInput.prototype.addTag = function(string) {
+    TagsInput.prototype.addTag = function (string) {
         if (this.anyErrors(string))
             return;
         if (!this.tagExistsInOptions(string)) {
@@ -51,7 +51,7 @@
         closeIcon.innerHTML = '&times;';
 
         // delete the tag when the icon is clicked
-        closeIcon.addEventListener('click', function(e) {
+        closeIcon.addEventListener('click', function (e) {
             e.preventDefault();
             var tag = this.parentNode;
 
@@ -80,10 +80,10 @@
     };
 
     // Delete Tags
-    TagsInput.prototype.deleteTag = function(tag , i){
+    TagsInput.prototype.deleteTag = function (tag, i) {
         tag.remove();
-        this.arr.splice( i , 1);
-        this.orignal_input.value =  this.arr.join(',');
+        this.arr.splice(i, 1);
+        this.orignal_input.value = this.arr.join(',');
         return this;
     }
 
@@ -91,22 +91,22 @@
     TagsInput.prototype.clearAllTags = function () {
         this.arr = [];
         this.orignal_input.value = '';
-        this.wrapper.querySelectorAll('.tag').forEach(function(tag) {
-            tag.remove();
-        }
+        this.wrapper.querySelectorAll('.tag').forEach(function (tag) {
+                tag.remove();
+            }
         );
 
 
     }
 
 
-        // Make sure input string have no error with the plugin
-    TagsInput.prototype.anyErrors = function(string){
-        if( this.options.max != null && this.arr.length >= this.options.max ){
+    // Make sure input string have no error with the plugin
+    TagsInput.prototype.anyErrors = function (string) {
+        if (this.options.max != null && this.arr.length >= this.options.max) {
             return true;
         }
 
-        if(!this.options.duplicate && this.arr.indexOf(string) !== -1 ){
+        if (!this.options.duplicate && this.arr.indexOf(string) !== -1) {
             return true;
         }
 
@@ -114,32 +114,32 @@
     }
 
     // Add tags programmatically
-    TagsInput.prototype.addData = function(array){
+    TagsInput.prototype.addData = function (array) {
         const plugin = this;
 
-        array.forEach(function(string){
+        array.forEach(function (string) {
             plugin.addTag(string);
         })
         return this;
     }
 
     // Get the Input String
-    TagsInput.prototype.getInputString = function(){
+    TagsInput.prototype.getInputString = function () {
         return this.arr.join(',');
     }
 
     // destroy the plugin
-    TagsInput.prototype.destroy = function(){
+    TagsInput.prototype.destroy = function () {
         this.orignal_input.removeAttribute('hidden');
 
         delete this.orignal_input;
         var self = this;
 
-        Object.keys(this).forEach(function(key){
-            if(self[key] instanceof HTMLElement)
+        Object.keys(this).forEach(function (key) {
+            if (self[key] instanceof HTMLElement)
                 self[key].remove();
 
-            if(key !== 'options')
+            if (key !== 'options')
                 delete self[key];
         });
 
@@ -147,26 +147,26 @@
     }
 
     // Private function to initialize the tag input plugin
-    function init(tags){
+    function init(tags) {
         tags.wrapper.append(tags.input);
         tags.wrapper.classList.add(tags.options.wrapperClass);
-        tags.orignal_input.setAttribute('hidden' , 'true');
-        tags.orignal_input.parentNode.insertBefore(tags.wrapper , tags.orignal_input);
+        tags.orignal_input.setAttribute('hidden', 'true');
+        tags.orignal_input.parentNode.insertBefore(tags.wrapper, tags.orignal_input);
     }
 
 
     // initialize the Events
-    function initEvents(tags){
+    function initEvents(tags) {
 
 
         tags.input.placeholder = document.getElementById('niakaniaka').value;
 
 
-        tags.wrapper.addEventListener('click' ,function(){
+        tags.wrapper.addEventListener('click', function () {
             tags.input.focus();
         });
 
-        tags.input.addEventListener('keydown' , function(e){
+        tags.input.addEventListener('keydown', function (e) {
             const str = tags.input.value.trim();
 
             if (![13, 188, 32].includes(e.keyCode)) {
@@ -184,26 +184,26 @@
 
     }
 
-        function insertClearButton(tags) {
-            const clearButton = document.createElement('a');
-            clearButton.className = 'w-100 cool-button red';
-            clearButton.innerHTML = '<spring:message code="Clear.all.tags"/>';
-            clearButton.style.fontWeight = 'bolder';
-            clearButton.onclick = function () {
-                tags.clearAllTags();
-                // Remove the clear button after clearing the tags
-                clearButton.remove();
-            };
+    function insertClearButton(tags) {
+        const clearButton = document.createElement('a');
+        clearButton.className = 'w-100 cool-button red';
+        clearButton.innerHTML = '<spring:message code="Clear.all.tags"/>';
+        clearButton.style.fontWeight = 'bolder';
+        clearButton.onclick = function () {
+            tags.clearAllTags();
+            // Remove the clear button after clearing the tags
+            clearButton.remove();
+        };
 
-            tags.wrapper.insertBefore(clearButton, tags.input);
-        }
+        tags.wrapper.insertBefore(clearButton, tags.input);
+    }
 
-        // Set All the Default Values
+    // Set All the Default Values
     TagsInput.defaults = {
-        selector : '',
-        wrapperClass : 'tags-input-wrapper',
-        tagClass : 'tag',
-        max : null,
+        selector: '',
+        wrapperClass: 'tags-input-wrapper',
+        tagClass: 'tag',
+        max: null,
         duplicate: false
     }
 

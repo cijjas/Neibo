@@ -1,4 +1,3 @@
-
 /*----------------------- GRID DISPLAY ------------------------------------*/
 
 .column {
@@ -7,7 +6,7 @@
     margin: 0;
 }
 
-.column-left{
+.column-left {
     flex: 1;
     max-width: 250px;
 }
@@ -20,14 +19,17 @@
     max-width: 580px;
     flex: 4;
 }
+
 @media (max-width: 1200px) {
-    .row{
+    .row {
         justify-content: center;
     }
+
     .column-right {
         display: none;
     }
 }
+
 @media (max-width: 993px) {
     .column-left,
     .column-right {
@@ -35,29 +37,35 @@
     }
 }
 
-.c-light-text{
+.c-light-text {
     color: var(--lighttext);
 }
-.c-primary{
+
+.c-primary {
     color: var(--primary);
 }
 
-.c-text{
+.c-text {
     color: var(--text);
 }
-.c-old-primary{
+
+.c-old-primary {
     color: var(--old-primary);
 }
-.c-accent{
+
+.c-accent {
     color: var(--accent);
 }
-.c-background{
+
+.c-background {
     color: var(--background);
 }
-.c-on-background{
+
+.c-on-background {
     color: var(--onbackground);
 }
-.c-on-on-background{
+
+.c-on-on-background {
     color: var(--on-onbackground);
 }
 
@@ -76,6 +84,7 @@
     background-color: var(--onbackground);
     border-radius: 10px;
 }
+
 .custom-navbar {
 }
 
@@ -87,14 +96,16 @@
     font-size: 32px;
     color: var(--background);
     transition: all 0.5s ease-in-out;
+
     &:hover {
         color: var(--background);
         text-shadow: 0 0 10px var(--onbackground);
 
     }
+
     &:focus-within,
     &:focus,
-    &:focus-visible{
+    &:focus-visible {
         color: var(--background);
     }
 }
@@ -116,9 +127,10 @@
     color: var(--text);
     border: 1px solid var(--lighttext);
     border-radius: var(--border-radius);
-    transform: translateY(-3px) ;
+    transform: translateY(-3px);
     box-shadow: -3px 4px 0 0 var(--lighttext);
-    & .cool-feed-button{
+
+    & .cool-feed-button {
         text-align: center;
         overflow: hidden;
 
@@ -131,33 +143,35 @@
         border: 1px solid var(--text);
         border-radius: var(--border-radius);
 
-        &.active{
-            transform: translateY(-4px) ;
+        &.active {
+            transform: translateY(-4px);
             box-shadow: 0 5px 0 0 var(--primary);
             color: var(--primary);
             border: var(--border);
         }
-        &.rounded{
+
+        &.rounded {
             border-radius: var(--border-hard) !important;
 
         }
 
-        &:hover ,
-        &:active ,
+        &:hover,
+        &:active,
         &:focus-visible {
-            transform: translateY(-4px) ;
+            transform: translateY(-4px);
             box-shadow: 0 5px 0 0 var(--primary);
             color: var(--primary);
             border: var(--border);
         }
     }
+
     & .coolest-button {
         text-align: center;
         font-weight: bold;
         overflow: hidden;
         cursor: pointer;
         padding: 1em 1em;
-        transition: all 0.3s ;
+        transition: all 0.3s;
         background-color: var(--onbackground);
         color: var(--text);
         border: 1px solid var(--text);
@@ -169,8 +183,9 @@
             background-color: var(--error);
             color: var(--background);
             box-shadow: 0 5px 0 0 #f1d283;
-            transform: translateY(-4px) ;
+            transform: translateY(-4px);
         }
+
         &:before {
             content: "";
             position: absolute;
@@ -187,7 +202,8 @@
             background-color: var(--error);
             color: var(--background);
             box-shadow: 0 5px 0 0 #f1d283;
-            transform: translateY(-4px) ;
+            transform: translateY(-4px);
+
             &::before {
                 transform: skewX(30deg) translate(150%, -50%);
                 transition-delay: 0.1s;
@@ -201,13 +217,9 @@
 /*-----------COOLEST :........................*/
 
 
-
-
-
-
 /*_----------------------------------------------*/
-.post-input {<
-    width: 100%;
+.post-input {
+< width: 100 %;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
@@ -225,7 +237,7 @@
 }
 
 /* ----------------------------------------------------- BlogPosts CSS-------------------------------------------------*/
-.grey-bg{
+.grey-bg {
     background-color: var(--on-onbackground);
 }
 
@@ -238,21 +250,23 @@
     border-radius: var(--border-radius);
     transition: all 0.3s ease-in-out;
     overflow: hidden;
-    &:hover{
-        transform: translateY(-4px) ;
+
+    &:hover {
+        transform: translateY(-4px);
         box-shadow: -3px 5px 0 0 var(--primary);
-        border : var(--border);
+        border: var(--border);
     }
 
 }
 
-.blogpost-author-and-date{
+.blogpost-author-and-date {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 10px;
 }
-.post-author{
+
+.post-author {
     font-size: 14px;
     color: var(--lighttext);
     white-space: nowrap;
@@ -260,7 +274,7 @@
     text-overflow: ellipsis;
 }
 
-.post-date{
+.post-date {
     font-size: 12px;
     color: var(--lighttext);
     white-space: nowrap;
@@ -268,6 +282,7 @@
     text-overflow: ellipsis;
 
 }
+
 .post-description {
     max-height: calc(1.2em * 10);
     overflow: hidden;
@@ -291,7 +306,8 @@
     font-size: 16px;
     font-weight: bold;
 }
-.post-title{
+
+.post-title {
     font-size: 24px;
     font-weight: bold;
     color: var(--text);
@@ -299,18 +315,16 @@
     overflow: hidden;
     text-overflow: ellipsis;
 
-    &:hover{
+    &:hover {
         color: var(--primary);
     }
 }
 
-.blogpost-image{
+.blogpost-image {
     max-width: 100%;
     max-height: 100vh;
     border-radius: 10px;
 }
-
-
 
 
 .post-info {
@@ -325,7 +339,7 @@
     font-size: 14px;
 }
 
-.no-posts-found{
+.no-posts-found {
     width: 100%;
     height: 300px;
     border: 2px solid var(--bordercolor);
@@ -339,6 +353,7 @@
     flex-direction: column;
     color: var(--text);
 }
+
 .circle-icon {
     border: var(--text) 2px solid;
     border-radius: 50px;
@@ -348,26 +363,28 @@
     justify-content: center;
     align-items: center;
 }
+
 .error {
     color: var(--error);
 }
+
 /*------------------- PLACEHOLDER -----------------------------------*/
 
-.placeholder{
-    margin: 1px ;
+.placeholder {
+    margin: 1px;
     border-radius: 3px;
 }
 
 /*-------------------------POSTCARD ---------------------------*/
 
-.post-section{
+.post-section {
     width: 100%;
     padding: 10px;
     background-color: var(--darkonbackground);
     border-radius: 10px;
-    border : 1px solid var(--lighttext);
+    border: 1px solid var(--lighttext);
 
-    transform: translateY(-4px) ;
+    transform: translateY(-4px);
     box-shadow: 0 5px 0 0 var(--lighttext);
     margin-bottom: 20px;
 }
@@ -382,7 +399,6 @@
     color: var(--lighttext);
     margin-bottom: 10px;
 }
-
 
 
 #success-container {
@@ -414,7 +430,7 @@
         color: var(--primary);
         border: 1px solid var(--primary);
         border-radius: var(--border-radius);
-        transform: translateY(-4px) ;
+        transform: translateY(-4px);
         box-shadow: -3px 5px 0 0 var(--primary);
     }
 }
@@ -430,7 +446,7 @@
     z-index: -1;
 }
 
-.svg-logo{
+.svg-logo {
     margin: 10px;
 }
 
@@ -448,7 +464,8 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    & .sticky{
+
+    & .sticky {
         position: sticky;
         top: 20px;
     }
@@ -468,13 +485,13 @@
     background-color: var(--onbackground);
     border: 1px solid var(--lighttext);
     border-radius: var(--border-radius);
-    transform: translateY(-4px) ;
+    transform: translateY(-4px);
     box-shadow: -3px 5px 0 0 var(--lighttext);
-    & .worker{
+
+    & .worker {
         height: 400px;
     }
 }
-
 
 
 .left-column-button {
@@ -489,15 +506,15 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-.sticky-bottom{
+
+.sticky-bottom {
     position: sticky;
     bottom: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap:1.25rem;
-
+    gap: 1.25rem;
 
 
 }
@@ -517,33 +534,35 @@
     border-radius: var(--border-radius);
 
 
-    &:hover ,
+    &:hover,
     &:focus-visible {
         border: var(--border);
-        transform: translateY(-4px) ;
+        transform: translateY(-4px);
         box-shadow: -2px 4px 0 0 var(--primary);
         color: var(--primary);
     }
 
     &.active {
-        transform: translateY(-4px) ;
+        transform: translateY(-4px);
         box-shadow: -2px 5px 0 0 var(--primary);
         color: var(--background);
         border: 1px solid var(--background);
         background-color: var(--primary);
     }
-    &.admin-button{
+
+    &.admin-button {
         color: var(--admin-color);
         border: 1px solid var(--admin-color);
 
-        &:hover{
-            transform: translateY(-4px) ;
+        &:hover {
+            transform: translateY(-4px);
             box-shadow: -2px 4px 0 0 var(--admin-color);
             color: var(--admin-color);
         }
+
         &.active {
             background-color: var(--background);
-            transform: translateY(-4px) ;
+            transform: translateY(-4px);
             box-shadow: -2px 4px 0 0 var(--admin-color);
             color: var(--admin-color);
         }
@@ -551,7 +570,7 @@
 }
 
 
-.filtered-tags{
+.filtered-tags {
     display: flex;
     flex-direction: row;
     justify-content: start;
@@ -562,7 +581,7 @@
 }
 
 /*---------------------------- Tag selector filter ------------------------------------*/
-.tags-row{
+.tags-row {
     display: flex;
     flex-direction: row;
     justify-content: start;
@@ -570,10 +589,12 @@
     gap: 3px;
     flex-wrap: wrap;
     width: 100%;
-    &.tags{
+
+    &.tags {
         justify-content: start;
     }
-    &.submit-tags{
+
+    &.submit-tags {
         justify-content: center;
     }
 }
@@ -581,7 +602,7 @@
 
 .filtered-tag,
 .post-tag,
-.tag-option{
+.tag-option {
     font-size: 14px;
     padding: 2px 5px 2px 5px;
     color: var(--accent);
@@ -589,37 +610,38 @@
     border: 1px solid var(--accent);
     border-radius: var(--border-hard);
     transition: all 0.3s ease-in-out;
-    &.static{
+
+    &.static {
         margin-bottom: 2px;
-        &:hover{
+
+        &:hover {
             cursor: pointer;
             color: var(--background);
             background-color: var(--accent);
         }
     }
 
-    &:hover{
+    &:hover {
         cursor: pointer;
         color: var(--accent);
-        transform: translateY(-4px) ;
+        transform: translateY(-4px);
         box-shadow: 0 4px 0 0 var(--accent);
     }
 }
 
 
-
-
 /*-------------------------------------PUBLISH/TAG INPUT------------------------*/
 
-.column-publish{
-    flex:3;
+.column-publish {
+    flex: 3;
     display: flex;
     flex-direction: row;
     justify-content: end;
     align-items: center;
 }
-.column-info{
-    flex:1;
+
+.column-info {
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -635,12 +657,12 @@
     color: var(--text);
     border: 1px solid var(--lighttext);
     border-radius: var(--border-radius);
-    transform: translateY(-4px) ;
+    transform: translateY(-4px);
     box-shadow: 0 5px 0 0 var(--lighttext);
 }
 
 
-.form-row{
+.form-row {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -648,12 +670,13 @@
     gap: 5px;
     width: 100%;
 }
-.form-row.form-error{
+
+.form-row.form-error {
     align-items: start;
     gap: 0;
 }
 
-.form-group{
+.form-group {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -663,7 +686,7 @@
 }
 
 
-.form-column{
+.form-column {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -671,7 +694,6 @@
     gap: 1rem;
     width: 100%;
 }
-
 
 
 .tags-input {
@@ -680,13 +702,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin:20px 0 20px 0 ;
+    margin: 20px 0 20px 0;
 }
 
-.tags-input-wrapper{
+.tags-input-wrapper {
     width: 100%;
-    margin-top:5px;
-    & input{
+    margin-top: 5px;
+
+    & input {
         width: 100%;
         font-size: 14px;
         font-weight: normal;
@@ -706,19 +729,19 @@
         &:active,
         &:hover,
         &:focus-visible {
-            transform: translateY(-4px) ;
+            transform: translateY(-4px);
             box-shadow: -3px 4px var(--accent);
         }
     }
 
-    & span{
+    & span {
         display: inline-block;
         background-color: var(--accent);
         color: white;
         border-radius: 40px;
         padding: 0px 3px 0px 7px;
         margin-right: 5px;
-        margin-bottom:5px;
+        margin-bottom: 5px;
         box-shadow: 0 0px 0px -2px var(--accent);
 
         & a {
@@ -726,7 +749,8 @@
             display: inline-block;
             cursor: pointer;
         }
-        &.tag{
+
+        &.tag {
             padding: 2px 3px 2px 10px;
             margin-bottom: 10px;
         }
@@ -735,12 +759,10 @@
 }
 
 
-
-
-
 .return-btn {
     color: var(--text);
 }
+
 /* IMAGEN */
 
 .drop-container {
@@ -770,7 +792,6 @@
 }
 
 
-
 .drop-title {
     color: var(--text);
     font-size: 20px;
@@ -787,6 +808,7 @@ input[type=file] {
     background: var(--background);
     border-radius: 10px;
     border: 1px solid var(--bordercolor);
+
     &::-webkit-file-upload-button,
     &::file-selector-button {
         margin-right: 20px;
@@ -799,11 +821,10 @@ input[type=file] {
         transition: background .2s ease-in-out;
     }
 }
-input[type=file]::file-selector-button:hover{
+
+input[type=file]::file-selector-button:hover {
     background: var(--primary);
 }
-
-
 
 
 /*-- loading --*/
@@ -820,7 +841,8 @@ input[type=file]::file-selector-button:hover{
     justify-content: center;
     align-items: center;
 }
-.medium-size-container{
+
+.medium-size-container {
     width: 500px;
     height: 400px;
     display: flex;
@@ -828,7 +850,8 @@ input[type=file]::file-selector-button:hover{
     justify-content: center;
     align-items: center;
 }
-.small-size-container{
+
+.small-size-container {
     width: 500px;
     height: 400px;
     display: flex;
@@ -836,6 +859,7 @@ input[type=file]::file-selector-button:hover{
     justify-content: center;
     align-items: center;
 }
+
 .loader {
     display: block;
     --height-of-loader: 10px;
@@ -843,12 +867,13 @@ input[type=file]::file-selector-button:hover{
     width: 30%;
     height: var(--height-of-loader);
     border-radius: 30px;
-    background-color: rgba(0,0,0,0.2);
+    background-color: rgba(0, 0, 0, 0.2);
     position: relative;
+
     &::before {
         content: "";
         position: absolute;
-        background:  var(--primary);
+        background: var(--primary);
         top: 0;
         left: 0;
         width: 0;
@@ -869,6 +894,7 @@ input[type=file]::file-selector-button:hover{
         left: unset;
     }
 }
+
 /*-------------------PAGINATION SELECTOR -----------------------------------*/
 .pagination {
     display: flex;
@@ -876,8 +902,9 @@ input[type=file]::file-selector-button:hover{
     align-items: center;
     margin-top: 5px;
     margin-bottom: 5px;
-    color:var(--text);
-    &.small-a{
+    color: var(--text);
+
+    &.small-a {
         width: 30px;
         height: 30px;
         padding: 4px;
@@ -900,6 +927,7 @@ input[type=file]::file-selector-button:hover{
     background-color: var(--onbackground);
     margin: 5px;
     transition: all 0.3s ease-in-out;
+
     &.small-a {
         width: 30px;
         height: 30px;
@@ -913,7 +941,7 @@ input[type=file]::file-selector-button:hover{
         color: var(--primary);
     }
 
-    &.active{
+    &.active {
         transform: translateY(-2px);
         border: 1px solid var(--background);
         box-shadow: 0 5px 0 0 var(--primary);
@@ -923,44 +951,45 @@ input[type=file]::file-selector-button:hover{
 }
 
 
-
-
 /*-------------------------FOOTER ------------------------------*/
 
 
-
 footer {
-    width:100%;
-    position:relative;
-    bottom:0;
+    width: 100%;
+    position: relative;
+    bottom: 0;
 }
+
 footer div {
-    background-color:var(--primary);
+    background-color: var(--primary);
     margin: -5px 0 0 0;
     color: #fff;
-    text-align:center;
+    text-align: center;
 }
 
 
 .wave-footer {
     animation: wave-footer 3s linear;
-    animation-iteration-count:infinite;
+    animation-iteration-count: infinite;
     fill: var(--primary);
 }
 
 
 #wave2 {
-    animation-duration:5s;
+    animation-duration: 5s;
     animation-direction: reverse;
     opacity: .9
 }
+
 #wave3 {
     animation-duration: 7s;
-    opacity:.6;
+    opacity: .6;
 }
 
 @keyframes wave-footer {
-    to {transform: translateX(-100%);}
+    to {
+        transform: translateX(-100%);
+    }
 }
 
 /*------------------------------------------------- requestmanager request manager --------------------*/
@@ -976,18 +1005,20 @@ footer div {
     color: var(--primary);
     border: 1px solid var(--primary);
     border-radius: var(--border-radius);
-    transform: translateY(-4px) ;
+    transform: translateY(-4px);
     box-shadow: -3px 5px 0 0 var(--primary);
 }
-.user-row{
-    padding: 5px 10px ;
+
+.user-row {
+    padding: 5px 10px;
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 }
-.flex-column-centerd{
+
+.flex-column-centerd {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -995,26 +1026,29 @@ footer div {
     gap: 1rem;
 }
 
-.information{
+.information {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: start;
 }
+
 .divider {
     margin: 5px 0 5px 0;
     height: 1px;
     width: 100%;
     background-color: var(--bordercolor);
 }
-.acceptance{
+
+.acceptance {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     gap: 1rem;
 }
-.ignore-button{
+
+.ignore-button {
     font-size: 12px;
     padding: 10px;
     color: var(--text);
@@ -1022,29 +1056,33 @@ footer div {
     border: 1px solid var(--bordercolor);
     border-radius: var(--border-hard);
     transition: all 0.3s ease-in-out;
-    &.outlined{
+
+    &.outlined {
         color: var(--error);
         background-color: var(--darkonbackground);
         border: 1px solid var(--error);
-        &:hover{
+
+        &:hover {
             border: 1px solid var(--error);
-            transform: translateY(-4px) ;
+            transform: translateY(-4px);
             box-shadow: 0 5px 0 0 var(--error);
             color: var(--error);
         }
     }
-    &.on-bg{
+
+    &.on-bg {
         background-color: var(--onbackground);
     }
-    &:hover{
+
+    &:hover {
         border: 1px solid var(--error);
-        transform: translateY(-4px) ;
+        transform: translateY(-4px);
         box-shadow: 0 5px 0 0 var(--error);
         color: var(--error);
     }
 }
 
-.accept-button{
+.accept-button {
     font-size: 12px;
     padding: 10px;
     color: var(--text);
@@ -1052,26 +1090,31 @@ footer div {
     border: 1px solid var(--bordercolor);
     border-radius: var(--border-hard);
     transition: all 0.3s ease-in-out;
-    &.outlined{
+
+    &.outlined {
         color: var(--primary);
         background-color: var(--darkonbackground);
         border: 1px solid var(--primary);
-        &.background{
+
+        &.background {
             background-color: var(--background);
         }
-        &.on-background{
+
+        &.on-background {
             background-color: var(--onbackground);
         }
-        &:hover{
+
+        &:hover {
             border: 1px solid var(--primary);
-            transform: translateY(-4px) ;
+            transform: translateY(-4px);
             box-shadow: 0 5px 0 0 var(--primary);
             color: var(--primary);
         }
     }
-    &:hover{
+
+    &:hover {
         border: 1px solid var(--primary);
-        transform: translateY(-4px) ;
+        transform: translateY(-4px);
         box-shadow: 0 5px 0 0 var(--primary);
         color: var(--primary);
     }
@@ -1094,7 +1137,7 @@ footer div {
     color: var(--primary);
     border: 1px solid var(--primary);
 
-    &.red{
+    &.red {
         padding: 7px 7px;
         font-size: 12px;
         color: var(--text);
@@ -1102,45 +1145,47 @@ footer div {
         border: 1px solid var(--lighttext);
         border-radius: var(--border-hard);
         transition: all 0.3s ease-in-out;
-        &:hover{
+
+        &:hover {
             border: 1px solid var(--error);
-            transform: translateY(-4px) ;
+            transform: translateY(-4px);
             box-shadow: 0 5px 0 0 var(--error);
             color: var(--error);
         }
     }
 
 
-    &:hover ,
-    &:active ,
+    &:hover,
+    &:active,
     &:focus-visible {
-        transform: translateY(-4px) ;
+        transform: translateY(-4px);
         box-shadow: 0 5px 0 0 var(--primary);
         color: var(--primary);
     }
-    &:disabled{
-        border:1px solid var(--lighttext);
+
+    &:disabled {
+        border: 1px solid var(--lighttext);
         color: var(--lighttext);
         box-shadow: 0 0 0 0 var(--primary);
-        transform: translateY(0) ;
+        transform: translateY(0);
         cursor: not-allowed;
     }
 }
 
 
-.cool-button.cool-small{
+.cool-button.cool-small {
     width: 100%;
-    &.dark-on-bg{
+
+    &.dark-on-bg {
         background-color: var(--darkonbackground);
         padding: 5px 5px;
     }
-    &.on-bg{
+
+    &.on-bg {
         background-color: var(--onbackground);
         padding: 5px 5px;
     }
 }
-
-
 
 
 .cool-input {
@@ -1154,35 +1199,36 @@ footer div {
     padding: 5px 10px;
     outline: none;
     transition: all 0.3s ease-in-out;
+
     &::placeholder {
         color: var(--lighttext);
         opacity: 0.8;
     }
+
     &:active,
     &:hover,
     &:focus-visible {
-        transform: translateY(-4px) ;
+        transform: translateY(-4px);
         box-shadow: -3px 4px var(--primary);
     }
 
 }
-.grey-input{
-    border:1px solid var(--lighttext);
-    &:active ,
-    &:hover ,
+
+.grey-input {
+    border: 1px solid var(--lighttext);
+
+    &:active,
+    &:hover,
     &:focus-visible {
-        transform: translateY(-4px) ;
+        transform: translateY(-4px);
         box-shadow: -3px 4px var(--lighttext);
     }
 }
 
 
-
-
-
 /*------------------- User setting -----------------------------*/
 
-.static-container{
+.static-container {
     position: relative;
     flex-wrap: wrap;
     width: 100%;
@@ -1243,7 +1289,7 @@ h6 {
     line-height: 25px;
 }
 
-@media only screen and (min-width: 1400px){
+@media only screen and (min-width: 1400px) {
     p {
         font-size: 14px;
     }
@@ -1264,18 +1310,23 @@ h6 {
 .p-b-5 {
     padding-bottom: 5px !important;
 }
-.m-l-5{
+
+.m-l-5 {
     margin-left: 5px !important;
 }
-.m-r-5{
+
+.m-r-5 {
     margin-right: 5px !important;
 }
-.m-l-3{
+
+.m-l-3 {
     margin-left: 3px !important;
 }
-.m-r-3{
+
+.m-r-3 {
     margin-right: 3px !important;
 }
+
 .card .card-block p {
     line-height: 25px;
 }
@@ -1313,7 +1364,7 @@ h6 {
     margin-top: 20px;
 }
 
-.controlled{
+.controlled {
     display: flex;
     flex-direction: row;
     justify-content: start;
@@ -1330,13 +1381,16 @@ h6 {
     display: flex;
     justify-content: center;
     align-items: center;
-    & form{
+
+    & form {
         display: flex;
     }
-    & input{
+
+    & input {
         display: none;
     }
-    & img{
+
+    & img {
         position: absolute;
         object-fit: cover;
         width: 165px;
@@ -1345,12 +1399,14 @@ h6 {
         border-radius: 100px;
         z-index: 0;
     }
-    & .-label{
+
+    & .-label {
         cursor: pointer;
         height: 165px;
         width: 165px;
     }
-    &:hover{
+
+    &:hover {
         & .-label {
             display: flex;
             justify-content: center;
@@ -1363,7 +1419,8 @@ h6 {
             margin-bottom: 0;
         }
     }
-    & span{
+
+    & span {
         display: inline-flex;
         padding: 0.2em;
         height: 2em;
@@ -1390,6 +1447,7 @@ h6 {
     opacity: 0;
     width: 0;
     height: 0;
+
     &:checked + .slider {
         background-color: var(--input-focus);
     }
@@ -1412,6 +1470,7 @@ h6 {
     bottom: 0;
     background-color: var(--bg-color);
     transition: 0.3s;
+
     &:before {
         box-sizing: border-box;
         position: absolute;
@@ -1429,9 +1488,6 @@ h6 {
 }
 
 
-
-
-
 /*---------------------------user profile box--------------------------------*/
 .grey-container {
     overflow: hidden;
@@ -1442,13 +1498,15 @@ h6 {
     border: 1px solid var(--text);
     border-radius: var(--border-radius);
     transition: all 0.3s ease-in-out;
-    &:hover{
+
+    &:hover {
         transform: translateY(-3px);
         box-shadow: -2px 3px 0 var(--text);
         cursor: pointer;
     }
 }
-.grey-static-container{
+
+.grey-static-container {
     overflow: hidden;
     padding: 1em 1em;
     width: 100%;
@@ -1457,17 +1515,17 @@ h6 {
     border: 1px solid var(--lighttext);
     border-radius: var(--border-radius);
     transition: all 0.3s ease-in-out;
-    transform: translateY(-4px) ;
+    transform: translateY(-4px);
     box-shadow: -3px 5px 0 0 var(--lighttext);
 }
 
 
-
 /*---------------------------------Amenities -----------------------*/
 
-.table-striped{
+.table-striped {
     --column-padding: 20px;
     color: var(--text);
+
     & td {
         text-align: center;
     }
@@ -1476,12 +1534,13 @@ h6 {
         text-align: center;
 
     }
+
     & th.day,
-    & td.day
-    {
+    & td.day {
         text-align: start;
         padding-left: var(--column-padding);
     }
+
     & tr:nth-child(even) {
         background-color: var(--onbackground);
     }
@@ -1491,7 +1550,7 @@ h6 {
     }
 }
 
-.like-button{
+.like-button {
     padding: 7px;
     border-radius: 50px;
     transition: all 0.1s ease-in-out;
@@ -1500,23 +1559,25 @@ h6 {
     cursor: pointer;
 
 
-    &:hover{
+    &:hover {
         transform: scale(1.1);
     }
-    & .pl-3 .pr-3 .pt-2 .pb-2 :hover{
+
+    & .pl-3 .pr-3 .pt-2 .pb-2 :hover {
         transform: scale(1.1);
 
     }
 
 
-    &.liked{
+    &.liked {
         color: var(--light-green);
         background-color: inherit;
 
 
     }
 }
-.post-like-button{
+
+.post-like-button {
     padding: 7px;
     border-radius: 50px;
     transition: all 0.1s ease-in-out;
@@ -1524,7 +1585,7 @@ h6 {
     color: var(--lighttext);
     cursor: pointer;
 
-    &.liked{
+    &.liked {
         color: var(--old-primary);
 
 
@@ -1532,10 +1593,11 @@ h6 {
 }
 
 
-.shifts-reservation{
+.shifts-reservation {
     width: 100%;
     color: var(--text);
-    & table{
+
+    & table {
         width: 100%;
         border-collapse: collapse;
         border-spacing: 0;
@@ -1552,12 +1614,13 @@ h6 {
             color: var(--text);
             text-align: center;
         }
+
         & th.day,
-        & td.day
-        {
+        & td.day {
             text-align: start;
             padding-left: var(--column-padding);
         }
+
         & tr:nth-child(even) {
             background-color: var(--darkonbackground);
         }
@@ -1567,7 +1630,7 @@ h6 {
         }
     }
 
-    & .cat{
+    & .cat {
         background-color: var(--onbackground);
         width: 100%;
         border-radius: var(--border-radius);
@@ -1576,32 +1639,36 @@ h6 {
         float: left;
 
         & label {
-            &  span {
+            & span {
                 padding: 5px;
                 text-align: center;
                 display: block;
                 cursor: pointer;
                 transition: all 0.3s ease-in-out;
 
-                &:hover{
+                &:hover {
                     color: var(--background);
                     background-color: var(--old-primary);
                 }
             }
+
             & input {
                 position: absolute;
                 display: none;
                 color: var(--text) !important;
-                &  + span{
+
+                & + span {
                     color: var(--text);
                 }
 
             }
         }
+
         & input:checked + span {
             color: var(--background);
             background-color: var(--primary);
         }
+
         & input:disabled + span {
             color: var(--text);
             background-color: var(--lightertext);
@@ -1609,7 +1676,8 @@ h6 {
             cursor: not-allowed;
         }
     }
-    & .cat.creation{
+
+    & .cat.creation {
         background-color: var(--onbackground);
         width: 100%;
         border-radius: 0;
@@ -1618,28 +1686,31 @@ h6 {
         float: left;
 
         & label {
-            &  span {
+            & span {
                 padding: 5px;
                 text-align: center;
                 display: block;
                 cursor: pointer;
                 transition: all 0.3s ease-in-out;
 
-                &:hover{
+                &:hover {
                     color: var(--background);
                     background-color: var(--old-primary);
                 }
             }
+
             & input {
                 position: absolute;
                 display: none;
                 color: var(--text) !important;
-                &  + span{
+
+                & + span {
                     color: var(--text);
                 }
 
             }
         }
+
         & input:checked + span {
             color: var(--background);
             background-color: var(--primary);
@@ -1650,30 +1721,27 @@ h6 {
 }
 
 
-
-
-
-.small-profile-picture{
+.small-profile-picture {
     width: 15px;
     height: 15px;
     border-radius: 50px;
     object-fit: cover;
     transition: all 0.3s ease-in-out;
 
-    & .placeholder{
+    & .placeholder {
         background-color: var(--lighttext);
     }
 }
 
 
-.big-profile-picture{
+.big-profile-picture {
     width: 100%;
     height: 100%;
     border-radius: 50px;
     object-fit: cover;
     transition: all 0.3s ease-in-out;
 
-    & .placeholder{
+    & .placeholder {
         background-color: var(--lighttext);
     }
 }
@@ -1692,6 +1760,7 @@ input[type=time] {
     outline: 0;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
+
     &::-webkit-calendar-picker-indicator {
         color: var(--text);
         appearance: none;
@@ -1703,8 +1772,8 @@ input[type=time] {
 
     &:active,
     &:focus-visible,
-    &:hover{
-        transform: translateY(-4px) ;
+    &:hover {
+        transform: translateY(-4px);
         box-shadow: -4px 4px var(--primary);
     }
 }
@@ -1722,7 +1791,6 @@ input[type=time] {
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
 }
-
 
 
 .dialog-content {
@@ -1754,13 +1822,14 @@ input[type=time] {
 
 /*MULTI*/
 .neighborhoods-select,
-.profession-select{
-    & .container{
+.profession-select {
+    & .container {
         padding: 0;
         position: relative;
         max-width: 320px;
         width: 100%;
-        & .select-btn{
+
+        & .select-btn {
             display: flex;
             height: 40px;
             align-items: center;
@@ -1771,14 +1840,17 @@ input[type=time] {
             cursor: pointer;
             transition: all 0.3s ease-in-out;
             background-color: var(--background);
-            &.n-workers{
-              background-color: var(--onbackground);
+
+            &.n-workers {
+                background-color: var(--onbackground);
             }
-            &:hover{
-                transform: translateY(-4px) ;
+
+            &:hover {
+                transform: translateY(-4px);
                 box-shadow: 4px 4px var(--primary);
             }
-            & .btn-text{
+
+            & .btn-text {
                 white-space: nowrap;
                 overflow: clip;
                 text-overflow: ellipsis;
@@ -1786,11 +1858,13 @@ input[type=time] {
                 font-weight: bold;
                 color: var(--lightertext);
                 max-width: 250px;
-                &.c-text{
+
+                &.c-text {
                     color: var(--text);
                 }
             }
-            & .arrow-dwn{
+
+            & .arrow-dwn {
                 display: flex;
                 height: 21px;
                 width: 21px;
@@ -1808,7 +1882,8 @@ input[type=time] {
             & .arrow-dwn {
                 transform: rotate(-180deg);
             }
-            &  ~ .list-items{
+
+            & ~ .list-items {
                 display: block;
             }
         }
@@ -1824,21 +1899,25 @@ input[type=time] {
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
         display: none;
         border-radius: var(--border-radius);
-        border:var(--border);
+        border: var(--border);
         width: 320px;
         max-height: 200px;
         overflow-y: auto;
-        &.n-workers{
+
+        &.n-workers {
             background-color: var(--onbackground);
         }
+
         &::-webkit-scrollbar {
             width: 10px;
         }
+
         &::-webkit-scrollbar-thumb {
             background-color: var(--primary);
             border-radius: 8px;
         }
-        & .item{
+
+        & .item {
             display: flex;
             align-items: center;
             list-style: none;
@@ -1848,11 +1927,13 @@ input[type=time] {
             padding: 0 10px;
             border-radius: var(--border-radius);
             color: var(--text);
-            & .item-text{
+
+            & .item-text {
                 font-size: 16px;
                 font-weight: 400;
             }
-            & .checkbox{
+
+            & .checkbox {
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -1863,7 +1944,8 @@ input[type=time] {
                 border: 1px solid var(--lighttext);
                 transition: all 0.3s ease-in-out;
             }
-            &:hover{
+
+            &:hover {
                 color: var(--background);
                 border-color: var(--background);
                 background-color: var(--old-primary);
@@ -1872,17 +1954,19 @@ input[type=time] {
 
     }
 
-    & .item.checked .checkbox{
+    & .item.checked .checkbox {
         background-color: var(--primary);
         border-color: var(--primary);
     }
-    & .checkbox .check-icon{
+
+    & .checkbox .check-icon {
         color: #fff;
         font-size: 11px;
         transform: scale(0);
         transition: all 0.2s ease-in-out;
     }
-    & .item.checked .check-icon{
+
+    & .item.checked .check-icon {
         transform: scale(1);
     }
 }

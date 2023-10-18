@@ -3,14 +3,15 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.models.Neighborhood;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
@@ -19,12 +20,17 @@ import java.util.Optional;
 
 @Repository
 public class NeighborhoodDaoImpl implements NeighborhoodDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodDaoImpl.class);
+    private static final RowMapper<Neighborhood> ROW_MAPPER = (rs, rowNum) ->
+            new Neighborhood.Builder()
+                    .neighborhoodId(rs.getLong("neighborhoodid"))
+                    .name(rs.getString("neighborhoodname"))
+                    .build();
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
     private final String NEIGHBORHOODS = "SELECT * FROM neighborhoods ";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodDaoImpl.class);
+    // ----------------------------------------- NEIGHBORHOODS INSERT --------------------------------------------------
 
     @Autowired
     public NeighborhoodDaoImpl(final DataSource ds) {
@@ -34,7 +40,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
                 .withTableName("neighborhoods");
     }
 
-    // ----------------------------------------- NEIGHBORHOODS INSERT --------------------------------------------------
+    // ----------------------------------------- NEIGHBORHOODS SELECT --------------------------------------------------
 
     @Override
     public Neighborhood createNeighborhood(String name) {
@@ -54,14 +60,6 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
         }
     }
 
-    // ----------------------------------------- NEIGHBORHOODS SELECT --------------------------------------------------
-
-    private static final RowMapper<Neighborhood> ROW_MAPPER = (rs, rowNum) ->
-            new Neighborhood.Builder()
-                    .neighborhoodId(rs.getLong("neighborhoodid"))
-                    .name(rs.getString("neighborhoodname"))
-                    .build();
-
     @Override
     public Optional<Neighborhood> findNeighborhoodById(long id) {
         LOGGER.debug("Selecting Neighborhood with id {}", id);
@@ -75,7 +73,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
         final List<Neighborhood> list = jdbcTemplate.query(NEIGHBORHOODS + " WHERE neighborhoodname = ?", ROW_MAPPER, name);
         return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
     }
-    
+
     @Override
     public List<Neighborhood> getNeighborhoods() {
         LOGGER.debug("Selecting All Neighborhoods");

@@ -9,6 +9,22 @@ public class Profession {
         this.profession = builder.profession;
     }
 
+    public long getProfessionId() {
+        return professionId;
+    }
+
+    public String getProfession() {
+        return profession;
+    }
+
+    @Override
+    public String toString() {
+        return "Profession{" +
+                "professionId=" + professionId +
+                ", profession='" + profession + '\'' +
+                '}';
+    }
+
     public static class Builder {
         private long professionId;
         private String profession;
@@ -26,21 +42,5 @@ public class Profession {
         public Profession build() {
             return new Profession(this);
         }
-    }
-
-    public long getProfessionId() {
-        return professionId;
-    }
-
-    public String getProfession() {
-        return profession;
-    }
-
-    @Override
-    public String toString() {
-        return "Profession{" +
-                "professionId=" + professionId +
-                ", profession='" + profession + '\'' +
-                '}';
     }
 }

@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
@@ -10,13 +12,11 @@ import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Worker;
-import ar.edu.itba.paw.enums.Language;
-import ar.edu.itba.paw.enums.UserRole;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,14 +26,13 @@ import java.util.Optional;
 @Service
 @Transactional
 public class WorkerServiceImpl implements WorkerService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WorkerServiceImpl.class);
     private final WorkerDao workerDao;
     private final ProfessionWorkerDao professionWorkerDao;
     private final UserDao userDao;
     private final ImageService imageService;
     private final PasswordEncoder passwordEncoder;
     private final NeighborhoodWorkerDao neighborhoodWorkerDao;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(WorkerServiceImpl.class);
 
     @Autowired
     public WorkerServiceImpl(WorkerDao workerDao, ProfessionWorkerDao professionWorkerDao, UserDao userDao, ImageService imageService, PasswordEncoder passwordEncoder, NeighborhoodWorkerDao neighborhoodWorkerDao) {
@@ -80,7 +79,7 @@ public class WorkerServiceImpl implements WorkerService {
     @Transactional(readOnly = true)
     public List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long neighborhoodId, long loggedUserId) {
         LOGGER.info("Getting Workers from Neighborhoods {} with professions {}", neighborhoodId, professions);
-        if(neighborhoodId != 0)
+        if (neighborhoodId != 0)
             return workerDao.getWorkersByCriteria(page, size, professions, new long[]{neighborhoodId});
 
         // If the user is a worker, display workers from every neighborhood they are in
@@ -115,7 +114,7 @@ public class WorkerServiceImpl implements WorkerService {
     public int getTotalWorkerPages(long neighborhoodId, int size) {
         LOGGER.info("Getting Pages of Workers with size {} from Neighborhood {}", size, neighborhoodId);
         long[] neighborhoodIds = {neighborhoodId};
-        return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(null, neighborhoodIds)/size);
+        return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(null, neighborhoodIds) / size);
     }
 
 }

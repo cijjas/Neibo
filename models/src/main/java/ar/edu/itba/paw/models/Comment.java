@@ -8,12 +8,44 @@ public class Comment {
     private final Date date;
     private final User user;
     private final long postId;
+
     private Comment(Builder builder) {
         this.commentId = builder.commentId;
         this.comment = builder.comment;
         this.date = builder.date;
         this.user = builder.user;
         this.postId = builder.postId;
+    }
+
+    public long getCommentId() {
+        return commentId;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public User getUser() { // New getter for neighborId
+        return user;
+    }
+
+    public long getPostId() { // New getter for postId
+        return postId;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "commentId=" + commentId +
+                ", comment='" + comment + '\'' +
+                ", date=" + date +
+                ", neighborId=" + user +
+                ", postId=" + postId +
+                '}';
     }
 
     public static class Builder {
@@ -51,36 +83,5 @@ public class Comment {
         public Comment build() {
             return new Comment(this);
         }
-    }
-
-    public long getCommentId() {
-        return commentId;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public User getUser() { // New getter for neighborId
-        return user;
-    }
-
-    public long getPostId() { // New getter for postId
-        return postId;
-    }
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "commentId=" + commentId +
-                ", comment='" + comment + '\'' +
-                ", date=" + date +
-                ", neighborId=" + user +
-                ", postId=" + postId +
-                '}';
     }
 }

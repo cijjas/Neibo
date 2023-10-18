@@ -8,10 +8,12 @@ import java.lang.annotation.*;
 
 @Documented
 @Constraint(validatedBy = TagsValidator.class)
-@Target( { ElementType.METHOD, ElementType.FIELD })
+@Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TagsConstraint {
     String message() default "Invalid tags format";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

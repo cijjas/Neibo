@@ -1,5 +1,3 @@
-
-
 <div class="w-100">
 
     <script>
@@ -27,16 +25,16 @@
                 </div>
             </c:when>
             <c:otherwise>
-                <c:forEach var="event" items="${eventList}" >
-                        <jsp:include page="/WEB-INF/jsp/components/widgets/calendar/calendarEvent.jsp" >
-                            <jsp:param name="eventId" value="${event.eventId}" />
-                            <jsp:param name="eventName" value="${event.name}"/>
-                            <jsp:param name="eventDescription" value="${event.description}"/>
-                            <jsp:param name="eventDate" value="${event.date}"/>
-                            <jsp:param name="eventDuration" value="${event.getDuration()}"/>
-                            <jsp:param name="eventStartTime" value="${event.getStartTimeString()}"/>
-                            <jsp:param name="eventEndTime" value="${event.getEndTimeString()}"/>
-                        </jsp:include>
+                <c:forEach var="event" items="${eventList}">
+                    <jsp:include page="/WEB-INF/jsp/components/widgets/calendar/calendarEvent.jsp">
+                        <jsp:param name="eventId" value="${event.eventId}"/>
+                        <jsp:param name="eventName" value="${event.name}"/>
+                        <jsp:param name="eventDescription" value="${event.description}"/>
+                        <jsp:param name="eventDate" value="${event.date}"/>
+                        <jsp:param name="eventDuration" value="${event.getDuration()}"/>
+                        <jsp:param name="eventStartTime" value="${event.getStartTimeString()}"/>
+                        <jsp:param name="eventEndTime" value="${event.getEndTimeString()}"/>
+                    </jsp:include>
                 </c:forEach>
             </c:otherwise>
         </c:choose>

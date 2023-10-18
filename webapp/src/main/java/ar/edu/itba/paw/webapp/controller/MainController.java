@@ -1,12 +1,15 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.*;
-import ar.edu.itba.paw.interfaces.exceptions.*;
+import ar.edu.itba.paw.interfaces.exceptions.DuplicateKeyException;
+import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
+import ar.edu.itba.paw.interfaces.exceptions.MailingException;
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.*;
+import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.webapp.form.*;
-import ar.edu.itba.paw.webapp.form.ReservationTimeForm;
-import ar.edu.itba.paw.webapp.form.ReviewForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -14,21 +17,19 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.*;
 import java.sql.Date;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import java.util.List;
+import java.util.Locale;
 
 @Controller
 public class MainController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
     private final SessionUtils sessionUtils;
-
     private final PostService ps;
     private final UserService us;
     private final NeighborhoodService nhs;
@@ -51,6 +52,8 @@ public class MainController {
     private final ReviewService rws;
     private final WorkerService ws;
     private final AvailabilityService avs;
+
+    // ------------------------------------- FEED --------------------------------------
 
     @Autowired
     public MainController(SessionUtils sessionUtils,
@@ -101,10 +104,6 @@ public class MainController {
         this.shs = shs;
         this.avs = avs;
     }
-
-    // ------------------------------------- FEED --------------------------------------
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
 
     private ModelAndView handleChannelRequest(
             String channelName,
@@ -172,16 +171,16 @@ public class MainController {
         return mav;
     }
 
-    @RequestMapping (value = "/update-darkmode-preference", method = RequestMethod.POST)
+    @RequestMapping(value = "/update-darkmode-preference", method = RequestMethod.POST)
     public String updateDarkModePreference() {
         sessionUtils.clearLoggedUser();
         us.toggleDarkMode(sessionUtils.getLoggedUser().getUserId());
         return "redirect:/profile";
     }
 
-    @RequestMapping (value = "/change-language", method = RequestMethod.POST)
+    @RequestMapping(value = "/change-language", method = RequestMethod.POST)
     public String changeLanguage(
-            @RequestParam(value="lang", required = false) String language,
+            @RequestParam(value = "lang", required = false) String language,
             HttpServletRequest request
     ) {
         sessionUtils.clearLoggedUser();
@@ -220,7 +219,7 @@ public class MainController {
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "tag", required = false) List<String> tags,
             @RequestParam(value = "postStatus", required = false, defaultValue = "none") String postStatus
-    ){
+    ) {
         LOGGER.info("User arriving at '/complaints'");
         return handleChannelRequest(BaseChannel.COMPLAINTS.toString(), page, size, tags, postStatus);
     }
@@ -228,7 +227,7 @@ public class MainController {
     @RequestMapping(value = "/unverified", method = RequestMethod.GET)
     public ModelAndView unverified() {
         LOGGER.info("User arriving at '/unverified'");
-        return  new ModelAndView("views/unverified");
+        return new ModelAndView("views/unverified");
     }
 
     @RequestMapping(value = "/rejected", method = RequestMethod.GET)
@@ -291,10 +290,10 @@ public class MainController {
     public ModelAndView redirectToChannel(
             @RequestParam("channelId") int channelId
     ) {
-        String channelName= chs.findChannelById(channelId).orElseThrow(()-> new NotFoundException("Channel not Found")).getChannel().toLowerCase();
-        if(channelName.equals(BaseChannel.FEED.toString().toLowerCase()))
+        String channelName = chs.findChannelById(channelId).orElseThrow(() -> new NotFoundException("Channel not Found")).getChannel().toLowerCase();
+        if (channelName.equals(BaseChannel.FEED.toString().toLowerCase()))
             return new ModelAndView("redirect:/");
-        else if(channelName.equals(BaseChannel.WORKERS.toString().toLowerCase()))
+        else if (channelName.equals(BaseChannel.WORKERS.toString().toLowerCase()))
             return new ModelAndView("redirect:/services");
         else
             return new ModelAndView("redirect:/" + channelName);
@@ -305,7 +304,7 @@ public class MainController {
     public ModelAndView publishToChannel(
             @RequestParam("channel") String channelString
     ) {
-        long channelId = chs.findChannelByName(channelString).orElseThrow(()-> new NotFoundException("Channel not Found")).getChannelId();
+        long channelId = chs.findChannelByName(channelString).orElseThrow(() -> new NotFoundException("Channel not Found")).getChannelId();
         return new ModelAndView("redirect:/publish?onChannelId=" + channelId);
     }
 
@@ -413,7 +412,7 @@ public class MainController {
     ) {
         if (errors.hasErrors()) {
             LOGGER.error("Error in Sign Up Form");
-            ModelAndView mav =  logIn(signupForm, new WorkerSignupForm(), true, "");
+            ModelAndView mav = logIn(signupForm, new WorkerSignupForm(), true, "");
             mav.addObject("openSignupDialog", true);
             return mav;
         }
@@ -489,8 +488,8 @@ public class MainController {
 
         mav.addObject("amenityId", amenityId);
         mav.addObject("date", date);
-        mav.addObject("amenityName", as.findAmenityById(amenityId).orElseThrow(()-> new NotFoundException("Amenity not Found")).getName());
-        mav.addObject("bookings", shs.getShifts(amenityId,date));
+        mav.addObject("amenityName", as.findAmenityById(amenityId).orElseThrow(() -> new NotFoundException("Amenity not Found")).getName());
+        mav.addObject("bookings", shs.getShifts(amenityId, date));
         mav.addObject("reservationsList", bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));
         return mav;
     }
@@ -568,7 +567,7 @@ public class MainController {
         mav.addObject("selectedDay", selectedDate.getDate());
         mav.addObject("selectedMonth", es.getSelectedMonth(selectedDate.getMonth(), sessionUtils.getLoggedUser().getLanguage()));
         mav.addObject("selectedYear", es.getSelectedYear(selectedDate.getYear()));
-        mav.addObject("selectedDate", selectedDate );
+        mav.addObject("selectedDate", selectedDate);
         mav.addObject("eventList", es.getEventsByDate(selectedDate, sessionUtils.getLoggedUser().getNeighborhoodId()));
         return mav;
     }

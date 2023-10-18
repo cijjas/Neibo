@@ -26,6 +26,57 @@ public class Post {
         this.likes = builder.likes;
     }
 
+    public long getPostId() {
+        return postId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Channel getChannel() {
+        return channel;
+    }
+
+    public long getPostPictureId() {
+        return postPictureId;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "postId=" + postId +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", date=" + date +
+                ", user=" + user +
+                ", channel=" + channel +
+                ", postPictureId=" + postPictureId +
+                ", tags=" + tags +
+                ", likes=" + likes +
+                '}';
+    }
+
     public static class Builder {
         private long postId;
         private String title;
@@ -85,56 +136,5 @@ public class Post {
         public Post build() {
             return new Post(this);
         }
-    }
-
-    public long getPostId() {
-        return postId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public Channel getChannel() {
-        return channel;
-    }
-
-    public long getPostPictureId() {
-        return postPictureId;
-    }
-
-    public List<Tag> getTags() {
-        return tags;
-    }
-
-    public int getLikes() {
-        return likes;
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                "postId=" + postId +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", date=" + date +
-                ", user=" + user +
-                ", channel=" + channel +
-                ", postPictureId=" + postPictureId +
-                ", tags=" + tags +
-                ", likes=" + likes +
-                '}';
     }
 }

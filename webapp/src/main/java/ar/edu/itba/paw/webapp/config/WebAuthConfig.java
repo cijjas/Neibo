@@ -33,13 +33,15 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     // this defines that whenever spring has to compare passwords the strategy is to use the following encoder
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetails).passwordEncoder(passwordEncoder());
     }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement()
@@ -72,8 +74,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedPage("/errors/errorPage")
                 .and().csrf().disable();
     }
-
-
 
 
     @Bean
@@ -110,11 +110,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-
-
     @Override
     public void configure(final WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/postImages/*","/resources/**","/css/**", "/js/**", "/img/**", "/favicon.ico", "/403");
+                .antMatchers("/postImages/*", "/resources/**", "/css/**", "/js/**", "/img/**", "/favicon.ico", "/403");
     }
 }

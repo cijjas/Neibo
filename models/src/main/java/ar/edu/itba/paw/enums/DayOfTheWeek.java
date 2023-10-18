@@ -15,6 +15,10 @@ public enum DayOfTheWeek {
     Saturday,
     Sunday;
 
+    public static final List<Pair<Integer, String>> DAY_PAIRS = Arrays.stream(values())
+            .map(day -> new Pair<>(day.getId(), day.name()))
+            .collect(Collectors.toList());
+
     public static long convertToCustomDayId(int calendarDayId) {
         if (calendarDayId == Calendar.SUNDAY) {
             return DayOfTheWeek.Sunday.getId();
@@ -22,11 +26,8 @@ public enum DayOfTheWeek {
 
         return calendarDayId - 1;
     }
+
     public int getId() {
         return ordinal() + 1;
     }
-
-    public static final List<Pair<Integer, String>> DAY_PAIRS = Arrays.stream(values())
-            .map(day -> new Pair<>(day.getId(), day.name()))
-            .collect(Collectors.toList());
 }

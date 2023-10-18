@@ -3,7 +3,6 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.models.Event;
-import ar.edu.itba.paw.models.Neighborhood;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +12,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.sql.Time;
 import java.util.Date;
-import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -77,6 +75,7 @@ public class EventServiceImplTest {
         Assert.assertEquals(newEvent.getNeighborhoodId(), NEIGHBORHOOD_ID);
 
     }
+
     @Test(expected = RuntimeException.class)
     public void testCreateAlreadyExists() {
         // 1. Preconditions

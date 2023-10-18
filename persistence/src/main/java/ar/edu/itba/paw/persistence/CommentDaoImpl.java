@@ -4,18 +4,16 @@ import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.CommentDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
-import ar.edu.itba.paw.models.Channel;
 import ar.edu.itba.paw.models.Comment;
-import ar.edu.itba.paw.models.Post;
 import ar.edu.itba.paw.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Timestamp;
@@ -27,19 +25,29 @@ import java.util.Optional;
 
 @Repository
 public class CommentDaoImpl implements CommentDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommentDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
-    private UserDao userDao;
-
     private final String COMMENTS_JOIN_USERS =
             "SELECT postid, commentid, comment, commentdate, u.userid, name, surname, mail \n" +
-            "FROM comments " +
+                    "FROM comments " +
                     "INNER JOIN public.users u ON comments.userid = u.userid ";
     private final String COMMENTS = "SELECT * FROM comments ";
     private final String COUNT_COMMENTS = "SELECT COUNT(*) FROM comments";
+    private UserDao userDao;
+    private final RowMapper<Comment> ROW_MAPPER = (rs, rowNum) -> {
+        User user = userDao.findUserById(rs.getLong("userid")).orElseThrow(() -> new NotFoundException("User Not Found"));
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommentDaoImpl.class);
+        return new Comment.Builder()
+                .commentId(rs.getLong("commentid"))
+                .comment(rs.getString("comment"))
+                .date(rs.getDate("commentdate"))
+                .postId(rs.getLong("postid"))
+                .user(user)
+                .build();
+    };
+
+    // -------------------------------------------- COMMENTS INSERT ----------------------------------------------------
 
     @Autowired
     public CommentDaoImpl(final DataSource ds, UserDao userDao) {
@@ -50,7 +58,7 @@ public class CommentDaoImpl implements CommentDao {
                 .withTableName("comments");
     }
 
-    // -------------------------------------------- COMMENTS INSERT ----------------------------------------------------
+    // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
 
     @Override
     public Comment createComment(String comment, long userId, long postId) {
@@ -73,20 +81,6 @@ public class CommentDaoImpl implements CommentDao {
             throw new InsertionException("An error occurred whilst creating the Comment");
         }
     }
-
-    // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
-
-    private final RowMapper<Comment> ROW_MAPPER = (rs, rowNum) -> {
-        User user = userDao.findUserById(rs.getLong("userid")).orElseThrow(() -> new NotFoundException("User Not Found"));
-
-        return new Comment.Builder()
-                .commentId(rs.getLong("commentid"))
-                .comment(rs.getString("comment"))
-                .date(rs.getDate("commentdate"))
-                .postId(rs.getLong("postid"))
-                .user(user)
-                .build();
-    };
 
     @Override
     public Optional<Comment> findCommentById(long commentId) {

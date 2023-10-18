@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
-import ar.edu.itba.paw.interfaces.persistence.ChannelMappingDao;
 import ar.edu.itba.paw.interfaces.services.ChannelMappingService;
 import ar.edu.itba.paw.models.Channel;
 import org.junit.Assert;
@@ -11,9 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Optional;
-
 import static org.mockito.Mockito.*;
+
 @RunWith(MockitoJUnitRunner.class)
 public class ChannelServiceImplTest {
     private static final long ID = 1;
@@ -26,6 +24,7 @@ public class ChannelServiceImplTest {
     private ChannelMappingService channelMappingService;
     @InjectMocks
     private ChannelServiceImpl cs;
+
     @Test
     public void testCreate() {
         // 1. Preconditions
@@ -36,7 +35,7 @@ public class ChannelServiceImplTest {
         );
 
         // 2. Exercise
-        Channel newChannel = cs.createChannel(NEIGHBORHOOD_ID,NAME);
+        Channel newChannel = cs.createChannel(NEIGHBORHOOD_ID, NAME);
 
         // 3. Postconditions
         Assert.assertNotNull(newChannel);
@@ -44,13 +43,14 @@ public class ChannelServiceImplTest {
         Assert.assertEquals(newChannel.getChannel(), NAME);
 
     }
+
     @Test(expected = RuntimeException.class)
     public void testCreateAlreadyExists() {
         // 1. Preconditions
         when(channelDao.createChannel(eq(NAME))).thenThrow(RuntimeException.class);
 
         // 2. Exercise
-        Channel newChannel = cs.createChannel(NEIGHBORHOOD_ID,NAME);
+        Channel newChannel = cs.createChannel(NEIGHBORHOOD_ID, NAME);
 
         // 3. Postconditions
     }

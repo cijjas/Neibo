@@ -1,13 +1,13 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
-import ar.edu.itba.paw.models.User;
 import ar.edu.itba.paw.models.Neighborhood;
-import ar.edu.itba.paw.enums.Language;
-import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.models.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,29 +18,24 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Date;
-import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceImplTest {
 
-    private Neighborhood mockNeighborhood;
     private static final long ID = 1;
     private static final String EMAIL = "pedro@mcpedro.com";
     private static final String NAME = "Pedro";
     private static final String SURNAME = "Pedrovsky";
+    private static final String NEIGHBORHOOD_NAME = "Varsovia";
+    private static final long NEIGHBORHOOD_ID = 1;
     private final String PASSWORD = "123456";
     private final boolean DARK_MODE = false;
     private final Language LANGUAGE = Language.ENGLISH;
     private final UserRole ROLE = UserRole.UNVERIFIED_NEIGHBOR;
     private final Date CREATION_DATE = new Date(2023, 9, 11);
     private final int IDENTIFICATION = 123456789;
-    private static final String NEIGHBORHOOD_NAME = "Varsovia";
-    private static final long NEIGHBORHOOD_ID = 1;
-
-    @Mock
-    private UserDao userDao;
     @Mock
     ImageService imageService;
     @Mock
@@ -49,6 +44,9 @@ public class UserServiceImplTest {
     EmailService emailService;
     @Mock
     NeighborhoodService neighborhoodService;
+    private Neighborhood mockNeighborhood;
+    @Mock
+    private UserDao userDao;
     @InjectMocks
     private UserServiceImpl us;
 
@@ -92,6 +90,7 @@ public class UserServiceImplTest {
         Assert.assertEquals(newUser.getIdentification(), IDENTIFICATION);
 
     }
+
     @Test(expected = RuntimeException.class)
     public void testCreateAlreadyExists() {
         // 1. Preconditions

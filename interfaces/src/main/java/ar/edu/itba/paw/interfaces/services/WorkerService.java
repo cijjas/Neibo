@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.Neighborhood;
-import ar.edu.itba.paw.models.Worker;
 import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.models.Worker;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

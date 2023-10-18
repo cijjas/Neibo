@@ -3,10 +3,10 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.ReviewDao;
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.models.Review;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -15,9 +15,8 @@ import java.util.Optional;
 @Service
 @Transactional
 public class ReviewServiceImpl implements ReviewService {
-    private final ReviewDao reviewDao;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewServiceImpl.class);
+    private final ReviewDao reviewDao;
 
     @Autowired
     public ReviewServiceImpl(ReviewDao reviewDao) {

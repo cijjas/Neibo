@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
-import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class CommentForm {
@@ -16,6 +14,7 @@ public class CommentForm {
     public String getComment() {
         return comment;
     }
+
     public void setComment(String comment) {
         this.comment = comment;
     }

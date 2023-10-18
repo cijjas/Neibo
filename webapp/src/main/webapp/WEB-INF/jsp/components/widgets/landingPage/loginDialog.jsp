@@ -9,7 +9,7 @@
             <span class=" font-weight-normal"><spring:message code="Login.to.continue"/> </span>
         </div>
 
-        <form method="post" class="login-form" id="loginForm" >
+        <form method="post" class="login-form" id="loginForm">
 
             <div class="centered-column">
                 <label>
@@ -20,28 +20,29 @@
 
                 <label>
                     <c:set var="password"><spring:message code="Password"/></c:set>
-                    <input type="password" placeholder="${password}"  autocomplete="true" name="password" class="input">
+                    <input type="password" placeholder="${password}" autocomplete="true" name="password" class="input">
                 </label>
 
-                </div>
+            </div>
 
-                <%--REMEMBER ME CHECKBOX--%>
-                <label class="centered-row light-text">
-                    <input name="rememberMe" type="checkbox">
-                    <spring:message code="Remember.me"/>
-                </label>
+            <%--REMEMBER ME CHECKBOX--%>
+            <label class="centered-row light-text">
+                <input name="rememberMe" type="checkbox">
+                <spring:message code="Remember.me"/>
+            </label>
 
-                <div class="centered-column">
+            <div class="centered-column">
 
                 <button class="action-button font-weight-bolder" onclick="tryLogin()">
                     <spring:message code="Login"/>
                 </button>
                 <span style="color:var(--lighttext); font-size: 14px;"><spring:message code="Not.a.member.question"/>
-                        <a onclick="closeLoginDialog(); openSignupDialog();" class="a-link"><spring:message code="Signup.now"/></a>
+                        <a onclick="closeLoginDialog(); openSignupDialog();" class="a-link"><spring:message
+                                code="Signup.now"/></a>
                 </span>
                 <script>
-                    function tryLogin(){
-                        if(document.getElementById("loginForm").checkValidity()){
+                    function tryLogin() {
+                        if (document.getElementById("loginForm").checkValidity()) {
                             document.getElementById("loginForm").submit();
                         }
                     }

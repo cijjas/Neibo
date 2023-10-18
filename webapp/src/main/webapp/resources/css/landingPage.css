@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
 }
+
 .drawings {
     position: absolute;
     width: 100%;
@@ -32,15 +33,17 @@
     justify-content: center;
     align-items: center;
 }
-.navbar-item{
+
+.navbar-item {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-evenly;
     align-items: center;
-    gap:50px;
+    gap: 50px;
 }
-.landing-neibo{
+
+.landing-neibo {
     font-size: 80px;
     font-weight: bold;
     color: var(--primary);
@@ -52,7 +55,7 @@
     font-family: -apple-system-headline, BlinkMacSystemFont, sans-serif;
 }
 
-#logo{
+#logo {
     width: 200px;
     height: 100%;
     display: flex;
@@ -61,15 +64,12 @@
     align-items: center;
 }
 
-.landing-description{
+.landing-description {
     color: var(--lighttext);
     max-width: 400px;
     text-align: center;
     text-overflow: clip;
 }
-
-
-
 
 
 .action-button {
@@ -85,24 +85,21 @@
     cursor: pointer;
     transition: all 0.3s ease-in-out;
     box-shadow: 0 0 0 0 var(--primary);
-    &:hover ,
-    &:active ,
+
+    &:hover,
+    &:active,
     &:focus {
-        transform: translateY(-4px) ;
+        transform: translateY(-4px);
         box-shadow: 0 5px 0 0 var(--primary);
         color: var(--primary);
     }
 }
 
 
-
 /*----------------------------------- LOGIN POPUP --------------------*/
 
 
-
-
-
-.signup-content{
+.signup-content {
     height: 650px;
     width: 500px;
 }
@@ -130,19 +127,21 @@ input[type="number"],
     padding: 5px 10px;
     outline: none;
     transition: all 0.3s ease-in-out;
+
     &::placeholder {
         color: var(--lighttext);
         opacity: 0.8;
     }
+
     &:active,
     &:hover,
-    &:focus-visible{
-        transform: translateY(-4px) ;
+    &:focus-visible {
+        transform: translateY(-4px);
         box-shadow: 4px 4px var(--primary);
     }
 }
 
-.form-input{
+.form-input {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -165,32 +164,31 @@ input[type="number"],
 }
 
 
-
-.a-link{
+.a-link {
     color: var(--old-primary);
     font-weight: bold;
 }
 
-.a-link:hover{
+.a-link:hover {
     color: var(--primary);
     cursor: pointer;
 }
 
 
-.centered-row{
+.centered-row {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     gap: 10px;
-    &.light-text{
+
+    &.light-text {
         color: var(--lighttext);
     }
 }
 
 
-
-.centered-column{
+.centered-column {
     margin: 1rem;
     width: 220px;
     display: flex;
@@ -216,18 +214,19 @@ input[type="number"],
         color: var(--lighttext);
         opacity: 0.8;
     }
+
     &:active,
     &:hover,
     &:focus-visible
     &:focus,
-    &:focus-visible{
-        transform: translateY(-4px) ;
+    &:focus-visible {
+        transform: translateY(-4px);
         box-shadow: 4px 4px var(--primary);
     }
 }
 
 
-.landing-error{
+.landing-error {
     color: var(--error);
     font-size: 14px;
 }

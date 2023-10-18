@@ -1,4 +1,3 @@
-
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
@@ -7,10 +6,10 @@ import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.interfaces.services.BookingService;
 import ar.edu.itba.paw.models.Booking;
 import ar.edu.itba.paw.models.GroupedBooking;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
@@ -22,10 +21,9 @@ import java.util.List;
 @Transactional
 public class BookingServiceImpl implements BookingService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BookingServiceImpl.class);
     private final BookingDao bookingDao;
     private final AvailabilityDao availabilityDao;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(BookingServiceImpl.class);
 
     @Autowired
     public BookingServiceImpl(final BookingDao bookingDao, final AvailabilityDao availabilityDao) {

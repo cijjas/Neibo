@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.webapp.form;
 
-import org.hibernate.validator.constraints.Range;
-
 public class NeighborhoodsForm {
 
     private long[] neighborhoodIds;

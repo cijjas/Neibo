@@ -13,7 +13,7 @@
         <div style="text-align:center;font-weight: bold; font-size: 24px; color:var(--error)">
             <c:out value="${param.errorMessage}"/>
         </div>
-        <a class="cool-button cool-small on-bg w-25 font-weight-bolder"  onclick="closeErrorDialog()">
+        <a class="cool-button cool-small on-bg w-25 font-weight-bolder" onclick="closeErrorDialog()">
             OK
         </a>
     </div>
@@ -21,13 +21,12 @@
 <script>
     function closeErrorDialog() {
         const errorContainer = document.getElementById('errorDialog');
-        if("${param.openLoginAgain}" === "true"){
+        if ("${param.openLoginAgain}" === "true") {
             openLoginDialog();
         }
         errorContainer.style.display = 'none'; // Hide the container
         errorContainer.style.opacity = '0'; // Fade in
     }
-
 
 
 </script>

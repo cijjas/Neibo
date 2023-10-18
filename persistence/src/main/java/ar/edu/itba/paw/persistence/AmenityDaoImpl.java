@@ -1,17 +1,17 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.models.Amenity;
 import ar.edu.itba.paw.models.Shift;
-import ar.edu.itba.paw.enums.Table;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -21,15 +21,24 @@ import java.util.Optional;
 
 @Repository
 public class AmenityDaoImpl implements AmenityDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AmenityDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
     private ShiftDao shiftDao;
-
+    private final RowMapper<Amenity> ROW_MAPPER = (rs, rowNum) -> {
+        List<Shift> availableShifts = shiftDao.getAmenityShifts(rs.getLong("amenityid"));
+        return new Amenity.Builder()
+                .amenityId(rs.getLong("amenityid"))
+                .name(rs.getString("name"))
+                .description(rs.getString("description"))
+                .neighborhoodId(rs.getLong("neighborhoodid"))
+                .availableShifts(availableShifts)
+                .build();
+    };
     private String AMENITIES = "SELECT * FROM amenities";
     private String COUNT_AMENITIES = "SELECT COUNT(*) FROM amenities";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AmenityDaoImpl.class);
+    // ---------------------------------------------- AMENITY INSERT ---------------------------------------------------
 
     @Autowired
     public AmenityDaoImpl(final DataSource ds, final ShiftDao shiftDao) {
@@ -40,7 +49,7 @@ public class AmenityDaoImpl implements AmenityDao {
                 .withTableName(Table.amenities.name());
     }
 
-    // ---------------------------------------------- AMENITY INSERT ---------------------------------------------------
+    // ---------------------------------------------- AMENITY SELECT ---------------------------------------------------
 
     @Override
     public Amenity createAmenity(String name, String description, long neighborhoodId) {
@@ -57,19 +66,6 @@ public class AmenityDaoImpl implements AmenityDao {
                 .description(description)
                 .build();
     }
-
-    // ---------------------------------------------- AMENITY SELECT ---------------------------------------------------
-
-    private final RowMapper<Amenity> ROW_MAPPER = (rs, rowNum) -> {
-        List<Shift> availableShifts = shiftDao.getAmenityShifts(rs.getLong("amenityid"));
-        return new Amenity.Builder()
-                .amenityId(rs.getLong("amenityid"))
-                .name(rs.getString("name"))
-                .description(rs.getString("description"))
-                .neighborhoodId(rs.getLong("neighborhoodid"))
-                .availableShifts(availableShifts)
-                .build();
-    };
 
     @Override
     public Optional<Amenity> findAmenityById(long amenityId) {

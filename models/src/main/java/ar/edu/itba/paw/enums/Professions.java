@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.enums;
 
-import java.sql.Time;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +11,10 @@ public enum Professions {
     GARDENER,
     CARPENTER;
 
+    public static final List<Pair<Integer, String>> PROF_PAIRS = Arrays.stream(values())
+            .map(profession -> new Pair<>(profession.getId(), profession.toString()))
+            .collect(Collectors.toList());
+
     @Override
     public String toString() {
         String name = name().toLowerCase();
@@ -21,8 +24,4 @@ public enum Professions {
     public int getId() {
         return ordinal() + 1;
     }
-
-    public static final List<Pair<Integer, String>> PROF_PAIRS = Arrays.stream(values())
-            .map(profession -> new Pair<>(profession.getId(), profession.toString()))
-            .collect(Collectors.toList());
 }

@@ -1,5 +1,4 @@
 
-
 .service-card {
     overflow: hidden;
     width: 100%;
@@ -12,10 +11,11 @@
     transition: all 0.3s ease-in-out;
     box-shadow: 0 4px 0 0 var(--primary);
 
-    & .card-header{
-        margin:0;
-        padding:0;
-        & .back-image{
+    & .card-header {
+        margin: 0;
+        padding: 0;
+
+        & .back-image {
             object-fit: cover;
             object-position: center bottom;
             width: 100%;
@@ -38,7 +38,7 @@
             background-size: cover;
             object-fit: cover;
             background-color: var(--onbackground);
-            background-image: var(--background-image);  /*This is ok no worries*/
+            background-image: var(--background-image); /*This is ok no worries*/
             width: 130px;
             height: 130px;
             border: 10px solid var(--onbackground);
@@ -52,7 +52,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap:1.2em;
+            gap: 1.2em;
         }
     }
 
@@ -62,16 +62,19 @@
         flex-direction: row;
         justify-content: space-around;
         align-items: center;
+
         & .inner {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+
             & div:first-child {
                 font-size: 24px;
                 font-weight: bold;
                 margin-bottom: 5px;
             }
+
             & div:last-child {
                 font-size: 12px;
             }
@@ -101,6 +104,7 @@
     & .card-text {
         display: grid;
         grid-template-columns: 1fr 3fr;
+
         & .img-avatar {
             width: 80px;
             height: 80px;
@@ -120,6 +124,7 @@
         align-items: start;
         padding: 1.5em 1.5em 1.5em 50px;
         gap: 10px;
+
         & .title {
             width: 100%;
             display: flex;
@@ -130,6 +135,7 @@
             font-weight: bold;
             font-size: 12px;
         }
+
         & .desc {
             color: var(--lighttext);
             font-size: 12px;
@@ -140,6 +146,7 @@
             text-overflow: ellipsis;
             white-space: normal;
         }
+
         & .actions {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -158,12 +165,12 @@
         background-size: cover;
     }
 
-    &:hover{
+    &:hover {
         transform: translateY(-4px);
         box-shadow: 0 4px 0 0 var(--primary);
     }
 
-    & .background-cover{
+    & .background-cover {
 
         width: 100%;
         height: 100%;
@@ -178,15 +185,8 @@
 }
 
 
-
-
-
-
-
-
-
 /*--------------------------tabbed box ---------------*/
-.tabbed-box{
+.tabbed-box {
     & section {
         background-color: var(--onbackground);
         display: none;
@@ -198,10 +198,10 @@
         z-index: -1;
         transform: translateY(-4px);
         box-shadow: 0 4px 0 0 var(--primary);
-        border-radius:0 var(--border-radius) var(--border-radius) var(--border-radius);
+        border-radius: 0 var(--border-radius) var(--border-radius) var(--border-radius);
     }
 
-    & input[type=radio]{
+    & input[type=radio] {
         display: none;
     }
 
@@ -219,6 +219,7 @@
         border-radius: var(--border-radius) var(--border-radius) 0 0;
         border-bottom: 1px solid transparent;
         transform: translateY(-2px);
+
         &:before {
             font-weight: normal;
             margin-right: 10px;
@@ -255,6 +256,7 @@
             padding: 0;
             margin: 0;
         }
+
         & .review-box {
             padding: 1rem;
             margin: 0 0 10px 0;
@@ -267,7 +269,7 @@
         }
     }
 
-    & .background-cover{
+    & .background-cover {
 
         width: 100%;
         height: 100px;
@@ -286,11 +288,13 @@
     display: flex;
     align-items: center;
     gap: 20px;
+
     & i {
         color: var(--star-background);
         font-size: 35px;
         cursor: pointer;
         transition: color 0.2s ease;
+
         &.active {
             color: var(--star-active);
         }
@@ -299,6 +303,7 @@
 
 .cool-star {
     color: var(--star-background);
+
     &.active {
         color: var(--star-active);
     }

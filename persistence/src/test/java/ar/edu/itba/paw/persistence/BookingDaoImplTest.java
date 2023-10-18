@@ -25,6 +25,7 @@ import static org.junit.Assert.*;
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class BookingDaoImplTest {
 
+    private final Date RESERVATION_DATE = Date.valueOf("2024-12-12");
     @Autowired
     private DataSource ds;
     @Autowired
@@ -35,9 +36,6 @@ public class BookingDaoImplTest {
     private AmenityDao amenityDao;
     private DayDao dayDao;
     private TimeDao timeDao;
-
-    private final Date RESERVATION_DATE = Date.valueOf("2024-12-12");
-
 
     @Before
     public void setUp() {

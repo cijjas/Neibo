@@ -2,27 +2,19 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
-import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.interfaces.services.ImageService;
-import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
-import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.enums.Language;
-import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.models.Booking;
+import ar.edu.itba.paw.models.GroupedBooking;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.sql.Time;
 import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.OptionalLong;
 
 import static org.mockito.Mockito.*;
@@ -30,10 +22,6 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class) // Le decimos a JUnit que corra los tests con el runner de Mockito
 public class BookingServiceImplTest {
 
-    private Booking mockBooking1;
-    private Booking mockBooking2;
-    private Booking mockBooking3;
-    private Booking mockBooking4;
     private static final long SHIFT_ID_1 = 1;
     private static final long SHIFT_ID_2 = 2;
     private static final long SHIFT_ID_3 = 3;
@@ -43,27 +31,30 @@ public class BookingServiceImplTest {
     private static final long ID = 1;
     private static final long USER_ID = 1;
     private static final String AMENITY_NAME = "Gym";
-    private static String DAY_NAME = "Monday";
     private static final Time START_TIME = new Time(10, 0, 0);
     private static final Date BOOKING_DATE = new Date(2021, 9, 11);
     private static final long AMENITY_AVAILABILITY_ID = 1;
     private static final long AMENITY_ID = 1;
     private static final long ID_2 = 2;
     private static final String AMENITY_NAME_2 = "Gym";
-    private static String DAY_NAME_2 = "Monday";
     private static final Time START_TIME_2 = new Time(11, 0, 0);
     private static final Date BOOKING_DATE_2 = new Date(2021, 9, 11);
     private static final long ID_3 = 3;
     private static final String AMENITY_NAME_3 = "Wrestling pit";
-    private static String DAY_NAME_3 = "Monday";
     private static final Time START_TIME_3 = new Time(12, 0, 0);
     private static final Date BOOKING_DATE_3 = new Date(2021, 9, 11);
     private static final long ID_4 = 4;
     private static final String AMENITY_NAME_4 = "Wrestling pit";
-    private static String DAY_NAME_4 = "Tuesday";
     private static final Time START_TIME_4 = new Time(13, 0, 0);
     private static final Date BOOKING_DATE_4 = new Date(2021, 9, 12);
-
+    private static String DAY_NAME = "Monday";
+    private static String DAY_NAME_2 = "Monday";
+    private static String DAY_NAME_3 = "Monday";
+    private static String DAY_NAME_4 = "Tuesday";
+    private Booking mockBooking1;
+    private Booking mockBooking2;
+    private Booking mockBooking3;
+    private Booking mockBooking4;
     @Mock
     private BookingDao bookingDao;
     @Mock
@@ -74,9 +65,9 @@ public class BookingServiceImplTest {
     @Test
     public void testCreate() {
         // 1. Preconditions
-        when(availabilityDao.findAvailabilityId(AMENITY_ID,SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
-        when(availabilityDao.findAvailabilityId(AMENITY_ID,SHIFT_ID_2)).thenReturn(OptionalLong.of(AVAILABILITY_ID_2));
-        when(availabilityDao.findAvailabilityId(AMENITY_ID,SHIFT_ID_3)).thenReturn(OptionalLong.of(AVAILABILITY_ID_3));
+        when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
+        when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_2)).thenReturn(OptionalLong.of(AVAILABILITY_ID_2));
+        when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_3)).thenReturn(OptionalLong.of(AVAILABILITY_ID_3));
 
         when(bookingDao.createBooking(eq(USER_ID), eq(AVAILABILITY_ID_1), eq(BOOKING_DATE))).thenReturn(ID);
         when(bookingDao.createBooking(eq(USER_ID), eq(AVAILABILITY_ID_2), eq(BOOKING_DATE))).thenReturn(ID_2);
@@ -98,10 +89,11 @@ public class BookingServiceImplTest {
         Assert.assertEquals(bookingIds[2], ID_3);
 
     }
+
     @Test(expected = RuntimeException.class)
     public void testCreateAlreadyExists() {
         // 1. Preconditions
-        when(availabilityDao.findAvailabilityId(AMENITY_ID,SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
+        when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
         when(bookingDao.createBooking(eq(USER_ID), eq(AMENITY_AVAILABILITY_ID), eq(BOOKING_DATE))).thenThrow(RuntimeException.class);
 
         List<Long> shiftIds = new ArrayList<>();

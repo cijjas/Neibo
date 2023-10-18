@@ -1,17 +1,13 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.models.Contact;
-import ar.edu.itba.paw.models.Neighborhood;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -21,17 +17,17 @@ public class ContactServiceImplTest {
     private static final long ID = 1;
     private static final String NAME = "Ismael";
     private static final String ADDRESS = "Calle Falsa 123";
-    private static String PHONE = "1234567890";
     private static final long NEIGHBORHOOD_ID = 1;
-
+    private static String PHONE = "1234567890";
     @Mock
     private ContactDao contactDao;
     @InjectMocks
     private ContactServiceImpl cs;
+
     @Test
     public void testCreate() {
         // 1. Preconditions
-        when(contactDao.createContact(anyLong(),anyString(),anyString(),anyString())).thenReturn(new Contact.Builder()
+        when(contactDao.createContact(anyLong(), anyString(), anyString(), anyString())).thenReturn(new Contact.Builder()
                 .contactId(ID)
                 .contactName(NAME)
                 .contactAddress(ADDRESS)
@@ -41,7 +37,7 @@ public class ContactServiceImplTest {
         );
 
         // 2. Exercise
-        Contact newContact = cs.createContact(NEIGHBORHOOD_ID,NAME,ADDRESS,PHONE);
+        Contact newContact = cs.createContact(NEIGHBORHOOD_ID, NAME, ADDRESS, PHONE);
 
         // 3. Postconditions
         Assert.assertNotNull(newContact);
@@ -51,13 +47,14 @@ public class ContactServiceImplTest {
         Assert.assertEquals(newContact.getContactPhone(), PHONE);
 
     }
+
     @Test(expected = RuntimeException.class)
     public void testCreateAlreadyExists() {
         // 1. Preconditions
-        when(contactDao.createContact(eq(NEIGHBORHOOD_ID),eq(NAME),eq(ADDRESS),eq(PHONE))).thenThrow(RuntimeException.class);
+        when(contactDao.createContact(eq(NEIGHBORHOOD_ID), eq(NAME), eq(ADDRESS), eq(PHONE))).thenThrow(RuntimeException.class);
 
         // 2. Exercise
-        Contact newContact = cs.createContact(NEIGHBORHOOD_ID,NAME,ADDRESS,PHONE);
+        Contact newContact = cs.createContact(NEIGHBORHOOD_ID, NAME, ADDRESS, PHONE);
 
         // 3. Postconditions
     }

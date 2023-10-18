@@ -9,12 +9,24 @@ public class Channel {
         this.channel = builder.channel;
     }
 
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+
     public long getChannelId() {
         return channelId;
     }
 
     public String getChannel() {
         return channel;
+    }
+
+    @Override
+    public String toString() {
+        return "Channel{" +
+                "channelId=" + channelId +
+                ", channel='" + channel + '\'' +
+                '}';
     }
 
     public static class Builder {
@@ -34,17 +46,5 @@ public class Channel {
         public Channel build() {
             return new Channel(this);
         }
-    }
-
-    public static Builder newBuilder() {
-        return new Builder();
-    }
-
-    @Override
-    public String toString() {
-        return "Channel{" +
-                "channelId=" + channelId +
-                ", channel='" + channel + '\'' +
-                '}';
     }
 }

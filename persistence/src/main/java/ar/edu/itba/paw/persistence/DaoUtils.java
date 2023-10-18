@@ -36,7 +36,7 @@ class DaoUtils {
         appendInitialWhereClause(query);
         appendWorkerNeighborhoodIdCondition(query, queryParams, neighborhoodIds);
 
-        if(professions != null && !professions.isEmpty()) {
+        if (professions != null && !professions.isEmpty()) {
             appendProfessionsCondition(query, queryParams, professions);
         }
     }

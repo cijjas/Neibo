@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
@@ -7,26 +8,22 @@ import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodWorkerService;
 import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.enums.UserRole;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
 public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodWorkerServiceImpl.class);
     private final NeighborhoodWorkerDao neighborhoodWorkerDao;
     private final UserDao userDao;
     private final EmailService emailService;
     private final NeighborhoodDao neighborhoodDao;
-
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodWorkerServiceImpl.class);
 
     @Autowired
     public NeighborhoodWorkerServiceImpl(NeighborhoodWorkerDao neighborhoodWorkerDao, UserDao userDao, EmailService emailService, NeighborhoodDao neighborhoodDao) {
@@ -51,8 +48,8 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
 
 
     @Override
-    public void addWorkerToNeighborhoods(long workerId, List<Long> neighborhoodIds){
-        for(long neighborhoodId : neighborhoodIds) {
+    public void addWorkerToNeighborhoods(long workerId, List<Long> neighborhoodIds) {
+        for (long neighborhoodId : neighborhoodIds) {
             addWorkerToNeighborhood(workerId, neighborhoodId);
         }
     }
@@ -73,7 +70,7 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
         List<Neighborhood> allNeighborhoods = neighborhoodDao.getNeighborhoods();
         List<Neighborhood> workerNeighborhoods = neighborhoodWorkerDao.getNeighborhoods(workerId);
 
-        for(Neighborhood neighborhood : workerNeighborhoods){
+        for (Neighborhood neighborhood : workerNeighborhoods) {
             allNeighborhoods.removeIf(neighborhoodName -> neighborhoodName.getName().equals(neighborhood.getName()));
         }
         allNeighborhoods.removeIf(neighborhood -> neighborhood.getName().equals("Worker Neighborhood"));

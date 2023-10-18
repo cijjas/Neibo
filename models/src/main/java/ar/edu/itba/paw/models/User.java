@@ -34,85 +34,6 @@ public class User {
         this.identification = builder.identification;
     }
 
-    public static class Builder {
-        private long userId;
-        private String mail;
-        private String name;
-        private String surname;
-        private String password;
-        private long neighborhoodId;
-        private boolean darkMode;
-        private Language language;
-        private UserRole role;
-        private Date creationDate;
-        private long profilePictureId;
-        private int identification;
-
-        public Builder userId(long userId) {
-            this.userId = userId;
-            return this;
-        }
-
-        public Builder mail(String mail) {
-            this.mail = mail;
-            return this;
-        }
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder surname(String surname) {
-            this.surname = surname;
-            return this;
-        }
-
-        public Builder password(String password){
-            this.password = password;
-            return this;
-        }
-
-        public Builder neighborhoodId(long neighborhoodId){
-            this.neighborhoodId = neighborhoodId;
-            return this;
-        }
-
-        public Builder darkMode(boolean darkMode){
-            this.darkMode = darkMode;
-            return this;
-        }
-
-        public Builder language(Language language){
-            this.language = language;
-            return this;
-        }
-
-        public Builder role(UserRole role){
-            this.role = role;
-            return this;
-        }
-
-        public Builder creationDate(Date creationDate){
-            this.creationDate = creationDate;
-            return this;
-        }
-
-        public Builder profilePictureId(long profilePictureId) {
-            this.profilePictureId = profilePictureId;
-            return this;
-        }
-
-        public Builder identification(int identification) {
-            this.identification = identification;
-            return this;
-        }
-
-        public User build() {
-            return new User(this);
-        }
-    }
-
     public long getUserId() {
         return userId;
     }
@@ -129,11 +50,11 @@ public class User {
         return surname;
     }
 
-    public String getPassword(){
+    public String getPassword() {
         return password;
     }
 
-    public long getNeighborhoodId(){
+    public long getNeighborhoodId() {
         return neighborhoodId;
     }
 
@@ -177,5 +98,84 @@ public class User {
                 ", profilePictureId=" + profilePictureId +
                 ", identification=" + identification +
                 '}';
+    }
+
+    public static class Builder {
+        private long userId;
+        private String mail;
+        private String name;
+        private String surname;
+        private String password;
+        private long neighborhoodId;
+        private boolean darkMode;
+        private Language language;
+        private UserRole role;
+        private Date creationDate;
+        private long profilePictureId;
+        private int identification;
+
+        public Builder userId(long userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public Builder mail(String mail) {
+            this.mail = mail;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder surname(String surname) {
+            this.surname = surname;
+            return this;
+        }
+
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public Builder neighborhoodId(long neighborhoodId) {
+            this.neighborhoodId = neighborhoodId;
+            return this;
+        }
+
+        public Builder darkMode(boolean darkMode) {
+            this.darkMode = darkMode;
+            return this;
+        }
+
+        public Builder language(Language language) {
+            this.language = language;
+            return this;
+        }
+
+        public Builder role(UserRole role) {
+            this.role = role;
+            return this;
+        }
+
+        public Builder creationDate(Date creationDate) {
+            this.creationDate = creationDate;
+            return this;
+        }
+
+        public Builder profilePictureId(long profilePictureId) {
+            this.profilePictureId = profilePictureId;
+            return this;
+        }
+
+        public Builder identification(int identification) {
+            this.identification = identification;
+            return this;
+        }
+
+        public User build() {
+            return new User(this);
+        }
     }
 }

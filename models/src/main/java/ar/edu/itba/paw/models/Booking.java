@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models;
 
-import java.util.Date;
 import java.sql.Time;
+import java.util.Date;
 
 public class Booking {
     private final long bookingId;
@@ -18,6 +18,42 @@ public class Booking {
         this.dayName = builder.dayName;
         this.startTime = builder.startTime;
         this.bookingDate = builder.bookingDate;
+    }
+
+    public long getBookingId() {
+        return bookingId;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public String getAmenityName() {
+        return amenityName;
+    }
+
+    public String getDayName() {
+        return dayName;
+    }
+
+    public Time getStartTime() {
+        return startTime;
+    }
+
+    public Date getBookingDate() {
+        return bookingDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "bookingId=" + bookingId +
+                ", userId=" + userId +
+                ", amenityName='" + amenityName + '\'' +
+                ", dayName='" + dayName + '\'' +
+                ", startTime=" + startTime +
+                ", bookingDate=" + bookingDate +
+                '}';
     }
 
     public static class Builder {
@@ -61,41 +97,5 @@ public class Booking {
         public Booking build() {
             return new Booking(this);
         }
-    }
-
-    public long getBookingId() {
-        return bookingId;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public String getAmenityName() {
-        return amenityName;
-    }
-
-    public String getDayName() {
-        return dayName;
-    }
-
-    public Time getStartTime() {
-        return startTime;
-    }
-
-    public Date getBookingDate() {
-        return bookingDate;
-    }
-
-    @Override
-    public String toString() {
-        return "Booking{" +
-                "bookingId=" + bookingId +
-                ", userId=" + userId +
-                ", amenityName='" + amenityName + '\'' +
-                ", dayName='" + dayName + '\'' +
-                ", startTime=" + startTime +
-                ", bookingDate=" + bookingDate +
-                '}';
     }
 }

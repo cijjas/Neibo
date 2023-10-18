@@ -6,15 +6,15 @@ import java.util.List;
 
 public interface NeighborhoodWorkerDao {
 
-        // --------------------------------------- NEIGHBORHOODS_WORKERS SELECT ----------------------------------------
+    // --------------------------------------- NEIGHBORHOODS_WORKERS SELECT ----------------------------------------
 
-        void addWorkerToNeighborhood(long workerId, long neighborhoodId);
+    void addWorkerToNeighborhood(long workerId, long neighborhoodId);
 
-        // --------------------------------------- NIEGHBORHOODWORKERS SELECT ------------------------------------------
+    // --------------------------------------- NIEGHBORHOODWORKERS SELECT ------------------------------------------
 
-        List<Neighborhood> getNeighborhoods(long workerId);
+    List<Neighborhood> getNeighborhoods(long workerId);
 
-        // --------------------------------------- NEIGHBORHOODS_WORKERS DELETE ----------------------------------------
+    // --------------------------------------- NEIGHBORHOODS_WORKERS DELETE ----------------------------------------
 
-        void removeWorkerFromNeighborhood(long workerId, long neighborhoodId);
+    void removeWorkerFromNeighborhood(long workerId, long neighborhoodId);
 }

@@ -5,21 +5,21 @@ import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.ResourceService;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.models.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 @Service
 @Transactional
 public class ResourceServiceImpl implements ResourceService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResourceServiceImpl.class);
     private final ResourceDao resourceDao;
     private final ImageService imageService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ResourceServiceImpl.class);
 
     @Autowired
     public ResourceServiceImpl(final ResourceDao resourceDao, ImageService imageService) {

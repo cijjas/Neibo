@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.*;
-import ar.edu.itba.paw.webapp.form.*;
 import ar.edu.itba.paw.enums.DayOfTheWeek;
 import ar.edu.itba.paw.enums.StandardTime;
 import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.Amenity;
+import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
     private final SessionUtils sessionUtils;
-
     private final PostService ps;
     private final UserService us;
     private final NeighborhoodService nhs;
@@ -35,11 +35,10 @@ public class AdminController {
     private final EventService es;
     private final ResourceService res;
     private final ContactService cos;
-
     private final ShiftService shs;
     private final AvailabilityService avs;
 
-
+    // ------------------------------------- INFORMATION --------------------------------------
 
     @Autowired
     public AdminController(SessionUtils sessionUtils,
@@ -77,10 +76,6 @@ public class AdminController {
         this.avs = avs;
     }
 
-    // ------------------------------------- INFORMATION --------------------------------------
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
-
     @RequestMapping(value = "/information", method = RequestMethod.GET)
     public ModelAndView adminInformation() {
         LOGGER.info("User arriving at '/admin/information'");
@@ -107,7 +102,7 @@ public class AdminController {
         mav.addObject("panelOption", "Neighbors");
         mav.addObject("neighbors", true);
         mav.addObject("page", page);
-        mav.addObject("totalPages", us.getTotalPages(UserRole.NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhoodId(), size ));
+        mav.addObject("totalPages", us.getTotalPages(UserRole.NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhoodId(), size));
         mav.addObject("users", us.getUsersPage(UserRole.NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhoodId(), page, size));
         return mav;
     }
@@ -168,7 +163,7 @@ public class AdminController {
             @Valid @ModelAttribute("publishForm") final PublishForm publishForm,
             final BindingResult errors
     ) {
-        if (errors.hasErrors()){
+        if (errors.hasErrors()) {
             LOGGER.error("Error in Publish Form");
             return publishAdminForm(publishForm);
         }
@@ -202,7 +197,7 @@ public class AdminController {
         mav.addObject("amenities", amenities);
         mav.addObject("panelOption", "Amenities");
         mav.addObject("contextPath", "/admin/amenities");
-        mav.addObject("page",page);
+        mav.addObject("page", page);
 
         return mav;
     }

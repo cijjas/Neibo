@@ -1,15 +1,13 @@
-
-
 async function getImageInto(imageElementId, imageSrcId, contextPath) {
     let image = document.getElementById(imageElementId);
-    if(imageSrcId === 0){
+    if (imageSrcId === 0) {
         image.src = contextPath + "/resources/images/roundedPlaceholder.png";
         image.classList.remove('placeholder');
         return;
     }
-    try{
-        const response= await fetch(contextPath + '/images/' + imageSrcId);
-        if(!response.ok) {
+    try {
+        const response = await fetch(contextPath + '/images/' + imageSrcId);
+        if (!response.ok) {
             throw new Error('Network response was not ok');
         }
         const blob = await response.blob();
@@ -19,8 +17,7 @@ async function getImageInto(imageElementId, imageSrcId, contextPath) {
             image.src = URL.createObjectURL(blob);
         }, 3000);
 
-    }
-    catch (e) {
+    } catch (e) {
         image.src = contextPath + "/resources/images/errorImage.png";
     }
 }

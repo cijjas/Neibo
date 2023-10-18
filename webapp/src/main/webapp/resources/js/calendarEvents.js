@@ -22,15 +22,12 @@ async function getEventTimestamps() {
 }
 
 
-
-
-function loadCalendar(){
+function loadCalendar() {
 
 
     const daysTag = document.querySelector(".days");
     const currentDate = document.querySelector(".current-date");
     const prevNextIcon = document.querySelectorAll(".icons span");
-
 
 
     // getting new date, current year, and month

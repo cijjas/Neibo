@@ -24,15 +24,13 @@ import static org.junit.Assert.*;
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class DayDaoImplTest {
 
+    private final String DAY_NAME = "TestDay";
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private DayDao dayDao;
-
-    private final String DAY_NAME = "TestDay";
-
 
     @Before
     public void setUp() {

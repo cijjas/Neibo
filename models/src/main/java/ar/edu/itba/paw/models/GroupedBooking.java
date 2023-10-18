@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.models;
 
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ArrayList;
 
 public class GroupedBooking {
     private List<Long> bookingIds;

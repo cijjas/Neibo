@@ -20,6 +20,6 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
         String email = httpServletRequest.getParameter("mail");
 
         // Redirect to the failureUrl with the email as a parameter
-        redirectStrategy.sendRedirect( httpServletRequest, httpServletResponse, "/login?error=true&email=" + email);
+        redirectStrategy.sendRedirect(httpServletRequest, httpServletResponse, "/login?error=true&email=" + email);
     }
 }

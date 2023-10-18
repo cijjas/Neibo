@@ -19,7 +19,7 @@
                     <form:errors path="businessName" cssClass="landing-error" element="p"/>
                 </div>
                 <div class="form-input  profession-select">
-                    <form:hidden path="professionIds" id="selectedProfessions" />
+                    <form:hidden path="professionIds" id="selectedProfessions"/>
 
                     <div class="container">
                         <div class="select-btn">
@@ -63,11 +63,10 @@
                             selectedProfessions.value = selectedProfessionIds.join(",");
                             const btnText = document.querySelector(".btn-text");
                             if (selectedProfessionIds.length > 0) {
-                                if(selectedProfessionTexts.length > 1){
-                                    btnText.innerText = "("+ selectedProfessionIds.length + ") " + selectedProfessionTexts.join(", ");
-                                }
-                                else {
-                                    btnText.innerText =  selectedProfessionTexts.join(", ");
+                                if (selectedProfessionTexts.length > 1) {
+                                    btnText.innerText = "(" + selectedProfessionIds.length + ") " + selectedProfessionTexts.join(", ");
+                                } else {
+                                    btnText.innerText = selectedProfessionTexts.join(", ");
                                 }
                                 btnText.classList.add("c-text");
 
@@ -125,7 +124,7 @@
                         </div>
                         <div class="form-input">
                             <form:label path="w_language">
-                                <form:select path="w_language" class="cool-select" >
+                                <form:select path="w_language" class="cool-select">
                                     <form:option value="English"><spring:message code="English"/></form:option>
                                     <form:option value="Spanish"><spring:message code="Spanish"/></form:option>
                                 </form:select>
@@ -144,7 +143,8 @@
                         <div class="form-input mb-3">
                             <form:label path="w_password">
                                 <c:set var="w_password"><spring:message code="Password"/></c:set>
-                                <form:input type="password" path="w_password" autocomplete="true" placeholder="Password" class="input"/>
+                                <form:input type="password" path="w_password" autocomplete="true" placeholder="Password"
+                                            class="input"/>
                             </form:label>
                             <form:errors path="w_password" cssClass="landing-error" element="p"/>
                         </div>
@@ -181,7 +181,8 @@
                         form.submit();
                     }
                 </script>
-                <button onclick="submitWorkerSignupForm()" class="action-button font-weight-bolder mb-5"><spring:message code="Signup"/></button>
+                <button onclick="submitWorkerSignupForm()" class="action-button font-weight-bolder mb-5"><spring:message
+                        code="Signup"/></button>
 
             </div>
 

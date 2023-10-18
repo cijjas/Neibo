@@ -1,4 +1,5 @@
 package ar.edu.itba.paw.webapp.auth;
+
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.User;
@@ -16,8 +17,9 @@ import java.util.Set;
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
     private final UserService us;
     private final PasswordEncoder passwordEncoder;
+
     @Autowired
-    public UserDetailsService(final UserService us, final PasswordEncoder passwordEncoder){
+    public UserDetailsService(final UserService us, final PasswordEncoder passwordEncoder) {
         this.us = us;
         this.passwordEncoder = passwordEncoder;
     }

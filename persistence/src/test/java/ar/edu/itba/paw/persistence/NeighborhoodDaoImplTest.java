@@ -23,16 +23,13 @@ import static org.junit.Assert.*;
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class NeighborhoodDaoImplTest {
 
+    private final String NEIGHBORHOOD_NAME = "Testing Create Neighborhood";
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
-
     private JdbcTemplate jdbcTemplate;
     private NeighborhoodDaoImpl neighborhoodDao;
-
-    private final String NEIGHBORHOOD_NAME = "Testing Create Neighborhood";
-
 
     @Before
     public void setUp() {

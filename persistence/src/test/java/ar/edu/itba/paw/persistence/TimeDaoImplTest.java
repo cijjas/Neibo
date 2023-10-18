@@ -24,14 +24,13 @@ import static org.junit.Assert.*;
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class TimeDaoImplTest {
 
+    private final java.sql.Time TIME_INTERVAL = new java.sql.Time(System.currentTimeMillis());
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private TimeDao timeDao;
-
-    private final java.sql.Time TIME_INTERVAL = new java.sql.Time(System.currentTimeMillis());
 
     @Before
     public void setUp() {

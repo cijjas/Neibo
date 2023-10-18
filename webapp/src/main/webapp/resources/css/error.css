@@ -19,7 +19,7 @@
 }
 
 
-.error-card-title{
+.error-card-title {
     color: var(--error);
     font-size: 100px;
 }
@@ -52,7 +52,6 @@
         transform: translateX(-50%);
     }
 }
-
 
 
 .drawings {
@@ -93,7 +92,7 @@
 }
 
 .goback-button:hover {
-    transform: translateY(-4px) ;
+    transform: translateY(-4px);
     box-shadow: 0 5px 0 0 var(--primary);
     color: var(--primary);
 }
@@ -104,7 +103,7 @@
 }
 
 
-.error-code{
+.error-code {
     font-size: 80px;
     font-weight: bold;
     color: var(--primary);
@@ -114,7 +113,7 @@
     text-align: center;
 }
 
-.error-message{
+.error-message {
     color: var(--lighttext);
     max-width: 400px;
     text-align: center;

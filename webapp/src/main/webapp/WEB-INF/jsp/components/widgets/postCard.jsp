@@ -6,11 +6,11 @@
     <div class="post-section">
         <div class="post-info">
 
-            <div class="f-r-sb-c " >
+            <div class="f-r-sb-c ">
                 <div>
                     <span style="font-size: 14px" class="font-weight-bold">
 
-                        <c:out value="${post.channel.channel}" />
+                        <c:out value="${post.channel.channel}"/>
                     </span>
                     <span style="font-size: 12px; font-weight: normal" class="ml-1 placeholder-glow">
                         -
@@ -21,11 +21,11 @@
                                 class="small-profile-picture placeholder mb-1"
                                 alt="poster_profile_picture_img"
                         />
-                        <script src ="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
+                        <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
                         <script>
-                            getImageInto("poster-image", ${post.user.profilePictureId},"${pageContext.request.contextPath}");
+                            getImageInto("poster-image", ${post.user.profilePictureId}, "${pageContext.request.contextPath}");
                         </script>
-                        <c:out value="${post.user.name}" />
+                        <c:out value="${post.user.name}"/>
                     </span>
 
 
@@ -38,16 +38,14 @@
                 <script src="${pageContext.request.contextPath}/resources/js/dateFormatter.js"></script>
 
             </div>
-            <p style="font-size: 20px;" class="mt-2 font-weight-bolder c-text"><c:out value="${post.title}" /></p>
-
-
+            <p style="font-size: 20px;" class="mt-2 font-weight-bolder c-text"><c:out value="${post.title}"/></p>
 
 
             <div class="divider m-b-20"></div>
             <div class="postcard-description">
-                <c:out value="${post.description}" />
+                <c:out value="${post.description}"/>
             </div>
-        </div >
+        </div>
 
         <!-- Image section -->
         <c:if test="${post.postPictureId != 0}">
@@ -59,7 +57,7 @@
                      alt="post_${post.postId}_img"/>
             </div>
             <script>
-                getImageInto("postImage", ${post.postPictureId},"${pageContext.request.contextPath}");
+                getImageInto("postImage", ${post.postPictureId}, "${pageContext.request.contextPath}");
             </script>
         </c:if>
 
@@ -70,7 +68,8 @@
             <div class="ml-2 d-flex flex-column justify-content-start align-items-start">
                 <div class="f-r-c-c">
 
-                    <span id="post-like-button" class="post-like-button pl-3 pr-3 pt-2 pb-2" data-post-id="${post.postId}">
+                    <span id="post-like-button" class="post-like-button pl-3 pr-3 pt-2 pb-2"
+                          data-post-id="${post.postId}">
                        <span class=" mr-1 " id="like-count" data-like-count="${post.likes}">
                             <c:out value="${post.likes}"/>
                         </span>
@@ -81,44 +80,45 @@
             </div>
         </div>
         <div class="col-6">
-                <c:choose>
-                    <c:when test="${empty tags}">
-                    </c:when>
-                    <c:otherwise>
-                        <div class="mr-2">
-                            <div class="w-100 d-flex flex-row justify-content-end align-items-center flex-wrap">
+            <c:choose>
+                <c:when test="${empty tags}">
+                </c:when>
+                <c:otherwise>
+                    <div class="mr-2">
+                        <div class="w-100 d-flex flex-row justify-content-end align-items-center flex-wrap">
 
-                                <c:forEach var="tag" items="${tags}">
-                                    <a class="post-tag static m-l-3 m-r-3" href="${pageContext.request.contextPath}/?tag=${tag.tag}">
-                                        <c:out value="${tag.tag}" />
-                                    </a>
-                                </c:forEach>
-                            </div>
+                            <c:forEach var="tag" items="${tags}">
+                                <a class="post-tag static m-l-3 m-r-3"
+                                   href="${pageContext.request.contextPath}/?tag=${tag.tag}">
+                                    <c:out value="${tag.tag}"/>
+                                </a>
+                            </c:forEach>
                         </div>
+                    </div>
 
 
-                    </c:otherwise>
-                </c:choose>
+                </c:otherwise>
+            </c:choose>
         </div>
 
     </div>
 
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const likeButton = document.getElementById('post-like-button');
             const postId = likeButton.getAttribute('data-post-id');
             setLikeStatus(postId);
         });
-        async function setLikeStatus(postId){
-            try{
+
+        async function setLikeStatus(postId) {
+            try {
                 const response = await fetch('/endpoint/is-liked?postId=' + postId);
                 const isLikedResponse = await response.text();
                 const likeButton = document.getElementById('post-like-button');
                 likeButton.setAttribute('data-liked', isLikedResponse);
                 likeButton.classList.toggle('liked', isLikedResponse === 'true');
-            }
-            catch(error){
+            } catch (error) {
                 console.error('An error occurred:', error);
             }
         }
@@ -198,19 +198,22 @@
                 <div class="form-group">
                     <div style="width: 100%">
 
-                    <div style="width: 100%">
-                        <spring:message code="Comment" var="commentPlaceholder"/>
-                        <form:textarea id="commentInput" path="comment" class="cool-input grey-input"  rows="3" placeholder="${commentPlaceholder}"/>
-                        <div class="form-row form-error" style="font-size: 12px; margin-left:0.5rem">
-                            <form:errors path="comment" cssClass="error" element="p"/>
+                        <div style="width: 100%">
+                            <spring:message code="Comment" var="commentPlaceholder"/>
+                            <form:textarea id="commentInput" path="comment" class="cool-input grey-input" rows="3"
+                                           placeholder="${commentPlaceholder}"/>
+                            <div class="form-row form-error" style="font-size: 12px; margin-left:0.5rem">
+                                <form:errors path="comment" cssClass="error" element="p"/>
+                            </div>
                         </div>
-                    </div>
-                    <!-- Submit button -->
-                    <div class="d-flex flex-column justify-content-center align-items-end">
-                        <button id="submitButton" type="submit" class="cool-button cool-small on-bg w-25 font-weight-bolder" style="margin-top:5px; font-size: 12px;" disabled>
-                            <spring:message code="Comment.verb"/>
-                        </button>
-                    </div>
+                        <!-- Submit button -->
+                        <div class="d-flex flex-column justify-content-center align-items-end">
+                            <button id="submitButton" type="submit"
+                                    class="cool-button cool-small on-bg w-25 font-weight-bolder"
+                                    style="margin-top:5px; font-size: 12px;" disabled>
+                                <spring:message code="Comment.verb"/>
+                            </button>
+                        </div>
                     </div>
 
                 </div>
@@ -252,19 +255,20 @@
                                         alt="profile_picture_img"
                                 />
                                 <script>
-                                    (function(){
-                                        getImageInto("comment-image-${comment.commentId}", ${comment.user.profilePictureId},"${pageContext.request.contextPath}");
+                                    (function () {
+                                        getImageInto("comment-image-${comment.commentId}", ${comment.user.profilePictureId}, "${pageContext.request.contextPath}");
                                     })();
                                 </script>
 
-                                <div class="bold"><c:out value="${comment.user.name} ${comment.user.surname}" /></div>
+                                <div class="bold"><c:out value="${comment.user.name} ${comment.user.surname}"/></div>
 
                             </div>
 
-                            <div class="bold"><c:out value="${comment.date}" /></div>
+                            <div class="bold"><c:out value="${comment.date}"/></div>
                         </div>
                         <div class="comment-body placeholder-glow w-100">
-                            <p class="mt-2 w-100 c-light-text normal placeholder col-6" id="comment-${comment.commentId}"></p>
+                            <p class="mt-2 w-100 c-light-text normal placeholder col-6"
+                               id="comment-${comment.commentId}"></p>
                             <script>
                                 async function getPostComment(commentId) {
                                     try {
@@ -281,6 +285,7 @@
                                         console.error(error.message);
                                     }
                                 }
+
                                 getPostComment(${comment.commentId});
 
                             </script>

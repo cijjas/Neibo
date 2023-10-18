@@ -3,15 +3,16 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 
-<div id="blogpost-container" class="blogpost" >
+<div id="blogpost-container" class="blogpost">
     <div class="container">
         <div class=" row ">
-            <div class="col-md-1 grey-bg col-md-pull-1" >
+            <div class="col-md-1 grey-bg col-md-pull-1">
                 <div class="f-c-c-c mt-3" style="gap: 1px">
                     <span id="like-button-${param.postID}" class="like-button" data-post-id="${param.postID}">
                         <i class="fa-solid fa-thumbs-up"></i>
                     </span>
-                    <span class="like-count c-light-text" id="like-count-${param.postID}" data-like-count="${param.postLikes}">
+                    <span class="like-count c-light-text" id="like-count-${param.postID}"
+                          data-like-count="${param.postLikes}">
                         <c:out value="${param.postLikes}"/>
                     </span>
 
@@ -19,7 +20,8 @@
                 </div>
             </div>
             <div class="col-md-11 pt-3 pb-3 pr-3 col-md-push-11">
-                <a href="${pageContext.request.contextPath}/posts/<c:out value="${param.postID}" />" style="text-decoration: none;">
+                <a href="${pageContext.request.contextPath}/posts/<c:out value="${param.postID}" />"
+                   style="text-decoration: none;">
                     <div class="post-header">
                         <div class="blogpost-author-and-date">
                             <div class="f-r-s-c placeholder-glow" style="gap: 3px">
@@ -29,14 +31,14 @@
                                         class="small-profile-picture placeholder"
                                         alt="profile_picture_img"
                                 />
-                                <script src ="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
+                                <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
 
                                 <script>
-                                    (function(){
-                                        getImageInto("postUserProfilePictureId-${param.postID}", ${param.postUserProfilePictureId},"${pageContext.request.contextPath}");
+                                    (function () {
+                                        getImageInto("postUserProfilePictureId-${param.postID}", ${param.postUserProfilePictureId}, "${pageContext.request.contextPath}");
                                     })();
                                 </script>
-                                <span class="post-author"><c:out value="${param.postNeighborMail}" /></span>
+                                <span class="post-author"><c:out value="${param.postNeighborMail}"/></span>
 
                             </div>
 
@@ -47,19 +49,22 @@
                             </div>
 
                         </div>
-                        <h1 class="post-title"><c:out value="${param.postTitle}" /></h1>
+                        <h1 class="post-title"><c:out value="${param.postTitle}"/></h1>
                     </div>
-                    <p class="post-description"><c:out value="${param.postDescription}" /></p>
+                    <p class="post-description"><c:out value="${param.postDescription}"/></p>
                     <c:if test="${ param.postImage != 0}">
                         <div style="display: flex; justify-content: center; align-items: center;">
-                            <img class="blogpost-image" src="${pageContext.request.contextPath}/images/<c:out value="${param.postImage}"/>" alt="post_<c:out value="${param.postID}"/>_img " />
+                            <img class="blogpost-image"
+                                 src="${pageContext.request.contextPath}/images/<c:out value="${param.postImage}"/>"
+                                 alt="post_<c:out value="${param.postID}"/>_img "/>
                         </div>
                     </c:if>
 
                 </a>
                 <div class="mt-2 d-flex flex-row justify-content-start align-items-center flex-wrap">
                     <c:forEach var="postTag" items="${requestScope.postTags}">
-                        <a href="${pageContext.request.contextPath}/?tag=${postTag.tag}" class="post-tag static m-l-3 m-r-3" data-post-tag="${postTag.tag}">
+                        <a href="${pageContext.request.contextPath}/?tag=${postTag.tag}"
+                           class="post-tag static m-l-3 m-r-3" data-post-tag="${postTag.tag}">
                             <c:out value="${postTag.tag}"/>
                         </a>
                     </c:forEach>
@@ -70,23 +75,23 @@
 </div>
 
 <script>
-    (function(){
+    (function () {
 
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelectorAll('#like-button-'+ ${param.postID}).forEach(likeButton => {
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll('#like-button-' + ${param.postID}).forEach(likeButton => {
                 const postId = this.getElementById('like-button-${param.postID}').getAttribute('data-post-id');
                 setLikeStatus(postId);
             });
         });
-        async function setLikeStatus(postId){
-            try{
+
+        async function setLikeStatus(postId) {
+            try {
                 const response = await fetch('/endpoint/is-liked?postId=' + postId);
                 const isLikedResponse = await response.text();
                 const likeButton = document.getElementById('like-button-' + postId);
                 likeButton.setAttribute('data-liked', isLikedResponse);
                 likeButton.classList.toggle('liked', isLikedResponse === 'true');
-            }
-            catch(error){
+            } catch (error) {
                 console.error('An error occurred:', error);
             }
         }
@@ -142,8 +147,6 @@
         }
 
     })();
-
-
 
 
 </script>

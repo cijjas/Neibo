@@ -19,6 +19,41 @@ public class Worker {
         this.backgroundPictureId = builder.backgroundPictureId;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getBusinessName() {
+        return businessName;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public long getBackgroundPictureId() {
+        return backgroundPictureId;
+    }
+
+    @Override
+    public String toString() {
+        return "Worker{" +
+                "user=" + user +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", businessName='" + businessName + '\'' +
+                ", address='" + address + '\'' +
+                ", bio='" + bio + '\'' +
+                '}';
+    }
+
     public static class Builder {
         private User user;
         private String phoneNumber;
@@ -60,40 +95,5 @@ public class Worker {
         public Worker build() {
             return new Worker(this);
         }
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getBusinessName() {
-        return businessName;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public long getBackgroundPictureId() {
-        return backgroundPictureId;
-    }
-
-    @Override
-    public String toString() {
-        return "Worker{" +
-                "user=" + user +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", businessName='" + businessName + '\'' +
-                ", address='" + address + '\'' +
-                ", bio='" + bio + '\'' +
-                '}';
     }
 }

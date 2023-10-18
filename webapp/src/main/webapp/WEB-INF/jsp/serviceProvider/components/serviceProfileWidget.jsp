@@ -10,18 +10,19 @@
                         alt="worker_picture_img_${worker.user.userId}"
                 />
                 <script>
-                    (function(){
+                    (function () {
                         getWorkerProfilePicture();
+
                         async function getWorkerProfilePicture() {
-                            let image = document.getElementById('worker-profile-image-'+ ${worker.user.userId})
-                            if("${worker.user.profilePictureId}" === "0"){
+                            let image = document.getElementById('worker-profile-image-' + ${worker.user.userId})
+                            if ("${worker.user.profilePictureId}" === "0") {
                                 image.src = "${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png";
                                 image.classList.remove('placeholder');
                                 return;
                             }
-                            try{
-                                const response= await fetch('${pageContext.request.contextPath}/images/<c:out value="${worker.user.profilePictureId}"/>');
-                                if(!response.ok) {
+                            try {
+                                const response = await fetch('${pageContext.request.contextPath}/images/<c:out value="${worker.user.profilePictureId}"/>');
+                                if (!response.ok) {
                                     throw new Error('Network response was not ok');
                                 }
                                 const blob = await response.blob();
@@ -31,8 +32,7 @@
                                     image.src = URL.createObjectURL(blob);
                                 }, 3000);
 
-                            }
-                            catch (e) {
+                            } catch (e) {
                                 image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
                                 console.log(e);
                             }
@@ -51,18 +51,19 @@
                         alt="worker_background_img_${worker.user.userId}"
                 />
                 <script>
-                    (function(){
+                    (function () {
                         getWorkerBackgroundPicture();
+
                         async function getWorkerBackgroundPicture() {
-                            let image = document.getElementById('worker-background-image-'+ ${worker.user.userId})
-                            if("${worker.backgroundPictureId}" === "0"){
+                            let image = document.getElementById('worker-background-image-' + ${worker.user.userId})
+                            if ("${worker.backgroundPictureId}" === "0") {
                                 image.src = "${pageContext.request.contextPath}/resources/images/workersBackground.png";
                                 image.classList.remove('placeholder');
                                 return;
                             }
-                            try{
-                                const response= await fetch('${pageContext.request.contextPath}/images/<c:out value="${worker.backgroundPictureId}"/>');
-                                if(!response.ok) {
+                            try {
+                                const response = await fetch('${pageContext.request.contextPath}/images/<c:out value="${worker.backgroundPictureId}"/>');
+                                if (!response.ok) {
                                     throw new Error('Network response was not ok');
                                 }
                                 const blob = await response.blob();
@@ -72,8 +73,7 @@
                                     image.src = URL.createObjectURL(blob);
                                 }, 3000);
 
-                            }
-                            catch (e) {
+                            } catch (e) {
                                 image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
                                 console.log(e);
                             }
@@ -103,6 +103,7 @@
                             console.error(error.message);
                         }
                     }
+
                     getProfessions(${worker.user.userId});
                 </script>
 

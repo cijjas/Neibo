@@ -3,7 +3,7 @@ GLOBAL CSS VARIABLES AND STYLES THAT SHOULD BE USED IN ALL PAGES
 */
 
 
-body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button, span{
+body, p, h1, h2, h3, h4, h5, h6, label, input, select, textarea, button, span {
     font: 14px/1 'IBM Plex Sans', sans-serif;
     font-weight: bold;
 }
@@ -40,7 +40,7 @@ body {
     --background: #faf6e8;
     --onbackground: rgb(243, 243, 235);
     --onbackgroundfaded: rgb(245, 245, 244, 0.2);
-    --darkonbackground : rgb(235, 236, 233);
+    --darkonbackground: rgb(235, 236, 233);
     --primary: #328d3d;
     --between-primary: #709a58;
     --onprimary: #fdfaf1;
@@ -51,7 +51,7 @@ body {
     --scrollbarthumb: #004F2D;
     --bordercolor: #dadad0;
     --admin-color: #578a66;
-    --always-background:#faf6e8;
+    --always-background: #faf6e8;
     --on-onbackground: rgb(238, 236, 231);
     --green: #328d3d;
     --light-green: #9ad379;
@@ -63,6 +63,7 @@ body {
     --border-hard: 50px;
     --border: 1px solid var(--primary);
 }
+
 .dark-mode {
     --text: #ced3c1;
     --lighttext: #b1bbab;
@@ -70,7 +71,7 @@ body {
     --background: #454c52;
     --onbackground: rgb(59, 64, 70);
     --onbackgroundfaded: rgba(49, 58, 63, 0.1);
-    --darkonbackground : #4b4f4f;
+    --darkonbackground: #4b4f4f;
     --primary: #8fbd79;
     --onprimary: #29333a;
     --between-primary: #187736;
@@ -81,27 +82,32 @@ body {
     --scrollbarthumb: #9a968c;
     --bordercolor: #646462;
     --admin-color: #8bcb9d;
-    --always-background:#faf6e8;
+    --always-background: #faf6e8;
     --on-onbackground: rgb(63, 68, 75);
     --green: #1b6926;
-    --light-green:  #9ad379;
+    --light-green: #9ad379;
     --star-background: #4b4f4f;
     --star-active: #ff9c1a;
 
 }
+
 html {
     /* Webkit-based browsers (Chrome, Safari) */
+
     &::-webkit-scrollbar {
         width: 10px;
         background: transparent;
     }
+
     &::-webkit-scrollbar-track {
         background: transparent;
     }
+
     &::-webkit-scrollbar-thumb {
         border-radius: var(--border-radius);
         background-color: var(--primary);
     }
+
     &::-webkit-scrollbar-track-piece {
         background: transparent;
     }
@@ -118,21 +124,21 @@ html {
 }
 
 
-
 a {
-    color: inherit;/* Inherit the color from the parent element */
-    text-decoration: none;/* Remove underlines */
+    color: inherit; /* Inherit the color from the parent element */
+    text-decoration: none; /* Remove underlines */
 }
 
 a:hover {
-    text-decoration: none;/* Remove underlines */
+    text-decoration: none; /* Remove underlines */
     color: inherit;
 }
 
-.normal{
+.normal {
     font-weight: normal;
 }
-.bold{
+
+.bold {
     font-weight: bold;
 }
 
@@ -140,7 +146,7 @@ i {
     color: inherit;
 }
 
-h2{
+h2 {
     font-size: 24px;
     font-weight: bold;
     color: var(--text);
@@ -149,7 +155,7 @@ h2{
     text-overflow: ellipsis;
 }
 
-h3{
+h3 {
     font-size: 16px;
     font-weight: bolder;
     color: inherit;
@@ -158,11 +164,11 @@ h3{
     text-overflow: ellipsis;
 }
 
-form{
+form {
     margin-block-end: 0;
 }
 
-.form-group{
+.form-group {
     margin-bottom: 0;
 }
 
@@ -176,11 +182,11 @@ input[type="time"],
 input[type="tel"],
 input[type="url"],
 input[type="search"],
-input[type="select"]
-{
+input[type="select"] {
     width: 100%;
     height: 40px;
 }
+
 input[type="checkbox"] {
     position: relative;
     width: 1.5em;
@@ -192,6 +198,7 @@ input[type="checkbox"] {
     outline: 0;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
+
     &::before {
         position: absolute;
         content: '';
@@ -206,25 +213,29 @@ input[type="checkbox"] {
         transform: rotate(45deg);
         opacity: 0;
     }
+
     &:checked {
         color: var(--background);
         border-color: var(--primary);
         background: var(--primary);
+
         &::before {
             opacity: 1;
         }
+
         ~ label::before {
             clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
         }
     }
+
     &:focus-visible,
-    &:hover{
-        transform: translateY(-2px) ;
+    &:hover {
+        transform: translateY(-2px);
         box-shadow: 0px 2px var(--primary);
     }
 }
 
-select{
+select {
     cursor: pointer;
     box-sizing: border-box;
     -webkit-appearance: none;
@@ -238,39 +249,39 @@ select{
 }
 
 
-label{
-    margin-bottom:0;
+label {
+    margin-bottom: 0;
     width: 100%;
 }
 
 button:focus-visible,
 button:focus-within
-button:focus{
+button:focus {
     outline: 0;
 }
 
-p{
-    margin-bottom:0;
+p {
+    margin-bottom: 0;
 }
 
 
-
-
-.f-c-c-c{
+.f-c-c-c {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 1rem;
 }
-.f-c-s-c{
+
+.f-c-s-c {
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: center;
     gap: 1rem;
 }
-.f-c-sb-c{
+
+.f-c-sb-c {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -278,42 +289,47 @@ p{
     gap: 1rem;
 }
 
-.f-r-c-c{
+.f-r-c-c {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     gap: 1rem;
 }
-.f-r-sb-c{
+
+.f-r-sb-c {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
 }
-.f-r-s-c{
+
+.f-r-s-c {
     display: flex;
     flex-direction: row;
     justify-content: start;
     align-items: center;
     gap: 1rem;
 }
-.f-c-s-s{
+
+.f-c-s-s {
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: start;
     gap: 1rem;
 }
-.f-r-st-c{
+
+.f-r-st-c {
     display: flex;
     flex-direction: row;
     justify-content: stretch;
     align-items: center;
     gap: 1rem;
 }
-.f-c-sb-c{
+
+.f-c-sb-c {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -338,7 +354,7 @@ p{
         left: 0;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg,  var(--color-base),  var(--color-highlight),  var(--color-base));
+        background: linear-gradient(90deg, var(--color-base), var(--color-highlight), var(--color-base));
         animation: progress 1s ease-in-out infinite;
     }
 }
@@ -352,34 +368,38 @@ p{
     }
 }
 
-.w-7-12{
+.w-7-12 {
     width: 13%;
 }
-.h-5rem{
+
+.h-5rem {
     height: 5rem;
 }
 
-.font-size-12{
+.font-size-12 {
     font-size: 12px;
 }
-.font-size-16{
+
+.font-size-16 {
     font-size: 16px;
 }
-.font-size-24{
+
+.font-size-24 {
     font-size: 24px;
 }
 
-.font-weight-bold{
+.font-weight-bold {
     font-weight: bold;
 }
 
-.font-weight-bolder{
+.font-weight-bolder {
     font-weight: bolder;
 }
-.font-weight-normal{
+
+.font-weight-normal {
     font-weight: normal;
 }
 
-.pointer{
+.pointer {
     cursor: pointer;
 }

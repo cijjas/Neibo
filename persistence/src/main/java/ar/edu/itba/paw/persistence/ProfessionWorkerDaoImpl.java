@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.persistence;
 
+import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
-import ar.edu.itba.paw.enums.Table;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +18,13 @@ import java.util.Map;
 
 @Repository
 public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProfessionWorkerDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
     private final String WORKERS_PROFESSIONS_JOIN_PROFESSIONS =
             "SELECT profession " +
                     "FROM workers_professions wp  " +
                     "JOIN professions p ON wp.professionid = p.professionid ";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProfessionWorkerDaoImpl.class);
 
 
     @Autowired

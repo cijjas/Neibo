@@ -1,7 +1,7 @@
 .card-container {
     width: 100%;
     padding: 20px;
-    transform: translateY(-4px) ;
+    transform: translateY(-4px);
     box-shadow: -3px 5px 0 0 var(--primary);
     background-color: var(--onbackground);
     color: var(--text);

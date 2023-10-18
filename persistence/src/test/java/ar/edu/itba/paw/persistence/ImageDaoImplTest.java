@@ -25,17 +25,15 @@ import static org.junit.Assert.*;
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ImageDaoImplTest {
 
+    private final String NAME = "image";
+    private final String FILE_NAME = "fake.jpg";
+    private final String CONTENT_TYPE = "image/jpeg";
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private ImageDao imageDao;
-
-    private final String NAME = "image";
-    private final String FILE_NAME = "fake.jpg";
-    private final String CONTENT_TYPE = "image/jpeg";
-
 
     @Before
     public void setUp() {

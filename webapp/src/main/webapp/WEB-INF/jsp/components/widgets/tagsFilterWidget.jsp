@@ -15,7 +15,7 @@
                 <input id="niakaniaka" type="hidden" value="${val}"/>
 
                 <label for="tag-input2" class="w-100">
-                    <input type="text" id="tag-input2"  >
+                    <input type="text" id="tag-input2">
                 </label>
             </div>
         </div>
@@ -26,7 +26,8 @@
                         <a class="tag-option" onclick="addTagToApply('${tag.tag}')">${tag.tag}</a>
                     </c:when>
                     <c:otherwise>
-                        <a class="tag-option" onclick="addTagToApply('${tag.tag}'  )" style="display: none" >${tag.tag}</a>
+                        <a class="tag-option" onclick="addTagToApply('${tag.tag}'  )"
+                           style="display: none">${tag.tag}</a>
                     </c:otherwise>
                 </c:choose>
 
@@ -56,11 +57,12 @@
                     }
                 }
             }
+
             // Call the function to initialize applied tags when the page loads
             window.addEventListener('load', initializeAppliedTags);
         </script>
-        <div class="f-r-sb-c" >
-            <a class="cool-button cool-small on-bg font-weight-bold " onclick="applyTagsAsFilter()" >
+        <div class="f-r-sb-c">
+            <a class="cool-button cool-small on-bg font-weight-bold " onclick="applyTagsAsFilter()">
                 <spring:message code="Apply"/>
             </a>
             <a class="cool-button red font-weight-bold" onclick="clearAllTags()">
@@ -77,7 +79,7 @@
 
 <script>
 
-    function clearAllTags(){
+    function clearAllTags() {
         tagInput2.clearAllTags();
     }
 
@@ -109,6 +111,7 @@
         duplicate: false,
         max: 5
     });
+
     // Add a tag from the dropdown
     function addTagToApply(tagText) {
         tagInput2.addTag(tagText); // Assuming tagInput2 is your TagsInput instance

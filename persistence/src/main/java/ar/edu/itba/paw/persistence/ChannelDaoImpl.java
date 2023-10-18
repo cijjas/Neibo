@@ -3,15 +3,14 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.models.Channel;
-import ar.edu.itba.paw.models.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -21,17 +20,22 @@ import java.util.Optional;
 
 @Repository
 public class ChannelDaoImpl implements ChannelDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChannelDaoImpl.class);
+    private static final RowMapper<Channel> ROW_MAPPER = (rs, rowNum) ->
+            new Channel.Builder()
+                    .channelId(rs.getLong("channelid"))
+                    .channel(rs.getString("channel"))
+                    .build();
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
     private final String CHANNELS = "SELECT * FROM channels ";
     private final String CHANNELS_JOIN_NEIGHBORHOODS =
             "SELECT distinct c.* \n" +
-            "FROM channels c " +
+                    "FROM channels c " +
                     "INNER JOIN neighborhoods_channels nc ON c.channelid = nc.channelid " +
                     "INNER JOIN neighborhoods n ON n.neighborhoodid = nc.neighborhoodid ";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChannelDaoImpl.class);
+    // -------------------------------------------- CHANNELS INSERT ----------------------------------------------------
 
     @Autowired
     public ChannelDaoImpl(final DataSource ds) {
@@ -41,7 +45,7 @@ public class ChannelDaoImpl implements ChannelDao {
                 .withTableName("channels");
     }
 
-    // -------------------------------------------- CHANNELS INSERT ----------------------------------------------------
+    // -------------------------------------------- CHANNELS SELECT ----------------------------------------------------
 
     @Override
     public Channel createChannel(String channel) {
@@ -60,14 +64,6 @@ public class ChannelDaoImpl implements ChannelDao {
             throw new InsertionException("An error occurred whilst creating the channel");
         }
     }
-
-    // -------------------------------------------- CHANNELS SELECT ----------------------------------------------------
-
-    private static final RowMapper<Channel> ROW_MAPPER = (rs, rowNum) ->
-            new Channel.Builder()
-                    .channelId(rs.getLong("channelid"))
-                    .channel(rs.getString("channel"))
-                    .build();
 
     @Override
     public Optional<Channel> findChannelById(long channelId) {

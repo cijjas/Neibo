@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.enums.BaseChannel;
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
@@ -8,41 +7,38 @@ import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Channel;
+import ar.edu.itba.paw.models.Post;
 import ar.edu.itba.paw.models.Tag;
 import ar.edu.itba.paw.models.User;
-import ar.edu.itba.paw.models.Post;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.junit.Test;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PostServiceImplTest {
 
-    private User mockUser;
-    private Channel mockChannel;
-    private Channel mockWorkerChannel;
-    private List mockTagList;
-    private Tag mockTag;
     private static final long ID = 1;
     private static final String TITLE = "LOBO RONDANDO";
     private static final String DESCRIPTION = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     private static final Date DATE = new Date(2023, 9, 11);
     private static final long USER_ID = 1;
     private static final long CHANNEL_ID = 1;
-    private static final long  POST_PICTURE_ID = 0;
+    private static final long POST_PICTURE_ID = 0;
     private static final int LIKES = 500;
-
+    private User mockUser;
+    private Channel mockChannel;
+    private Channel mockWorkerChannel;
+    private List mockTagList;
+    private Tag mockTag;
     @Mock
     private PostDao postDao;
     @Mock
@@ -101,6 +97,7 @@ public class PostServiceImplTest {
         Assert.assertEquals(newPost.getPostPictureId(), POST_PICTURE_ID);
 
     }
+
     @Test(expected = RuntimeException.class)
     public void testCreateAlreadyExists() {
         // 1. Preconditions

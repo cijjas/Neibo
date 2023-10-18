@@ -3,8 +3,8 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.persistence.WorkerDao;
-import ar.edu.itba.paw.models.Worker;
 import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.Worker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,31 +22,39 @@ import static ar.edu.itba.paw.persistence.DaoUtils.appendPaginationClause;
 
 @Repository
 public class WorkerDaoImpl implements WorkerDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WorkerDaoImpl.class);
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
-    private UserDao userDao;
-
     private final String USERS_JOIN_WI =
             "SELECT * \n" +
-            "FROM users w " +
+                    "FROM users w " +
                     "JOIN workers_info wi ON w.userid = wi.workerid ";
     private final String USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
             "SELECT DISTINCT w.*, wn.*, wi.* " +
-            "FROM users w " +
+                    "FROM users w " +
                     "JOIN workers_neighborhoods wn ON w.userid = wn.workerId " +
                     "JOIN workers_info wi ON w.userid = wi.workerid ";
 
 
     private final String COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
             "SELECT COUNT(distinct w.userid)\n" +
-            "FROM users w " +
+                    "FROM users w " +
                     "JOIN workers_professions wp ON w.userid = wp.workerid " +
                     "JOIN professions p ON wp.professionid = p.professionid " +
                     "JOIN workers_neighborhoods wn ON w.userid = wn.workerId " +
                     "JOIN workers_info wi ON w.userid = wi.workerid ";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(WorkerDaoImpl.class);
+    private UserDao userDao;
+    private final RowMapper<Worker> ROW_MAPPER = (rs, rowNum) -> {
+        User user = userDao.findUserById(rs.getLong("workerid")).orElse(null);
+        return new Worker.Builder()
+                .user(user)
+                .phoneNumber(rs.getString("phoneNumber"))
+                .address(rs.getString("address"))
+                .businessName(rs.getString("businessName"))
+                .backgroundPictureId(rs.getLong("backgroundPictureId"))
+                .bio(rs.getString("bio"))
+                .build();
+    };
 
     @Autowired
     public WorkerDaoImpl(final DataSource ds, UserDao userDao) {
@@ -55,6 +63,10 @@ public class WorkerDaoImpl implements WorkerDao {
         this.jdbcInsert = new SimpleJdbcInsert(ds)
                 .withTableName("workers_info");
     }
+
+
+    // ---------------------------------------------- WORKERS SELECT -----------------------------------------------------
+
     // ---------------------------------------------- WORKERS INSERT -----------------------------------------------------
     @Override
     public Worker createWorker(long workerId, String phoneNumber, String address, String businessName) {
@@ -80,21 +92,6 @@ public class WorkerDaoImpl implements WorkerDao {
         }
     }
 
-
-    // ---------------------------------------------- WORKERS SELECT -----------------------------------------------------
-
-    private final RowMapper<Worker> ROW_MAPPER = (rs, rowNum) -> {
-        User user = userDao.findUserById(rs.getLong("workerid")).orElse(null);
-        return new Worker.Builder()
-                .user(user)
-                .phoneNumber(rs.getString("phoneNumber"))
-                .address(rs.getString("address"))
-                .businessName(rs.getString("businessName"))
-                .backgroundPictureId(rs.getLong("backgroundPictureId"))
-                .bio(rs.getString("bio"))
-                .build();
-    };
-
     @Override
     public Optional<Worker> findWorkerById(long workerId) {
         LOGGER.debug("Selecting Worker with workerId {}", workerId);
@@ -110,7 +107,7 @@ public class WorkerDaoImpl implements WorkerDao {
 
         appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions);
 
-        if(page != 0)
+        if (page != 0)
             appendPaginationClause(query, queryParams, page, size);
 
         LOGGER.debug("{}", query);

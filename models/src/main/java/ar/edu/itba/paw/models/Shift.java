@@ -27,37 +27,6 @@ public class Shift {
         return new Time(endTimeMillis);
     }
 
-    public static class Builder {
-        private long shiftId;
-        private String day;
-        private Time startTime;
-        private boolean taken;
-
-        public Builder shiftId(long shiftId) {
-            this.shiftId = shiftId;
-            return this;
-        }
-
-        public Builder day(String day) {
-            this.day = day;
-            return this;
-        }
-
-        public Builder startTime(Time startTime) {
-            this.startTime = startTime;
-            return this;
-        }
-
-        public Builder taken(boolean taken) {
-            this.taken = taken;
-            return this;
-        }
-
-        public Shift build() {
-            return new Shift(this);
-        }
-    }
-
     public long getShiftId() {
         return shiftId;
     }
@@ -100,5 +69,36 @@ public class Shift {
     @Override
     public int hashCode() {
         return Objects.hash(shiftId, day, startTime, endTime, taken);
+    }
+
+    public static class Builder {
+        private long shiftId;
+        private String day;
+        private Time startTime;
+        private boolean taken;
+
+        public Builder shiftId(long shiftId) {
+            this.shiftId = shiftId;
+            return this;
+        }
+
+        public Builder day(String day) {
+            this.day = day;
+            return this;
+        }
+
+        public Builder startTime(Time startTime) {
+            this.startTime = startTime;
+            return this;
+        }
+
+        public Builder taken(boolean taken) {
+            this.taken = taken;
+            return this;
+        }
+
+        public Shift build() {
+            return new Shift(this);
+        }
     }
 }

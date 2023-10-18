@@ -17,6 +17,36 @@ public class Amenity {
         this.availableShifts = builder.availableShifts;
     }
 
+    public long getAmenityId() {
+        return amenityId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public long getNeighborhoodId() {
+        return neighborhoodId;
+    }
+
+    public List<Shift> getAvailableShifts() {
+        return availableShifts;
+    }
+
+    @Override
+    public String toString() {
+        return "Amenity{" +
+                "amenityId=" + amenityId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", availableShifts=" + availableShifts +
+                '}';
+    }
+
     public static class Builder {
         private long amenityId;
         private String name;
@@ -52,35 +82,5 @@ public class Amenity {
         public Amenity build() {
             return new Amenity(this);
         }
-    }
-
-    public long getAmenityId() {
-        return amenityId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public long getNeighborhoodId() {
-        return neighborhoodId;
-    }
-
-    public List<Shift> getAvailableShifts() {
-        return availableShifts;
-    }
-
-    @Override
-    public String toString() {
-        return "Amenity{" +
-                "amenityId=" + amenityId +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", availableShifts=" + availableShifts +
-                '}';
     }
 }

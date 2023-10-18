@@ -3,28 +3,36 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.ResourceDao;
 import ar.edu.itba.paw.models.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Repository
 public class ResourceDaoImpl implements ResourceDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResourceDaoImpl.class);
+    private static final RowMapper<Resource> ROW_MAPPER = (rs, rowNum) ->
+            new Resource.Builder()
+                    .resourceId(rs.getLong("resourceid"))
+                    .title(rs.getString("resourcetitle"))
+                    .description(rs.getString("resourcedescription"))
+                    .imageId(rs.getLong("resourceimageId"))
+                    .neighborhoodId(rs.getLong("neighborhoodid"))
+                    .build();
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
     private final String RESOURCES = "SELECT rs.* FROM resources rs";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ResourceDaoImpl.class);
+    // --------------------------------------------- RESOURCES INSERT --------------------------------------------------
 
     @Autowired
     public ResourceDaoImpl(final DataSource ds) {
@@ -34,7 +42,7 @@ public class ResourceDaoImpl implements ResourceDao {
                 .withTableName("resources");
     }
 
-    // --------------------------------------------- RESOURCES INSERT --------------------------------------------------
+    // --------------------------------------------- RESOURCES SELECT --------------------------------------------------
 
     @Override
     public Resource createResource(long neighborhoodId, String title, String description, long imageId) {
@@ -61,17 +69,6 @@ public class ResourceDaoImpl implements ResourceDao {
         }
 
     }
-
-    // --------------------------------------------- RESOURCES SELECT --------------------------------------------------
-
-    private static final RowMapper<Resource> ROW_MAPPER = (rs, rowNum) ->
-            new Resource.Builder()
-                    .resourceId(rs.getLong("resourceid"))
-                    .title(rs.getString("resourcetitle"))
-                    .description(rs.getString("resourcedescription"))
-                    .imageId(rs.getLong("resourceimageId"))
-                    .neighborhoodId(rs.getLong("neighborhoodid"))
-                    .build();
 
     @Override
     public List<Resource> getResources(final long neighborhoodId) {

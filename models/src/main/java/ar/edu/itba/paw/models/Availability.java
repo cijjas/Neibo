@@ -13,6 +13,27 @@ public class Availability {
         this.schedule = builder.schedule;
     }
 
+    public long getAvailabilityId() { // Added availabilityId getter
+        return availabilityId;
+    }
+
+    public Amenity getAmenity() {
+        return amenity;
+    }
+
+    public List<Shift> getSchedule() {
+        return schedule;
+    }
+
+    @Override
+    public String toString() {
+        return "Availability{" +
+                "availabilityId=" + availabilityId +
+                ", amenity=" + amenity +
+                ", schedule=" + schedule +
+                '}';
+    }
+
     public static class Builder {
         private long availabilityId;
         private Amenity amenity;
@@ -36,26 +57,5 @@ public class Availability {
         public Availability build() {
             return new Availability(this);
         }
-    }
-
-    public long getAvailabilityId() { // Added availabilityId getter
-        return availabilityId;
-    }
-
-    public Amenity getAmenity() {
-        return amenity;
-    }
-
-    public List<Shift> getSchedule() {
-        return schedule;
-    }
-
-    @Override
-    public String toString() {
-        return "Availability{" +
-                "availabilityId=" + availabilityId +
-                ", amenity=" + amenity +
-                ", schedule=" + schedule +
-                '}';
     }
 }

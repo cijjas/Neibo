@@ -28,6 +28,8 @@ import static org.junit.Assert.*;
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class AmenityDaoImplTest {
 
+    private final String AMENITY_NAME = "Amenity Name";
+    private final String AMENITY_DESCRIPTION = "Amenity Description";
     @Autowired
     private DataSource ds;
     @Autowired
@@ -37,11 +39,6 @@ public class AmenityDaoImplTest {
     private AmenityDao amenityDao;
     private DayDao dayDao;
     private TimeDao timeDao;
-
-
-    private final String AMENITY_NAME = "Amenity Name";
-    private final String AMENITY_DESCRIPTION = "Amenity Description";
-
 
     @Before
     public void setUp() {

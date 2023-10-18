@@ -15,6 +15,36 @@ public class Contact {
         this.neighborhoodId = builder.neighborhoodId;
     }
 
+    public long getContactId() {
+        return contactId;
+    }
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public String getContactAddress() {
+        return contactAddress;
+    }
+
+    public String getContactPhone() {
+        return contactPhone;
+    }
+
+    public long getNeighborhoodId() {
+        return neighborhoodId;
+    }
+
+    @Override
+    public String toString() {
+        return "Contact{" +
+                "contactId=" + contactId +
+                "contactName='" + contactName + '\'' +
+                ", contactAddress='" + contactAddress + '\'' +
+                ", contactPhone='" + contactPhone + '\'' +
+                '}';
+    }
+
     public static class Builder {
         private long contactId;
         private String contactName;
@@ -50,35 +80,5 @@ public class Contact {
         public Contact build() {
             return new Contact(this);
         }
-    }
-
-    public long getContactId() {
-        return contactId;
-    }
-
-    public String getContactName() {
-        return contactName;
-    }
-
-    public String getContactAddress() {
-        return contactAddress;
-    }
-
-    public String getContactPhone() {
-        return contactPhone;
-    }
-
-    public long getNeighborhoodId() {
-        return neighborhoodId;
-    }
-
-    @Override
-    public String toString() {
-        return "Contact{" +
-                "contactId=" + contactId +
-                "contactName='" + contactName + '\'' +
-                ", contactAddress='" + contactAddress + '\'' +
-                ", contactPhone='" + contactPhone + '\'' +
-                '}';
     }
 }

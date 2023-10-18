@@ -1,6 +1,5 @@
 
-
-.wrapper{
+.wrapper {
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -12,7 +11,7 @@
     color: var(--primary);
     border: 1px solid var(--lighttext);
     border-radius: var(--border-radius);
-    transform: translateY(-4px) ;
+    transform: translateY(-4px);
     box-shadow: -3px 5px 0 0 var(--lighttext);
 
     & span {
@@ -29,11 +28,13 @@
         justify-content: center;
         align-items: center;
         transition: all 0.3s ease-in-out;
-        &:hover{
+
+        &:hover {
             background: var(--secondary);
         }
     }
-    & .current-date{
+
+    & .current-date {
         font-size: 2rem;
         font-weight: 500;
         color: var(--text);
@@ -53,6 +54,7 @@
         justify-content: center; /* Center the weeks and days horizontally */
         align-items: center; /* Center the weeks and days vertically */
         padding: 0; /* Remove any padding */
+
         &.weeks {
             margin-bottom: -5px;
             width: 100%; /* Make the weeks take up the full width of the container */
@@ -78,8 +80,8 @@
                 transition: all 0.3s ease-in-out;
 
                 &.inactive {
-                    &:hover{
-                        transform: translateY(0px)!important;
+                    &:hover {
+                        transform: translateY(0px) !important;
 
                     }
 
@@ -89,6 +91,7 @@
 
                 &.active {
                     color: var(--always-background);
+
                     &::before {
                         background: var(--primary);
                     }
@@ -118,6 +121,7 @@
                     position: relative;
                     margin-top: 15px;
                     color: var(--always-background); /* Set the text color to white */
+
                     &::before {
                         position: absolute;
                         cursor: pointer;
@@ -154,7 +158,8 @@
                         background: var(--error);
                     }
                 }
-                &:hover{
+
+                &:hover {
                     transform: translateY(-4px);
                 }
 

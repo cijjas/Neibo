@@ -9,7 +9,21 @@ public class Tag {
         this.tag = builder.tag;
     }
 
+    public long getTagId() {
+        return tagId;
+    }
 
+    public String getTag() {
+        return tag;
+    }
+
+    @Override
+    public String toString() {
+        return "Tag{" +
+                "tagId=" + tagId +
+                ", tag='" + tag + '\'' +
+                '}';
+    }
 
     public static class Builder {
         private long tagId;
@@ -28,21 +42,5 @@ public class Tag {
         public Tag build() {
             return new Tag(this);
         }
-    }
-
-    public long getTagId() {
-        return tagId;
-    }
-
-    public String getTag() {
-        return tag;
-    }
-
-    @Override
-    public String toString() {
-        return "Tag{" +
-                "tagId=" + tagId +
-                ", tag='" + tag + '\'' +
-                '}';
     }
 }

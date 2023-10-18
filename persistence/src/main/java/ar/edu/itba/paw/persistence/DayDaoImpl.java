@@ -3,8 +3,6 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.DayDao;
 import ar.edu.itba.paw.models.Day;
-import ar.edu.itba.paw.models.Shift;
-import ar.edu.itba.paw.models.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,13 +19,18 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class    DayDaoImpl implements DayDao {
+public class DayDaoImpl implements DayDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DayDaoImpl.class);
+    private static final RowMapper<Day> ROW_MAPPER =
+            (rs, rowNum) -> new Day.Builder()
+                    .dayId(rs.getLong("dayid"))
+                    .dayName(rs.getString("dayname"))
+                    .build();
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-
     private final String DAYS = "SELECT * FROM days ";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DayDaoImpl.class);
+    // ------------------------------------------------ DAYS INSERT ----------------------------------------------------
 
     @Autowired
     public DayDaoImpl(final DataSource ds) {
@@ -37,7 +40,7 @@ public class    DayDaoImpl implements DayDao {
                 .usingGeneratedKeyColumns("dayid");
     }
 
-    // ------------------------------------------------ DAYS INSERT ----------------------------------------------------
+    // ------------------------------------------------ DAYS SELECT ----------------------------------------------------
 
     @Override
     public Day createDay(String day) {
@@ -56,14 +59,6 @@ public class    DayDaoImpl implements DayDao {
             throw new InsertionException("An error occurred whilst creating the Day");
         }
     }
-
-    // ------------------------------------------------ DAYS SELECT ----------------------------------------------------
-
-    private static final RowMapper<Day> ROW_MAPPER =
-            (rs, rowNum) -> new Day.Builder()
-                    .dayId(rs.getLong("dayid"))
-                    .dayName(rs.getString("dayname"))
-                    .build();
 
     @Override
     public Optional<Day> findDayById(long dayId) {

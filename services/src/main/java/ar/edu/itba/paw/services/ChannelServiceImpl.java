@@ -1,14 +1,14 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.BaseChannel;
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.interfaces.services.ChannelMappingService;
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.models.Channel;
-import ar.edu.itba.paw.enums.BaseChannel;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
@@ -21,10 +21,9 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class ChannelServiceImpl implements ChannelService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChannelServiceImpl.class);
     private final ChannelDao channelDao;
     private final ChannelMappingService channelMappingService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChannelServiceImpl.class);
 
     @Autowired
     public ChannelServiceImpl(final ChannelDao channelDao, final ChannelMappingService channelMappingService) {

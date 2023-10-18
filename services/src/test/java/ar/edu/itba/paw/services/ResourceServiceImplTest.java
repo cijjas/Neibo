@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.ResourceDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
-import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.models.Resource;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,30 +11,28 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Optional;
-
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ResourceServiceImplTest {
 
-    MultipartFile mockImageFile;
     private static final long ID = 1;
     private static final String DESCRIPTION = "Varsovia de noche";
     private static final long IMAGE_ID = 1;
     private static final String TITLE = "Varsovia";
     private static final long NEIGHBORHOOD_ID = 1;
-
+    MultipartFile mockImageFile;
     @Mock
     private ResourceDao resourceDao;
     @Mock
     private ImageService imageService;
     @InjectMocks
     private ResourceServiceImpl rs;
+
     @Test
     public void testCreate() {
         // 1. Preconditions
-        when(resourceDao.createResource(anyLong(),anyString(),anyString(),anyLong())).thenReturn(new Resource.Builder()
+        when(resourceDao.createResource(anyLong(), anyString(), anyString(), anyLong())).thenReturn(new Resource.Builder()
                 .resourceId(ID)
                 .description(DESCRIPTION)
                 .imageId(IMAGE_ID)
@@ -46,7 +42,7 @@ public class ResourceServiceImplTest {
         );
 
         // 2. Exercise
-        Resource newResource = rs.createResource(NEIGHBORHOOD_ID,TITLE,DESCRIPTION,mockImageFile);
+        Resource newResource = rs.createResource(NEIGHBORHOOD_ID, TITLE, DESCRIPTION, mockImageFile);
 
         // 3. Postconditions
         Assert.assertNotNull(newResource);
