@@ -157,12 +157,11 @@ public class TestInserter {
         likeInsert.execute(data);
     }
 
-    public long createEvent(String name, String description, Date date, long startTimeId, long endTimeId, long duration, long neighborhoodId) {
+    public long createEvent(String name, String description, Date date, long startTimeId, long endTimeId, long neighborhoodId) {
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
         data.put("description", description);
         data.put("date", date);
-        data.put("duration", duration);
         data.put("neighborhoodid", neighborhoodId);
         data.put("starttimeid", startTimeId);
         data.put("endtimeid", endTimeId);
@@ -388,8 +387,7 @@ public class TestInserter {
         String name = "Dummy Event Name";
         String description = "Me estoy volviendo loco";
         Date date = java.sql.Date.valueOf("2001-3-14");
-        long duration = 90;
-        return createEvent(name, description, date, startTime, endTime, duration, neighborhoodId);
+        return createEvent(name, description, date, startTime, endTime, neighborhoodId);
     }
 
     public long createNeighborhood() {

@@ -85,7 +85,6 @@ public class EventServiceImplTest {
                 .name(NAME)
                 .description(DESCRIPTION)
                 .date(DATE)
-                .duration(DURATION)
                 .neighborhoodId(NEIGHBORHOOD_ID)
                 .build()
         ));

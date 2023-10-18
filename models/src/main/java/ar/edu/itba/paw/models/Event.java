@@ -3,6 +3,11 @@ package ar.edu.itba.paw.models;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.sql.Time;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.sql.Time;
 
 public class Event {
     private final long eventId;
@@ -11,7 +16,6 @@ public class Event {
     private final Date date;
     private final Time startTime;
     private final Time endTime;
-    private final long duration;
     private final long neighborhoodId;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -23,7 +27,6 @@ public class Event {
         this.date = builder.date;
         this.startTime = builder.startTime;
         this.endTime = builder.endTime;
-        this.duration = builder.duration;
         this.neighborhoodId = builder.neighborhoodId;
     }
 
@@ -34,7 +37,6 @@ public class Event {
         private Date date;
         private Time startTime;
         private Time endTime;
-        private long duration;
         private long neighborhoodId;
 
         public Builder eventId(long eventId) {
@@ -64,11 +66,6 @@ public class Event {
 
         public Builder endTime(Time endTime) {
             this.endTime = endTime;
-            return this;
-        }
-
-        public Builder duration(long duration) {
-            this.duration = duration;
             return this;
         }
 
@@ -102,8 +99,6 @@ public class Event {
 
     public Time getEndTime() { return endTime; }
 
-    public long getDuration() { return duration; }
-
     public long getNeighborhoodId() {
         return neighborhoodId;
     }
@@ -124,6 +119,16 @@ public class Event {
         }
     }
 
+    public String getDuration() {
+        if (startTime != null && endTime != null) {
+            LocalTime start = startTime.toLocalTime();
+            LocalTime end = endTime.toLocalTime();
+            long minutes = ChronoUnit.MINUTES.between(start, end);
+            return String.valueOf(minutes);
+        }
+        return "N/A";
+    }
+
     @Override
     public String toString() {
         return "Event{" +
@@ -133,9 +138,7 @@ public class Event {
                 ", date=" + date +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
-                ", duration=" + duration +
                 ", neighborhoodId=" + neighborhoodId +
                 '}';
     }
-
 }

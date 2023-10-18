@@ -15,7 +15,7 @@
             <div class="divider"></div>
             <div class="postcard-description">
 
-                <spring:message code="Duration"/>: <c:out value="${event.duration}" /> <spring:message code="Minutes"/>
+                <spring:message code="Duration"/>: <c:out value="${event.getDuration()}" /> <spring:message code="Minutes"/>
             </div>
         </div >
 

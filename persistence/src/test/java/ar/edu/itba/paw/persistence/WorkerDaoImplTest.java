@@ -15,6 +15,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -133,13 +135,14 @@ public class WorkerDaoImplTest {
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_info.name()));
     }
 
-   /* @Test
+    @Test
     public void testGetWorkersByNeighborhood() {
         // Pre Conditions
         populateWorkers();
+        long[] neighborhoods = {nhKey1};
 
         // Exercise
-        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1);
+        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, BASE_PAGE_SIZE, null, neighborhoods);
 
         // Validations
         assertEquals(2, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
@@ -149,9 +152,10 @@ public class WorkerDaoImplTest {
     public void testGetWorkersByNeighborhoodAndProfessions() {
         // Pre Conditions
         populateWorkers();
+        long[] neighborhoods = {nhKey1};
 
         // Exercise
-        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, BASE_PAGE_SIZE, Collections.singletonList(PROFESSION_1), nhKey1);
+        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, BASE_PAGE_SIZE, Collections.singletonList(PROFESSION_1), neighborhoods);
 
         // Validations
         assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
@@ -162,9 +166,10 @@ public class WorkerDaoImplTest {
     public void testGetWorkersByNeighborhoodAndSize() {
         // Pre Conditions
         populateWorkers();
+        long[] neighborhoods = {nhKey1};
 
         // Exercise
-        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, 1, null, nhKey1);
+        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, 1, null, neighborhoods);
 
         // Validations
         assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
@@ -174,13 +179,14 @@ public class WorkerDaoImplTest {
     public void testGetWorkersByNeighborhoodAndSizeAndPage() {
         // Pre Conditions
         populateWorkers();
+        long[] neighborhoods = {nhKey1};
 
         // Exercise
-        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(2, 1, null, nhKey1);
+        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(2, 1, null, neighborhoods);
 
         // Validations
         assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
-    }*/
+    }
 
     private void populateWorkers() {
 

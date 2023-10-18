@@ -10,7 +10,7 @@ public interface EventDao {
 
     // ---------------------------------------------- EVENTS INSERT ----------------------------------------------------
 
-    Event createEvent(String name, String description, Date date, long startTimeId, long endTimeId, long duration, long neighborhoodId);
+    Event createEvent(String name, String description, Date date, long startTimeId, long endTimeId, long neighborhoodId);
 
     // ---------------------------------------------- EVENTS SELECT ----------------------------------------------------
 

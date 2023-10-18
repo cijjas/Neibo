@@ -41,13 +41,12 @@ public class EventDaoImpl implements EventDao {
     // ---------------------------------------------- EVENT INSERT -----------------------------------------------------
 
     @Override
-    public Event createEvent(final String name, final String description, final Date date, final long startTimeId, final long endTimeId, final long duration, final long neighborhoodId) {
+    public Event createEvent(final String name, final String description, final Date date, final long startTimeId, final long endTimeId, final long neighborhoodId) {
         LOGGER.debug("Inserting Event {}", name);
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
         data.put("description", description);
         data.put("date", date);
-        data.put("duration", duration);
         data.put("neighborhoodid", neighborhoodId);
         data.put("starttimeid", startTimeId);
         data.put("endtimeid", endTimeId);
@@ -59,7 +58,6 @@ public class EventDaoImpl implements EventDao {
                     .name(name)
                     .description(description)
                     .date(date)
-                    .duration(duration)
                     .neighborhoodId(neighborhoodId)
                     .build();
         } catch (DataAccessException ex) {
@@ -77,7 +75,6 @@ public class EventDaoImpl implements EventDao {
             .date(rs.getDate("date"))
             .startTime(rs.getTime("starttime"))
             .endTime(rs.getTime("endtime"))
-            .duration(rs.getLong("duration"))
             .neighborhoodId(rs.getLong("neighborhoodid"))
             .build();
 
