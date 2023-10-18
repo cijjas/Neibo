@@ -36,11 +36,21 @@
                 <%@ include file="/WEB-INF/jsp/components/widgets/leftColumn.jsp" %>
             </div>
             <div class="column-middle">
-                <div class="f-c-c-c">
-                    <c:forEach var="worker" items="${workersList}">
-                        <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileWidget.jsp" %>
-                    </c:forEach>
-                </div>
+                <c:choose>
+                    <c:when test='${workersList.size() == 0}'>
+                        <div class="no-posts-found">
+                            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+                            <spring:message code="Workers.notFound"/>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                    <div class="f-c-c-c">
+                        <c:forEach var="worker" items="${workersList}">
+                            <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileWidget.jsp" %>
+                        </c:forEach>
+                    </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
 
             <div class="column-right">

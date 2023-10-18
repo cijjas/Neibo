@@ -151,7 +151,7 @@
     }
 
     function takeToLogin() {
-        window.location.href = "/login";
+        window.location.href = "${pageContext.request.contextPath}/login";
     }
 
     function clearFormErrors() {

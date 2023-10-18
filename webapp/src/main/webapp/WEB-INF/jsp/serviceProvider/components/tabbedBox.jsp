@@ -129,7 +129,7 @@
 
         <section id="content2">
             <div class="f-c-c-c w-100" style="gap:10px">
-                <c:if test='${loggedUser.role.toString() == "WORKER"}'>
+                <c:if test='${loggedUser.userId == worker.user.userId}'>
                     <a class="cool-button cool-small on-bg font-weight-bold mb-2" style="width: 200px" href="${pageContext.request.contextPath}/publish">
                         <spring:message code="Post.verb"/>
                     </a>
@@ -151,8 +151,7 @@
                         </c:if>
 
                         <c:forEach var="post" items="${postList}">
-                            <c:set var="postTags" value="${post.tags}" scope="request"/>
-                            <jsp:include page="/WEB-INF/jsp/components/widgets/blogpost.jsp">
+                            <jsp:include page="/WEB-INF/jsp/serviceProvider/components/workerBlogpost.jsp">
                                 <jsp:param name="postID" value="${post.postId}"/>
                                 <jsp:param name="postNeighborMail" value="${post.user.mail}"/>
                                 <jsp:param name="postDate" value="${post.date}"/>

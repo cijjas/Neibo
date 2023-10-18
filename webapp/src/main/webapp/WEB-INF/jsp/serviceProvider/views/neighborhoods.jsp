@@ -36,7 +36,48 @@
                 <%@ include file="/WEB-INF/jsp/components/widgets/leftColumn.jsp" %>
             </div>
             <div class="column-middle">
-                <div class="cool-static-container mb-4" style="overflow: visible">
+                <div class="cool-static-container mb-4">
+                    <c:choose>
+                        <c:when test="${associatedNeighborhoods.isEmpty()}">
+                            <div class="f-c-c-c w-100 mt-3" style="text-align: center">
+                                <div class="w-75">
+                                    <spring:message code="No.associated.neighborhoods"/>
+                                </div>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="f-c-s-c mt-2 w-100">
+                                <span class="font-weight-bold " style="font-size: 20px"><spring:message
+                                        code="My.Neighborhoods"/></span>
+                                <table class="table-striped w-100 mt-3">
+                                    <thead>
+                                    <tr>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <c:forEach var="entry" items="${associatedNeighborhoods}">
+                                        <tr>
+                                            <td style="text-align: start;"><span class="pl-2"><c:out
+                                                    value="${entry.name}"/></span></td>
+                                            <td>
+                                                <a href="${pageContext.request.contextPath}/services/neighborhoods/remove/${entry.neighborhoodId}"
+                                                   class="btn btn-link">
+                                                    <i class="fas fa-trash" style="color: var(--error);"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                        </c:otherwise>
+                    </c:choose>
+
+                </div>
+
+                <div class="cool-static-container " style="overflow: visible">
                     <c:choose>
                         <c:when test="${otherNeighborhoods.isEmpty()}">
                             <div class="f-c-c-c w-100 mb-3" style="text-align: center">
@@ -168,46 +209,7 @@
                     </c:choose>
 
                 </div>
-                <div class="cool-static-container">
-                    <c:choose>
-                        <c:when test="${associatedNeighborhoods.isEmpty()}">
-                            <div class="f-c-c-c w-100 mt-3" style="text-align: center">
-                                <div class="w-75">
-                                    <spring:message code="No.associated.neighborhoods"/>
-                                </div>
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-                            <div class="f-c-s-c mt-2 w-100">
-                                <span class="font-weight-bold " style="font-size: 20px"><spring:message
-                                        code="My.Neighborhoods"/></span>
-                                <table class="table-striped w-100 mt-3">
-                                    <thead>
-                                    <tr>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <c:forEach var="entry" items="${associatedNeighborhoods}">
-                                        <tr>
-                                            <td style="text-align: start;"><span class="pl-2"><c:out
-                                                    value="${entry.name}"/></span></td>
-                                            <td>
-                                                <a href="${pageContext.request.contextPath}/services/neighborhoods/remove/${entry.neighborhoodId}"
-                                                   class="btn btn-link">
-                                                    <i class="fas fa-trash" style="color: var(--error);"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    </c:forEach>
-                                    </tbody>
-                                </table>
 
-                            </div>
-
-                        </c:otherwise>
-                    </c:choose>
-
-                </div>
 
             </div>
             <div class="column-right">

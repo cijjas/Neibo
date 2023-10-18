@@ -1,8 +1,25 @@
 <c:forEach var="amenity" items="${amenities}">
     <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
-        <div>
-            <h2><c:out value="${amenity.name}"/></h2>
-        </div>
+
+        <c:choose>
+            <c:when test='${loggedUser.role.toString() == "ADMINISTRATOR"}'>
+                <div class="row">
+                    <div class="col-md-8">
+                        <h2><c:out value="${amenity.name}" /></h2>
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <a href="${pageContext.request.contextPath}/admin/delete-amenity/${amenity.amenityId}" class="btn btn-link">
+                            <i class="fas fa-trash" style="color: var(--error);"></i>
+                        </a>
+                    </div>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div >
+                    <h2><c:out value="${amenity.name}" /></h2>
+                </div>
+            </c:otherwise>
+        </c:choose>
         <p class="mb-3" style="color:var(--lighttext);"><c:out value="${amenity.description}"/></p>
 
         <div class="d-flex flex-column justify-content-center align-items-center w-100">

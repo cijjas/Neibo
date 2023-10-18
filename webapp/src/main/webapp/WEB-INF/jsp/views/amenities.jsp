@@ -29,37 +29,50 @@
 
         <div class="column-middle">
             <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
-                <h2><spring:message code="MakeReservation"/></h2>
-                <div class="divider"></div>
 
-                <form:form method="post" action="amenities" modelAttribute="reservationForm">
-                    <div class="col-md-12">
-                        <form:label path="amenityId" class="mt-3 mb-1"><spring:message
-                                code="SelectAmenity"/></form:label>
-                        <form:select path="amenityId" id="amenityId" required="true" class="cool-input">
-                            <c:forEach var="entry" items="${amenities}">
-                                <form:option value="${entry.amenityId}">
-                                    <c:out value="${entry.name}"/>
-                                </form:option>
-                            </c:forEach>
-                        </form:select>
-                        <form:errors path="amenityId" cssClass="error" element="p"/>
-                    </div>
-
-                    <div class="col-md-12">
-                        <form:label path="date" class="mt-3 mb-1"><spring:message code="ChooseDate"/></form:label>
-                        <form:input path="date" id="date" type="date" required="true" class="cool-input ml-1 mb-1"/>
-                        <form:errors path="date" cssClass="error" element="p"/>
-                    </div>
-
-                    <div class="col-md-12">
-                        <div class="d-flex justify-content-end m-t-40">
-                            <button onclick="submitForm()" type="submit"
-                                    class="cool-button cool-small on-bg w-25 font-weight-bold" style="height:40px;">
-                                <spring:message code="SeeTimesButton"/></button>
+                <c:choose>
+                    <c:when test='${amenities.size() == 0}'>
+                        <div class="no-posts-found">
+                            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+                            <spring:message code="Amenities.not.found"/>
                         </div>
-                    </div>
-                </form:form>
+                    </c:when>
+                    <c:otherwise>
+                        <h2><spring:message code="MakeReservation"/></h2>
+                        <div class="divider"></div>
+
+                        <form:form method="post" action="amenities" modelAttribute="reservationForm">
+                            <div class="col-md-12">
+                                <form:label path="amenityId" class="mt-3 mb-1"><spring:message
+                                        code="SelectAmenity"/></form:label>
+                                <form:select path="amenityId" id="amenityId" required="true" class="cool-input">
+                                    <c:forEach var="entry" items="${amenities}">
+                                        <form:option value="${entry.amenityId}">
+                                            <c:out value="${entry.name}"/>
+                                        </form:option>
+                                    </c:forEach>
+                                </form:select>
+                                <form:errors path="amenityId" cssClass="error" element="p"/>
+                            </div>
+
+                            <div class="col-md-12">
+                                <form:label path="date" class="mt-3 mb-1"><spring:message code="ChooseDate"/></form:label>
+                                <form:input path="date" id="date" type="date" required="true" class="cool-input ml-1 mb-1"/>
+                                <form:errors path="date" cssClass="error" element="p"/>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="d-flex justify-content-end m-t-40">
+                                    <button onclick="submitForm()" type="submit"
+                                            class="cool-button cool-small on-bg w-25 font-weight-bold" style="height:40px;">
+                                        <spring:message code="SeeTimesButton"/></button>
+                                </div>
+                            </div>
+                        </form:form>
+                    </c:otherwise>
+                </c:choose>
+
+
 
             </div>
 

@@ -41,7 +41,7 @@
                     <c:when test="${empty phoneNumbersList}">
                         <div class="no-posts-found">
                             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-                            <spring:message code="Contacts.notFound"/>
+                            <spring:message code="Information.not.found"/>
                         </div>
                     </c:when>
                     <c:otherwise>
