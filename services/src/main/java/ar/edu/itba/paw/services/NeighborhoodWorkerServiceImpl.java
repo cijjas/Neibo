@@ -49,6 +49,14 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
         emailService.sendNewUserMail(neighborhoodId, worker.getName(), UserRole.WORKER);
     }
 
+
+    @Override
+    public void addWorkerToNeighborhoods(long workerId, List<Long> neighborhoodIds){
+        for(long neighborhoodId : neighborhoodIds) {
+            addWorkerToNeighborhood(workerId, neighborhoodId);
+        }
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

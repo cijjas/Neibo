@@ -4,6 +4,8 @@ public interface AttendanceService {
 
     void createAttendee(long userId, long eventId);
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     void deleteAttendee(long userId, long eventId);
 
 }

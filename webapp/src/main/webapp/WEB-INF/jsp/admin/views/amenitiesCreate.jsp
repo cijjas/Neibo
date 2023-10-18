@@ -95,7 +95,7 @@
                                             <td>
                                                 <div class="cat creation">
                                                     <label class="w-100">
-                                                        <input type="checkbox" name="selectedShifts" value="${day.key},${time.key}" />
+                                                        <input type="checkbox" name="selectedShifts" value="${day.key}-${time.key}" />
                                                         <span>${time.value.key}</span>
                                                     </label>
                                                 </div>
@@ -133,6 +133,7 @@
                                             checkbox.checked = true;
                                         }
                                     });
+                                    checkCheckboxes()
                                 }
 
                                 function clearAllCheckedHours() {
@@ -146,6 +147,7 @@
                                     rowCheckboxes.forEach(function (checkbox) {
                                         checkbox.checked = false;
                                     });
+                                    checkCheckboxes()
                                 }
 
                                 function toggleRow(checkbox) {
@@ -156,6 +158,7 @@
 
                                         checkbox.checked = !checkbox.checked;
                                     });
+                                    checkCheckboxes()
                                 }
 
                                 function uncheckWeekends(){
@@ -165,8 +168,32 @@
                                             checkbox.checked = false;
                                         }
                                     });
+                                    checkCheckboxes()
                                 }
 
+                                function checkCheckboxes() {
+                                    const checkboxes = document.querySelectorAll('input[name="selectedShifts"]');
+                                    const submitButton = document.getElementById("submit-checks");
+
+                                    let anyCheckboxChecked = false;
+                                    checkboxes.forEach(function (checkbox) {
+                                        if (checkbox.checked) {
+                                            anyCheckboxChecked = true;
+
+                                        }
+                                    });
+
+                                    submitButton.disabled = !anyCheckboxChecked;
+                                }
+
+                                // Attach an event listener to the checkboxes to call the checkCheckboxes function
+                                const checkboxes = document.querySelectorAll('input[name="selectedShifts"]');
+                                checkboxes.forEach(function (checkbox) {
+                                    checkbox.addEventListener('change', checkCheckboxes);
+                                });
+
+                                // Call checkCheckboxes initially to set the initial state of the submit button
+                                checkCheckboxes();
                             </script>
                         </div>
 
@@ -183,7 +210,7 @@
 
                         <%--Submit button --%>
                         <div class="d-flex justify-content-end m-t-40 ">
-                            <button onclick="load()" type="submit" class="cool-button cool-small on-bg w-25" style="height:40px;" ><spring:message code="Create.verb"/></button>
+                            <button id="submit-checks" onclick="load()" type="submit" class="cool-button cool-small on-bg w-25" disabled style="height:40px;" ><spring:message code="Create.verb"/></button>
                         </div>
                     </form:form>
                 </div>

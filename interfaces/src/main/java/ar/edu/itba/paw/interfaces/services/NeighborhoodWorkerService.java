@@ -5,14 +5,18 @@ import ar.edu.itba.paw.models.Neighborhood;
 import java.util.List;
 
 public interface NeighborhoodWorkerService {
-    // --------------------------------------- NIEGHBORHOODWORKERS SELECT ------------------------------------------
+
     void addWorkerToNeighborhood(long workerId, long neighborhoodId);
 
-    // --------------------------------------- NIEGHBORHOODWORKERS INSERT ------------------------------------------
+    void addWorkerToNeighborhoods(long workerId, List<Long> neighborhoodIds);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
     List<Neighborhood> getNeighborhoods(long workerId);
 
     List<Neighborhood> getOtherNeighborhoods(long workerId);
 
-    // --------------------------------------- NIEGHBORHOODWORKERS DELETE ------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
     void removeWorkerFromNeighborhood(long workerId, long neighborhoodId);
 }

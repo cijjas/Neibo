@@ -12,9 +12,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AmenityService {
+
     Amenity createAmenity(String name, String description, long neighborhoodId, List<String> selectedShifts);
 
-    boolean deleteAmenity(long amenityId);
+    // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Amenity> findAmenityById(long amenityId);
 
@@ -23,4 +24,9 @@ public interface AmenityService {
     int getAmenitiesCount(long neighborhoodId);
 
     int getTotalAmenitiesPages(long neighborhoodId, int size);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    boolean deleteAmenity(long amenityId);
+
 }

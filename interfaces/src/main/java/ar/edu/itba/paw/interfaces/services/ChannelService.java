@@ -8,15 +8,18 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface ChannelService {
-    List<Channel> getChannels(long neighborhoodId);
 
     Channel createChannel(long neighborhoodId, final String name);
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     Optional<Channel> findChannelById(long id);
 
-    Map<String, Channel> getNeighborChannels(long neighborhoodId, long neighborId);
-
     Optional<Channel> findChannelByName(String name);
+
+    List<Channel> getChannels(long neighborhoodId);
+
+    Map<String, Channel> getNeighborChannels(long neighborhoodId, long neighborId);
 
     Map<String, Channel> getAdminChannels(long neighborhoodId);
 

@@ -17,7 +17,7 @@
             </span>
         </div>
 
-        <form:form method="post" action="${pageContext.request.contextPath}/service/profile/${worker.user.userId}/review" modelAttribute="reviewForm" enctype="multipart/form-data">
+        <form:form method="post" action="${pageContext.request.contextPath}/services/profile/${worker.user.userId}/review" modelAttribute="reviewForm" enctype="multipart/form-data">
             <div class="f-c-c-c pl-3 pr-3 c-text">
                 <form:errors cssClass="error" element="p"/>
 

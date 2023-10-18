@@ -6,6 +6,8 @@ import ar.edu.itba.paw.webapp.form.*;
 import ar.edu.itba.paw.enums.DayOfTheWeek;
 import ar.edu.itba.paw.enums.StandardTime;
 import ar.edu.itba.paw.enums.UserRole;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -77,8 +79,12 @@ public class AdminController {
 
     // ------------------------------------- INFORMATION --------------------------------------
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
+
     @RequestMapping(value = "/information", method = RequestMethod.GET)
     public ModelAndView adminInformation() {
+        LOGGER.info("User arriving at '/admin/information'");
+
         ModelAndView mav = new ModelAndView("admin/views/information");
 
         mav.addObject("panelOption", "Information");
@@ -94,6 +100,7 @@ public class AdminController {
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
+        LOGGER.info("User arriving at '/admin/neighbors'");
 
         final ModelAndView mav = new ModelAndView("admin/views/adminRequestHandler");
 
@@ -112,6 +119,8 @@ public class AdminController {
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "3") int size
     ) {
+        LOGGER.info("User arriving at '/admin/unverified'");
+
         final ModelAndView mav = new ModelAndView("admin/views/adminRequestHandler");
 
         mav.addObject("panelOption", "Requests");
@@ -144,6 +153,8 @@ public class AdminController {
     public ModelAndView publishAdminForm(
             @ModelAttribute("publishForm") final PublishForm publishForm
     ) {
+        LOGGER.info("User arriving at '/admin/publish'");
+
         final ModelAndView mav = new ModelAndView("admin/views/adminPublish");
 
         mav.addObject("panelOption", "PublishAdmin");
@@ -158,6 +169,7 @@ public class AdminController {
             final BindingResult errors
     ) {
         if (errors.hasErrors()){
+            LOGGER.error("Error in Publish Form");
             return publishAdminForm(publishForm);
         }
 
@@ -178,17 +190,19 @@ public class AdminController {
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
+        LOGGER.info("User arriving at '/admin/amenities'");
+
         ModelAndView mav = new ModelAndView("admin/views/amenitiesPanel");
 
         List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId(), page, size);
-
-        System.out.println(as.getTotalAmenitiesPages(sessionUtils.getLoggedUser().getNeighborhoodId(), size));
 
         mav.addObject("totalPages", as.getTotalAmenitiesPages(sessionUtils.getLoggedUser().getNeighborhoodId(), size));
         mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
         mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
         mav.addObject("amenities", amenities);
         mav.addObject("panelOption", "Amenities");
+        mav.addObject("contextPath", "/admin/amenities");
+        mav.addObject("page",page);
 
         return mav;
     }
@@ -206,6 +220,8 @@ public class AdminController {
     public ModelAndView createAmenityForm(
             @ModelAttribute("amenityForm") final AmenityForm amenityForm
     ) {
+        LOGGER.info("User arriving at '/admin/create-amenity'");
+
         ModelAndView mav = new ModelAndView("admin/views/amenitiesCreate");
 
         mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
@@ -215,11 +231,12 @@ public class AdminController {
 
     @RequestMapping(value = "/create-amenity", method = RequestMethod.POST)
     public ModelAndView createAmenity(
-            @RequestParam("selectedShifts") List<String> selectedShifts,
+            @RequestParam(value = "selectedShifts", required = false) List<String> selectedShifts,
             @Valid @ModelAttribute("amenityForm") final AmenityForm amenityForm,
             final BindingResult errors
     ) {
         if (errors.hasErrors()) {
+            LOGGER.error("Error in Amenity Form");
             return createAmenityForm(amenityForm);
         }
 
@@ -228,16 +245,14 @@ public class AdminController {
         return new ModelAndView("redirect:/admin/amenities");
     }
 
-
-
-
-
     // ------------------------------------- CALENDAR --------------------------------------
 
     @RequestMapping(value = "/add-event", method = RequestMethod.GET)
     public ModelAndView eventForm(
             @ModelAttribute("eventForm") final EventForm eventForm
     ) {
+        LOGGER.info("User arriving at '/admin/add-event'");
+
         return new ModelAndView("admin/views/eventsCreate");
     }
 
@@ -247,6 +262,7 @@ public class AdminController {
             final BindingResult errors
     ) {
         if (errors.hasErrors()) {
+            LOGGER.error("Error in Event Form");
             return eventForm(eventForm);
         }
         es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), eventForm.getStartTime(), eventForm.getEndTime(), sessionUtils.getLoggedUser().getNeighborhoodId());
@@ -272,6 +288,7 @@ public class AdminController {
     public ModelAndView createContact(
             @ModelAttribute("contactForm") final ContactForm contactForm
     ) {
+        LOGGER.info("User arriving at '/admin/create-contact'");
         return new ModelAndView("admin/views/informationContactCreate");
     }
 
@@ -281,6 +298,7 @@ public class AdminController {
             final BindingResult errors
     ) {
         if (errors.hasErrors()) {
+            LOGGER.error("Error in Contact Form");
             return createContact(contactForm);
         }
         cos.createContact(sessionUtils.getLoggedUser().getNeighborhoodId(), contactForm.getContactName(), contactForm.getContactAddress(), contactForm.getContactPhone());
@@ -291,6 +309,7 @@ public class AdminController {
     public ModelAndView deleteContact(
             @PathVariable(value = "id") int contactId
     ) {
+        LOGGER.info("User arriving at '/admin/delete-contact/{}'", contactId);
         ModelAndView mav = new ModelAndView("redirect:/admin/information");
         cos.deleteContact(contactId);
         return mav;
@@ -303,6 +322,7 @@ public class AdminController {
     public ModelAndView createResourceForm(
             @ModelAttribute("resourceForm") final ResourceForm resourceForm
     ) {
+        LOGGER.info("User arriving at '/admin/create-resource'");
         return new ModelAndView("admin/views/informationResourceCreate");
     }
 
@@ -312,6 +332,7 @@ public class AdminController {
             final BindingResult errors
     ) {
         if (errors.hasErrors()) {
+            LOGGER.error("Error in Resource Form");
             return createResourceForm(resourceForm);
         }
         res.createResource(sessionUtils.getLoggedUser().getNeighborhoodId(), resourceForm.getTitle(), resourceForm.getDescription(), resourceForm.getImageFile());
@@ -322,16 +343,9 @@ public class AdminController {
     public ModelAndView deleteResource(
             @PathVariable(value = "id") int resourceId
     ) {
+        LOGGER.info("User arriving at '/admin/delete-resource/{}'", resourceId);
         ModelAndView mav = new ModelAndView("redirect:/admin/information");
         res.deleteResource(resourceId);
         return mav;
     }
-
-
-
-    // -------------------------------------------------------------------------------
-    // Transition this into AuthenticatedUtils?
-
-   
-
 }

@@ -36,7 +36,7 @@
       </div>
       <div class="column-middle">
         <div class="f-c-c-c">
-          <c:forEach var="worker" items="${workersList}" >
+<c:forEach var="worker" items="${workersList}" >
             <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileWidget.jsp" %>
           </c:forEach>
         </div>

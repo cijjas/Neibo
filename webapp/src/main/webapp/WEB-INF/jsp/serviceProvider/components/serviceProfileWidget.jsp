@@ -1,5 +1,5 @@
 <div class="service-widget">
-    <a href="${pageContext.request.contextPath}/service/profile/${worker.user.userId}">
+    <a href="${pageContext.request.contextPath}/services/profile/${worker.user.userId}">
         <div class="card-text">
             <div class="img-avatar placeholder-glow">
 

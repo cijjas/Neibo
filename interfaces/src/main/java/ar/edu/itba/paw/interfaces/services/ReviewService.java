@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ReviewService {
-    // -------------------------------------------- REVIEWS INSERT -----------------------------------------------------
+
     Review createReview(long workerId, long userId, float rating, String review);
 
-    // -------------------------------------------- REVIEWS SELECT -----------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
     Review getReview(long reviewId);
 
     List<Review> getReviews(long workerId);
@@ -18,6 +19,7 @@ public interface ReviewService {
 
     int getReviewsCount(long workerId);
 
-    // -------------------------------------------- REVIEWS DELETE -----------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
     void deleteReview(long reviewId);
 }

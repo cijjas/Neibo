@@ -10,8 +10,11 @@ public interface BookingService {
 
     long[] createBooking(long userId, long amenityId, List<Long> shiftIds, Date reservationDate);
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     List<GroupedBooking> getUserBookings(long userId);
 
+    // -----------------------------------------------------------------------------------------------------------------
 
     boolean deleteBooking(long bookingId);
 

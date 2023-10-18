@@ -38,4 +38,18 @@ public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
         LOGGER.info("Adding Professions for Worker {}", workerId);
         return professionWorkerDao.getWorkerProfessions(workerId);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String getWorkerProfessionsAsString(long workerId) {
+        List<String> professions = getWorkerProfessions(workerId);
+        StringBuilder professionsString = new StringBuilder();
+        for (String profession : professions) {
+            if (professionsString.length() > 0) {
+                professionsString.append(", ");
+            }
+            professionsString.append(profession);
+        }
+        return professionsString.toString();
+    }
 }

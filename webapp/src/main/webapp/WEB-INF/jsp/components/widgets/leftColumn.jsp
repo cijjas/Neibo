@@ -13,7 +13,7 @@
                 <c:when test='${loggedUser.role.toString() == "WORKER"}'>
                     <div class="left-box" >
                         <div class="f-c-c-c">
-                            <a id="profileButton" href="${pageContext.request.contextPath}/service/profile/${loggedUser.userId}" class="cool-left-button  ${channel == 'Profile' ? 'active' : ''} f-r-sb-c">
+                            <a id="profileButton" href="${pageContext.request.contextPath}/services/profile/${loggedUser.userId}" class="cool-left-button  ${channel == 'Profile' ? 'active' : ''} f-r-sb-c">
                                 <i class="fas fa-bullhorn"></i>
                                 <spring:message code="Profile"/>
                             </a>

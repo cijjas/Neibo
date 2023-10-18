@@ -9,9 +9,10 @@ import java.util.Optional;
 
 public interface WorkerService {
 
-    // ---------------------------------------------- WORKERS INSERT -----------------------------------------------------
     Worker createWorker(String mail, String name, String surname, String password, int identification, String phoneNumber, String address, Language language, long[] professionIds, String businessName);
-    // ---------------------------------------------- WORKERS SELECT -----------------------------------------------------
+
+    // -----------------------------------------------------------------------------------------------------------------
+
     Optional<Worker> findWorkerById(long workerId);
 
     Optional<Worker> findWorkerByMail(String mail);
@@ -20,7 +21,9 @@ public interface WorkerService {
 
     int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds);
 
-    // ---------------------------------------------- WORKERS UPDATE -----------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+
     void updateWorker(long userId, String phoneNumber, String address, String businessName,
                       MultipartFile backgroundPicture, String bio);
+
 }

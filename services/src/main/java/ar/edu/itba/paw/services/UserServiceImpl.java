@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.BaseNeighborhood;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
@@ -166,7 +167,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void rejectNeighbor(long id) {
         LOGGER.info("Rejecting User {}", id);
-        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(),  n.getProfilePictureId(), UserRole.REJECTED, n.getIdentification(), -1));
+        userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(),  n.getProfilePictureId(), UserRole.REJECTED, n.getIdentification(), BaseNeighborhood.REJECTED_NEIGHBORHOOD.getId()));
     }
 
     @Override

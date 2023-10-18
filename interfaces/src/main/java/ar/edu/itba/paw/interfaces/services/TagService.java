@@ -7,8 +7,6 @@ import java.util.Optional;
 
 public interface TagService {
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     Tag createTag(String name);
 
     void createTagsAndCategorizePost(long postId, String tagsString);

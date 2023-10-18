@@ -75,9 +75,16 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
   </error-page>
 
   <error-page>
+    <error-code>405</error-code>
+    <location>/WEB-INF/jsp/errors/errorPage.jsp</location>
+  </error-page>
+
+  <error-page>
     <error-code>500</error-code>
     <location>/WEB-INF/jsp/errors/errorPage.jsp</location>
   </error-page>
+
+
 
   <filter>
     <filter-name>springSecurityFilterChain</filter-name>

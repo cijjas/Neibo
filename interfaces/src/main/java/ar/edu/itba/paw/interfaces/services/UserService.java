@@ -9,19 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    /*
-        Use descriptive names that indicate the purpose of the method.
-        Prefix service layer methods with verbs like "create," "retrieve," "update," or "delete" to indicate their primary action.
-        Use camelCase or PascalCase for method names, depending on your project's convention.
-        Include domain-specific terms when applicable.
-        Examples:
-            createUserAccount
-            getUserProfile
-            updateProductDetails
-            deleteOrder
-     */
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     User createNeighbor(final String mail, final String password, final String name, final String surname,
                         final long neighborhoodId, final Language language, final int identification);
@@ -32,6 +19,8 @@ public interface UserService {
 
     Optional<User> findUserByMail(final String mail);
 
+    boolean isAttending(long eventId, long userId);
+
     List<User> getNeighbors(long neighborhoodId);
 
     List<User> getNeighborsSubscribedByPostId(long id);
@@ -41,8 +30,6 @@ public interface UserService {
     int getTotalPages(UserRole role, long neighborhoodId, int size );
 
     List<User> getEventUsers(long eventId);
-
-    boolean isAttending(long eventId, long userId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

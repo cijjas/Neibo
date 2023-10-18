@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Event;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -68,13 +70,7 @@ public class EndpointController {
         this.pws = pws;
     }
 
-//    @RequestMapping(value = "/comment", method = RequestMethod.GET)
-//    @ResponseBody
-//    public String getComment(
-//            @RequestParam(value = "id", required = false) int postId
-//    ) {
-//        return cs.findCommentsByPostId(postId).toString();
-//    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(EndpointController.class);
 
     @RequestMapping(value = "/commentById", method = RequestMethod.GET)
     @ResponseBody
@@ -82,14 +78,16 @@ public class EndpointController {
             @RequestParam(value = "id", required = false) int commentId,
             HttpServletResponse response
     ) {
+        LOGGER.debug("Requesting information from '/endpoint/commentById'");
         response.setCharacterEncoding("UTF-8"); // Set the character encoding for the response
         response.setContentType("text/plain; charset=UTF-8");
-        return cs.findCommentById(commentId).get().getComment();
+        return cs.findCommentById(commentId).orElseThrow(()-> new NotFoundException("Comment Not Found")).getComment();
     }
 
     @RequestMapping(value = "/get-event-timestamps", method = RequestMethod.GET)
     @ResponseBody
     public String getEventTimestamps() {
+        LOGGER.debug("Requesting information from '/endpoint/get-event-timestamps'");
         return es.getEventTimestampsString(sessionUtils.getLoggedUser().getNeighborhoodId());
     }
 
@@ -98,6 +96,7 @@ public class EndpointController {
     public ResponseEntity<String> likePost(
             @RequestParam(value = "postId") long postId
     ) {
+        LOGGER.debug("Requesting information from '/endpoint/like'");
         long userId = sessionUtils.getLoggedUser().getUserId();
         ls.addLikeToPost(postId, userId);
         return ResponseEntity.ok("{\"message\": \"Post liked successfully.\"}");
@@ -108,7 +107,7 @@ public class EndpointController {
     public ResponseEntity<String> unlikePost(
             @RequestParam(value = "postId") long postId
     ) {
-
+        LOGGER.debug("Requesting information from '/endpoint/unlike'");
         long userId = sessionUtils.getLoggedUser().getUserId();
         ls.removeLikeFromPost(postId, userId);
         return ResponseEntity.ok("{\"message\": \"Post unliked successfully.\"}");
@@ -119,7 +118,7 @@ public class EndpointController {
     public String isLiked(
             @RequestParam(value = "postId") long postId
     ) {
-
+        LOGGER.debug("Requesting information from '/endpoint/is-liked'");
         long userId = sessionUtils.getLoggedUser().getUserId();
         if(ls.isPostLiked(postId, userId)){
             return "true";
@@ -130,20 +129,19 @@ public class EndpointController {
     @RequestMapping(value = "/toggle-dark-mode", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity<String> toggleDarkMode() {
+        LOGGER.debug("Requesting information from '/endpoint/toggle-dark-mode'");
         sessionUtils.clearLoggedUser();
         us.toggleDarkMode(sessionUtils.getLoggedUser().getUserId());
         return ResponseEntity.ok("{\"message\": \"Dark mode toggled successfully.\"}");
     }
-
-
-
 
     @RequestMapping(value = "/image", method = RequestMethod.GET)
     @ResponseBody
     public byte[] getImage(
             @RequestParam(value = "id", required = false) int imageId
     ) {
-        return is.getImage(imageId).get().getImage();
+        LOGGER.debug("Requesting information from '/endpoint/image'");
+        return is.getImage(imageId).orElseThrow(()-> new NotFoundException("Image Not Found")).getImage();
     }
 
     @RequestMapping(value = "/posts", method = RequestMethod.GET)
@@ -151,7 +149,8 @@ public class EndpointController {
     public String getPost(
             @RequestParam(value = "id", required = false) int postId
     ) {
-        return ps.findPostById(postId).get().toString();
+        LOGGER.debug("Requesting information from '/endpoint/posts'");
+        return ps.findPostById(postId).orElseThrow(()-> new NotFoundException("Post Not Found")).toString();
     }
 
     @RequestMapping(value = "/profession", method = RequestMethod.GET)
@@ -159,15 +158,8 @@ public class EndpointController {
     public String getProfessions(
             @RequestParam(value = "id") long workerId
     ) {
-        List<String> professions = pws.getWorkerProfessions(workerId);
-        StringBuilder professionsString = new StringBuilder();
-        for (String profession : professions) {
-            if (professionsString.length() > 0) {
-                professionsString.append(", ");
-            }
-            professionsString.append(profession);
-        }
-        return professionsString.toString();
+        LOGGER.debug("Requesting information from '/endpoint/profession'");
+        return pws.getWorkerProfessionsAsString(workerId);
     }
 
     @RequestMapping(value = "/user-name", method = RequestMethod.GET)
@@ -175,6 +167,7 @@ public class EndpointController {
     public String getUserName(
             @RequestParam(value = "id") long userId
     ) {
+        LOGGER.debug("Requesting information from '/endpoint/user-name'");
         return us.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found")).getName();
     }
 
@@ -183,6 +176,7 @@ public class EndpointController {
     public String getNeighborhoodName(
             @RequestParam(value = "id") long userId
     ) {
+        LOGGER.debug("Requesting information from '/endpoint/neighborhood-name'");
         return nhs.findNeighborhoodById(us.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found"))
                         .getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
     }

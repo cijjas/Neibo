@@ -40,7 +40,7 @@ public class AmenityServiceImpl implements AmenityService {
 
         for (String shiftPair : selectedShifts) {
             // Parse the pair into <Long dayId, Long timeId>
-            String[] shiftParts = shiftPair.split(",");
+            String[] shiftParts = shiftPair.split("-");
 
             long dayId = Long.parseLong(shiftParts[0]);
             long timeId = Long.parseLong(shiftParts[1]);
