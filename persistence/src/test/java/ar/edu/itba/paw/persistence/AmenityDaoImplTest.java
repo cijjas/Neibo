@@ -24,14 +24,14 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class AmenityDaoImplTest {
 
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private ShiftDao shiftDao;
     private AmenityDao amenityDao;
@@ -55,7 +55,7 @@ public class AmenityDaoImplTest {
     @Test
     public void testCreateAmenity() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
+        long nhKey = testInserter.createNeighborhood();
 
         // Exercise
         Amenity createdAmenity = amenityDao.createAmenity(AMENITY_NAME, AMENITY_DESCRIPTION, nhKey);
@@ -70,8 +70,8 @@ public class AmenityDaoImplTest {
     @Test
     public void testFindAmenityById() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long aKey = testInsertionUtils.createAmenity(nhKey);
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
 
         // Exercise
         Optional<Amenity> foundAmenity = amenityDao.findAmenityById(aKey);
@@ -92,11 +92,11 @@ public class AmenityDaoImplTest {
     @Test
     public void testGetAmenities() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long aKey = testInsertionUtils.createAmenity(nhKey);
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
 
         // Exercise
-        List<Amenity> amenities = amenityDao.getAmenities(nhKey);
+        List<Amenity> amenities = amenityDao.getAmenities(nhKey, 1, 10);
 
         // Validations & Post Conditions
         assertEquals(1, amenities.size());
@@ -105,8 +105,8 @@ public class AmenityDaoImplTest {
     @Test
     public void testDeleteAmenity() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long aKey = testInsertionUtils.createAmenity(nhKey);
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
 
         // Exercise
         boolean deleted = amenityDao.deleteAmenity(aKey);

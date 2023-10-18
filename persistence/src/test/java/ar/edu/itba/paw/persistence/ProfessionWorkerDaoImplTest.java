@@ -20,14 +20,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ProfessionWorkerDaoImplTest {
 
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
 
     private JdbcTemplate jdbcTemplate;
     private ProfessionWorkerDao professionWorkerDao;
@@ -44,9 +44,9 @@ public class ProfessionWorkerDaoImplTest {
     @Test
     public void testAddWorkerProfession() {
         // Pre Conditions
-        Number pKey = testInsertionUtils.createProfession();
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
+        Number pKey = testInserter.createProfession();
+        Number nhKey = testInserter.createNeighborhood();
+        Number uKey = testInserter.createUser(nhKey.longValue());
 
         // Exercise
         professionWorkerDao.addWorkerProfession(uKey.longValue(), pKey.longValue());
@@ -58,11 +58,11 @@ public class ProfessionWorkerDaoImplTest {
     @Test
     public void testGetWorkerProfession() {
         // Pre Conditions
-        Number pKey = testInsertionUtils.createProfession(PROFESSION_NAME);
-        Number nhKey = testInsertionUtils.createNeighborhood();
-        Number uKey = testInsertionUtils.createUser(nhKey.longValue());
-        testInsertionUtils.createWorker(uKey.longValue());
-        testInsertionUtils.createWorkerProfession(uKey.longValue(), pKey.longValue());
+        Number pKey = testInserter.createProfession(PROFESSION_NAME);
+        Number nhKey = testInserter.createNeighborhood();
+        Number uKey = testInserter.createUser(nhKey.longValue());
+        testInserter.createWorker(uKey.longValue());
+        testInserter.createWorkerProfession(uKey.longValue(), pKey.longValue());
 
         // Exercise
         List<String> profession = professionWorkerDao.getWorkerProfessions(uKey.longValue());

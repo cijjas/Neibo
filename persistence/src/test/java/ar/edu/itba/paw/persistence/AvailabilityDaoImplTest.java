@@ -19,7 +19,7 @@ import java.util.OptionalLong;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class AvailabilityDaoImplTest {
 
@@ -27,7 +27,7 @@ public class AvailabilityDaoImplTest {
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
 
     private JdbcTemplate jdbcTemplate;
     private AmenityDao amenityDao;
@@ -49,11 +49,11 @@ public class AvailabilityDaoImplTest {
     @Test
     public void testCreateAvailability() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long aKey = testInsertionUtils.createAmenity(nhKey);
-        long dKey = testInsertionUtils.createDay();
-        long tKey = testInsertionUtils.createTime();
-        long sKey = testInsertionUtils.createShift(dKey, tKey);
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
 
         // Exercise
         Number createdAvailability = availabilityDao.createAvailability(aKey, sKey);
@@ -66,12 +66,12 @@ public class AvailabilityDaoImplTest {
     @Test
     public void testFindAvailabilityId() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long aKey = testInsertionUtils.createAmenity(nhKey);
-        long dKey = testInsertionUtils.createDay();
-        long tKey = testInsertionUtils.createTime();
-        long sKey = testInsertionUtils.createShift(dKey, tKey);
-        long availabilityKey = testInsertionUtils.createAvailability(aKey, sKey);
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long availabilityKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
         OptionalLong foundAvailability = availabilityDao.findAvailabilityId(aKey, sKey);
@@ -92,12 +92,12 @@ public class AvailabilityDaoImplTest {
     @Test
     public void testDeleteAvailability() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long aKey = testInsertionUtils.createAmenity(nhKey);
-        long dKey = testInsertionUtils.createDay();
-        long tKey = testInsertionUtils.createTime();
-        long sKey = testInsertionUtils.createShift(dKey, tKey);
-        long availabilityKey = testInsertionUtils.createAvailability(aKey, sKey);
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long availabilityKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
         boolean deleted = availabilityDao.deleteAvailability(aKey, sKey);

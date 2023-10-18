@@ -19,7 +19,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ContactDaoImplTest {
 
@@ -30,7 +30,7 @@ public class ContactDaoImplTest {
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private ContactDaoImpl contactDao;
 
@@ -43,7 +43,7 @@ public class ContactDaoImplTest {
     @Test
     public void testCreateContact() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
+        long nhKey = testInserter.createNeighborhood();
 
         // Exercise
         Contact c = contactDao.createContact(nhKey, CONTACT_NAME, ADDRESS, NUMBER);
@@ -58,8 +58,8 @@ public class ContactDaoImplTest {
     @Test
     public void testGetContacts() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        testInsertionUtils.createContact(nhKey, CONTACT_NAME, ADDRESS, NUMBER);
+        long nhKey = testInserter.createNeighborhood();
+        testInserter.createContact(nhKey, CONTACT_NAME, ADDRESS, NUMBER);
 
         // Exercise
         List<Contact> contacts = contactDao.getContacts(nhKey);
@@ -82,8 +82,8 @@ public class ContactDaoImplTest {
     @Test
     public void testDeleteContact() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long contactId = testInsertionUtils.createContact(nhKey);
+        long nhKey = testInserter.createNeighborhood();
+        long contactId = testInserter.createContact(nhKey);
 
         // Exercise
         boolean deleted = contactDao.deleteContact(contactId);

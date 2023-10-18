@@ -20,14 +20,14 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ResourceDaoImplTest {
 
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private ResourceDao resourceDao;
 
@@ -44,7 +44,7 @@ public class ResourceDaoImplTest {
     @Test
     public void testCreateResource() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
+        long nhKey = testInserter.createNeighborhood();
 
         // Exercise
         resourceDao.createResource(nhKey, SAMPLE_TITLE, SAMPLE_DESC, 0);
@@ -56,9 +56,9 @@ public class ResourceDaoImplTest {
     @Test
     public void testGetResources() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long iKey = testInsertionUtils.createImage();
-        testInsertionUtils.createResource(nhKey, iKey);
+        long nhKey = testInserter.createNeighborhood();
+        long iKey = testInserter.createImage();
+        testInserter.createResource(nhKey, iKey);
 
         // Exercise
         List<Resource> resources = resourceDao.getResources(nhKey);
@@ -70,7 +70,7 @@ public class ResourceDaoImplTest {
     @Test
     public void testGetNoResources() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
+        long nhKey = testInserter.createNeighborhood();
 
         // Exercise
         List<Resource> resources = resourceDao.getResources(nhKey);
@@ -82,9 +82,9 @@ public class ResourceDaoImplTest {
     @Test
     public void testDeleteResource() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long iKey = testInsertionUtils.createImage();
-        long rKey = testInsertionUtils.createResource(nhKey, iKey);
+        long nhKey = testInserter.createNeighborhood();
+        long iKey = testInserter.createImage();
+        long rKey = testInserter.createResource(nhKey, iKey);
 
         // Exercise
         boolean deleted = resourceDao.deleteResource(rKey);

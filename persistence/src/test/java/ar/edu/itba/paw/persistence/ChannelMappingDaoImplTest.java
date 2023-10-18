@@ -17,14 +17,14 @@ import javax.sql.DataSource;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ChannelMappingDaoImplTest {
 
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private ChannelMappingDaoImpl channelMappingDao;
 
@@ -38,8 +38,8 @@ public class ChannelMappingDaoImplTest {
     @Test
     public void testCreateChannelMapping() {
         // Pre Conditions
-        long chKey = testInsertionUtils.createChannel();
-        long nhKey = testInsertionUtils.createNeighborhood();
+        long chKey = testInserter.createChannel();
+        long nhKey = testInserter.createNeighborhood();
 
         // Exercise
         channelMappingDao.createChannelMapping(chKey, nhKey);

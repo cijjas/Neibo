@@ -76,9 +76,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Comment> findCommentsByPostId(long id, int page, int size) {
+    public List<Comment> getCommentsByPostId(long id, int page, int size) {
         LOGGER.info("Finding Comments for Post {}", id);
-        return commentDao.findCommentsByPostId(id,page,size);
+        return commentDao.getCommentsByPostId(id,page,size);
     }
 
     @Override
@@ -88,9 +88,8 @@ public class CommentServiceImpl implements CommentService {
         return commentDao.getCommentsCountByPostId(id);
     }
 
-    @Override
     @Transactional(readOnly = true)
-    public int getTotalPostPages(long id, int size) {
+    public int getTotalCommentPages(long id, int size) {
         LOGGER.info("Getting Total Comment Pages for size {}", size);
         return (int) Math.ceil((double) commentDao.getCommentsCountByPostId(id) / size);
     }

@@ -21,14 +21,14 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ImageDaoImplTest {
 
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private ImageDao imageDao;
 
@@ -60,7 +60,7 @@ public class ImageDaoImplTest {
     @Test
     public void testFindImage() {
         // Pre Conditions
-        long iKey = testInsertionUtils.createImage();
+        long iKey = testInserter.createImage();
 
         // Exercise
         Optional<Image> maybeImage = imageDao.getImage(iKey);

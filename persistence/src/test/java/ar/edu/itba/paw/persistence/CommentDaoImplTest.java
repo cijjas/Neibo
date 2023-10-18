@@ -21,7 +21,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class CommentDaoImplTest {
 
@@ -31,7 +31,7 @@ public class CommentDaoImplTest {
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private CommentDaoImpl commentDao;
     private UserDao userDao;
@@ -56,11 +56,11 @@ public class CommentDaoImplTest {
     @Test
     public void testCreateComment() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        long chKey = testInsertionUtils.createChannel();
-        long iKey = testInsertionUtils.createImage();
-        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
         Comment c = commentDao.createComment(COMMENT_TEXT, uKey, pKey);
@@ -73,12 +73,12 @@ public class CommentDaoImplTest {
     @Test
     public void testFindCommentById() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        long chKey = testInsertionUtils.createChannel();
-        long iKey = testInsertionUtils.createImage();
-        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
-        long cKey = testInsertionUtils.createComment(uKey, pKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long cKey = testInserter.createComment(uKey, pKey);
 
         // Exercise
         Optional<Comment> comment = commentDao.findCommentById(cKey);
@@ -102,15 +102,15 @@ public class CommentDaoImplTest {
     @Test
     public void testFindCommentsByPostId() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        long chKey = testInsertionUtils.createChannel();
-        long iKey = testInsertionUtils.createImage();
-        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
-        testInsertionUtils.createComment(uKey, pKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        testInserter.createComment(uKey, pKey);
 
         // Exercise
-        List<Comment> comments = commentDao.findCommentsByPostId(pKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Comment> comments = commentDao.getCommentsByPostId(pKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertFalse(comments.isEmpty());
@@ -122,7 +122,7 @@ public class CommentDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Comment> comments = commentDao.findCommentsByPostId(1, 10, 1);
+        List<Comment> comments = commentDao.getCommentsByPostId(1, 10, 1);
 
         // Validations & Post Conditions
         assertTrue(comments.isEmpty());
@@ -131,12 +131,12 @@ public class CommentDaoImplTest {
     @Test
     public void testGetCommentsCountByPostId() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        long chKey = testInsertionUtils.createChannel();
-        long iKey = testInsertionUtils.createImage();
-        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
-        testInsertionUtils.createComment(uKey, pKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        testInserter.createComment(uKey, pKey);
 
         // Exercise
         int comments = commentDao.getCommentsCountByPostId(pKey);
@@ -149,11 +149,11 @@ public class CommentDaoImplTest {
     @Test
     public void testGetCommentsCountByPostInvalidId() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
-        long uKey = testInsertionUtils.createUser(nhKey);
-        long chKey = testInsertionUtils.createChannel();
-        long iKey = testInsertionUtils.createImage();
-        long pKey = testInsertionUtils.createPost(uKey, chKey, iKey);
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
         int comments = commentDao.getCommentsCountByPostId(pKey);

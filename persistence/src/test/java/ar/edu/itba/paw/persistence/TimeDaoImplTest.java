@@ -20,14 +20,14 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class TimeDaoImplTest {
 
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private TimeDao timeDao;
 
@@ -53,7 +53,7 @@ public class TimeDaoImplTest {
     @Test
     public void testFindTimeById() {
         // Pre Conditions
-        long timeKey = testInsertionUtils.createTime();
+        long timeKey = testInserter.createTime();
 
         // Exercise
         Optional<Time> foundTime = timeDao.findTimeById(timeKey);

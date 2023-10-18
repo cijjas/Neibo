@@ -20,14 +20,14 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, TestInsertionUtils.class})
+@ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Sql("classpath:hsqlValueCleanUp.sql")
 public class ChannelDaoImplTest {
 
     @Autowired
     private DataSource ds;
     @Autowired
-    private TestInsertionUtils testInsertionUtils;
+    private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     private ChannelDaoImpl channelDao;
 
@@ -55,7 +55,7 @@ public class ChannelDaoImplTest {
     @Test
     public void testFindChannelById() {
         // Pre Conditions
-        long chKey = testInsertionUtils.createChannel();
+        long chKey = testInserter.createChannel();
 
         // Exercise
         Optional<Channel> ch = channelDao.findChannelById(chKey);
@@ -79,7 +79,7 @@ public class ChannelDaoImplTest {
     @Test
     public void testFindChannelByName() {
         // Pre Conditions
-        testInsertionUtils.createChannel(CHANNEL_NAME);
+        testInserter.createChannel(CHANNEL_NAME);
 
         // Exercise
         Optional<Channel> ch = channelDao.findChannelByName(CHANNEL_NAME);
@@ -104,9 +104,9 @@ public class ChannelDaoImplTest {
     @Test
     public void testGetChannels() {
         // Pre Conditions
-        long chKey = testInsertionUtils.createChannel();
-        long nhKey = testInsertionUtils.createNeighborhood();
-        testInsertionUtils.createNeighborhoodChannelMapping(nhKey, chKey);
+        long chKey = testInserter.createChannel();
+        long nhKey = testInserter.createNeighborhood();
+        testInserter.createNeighborhoodChannelMapping(nhKey, chKey);
 
         // Exercise
         List<Channel> channels = channelDao.getChannels(nhKey);
@@ -118,7 +118,7 @@ public class ChannelDaoImplTest {
     @Test
     public void testGetNoChannels() {
         // Pre Conditions
-        long nhKey = testInsertionUtils.createNeighborhood();
+        long nhKey = testInserter.createNeighborhood();
 
         // Exercise
         List<Channel> channels = channelDao.getChannels(nhKey);

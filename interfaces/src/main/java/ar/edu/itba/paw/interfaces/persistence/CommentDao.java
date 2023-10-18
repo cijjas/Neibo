@@ -18,7 +18,7 @@ public interface CommentDao {
 
     Optional<Comment> findCommentById(long id);
 
-    List<Comment> findCommentsByPostId(long id, int page, int size);
+    List<Comment> getCommentsByPostId(long id, int offset, int size);
 
     int getCommentsCountByPostId(long id);
 

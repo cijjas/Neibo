@@ -18,5 +18,9 @@ public interface AmenityService {
 
     Optional<Amenity> findAmenityById(long amenityId);
 
-    List<Amenity> getAmenities(long neighborhoodId);
+    List<Amenity> getAmenities(long neighborhoodId, int page, int size);
+
+    int getAmenitiesCount(long neighborhoodId);
+
+    int getTotalAmenitiesPages(long neighborhoodId, int size);
 }

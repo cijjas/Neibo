@@ -38,7 +38,21 @@
                     <i class="fa-solid fa-plus"></i>
                 </a>
             </div>
+            <!-- Include the page selector -->
+            <c:if test="${totalPages >  1}">
+                <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                    <jsp:param name="page" value="${page}" />
+                    <jsp:param name="totalPages" value="${totalPages}" />
+                </jsp:include>
+            </c:if>
             <%@ include file="/WEB-INF/jsp/components/widgets/amenitiesSchedule.jsp" %>
+            <!-- Include the page selector -->
+            <c:if test="${totalPages >  1}">
+                <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                    <jsp:param name="page" value="${page}" />
+                    <jsp:param name="totalPages" value="${totalPages}" />
+                </jsp:include>
+            </c:if>
 
         </div>
         <div class="column-right">
