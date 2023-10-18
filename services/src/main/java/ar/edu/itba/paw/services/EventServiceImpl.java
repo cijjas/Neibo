@@ -2,10 +2,12 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.Month;
+import ar.edu.itba.paw.interfaces.exceptions.UnexpectedException;
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Event;
+import org.apache.commons.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +52,8 @@ public class EventServiceImpl implements EventService {
             startTimeInTime = new Time(parsedStartTime.getTime());
             endTimeInTime = new Time(parsedEndTime.getTime());
         } catch (ParseException e) {
-            // Handle parsing exception
-            e.printStackTrace();
+            LOGGER.error("Error whilst creating the Event");
+            throw new UnexpectedException("Unexpected error while creating the Event");
         }
         OptionalLong startTimeId = getTimeId(startTimeInTime);
         OptionalLong endTimeId = getTimeId(endTimeInTime);

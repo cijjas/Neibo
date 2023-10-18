@@ -5,7 +5,7 @@ async function assignEventTimestamps() {
 
 async function getEventTimestamps() {
     try {
-        const response = await fetch("/endpoint/get-event-timestamps");
+        const response = await fetch("${pageContext.request.contextPath}/endpoint/get-event-timestamps");
 
         if (response.ok) {
             const timestampString = await response.text();

@@ -111,8 +111,6 @@ public class ServiceController {
 
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
 
-        System.out.println(ws.findWorkerById(42));
-
         mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found")));
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
@@ -182,7 +180,7 @@ public class ServiceController {
 
         mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found")));
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
-        mav.addObject("channel", "Profile");
+        mav.addObject("channel", "Profile" + workerId);
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
         mav.addObject("averageRating", rws.getAvgRating(workerId).orElseThrow(() -> new NotFoundException("Average Rating not found")));

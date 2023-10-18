@@ -13,17 +13,18 @@
                     <div class="f-c-c-c">
                         <a id="profileButton"
                            href="${pageContext.request.contextPath}/services/profile/${loggedUser.userId}"
-                           class="cool-left-button  ${channel == 'Profile' ? 'active' : ''} f-r-sb-c">
-                            <i class="fas fa-bullhorn"></i>
+                           class="cool-left-button  ${channel == 'Profile'  ? 'active' : ''} f-r-sb-c">
+                            <i class="fa-solid fa-address-card"></i>
                             <spring:message code="Profile"/>
                         </a>
                         <a id="workerServicesButton" href="${pageContext.request.contextPath}/services"
                            class="cool-left-button ${channel == 'Services' ? 'active' : ''} f-r-sb-c">
-                            <i class="fa-solid fa-handshake-angle"></i> <spring:message code="Services"/>
+                            <i class="fa-solid fa-handshake-angle"></i>
+                            <spring:message code="Services"/>
                         </a>
                         <a id="neighborhoodsButton" href="${pageContext.request.contextPath}/services/neighborhoods"
                            class="cool-left-button ${channel == 'Neighborhoods' ? 'active' : ''} f-r-sb-c">
-                            <i class="fas fa-envelope"></i> <spring:message code="My.Neighborhoods"/>
+                            <i class="fa-solid fa-house"></i> <spring:message code="My.Neighborhoods"/>
                         </a>
                     </div>
                 </div>

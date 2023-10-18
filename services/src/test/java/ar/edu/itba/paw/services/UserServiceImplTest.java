@@ -18,6 +18,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Date;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -35,6 +36,7 @@ public class UserServiceImplTest {
     private final Language LANGUAGE = Language.ENGLISH;
     private final UserRole ROLE = UserRole.UNVERIFIED_NEIGHBOR;
     private final Date CREATION_DATE = new Date(2023, 9, 11);
+    private final String IDENTIFICATION_STRING = "123456789";
     private final int IDENTIFICATION = 123456789;
     @Mock
     ImageService imageService;
@@ -75,7 +77,7 @@ public class UserServiceImplTest {
         );
 
         // 2. Exercise
-        User newUser = us.createNeighbor(EMAIL, PASSWORD, NAME, SURNAME, NEIGHBORHOOD_ID, LANGUAGE, IDENTIFICATION);
+        User newUser = us.createNeighbor(EMAIL, PASSWORD, NAME, SURNAME, NEIGHBORHOOD_ID, LANGUAGE, IDENTIFICATION_STRING);
 
         // 3. Postconditions
         Assert.assertNotNull(newUser);
@@ -97,7 +99,7 @@ public class UserServiceImplTest {
         when(userDao.createUser(eq(EMAIL), eq(PASSWORD), eq(NAME), eq(SURNAME), eq(NEIGHBORHOOD_ID), eq(LANGUAGE), eq(DARK_MODE), eq(ROLE), eq(IDENTIFICATION))).thenThrow(RuntimeException.class);
 
         // 2. Exercise
-        User newUser = us.createNeighbor(EMAIL, PASSWORD, NAME, SURNAME, NEIGHBORHOOD_ID, LANGUAGE, IDENTIFICATION);
+        User newUser = us.createNeighbor(EMAIL, PASSWORD, NAME, SURNAME, NEIGHBORHOOD_ID, LANGUAGE, IDENTIFICATION_STRING);
 
         // 3. Postconditions
     }

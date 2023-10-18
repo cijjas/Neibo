@@ -86,7 +86,7 @@
 
         async function setLikeStatus(postId) {
             try {
-                const response = await fetch('/endpoint/is-liked?postId=' + postId);
+                const response = await fetch('${pageContext.request.contextPath}/endpoint/is-liked?postId=' + postId);
                 const isLikedResponse = await response.text();
                 const likeButton = document.getElementById('like-button-' + postId);
                 likeButton.setAttribute('data-liked', isLikedResponse);
@@ -105,7 +105,7 @@
             likeButtonLocked = true;
             const liked = this.getAttribute('data-liked') === 'true';
             const postId = this.getAttribute('data-post-id'); // Get the post ID from the data attribute
-            const likeEndpoint = liked ? '/endpoint/unlike?postId=' + postId : '/endpoint/like?postId=' + postId;
+            const likeEndpoint = liked ? '${pageContext.request.contextPath}/endpoint/unlike?postId=' + postId : '${pageContext.request.contextPath}/endpoint/like?postId=' + postId;
 
             const likeCountElement = document.getElementById('like-count-' + postId);
             const currentCount = parseInt(likeCountElement.getAttribute('data-like-count'), 10);

@@ -98,8 +98,7 @@
             <spring:message code="EditProfile"/>
         </div>
 
-        <form:form method="post" action="edit" modelAttribute="editWorkerProfileForm" enctype="multipart/form-data">
-            <%--                <form:form method="post" action="calendar" modelAttribute="editWorkerProfileForm" enctype="multipart/form-data">--%>
+        <form:form method="post" action="${pageContext.request.contextPath}/services/profile/edit" modelAttribute="editWorkerProfileForm" enctype="multipart/form-data">
             <div class="f-c-c-c pl-3 pr-3 c-text" style="width:500px">
 
                 <form:errors cssClass="error" element="p"/>

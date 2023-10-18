@@ -113,7 +113,7 @@
 
         async function setLikeStatus(postId) {
             try {
-                const response = await fetch('/endpoint/is-liked?postId=' + postId);
+                const response = await fetch('${pageContext.request.contextPath}/endpoint/is-liked?postId=' + postId);
                 const isLikedResponse = await response.text();
                 const likeButton = document.getElementById('post-like-button');
                 likeButton.setAttribute('data-liked', isLikedResponse);
@@ -272,7 +272,7 @@
                             <script>
                                 async function getPostComment(commentId) {
                                     try {
-                                        const response = await fetch("/endpoint/commentById?id=" + commentId);
+                                        const response = await fetch("${pageContext.request.contextPath}/endpoint/commentById?id=" + commentId);
                                         if (!response.ok) {
                                             throw new Error("Failed to fetch post comment data from the endpoint.");
                                         }

@@ -72,7 +72,6 @@ public class WorkerDaoImpl implements WorkerDao {
     public Worker createWorker(long workerId, String phoneNumber, String address, String businessName) {
         LOGGER.debug("Inserting Worker");
 
-        System.out.println("Inserting Worker");
         Map<String, Object> data = new HashMap<>();
         data.put("workerId", workerId);
         data.put("phoneNumber", phoneNumber);

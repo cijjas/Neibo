@@ -15,11 +15,12 @@
             </a>
         </div>
 
-
-        <a onclick="publishInChannel()" class="cool-feed-button">
-            <spring:message code="CreateNewPost.button"/>
-            <i class="fa-solid fa-plus"></i>
-        </a>
+        <c:if test='${loggedUser.role.toString() != "ADMINISTRATOR"}'>
+            <a onclick="publishInChannel()" class="cool-feed-button">
+                <spring:message code="CreateNewPost.button"/>
+                <i class="fa-solid fa-plus"></i>
+            </a>
+        </c:if>
     </div>
 </c:if>
 

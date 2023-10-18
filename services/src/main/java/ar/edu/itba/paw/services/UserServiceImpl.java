@@ -3,6 +3,8 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.enums.BaseNeighborhood;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
+import ar.edu.itba.paw.interfaces.exceptions.UnexpectedException;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
@@ -46,11 +48,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createNeighbor(final String mail, final String password, final String name, final String surname,
-                               final long neighborhoodId, Language language, final int identification) {
+                               final long neighborhoodId, Language language, final String identification) {
         LOGGER.info("Creating Neighbor with mail {}", mail);
+
+        int id = 0;
+        try {
+            id = Integer.parseInt(identification);
+        } catch (NumberFormatException e) {
+            LOGGER.error("Error whilst formatting Identification");
+            throw new UnexpectedException("Unexpected Error while creating Neighbor");
+        }
+
         User n = findUserByMail(mail).orElse(null);
         if (n == null) {
-            User createdUser = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, false, UserRole.UNVERIFIED_NEIGHBOR, identification);
+            User createdUser = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, false, UserRole.UNVERIFIED_NEIGHBOR, id);
 
             //if user created is a neighbor (not worker), send admin email notifying new neighbor
             if (neighborhoodId != 0) {
@@ -59,7 +70,7 @@ public class UserServiceImpl implements UserService {
             return createdUser;
         } else if (n.getPassword() == null) {
             // n is a user from an early version where signing up was not a requirement
-            userDao.setUserValues(n.getUserId(), passwordEncoder.encode(password), n.getName(), n.getSurname(), language, false, n.getProfilePictureId(), UserRole.UNVERIFIED_NEIGHBOR, identification, n.getNeighborhoodId());
+            userDao.setUserValues(n.getUserId(), passwordEncoder.encode(password), n.getName(), n.getSurname(), language, false, n.getProfilePictureId(), UserRole.UNVERIFIED_NEIGHBOR, id, n.getNeighborhoodId());
         }
         return n;
     }

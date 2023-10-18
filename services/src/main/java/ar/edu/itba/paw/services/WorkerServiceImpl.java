@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.BaseNeighborhood;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.exceptions.UnexpectedException;
@@ -55,11 +56,11 @@ public class WorkerServiceImpl implements WorkerService {
         try {
             id = Integer.parseInt(identification);
         } catch (NumberFormatException e) {
-            LOGGER.error("Unexpected error while parsing the identification");
-            throw new UnexpectedException("Error while creating worker");
+            LOGGER.error("Error whilst formatting Identification");
+            throw new UnexpectedException("Unexpected Error while creating Worker");
         }
 
-        User user = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, 0, language, false, UserRole.WORKER, id);
+        User user = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), language, false, UserRole.WORKER, id);
         Worker worker = workerDao.createWorker(user.getUserId(), phoneNumber, address, businessName);
         for (long professionId : professionIds) {
             professionWorkerDao.addWorkerProfession(user.getUserId(), professionId);
@@ -92,10 +93,8 @@ public class WorkerServiceImpl implements WorkerService {
         if (neighborhoodId != 0)
             return workerDao.getWorkersByCriteria(page, size, professions, new long[]{neighborhoodId});
 
-        // If the user is a worker, display workers from every neighborhood they are in
         List<Neighborhood> neighborhoods = neighborhoodWorkerDao.getNeighborhoods(loggedUserId);
 
-        // Transform the list of neighborhoods into an array of longs
         long[] neighborhoodIds = neighborhoods.stream()
                 .mapToLong(Neighborhood::getNeighborhoodId)
                 .toArray();

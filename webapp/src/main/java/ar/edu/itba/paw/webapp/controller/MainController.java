@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.*;
-import ar.edu.itba.paw.interfaces.exceptions.DuplicateKeyException;
-import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
-import ar.edu.itba.paw.interfaces.exceptions.MailingException;
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
+import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Image;
 import ar.edu.itba.paw.webapp.form.*;
@@ -419,13 +416,7 @@ public class MainController {
             mav.addObject("openSignupDialog", true);
             return mav;
         }
-        int identification = 0;
-        try {
-            identification = Integer.parseInt(signupForm.getIdentification());
-        } catch (NumberFormatException e) {
-            LOGGER.error("Error whilst formatting Identification");
-        }
-        us.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), Language.ENGLISH, identification);
+        us.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), Language.ENGLISH, signupForm.getIdentification());
         ModelAndView mav = new ModelAndView("redirect:/signup");
         mav.addObject("successfullySignup", true);
         return mav;
@@ -460,7 +451,7 @@ public class MainController {
             return mav;
         }
 
-        ws.createWorker(workerSignupForm.getW_mail(), workerSignupForm.getW_name(), workerSignupForm.getW_surname(), workerSignupForm.getW_password(), signupForm.getIdentification(), workerSignupForm.getPhoneNumber(), workerSignupForm.getAddress(), Language.ENGLISH, workerSignupForm.getProfessionIds(), workerSignupForm.getBusinessName());
+        ws.createWorker(workerSignupForm.getW_mail(), workerSignupForm.getW_name(), workerSignupForm.getW_surname(), workerSignupForm.getW_password(), workerSignupForm.getW_identification(), workerSignupForm.getPhoneNumber(), workerSignupForm.getAddress(), Language.ENGLISH, workerSignupForm.getProfessionIds(), workerSignupForm.getBusinessName());
         ModelAndView mav = new ModelAndView("redirect:/signup-worker");
         mav.addObject("successfullySignup", true);
         return mav;
@@ -670,4 +661,16 @@ public class MainController {
         mav.addObject("errorMsg", ex.getMessage());
         return mav;
     }
+
+    @ExceptionHandler(UnexpectedException.class)
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ModelAndView unexpected(RuntimeException ex) {
+        LOGGER.info("Unexpected Exception was Thrown", ex);
+        ModelAndView mav = new ModelAndView("errors/errorPage");
+        mav.addObject("errorCode", "500");
+        mav.addObject("errorMsg", ex.getMessage());
+        return mav;
+    }
+
+
 }

@@ -93,7 +93,7 @@
                 <script>
                     async function getProfessions(workerId) {
                         try {
-                            const response = await fetch("/endpoint/profession?id=" + workerId);
+                            const response = await fetch("${pageContext.request.contextPath}/endpoint/profession?id=" + workerId);
                             if (!response.ok) {
                                 throw new Error("Failed to fetch data from the endpoint.");
                             }

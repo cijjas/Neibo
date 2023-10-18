@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface UserService {
 
     User createNeighbor(final String mail, final String password, final String name, final String surname,
-                        final long neighborhoodId, final Language language, final int identification);
+                        final long neighborhoodId, final Language language, final String identification);
 
     // -----------------------------------------------------------------------------------------------------------------
 

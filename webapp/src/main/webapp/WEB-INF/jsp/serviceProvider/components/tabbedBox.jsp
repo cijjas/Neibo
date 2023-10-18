@@ -78,14 +78,14 @@
                                 <script>
                                     async function fetchUserData(reviewUserId) {
                                         try {
-                                            const userNameResponse = await fetch("/endpoint/user-name?id=" + reviewUserId);
+                                            const userNameResponse = await fetch("${pageContext.request.contextPath}/endpoint/user-name?id=" + reviewUserId);
                                             if (!userNameResponse.ok) {
                                                 throw new Error("Failed to fetch user name from the endpoint.");
                                             }
                                             const userNameElement = document.getElementById("userNamePlaceholder-${loopStatus.index}");
                                             userNameElement.textContent = await userNameResponse.text();
 
-                                            const neighborhoodNameResponse = await fetch("/endpoint/neighborhood-name?id=" + reviewUserId);
+                                            const neighborhoodNameResponse = await fetch("${pageContext.request.contextPath}/endpoint/neighborhood-name?id=" + reviewUserId);
                                             if (!neighborhoodNameResponse.ok) {
                                                 throw new Error("Failed to fetch neighborhood name from the endpoint.");
                                             }
