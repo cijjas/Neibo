@@ -18,7 +18,7 @@
                             <spring:message code="Profile"/>
                         </a>
                         <a id="workerServicesButton" href="${pageContext.request.contextPath}/services"
-                           class="cool-left-button f-r-sb-c">
+                           class="cool-left-button ${channel == 'Services' ? 'active' : ''} f-r-sb-c">
                             <i class="fa-solid fa-handshake-angle"></i> <spring:message code="Services"/>
                         </a>
                         <a id="neighborhoodsButton" href="${pageContext.request.contextPath}/services/neighborhoods"
@@ -58,7 +58,7 @@
                     <div class="f-c-c-c">
                         <div class="divider"></div>
                         <a id="servicesButton" href="${pageContext.request.contextPath}/services"
-                           class="cool-left-button f-r-sb-c">
+                           class="cool-left-button ${channel == 'Services' ? 'active' : ''} f-r-sb-c">
                             <i class="fa-solid fa-handshake-angle"></i> <spring:message code="Services"/>
                         </a>
                         <a id="reservationsButton" href="${pageContext.request.contextPath}/amenities"

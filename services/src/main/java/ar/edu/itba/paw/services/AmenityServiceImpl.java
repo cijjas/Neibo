@@ -33,13 +33,13 @@ public class AmenityServiceImpl implements AmenityService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    // Function has to create the shifts if they do not already exist and match them with the amenity through the junction table
     @Override
     public Amenity createAmenity(String name, String description, long neighborhoodId, List<String> selectedShifts) {
         LOGGER.info("Creating Amenity {}", name);
         Amenity amenity = amenityDao.createAmenity(name, description, neighborhoodId);
 
         for (String shiftPair : selectedShifts) {
-            // Parse the pair into <Long dayId, Long timeId>
             String[] shiftParts = shiftPair.split("-");
 
             long dayId = Long.parseLong(shiftParts[0]);
@@ -50,7 +50,6 @@ public class AmenityServiceImpl implements AmenityService {
             if (existingShift.isPresent()) {
                 availabilityDao.createAvailability(amenity.getAmenityId(), existingShift.get().getShiftId());
             } else {
-                // Shift doesn't exist, create a new shift and then create an availability entry
                 Shift newShift = shiftDao.createShift(dayId, timeId);
                 availabilityDao.createAvailability(amenity.getAmenityId(), newShift.getShiftId());
             }

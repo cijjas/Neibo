@@ -111,10 +111,13 @@ public class ServiceController {
 
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
 
+        System.out.println(ws.findWorkerById(42));
+
         mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found")));
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
-        mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
+        mav.addObject("reviews", rws.getReviews(workerId));
+        mav.addObject("channel", "Profile");
         mav.addObject("averageRating", rws.getAvgRating(workerId).orElseThrow(() -> new NotFoundException("Average Rating not found")));
         mav.addObject("postList", ps.getWorkerPostsByCriteria(BaseChannel.WORKERS.toString(), page, size, null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId));
         mav.addObject("totalPages", ps.getTotalPages(BaseChannel.WORKERS.toString(), size, null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId));
@@ -123,6 +126,7 @@ public class ServiceController {
 
     @RequestMapping(value = "/profile/{id:\\d+}", method = RequestMethod.POST)
     public ModelAndView serviceProfile(
+            @PathVariable String id
     ) {
         return new ModelAndView("serviceProvider/views/serviceProfile");
     }
@@ -137,13 +141,13 @@ public class ServiceController {
 
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
 
-        mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found")));
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
+        mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found")));
+        mav.addObject("channel", "Profile");
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
         mav.addObject("averageRating", rws.getAvgRating(workerId).orElseThrow(() -> new NotFoundException("Average Rating not found")));
         return mav;
-
     }
 
     @RequestMapping(value = "/profile/{id:\\d+}/review", method = RequestMethod.POST)
@@ -163,7 +167,6 @@ public class ServiceController {
         }
 
         rws.createReview(workerId, sessionUtils.getLoggedUser().getUserId(), reviewForm.getRating(), reviewForm.getReview());
-
         return new ModelAndView("redirect:/services/profile/" + workerId);
     }
 
@@ -179,6 +182,7 @@ public class ServiceController {
 
         mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found")));
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
+        mav.addObject("channel", "Profile");
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
         mav.addObject("averageRating", rws.getAvgRating(workerId).orElseThrow(() -> new NotFoundException("Average Rating not found")));
@@ -214,6 +218,7 @@ public class ServiceController {
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
         List<Worker> workerList = ws.getWorkersByCriteria(page, size, null, sessionUtils.getLoggedUser().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId());
         mav.addObject("workersList", workerList);
+        mav.addObject("channel", "Services");
         mav.addObject("totalPages", ws.getTotalWorkerPages(sessionUtils.getLoggedUser().getNeighborhoodId(), size));
         mav.addObject("contextPath", "/services");
         mav.addObject("page", page);
@@ -224,6 +229,7 @@ public class ServiceController {
     public ModelAndView workersNeighborhoods() {
         LOGGER.info("User arriving at '/services/neighborhoods'");
         ModelAndView mav = new ModelAndView("serviceProvider/views/neighborhoods");
+        mav.addObject("channel", "Neighborhoods");
         mav.addObject("associatedNeighborhoods", nhws.getNeighborhoods(sessionUtils.getLoggedUser().getUserId()));
         mav.addObject("otherNeighborhoods", nhws.getOtherNeighborhoods(sessionUtils.getLoggedUser().getUserId()));
         return mav;
@@ -242,8 +248,10 @@ public class ServiceController {
     public ModelAndView removeWorkerFromNeighborhood(
             @PathVariable(value = "id") long neighborhoodId
     ) {
+        ModelAndView mav = new ModelAndView("redirect:/services/neighborhoods");
+        mav.addObject("channel", "Neighborhood");
         nhws.removeWorkerFromNeighborhood(sessionUtils.getLoggedUser().getUserId(), neighborhoodId);
-        return new ModelAndView("redirect:/services/neighborhoods");
+        return mav;
     }
 
 }

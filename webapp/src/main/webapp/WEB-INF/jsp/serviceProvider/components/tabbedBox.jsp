@@ -128,47 +128,50 @@
         </section>
 
         <section id="content2">
-            <div class="f-c-c-c" style="gap:0">
-                <div id="actual-posts-container">
-                    <c:choose>
-                        <c:when test="${empty postList}">
-                            <div class="no-posts-found">
-                                <i class="circle-icon fa-solid fa-magnifying-glass mb-3" style="color:var(--text)"></i>
-                                <spring:message code="Posts.notFound"/>
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-                            <!-- Include the page selector -->
-                            <c:if test="${totalPages >  1}">
-                                <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
-                                    <jsp:param name="page" value="${page}"/>
-                                    <jsp:param name="totalPages" value="${totalPages}"/>
-                                </jsp:include>
-                            </c:if>
+            <div class="f-c-c-c w-100" style="gap:10px">
+                <c:if test='${loggedUser.role.toString() == "WORKER"}'>
+                    <a class="cool-button cool-small on-bg font-weight-bold mb-2" style="width: 200px" href="${pageContext.request.contextPath}/publish">
+                        <spring:message code="Post.verb"/>
+                    </a>
+                </c:if>
+                <c:choose>
+                    <c:when test="${empty postList}">
+                        <div class="no-posts-found w-100">
+                            <i class="circle-icon fa-solid fa-magnifying-glass mb-3" style="color:var(--text)"></i>
+                            <spring:message code="Posts.notFound"/>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <!-- Include the page selector -->
+                        <c:if test="${totalPages >  1}">
+                            <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                                <jsp:param name="page" value="${page}"/>
+                                <jsp:param name="totalPages" value="${totalPages}"/>
+                            </jsp:include>
+                        </c:if>
 
-                            <c:forEach var="post" items="${postList}">
-                                <c:set var="postTags" value="${post.tags}" scope="request"/>
-                                <jsp:include page="/WEB-INF/jsp/components/widgets/blogpost.jsp">
-                                    <jsp:param name="postID" value="${post.postId}"/>
-                                    <jsp:param name="postNeighborMail" value="${post.user.mail}"/>
-                                    <jsp:param name="postDate" value="${post.date}"/>
-                                    <jsp:param name="postTitle" value="${post.title}"/>
-                                    <jsp:param name="postDescription" value="${post.description}"/>
-                                    <jsp:param name="postImage" value="${post.postPictureId}"/>
-                                    <jsp:param name="postLikes" value="${post.likes}"/>
-                                </jsp:include>
-                            </c:forEach>
+                        <c:forEach var="post" items="${postList}">
+                            <c:set var="postTags" value="${post.tags}" scope="request"/>
+                            <jsp:include page="/WEB-INF/jsp/components/widgets/blogpost.jsp">
+                                <jsp:param name="postID" value="${post.postId}"/>
+                                <jsp:param name="postNeighborMail" value="${post.user.mail}"/>
+                                <jsp:param name="postDate" value="${post.date}"/>
+                                <jsp:param name="postTitle" value="${post.title}"/>
+                                <jsp:param name="postDescription" value="${post.description}"/>
+                                <jsp:param name="postImage" value="${post.postPictureId}"/>
+                                <jsp:param name="postLikes" value="${post.likes}"/>
+                            </jsp:include>
+                        </c:forEach>
 
 
-                            <c:if test="${totalPages >  1}">
-                                <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
-                                    <jsp:param name="page" value="${page}"/>
-                                    <jsp:param name="totalPages" value="${totalPages}"/>
-                                </jsp:include>
-                            </c:if>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
+                        <c:if test="${totalPages >  1}">
+                            <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                                <jsp:param name="page" value="${page}"/>
+                                <jsp:param name="totalPages" value="${totalPages}"/>
+                            </jsp:include>
+                        </c:if>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </section>
 

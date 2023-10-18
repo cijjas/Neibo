@@ -31,7 +31,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
     @Override
     public boolean updateAvailability(long amenityId, List<Long> newShifts) {
-        LOGGER.info("Updating the Availability for Amenity", amenityId);
+        LOGGER.info("Updating the Availability for Amenity");
         // Convert the List of Shift objects to a List of long shift IDs
         List<Long> oldShiftIds = shiftDao.getAmenityShifts(amenityId).stream()
                 .map(Shift::getShiftId)

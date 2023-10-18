@@ -39,10 +39,6 @@
                 <div class="f-c-c-c">
 
                     <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileCard.jsp" %>
-                    <c:if test='${loggedUser.role.toString() == "WORKER"}'>
-                        <a class="cool-button" href="${pageContext.request.contextPath}/publish"><spring:message
-                                code="Post.verb"/></a>
-                    </c:if>
 
                     <%@ include file="/WEB-INF/jsp/serviceProvider/components/tabbedBox.jsp" %>
 

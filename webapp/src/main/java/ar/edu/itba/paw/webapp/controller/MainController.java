@@ -162,6 +162,7 @@ public class MainController {
             @Valid @ModelAttribute("profilePictureForm") final ProfilePictureForm profilePictureForm,
             final BindingResult errors
     ) {
+        sessionUtils.clearLoggedUser();
         ModelAndView mav = new ModelAndView("redirect:/profile");
         if (errors.hasErrors()) {
             LOGGER.error("Error while updating profile picture");
@@ -374,7 +375,7 @@ public class MainController {
             @RequestParam(value = "error", required = false, defaultValue = "false") boolean error,
             @RequestParam(value = "email", required = false) String email
     ) {
-        LOGGER.error("User arriving at '/login'");
+        LOGGER.info("User arriving at '/login'");
         ModelAndView mav = new ModelAndView("views/landingPage");
 
         mav.addObject("email", email);
@@ -397,7 +398,7 @@ public class MainController {
             @ModelAttribute("workerSignupForm") final WorkerSignupForm workerSignupForm,
             @RequestParam(value = "successfullySignup", required = false) boolean successfullySignup
     ) {
-        LOGGER.error("User arriving at '/signup'");
+        LOGGER.info("User arriving at '/signup'");
         ModelAndView mav = new ModelAndView("views/landingPage");
         mav.addObject("successfullySignup", successfullySignup);
         mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
@@ -420,7 +421,7 @@ public class MainController {
         try {
             identification = Integer.parseInt(signupForm.getIdentification());
         } catch (NumberFormatException e) {
-            LOGGER.error("User arriving at '/login'");
+            LOGGER.error("Error whilst formatting Identification");
         }
         us.createNeighbor(signupForm.getMail(), signupForm.getPassword(), signupForm.getName(), signupForm.getSurname(), signupForm.getNeighborhoodId(), Language.ENGLISH, identification);
         ModelAndView mav = new ModelAndView("redirect:/signup");
@@ -636,6 +637,7 @@ public class MainController {
     @ExceptionHandler({NotFoundException.class})
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView notFound(RuntimeException ex) {
+        LOGGER.info("Not Found Exception was Thrown", ex);
         ModelAndView mav = new ModelAndView("errors/errorPage");
         mav.addObject("errorCode", "404");
         mav.addObject("errorMsg", ex.getMessage());
@@ -645,15 +647,27 @@ public class MainController {
     @ExceptionHandler({DuplicateKeyException.class})
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ModelAndView duplicated(RuntimeException ex) {
+        LOGGER.info("Duplicate Key Exception was Thrown", ex);
         ModelAndView mav = new ModelAndView("errors/errorPage");
         mav.addObject("errorCode", "409"); // 409 = Conflict
         mav.addObject("errorMsg", ex.getMessage());
         return mav;
     }
 
-    @ExceptionHandler({InsertionException.class, MailingException.class})
+    @ExceptionHandler(InsertionException.class)
     @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
     public ModelAndView insertion(RuntimeException ex) {
+        LOGGER.info("Insertion Exception was Thrown", ex);
+        ModelAndView mav = new ModelAndView("errors/errorPage");
+        mav.addObject("errorCode", "500");
+        mav.addObject("errorMsg", ex.getMessage());
+        return mav;
+    }
+
+    @ExceptionHandler(MailingException.class)
+    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ModelAndView mailing(RuntimeException ex) {
+        LOGGER.info("Mailing Exception was Thrown", ex);
         ModelAndView mav = new ModelAndView("errors/errorPage");
         mav.addObject("errorCode", "500");
         mav.addObject("errorMsg", ex.getMessage());

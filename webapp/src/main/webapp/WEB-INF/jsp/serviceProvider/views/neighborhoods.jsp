@@ -62,7 +62,7 @@
                                             <i class="fa-solid fa-chevron-down"></i>
                                         </span>
                                             </div>
-                                            <ul class="list-items n-workers">
+                                            <ul class="list-items n-workers" >
                                                 <c:forEach var="neighborhood" items="${otherNeighborhoods}">
                                                     <li class="item"
                                                         data-neighborhood-id="${neighborhood.neighborhoodId}">

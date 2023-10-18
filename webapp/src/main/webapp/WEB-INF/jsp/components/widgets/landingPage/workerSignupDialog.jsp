@@ -8,7 +8,7 @@
             <span class=" font-weight-normal"><spring:message code="Signup.to.get.started"/></span>
         </div>
 
-        <form:form method="post" action="signup-worker" modelAttribute="workerSignupForm" id="workerSignupForm">
+        <form:form method="post" action="${pageContext.request.contextPath}/signup-worker" modelAttribute="workerSignupForm" id="workerSignupForm">
             <form:errors cssClass="error" element="p"/>
             <div class="f-c-c-c pl-3 pr-3">
                 <div class="form-input " style="max-width: 320px">

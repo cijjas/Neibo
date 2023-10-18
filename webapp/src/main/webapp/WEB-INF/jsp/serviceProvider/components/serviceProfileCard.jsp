@@ -1,5 +1,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 
 <div class="container">
@@ -51,12 +52,11 @@
 
         </div>
         <div class="card-footer">
+            <c:set var="averageRating" value="${averageRating}" />
+            <fmt:formatNumber var="formattedRating" value="${averageRating}" pattern="#,##0.00" />
             <div class="inner">
-                <div id="average-rating" class="c-primary"><c:out value="${averageRating}"/></div>
-                <div class="c-light-text"><spring:message code="Rating"/></div>
-                <script>
-                    const averageRating = document.getElementById('average-rating');
-                </script>
+                <div class="c-primary"><c:out value="${formattedRating}" /></div>
+                <div class="c-light-text"><spring:message code="Rating" /></div>
             </div>
             <div class="inner">
                 <div class="c-primary"><c:out value="${reviewsCount}"/></div>

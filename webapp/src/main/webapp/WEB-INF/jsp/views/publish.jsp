@@ -41,12 +41,12 @@
                                     <c:forEach var="entry" items="${channelList}">
                                         <c:choose>
                                             <c:when test="${entry.value.channelId == channel}">
-                                                <form:option value="${entry.value.channelId}"
-                                                             selected="selected"><spring:message
-                                                        code="${entry.key}"/></form:option>
+                                                <form:option value="${entry.value.channelId}" selected="selected">
+                                                    <spring:message code="${entry.key}"/>
+                                                </form:option>
                                             </c:when>
                                             <c:otherwise>
-                                                <form:option value="${entry.value.channelId}">${entry.key}</form:option>
+                                                <form:option value="${entry.value.channelId}"><spring:message code="${entry.key}"/></form:option>
                                             </c:otherwise>
                                         </c:choose>
                                     </c:forEach>

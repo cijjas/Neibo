@@ -31,7 +31,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetails;
 
-    // this defines that whenever spring has to compare passwords the strategy is to use the following encoder
+    // This defines that whenever spring has to compare passwords the strategy is to use the following encoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -55,6 +55,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/rejected").hasRole("REJECTED")
                 .antMatchers("/profile").permitAll()
                 .antMatchers("/").hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
+                .antMatchers("/complaints", "/announcements", "/amenities", "/information", "/reservation").hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
                 .antMatchers("/**").hasAnyRole("NEIGHBOR", "ADMINISTRATOR", "WORKER")
                 .and().formLogin()
                 .failureHandler(new CustomAuthenticationFailureHandler())
