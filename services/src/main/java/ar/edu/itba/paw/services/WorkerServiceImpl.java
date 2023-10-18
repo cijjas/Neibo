@@ -115,8 +115,12 @@ public class WorkerServiceImpl implements WorkerService {
     public void updateWorker(long userId, String phoneNumber, String address, String businessName,
                              MultipartFile backgroundPicture, String bio) {
         LOGGER.info("Updating Worker {}", userId);
-        Image i = imageService.storeImage(backgroundPicture);
-        workerDao.updateWorker(userId, phoneNumber, address, businessName, i.getImageId(), bio);
+        if(backgroundPicture.isEmpty()) {
+            workerDao.updateWorker(userId, phoneNumber, address, businessName, 0, bio);
+        } else {
+            Image i = imageService.storeImage(backgroundPicture);
+            workerDao.updateWorker(userId, phoneNumber, address, businessName, i.getImageId(), bio);
+        }
     }
 
     @Override
