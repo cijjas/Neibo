@@ -112,8 +112,6 @@ public class ServiceController {
 
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
 
-        System.out.println(ws.findWorkerById(42));
-
         int totalPages;
 
         if(tab == "posts") {
@@ -124,7 +122,6 @@ public class ServiceController {
         }
 
         int postsSize = ps.getWorkerPostsCountByCriteria(BaseChannel.WORKERS.toString(), null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId);
-        System.out.println(postsSize);
 
         int reviewsSize = rws.getReviewsCount(workerId);
 
