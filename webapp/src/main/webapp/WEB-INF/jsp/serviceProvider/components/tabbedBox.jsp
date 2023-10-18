@@ -8,8 +8,8 @@
         <input id="tab2" type="radio" name="tabs">
         <label for="tab2"><spring:message code="Posts"/></label>
 
-        <input id="tab3" type="radio" name="tabs">
-        <label for="tab3"><spring:message code="Information"/></label>
+<%--        <input id="tab3" type="radio" name="tabs">--%>
+<%--        <label for="tab3"><spring:message code="Information"/></label>--%>
 
 
 
@@ -41,73 +41,85 @@
 
             <div class="container">
                 <div class="f-c-c-c" style="gap:0">
-                        <c:if test='${loggedUser.role.toString() != "WORKER"}'>
-                            <button class="cool-button cool-small on-bg font-weight-bold mb-4 " style="width: 200px" onclick="openReviewDialog()">
-                                <spring:message code="CreateReview"/>
-                                <i class="fa-solid fa-star  ml-1"></i>
-                            </button>
-                        </c:if>
-                    <c:forEach var="review" items="${reviews}" varStatus="loopStatus">
-                        <div class="review-box f-c-s-s w-100" >
-                            <div class="f-r-sb-c w-100">
+                    <c:if test='${loggedUser.role.toString() != "WORKER"}'>
+                        <button class="cool-button cool-small on-bg font-weight-bold mb-4 " style="width: 200px" onclick="openReviewDialog()">
+                            <spring:message code="CreateReview"/>
+                            <i class="fa-solid fa-star  ml-1"></i>
+                        </button>
+                    </c:if>
+                    <c:choose>
+                        <c:when test="${empty reviews}">
+                            <div class="no-posts-found">
+                                <i class="circle-icon fa-solid fa-magnifying-glass mb-3" style="color:var(--text)"></i>
+                                <spring:message code="Reviews.notFound"/>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach var="review" items="${reviews}" varStatus="loopStatus">
+                                <div class="review-box f-c-s-s w-100" >
+                                    <div class="f-r-sb-c w-100">
                                 <span class="font-size-16 font-weight-bold" id="userNamePlaceholder-${loopStatus.index}">
                                     <spring:message code="Loading."/>
                                 </span>
-                                <div>
-                                    <span class="post-date" data-post-date="<c:out value="${review.date}"/>"></span>
-                                    <script src="${pageContext.request.contextPath}/resources/js/dateFormatter.js"></script>
+                                        <div>
+                                            <span class="post-date" data-post-date="<c:out value="${review.date}"/>"></span>
+                                            <script src="${pageContext.request.contextPath}/resources/js/dateFormatter.js"></script>
+                                        </div>
+                                    </div>
+                                    <span class="font-size-12" id="neighborhoodNamePlaceholder-${loopStatus.index}"><spring:message code="Loading."/></span>
+                                    <div class="f-r-c-c">
+                                        <div id="starsContainer-${loopStatus.index}">
+                                        </div>
+                                    </div>
+                                    <p class="font-size-12"> <c:out value="${review.review}"/></p>
                                 </div>
-                            </div>
-                            <span class="font-size-12" id="neighborhoodNamePlaceholder-${loopStatus.index}"><spring:message code="Loading."/></span>
-                            <div class="f-r-c-c">
-                                <div id="starsContainer-${loopStatus.index}">
-                                </div>
-                            </div>
-                            <p class="font-size-12"> <c:out value="${review.review}"/></p>
-                        </div>
-                        <script>
-                            async function fetchUserData(reviewUserId) {
-                                try {
-                                    const userNameResponse = await fetch("/endpoint/user-name?id=" + reviewUserId);
-                                    if (!userNameResponse.ok) {
-                                        throw new Error("Failed to fetch user name from the endpoint.");
+                                <script>
+                                    async function fetchUserData(reviewUserId) {
+                                        try {
+                                            const userNameResponse = await fetch("/endpoint/user-name?id=" + reviewUserId);
+                                            if (!userNameResponse.ok) {
+                                                throw new Error("Failed to fetch user name from the endpoint.");
+                                            }
+                                            const userNameElement = document.getElementById("userNamePlaceholder-${loopStatus.index}");
+                                            userNameElement.textContent = await userNameResponse.text();
+
+                                            const neighborhoodNameResponse = await fetch("/endpoint/neighborhood-name?id=" + reviewUserId);
+                                            if (!neighborhoodNameResponse.ok) {
+                                                throw new Error("Failed to fetch neighborhood name from the endpoint.");
+                                            }
+                                            const neighborhoodNameElement = document.getElementById("neighborhoodNamePlaceholder-${loopStatus.index}");
+                                            neighborhoodNameElement.textContent = await neighborhoodNameResponse.text();
+
+                                            // Calculate rating as stars
+                                            const fullStars = Math.floor(${review.rating});
+                                            const halfStar = ${review.rating} - fullStars;
+                                            const emptyStars = 5 - fullStars - (halfStar > 0 ? 1 : 0);
+
+                                            const starsContainer = document.querySelector("#starsContainer-${loopStatus.index}");
+                                            starsContainer.innerHTML = "";
+
+                                            for (let i = 1; i <= fullStars; i++) {
+                                                starsContainer.innerHTML += '<i class="fa-solid fa-star cool-star active"></i>';
+                                            }
+
+                                            if (halfStar > 0) {
+                                                starsContainer.innerHTML += '<i class="fa-solid fa-star-half-stroke"></i>';
+                                            }
+
+                                            for (let i = 1; i <= emptyStars; i++) {
+                                                starsContainer.innerHTML += '<i class="fa-regular fa-star cool-star "></i>';
+                                            }
+                                        } catch (error) {
+                                            console.error(error.message);
+                                        }
                                     }
-                                    const userNameElement = document.getElementById("userNamePlaceholder-${loopStatus.index}");
-                                    userNameElement.textContent = await userNameResponse.text();
+                                    fetchUserData(${review.userId});
+                                </script>
+                            </c:forEach>
 
-                                    const neighborhoodNameResponse = await fetch("/endpoint/neighborhood-name?id=" + reviewUserId);
-                                    if (!neighborhoodNameResponse.ok) {
-                                        throw new Error("Failed to fetch neighborhood name from the endpoint.");
-                                    }
-                                    const neighborhoodNameElement = document.getElementById("neighborhoodNamePlaceholder-${loopStatus.index}");
-                                    neighborhoodNameElement.textContent = await neighborhoodNameResponse.text();
+                        </c:otherwise>
+                    </c:choose>
 
-                                    // Calculate rating as stars
-                                    const fullStars = Math.floor(${review.rating});
-                                    const halfStar = ${review.rating} - fullStars;
-                                    const emptyStars = 5 - fullStars - (halfStar > 0 ? 1 : 0);
-
-                                    const starsContainer = document.querySelector("#starsContainer-${loopStatus.index}");
-                                    starsContainer.innerHTML = "";
-
-                                    for (let i = 1; i <= fullStars; i++) {
-                                        starsContainer.innerHTML += '<i class="fa-solid fa-star cool-star active"></i>';
-                                    }
-
-                                    if (halfStar > 0) {
-                                        starsContainer.innerHTML += '<i class="fa-solid fa-star-half-stroke"></i>';
-                                    }
-
-                                    for (let i = 1; i <= emptyStars; i++) {
-                                        starsContainer.innerHTML += '<i class="fa-regular fa-star cool-star "></i>';
-                                    }
-                                } catch (error) {
-                                    console.error(error.message);
-                                }
-                            }
-                            fetchUserData(${review.userId});
-                        </script>
-                    </c:forEach>
                 </div>
             </div>
         </section>
@@ -117,7 +129,7 @@
                 <c:choose>
                     <c:when test="${empty postList}">
                         <div class="no-posts-found">
-                            <i class="circle-icon fa-solid fa-magnifying-glass" style="color:var(--text)"></i>
+                            <i class="circle-icon fa-solid fa-magnifying-glass mb-3" style="color:var(--text)"></i>
                             <spring:message code="Posts.notFound"/>
                         </div>
                     </c:when>
@@ -155,11 +167,11 @@
             </div>
         </section>
 
-        <section id="content3">
-            <c:out value="${worker.user.mail}"/>
-            <c:out value="${worker.address}"/>
-            <c:out value="${worker.user.name}"/>
-        </section>
+<%--        <section id="content3">--%>
+<%--            <c:out value="${worker.user.mail}"/>--%>
+<%--            <c:out value="${worker.address}"/>--%>
+<%--            <c:out value="${worker.user.name}"/>--%>
+<%--        </section>--%>
 
 
     </div>
