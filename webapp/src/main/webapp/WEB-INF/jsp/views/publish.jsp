@@ -26,7 +26,20 @@
     <div class="row">
         <div class="column-publish">
             <div class="cool-static-container">
-                <h2 class="card-title"><spring:message code="CreatePost.title"/></h2>
+
+                <c:forEach var="entry" items="${channelList}">
+                    <c:if test="${entry.value.channelId == channel}">
+                        <c:choose>
+                            <c:when test="${entry.key == 'Complaints'}">
+                                <h2 class="card-title"><spring:message code="CreateComplaint.title"/></h2>
+                            </c:when>
+                            <c:otherwise>
+                                <h2 class="card-title"><spring:message code="CreatePost.title"/></h2>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
+                </c:forEach>
+
                 <div class="divider"></div>
                 <!-- Post Creation Form -->
                 <form:form method="post" action="publish" modelAttribute="publishForm" enctype="multipart/form-data">
@@ -34,25 +47,7 @@
 
                     <div class="form-column" style="margin-top:1rem;">
                         <div class="form-group">
-                            <div class="form-row">
-                                <spring:message code="Channel" var="channelPlaceholder"/>
-                                <form:select id="channel-select" path="channel" class="cool-input"
-                                             placeholder="${channelPlaceholder}">
-                                    <c:forEach var="entry" items="${channelList}">
-                                        <c:choose>
-                                            <c:when test="${entry.value.channelId == channel}">
-                                                <form:option value="${entry.value.channelId}" selected="selected">
-                                                    <spring:message code="${entry.key}"/>
-                                                </form:option>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <form:option value="${entry.value.channelId}"><spring:message code="${entry.key}"/></form:option>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </c:forEach>
-                                </form:select>
-
-                            </div>
+                            <form:hidden path="channel" value="${channel}" />
 
                             <div class="form-row">
 
@@ -90,7 +85,7 @@
                         </div>
 
 
-                        <c:if test="${loggedUser.role.toString() != 'WORKER'}">
+                        <c:if test="${loggedUser.role != 'WORKER'}">
                             <div class="w-50">
                                 <div class="tags-input w-100">
                                     <c:set var="val"><spring:message code="EnterATag"/></c:set>

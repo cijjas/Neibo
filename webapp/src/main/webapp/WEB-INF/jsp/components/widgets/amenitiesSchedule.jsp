@@ -2,7 +2,7 @@
     <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
 
         <c:choose>
-            <c:when test='${loggedUser.role.toString() == "ADMINISTRATOR"}'>
+            <c:when test='${loggedUser.role == "ADMINISTRATOR"}'>
                 <div class="row">
                     <div class="col-md-8">
                         <h2><c:out value="${amenity.name}" /></h2>

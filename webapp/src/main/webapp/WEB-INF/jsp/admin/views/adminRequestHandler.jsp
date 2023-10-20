@@ -115,8 +115,9 @@
                                     <c:choose>
                                         <c:when test="${neighbors}">
                                             <button class="ignore-button  outlined on-bg"
-                                                    onclick="rejectUser(${user.userId})"><spring:message
-                                                    code="Unverify"/></button>
+                                                    onclick="rejectUser(${user.userId})">
+                                                <spring:message code="Remove"/>
+                                            </button>
                                         </c:when>
                                         <c:otherwise>
                                             <button class="ignore-button outlined on-bg"

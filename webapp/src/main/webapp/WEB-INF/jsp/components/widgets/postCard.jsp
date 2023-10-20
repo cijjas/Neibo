@@ -132,7 +132,7 @@
             likeButtonLocked = true;
             const liked = this.getAttribute('data-liked') === 'true';
             const postId = this.getAttribute('data-post-id'); // Get the post ID from the data attribute
-            const likeEndpoint = liked ? '/endpoint/unlike?postId=' + postId : '/endpoint/like?postId=' + postId;
+            const likeEndpoint = liked ? '${pageContext.request.contextPath}/endpoint/unlike?postId=' + postId : '${pageContext.request.contextPath}/endpoint/like?postId=' + postId;
 
             const likeCountElement = document.getElementById('like-count');
             const currentCount = parseInt(likeCountElement.getAttribute('data-like-count'), 10);

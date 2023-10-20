@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
+import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -15,12 +17,25 @@ import java.util.Optional;
 public class SessionUtils {
 
     private final SessionUserCache sessionUserCache;
-    private final UserService userService;
+    private final UserService us;
+
+    private final NeighborhoodService ns;
 
     @Autowired
-    public SessionUtils(SessionUserCache sessionUserCache, UserService userService) {
-        this.userService = userService;
+    public SessionUtils(SessionUserCache sessionUserCache, UserService userService, NeighborhoodService ns) {
+        this.us = userService;
         this.sessionUserCache = sessionUserCache;
+        this.ns = ns;
+    }
+
+    public String getLoggedUserNeighborhoodName() {
+        User user = getLoggedUser();
+        if (user == null) {
+            return null;
+        }
+        Optional<Neighborhood> neighborhood = ns.findNeighborhoodById(getLoggedUser().getNeighborhoodId());
+        Neighborhood n = neighborhood.orElseThrow(() -> new NotFoundException("Neighborhood Not Found"));
+        return n.getName();
     }
 
     public User getLoggedUser() {
@@ -35,7 +50,7 @@ public class SessionUtils {
         }
 
         String email = authentication.getName();
-        Optional<User> neighborOptional = userService.findUserByMail(email);
+        Optional<User> neighborOptional = us.findUserByMail(email);
 
         User user = neighborOptional.orElseThrow(() -> new NotFoundException("Neighbor Not Found"));
         sessionUserCache.setCachedUser(user);

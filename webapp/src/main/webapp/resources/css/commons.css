@@ -281,6 +281,18 @@ p {
     gap: 1rem;
 }
 
+.f-c-s-s {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    gap: 1rem;
+}
+
+.g-0{
+    gap:0 !important;
+}
+
 .f-c-sb-c {
     display: flex;
     flex-direction: column;

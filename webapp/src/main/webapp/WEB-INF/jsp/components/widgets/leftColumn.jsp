@@ -8,7 +8,7 @@
 
 
         <c:choose>
-            <c:when test='${loggedUser.role.toString() == "WORKER"}'>
+            <c:when test='${loggedUser.role == "WORKER"}'>
                 <div class="left-box worker">
                     <div class="f-c-c-c">
                         <a id="profileButton"
@@ -32,7 +32,7 @@
             <c:otherwise>
                 <div class="left-box">
                     <div class="f-c-c-c">
-                        <c:if test='${loggedUser.role.toString() == "ADMINISTRATOR"}'>
+                        <c:if test='${loggedUser.role == "ADMINISTRATOR"}'>
                             <a href="${pageContext.request.contextPath}/admin/publish">
                                 <div class="cool-left-button admin-button f-r-sb-c" style="width: 200px; ">
                                     <i class="fa-solid fa-chart-pie"></i>

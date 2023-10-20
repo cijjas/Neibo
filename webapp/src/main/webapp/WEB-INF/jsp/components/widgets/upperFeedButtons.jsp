@@ -14,10 +14,17 @@
                 <i class="fa-solid fa-arrow-trend-up ml-1"></i>
             </a>
         </div>
-
-        <c:if test='${loggedUser.role.toString() != "ADMINISTRATOR"}'>
+        <c:if test='${loggedUser.role != "ADMINISTRATOR"}'>
             <a onclick="publishInChannel()" class="cool-feed-button">
-                <spring:message code="CreateNewPost.button"/>
+
+                <c:choose>
+                    <c:when test="${channel eq 'Feed'}">
+                            <spring:message code="CreateNewPost.button"/>
+                    </c:when>
+                    <c:when test="${channel eq 'Complaints'}">
+                            <spring:message code="Create.new.complaint"/>
+                    </c:when>
+                </c:choose>
                 <i class="fa-solid fa-plus"></i>
             </a>
         </c:if>

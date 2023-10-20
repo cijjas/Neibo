@@ -12,11 +12,12 @@
 }
 
 .column-right {
+    max-width: 320px;
     flex: 2;
 }
 
 .column-middle {
-    max-width: 580px;
+    max-width: 565px;
     flex: 4;
 }
 
@@ -300,10 +301,11 @@
 }
 
 .post-description {
-    max-height: calc(1.2em * 10);
+    max-height: calc(1.2em * 4);
     overflow: hidden;
     position: relative;
     color: var(--lighttext);
+    line-height: 1.2em; /* Set the line height to match your text */
 
     &::after {
         content: "";
@@ -311,12 +313,10 @@
         bottom: 0;
         left: 0;
         width: 100%;
-        transition: all 0.3s ease-in-out;
-        height: 20px;
-        background: linear-gradient(to bottom, var(--onbackgroundfaded), var(--onbackground));
+        height: calc(1.2em * 2); /* Adjust the height to match 5 lines of text */
+        background: linear-gradient(to bottom, transparent, var(--onbackground));
     }
 }
-
 .worker-post-description {
     width: 100%;
     position: relative;

@@ -51,7 +51,7 @@
                         </div>
                         <h1 class="post-title"><c:out value="${param.postTitle}"/></h1>
                     </div>
-                    <p class="post-description"><c:out value="${param.postDescription}"/></p>
+                    <p class="post-description mb-2"><c:out value="${param.postDescription}"/></p>
                     <c:if test="${ param.postImage != 0}">
                         <div style="display: flex; justify-content: center; align-items: center;">
                             <img class="blogpost-image"

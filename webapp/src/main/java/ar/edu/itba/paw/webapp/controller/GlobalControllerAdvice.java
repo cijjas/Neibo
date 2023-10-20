@@ -21,4 +21,10 @@ public class GlobalControllerAdvice {
     public User getLoggedUser() {
         return sessionUtils.getLoggedUser();
     }
+
+    @ModelAttribute("neighborhoodName")
+    @Cacheable("neighborhoodName")
+    public String getNeighborhoodName() {
+        return sessionUtils.getLoggedUserNeighborhoodName();
+    }
 }
