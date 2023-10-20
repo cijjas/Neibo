@@ -53,7 +53,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/services").hasAnyRole("WORKER", "ADMINISTRATOR", "NEIGHBOR")
                 .antMatchers("/services/neighborhoods").hasRole("WORKER")
                 .antMatchers("/rejected").hasRole("REJECTED")
-                .antMatchers("/profile").permitAll()
+                .antMatchers("/profile").hasAnyRole("ADMINISTRATOR, NEIGHBOR, WORKER, REJECTED")
                 .antMatchers("/").hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
                 .antMatchers("/complaints", "/announcements", "/amenities", "/information", "/reservation", "/posts/**").hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
                 .antMatchers("/**").hasAnyRole("NEIGHBOR", "ADMINISTRATOR", "WORKER")
