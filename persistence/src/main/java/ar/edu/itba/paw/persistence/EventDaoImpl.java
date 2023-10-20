@@ -94,6 +94,12 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
+    public List<Event> getEventsByNeighborhoodIdAndDateRange(long neighborhoodId, Date startDate, Date endDate) {
+        LOGGER.debug("Selecting Events from Neighborhood {} between {} and {}", neighborhoodId, startDate, endDate);
+        return jdbcTemplate.query(EVENTS_JOIN_TIMES + " where neighborhoodid = ? and date between ? and ?", ROW_MAPPER, neighborhoodId, startDate, endDate);
+    }
+
+    @Override
     public List<Date> getEventDates(long neighborhoodId) {
         LOGGER.debug("Selecting Event Dates from Neighborhood {}", neighborhoodId);
         return jdbcTemplate.queryForList("select distinct date from events where neighborhoodid = ?", Date.class, neighborhoodId);

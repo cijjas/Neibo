@@ -3,9 +3,11 @@ package ar.edu.itba.paw.services.email;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.exceptions.MailingException;
+import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
+import ar.edu.itba.paw.models.Event;
 import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.models.User;
 import org.slf4j.Logger;
@@ -15,30 +17,40 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import java.sql.Date;
+
+@EnableScheduling
 @Component
 public class EmailServiceImpl implements EmailService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
     private final UserDao userDao;
     private final NeighborhoodDao neighborhoodDao;
+    private final EventDao eventDao;
+
     @Autowired
     private JavaMailSender emailSender;
     @Autowired
     private SpringTemplateEngine thymeleafTemplateEngine;
 
     @Autowired
-    public EmailServiceImpl(UserDao userDao, NeighborhoodDao neighborhoodDao) {
+    public EmailServiceImpl(UserDao userDao, NeighborhoodDao neighborhoodDao, EventDao eventDao) {
         this.userDao = userDao;
         this.neighborhoodDao = neighborhoodDao;
+        this.eventDao = eventDao;
     }
 
     @Override
@@ -118,5 +130,39 @@ public class EmailServiceImpl implements EmailService {
         }
 
     }
+
+    @Scheduled(cron = "0 00 09 ? * MON") // CRON expression for weekly on Mondays at 9 AM
+    public void sendWeeklyEventNotifications() {
+        // Fetch the list of neighborhoods
+        List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoods();
+
+        // Iterate through each neighborhood
+        for (Neighborhood neighborhood : neighborhoods) {
+            long neighborhoodId = neighborhood.getNeighborhoodId();
+
+            // Fetch events for the specified neighborhood within the upcoming week
+            Date startDate = new Date(System.currentTimeMillis());
+            long oneWeekInMillis = 7L * 24L * 60L * 60L * 1000L; // One week in milliseconds
+            Date endDate = new Date(startDate.getTime() + oneWeekInMillis);
+
+            List<Event> events = eventDao.getEventsByNeighborhoodIdAndDateRange(neighborhoodId, startDate, endDate);
+
+            // Iterate through the events and send notifications to subscribed users
+            for (Event event : events) {
+                List<User> subscribedUsers = userDao.getEventUsers(event.getEventId());
+
+                for (User user : subscribedUsers) {
+                    String to = user.getMail(); // Get the user's email
+                    String subject = "Upcoming Event Notification";
+                    String message = "Hey " + user.getName() + " " + user.getSurname() + "you are subscribed to an upcoming event in " + neighborhood.getName() + "!\n"
+                            + "Event details: " + event.getDescription() + " on " + event.getDate();
+
+                    // Send the email using your email service (e.g., emailService.sendSimpleMessage)
+                    sendSimpleMessage(to, subject, message);
+                }
+            }
+        }
+    }
+
 
 }

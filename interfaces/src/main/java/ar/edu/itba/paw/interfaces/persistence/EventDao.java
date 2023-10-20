@@ -20,6 +20,8 @@ public interface EventDao {
 
     List<Event> getEventsByNeighborhoodId(long neighborhoodId);
 
+    public List<Event> getEventsByNeighborhoodIdAndDateRange(long neighborhoodId, Date startDate, Date endDate);
+
     List<Date> getEventDates(long neighborhoodId);
 
     // ---------------------------------------------- EVENTS DELETE ----------------------------------------------------

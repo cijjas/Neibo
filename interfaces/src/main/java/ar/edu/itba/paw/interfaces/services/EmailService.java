@@ -14,4 +14,7 @@ public interface EmailService {
     public void sendMessageUsingThymeleafTemplate(String to, String subject, String templateModel, Map<String, Object> variables);
 
     public void sendNewUserMail(long neighborhoodId, String userName, UserRole role);
-}
+
+    public void sendWeeklyEventNotifications();
+
+    }
