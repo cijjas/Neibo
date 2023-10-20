@@ -93,7 +93,7 @@ public class AdminController {
     @RequestMapping("/neighbors")
     public ModelAndView neighbors(
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size
+            @RequestParam(value = "size", defaultValue = "5") int size
     ) {
         LOGGER.info("User arriving at '/admin/neighbors'");
 
@@ -112,7 +112,7 @@ public class AdminController {
     @RequestMapping("/unverified")
     public ModelAndView unverified(
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "3") int size
+            @RequestParam(value = "size", defaultValue = "5") int size
     ) {
         LOGGER.info("User arriving at '/admin/unverified'");
 
@@ -123,6 +123,7 @@ public class AdminController {
         mav.addObject("page", page);
         mav.addObject("totalPages", us.getTotalPages(UserRole.UNVERIFIED_NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhoodId(), size));
         mav.addObject("users", us.getUsersPage(UserRole.UNVERIFIED_NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhoodId(), page, size));
+        mav.addObject("contextPath", "/admin/unverified");
         return mav;
     }
 

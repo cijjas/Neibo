@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public int getTotalPages(UserRole role, long neighborhoodId, int size) {
         LOGGER.info("Getting Pages of Users with size {} from Neighborhood {} with Role {}", size, neighborhoodId, role);
-        return userDao.getTotalUsers(role, neighborhoodId) / size;
+        return (int) Math.ceil((double) userDao.getTotalUsers(role, neighborhoodId) / size);
     }
 
     @Override
