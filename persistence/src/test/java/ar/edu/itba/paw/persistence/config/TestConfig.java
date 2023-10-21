@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence.config;
 
+import org.hsqldb.jdbc.JDBCDriver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -7,20 +8,42 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.Properties;
 
-@ComponentScan(basePackages = "ar.edu.itba.paw.persistence.config")
+@ComponentScan(basePackages = "ar.edu.itba.paw.persistence")
 @Configuration
+@EnableTransactionManagement
 public class TestConfig {
 
-    @Value("classpath:hsqlSetUp.sql") // Le pedimos que nos traiga este archivo en resources
-    private Resource hsqldbSql; // (leer el comentario enorme en dataSource() para entender esto
+    @Value("classpath:hsqlSetUp.sql")
+    private Resource hsqldbSql;
 
 
+    /*@Bean
+    public DataSource dataSource() {
+        final SingleConnectionDataSource ds = new SingleConnectionDataSource();
+
+        ds.setDriverClassName(JDBCDriver.class.getCanonicalName());
+        ds.setSuppressClose(true);
+        ds.setUrl("jdbc:hsqldb:mem:pawtest");
+        ds.setUsername("ha");
+        ds.setPassword("");
+
+        return ds;
+    }*/
     @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();
@@ -30,19 +53,35 @@ public class TestConfig {
         ds.setUsername("ha");
         ds.setPassword("");
 
-        // Por default HSQLDB no tiene soporte para cosas que estamos usando, como por ejemplo el tipo de dato SERIAL
-        // en la columna "id" de la tabla "users". Peero HSQLDB nos permite interpretar estas cosas correctamente
-        // pidiéndole que emule alguna base de datos en particular. Por suerte, esto incluye soporte para PostgreSQL.
-
-        // OBVIAMENTE ESTO NO SIMULA FULL POSTGRES, Cosas como triggers y funciones NO ESTÁN.
-        // Hay dos formas de usar esto:
-        // 1. Agregar a la clase test (ej. UserDaoImplTest) un
-        //    @Sql(scripts = { "classpath:hsqlSetUp.sql", "classpath:schema.sql" }) siendo estos archivos los que
-        //    agregamos en persistence/src/test/resources/hsqlSetUp.sql y persistence/src/main/resources/schema.sql
-        // 2. Como queremos correr schema.sql también en runtime, usamos un DataSourceInitializer. Definimos un @Bean
-        //    siguiente a esta función que inicializa una base de datos.
-
         return ds;
+    }
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        final LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
+
+        factoryBean.setPackagesToScan("ar.edu.itba.paw.models");
+        factoryBean.setDataSource(dataSource());
+
+        final HibernateJpaVendorAdapter jpaAdapter = new HibernateJpaVendorAdapter();
+        factoryBean.setJpaVendorAdapter(jpaAdapter);
+
+        final Properties properties = new Properties();
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");
+
+        // Si ponen esto en prod, hay tabla!!!
+        // NUNCA DEPLOYAR ESTO; PRINTEA A STDOUTTTTT
+        properties.setProperty("hibernate.show_sql", "true");
+        properties.setProperty("format_sql", "true");
+
+        factoryBean.setJpaProperties(properties);
+        return factoryBean;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(final EntityManagerFactory emf) {
+        return new JpaTransactionManager(emf);
     }
 
     @Bean

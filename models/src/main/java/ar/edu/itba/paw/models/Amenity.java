@@ -1,12 +1,13 @@
 package ar.edu.itba.paw.models;
 
+
 import java.util.List;
 
 public class Amenity {
-    private final long amenityId;
+    private final Long amenityId;
     private final String name;
     private final String description;
-    private final long neighborhoodId;
+    private final Long neighborhoodId;
     private final List<Shift> availableShifts;
 
     private Amenity(Builder builder) {
@@ -17,7 +18,7 @@ public class Amenity {
         this.availableShifts = builder.availableShifts;
     }
 
-    public long getAmenityId() {
+    public Long getAmenityId() {
         return amenityId;
     }
 
@@ -29,7 +30,7 @@ public class Amenity {
         return description;
     }
 
-    public long getNeighborhoodId() {
+    public Long getNeighborhoodId() {
         return neighborhoodId;
     }
 
@@ -48,13 +49,13 @@ public class Amenity {
     }
 
     public static class Builder {
-        private long amenityId;
+        private Long amenityId;
         private String name;
         private String description;
-        private long neighborhoodId;
+        private Long neighborhoodId;
         private List<Shift> availableShifts;
 
-        public Builder amenityId(long amenityId) {
+        public Builder amenityId(Long amenityId) {
             this.amenityId = amenityId;
             return this;
         }
@@ -69,7 +70,7 @@ public class Amenity {
             return this;
         }
 
-        public Builder neighborhoodId(long neighborhoodId) {
+        public Builder neighborhoodId(Long neighborhoodId) {
             this.neighborhoodId = neighborhoodId;
             return this;
         }

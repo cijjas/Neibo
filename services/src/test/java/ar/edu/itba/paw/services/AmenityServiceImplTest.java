@@ -15,10 +15,10 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AmenityServiceImplTest {
-    private static final long ID = 1;
+    private static final Long ID = 1L;
     private static final String NAME = "Pileta";
     private static final String DESCRIPTION = "Pileta de natación";
-    private static final long NEIGHBORHOOD_ID = 1;
+    private static final Long NEIGHBORHOOD_ID = 1L;
 
     @Mock
     private AmenityDao amenityDao;

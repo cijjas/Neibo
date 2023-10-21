@@ -80,7 +80,7 @@ public class AmenityDaoImplTest {
     @Test
     public void testFindAmenityByInvalidId() {
         // Exercise
-        Optional<Amenity> foundAmenity = amenityDao.findAmenityById(1);
+        Optional<Amenity> foundAmenity = amenityDao.findAmenityById(1L);
 
         // Validations & Post Conditions
         assertFalse(foundAmenity.isPresent());
@@ -118,7 +118,7 @@ public class AmenityDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        boolean deleted = amenityDao.deleteAmenity(1);
+        boolean deleted = amenityDao.deleteAmenity(1L);
 
         // Validations & Post Conditions
         assertFalse(deleted);

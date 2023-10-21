@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.models.Channel;
+import ar.edu.itba.paw.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +26,10 @@ import java.util.Optional;
 @Repository
 public class ChannelDaoImpl implements ChannelDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelDaoImpl.class);
+
+    @PersistenceContext
+    private EntityManager em;
+
     private static final RowMapper<Channel> ROW_MAPPER = (rs, rowNum) ->
             new Channel.Builder()
                     .channelId(rs.getLong("channelid"))
@@ -28,14 +37,11 @@ public class ChannelDaoImpl implements ChannelDao {
                     .build();
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
-    private final String CHANNELS = "SELECT * FROM channels ";
     private final String CHANNELS_JOIN_NEIGHBORHOODS =
             "SELECT distinct c.* \n" +
                     "FROM channels c " +
                     "INNER JOIN neighborhoods_channels nc ON c.channelid = nc.channelid " +
                     "INNER JOIN neighborhoods n ON n.neighborhoodid = nc.neighborhoodid ";
-
-    // -------------------------------------------- CHANNELS INSERT ----------------------------------------------------
 
     @Autowired
     public ChannelDaoImpl(final DataSource ds) {
@@ -45,38 +51,33 @@ public class ChannelDaoImpl implements ChannelDao {
                 .withTableName("channels");
     }
 
-    // -------------------------------------------- CHANNELS SELECT ----------------------------------------------------
+
+    // -------------------------------------------- CHANNELS INSERT ----------------------------------------------------
 
     @Override
-    public Channel createChannel(String channel) {
-        LOGGER.debug("Inserting Channel {}", channel);
-        Map<String, Object> data = new HashMap<>();
-        data.put("channel", channel);
-
-        try {
-            final Number key = jdbcInsert.executeAndReturnKey(data);
-            return new Channel.Builder()
-                    .channelId(key.longValue())
-                    .channel(channel)
-                    .build();
-        } catch (DataAccessException ex) {
-            LOGGER.error("Error inserting the Channel", ex);
-            throw new InsertionException("An error occurred whilst creating the channel");
-        }
+    public Channel createChannel(final String channelName) {
+        LOGGER.debug("Inserting Channel {}", channelName);
+        final Channel channel = new Channel.Builder()
+                .channel(channelName)
+                .build();
+        em.persist(channel);
+        return channel;
     }
 
-    @Override
+
+    // -------------------------------------------- CHANNELS SELECT ----------------------------------------------------
+
     public Optional<Channel> findChannelById(long channelId) {
         LOGGER.debug("Selecting Channel with channelId {}", channelId);
-        final List<Channel> list = jdbcTemplate.query(CHANNELS + " WHERE channelid = ?", ROW_MAPPER, channelId);
-        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+        return Optional.ofNullable(em.find(Channel.class, channelId));
     }
 
     @Override
     public Optional<Channel> findChannelByName(String channelName) {
-        LOGGER.debug("Selecting Channel with Channel name {}", channelName);
-        final List<Channel> list = jdbcTemplate.query(CHANNELS + " WHERE channel = ?", ROW_MAPPER, channelName);
-        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+        LOGGER.debug("Selecting Channel with name {}", channelName);
+        TypedQuery<Channel> query = em.createQuery("FROM Channel WHERE channel = :channel", Channel.class);
+        query.setParameter("channel", channelName);
+        return query.getResultList().stream().findFirst();
     }
 
     @Override

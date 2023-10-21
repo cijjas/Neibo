@@ -205,7 +205,7 @@ public class AdminController {
 
     @RequestMapping(value = "/delete-amenity/{id}", method = RequestMethod.GET)
     public ModelAndView deleteAmenity(
-            @PathVariable(value = "id") int amenityId
+            @PathVariable(value = "id") Long amenityId
     ) {
         ModelAndView mav = new ModelAndView("redirect:/admin/amenities");
         as.deleteAmenity(amenityId); //JOAAAAAAAAAAAAAAAAAAAEWQDSAFEDAs

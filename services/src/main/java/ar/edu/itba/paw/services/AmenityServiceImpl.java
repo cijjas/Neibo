@@ -35,7 +35,7 @@ public class AmenityServiceImpl implements AmenityService {
 
     // Function has to create the shifts if they do not already exist and match them with the amenity through the junction table
     @Override
-    public Amenity createAmenity(String name, String description, long neighborhoodId, List<String> selectedShifts) {
+    public Amenity createAmenity(String name, String description, Long neighborhoodId, List<String> selectedShifts) {
         LOGGER.info("Creating Amenity {}", name);
         Amenity amenity = amenityDao.createAmenity(name, description, neighborhoodId);
 
@@ -62,32 +62,32 @@ public class AmenityServiceImpl implements AmenityService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Amenity> findAmenityById(long amenityId) {
+    public Optional<Amenity> findAmenityById(Long amenityId) {
         return amenityDao.findAmenityById(amenityId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Amenity> getAmenities(long neighborhoodId, int page, int size) {
+    public List<Amenity> getAmenities(Long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Amenities from Neighborhood {}", neighborhoodId);
 
         return amenityDao.getAmenities(neighborhoodId, page, size);
     }
 
     @Override
-    public int getAmenitiesCount(long neighborhoodId) {
+    public int getAmenitiesCount(Long neighborhoodId) {
         return amenityDao.getAmenitiesCount(neighborhoodId);
     }
 
     @Override
-    public int getTotalAmenitiesPages(long neighborhoodId, int size) {
+    public int getTotalAmenitiesPages(Long neighborhoodId, int size) {
         return (int) Math.ceil((double) amenityDao.getAmenitiesCount(neighborhoodId) / size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteAmenity(long amenityId) {
+    public boolean deleteAmenity(Long amenityId) {
         LOGGER.info("Deleting Amenity {}", amenityId);
         return amenityDao.deleteAmenity(amenityId);
     }
