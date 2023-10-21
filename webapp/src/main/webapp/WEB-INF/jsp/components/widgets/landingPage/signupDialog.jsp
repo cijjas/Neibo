@@ -21,6 +21,7 @@
                                     value="${entry.getName()}"/></form:option>
                         </c:forEach>
                     </form:select>
+                    <form:errors path="neighborhoodId" cssClass="landing-error" element="p"/>
                 </div>
                 <div class="row">
                     <div class="col-6 pr-2">

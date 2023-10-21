@@ -1,10 +1,11 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.NeighborhoodConstraint;
 import org.hibernate.validator.constraints.Range;
 
 public class NeighborhoodForm {
 
-    @Range(min = 1)
+    @NeighborhoodConstraint
     private long neighborhoodId;
 
     public long getNeighborhoodId() {

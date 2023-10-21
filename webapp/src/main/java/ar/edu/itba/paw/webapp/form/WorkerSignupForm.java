@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.LanguageConstraint;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -48,6 +49,7 @@ public class WorkerSignupForm {
     @Pattern(regexp = "^[0-9]+$")
     private String w_identification;
 
+    @LanguageConstraint
     private String w_language;
 
     public String getW_identification() {
