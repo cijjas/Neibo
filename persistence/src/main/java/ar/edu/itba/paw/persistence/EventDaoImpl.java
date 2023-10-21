@@ -105,6 +105,12 @@ public class EventDaoImpl implements EventDao {
         return jdbcTemplate.queryForList("select distinct date from events where neighborhoodid = ?", Date.class, neighborhoodId);
     }
 
+    @Override
+    public boolean isUserSubscribedToEvent(long userId, long eventId) {
+        LOGGER.debug("Selecting if User {} is subscribed to Event {}", userId, eventId);
+        return jdbcTemplate.queryForObject("select count(*) from users_events where userid = ? and eventid = ?", Integer.class, userId, eventId) > 0;
+    }
+
     // ---------------------------------------------- EVENT DELETE -----------------------------------------------------
 
     @Override

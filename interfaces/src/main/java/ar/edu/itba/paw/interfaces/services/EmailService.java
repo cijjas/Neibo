@@ -17,4 +17,6 @@ public interface EmailService {
 
     public void sendWeeklyEventNotifications();
 
+    public void sendDailyEventNotifications();
+
     }

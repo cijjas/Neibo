@@ -27,9 +27,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import java.sql.Date;
 
@@ -131,12 +129,12 @@ public class EmailServiceImpl implements EmailService {
 
     }
 
-    @Scheduled(cron = "0 00 09 ? * MON") // CRON expression for weekly on Mondays at 9 AM
+    @Override
+    @Scheduled(cron = "0 0 9 ? * MON") // CRON expression for weekly on Mondays at 8 PM
     public void sendWeeklyEventNotifications() {
         // Fetch the list of neighborhoods
         List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoods();
 
-        // Iterate through each neighborhood
         for (Neighborhood neighborhood : neighborhoods) {
             long neighborhoodId = neighborhood.getNeighborhoodId();
 
@@ -147,22 +145,103 @@ public class EmailServiceImpl implements EmailService {
 
             List<Event> events = eventDao.getEventsByNeighborhoodIdAndDateRange(neighborhoodId, startDate, endDate);
 
-            // Iterate through the events and send notifications to subscribed users
+            // Create a map to accumulate events for each subscribed user
+            Map<User, Set<Event>> userEventsMap = new HashMap<>();
+
+            // Iterate through the events and collect them for each subscribed user
             for (Event event : events) {
                 List<User> subscribedUsers = userDao.getEventUsers(event.getEventId());
 
                 for (User user : subscribedUsers) {
-                    String to = user.getMail(); // Get the user's email
-                    String subject = "Upcoming Event Notification";
-                    String message = "Hey " + user.getName() + " " + user.getSurname() + "you are subscribed to an upcoming event in " + neighborhood.getName() + "!\n"
-                            + "Event details: " + event.getDescription() + " on " + event.getDate();
-
-                    // Send the email using your email service (e.g., emailService.sendSimpleMessage)
-                    sendSimpleMessage(to, subject, message);
+                    userEventsMap
+                            .computeIfAbsent(user, k -> new HashSet<>())
+                            .add(event);
                 }
+            }
+
+            // Iterate through users and send a single email with all their subscribed events
+            for (Map.Entry<User, Set<Event>> entry : userEventsMap.entrySet()) {
+                User user = entry.getKey();
+                Set<Event> subscribedEvents = entry.getValue();
+
+                String to = user.getMail(); // Get the user's email
+                String subject = "Upcoming Events on " + neighborhood.getName(); // Subject of the email
+                StringBuilder message = new StringBuilder("Hey " + user.getName() + " " + user.getSurname() + ", you are subscribed to upcoming events next week!\n\n");
+
+                // Append event details for all subscribed events
+                for (Event event : subscribedEvents) {
+                    message.append(event.getName())
+                            .append("\n")
+                            .append("Event details: ")
+                            .append(event.getDescription())
+                            .append(" on ")
+                            .append(event.getDate())
+                            .append("\n\n");
+                }
+
+                // Send the email using your email service (e.g., emailService.sendSimpleMessage)
+                sendSimpleMessage(to, subject, message.toString());
             }
         }
     }
 
+    @Override
+    @Scheduled(cron = "0 0 9 ? * *") // CRON expression for weekly on Mondays at 8 PM
+    public void sendDailyEventNotifications() {
+        // Fetch the list of neighborhoods
+        List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoods();
+
+        for (Neighborhood neighborhood : neighborhoods) {
+            long neighborhoodId = neighborhood.getNeighborhoodId();
+
+            // Calculate the date for the next day
+            Date today = new Date(System.currentTimeMillis());
+            long oneDayInMillis = 24L * 60L * 60L * 1000L; // One day in milliseconds
+            Date nextDay = new Date(today.getTime() + oneDayInMillis);
+
+            // Fetch events for the specified neighborhood happening in the next day
+            List<Event> events = eventDao.getEventsByNeighborhoodIdAndDateRange(neighborhoodId, nextDay, nextDay);
+
+            // Create a map to accumulate events for each subscribed user
+            Map<User, Set<Event>> userEventsMap = new HashMap<>();
+
+            // Iterate through the events and collect them for each subscribed user
+            for (Event event : events) {
+                List<User> subscribedUsers = userDao.getEventUsers(event.getEventId());
+
+                for (User user : subscribedUsers) {
+                    userEventsMap
+                            .computeIfAbsent(user, k -> new HashSet<>())
+                            .add(event);
+                }
+            }
+
+            // Iterate through users and send a single email with all their subscribed events
+            for (Map.Entry<User, Set<Event>> entry : userEventsMap.entrySet()) {
+                User user = entry.getKey();
+                Set<Event> subscribedEvents = entry.getValue();
+
+                String to = user.getMail(); // Get the user's email
+                String subject = "Upcoming Events on " + neighborhood.getName() + " for Tomorrow"; // Subject of the email
+                StringBuilder message = new StringBuilder("Hey " + user.getName() + " " + user.getSurname() + ", you are subscribed to events happening tomorrow!\n\n");
+
+                // Append event details for all subscribed events
+                for (Event event : subscribedEvents) {
+                    message.append(event.getName())
+                            .append("\n")
+                            .append("Event details: ")
+                            .append(event.getDescription())
+                            .append(" from ")
+                            .append(event.getStartTimeString())
+                            .append(" to ")
+                            .append(event.getEndTimeString())
+                            .append("\n\n");
+                }
+
+                // Send the email using your email service (e.g., emailService.sendSimpleMessage)
+                sendSimpleMessage(to, subject, message.toString());
+            }
+        }
+    }
 
 }

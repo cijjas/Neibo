@@ -24,7 +24,9 @@ public interface EventDao {
 
     List<Date> getEventDates(long neighborhoodId);
 
-    // ---------------------------------------------- EVENTS DELETE ----------------------------------------------------
+    public boolean isUserSubscribedToEvent(long userId, long eventId);
+
+        // ---------------------------------------------- EVENTS DELETE ----------------------------------------------------
 
     boolean deleteEvent(long eventId);
 }

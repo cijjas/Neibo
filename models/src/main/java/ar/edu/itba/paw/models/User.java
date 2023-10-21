@@ -4,6 +4,7 @@ import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class User {
     private final long userId;
@@ -177,5 +178,18 @@ public class User {
         public User build() {
             return new User(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User otherUser = (User) o;
+        return userId == otherUser.userId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
     }
 }
