@@ -86,13 +86,13 @@ public class PostServiceImplTest {
 
         // 3. Postconditions
         Assert.assertNotNull(newPost);
-        Assert.assertEquals(newPost.getPostId(), ID);
+        Assert.assertEquals(newPost.getPostId().longValue(), ID);
         Assert.assertEquals(newPost.getTitle(), TITLE);
         Assert.assertEquals(newPost.getDescription(), DESCRIPTION);
         Assert.assertEquals(newPost.getDate(), DATE);
         Assert.assertEquals(newPost.getUser(), mockUser);
         Assert.assertEquals(newPost.getChannel(), mockChannel);
-        Assert.assertEquals(newPost.getPostPictureId(), POST_PICTURE_ID);
+        Assert.assertEquals(newPost.getPostPictureId().longValue(), POST_PICTURE_ID);
 
     }
 

@@ -41,7 +41,7 @@ public class ContactServiceImplTest {
 
         // 3. Postconditions
         Assert.assertNotNull(newContact);
-        Assert.assertEquals(newContact.getNeighborhoodId(), NEIGHBORHOOD_ID);
+        Assert.assertEquals(newContact.getNeighborhoodId().longValue(), NEIGHBORHOOD_ID);
         Assert.assertEquals(newContact.getContactName(), NAME);
         Assert.assertEquals(newContact.getContactAddress(), ADDRESS);
         Assert.assertEquals(newContact.getContactPhone(), PHONE);

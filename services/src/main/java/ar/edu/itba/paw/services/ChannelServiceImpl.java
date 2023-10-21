@@ -41,6 +41,12 @@ public class ChannelServiceImpl implements ChannelService {
         return channel;
     }
 
+    @Override
+    public Channel createChannel(String name) {
+        LOGGER.info("Creating Channel {}", name);
+        return channelDao.createChannel(name);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

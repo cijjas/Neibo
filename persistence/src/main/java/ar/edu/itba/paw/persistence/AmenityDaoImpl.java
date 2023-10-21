@@ -52,7 +52,7 @@ public class AmenityDaoImpl implements AmenityDao {
     // ---------------------------------------------- AMENITY SELECT ---------------------------------------------------
 
     @Override
-    public Amenity createAmenity(String name, String description, Long neighborhoodId) {
+    public Amenity createAmenity(String name, String description, long neighborhoodId) {
         LOGGER.debug("Inserting Amenity {}", name);
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
@@ -68,20 +68,20 @@ public class AmenityDaoImpl implements AmenityDao {
     }
 
     @Override
-    public Optional<Amenity> findAmenityById(Long amenityId) {
+    public Optional<Amenity> findAmenityById(long amenityId) {
         LOGGER.debug("Selecting Amenity with id {}", amenityId);
         List<Amenity> amenities = jdbcTemplate.query(AMENITIES + " WHERE amenityid = ?", ROW_MAPPER, amenityId);
         return amenities.isEmpty() ? Optional.empty() : Optional.of(amenities.get(0));
     }
 
     @Override
-    public List<Amenity> getAmenities(Long neighborhoodId, int page, int size) {
+    public List<Amenity> getAmenities(long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Amenities from Neighborhood {}", neighborhoodId);
         return jdbcTemplate.query(AMENITIES + " WHERE neighborhoodId = ? ORDER BY name  LIMIT ? OFFSET ?", ROW_MAPPER, neighborhoodId, size, (page - 1) * size);
     }
 
     @Override
-    public int getAmenitiesCount(Long neighborhoodId) {
+    public int getAmenitiesCount(long neighborhoodId) {
         LOGGER.debug("Selecting Amenities from Neighborhood {}", neighborhoodId);
         return jdbcTemplate.queryForObject(COUNT_AMENITIES + " WHERE neighborhoodId = ?", Integer.class, neighborhoodId);
     }
@@ -89,7 +89,7 @@ public class AmenityDaoImpl implements AmenityDao {
     // ---------------------------------------------- AMENITY DELETE ---------------------------------------------------
 
     @Override
-    public boolean deleteAmenity(Long amenityId) {
+    public boolean deleteAmenity(long amenityId) {
         LOGGER.debug("Deleting Amenity with id {}", amenityId);
         return jdbcTemplate.update("DELETE FROM amenities WHERE amenityid = ?", amenityId) > 0;
     }

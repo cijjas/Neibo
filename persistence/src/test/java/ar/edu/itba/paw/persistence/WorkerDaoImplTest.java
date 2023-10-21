@@ -84,7 +84,7 @@ public class WorkerDaoImplTest {
 
         // Validations & Post Conditions
         assertNotNull(createdWorker);
-        assertEquals(uKey, createdWorker.getUser().getUserId());
+        assertEquals(uKey, createdWorker.getUser().getUserId().longValue());
         assertEquals(PHONE_NUMBER_1, createdWorker.getPhoneNumber());
         assertEquals(ADDRESS_1, createdWorker.getAddress());
         assertEquals(BUSINESS_1, createdWorker.getBusinessName());

@@ -3,9 +3,9 @@ package ar.edu.itba.paw.models;
 import java.util.Date;
 
 public class Review {
-    private final long reviewId;
-    private final long workerId;
-    private final long userId;
+    private final Long reviewId;
+    private final Long workerId;
+    private final Long userId;
     private final float rating;
     private final String review;
     private final Date date;
@@ -19,11 +19,11 @@ public class Review {
         this.date = builder.date;
     }
 
-    public long getWorkerId() {
+    public Long getWorkerId() {
         return workerId;
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
@@ -39,7 +39,7 @@ public class Review {
         return date;
     }
 
-    public long getReviewId() {
+    public Long getReviewId() {
         return reviewId;
     }
 
@@ -56,19 +56,19 @@ public class Review {
     }
 
     public static class Builder {
-        private long reviewId;
-        private long workerId;
-        private long userId;
+        private Long reviewId;
+        private Long workerId;
+        private Long userId;
         private float rating;
         private String review;
         private Date date;
 
-        public Builder workerId(long workerId) {
+        public Builder workerId(Long workerId) {
             this.workerId = workerId;
             return this;
         }
 
-        public Builder userId(long userId) {
+        public Builder userId(Long userId) {
             this.userId = userId;
             return this;
         }
@@ -88,7 +88,7 @@ public class Review {
             return this;
         }
 
-        public Builder reviewId(long reviewId) {
+        public Builder reviewId(Long reviewId) {
             this.reviewId = reviewId;
             return this;
         }

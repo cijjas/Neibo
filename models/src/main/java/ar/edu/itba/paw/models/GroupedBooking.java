@@ -46,7 +46,7 @@ public class GroupedBooking {
         return endTime;
     }
 
-    public void addBookingId(long bookingId) {
+    public void addBookingId(Long bookingId) {
         bookingIds.add(bookingId);
     }
 

@@ -4,8 +4,8 @@ import java.sql.Time;
 import java.util.Date;
 
 public class Booking {
-    private final long bookingId;
-    private final long userId;
+    private final Long bookingId;
+    private final Long userId;
     private final String amenityName;
     private final String dayName;
     private final Time startTime;
@@ -20,11 +20,11 @@ public class Booking {
         this.bookingDate = builder.bookingDate;
     }
 
-    public long getBookingId() {
+    public Long getBookingId() {
         return bookingId;
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
@@ -57,19 +57,19 @@ public class Booking {
     }
 
     public static class Builder {
-        private long bookingId;
-        private long userId;
+        private Long bookingId;
+        private Long userId;
         private String amenityName;
         private String dayName;
         private Time startTime;
         private Date bookingDate;
 
-        public Builder bookingId(long bookingId) {
+        public Builder bookingId(Long bookingId) {
             this.bookingId = bookingId;
             return this;
         }
 
-        public Builder userId(long userId) {
+        public Builder userId(Long userId) {
             this.userId = userId;
             return this;
         }

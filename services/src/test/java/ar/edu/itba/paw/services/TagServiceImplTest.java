@@ -37,7 +37,7 @@ public class TagServiceImplTest {
 
         // 3. Postconditions
         Assert.assertNotNull(newTag);
-        Assert.assertEquals(newTag.getTagId(), ID);
+        Assert.assertEquals(newTag.getTagId().longValue(), ID);
         Assert.assertEquals(newTag.getTag(), TAG);
 
     }

@@ -10,7 +10,7 @@ public class Channel {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "channels_channelid_seq")
     @SequenceGenerator(sequenceName = "channels_channelid_seq", name = "channels_channelid_seq", allocationSize = 1)
-    private long channelId;
+    private Long channelId;
 
     @Column(name = "channel", length = 64, unique = true, nullable = false)
     private String channel;
@@ -37,7 +37,7 @@ public class Channel {
         return new Builder();
     }
 
-    public long getChannelId() {
+    public Long getChannelId() {
         return channelId;
     }
 
@@ -54,10 +54,10 @@ public class Channel {
     }
 
     public static class Builder {
-        private long channelId;
+        private Long channelId;
         private String channel;
 
-        public Builder channelId(long channelId) {
+        public Builder channelId(Long channelId) {
             this.channelId = channelId;
             return this;
         }

@@ -85,7 +85,7 @@ public class CommentDaoImplTest {
 
         // Validations & Post Conditions
         assertTrue(comment.isPresent());
-        assertEquals(cKey, comment.get().getCommentId());
+        assertEquals(cKey, comment.get().getCommentId().longValue());
     }
 
     @Test

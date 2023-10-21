@@ -72,11 +72,11 @@ public class CommentServiceImplTest {
 
         // 3. Postconditions
         Assert.assertNotNull(newComment);
-        Assert.assertEquals(newComment.getCommentId(), ID);
+        Assert.assertEquals(newComment.getCommentId().longValue(), ID);
         Assert.assertEquals(newComment.getComment(), COMMENT);
         Assert.assertEquals(newComment.getDate(), DATE);
         Assert.assertEquals(newComment.getUser(), mockUser);
-        Assert.assertEquals(newComment.getPostId(), POST_ID);
+        Assert.assertEquals(newComment.getPostId().longValue(), POST_ID);
 
     }
 

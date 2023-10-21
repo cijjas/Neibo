@@ -288,7 +288,7 @@ public class MainController {
 
     @RequestMapping(value = "/redirect-to-channel", method = RequestMethod.POST)
     public ModelAndView redirectToChannel(
-            @RequestParam("channelId") int channelId
+            @RequestParam("channelId") Long channelId
     ) {
         String channelName = chs.findChannelById(channelId).orElseThrow(() -> new NotFoundException("Channel not Found")).getChannel().toLowerCase();
         if (channelName.equals(BaseChannel.FEED.toString().toLowerCase()))
@@ -672,5 +672,8 @@ public class MainController {
         return mav;
     }
 
-
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public void test(){
+        chs.createChannel("testing");
+    }
 }

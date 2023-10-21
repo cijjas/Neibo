@@ -2,7 +2,7 @@ package ar.edu.itba.paw.models;
 
 
 public class Image {
-    private final long imageId;
+    private final Long imageId;
     private final byte[] image;
 
     private Image(Builder builder) {
@@ -10,7 +10,7 @@ public class Image {
         this.image = builder.image;
     }
 
-    public long getImageId() {
+    public Long getImageId() {
         return imageId;
     }
 
@@ -19,10 +19,10 @@ public class Image {
     }
 
     public static class Builder {
-        private long imageId;
+        private Long imageId;
         private byte[] image;
 
-        public Builder imageId(long imageId) {
+        public Builder imageId(Long imageId) {
             this.imageId = imageId;
             return this;
         }

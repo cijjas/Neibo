@@ -72,7 +72,7 @@ public class ChannelDaoImplTest {
 
         // Validations & Post Conditions
         assertTrue(ch.isPresent());
-        assertEquals(chKey, ch.get().getChannelId());
+        assertEquals(chKey, ch.get().getChannelId().longValue());
     }
 
     @Test

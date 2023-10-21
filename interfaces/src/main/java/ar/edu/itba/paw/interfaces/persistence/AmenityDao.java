@@ -9,17 +9,17 @@ public interface AmenityDao {
 
     // --------------------------------------------- AMENITIES INSERT --------------------------------------------------
 
-    Amenity createAmenity(String name, String description, Long neighborhoodId);
+    Amenity createAmenity(String name, String description, long neighborhoodId);
 
     // --------------------------------------------- AMENITIES SELECT --------------------------------------------------
 
-    Optional<Amenity> findAmenityById(Long amenityId);
+    Optional<Amenity> findAmenityById(long amenityId);
 
-    List<Amenity> getAmenities(Long neighborhoodId, int page, int size);
+    List<Amenity> getAmenities(long neighborhoodId, int page, int size);
 
-    int getAmenitiesCount(Long neighborhoodId);
+    int getAmenitiesCount(long neighborhoodId);
 
     // --------------------------------------------- AMENITIES DELETE --------------------------------------------------
 
-    boolean deleteAmenity(Long amenityId);
+    boolean deleteAmenity(long amenityId);
 }

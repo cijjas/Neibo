@@ -4,13 +4,13 @@ import java.util.Date;
 import java.util.List;
 
 public class Post {
-    private final long postId;
+    private final Long postId;
     private final String title;
     private final String description;
     private final Date date;
     private final User user;
     private final Channel channel;
-    private final long postPictureId;
+    private final Long postPictureId;
     private final List<Tag> tags;
     private final int likes;  // Added likes field
 
@@ -26,7 +26,7 @@ public class Post {
         this.likes = builder.likes;
     }
 
-    public long getPostId() {
+    public Long getPostId() {
         return postId;
     }
 
@@ -50,7 +50,7 @@ public class Post {
         return channel;
     }
 
-    public long getPostPictureId() {
+    public Long getPostPictureId() {
         return postPictureId;
     }
 
@@ -78,17 +78,17 @@ public class Post {
     }
 
     public static class Builder {
-        private long postId;
+        private Long postId;
         private String title;
         private String description;
         private Date date;
         private User user;
         private Channel channel;
-        private long postPictureId;
+        private Long postPictureId;
         private List<Tag> tags;
         private int likes;
 
-        public Builder postId(long postId) {
+        public Builder postId(Long postId) {
             this.postId = postId;
             return this;
         }
@@ -118,7 +118,7 @@ public class Post {
             return this;
         }
 
-        public Builder postPictureId(long postPictureId) {
+        public Builder postPictureId(Long postPictureId) {
             this.postPictureId = postPictureId;
             return this;
         }

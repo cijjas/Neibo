@@ -4,7 +4,7 @@ import java.sql.Time;
 import java.util.Objects;
 
 public class Shift {
-    private long shiftId;
+    private Long shiftId;
     private String day;
     private Time startTime;
     private Time endTime;
@@ -27,7 +27,7 @@ public class Shift {
         return new Time(endTimeMillis);
     }
 
-    public long getShiftId() {
+    public Long getShiftId() {
         return shiftId;
     }
 
@@ -72,12 +72,12 @@ public class Shift {
     }
 
     public static class Builder {
-        private long shiftId;
+        private Long shiftId;
         private String day;
         private Time startTime;
         private boolean taken;
 
-        public Builder shiftId(long shiftId) {
+        public Builder shiftId(Long shiftId) {
             this.shiftId = shiftId;
             return this;
         }

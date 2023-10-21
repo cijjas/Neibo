@@ -7,13 +7,13 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 public class Event {
-    private final long eventId;
+    private final Long eventId;
     private final String name;
     private final String description;
     private final Date date;
     private final Time startTime;
     private final Time endTime;
-    private final long neighborhoodId;
+    private final Long neighborhoodId;
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -27,7 +27,7 @@ public class Event {
         this.neighborhoodId = builder.neighborhoodId;
     }
 
-    public long getEventId() {
+    public Long getEventId() {
         return eventId;
     }
 
@@ -51,7 +51,7 @@ public class Event {
         return endTime;
     }
 
-    public long getNeighborhoodId() {
+    public Long getNeighborhoodId() {
         return neighborhoodId;
     }
 
@@ -75,7 +75,7 @@ public class Event {
         if (startTime != null && endTime != null) {
             LocalTime start = startTime.toLocalTime();
             LocalTime end = endTime.toLocalTime();
-            long minutes = ChronoUnit.MINUTES.between(start, end);
+            Long minutes = ChronoUnit.MINUTES.between(start, end);
             return String.valueOf(minutes);
         }
         return "N/A";
@@ -95,15 +95,15 @@ public class Event {
     }
 
     public static class Builder {
-        private long eventId;
+        private Long eventId;
         private String name;
         private String description;
         private Date date;
         private Time startTime;
         private Time endTime;
-        private long neighborhoodId;
+        private Long neighborhoodId;
 
-        public Builder eventId(long eventId) {
+        public Builder eventId(Long eventId) {
             this.eventId = eventId;
             return this;
         }
@@ -133,7 +133,7 @@ public class Event {
             return this;
         }
 
-        public Builder neighborhoodId(long neighborhoodId) {
+        public Builder neighborhoodId(Long neighborhoodId) {
             this.neighborhoodId = neighborhoodId;
             return this;
         }

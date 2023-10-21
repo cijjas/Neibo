@@ -7,7 +7,7 @@ public class Worker {
     private final String businessName;
     private final String address;
     private final String bio;
-    private final long backgroundPictureId;
+    private final Long backgroundPictureId;
 
 
     private Worker(Builder builder) {
@@ -39,7 +39,7 @@ public class Worker {
         return bio;
     }
 
-    public long getBackgroundPictureId() {
+    public Long getBackgroundPictureId() {
         return backgroundPictureId;
     }
 
@@ -60,7 +60,7 @@ public class Worker {
         private String businessName;
         private String address;
         private String bio;
-        private long backgroundPictureId;
+        private Long backgroundPictureId;
 
         public Builder user(User user) {
             this.user = user;
@@ -82,7 +82,7 @@ public class Worker {
             return this;
         }
 
-        public Builder backgroundPictureId(long backgroundPictureId) {
+        public Builder backgroundPictureId(Long backgroundPictureId) {
             this.backgroundPictureId = backgroundPictureId;
             return this;
         }

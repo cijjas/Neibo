@@ -79,7 +79,7 @@ public class WorkerServiceImplTest {
 
         // 3. Postconditions
         Assert.assertNotNull(newWorker);
-        Assert.assertEquals(newWorker.getUser().getUserId(), USER_ID);
+        Assert.assertEquals(newWorker.getUser().getUserId().longValue(), USER_ID);
         Assert.assertEquals(newWorker.getUser(), mockUser);
         Assert.assertEquals(newWorker.getPhoneNumber(), PHONE_NUMBER);
         Assert.assertEquals(newWorker.getAddress(), ADDRESS);

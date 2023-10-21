@@ -60,7 +60,7 @@ public class NeighborhoodDaoImplTest {
 
         // Validations & Post Conditions
         assertTrue(nh.isPresent());
-        assertEquals(nhKey, nh.get().getNeighborhoodId());
+        assertEquals(nhKey, nh.get().getNeighborhoodId().longValue());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class NeighborhoodDaoImplTest {
 
         // Validations & Post Conditions
         assertTrue(nh.isPresent());
-        assertEquals(nhKey, nh.get().getNeighborhoodId());
+        assertEquals(nhKey, nh.get().getNeighborhoodId().longValue());
     }
 
     @Test

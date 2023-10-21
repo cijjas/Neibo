@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models;
 
 public class Neighborhood {
-    private final long neighborhoodId;
+    private final Long neighborhoodId;
     private final String name;
 
     private Neighborhood(Builder builder) {
@@ -9,7 +9,7 @@ public class Neighborhood {
         this.name = builder.name;
     }
 
-    public long getNeighborhoodId() {
+    public Long getNeighborhoodId() {
         return neighborhoodId;
     }
 
@@ -26,10 +26,10 @@ public class Neighborhood {
     }
 
     public static class Builder {
-        private long neighborhoodId;
+        private Long neighborhoodId;
         private String name;
 
-        public Builder neighborhoodId(long neighborhoodId) {
+        public Builder neighborhoodId(Long neighborhoodId) {
             this.neighborhoodId = neighborhoodId;
             return this;
         }

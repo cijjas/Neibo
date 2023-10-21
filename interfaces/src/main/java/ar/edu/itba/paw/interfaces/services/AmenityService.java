@@ -7,20 +7,20 @@ import java.util.Optional;
 
 public interface AmenityService {
 
-    Amenity createAmenity(String name, String description, Long neighborhoodId, List<String> selectedShifts);
+    Amenity createAmenity(String name, String description, long neighborhoodId, List<String> selectedShifts);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Amenity> findAmenityById(Long amenityId);
+    Optional<Amenity> findAmenityById(long amenityId);
 
-    List<Amenity> getAmenities(Long neighborhoodId, int page, int size);
+    List<Amenity> getAmenities(long neighborhoodId, int page, int size);
 
-    int getAmenitiesCount(Long neighborhoodId);
+    int getAmenitiesCount(long neighborhoodId);
 
-    int getTotalAmenitiesPages(Long neighborhoodId, int size);
+    int getTotalAmenitiesPages(long neighborhoodId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteAmenity(Long amenityId);
+    boolean deleteAmenity(long amenityId);
 
 }

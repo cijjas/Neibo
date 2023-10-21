@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models;
 
 public class Profession {
-    private final long professionId;
+    private final Long professionId;
     private final String profession;
 
     private Profession(Builder builder) {
@@ -9,7 +9,7 @@ public class Profession {
         this.profession = builder.profession;
     }
 
-    public long getProfessionId() {
+    public Long getProfessionId() {
         return professionId;
     }
 
@@ -26,10 +26,10 @@ public class Profession {
     }
 
     public static class Builder {
-        private long professionId;
+        private Long professionId;
         private String profession;
 
-        public Builder professionId(long professionId) {
+        public Builder professionId(Long professionId) {
             this.professionId = professionId;
             return this;
         }

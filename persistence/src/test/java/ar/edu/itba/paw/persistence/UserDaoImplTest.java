@@ -84,7 +84,7 @@ public class UserDaoImplTest {
         assertEquals(USER_MAIL_1, createdUser.getMail());
         assertEquals(NAME, createdUser.getName());
         assertEquals(SURNAME, createdUser.getSurname());
-        assertEquals(nhKey1, createdUser.getNeighborhoodId());
+        assertEquals(nhKey1, createdUser.getNeighborhoodId().longValue());
         assertEquals(LANGUAGE, createdUser.getLanguage());
         assertEquals(DARK_MODE, createdUser.isDarkMode());
         assertEquals(ROLE, createdUser.getRole());

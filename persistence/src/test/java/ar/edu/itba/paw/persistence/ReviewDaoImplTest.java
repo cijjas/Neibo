@@ -62,8 +62,8 @@ public class ReviewDaoImplTest {
 
         // Validations & Post Conditions
         assertNotNull(createdReview);
-        assertEquals(uKey, createdReview.getWorkerId());
-        assertEquals(uKey2, createdReview.getUserId());
+        assertEquals(uKey, createdReview.getWorkerId().longValue());
+        assertEquals(uKey2, createdReview.getUserId().longValue());
         assertEquals(RATING, createdReview.getRating(), DELTA);
         assertEquals(REVIEW_TEXT, createdReview.getReview());
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.reviews.name()));

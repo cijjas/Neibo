@@ -77,7 +77,7 @@ public class EventDaoImplTest {
 
         // Validations & Post Conditions
         assertTrue(event.isPresent());
-        assertEquals(eKey, event.get().getEventId());
+        assertEquals(eKey, event.get().getEventId().longValue());
     }
 
     @Test

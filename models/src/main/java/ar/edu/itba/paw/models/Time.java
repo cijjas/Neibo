@@ -3,7 +3,7 @@ package ar.edu.itba.paw.models;
 import java.util.Objects;
 
 public class Time {
-    private long timeId;
+    private Long timeId;
     private java.sql.Time timeInterval;
 
     private Time(Builder builder) {
@@ -11,7 +11,7 @@ public class Time {
         this.timeInterval = builder.timeInterval;
     }
 
-    public long getTimeId() {
+    public Long getTimeId() {
         return timeId;
     }
 
@@ -32,7 +32,7 @@ public class Time {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Time time = (Time) o;
-        return timeId == time.timeId && Objects.equals(timeInterval, time.timeInterval);
+        return Objects.equals(timeId, time.timeId) && Objects.equals(timeInterval, time.timeInterval);
     }
 
     public Time plusHours(int hours) {
@@ -48,10 +48,10 @@ public class Time {
     }
 
     public static class Builder {
-        private long timeId;
+        private Long timeId;
         private java.sql.Time timeInterval;
 
-        public Builder timeId(long timeId) {
+        public Builder timeId(Long timeId) {
             this.timeId = timeId;
             return this;
         }

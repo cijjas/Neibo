@@ -81,7 +81,7 @@ public class UserServiceImplTest {
 
         // 3. Postconditions
         Assert.assertNotNull(newUser);
-        Assert.assertEquals(newUser.getUserId(), ID);
+        Assert.assertEquals(newUser.getUserId().longValue(), ID);
         Assert.assertEquals(newUser.getMail(), EMAIL);
         Assert.assertEquals(newUser.getName(), NAME);
         Assert.assertEquals(newUser.getSurname(), SURNAME);

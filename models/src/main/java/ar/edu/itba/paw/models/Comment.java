@@ -3,11 +3,11 @@ package ar.edu.itba.paw.models;
 import java.util.Date;
 
 public class Comment {
-    private final long commentId;
+    private final Long commentId;
     private final String comment;
     private final Date date;
     private final User user;
-    private final long postId;
+    private final Long postId;
 
     private Comment(Builder builder) {
         this.commentId = builder.commentId;
@@ -17,7 +17,7 @@ public class Comment {
         this.postId = builder.postId;
     }
 
-    public long getCommentId() {
+    public Long getCommentId() {
         return commentId;
     }
 
@@ -33,7 +33,7 @@ public class Comment {
         return user;
     }
 
-    public long getPostId() { // New getter for postId
+    public Long getPostId() { // New getter for postId
         return postId;
     }
 
@@ -49,13 +49,13 @@ public class Comment {
     }
 
     public static class Builder {
-        private long commentId;
+        private Long commentId;
         private String comment;
         private Date date;
         private User user;
-        private long postId;
+        private Long postId;
 
-        public Builder commentId(long commentId) {
+        public Builder commentId(Long commentId) {
             this.commentId = commentId;
             return this;
         }
@@ -75,7 +75,7 @@ public class Comment {
             return this;
         }
 
-        public Builder postId(long postId) {
+        public Builder postId(Long postId) {
             this.postId = postId;
             return this;
         }

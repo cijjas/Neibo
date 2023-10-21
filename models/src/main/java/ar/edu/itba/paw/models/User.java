@@ -7,17 +7,17 @@ import java.util.Date;
 import java.util.Objects;
 
 public class User {
-    private final long userId;
+    private final Long userId;
     private final String mail;
     private final String name;
     private final String surname;
     private final String password;
-    private final long neighborhoodId;
+    private final Long neighborhoodId;
     private final boolean darkMode;
     private final Language language;
     private final UserRole role;
     private final Date creationDate;
-    private final long profilePictureId;
+    private final Long profilePictureId;
     private final int identification;
 
     private User(Builder builder) {
@@ -35,7 +35,7 @@ public class User {
         this.identification = builder.identification;
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
@@ -55,7 +55,7 @@ public class User {
         return password;
     }
 
-    public long getNeighborhoodId() {
+    public Long getNeighborhoodId() {
         return neighborhoodId;
     }
 
@@ -75,7 +75,7 @@ public class User {
         return creationDate;
     }
 
-    public long getProfilePictureId() {
+    public Long getProfilePictureId() {
         return profilePictureId;
     }
 
@@ -102,20 +102,20 @@ public class User {
     }
 
     public static class Builder {
-        private long userId;
+        private Long userId;
         private String mail;
         private String name;
         private String surname;
         private String password;
-        private long neighborhoodId;
+        private Long neighborhoodId;
         private boolean darkMode;
         private Language language;
         private UserRole role;
         private Date creationDate;
-        private long profilePictureId;
+        private Long profilePictureId;
         private int identification;
 
-        public Builder userId(long userId) {
+        public Builder userId(Long userId) {
             this.userId = userId;
             return this;
         }
@@ -140,7 +140,7 @@ public class User {
             return this;
         }
 
-        public Builder neighborhoodId(long neighborhoodId) {
+        public Builder neighborhoodId(Long neighborhoodId) {
             this.neighborhoodId = neighborhoodId;
             return this;
         }
@@ -165,7 +165,7 @@ public class User {
             return this;
         }
 
-        public Builder profilePictureId(long profilePictureId) {
+        public Builder profilePictureId(Long profilePictureId) {
             this.profilePictureId = profilePictureId;
             return this;
         }

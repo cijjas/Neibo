@@ -3,7 +3,7 @@ package ar.edu.itba.paw.models;
 import java.util.List;
 
 public class Availability {
-    private long availabilityId;
+    private Long availabilityId;
     private Amenity amenity;
     private List<Shift> schedule;
 
@@ -13,7 +13,7 @@ public class Availability {
         this.schedule = builder.schedule;
     }
 
-    public long getAvailabilityId() { // Added availabilityId getter
+    public Long getAvailabilityId() { // Added availabilityId getter
         return availabilityId;
     }
 
@@ -35,11 +35,11 @@ public class Availability {
     }
 
     public static class Builder {
-        private long availabilityId;
+        private Long availabilityId;
         private Amenity amenity;
         private List<Shift> schedule;
 
-        public Builder availabilityId(long availabilityId) {
+        public Builder availabilityId(Long availabilityId) {
             this.availabilityId = availabilityId;
             return this;
         }

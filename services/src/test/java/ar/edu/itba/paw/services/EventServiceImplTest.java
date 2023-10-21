@@ -68,13 +68,13 @@ public class EventServiceImplTest {
 
         // 3. Postconditions
         Assert.assertNotNull(newEvent);
-        Assert.assertEquals(newEvent.getEventId(), ID);
+        Assert.assertEquals(newEvent.getEventId().longValue(), ID);
         Assert.assertEquals(newEvent.getName(), NAME);
         Assert.assertEquals(newEvent.getDescription(), DESCRIPTION);
         Assert.assertEquals(newEvent.getDate(), DATE);
         Assert.assertEquals(newEvent.getStartTime(), START_TIME);
         Assert.assertEquals(newEvent.getEndTime(), END_TIME);
-        Assert.assertEquals(newEvent.getNeighborhoodId(), NEIGHBORHOOD_ID);
+        Assert.assertEquals(newEvent.getNeighborhoodId().longValue(), NEIGHBORHOOD_ID);
 
     }
 

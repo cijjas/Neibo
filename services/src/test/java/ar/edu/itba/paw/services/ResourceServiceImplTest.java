@@ -46,11 +46,11 @@ public class ResourceServiceImplTest {
 
         // 3. Postconditions
         Assert.assertNotNull(newResource);
-        Assert.assertEquals(newResource.getResourceId(), ID);
+        Assert.assertEquals(newResource.getResourceId().longValue(), ID);
         Assert.assertEquals(newResource.getDescription(), DESCRIPTION);
-        Assert.assertEquals(newResource.getImageId(), IMAGE_ID);
+        Assert.assertEquals(newResource.getImageId().longValue(), IMAGE_ID);
         Assert.assertEquals(newResource.getTitle(), TITLE);
-        Assert.assertEquals(newResource.getNeighborhoodId(), NEIGHBORHOOD_ID);
+        Assert.assertEquals(newResource.getNeighborhoodId().longValue(), NEIGHBORHOOD_ID);
 
     }
 

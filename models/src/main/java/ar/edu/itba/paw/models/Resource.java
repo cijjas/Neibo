@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.models;
 
 public class Resource {
-    private final long resourceId;
+    private final Long resourceId;
     private final String description;
-    private final long imageId;
+    private final Long imageId;
     private final String title;
-    private final long neighborhoodId;
+    private final Long neighborhoodId;
 
     private Resource(Builder builder) {
         this.resourceId = builder.resourceId;
@@ -15,7 +15,7 @@ public class Resource {
         this.neighborhoodId = builder.neighborhoodId;
     }
 
-    public long getResourceId() {
+    public Long getResourceId() {
         return resourceId;
     }
 
@@ -23,7 +23,7 @@ public class Resource {
         return description;
     }
 
-    public long getImageId() {
+    public Long getImageId() {
         return imageId;
     }
 
@@ -31,7 +31,7 @@ public class Resource {
         return title;
     }
 
-    public long getNeighborhoodId() {
+    public Long getNeighborhoodId() {
         return neighborhoodId;
     }
 
@@ -46,13 +46,13 @@ public class Resource {
     }
 
     public static class Builder {
-        private long resourceId;
+        private Long resourceId;
         private String description;
-        private long imageId;
+        private Long imageId;
         private String title;
-        private long neighborhoodId;
+        private Long neighborhoodId;
 
-        public Builder resourceId(long resourceId) {
+        public Builder resourceId(Long resourceId) {
             this.resourceId = resourceId;
             return this;
         }
@@ -62,7 +62,7 @@ public class Resource {
             return this;
         }
 
-        public Builder imageId(long imageId) {
+        public Builder imageId(Long imageId) {
             this.imageId = imageId;
             return this;
         }
@@ -72,7 +72,7 @@ public class Resource {
             return this;
         }
 
-        public Builder neighborhoodId(long neighborhoodId) {
+        public Builder neighborhoodId(Long neighborhoodId) {
             this.neighborhoodId = neighborhoodId;
             return this;
         }

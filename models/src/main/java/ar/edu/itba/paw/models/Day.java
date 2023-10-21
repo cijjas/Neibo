@@ -3,7 +3,7 @@ package ar.edu.itba.paw.models;
 import java.util.Objects;
 
 public class Day {
-    private long dayId;
+    private Long dayId;
     private String dayName;
 
     private Day(Builder builder) {
@@ -13,7 +13,7 @@ public class Day {
 
     // Getter methods
 
-    public long getDayId() {
+    public Long getDayId() {
         return dayId;
     }
 
@@ -34,7 +34,7 @@ public class Day {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Day day = (Day) o;
-        return dayId == day.dayId && Objects.equals(dayName, day.dayName);
+        return Objects.equals(dayId, day.dayId) && Objects.equals(dayName, day.dayName);
     }
 
     @Override
@@ -43,10 +43,10 @@ public class Day {
     }
 
     public static class Builder {
-        private long dayId;
+        private Long dayId;
         private String dayName;
 
-        public Builder dayId(long dayId) {
+        public Builder dayId(Long dayId) {
             this.dayId = dayId;
             return this;
         }

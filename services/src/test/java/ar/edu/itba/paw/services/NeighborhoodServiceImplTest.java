@@ -36,7 +36,7 @@ public class NeighborhoodServiceImplTest {
 
         // 3. Postconditions
         Assert.assertNotNull(newNeighborhood);
-        Assert.assertEquals(newNeighborhood.getNeighborhoodId(), ID);
+        Assert.assertEquals(newNeighborhood.getNeighborhoodId().longValue(), ID);
         Assert.assertEquals(newNeighborhood.getName(), NAME);
 
     }
