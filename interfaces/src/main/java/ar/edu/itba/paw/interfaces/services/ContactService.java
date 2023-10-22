@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.Contact;
+import ar.edu.itba.paw.models.MainEntities.Contact;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@ import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.interfaces.services.BookingService;
-import ar.edu.itba.paw.models.Booking;
+import ar.edu.itba.paw.models.JunctionEntities.Booking;
 import ar.edu.itba.paw.models.GroupedBooking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,19 +64,19 @@ public class BookingServiceImpl implements BookingService {
         for (Booking booking : userBookings) {
             if (currentGroupedBooking == null || !currentGroupedBooking.canCombine(booking)) {
                 // Create a new GroupedBooking when the current one cannot be continued
-                Time endTime = calculateEndTime(booking.getStartTime());
+                Time endTime = calculateEndTime(booking.getTime().getTimeInterval());
                 currentGroupedBooking = new GroupedBooking(
-                        booking.getAmenityName(),
+                        booking.getAmenity().getName(),
                         booking.getBookingDate(),
-                        booking.getDayName(),
-                        booking.getStartTime(),
+                        booking.getDay().getDayName(),
+                        booking.getTime().getTimeInterval(),
                         endTime
                 );
                 currentGroupedBooking.addBookingId(booking.getBookingId());
                 groupedBookings.add(currentGroupedBooking);
             } else {
                 // Use the combine method to update the current GroupedBooking
-                Time endTime = calculateEndTime(booking.getStartTime());
+                Time endTime = calculateEndTime(booking.getTime().getTimeInterval());
                 currentGroupedBooking.combine(booking);
                 currentGroupedBooking.addBookingId(booking.getBookingId());
             }

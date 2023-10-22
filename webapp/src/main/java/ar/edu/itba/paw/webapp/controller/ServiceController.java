@@ -5,7 +5,7 @@ import ar.edu.itba.paw.enums.BaseNeighborhood;
 import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Worker;
+import ar.edu.itba.paw.models.MainEntities.Worker;
 import ar.edu.itba.paw.webapp.form.EditWorkerProfileForm;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
 import org.slf4j.Logger;

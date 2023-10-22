@@ -1,5 +1,9 @@
 package ar.edu.itba.paw.models;
 
+import ar.edu.itba.paw.models.MainEntities.Neighborhood;
+import ar.edu.itba.paw.models.MainEntities.Post;
+import ar.edu.itba.paw.models.MainEntities.User;
+
 public class NeighborPostNeighborhoodWrapper {
     private User user;
     private Neighborhood neighborhood;

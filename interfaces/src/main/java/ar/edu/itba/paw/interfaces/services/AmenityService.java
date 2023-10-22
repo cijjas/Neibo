@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.Amenity;
+import ar.edu.itba.paw.models.MainEntities.Amenity;
 
 import java.util.List;
 import java.util.Optional;

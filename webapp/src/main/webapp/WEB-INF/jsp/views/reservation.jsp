@@ -78,7 +78,7 @@
                                                     <label class="w-100">
                                                         <input type="checkbox" name="selectedShifts"
                                                                value="${shift.shiftId}" disabled/>
-                                                        <span>${shift.startTime} - ${shift.endTime}</span>
+                                                        <span>${shift.startTime.timeInterval} - ${shift.endTime}</span>
                                                     </label>
                                                 </div>
                                             </c:when>
@@ -87,7 +87,7 @@
                                                     <label class="w-100">
                                                         <input type="checkbox" name="selectedShifts"
                                                                value="${shift.shiftId}"/>
-                                                        <span>${shift.startTime} - ${shift.endTime}</span>
+                                                        <span>${shift.startTime.timeInterval} - ${shift.endTime}</span>
                                                     </label>
                                                 </div>
                                             </c:otherwise>

@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Image;
+import ar.edu.itba.paw.models.MainEntities.Image;
 import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -504,6 +504,8 @@ public class MainController {
         LOGGER.info("User arriving at '/amenities'");
 
         ModelAndView mav = new ModelAndView("views/amenities");
+
+        System.out.println(as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId(), page, size));
 
         mav.addObject("totalPages", as.getTotalAmenitiesPages(sessionUtils.getLoggedUser().getNeighborhoodId(), size));
         mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);

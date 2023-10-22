@@ -2,7 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
-import ar.edu.itba.paw.models.Event;
+import ar.edu.itba.paw.models.MainEntities.Event;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,12 +52,12 @@ public class EventServiceImplTest {
                 .neighborhoodId(NEIGHBORHOOD_ID)
                 .build()
         );
-        when(timeDao.createTime(START_TIME)).thenReturn(new ar.edu.itba.paw.models.Time.Builder()
+        when(timeDao.createTime(START_TIME)).thenReturn(new ar.edu.itba.paw.models.MainEntities.Time.Builder()
                 .timeId(START_TIME_ID)
                 .timeInterval(START_TIME)
                 .build()
         );
-        when(timeDao.createTime(END_TIME)).thenReturn(new ar.edu.itba.paw.models.Time.Builder()
+        when(timeDao.createTime(END_TIME)).thenReturn(new ar.edu.itba.paw.models.MainEntities.Time.Builder()
                 .timeId(END_TIME_ID)
                 .timeInterval(END_TIME)
                 .build()

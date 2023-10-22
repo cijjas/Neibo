@@ -1,16 +1,15 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.enums.BaseChannel;
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Channel;
-import ar.edu.itba.paw.models.Post;
-import ar.edu.itba.paw.models.Tag;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.MainEntities.Channel;
+import ar.edu.itba.paw.models.MainEntities.Post;
+import ar.edu.itba.paw.models.MainEntities.Tag;
+import ar.edu.itba.paw.models.MainEntities.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

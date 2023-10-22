@@ -4,7 +4,7 @@ import ar.edu.itba.paw.enums.DayOfTheWeek;
 import ar.edu.itba.paw.enums.StandardTime;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Amenity;
+import ar.edu.itba.paw.models.MainEntities.Amenity;
 import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

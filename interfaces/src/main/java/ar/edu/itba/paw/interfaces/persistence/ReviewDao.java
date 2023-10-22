@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.Review;
+import ar.edu.itba.paw.models.MainEntities.Review;
 
 import java.util.List;
 import java.util.Optional;
