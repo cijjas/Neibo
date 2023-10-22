@@ -1,14 +1,19 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.NeighborhoodsConstraint;
+
+import java.util.List;
+
 public class NeighborhoodsForm {
 
-    private long[] neighborhoodIds;
+    @NeighborhoodsConstraint
+    private List<Long> neighborhoodIds;
 
-    public long[] getNeighborhoodIds() {
+    public List<Long> getNeighborhoodIds() {
         return neighborhoodIds;
     }
 
-    public void setNeighborhoodId(long[] neighborhoodIds) {
+    public void setNeighborhoodId(List<Long> neighborhoodIds) {
         this.neighborhoodIds = neighborhoodIds;
     }
 

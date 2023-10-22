@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.LanguageConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.NeighborhoodConstraint;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -17,7 +19,7 @@ public class SignupForm {
     @Size(max = 64)
     private String surname;
 
-    //will never be blank because its a dropdown (has a preselected value)
+    @NeighborhoodConstraint
     private long neighborhoodId;
 
     @NotBlank
@@ -35,6 +37,7 @@ public class SignupForm {
     @Pattern(regexp = "^[0-9]+$")
     private String identification;
 
+    @LanguageConstraint
     private String language;
 
     public String getIdentification() {

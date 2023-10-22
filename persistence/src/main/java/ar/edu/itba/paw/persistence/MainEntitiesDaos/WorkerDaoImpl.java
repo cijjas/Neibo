@@ -30,7 +30,7 @@ public class WorkerDaoImpl implements WorkerDao {
                     "FROM users w " +
                     "JOIN workers_info wi ON w.userid = wi.workerid ";
     private final String USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
-            "SELECT DISTINCT w.*, wn.*, wi.* " +
+            "SELECT DISTINCT ON (w.userid) w.*, wn.*, wi.* " +
                     "FROM users w " +
                     "JOIN workers_neighborhoods wn ON w.userid = wn.workerId " +
                     "JOIN workers_info wi ON w.userid = wi.workerid ";

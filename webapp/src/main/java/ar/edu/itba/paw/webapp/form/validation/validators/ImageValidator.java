@@ -22,7 +22,14 @@ public class ImageValidator implements ConstraintValidator<ImageConstraint, Mult
         }
 
         if (multipartFile.getContentType().startsWith("image/")) {
-            return true;
+            if (multipartFile.getSize() <= MAX_IMAGE_SIZE_BYTES) {
+                return true;
+            } else {
+                constraintValidatorContext.disableDefaultConstraintViolation();
+                constraintValidatorContext.buildConstraintViolationWithTemplate("Image size exceeds the maximum allowed size")
+                        .addConstraintViolation();
+                return false;
+            }
         }
         constraintValidatorContext.disableDefaultConstraintViolation();
         constraintValidatorContext.buildConstraintViolationWithTemplate("Invalid image format")
