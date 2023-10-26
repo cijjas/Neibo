@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.form.validation.validators;
 
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
-import ar.edu.itba.paw.models.Neighborhood;
 import ar.edu.itba.paw.webapp.form.validation.constraints.LanguageConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.NeighborhoodConstraint;
 import org.springframework.beans.factory.annotation.Autowired;

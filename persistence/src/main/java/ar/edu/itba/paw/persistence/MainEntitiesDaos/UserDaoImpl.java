@@ -5,7 +5,7 @@ import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
-import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.MainEntities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -25,6 +28,8 @@ import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.*;
 @Repository
 public class UserDaoImpl implements UserDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
+    @PersistenceContext
+    private EntityManager em;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private final String USERS = "SELECT u.* FROM users u ";
@@ -45,10 +50,8 @@ public class UserDaoImpl implements UserDao {
                 .name(rs.getString("name"))
                 .surname(rs.getString("surname"))
                 .password(rs.getString("password"))
-                .neighborhoodId(rs.getLong("neighborhoodid"))
                 .creationDate(rs.getDate("creationdate"))
                 .darkMode(rs.getBoolean("darkmode"))
-                .profilePictureId(rs.getLong("profilepictureid"))
                 .language(rs.getString("language") != null ? Language.valueOf(rs.getString("language")) : null)
                 .role(rs.getString("role") != null ? UserRole.valueOf(rs.getString("role")) : null)
                 .build();
@@ -72,48 +75,32 @@ public class UserDaoImpl implements UserDao {
     public User createUser(final String mail, final String password, final String name, final String surname,
                            final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role, final int identification) {
         LOGGER.debug("Inserting User {}", mail);
-        Map<String, Object> data = new HashMap<>();
-        data.put("mail", mail);
-        data.put("password", password);
-        data.put("name", name);
-        data.put("creationDate", Timestamp.valueOf(LocalDateTime.now()));
-        data.put("surname", surname);
-        data.put("neighborhoodid", neighborhoodId);
-        data.put("darkmode", darkMode);
-        data.put("language", language != null ? language.toString() : null);
-        data.put("role", role != null ? role.toString() : null);
-        data.put("identification", identification);
-        try {
-            final Number key = jdbcInsert.executeAndReturnKey(data);
-            return new User.Builder()
-                    .userId(key.longValue())
-                    .name(name).mail(mail)
-                    .surname(surname)
-                    .password(password)
-                    .neighborhoodId(neighborhoodId)
-                    .darkMode(darkMode)
-                    .language(language)
-                    .role(role)
-                    .identification(identification)
-                    .build();
-        } catch (DataAccessException ex) {
-            LOGGER.error("Error inserting the User", ex);
-            throw new InsertionException("An error occurred whilst creating the User");
-        }
+        User user = new User.Builder()
+                .name(name).mail(mail)
+                .surname(surname)
+                .password(password)
+                .neighborhood(em.find(Neighborhood.class, neighborhoodId))
+                .darkMode(darkMode)
+                .language(language)
+                .role(role)
+                .identification(identification)
+                .build();
+        em.persist(user);
+        return user;
     }
 
     @Override
     public Optional<User> findUserById(final long userId) {
         LOGGER.debug("Selecting User with userId {}", userId);
-        final List<User> list = jdbcTemplate.query(USERS + " WHERE userid = ?", ROW_MAPPER, userId);
-        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+        return Optional.ofNullable(em.find(User.class, userId));
     }
 
     @Override
     public Optional<User> findUserByMail(final String mail) {
         LOGGER.debug("Selecting User with mail {}", mail);
-        final List<User> list = jdbcTemplate.query(USERS + " WHERE mail = ?", ROW_MAPPER, mail);
-        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+        TypedQuery<User> query = em.createQuery("FROM User WHERE mail = :mail", User.class);
+        query.setParameter("mail", mail);
+        return query.getResultList().stream().findFirst();
     }
 
     @Override

@@ -18,6 +18,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
@@ -59,6 +61,9 @@ public class UserDaoImplTest {
     private long uKey3;
     private long uKey4;
 
+    @PersistenceContext
+    private EntityManager em;
+
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -73,11 +78,11 @@ public class UserDaoImplTest {
         User createdUser = userDao.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, ROLE, ID);
 
         // Validations & Post Conditions
+        em.flush();
         assertNotNull(createdUser);
         assertEquals(USER_MAIL_1, createdUser.getMail());
         assertEquals(NAME, createdUser.getName());
         assertEquals(SURNAME, createdUser.getSurname());
-        assertEquals(nhKey1, createdUser.getNeighborhoodId().longValue());
         assertEquals(LANGUAGE, createdUser.getLanguage());
         assertEquals(DARK_MODE, createdUser.isDarkMode());
         assertEquals(ROLE, createdUser.getRole());

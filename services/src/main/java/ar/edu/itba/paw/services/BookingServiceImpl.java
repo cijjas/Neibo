@@ -61,22 +61,30 @@ public class BookingServiceImpl implements BookingService {
         List<GroupedBooking> groupedBookings = new ArrayList<>();
         GroupedBooking currentGroupedBooking = null;
 
+
+
         for (Booking booking : userBookings) {
             if (currentGroupedBooking == null || !currentGroupedBooking.canCombine(booking)) {
                 // Create a new GroupedBooking when the current one cannot be continued
-                Time endTime = calculateEndTime(booking.getTime().getTimeInterval());
+                // TODO this is a fix until the whole codebase is transitioned into hibernate, issue comes from getUserBookings that is not trully bringing the objects that Hibernate commonly manipulates
+                if (booking.getAmenityAvailability() == null) {
+                    // Handle the case where amenityAvailability is null
+                    continue;
+                }
+
+                Time endTime = calculateEndTime(booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval());
                 currentGroupedBooking = new GroupedBooking(
-                        booking.getAmenity().getName(),
+                        booking.getAmenityAvailability().getAmenity().getName(),
                         booking.getBookingDate(),
-                        booking.getDay().getDayName(),
-                        booking.getTime().getTimeInterval(),
+                        booking.getAmenityAvailability().getShift().getDay().getDayName(),
+                        booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval(),
                         endTime
                 );
                 currentGroupedBooking.addBookingId(booking.getBookingId());
                 groupedBookings.add(currentGroupedBooking);
             } else {
                 // Use the combine method to update the current GroupedBooking
-                Time endTime = calculateEndTime(booking.getTime().getTimeInterval());
+                Time endTime = calculateEndTime(booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval());
                 currentGroupedBooking.combine(booking);
                 currentGroupedBooking.addBookingId(booking.getBookingId());
             }

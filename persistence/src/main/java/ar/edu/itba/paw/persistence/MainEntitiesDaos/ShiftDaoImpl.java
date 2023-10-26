@@ -7,6 +7,7 @@ import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.models.MainEntities.Day;
 import ar.edu.itba.paw.models.MainEntities.Shift;
 import ar.edu.itba.paw.models.MainEntities.Time;
+import ar.edu.itba.paw.models.MainEntities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,20 +89,9 @@ public class ShiftDaoImpl implements ShiftDao {
     @Override
     public Shift createShift(long dayId, long startTimeId) {
         LOGGER.debug("Inserting Shift");
-        // Fetch the Amenity and Shift entities using the EntityManager
-        Day day = em.find(Day.class, dayId);
-        Time time = em.find(Time.class, startTimeId);
-
-        // Check if the Amenity and Shift entities exist
-        if (day == null) {
-            throw new NotFoundException("Amenity Not Found");
-        }
-        if (time == null) {
-            throw new NotFoundException("Shift Not Found");
-        }
         Shift shift = new Shift.Builder()
-                .day(day)
-                .startTime(time)
+                .day(em.find(Day.class, dayId))
+                .startTime(em.find(Time.class, startTimeId))
                 .build();
         em.persist(shift);
         return shift;
@@ -110,8 +100,7 @@ public class ShiftDaoImpl implements ShiftDao {
     @Override
     public Optional<Shift> findShiftById(long shiftId) {
         LOGGER.debug("Selecting Shift with shiftId {}", shiftId);
-        final List<Shift> list = jdbcTemplate.query(SHIFTS + " WHERE s.shiftid = ?", ROW_MAPPER, shiftId);
-        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+        return Optional.ofNullable(em.find(Shift.class, shiftId));
     }
 
     @Override

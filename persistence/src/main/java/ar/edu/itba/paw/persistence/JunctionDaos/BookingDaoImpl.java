@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.MainEntities.Amenity;
 import ar.edu.itba.paw.models.JunctionEntities.Booking;
 import ar.edu.itba.paw.models.MainEntities.Day;
 import ar.edu.itba.paw.models.MainEntities.Time;
+import ar.edu.itba.paw.models.MainEntities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.HashMap;
@@ -26,6 +29,8 @@ import java.util.Map;
 @Repository
 public class BookingDaoImpl implements BookingDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingDaoImpl.class);
+    @PersistenceContext
+    private EntityManager em;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private ShiftDao shiftDao;
@@ -47,11 +52,11 @@ public class BookingDaoImpl implements BookingDao {
         Time time = timeDao.findTimeById(rs.getLong("timeid")).orElseThrow(()-> new NotFoundException("Time Not Found"));
         return new Booking.Builder()
                 .bookingId(rs.getLong("bookingid"))
-                .userId(rs.getLong("userid"))
-                .amenity(amenity)
+                .user(em.find(User.class, rs.getLong("userid")))
+                /*.amenity(amenity)*/
                 .bookingDate(rs.getDate("date"))
-                .day(day)
-                .time(time)
+                /*.day(day)*/
+                /*.time(time)*/
                 .build();
     };
 

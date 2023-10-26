@@ -2,8 +2,10 @@ package ar.edu.itba.paw.models.JunctionEntities;
 
 import ar.edu.itba.paw.models.MainEntities.Amenity;
 import ar.edu.itba.paw.models.MainEntities.Shift;
+import ar.edu.itba.paw.models.MainEntities.User;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "amenities_shifts_availability")
@@ -12,24 +14,29 @@ public class Availability {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "amenities_shifts_availability_amenityavailabilityid_seq")
     @SequenceGenerator(sequenceName = "amenities_shifts_availability_amenityavailabilityid_seq", name = "amenities_shifts_availability_amenityavailabilityid_seq", allocationSize = 1)
     @Column(name = "amenityavailabilityid")
-    private Long availabilityId;
+    private Long amenityAvailabilityId;
 
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "amenityid")
     private Amenity amenity;
 
-    @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name = "shiftid")
+    @ManyToOne
     private Shift shift;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "users_availability",
+            joinColumns = @JoinColumn(name = "amenityavailabilityid"),
+            inverseJoinColumns = @JoinColumn(name = "userid"))
+    private Set<User> bookedByUsers;
+
     private Availability(Builder builder) {
-        this.availabilityId = builder.availabilityId;
+        this.amenityAvailabilityId = builder.amenityAvailabilityId;
         this.amenity = builder.amenity;
         this.shift = builder.shift;
     }
 
-    public Long getAvailabilityId() {
-        return availabilityId;
+    public Long getAmenityAvailabilityId() {
+        return amenityAvailabilityId;
     }
 
     public Amenity getAmenity() {
@@ -40,22 +47,26 @@ public class Availability {
         return shift;
     }
 
+    public Set<User> getBookedByUsers() {
+        return bookedByUsers;
+    }
+
     @Override
     public String toString() {
         return "Availability{" +
-                "availabilityId=" + availabilityId +
+                "amenityAvailabilityId=" + amenityAvailabilityId +
                 ", amenity=" + amenity +
                 ", shift=" + shift +
                 '}';
     }
 
     public static class Builder {
-        private Long availabilityId;
+        private Long amenityAvailabilityId;
         private Amenity amenity;
         private Shift shift;
 
-        public Builder availabilityId(Long availabilityId) {
-            this.availabilityId = availabilityId;
+        public Builder amenityAvailabilityId(Long amenityAvailabilityId) {
+            this.amenityAvailabilityId = amenityAvailabilityId;
             return this;
         }
 

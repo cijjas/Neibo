@@ -231,10 +231,10 @@ public class ServiceController {
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
-        List<Worker> workerList = ws.getWorkersByCriteria(page, size, null, sessionUtils.getLoggedUser().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId());
+        List<Worker> workerList = ws.getWorkersByCriteria(page, size, null, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId());
         mav.addObject("workersList", workerList);
         mav.addObject("channel", "Services");
-        mav.addObject("totalPages", ws.getTotalWorkerPages(sessionUtils.getLoggedUser().getNeighborhoodId(), size));
+        mav.addObject("totalPages", ws.getTotalWorkerPages(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
         mav.addObject("contextPath", "/services");
         mav.addObject("page", page);
         return mav;

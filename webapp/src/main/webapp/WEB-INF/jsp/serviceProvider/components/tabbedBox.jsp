@@ -152,7 +152,7 @@
                                 <jsp:param name="postTitle" value="${post.title}"/>
                                 <jsp:param name="postDescription" value="${post.description}"/>
                                 <jsp:param name="postImage" value="${post.postPictureId}"/>
-                                <jsp:param name="postUserProfilePictureId" value="${post.user.profilePictureId}"/>
+                                <jsp:param name="postUserProfilePictureId" value="${post.user.profilePicture.getImageId}"/>
                             </jsp:include>
                         </c:forEach>
 

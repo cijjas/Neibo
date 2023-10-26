@@ -23,7 +23,7 @@
                         />
                         <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
                         <script>
-                            getImageInto("poster-image", ${post.user.profilePictureId}, "${pageContext.request.contextPath}");
+                            getImageInto("poster-image", ${post.user.profilePicture.getImageId}, "${pageContext.request.contextPath}");
                         </script>
                         <c:out value="${post.user.name}"/>
                     </span>
@@ -256,7 +256,7 @@
                                 />
                                 <script>
                                     (function () {
-                                        getImageInto("comment-image-${comment.commentId}", ${comment.user.profilePictureId}, "${pageContext.request.contextPath}");
+                                        getImageInto("comment-image-${comment.commentId}", ${comment.user.profilePicture.getImageId}, "${pageContext.request.contextPath}");
                                     })();
                                 </script>
 

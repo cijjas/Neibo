@@ -83,8 +83,8 @@ public class AdminController {
         ModelAndView mav = new ModelAndView("admin/views/information");
 
         mav.addObject("panelOption", "Information");
-        mav.addObject("resourceList", res.getResources(sessionUtils.getLoggedUser().getNeighborhoodId()));
-        mav.addObject("phoneNumbersList", cos.getContacts(sessionUtils.getLoggedUser().getNeighborhoodId()));
+        mav.addObject("resourceList", res.getResources(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
+        mav.addObject("phoneNumbersList", cos.getContacts(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
         return mav;
     }
 
@@ -102,8 +102,8 @@ public class AdminController {
         mav.addObject("panelOption", "Neighbors");
         mav.addObject("neighbors", true);
         mav.addObject("page", page);
-        mav.addObject("totalPages", us.getTotalPages(UserRole.NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhoodId(), size));
-        mav.addObject("users", us.getUsersPage(UserRole.NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhoodId(), page, size));
+        mav.addObject("totalPages", us.getTotalPages(UserRole.NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
+        mav.addObject("users", us.getUsersPage(UserRole.NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size));
         return mav;
     }
 
@@ -121,8 +121,8 @@ public class AdminController {
         mav.addObject("panelOption", "Requests");
         mav.addObject("neighbors", false);
         mav.addObject("page", page);
-        mav.addObject("totalPages", us.getTotalPages(UserRole.UNVERIFIED_NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhoodId(), size));
-        mav.addObject("users", us.getUsersPage(UserRole.UNVERIFIED_NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhoodId(), page, size));
+        mav.addObject("totalPages", us.getTotalPages(UserRole.UNVERIFIED_NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
+        mav.addObject("users", us.getUsersPage(UserRole.UNVERIFIED_NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size));
         mav.addObject("contextPath", "/admin/unverified");
         return mav;
     }
@@ -154,7 +154,7 @@ public class AdminController {
         final ModelAndView mav = new ModelAndView("admin/views/adminPublish");
 
         mav.addObject("panelOption", "PublishAdmin");
-        mav.addObject("channelList", chs.getAdminChannels(sessionUtils.getLoggedUser().getNeighborhoodId()));
+        mav.addObject("channelList", chs.getAdminChannels(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
         return mav;
     }
 
@@ -169,11 +169,11 @@ public class AdminController {
             return publishAdminForm(publishForm);
         }
 
-        ps.createAdminPost(sessionUtils.getLoggedUser().getNeighborhoodId(), publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), publishForm.getChannel(), publishForm.getTags(), publishForm.getImageFile());
+        ps.createAdminPost(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), publishForm.getChannel(), publishForm.getTags(), publishForm.getImageFile());
         PublishForm clearedForm = new PublishForm();
         ModelAndView mav = new ModelAndView("admin/views/adminPublish");
         mav.addObject("showSuccessMessage", true);
-        mav.addObject("channelList", chs.getAdminChannels(sessionUtils.getLoggedUser().getNeighborhoodId()));
+        mav.addObject("channelList", chs.getAdminChannels(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
         mav.addObject("publishForm", clearedForm);
 
         return mav;
@@ -190,9 +190,9 @@ public class AdminController {
 
         ModelAndView mav = new ModelAndView("admin/views/amenitiesPanel");
 
-        List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId(), page, size);
+        List<Amenity> amenities = as.getAmenities(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size);
 
-        mav.addObject("totalPages", as.getTotalAmenitiesPages(sessionUtils.getLoggedUser().getNeighborhoodId(), size));
+        mav.addObject("totalPages", as.getTotalAmenitiesPages(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
         mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
         mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
         mav.addObject("amenities", amenities);
@@ -237,7 +237,7 @@ public class AdminController {
         }
 
 
-        as.createAmenity(amenityForm.getName(), amenityForm.getDescription(), sessionUtils.getLoggedUser().getNeighborhoodId(), selectedShifts);
+        as.createAmenity(amenityForm.getName(), amenityForm.getDescription(), sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), selectedShifts);
         return new ModelAndView("redirect:/admin/amenities");
     }
 
@@ -261,7 +261,7 @@ public class AdminController {
             LOGGER.error("Error in Event Form");
             return eventForm(eventForm);
         }
-        es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), eventForm.getStartTime(), eventForm.getEndTime(), sessionUtils.getLoggedUser().getNeighborhoodId());
+        es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), eventForm.getStartTime(), eventForm.getEndTime(), sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId());
         ModelAndView mav = new ModelAndView("redirect:/calendar?timestamp=" + eventForm.getDate().getTime());
         mav.addObject("showSuccessMessage", true);
         return mav;
@@ -297,7 +297,7 @@ public class AdminController {
             LOGGER.error("Error in Contact Form");
             return createContact(contactForm);
         }
-        cos.createContact(sessionUtils.getLoggedUser().getNeighborhoodId(), contactForm.getContactName(), contactForm.getContactAddress(), contactForm.getContactPhone());
+        cos.createContact(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), contactForm.getContactName(), contactForm.getContactAddress(), contactForm.getContactPhone());
         return new ModelAndView("redirect:/admin/information");
     }
 
@@ -331,7 +331,7 @@ public class AdminController {
             LOGGER.error("Error in Resource Form");
             return createResourceForm(resourceForm);
         }
-        res.createResource(sessionUtils.getLoggedUser().getNeighborhoodId(), resourceForm.getTitle(), resourceForm.getDescription(), resourceForm.getImageFile());
+        res.createResource(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), resourceForm.getTitle(), resourceForm.getDescription(), resourceForm.getImageFile());
         return new ModelAndView("redirect:/admin/information");
     }
 

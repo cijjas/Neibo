@@ -53,14 +53,14 @@ public class GroupedBooking {
     }
 
     public boolean canCombine(Booking booking) {
-        return amenityName.equals(booking.getAmenity().getName()) &&
+        return amenityName.equals(booking.getAmenityAvailability().getAmenity().getName()) &&
                 date.equals(booking.getBookingDate()) &&
-                day.equals(booking.getDay().getDayName()) &&
-                endTime.equals(booking.getTime().getTimeInterval());
+                day.equals(booking.getAmenityAvailability().getShift().getDay().getDayName()) &&
+                endTime.equals(booking.getAmenityAvailability().getShift().getEndTime());
     }
 
     public void combine(Booking booking) {
-        long startTimeMillis = booking.getTime().getTimeInterval().getTime();
+        long startTimeMillis = booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval().getTime();
         long endTimeMillis = startTimeMillis + 60 * 60 * 1000;
         this.endTime = new Time(endTimeMillis);
     }

@@ -3,23 +3,34 @@ package ar.edu.itba.paw.models.JunctionEntities;
 import java.sql.Date;
 
 import ar.edu.itba.paw.models.MainEntities.Amenity;
-import ar.edu.itba.paw.models.MainEntities.Day;
-import ar.edu.itba.paw.models.MainEntities.Time;
+import ar.edu.itba.paw.models.MainEntities.User;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "users_availability")
 public class Booking {
-    private final Long bookingId;
-    private final Long userId;
-    private final Amenity amenity;
-    private final Day day;
-    private final Time time;
-    private final Date bookingDate;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_availability_bookingid_seq")
+    @SequenceGenerator(sequenceName = "users_availability_bookingid_seq", name = "users_availability_bookingid_seq", allocationSize = 1)
+    @Column(name = "bookingid")
+    private Long bookingId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "userid", referencedColumnName = "userid")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "amenityavailabilityid", referencedColumnName = "amenityavailabilityid")
+    private Availability amenityAvailability;
+
+    @Column(name = "date")
+    private Date bookingDate;
 
     private Booking(Builder builder) {
         this.bookingId = builder.bookingId;
-        this.userId = builder.userId;
-        this.amenity = builder.amenity;
-        this.day = builder.day;
-        this.time = builder.time;
+        this.user = builder.user;
+        this.amenityAvailability = builder.amenityAvailability;
         this.bookingDate = builder.bookingDate;
     }
 
@@ -27,20 +38,12 @@ public class Booking {
         return bookingId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public Amenity getAmenity() {
-        return amenity;
-    }
-
-    public Day getDay() {
-        return day;
-    }
-
-    public Time getTime() {
-        return time;
+    public Availability getAmenityAvailability() {
+        return amenityAvailability;
     }
 
     public Date getBookingDate() {
@@ -51,20 +54,16 @@ public class Booking {
     public String toString() {
         return "Booking{" +
                 "bookingId=" + bookingId +
-                ", userId=" + userId +
-                ", amenity=" + amenity +
-                ", day=" + day +
-                ", time=" + time +
+                ", user=" + user +
+                ", amenityAvailability=" + amenityAvailability +
                 ", bookingDate=" + bookingDate +
                 '}';
     }
 
     public static class Builder {
         private Long bookingId;
-        private Long userId;
-        private Amenity amenity;
-        private Day day;
-        private Time time;
+        private User user;
+        private Availability amenityAvailability;
         private Date bookingDate;
 
         public Builder bookingId(Long bookingId) {
@@ -72,23 +71,13 @@ public class Booking {
             return this;
         }
 
-        public Builder userId(Long userId) {
-            this.userId = userId;
+        public Builder user(User user) {
+            this.user = user;
             return this;
         }
 
-        public Builder amenity(Amenity amenity) {
-            this.amenity = amenity;
-            return this;
-        }
-
-        public Builder day(Day day) {
-            this.day = day;
-            return this;
-        }
-
-        public Builder time(Time time) {
-            this.time = time;
+        public Builder amenityAvailability(Availability amenityAvailability) {
+            this.amenityAvailability = amenityAvailability;
             return this;
         }
 
@@ -102,4 +91,3 @@ public class Booking {
         }
     }
 }
-

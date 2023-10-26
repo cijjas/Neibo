@@ -33,7 +33,7 @@ public class SessionUtils {
         if (user == null) {
             return null;
         }
-        Optional<Neighborhood> neighborhood = ns.findNeighborhoodById(getLoggedUser().getNeighborhoodId());
+        Optional<Neighborhood> neighborhood = ns.findNeighborhoodById(getLoggedUser().getNeighborhood().getNeighborhoodId());
         Neighborhood n = neighborhood.orElseThrow(() -> new NotFoundException("Neighborhood Not Found"));
         return n.getName();
     }

@@ -18,6 +18,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.Optional;
 
@@ -37,12 +39,15 @@ public class ImageDaoImplTest {
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
+    @Autowired
     private ImageDao imageDao;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        imageDao = new ImageDaoImpl(ds);
     }
 
     @Test
@@ -55,6 +60,7 @@ public class ImageDaoImplTest {
         Image storedImage = imageDao.storeImage(fakeImage);
 
         // Validations & Post Conditions
+        em.flush();
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.images.name()));
         assertArrayEquals(fakeImageBytes, storedImage.getImage());
     }

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.MainEntities;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -18,6 +19,9 @@ public class Neighborhood {
             joinColumns = @JoinColumn(name = "neighborhoodid"),
             inverseJoinColumns = @JoinColumn(name = "channelid"))
     private Set<Neighborhood> channels;
+
+    @OneToMany(mappedBy = "neighborhood")  // mappedBy refers to the field in the User entity
+    private Set<User> users = new HashSet<>();
 
     public Neighborhood(){}
 
