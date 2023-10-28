@@ -9,7 +9,6 @@
             <div class="f-r-sb-c ">
                 <div>
                     <span style="font-size: 14px" class="font-weight-bold">
-
                         <c:out value="${post.channel.channel}"/>
                     </span>
                     <span style="font-size: 12px; font-weight: normal" class="ml-1 placeholder-glow">
@@ -89,9 +88,18 @@
 
                             <c:forEach var="tag" items="${tags}">
                                 <a class="post-tag static m-l-3 m-r-3"
-                                   href="${pageContext.request.contextPath}/?tag=${tag.tag}">
+                                   onclick="redirectWithTag('${post.channel.channel}','${tag.tag}')">
                                     <c:out value="${tag.tag}"/>
                                 </a>
+                                <script>
+                                    function redirectWithTag(channel,tag) {
+                                        if(channel === "Feed"){
+                                            window.location.href = "${pageContext.request.contextPath}/" + "?tag=" + tag;
+                                            return;
+                                        }
+                                        window.location.href = "${pageContext.request.contextPath}/" + channel.toLocaleLowerCase() + "?tag=" + tag;
+                                    }
+                                </script>
                             </c:forEach>
                         </div>
                     </div>

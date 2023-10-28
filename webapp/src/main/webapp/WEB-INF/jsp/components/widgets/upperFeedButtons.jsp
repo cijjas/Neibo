@@ -4,6 +4,11 @@
 <c:if test="${channel != 'Announcements'}">
     <div class="upper-feed-buttons-box ">
         <div class="f-r-s-c">
+            <a onclick="newestPosts()"
+               class="cool-feed-button rounded ${param.postStatus == 'newest' ? 'active' : ''}  ">
+                <spring:message code="Newest"/>
+                <i class="fa-solid fa-up-long"></i>
+            </a>
             <a onclick="hotPosts()" class="coolest-button ${param.postStatus == 'hot' ? 'active' : ''}">
                 <spring:message code="Hot"/>
                 <i class="fa-solid fa-fire ml-1"></i>
@@ -56,6 +61,12 @@
     function hotPosts() {
         const currentUrl = new URL(window.location.href);
         currentUrl.searchParams.set('postStatus', 'hot');
+        window.location.href = currentUrl.toString();
+    }
+
+    function newestPosts(){ // TODO: change to newest
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('postStatus', 'newest');
         window.location.href = currentUrl.toString();
     }
 
