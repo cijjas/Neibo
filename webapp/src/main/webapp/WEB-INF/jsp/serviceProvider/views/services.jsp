@@ -55,6 +55,7 @@
 
             <div class="column-right">
                 <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %>
+                <%@ include file="/WEB-INF/jsp/serviceProvider/components/filterWorkersWidget.jsp" %>
             </div>
 
         </div>

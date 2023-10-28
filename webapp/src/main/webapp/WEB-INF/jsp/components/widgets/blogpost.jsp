@@ -38,7 +38,7 @@
                                         getImageInto("postUserProfilePictureId-${param.postID}", ${param.postUserProfilePictureId}, "${pageContext.request.contextPath}");
                                     })();
                                 </script>
-                                <span class="post-author"><c:out value="${param.postNeighborMail}"/></span>
+                                <span class="post-author pt-1 pb-1 pl-1"><c:out value="${param.postNeighborMail}"/></span>
 
                             </div>
 

@@ -1,7 +1,6 @@
 // Wrap the entire script in a function
 (function () {
     const postDateElements = document.querySelectorAll('.post-date');
-    console.log(postDateElements);
 // Iterate through each element and update the date
     postDateElements.forEach((postDateElement) => {
         const dateString = postDateElement.getAttribute('data-post-date');

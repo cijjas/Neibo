@@ -199,6 +199,17 @@ input[type="checkbox"] {
     cursor: pointer;
     transition: all 0.3s ease-in-out;
 
+    &::before{
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 110%;
+        bottom: -2px;
+        left: 0;
+        -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+    }
     &::before {
         position: absolute;
         content: '';
@@ -272,7 +283,13 @@ p {
     align-items: center;
     gap: 1rem;
 }
-
+.f-c-c-s {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    gap: 1rem;
+}
 .f-c-s-c {
     display: flex;
     flex-direction: column;
@@ -291,6 +308,13 @@ p {
 
 .g-0{
     gap:0 !important;
+}
+
+.g-1{
+    gap:1rem !important;
+}
+.g-2{
+    gap:2rem !important;
 }
 
 .f-c-sb-c {
@@ -414,4 +438,8 @@ p {
 
 .pointer {
     cursor: pointer;
+}
+
+.fixed{
+    position: fixed;
 }

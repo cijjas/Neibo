@@ -262,6 +262,7 @@ public class MainController {
     ) {
         LOGGER.info("User arriving at '/publish'");
         final ModelAndView mav = new ModelAndView("views/publish");
+        mav.addObject("tagList", ts.getTags(sessionUtils.getLoggedUser().getNeighborhoodId()));
         mav.addObject("channel", onChannelId);
         mav.addObject("channelList", chs.getNeighborChannels(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId()));
         return mav;

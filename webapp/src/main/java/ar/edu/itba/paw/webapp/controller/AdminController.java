@@ -154,6 +154,7 @@ public class AdminController {
         final ModelAndView mav = new ModelAndView("admin/views/adminPublish");
 
         mav.addObject("panelOption", "PublishAdmin");
+        mav.addObject("tagList", ts.getTags(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
         mav.addObject("channelList", chs.getAdminChannels(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
         return mav;
     }

@@ -1,10 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <div class="grey-static-container ">
-    <div class="column d-flex justify-content-center align-items-start">
+    <div class="f-c-c-s g-0">
 
-        <div class="f-r-sb-c w-100">
-            <h3 class="m-b-10 ml-2"><spring:message code="Filter.by.tags"/></h3>
+        <div class="f-r-sb-c w-100 ">
+            <h3 class="pt-1 pb-1 m-1"><spring:message code="Filter.by.tags"/></h3>
 
 
         </div>
@@ -12,7 +12,7 @@
         <div class="m-b-10 w-100">
             <div class="d-flex flex-column justify-content-center align-items-center  w-100">
                 <c:set var="val"><spring:message code="EnterATag"/></c:set>
-                <input id="niakaniaka" type="hidden" value="${val}"/>
+                <input id="niakaniaka" type="hidden" value="<c:out value='${val}'/>"/>
 
                 <label for="tag-input2" class="w-100">
                     <input type="text" id="tag-input2">
@@ -23,11 +23,10 @@
             <c:forEach var="tag" items="${tagList}" varStatus="loop">
                 <c:choose>
                     <c:when test="${loop.index < 20}">
-                        <a class="tag-option" onclick="addTagToApply('${tag.tag}')">${tag.tag}</a>
+                        <a class="tag-option" onclick="addTagToApply('${tag.tag}', tagInput2)"><c:out value="${tag.tag}"/></a>
                     </c:when>
                     <c:otherwise>
-                        <a class="tag-option" onclick="addTagToApply('${tag.tag}'  )"
-                           style="display: none">${tag.tag}</a>
+                        <a class="tag-option" onclick="addTagToApply('${tag.tag}',tagInput2)" style="display: none"><c:out value="${tag.tag}"/></a>
                     </c:otherwise>
                 </c:choose>
 
@@ -52,7 +51,7 @@
                     if (tagsArray) {
                         // Loop through the tags and add them
                         tagsArray.forEach(function (tagText) {
-                            addTagToApply(tagText);
+                            addTagToApply(tagText, tagInput2);
                         });
                     }
                 }
@@ -61,14 +60,17 @@
             // Call the function to initialize applied tags when the page loads
             window.addEventListener('load', initializeAppliedTags);
         </script>
-        <div class="f-r-sb-c">
-            <a class="cool-button cool-small on-bg font-weight-bold " onclick="applyTagsAsFilter()">
-                <spring:message code="Apply"/>
-            </a>
-            <a class="cool-button red font-weight-bold" onclick="clearAllTags()">
-                <spring:message code="Clear"/>
-                <i class="fa-solid fa-xmark"></i>
-            </a>
+        <div class="w-100">
+            <div class="f-r-sb-c  g-1">
+                <a class="cool-button red font-weight-bold" onclick="clearAllTags()">
+                    <spring:message code="Clear"/>
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+                <a class="cool-button cool-small on-bg font-weight-bold " onclick="applyTagsAsFilter()">
+                    <spring:message code="Apply"/>
+                </a>
+            </div>
+
         </div>
 
     </div>
@@ -113,8 +115,8 @@
     });
 
     // Add a tag from the dropdown
-    function addTagToApply(tagText) {
-        tagInput2.addTag(tagText); // Assuming tagInput2 is your TagsInput instance
+    function addTagToApply(tagText, tagInput) {
+        tagInput.addTag(tagText); // Assuming tagInput2 is your TagsInput instance
     }
 
     function applyTagsAsFilter() {

@@ -89,7 +89,7 @@
                             <div class="w-50">
                                 <div class="tags-input w-100">
                                     <c:set var="val"><spring:message code="EnterATag"/></c:set>
-                                    <input id="niakaniaka" type="hidden" value="${val}"/>
+                                    <input id="niakaniaka" type="hidden" value="<c:out value='${val}'/>"/>
                                     <label for="tag-input1" class="w-100">
                                         <input type="text" id="tag-input1">
                                     </label>
@@ -100,7 +100,41 @@
                                         </div>
                                     </form:label>
                                 </div>
+                                <div class="m-b-10 tags-row tags">
+                                    <c:forEach var="tag" items="${tagList}" varStatus="loop">
+                                        <c:choose>
+                                            <c:when test="${loop.index < 20}">
+                                                <a class="tag-option" onclick="addTagToApply('${tag.tag}', tagInput1)"><c:out value="${tag.tag}"/></a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="tag-option" onclick="addTagToApply('${tag.tag}', tagInput1)" style="display: none"><c:out value="${tag.tag}"/></a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:forEach>
+                                </div>
+                                <script>
+                                    function addTagToApply(tagText, tagInput) {
+                                        tagInput.addTag(tagText); // Assuming tagInput2 is your TagsInput instance
+                                    }
+                                    function filterTags(tags, query) {
+                                        const tagList = document.querySelectorAll('.tag-option');
+
+                                        tagList.forEach(function (tagOption) {
+                                            const tagText = tagOption.textContent;
+                                            const shouldShow = tagText.toLowerCase().includes(query.toLowerCase());
+
+                                            if (shouldShow) {
+                                                tagOption.style.display = 'block'; // Show the element
+
+                                            } else {
+                                                tagOption.style.display = 'none'; // Hide the element
+                                            }
+                                        });
+                                    }
+                                </script>
+
                             </div>
+
                         </c:if>
 
 
