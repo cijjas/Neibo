@@ -88,14 +88,9 @@
 
                             <c:forEach var="tag" items="${tags}">
                                 <a class="post-tag static m-l-3 m-r-3"
-                                   onclick="redirectWithTag('${post.channel.channel}','${tag.tag}')">
+                                   href="${pageContext.request.contextPath}/${channel.toLowerCase()}?tag=${tag.tag}">
                                     <c:out value="${tag.tag}"/>
                                 </a>
-                                <script>
-                                    function redirectWithTag(channel,tag) {
-                                        window.location.href = "${pageContext.request.contextPath}/" + channel.toLocaleLowerCase() + "?tag=" + tag;
-                                    }
-                                </script>
                             </c:forEach>
                         </div>
                     </div>

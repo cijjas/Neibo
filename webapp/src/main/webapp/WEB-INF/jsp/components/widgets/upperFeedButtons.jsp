@@ -5,7 +5,7 @@
     <div class="upper-feed-buttons-box ">
         <div class="f-r-s-c">
             <a onclick="newestPosts()"
-               class="cool-feed-button rounded ${param.postStatus == 'newest' ? 'active' : ''}  ">
+                   class="cool-feed-button rounded ${(param.postStatus == 'none' || param.postStatus eq null) ? 'active' : ''}  ">
                 <spring:message code="Newest"/>
                 <i class="fa-solid fa-up-long"></i>
             </a>
@@ -64,9 +64,9 @@
         window.location.href = currentUrl.toString();
     }
 
-    function newestPosts(){ // TODO: change to newest
+    function newestPosts(){
         const currentUrl = new URL(window.location.href);
-        currentUrl.searchParams.set('postStatus', 'newest');
+        currentUrl.searchParams.set('postStatus', 'none');
         window.location.href = currentUrl.toString();
     }
 
