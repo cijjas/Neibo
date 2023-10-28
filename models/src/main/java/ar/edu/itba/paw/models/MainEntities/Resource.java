@@ -1,59 +1,95 @@
 package ar.edu.itba.paw.models.MainEntities;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "resources")
 public class Resource {
-    private final Long resourceId;
-    private final String description;
-    private final Long imageId;
-    private final String title;
-    private final Long neighborhoodId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "resources_resourceid_seq")
+    @SequenceGenerator(sequenceName = "resources_resourceid_seq", name = "resources_resourceid_seq", allocationSize = 1)
+    @Column(name = "resourceid")
+    private Long resourceId;
+
+    @Column(name = "resourcetitle", length = 64)
+    private String title;
+
+    @Column(name = "resourcedescription", length = 255)
+    private String description;
+
+    @ManyToOne
+    @JoinColumn(name = "resourceimageid")
+    private Image image;
+
+    @ManyToOne
+    @JoinColumn(name = "neighborhoodid", nullable = false)
+    private Neighborhood neighborhood;
+
+    protected Resource() {
+        // Default constructor for JPA
+    }
 
     private Resource(Builder builder) {
-        this.resourceId = builder.resourceId;
-        this.description = builder.description;
-        this.imageId = builder.imageId;
         this.title = builder.title;
-        this.neighborhoodId = builder.neighborhoodId;
+        this.description = builder.description;
+        this.image = builder.image;
+        this.neighborhood = builder.neighborhood;
     }
 
     public Long getResourceId() {
         return resourceId;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public Long getImageId() {
-        return imageId;
-    }
-
     public String getTitle() {
         return title;
     }
 
-    public Long getNeighborhoodId() {
-        return neighborhoodId;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public Neighborhood getNeighborhood() {
+        return neighborhood;
+    }
+
+    public void setNeighborhood(Neighborhood neighborhood) {
+        this.neighborhood = neighborhood;
     }
 
     @Override
     public String toString() {
         return "Resource{" +
                 "resourceId=" + resourceId +
-                "description='" + description + '\'' +
-                ", image='" + imageId + '\'' +
+                ", description='" + description + '\'' +
+                ", image='" + (image != null ? image.getImageId() : null) + '\'' +
                 ", title='" + title + '\'' +
                 '}';
     }
 
     public static class Builder {
-        private Long resourceId;
-        private String description;
-        private Long imageId;
         private String title;
-        private Long neighborhoodId;
+        private String description;
+        private Image image;
+        private Neighborhood neighborhood;
 
-        public Builder resourceId(Long resourceId) {
-            this.resourceId = resourceId;
+        public Builder title(String title) {
+            this.title = title;
             return this;
         }
 
@@ -62,18 +98,13 @@ public class Resource {
             return this;
         }
 
-        public Builder imageId(Long imageId) {
-            this.imageId = imageId;
+        public Builder image(Image image) {
+            this.image = image;
             return this;
         }
 
-        public Builder title(String title) {
-            this.title = title;
-            return this;
-        }
-
-        public Builder neighborhoodId(Long neighborhoodId) {
-            this.neighborhoodId = neighborhoodId;
+        public Builder neighborhood(Neighborhood neighborhood) {
+            this.neighborhood = neighborhood;
             return this;
         }
 
@@ -82,4 +113,3 @@ public class Resource {
         }
     }
 }
-

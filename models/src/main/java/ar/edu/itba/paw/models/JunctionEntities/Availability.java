@@ -21,6 +21,7 @@ public class Availability {
     private Amenity amenity;
 
     @ManyToOne
+    @JoinColumn(name = "shiftid")
     private Shift shift;
 
     @ManyToMany(cascade = CascadeType.ALL)

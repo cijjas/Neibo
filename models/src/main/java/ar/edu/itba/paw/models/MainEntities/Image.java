@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.models.MainEntities;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "images")
@@ -11,9 +13,11 @@ public class Image {
     @Column(name = "imageid")
     private Long imageId;
 
-    @Lob
-    @Column(name = "image", nullable = false)
+    @Column(name = "image", columnDefinition = "bytea", nullable = false)
     private byte[] image;
+
+    @OneToMany(mappedBy = "image")
+    private Set<Resource> resources = new HashSet<>();
 
 
     public Image() {

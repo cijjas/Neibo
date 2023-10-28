@@ -18,6 +18,13 @@ public class Time {
     @OneToMany(mappedBy = "startTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Shift> shifts = new HashSet<>();
 
+    @OneToMany(mappedBy = "startTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Event> eventsStartingAtThisTime = new HashSet<>();
+
+    @OneToMany(mappedBy = "endTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<Event> eventsEndingAtThisTime = new HashSet<>();
+
+
     public Time(){}
 
     private Time(Builder builder) {

@@ -53,33 +53,18 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
     @Override
     public Availability createAvailability(long amenityId, long shiftId) {
         LOGGER.debug("Inserting Availability");
-
-        // Fetch the Amenity and Shift entities using the EntityManager
-        Amenity amenity = em.find(Amenity.class, amenityId);
-        Shift shift = em.find(Shift.class, shiftId);
-
-        // Check if the Amenity and Shift entities exist
-        if (amenity == null) {
-            throw new NotFoundException("Amenity Not Found");
-        }
-        if (shift == null) {
-            throw new NotFoundException("Shift Not Found");
-        }
-
-        // Create and persist the Availability
         Availability availability = new Availability.Builder()
-                .amenity(amenity)
-                .shift(shift)
+                .amenity(em.find(Amenity.class, amenityId))
+                .shift(em.find(Shift.class, shiftId))
                 .build();
         em.persist(availability);
-
         return availability;
     }
 
 
     public OptionalLong findAvailabilityId(long amenityId, long shiftId) {
         LOGGER.debug("Selecting Availability with amenityId {} and shiftId {}", amenityId, shiftId);
-        TypedQuery<Long> query = em.createQuery("SELECT a.availabilityId FROM Availability a WHERE a.shift.shiftId = :shiftId AND a.amenity.amenityId = :amenityId", Long.class);
+        TypedQuery<Long> query = em.createQuery("SELECT a.amenityAvailabilityId FROM Availability a WHERE a.shift.shiftId = :shiftId AND a.amenity.amenityId = :amenityId", Long.class);
         query.setParameter("shiftId", shiftId);
         query.setParameter("amenityId", amenityId);
         List<Long> resultList = query.getResultList();

@@ -17,6 +17,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
 
@@ -35,12 +37,14 @@ public class ResourceDaoImplTest {
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
+    @Autowired
     private ResourceDao resourceDao;
 
+    @PersistenceContext
+    private EntityManager em;
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        resourceDao = new ResourceDaoImpl(ds);
     }
 
     @Test
@@ -52,6 +56,7 @@ public class ResourceDaoImplTest {
         resourceDao.createResource(nhKey, SAMPLE_TITLE, SAMPLE_DESC, 0);
 
         // Validations & Post Conditions
+        em.flush();
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.resources.name()));
     }
 
@@ -92,6 +97,7 @@ public class ResourceDaoImplTest {
         boolean deleted = resourceDao.deleteResource(rKey);
 
         // Validations & Post Conditions
+        em.flush();
         assertTrue(deleted);
         assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.resources.name()));
     }
@@ -104,6 +110,7 @@ public class ResourceDaoImplTest {
         boolean deleted = resourceDao.deleteResource(1);
 
         // Validations & Post Conditions
+        em.flush();
         assertFalse(deleted);
     }
 }

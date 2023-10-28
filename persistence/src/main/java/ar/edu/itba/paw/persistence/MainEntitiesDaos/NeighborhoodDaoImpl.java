@@ -70,6 +70,8 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     @Override
     public List<Neighborhood> getNeighborhoods() {
         LOGGER.debug("Selecting All Neighborhoods");
-        return jdbcTemplate.query(NEIGHBORHOODS, ROW_MAPPER);
+        String jpql = "SELECT n FROM Neighborhood n";
+        TypedQuery<Neighborhood> query = em.createQuery(jpql, Neighborhood.class);
+        return query.getResultList();
     }
 }

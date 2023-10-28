@@ -23,6 +23,15 @@ public class Neighborhood {
     @OneToMany(mappedBy = "neighborhood")  // mappedBy refers to the field in the User entity
     private Set<User> users = new HashSet<>();
 
+    @OneToMany(mappedBy = "neighborhood")
+    private Set<Contact> contacts = new HashSet<>();
+
+    @OneToMany(mappedBy = "neighborhood")
+    private Set<Event> events = new HashSet<>();
+
+    @OneToMany(mappedBy = "neighborhood")
+    private Set<Resource> resources = new HashSet<>();
+
     public Neighborhood(){}
 
     private Neighborhood(Builder builder) {

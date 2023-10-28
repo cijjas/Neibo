@@ -263,9 +263,9 @@ public class EmailServiceImpl implements EmailService {
                                 .append("Event details: ")
                                 .append(event.getDescription())
                                 .append(" from ")
-                                .append(event.getStartTimeString())
+                                .append(event.getStartTime())
                                 .append(" to ")
-                                .append(event.getEndTimeString())
+                                .append(event.getEndTime())
                                 .append("\n\n");
                     }
                 } else {
@@ -279,9 +279,9 @@ public class EmailServiceImpl implements EmailService {
                                 .append("Detalles del evento: ")
                                 .append(event.getDescription())
                                 .append(" desde ")
-                                .append(event.getStartTimeString())
+                                .append(event.getStartTime())
                                 .append(" hasta ")
-                                .append(event.getEndTimeString())
+                                .append(event.getEndTime())
                                 .append("\n\n");
                     }
                 }

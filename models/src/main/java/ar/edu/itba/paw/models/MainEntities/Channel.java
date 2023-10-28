@@ -14,12 +14,12 @@ public class Channel {
     @Column(name = "channel", length = 64, unique = true, nullable = false)
     private String channel;
 
-
-
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "neighborhoods_channels",
+    @JoinTable(
+            name = "neighborhoods_channels",
             joinColumns = @JoinColumn(name = "channelid"),
-            inverseJoinColumns = @JoinColumn(name = "neighborhoodid"))
+            inverseJoinColumns = @JoinColumn(name = "neighborhoodid")
+    )
     private Set<Neighborhood> neighborhoods;
 
 

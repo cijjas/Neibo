@@ -102,11 +102,11 @@
 
                     <div class="d-flex flex-column justify-content-center align-items-center w-100">
 
-                        <c:if test="${resource.imageId != 0}">
+                        <c:if test="${resource.image.imageId != 0}">
                             <div style="display: flex; justify-content: center; align-items: center;">
-                                <img src="${pageContext.request.contextPath}/images/<c:out value="${resource.imageId}" />"
+                                <img src="${pageContext.request.contextPath}/images/<c:out value="${resource.image.imageId}" />"
                                      style="max-width: 100%; max-height: 100vh; border-radius: 5px;"
-                                     alt="resource_${resource.imageId}_img"/>
+                                     alt="resource_${resource.image.imageId}_img"/>
                             </div>
                         </c:if>
                     </div>
