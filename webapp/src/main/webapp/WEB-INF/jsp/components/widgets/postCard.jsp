@@ -93,10 +93,6 @@
                                 </a>
                                 <script>
                                     function redirectWithTag(channel,tag) {
-                                        if(channel === "Feed"){
-                                            window.location.href = "${pageContext.request.contextPath}/" + "?tag=" + tag;
-                                            return;
-                                        }
                                         window.location.href = "${pageContext.request.contextPath}/" + channel.toLocaleLowerCase() + "?tag=" + tag;
                                     }
                                 </script>

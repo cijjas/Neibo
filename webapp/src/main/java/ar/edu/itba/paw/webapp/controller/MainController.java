@@ -110,14 +110,6 @@ public class MainController {
             String postStatus
     ) {
 
-        String contextPath;
-
-        if (channelName.equals(BaseChannel.FEED.toString())) {
-            contextPath = "";
-        } else {
-            contextPath = "/" + channelName.toLowerCase();
-        }
-
         ModelAndView mav = new ModelAndView("views/index");
         mav.addObject("tagList", ts.getTags(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
         mav.addObject("appliedTags", tags);
@@ -125,19 +117,19 @@ public class MainController {
         mav.addObject("page", page);
         mav.addObject("totalPages", ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), PostStatus.valueOf(postStatus), 0));
         mav.addObject("channel", channelName);
-        mav.addObject("contextPath", contextPath);
+        mav.addObject("contextPath", "/" + channelName.toLowerCase());
 
         return mav;
     }
 
-    @RequestMapping("/")
+    @RequestMapping(value={"/", "/feed"})
     public ModelAndView index(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "tag", required = false) List<String> tags,
             @RequestParam(value = "postStatus", required = false, defaultValue = "none") String postStatus
     ) {
-        LOGGER.info("User arriving at '/'");
+        LOGGER.info("User arriving at '/feed'");
         return handleChannelRequest(BaseChannel.FEED.toString(), page, size, tags, postStatus);
     }
 
@@ -187,7 +179,7 @@ public class MainController {
         request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, new Locale(language));
         us.toggleLanguage(sessionUtils.getLoggedUser().getUserId());
         String referer = request.getHeader("Referer");
-        return "redirect:" + (referer != null ? referer : "/");
+        return "redirect:" + (referer != null ? referer : "/feed");
     }
 
     @RequestMapping(value = "/apply-tags-as-filter", method = RequestMethod.POST)
@@ -292,9 +284,7 @@ public class MainController {
             @RequestParam("channelId") Long channelId
     ) {
         String channelName = chs.findChannelById(channelId).orElseThrow(() -> new NotFoundException("Channel not Found")).getChannel().toLowerCase();
-        if (channelName.equals(BaseChannel.FEED.toString().toLowerCase()))
-            return new ModelAndView("redirect:/");
-        else if (channelName.equals(BaseChannel.WORKERS.toString().toLowerCase()))
+        if (channelName.equals(BaseChannel.WORKERS.toString().toLowerCase()))
             return new ModelAndView("redirect:/services");
         else
             return new ModelAndView("redirect:/" + channelName);
