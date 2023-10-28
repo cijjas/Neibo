@@ -23,6 +23,7 @@
         this.arr = [];
         this.wrapper = document.createElement('div');
         this.input = document.createElement('input');
+        this.input.classList.add('fixed');
         init(this);
         initEvents(this);
 
@@ -139,11 +140,14 @@
         tags.input.addEventListener('keydown', function (e) {
             const str = tags.input.value.trim();
 
-            if (!!(~[13, 188, 32].indexOf(e.keyCode))) {
+            if (![13, 188, 32].includes(e.keyCode)) {
+                // If the key pressed is not Enter, Comma, or Space
+                filterTags(tags, str);
+            } else {
                 e.preventDefault();
-                tags.input.value = "";
-                if (str !== "")
-                    tags.addTag(str);
+                tags.input.value = '';
+                if (str !== '') tags.addTag(str);
+
             }
 
         });
