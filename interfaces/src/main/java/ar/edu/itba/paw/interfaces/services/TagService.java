@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.Tag;
+import ar.edu.itba.paw.models.MainEntities.Tag;
 
 import java.util.List;
 

@@ -1,0 +1,84 @@
+package ar.edu.itba.paw.models.MainEntities;
+
+public class Contact {
+    private final Long contactId;
+    private final String contactName;
+    private final String contactAddress;
+    private final String contactPhone;
+    private final Long neighborhoodId;
+
+    private Contact(Builder builder) {
+        this.contactId = builder.contactId;
+        this.contactName = builder.contactName;
+        this.contactAddress = builder.contactAddress;
+        this.contactPhone = builder.contactPhone;
+        this.neighborhoodId = builder.neighborhoodId;
+    }
+
+    public Long getContactId() {
+        return contactId;
+    }
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public String getContactAddress() {
+        return contactAddress;
+    }
+
+    public String getContactPhone() {
+        return contactPhone;
+    }
+
+    public Long getNeighborhoodId() {
+        return neighborhoodId;
+    }
+
+    @Override
+    public String toString() {
+        return "Contact{" +
+                "contactId=" + contactId +
+                "contactName='" + contactName + '\'' +
+                ", contactAddress='" + contactAddress + '\'' +
+                ", contactPhone='" + contactPhone + '\'' +
+                '}';
+    }
+
+    public static class Builder {
+        private Long contactId;
+        private String contactName;
+        private String contactAddress;
+        private String contactPhone;
+        private Long neighborhoodId;
+
+        public Builder contactId(Long contactId) {
+            this.contactId = contactId;
+            return this;
+        }
+
+        public Builder contactName(String contactName) {
+            this.contactName = contactName;
+            return this;
+        }
+
+        public Builder contactAddress(String contactAddress) {
+            this.contactAddress = contactAddress;
+            return this;
+        }
+
+        public Builder contactPhone(String contactPhone) {
+            this.contactPhone = contactPhone;
+            return this;
+        }
+
+        public Builder neighborhoodId(Long neighborhoodId) {
+            this.neighborhoodId = neighborhoodId;
+            return this;
+        }
+
+        public Contact build() {
+            return new Contact(this);
+        }
+    }
+}

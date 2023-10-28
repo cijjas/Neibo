@@ -83,7 +83,7 @@
 
                                         <script>
                                             (function () {
-                                                getImageInto("user-profile-image-${user.userId}", ${user.profilePictureId}, "${pageContext.request.contextPath}");
+                                                getImageInto("user-profile-image-${user.userId}", ${user.profilePicture.getImageId}, "${pageContext.request.contextPath}");
                                             })();
                                         </script>
                                     </div>

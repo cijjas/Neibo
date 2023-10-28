@@ -3,8 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Neighborhood;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.MainEntities.Neighborhood;
+import ar.edu.itba.paw.models.MainEntities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,7 +33,7 @@ public class SessionUtils {
         if (user == null) {
             return null;
         }
-        Optional<Neighborhood> neighborhood = ns.findNeighborhoodById(getLoggedUser().getNeighborhoodId());
+        Optional<Neighborhood> neighborhood = ns.findNeighborhoodById(getLoggedUser().getNeighborhood().getNeighborhoodId());
         Neighborhood n = neighborhood.orElseThrow(() -> new NotFoundException("Neighborhood Not Found"));
         return n.getName();
     }

@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.Shift;
+import ar.edu.itba.paw.models.MainEntities.Shift;
 
 import java.sql.Date;
 import java.util.List;

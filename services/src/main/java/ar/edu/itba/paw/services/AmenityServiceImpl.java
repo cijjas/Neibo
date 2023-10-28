@@ -4,8 +4,8 @@ import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.services.AmenityService;
-import ar.edu.itba.paw.models.Amenity;
-import ar.edu.itba.paw.models.Shift;
+import ar.edu.itba.paw.models.MainEntities.Amenity;
+import ar.edu.itba.paw.models.MainEntities.Shift;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +70,6 @@ public class AmenityServiceImpl implements AmenityService {
     @Transactional(readOnly = true)
     public List<Amenity> getAmenities(long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Amenities from Neighborhood {}", neighborhoodId);
-
         return amenityDao.getAmenities(neighborhoodId, page, size);
     }
 

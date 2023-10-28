@@ -4,7 +4,7 @@ import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.interfaces.services.BookingService;
-import ar.edu.itba.paw.models.Booking;
+import ar.edu.itba.paw.models.JunctionEntities.Booking;
 import ar.edu.itba.paw.models.GroupedBooking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,22 +61,30 @@ public class BookingServiceImpl implements BookingService {
         List<GroupedBooking> groupedBookings = new ArrayList<>();
         GroupedBooking currentGroupedBooking = null;
 
+
+
         for (Booking booking : userBookings) {
             if (currentGroupedBooking == null || !currentGroupedBooking.canCombine(booking)) {
                 // Create a new GroupedBooking when the current one cannot be continued
-                Time endTime = calculateEndTime(booking.getStartTime());
+                // TODO this is a fix until the whole codebase is transitioned into hibernate, issue comes from getUserBookings that is not trully bringing the objects that Hibernate commonly manipulates
+                if (booking.getAmenityAvailability() == null) {
+                    // Handle the case where amenityAvailability is null
+                    continue;
+                }
+
+                Time endTime = calculateEndTime(booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval());
                 currentGroupedBooking = new GroupedBooking(
-                        booking.getAmenityName(),
+                        booking.getAmenityAvailability().getAmenity().getName(),
                         booking.getBookingDate(),
-                        booking.getDayName(),
-                        booking.getStartTime(),
+                        booking.getAmenityAvailability().getShift().getDay().getDayName(),
+                        booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval(),
                         endTime
                 );
                 currentGroupedBooking.addBookingId(booking.getBookingId());
                 groupedBookings.add(currentGroupedBooking);
             } else {
                 // Use the combine method to update the current GroupedBooking
-                Time endTime = calculateEndTime(booking.getStartTime());
+                Time endTime = calculateEndTime(booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval());
                 currentGroupedBooking.combine(booking);
                 currentGroupedBooking.addBookingId(booking.getBookingId());
             }

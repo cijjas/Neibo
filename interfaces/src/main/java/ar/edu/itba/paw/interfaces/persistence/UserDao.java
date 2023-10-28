@@ -2,7 +2,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.MainEntities.User;
 
 import java.util.List;
 import java.util.Optional;

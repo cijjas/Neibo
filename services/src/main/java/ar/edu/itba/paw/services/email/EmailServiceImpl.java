@@ -7,9 +7,9 @@ import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.models.Event;
-import ar.edu.itba.paw.models.Neighborhood;
-import ar.edu.itba.paw.models.User;
+import ar.edu.itba.paw.models.MainEntities.Event;
+import ar.edu.itba.paw.models.MainEntities.Neighborhood;
+import ar.edu.itba.paw.models.MainEntities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +25,6 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import java.sql.Date;
@@ -163,24 +161,50 @@ public class EmailServiceImpl implements EmailService {
             for (Map.Entry<User, Set<Event>> entry : userEventsMap.entrySet()) {
                 User user = entry.getKey();
                 Set<Event> subscribedEvents = entry.getValue();
+                Map<String, Object> variables = new HashMap<>();
+                boolean isEnglish = user.getLanguage() == Language.ENGLISH;
 
                 String to = user.getMail(); // Get the user's email
-                String subject = "Upcoming Events on " + neighborhood.getName(); // Subject of the email
-                StringBuilder message = new StringBuilder("Hey " + user.getName() + " " + user.getSurname() + ", you are subscribed to upcoming events next week!\n\n");
+                String subject;
+                String template;
+                StringBuilder message = new StringBuilder("\n");
 
                 // Append event details for all subscribed events
-                for (Event event : subscribedEvents) {
-                    message.append(event.getName())
-                            .append("\n")
-                            .append("Event details: ")
-                            .append(event.getDescription())
-                            .append(" on ")
-                            .append(event.getDate())
-                            .append("\n\n");
+                if(isEnglish) {
+                    subject = "Upcoming Events on " + neighborhood.getName();
+                    variables.put("time","next week!");
+                    template = "events-template_en.html";
+
+                    for (Event event : subscribedEvents) {
+                        message.append(event.getName())
+                                .append("\n")
+                                .append("Event details: ")
+                                .append(event.getDescription())
+                                .append(" on ")
+                                .append(event.getDate())
+                                .append("\n\n");
+                    }
+                } else {
+                    subject = "Próximos Eventos en " + neighborhood.getName();
+                    variables.put("time", "esta semana!");
+                    template = "events-template_es.html";
+
+                    for (Event event : subscribedEvents) {
+                        message.append(event.getName())
+                                .append("\n")
+                                .append("Detalles del evento: ")
+                                .append(event.getDescription())
+                                .append(" en ")
+                                .append(event.getDate())
+                                .append("\n\n");
+                    }
                 }
 
-                // Send the email using your email service (e.g., emailService.sendSimpleMessage)
-                sendSimpleMessage(to, subject, message.toString());
+                variables.put("events", message.toString());
+                variables.put("name", user.getName());
+                variables.put("eventsPath", "pawserver.it.itba.edu.ar/paw-2023b-02/calendar");
+
+                sendMessageUsingThymeleafTemplate(to, subject, template, variables);
             }
         }
     }
@@ -220,28 +244,53 @@ public class EmailServiceImpl implements EmailService {
             for (Map.Entry<User, Set<Event>> entry : userEventsMap.entrySet()) {
                 User user = entry.getKey();
                 Set<Event> subscribedEvents = entry.getValue();
+                Map<String, Object> variables = new HashMap<>();
+                boolean isEnglish = user.getLanguage() == Language.ENGLISH;
 
                 String to = user.getMail(); // Get the user's email
-                String subject = "Upcoming Events on " + neighborhood.getName() + " for Tomorrow"; // Subject of the email
-                StringBuilder message = new StringBuilder("Hey " + user.getName() + " " + user.getSurname() + ", you are subscribed to events happening tomorrow!\n\n");
+                String subject;
+                String template;
+                StringBuilder message = new StringBuilder("\n");
 
-                // Append event details for all subscribed events
-                for (Event event : subscribedEvents) {
-                    message.append(event.getName())
-                            .append("\n")
-                            .append("Event details: ")
-                            .append(event.getDescription())
-                            .append(" from ")
-                            .append(event.getStartTimeString())
-                            .append(" to ")
-                            .append(event.getEndTimeString())
-                            .append("\n\n");
+                if(isEnglish) {
+                    subject = "Tomorrow's Events in " + neighborhood.getName();
+                    variables.put("time", "tomorrow!");
+                    template = "events-template_en.html";
+
+                    for (Event event : subscribedEvents) {
+                        message.append(event.getName())
+                                .append("\n")
+                                .append("Event details: ")
+                                .append(event.getDescription())
+                                .append(" from ")
+                                .append(event.getStartTimeString())
+                                .append(" to ")
+                                .append(event.getEndTimeString())
+                                .append("\n\n");
+                    }
+                } else {
+                    subject = "Los Eventos de Mañana en " + neighborhood.getName();
+                    variables.put("time", "mañana!");
+                    template = "events-template_es.html";
+
+                    for (Event event : subscribedEvents) {
+                        message.append(event.getName())
+                                .append("\n")
+                                .append("Detalles del evento: ")
+                                .append(event.getDescription())
+                                .append(" desde ")
+                                .append(event.getStartTimeString())
+                                .append(" hasta ")
+                                .append(event.getEndTimeString())
+                                .append("\n\n");
+                    }
                 }
+                variables.put("name", user.getName());
+                variables.put("eventsPath", "pawserver.it.itba.edu.ar/paw-2023b-02/calendar");
+                variables.put("events", message.toString());
 
-                // Send the email using your email service (e.g., emailService.sendSimpleMessage)
-                sendSimpleMessage(to, subject, message.toString());
+                sendMessageUsingThymeleafTemplate(to, subject, template, variables);
             }
         }
     }
-
 }

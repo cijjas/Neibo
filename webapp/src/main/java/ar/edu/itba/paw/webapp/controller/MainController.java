@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Image;
+import ar.edu.itba.paw.models.MainEntities.Image;
 import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,11 +119,11 @@ public class MainController {
         }
 
         ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags(sessionUtils.getLoggedUser().getNeighborhoodId()));
+        mav.addObject("tagList", ts.getTags(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
         mav.addObject("appliedTags", tags);
-        mav.addObject("postList", ps.getPostsByCriteria(channelName, page, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), PostStatus.valueOf(postStatus)));
+        mav.addObject("postList", ps.getPostsByCriteria(channelName, page, size, tags, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), PostStatus.valueOf(postStatus)));
         mav.addObject("page", page);
-        mav.addObject("totalPages", ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhoodId(), PostStatus.valueOf(postStatus), 0));
+        mav.addObject("totalPages", ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), PostStatus.valueOf(postStatus), 0));
         mav.addObject("channel", channelName);
         mav.addObject("contextPath", contextPath);
 
@@ -195,7 +195,7 @@ public class MainController {
             @RequestParam("tags") String tags,
             @RequestParam("currentUrl") String currentUrl
     ) {
-        return new ModelAndView("redirect:" + ts.createURLForTagFilter(tags, currentUrl, sessionUtils.getLoggedUser().getNeighborhoodId()));
+        return new ModelAndView("redirect:" + ts.createURLForTagFilter(tags, currentUrl, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
     }
 
     // ------------------------------------- ANNOUNCEMENTS --------------------------------------
@@ -264,7 +264,7 @@ public class MainController {
         final ModelAndView mav = new ModelAndView("views/publish");
         mav.addObject("tagList", ts.getTags(sessionUtils.getLoggedUser().getNeighborhoodId()));
         mav.addObject("channel", onChannelId);
-        mav.addObject("channelList", chs.getNeighborChannels(sessionUtils.getLoggedUser().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId()));
+        mav.addObject("channelList", chs.getNeighborChannels(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId()));
         return mav;
     }
 
@@ -506,10 +506,12 @@ public class MainController {
 
         ModelAndView mav = new ModelAndView("views/amenities");
 
-        mav.addObject("totalPages", as.getTotalAmenitiesPages(sessionUtils.getLoggedUser().getNeighborhoodId(), size));
+        System.out.println(as.getAmenities(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size));
+
+        mav.addObject("totalPages", as.getTotalAmenitiesPages(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
         mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
         mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
-        mav.addObject("amenities", as.getAmenities(sessionUtils.getLoggedUser().getNeighborhoodId(), page, size));
+        mav.addObject("amenities", as.getAmenities(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size));
         mav.addObject("channel", BaseChannel.RESERVATIONS.toString());
         mav.addObject("reservationsList", bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));
         return mav;
@@ -558,7 +560,7 @@ public class MainController {
         mav.addObject("selectedMonth", es.getSelectedMonth(selectedDate.getMonth(), sessionUtils.getLoggedUser().getLanguage()));
         mav.addObject("selectedYear", es.getSelectedYear(selectedDate.getYear()));
         mav.addObject("selectedDate", selectedDate);
-        mav.addObject("eventList", es.getEventsByDate(selectedDate, sessionUtils.getLoggedUser().getNeighborhoodId()));
+        mav.addObject("eventList", es.getEventsByDate(selectedDate, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
         return mav;
     }
 
@@ -613,11 +615,11 @@ public class MainController {
         LOGGER.info("User arriving at '/information'");
 
         ModelAndView mav = new ModelAndView("views/information");
-        mav.addObject("resourceList", res.getResources(sessionUtils.getLoggedUser().getNeighborhoodId()));
-        mav.addObject("phoneNumbersList", cos.getContacts(sessionUtils.getLoggedUser().getNeighborhoodId()));
+        mav.addObject("resourceList", res.getResources(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
+        mav.addObject("phoneNumbersList", cos.getContacts(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
         mav.addObject("channel", BaseChannel.INFORMATION.toString());
-        mav.addObject("resourceMap", res.getResources(sessionUtils.getLoggedUser().getNeighborhoodId()));
-        mav.addObject("phoneNumbersMap", cos.getContacts(sessionUtils.getLoggedUser().getNeighborhoodId()));
+        mav.addObject("resourceMap", res.getResources(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
+        mav.addObject("phoneNumbersMap", cos.getContacts(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
         return mav;
     }
 

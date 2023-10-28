@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.Booking;
+import ar.edu.itba.paw.models.JunctionEntities.Booking;
 
 import java.sql.Date;
 import java.util.List;

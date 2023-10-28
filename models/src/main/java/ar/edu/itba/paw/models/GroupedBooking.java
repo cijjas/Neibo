@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models;
 
+import ar.edu.itba.paw.models.JunctionEntities.Booking;
+
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,14 +53,14 @@ public class GroupedBooking {
     }
 
     public boolean canCombine(Booking booking) {
-        return amenityName.equals(booking.getAmenityName()) &&
+        return amenityName.equals(booking.getAmenityAvailability().getAmenity().getName()) &&
                 date.equals(booking.getBookingDate()) &&
-                day.equals(booking.getDayName()) &&
-                endTime.equals(booking.getStartTime());
+                day.equals(booking.getAmenityAvailability().getShift().getDay().getDayName()) &&
+                endTime.equals(booking.getAmenityAvailability().getShift().getEndTime());
     }
 
     public void combine(Booking booking) {
-        long startTimeMillis = booking.getStartTime().getTime();
+        long startTimeMillis = booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval().getTime();
         long endTimeMillis = startTimeMillis + 60 * 60 * 1000;
         this.endTime = new Time(endTimeMillis);
     }

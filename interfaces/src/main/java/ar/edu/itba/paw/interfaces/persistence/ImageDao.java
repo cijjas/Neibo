@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.Image;
+import ar.edu.itba.paw.models.MainEntities.Image;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;

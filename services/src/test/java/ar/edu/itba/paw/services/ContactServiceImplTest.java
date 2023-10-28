@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
-import ar.edu.itba.paw.models.Contact;
+import ar.edu.itba.paw.models.MainEntities.Contact;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

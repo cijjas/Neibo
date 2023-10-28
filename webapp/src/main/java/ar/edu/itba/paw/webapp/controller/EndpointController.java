@@ -86,7 +86,7 @@ public class EndpointController {
     @ResponseBody
     public String getEventTimestamps() {
         LOGGER.debug("Requesting information from '/endpoint/get-event-timestamps'");
-        return es.getEventTimestampsString(sessionUtils.getLoggedUser().getNeighborhoodId());
+        return es.getEventTimestampsString(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId());
     }
 
     @RequestMapping(value = "/like", method = RequestMethod.POST)
@@ -176,7 +176,7 @@ public class EndpointController {
     ) {
         LOGGER.debug("Requesting information from '/endpoint/neighborhood-name'");
         return nhs.findNeighborhoodById(us.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found"))
-                .getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
+                .getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
     }
 
     @RequestMapping(value = "/role", method = RequestMethod.GET)

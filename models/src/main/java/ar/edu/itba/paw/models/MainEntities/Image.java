@@ -1,0 +1,70 @@
+package ar.edu.itba.paw.models.MainEntities;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "images")
+public class Image {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "images_imageid_seq")
+    @SequenceGenerator(name = "images_imageid_seq", sequenceName = "images_imageid_seq", allocationSize = 1)
+    @Column(name = "imageid")
+    private Long imageId;
+
+    @Lob
+    @Column(name = "image", nullable = false)
+    private byte[] image;
+
+
+    public Image() {
+        // Default constructor
+    }
+
+    public Image(Long imageId, byte[] image) {
+        this.imageId = imageId;
+        this.image = image;
+    }
+
+    public Long getImageId() {
+        return imageId;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImageId(Long imageId) {
+        this.imageId = imageId;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    @Override
+    public String toString() {
+        return "Image{" +
+                "imageId=" + imageId +
+                ", image=[BLOB]" +  // Representing a byte array
+                '}';
+    }
+
+    public static class Builder {
+        private Long imageId;
+        private byte[] image;
+
+        public Builder imageId(Long imageId) {
+            this.imageId = imageId;
+            return this;
+        }
+
+        public Builder image(byte[] image) {
+            this.image = image;
+            return this;
+        }
+
+        public Image build() {
+            return new Image(this.imageId, this.image);
+        }
+    }
+}

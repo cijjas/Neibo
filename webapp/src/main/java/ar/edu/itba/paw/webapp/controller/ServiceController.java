@@ -5,7 +5,7 @@ import ar.edu.itba.paw.enums.BaseNeighborhood;
 import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Worker;
+import ar.edu.itba.paw.models.MainEntities.Worker;
 import ar.edu.itba.paw.webapp.form.EditWorkerProfileForm;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
 import org.slf4j.Logger;
@@ -231,10 +231,10 @@ public class ServiceController {
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
-        List<Worker> workerList = ws.getWorkersByCriteria(page, size, null, sessionUtils.getLoggedUser().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId());
+        List<Worker> workerList = ws.getWorkersByCriteria(page, size, null, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId());
         mav.addObject("workersList", workerList);
         mav.addObject("channel", "Services");
-        mav.addObject("totalPages", ws.getTotalWorkerPages(sessionUtils.getLoggedUser().getNeighborhoodId(), size));
+        mav.addObject("totalPages", ws.getTotalWorkerPages(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
         mav.addObject("contextPath", "/services");
         mav.addObject("page", page);
         return mav;
