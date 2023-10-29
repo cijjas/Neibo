@@ -5,10 +5,9 @@ import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.*;
-import ar.edu.itba.paw.models.MainEntities.Channel;
-import ar.edu.itba.paw.models.MainEntities.Post;
-import ar.edu.itba.paw.models.MainEntities.Tag;
-import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.MainEntities.*;
+import org.hibernate.SQLQuery;
+import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -28,6 +30,8 @@ import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.*;
 @Repository
 public class PostDaoImpl implements PostDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(PostDaoImpl.class);
+    @PersistenceContext
+    private EntityManager em;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private final String POSTS_JOIN_USERS_JOIN_CHANNELS =
@@ -67,8 +71,6 @@ public class PostDaoImpl implements PostDao {
                 .title(rs.getString("title"))
                 .description(rs.getString("description"))
                 .date(rs.getTimestamp("postdate"))
-                .postPictureId(rs.getLong("postpictureid"))
-                .tags(tags)
                 .user(
                         new User.Builder()
                                 .userId(rs.getLong("userid"))
@@ -88,7 +90,6 @@ public class PostDaoImpl implements PostDao {
                                 .channel(rs.getString("channel"))
                                 .build()
                 )
-                .likes(likeDao.getLikes(rs.getLong("postid")))
                 .build();
     };
 
@@ -114,35 +115,23 @@ public class PostDaoImpl implements PostDao {
     // ------------------------------------------------ POSTS SELECT ---------------------------------------------------
 
     @Override
-    public Post createPost(String title, String description, long userid, long channelId, long imageId) {
+    public Post createPost(String title, String description, long userId, long channelId, long imageId) {
         LOGGER.debug("Inserting Post {}", title);
-        Map<String, Object> data = new HashMap<>();
-        data.put("title", title);
-        data.put("description", description);
-        data.put("postdate", Timestamp.valueOf(LocalDateTime.now()));
-        data.put("userid", userid);
-        data.put("postPictureId", imageId == 0 ? null : imageId);
-        data.put("channelid", channelId);
-
-        try {
-            final Number key = jdbcInsert.executeAndReturnKey(data);
-            return new Post.Builder()
-                    .postId(key.longValue())
-                    .title(title)
-                    .postPictureId(imageId)
-                    .description(description)
-                    .build();
-        } catch (DataAccessException ex) {
-            LOGGER.error("Error inserting the Post", ex);
-            throw new InsertionException("An error occurred whilst creating the Post");
-        }
+        Post post = new Post.Builder()
+                .title(title)
+                .description(description)
+                .user(em.find(User.class, userId))
+                .channel(em.find(Channel.class, channelId))
+                .postPicture(em.find(Image.class, imageId))
+                .build();
+        em.persist(post);
+        return post;
     }
 
     @Override
-    public Optional<Post> findPostById(long id) {
-        LOGGER.debug("Selecting Post with id {}", id);
-        final List<Post> postList = jdbcTemplate.query(POSTS_JOIN_USERS_JOIN_CHANNELS + " where p.postid=?;", ROW_MAPPER, id);
-        return postList.isEmpty() ? Optional.empty() : Optional.of(postList.get(0));
+    public Optional<Post> findPostById(long postId) {
+        LOGGER.debug("Selecting Post with id {}", postId);
+        return Optional.ofNullable(em.find(Post.class, postId));
     }
 
 
@@ -151,9 +140,8 @@ public class PostDaoImpl implements PostDao {
     @Override
     public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         LOGGER.debug("Selecting Post from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channel, userId, tags, postStatus);
-        // BASE QUERY
+
         StringBuilder query = new StringBuilder(FROM_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
-        // PARAMS
         List<Object> queryParams = new ArrayList<>();
 
         appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags, postStatus);
@@ -168,17 +156,24 @@ public class PostDaoImpl implements PostDao {
         LOGGER.debug("{}", query);
         LOGGER.debug("{}", queryParams);
 
-        // LAUNCH IT!
-        return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
+        // Create a native SQL query
+        Query sqlQuery = em.createNativeQuery(query.toString(), Post.class);
+
+        // Set query parameters
+        for (int i = 0; i < queryParams.size(); i++) {
+            sqlQuery.setParameter(i + 1, queryParams.get(i));
+        }
+
+        // Return the result directly as a list of Post entities
+        return sqlQuery.getResultList();
     }
+
 
     @Override
     public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         LOGGER.debug("Selecting Post Count from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channel, userId, tags, postStatus);
-        // Create the base SQL query string for counting
-        StringBuilder query = new StringBuilder(COUNT_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
 
-        // Create a list to hold query parameters
+        StringBuilder query = new StringBuilder(COUNT_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
         List<Object> queryParams = new ArrayList<>();
 
         appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags, postStatus);
@@ -187,7 +182,21 @@ public class PostDaoImpl implements PostDao {
         LOGGER.debug("{}", query);
         LOGGER.debug("{}", queryParams);
 
+        // Create a native SQL query for counting
+        Query sqlQuery = em.createNativeQuery(query.toString());
+
+        // Set query parameters
+        for (int i = 0; i < queryParams.size(); i++) {
+            sqlQuery.setParameter(i + 1, queryParams.get(i));
+        }
+
         // Execute the query and retrieve the count
-        return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());
+        Object result = sqlQuery.getSingleResult();
+        return Integer.parseInt(result.toString());
     }
+
+
+
+
+
 }

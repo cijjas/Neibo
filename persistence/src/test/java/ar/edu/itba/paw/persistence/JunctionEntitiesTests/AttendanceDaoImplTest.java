@@ -89,6 +89,7 @@ public class AttendanceDaoImplTest {
         boolean deleted = attendanceDao.deleteAttendee(1, 1);
 
         // Validations & Post Conditions
+        em.flush();
         assertFalse(deleted);
         assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events_users.name()));
     }

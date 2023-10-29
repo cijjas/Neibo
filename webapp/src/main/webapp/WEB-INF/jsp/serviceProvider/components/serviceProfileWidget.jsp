@@ -15,13 +15,13 @@
 
                         async function getWorkerProfilePicture() {
                             let image = document.getElementById('worker-profile-image-' + ${worker.user.userId})
-                            if ("${worker.user.profilePicture.getImageId}" === "0") {
+                            if ("${worker.user.profilePicture.imageId}" === "0") {
                                 image.src = "${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png";
                                 image.classList.remove('placeholder');
                                 return;
                             }
                             try {
-                                const response = await fetch('${pageContext.request.contextPath}/images/<c:out value="${worker.user.profilePicture.getImageId}"/>');
+                                const response = await fetch('${pageContext.request.contextPath}/images/<c:out value="${worker.user.profilePicture.imageId}"/>');
                                 if (!response.ok) {
                                     throw new Error('Network response was not ok');
                                 }

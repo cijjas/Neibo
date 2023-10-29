@@ -16,6 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
 
@@ -33,12 +35,14 @@ public class TagDaoImplTest {
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
+    @Autowired
     private TagDaoImpl tagDao;
 
+    @PersistenceContext
+    private EntityManager em;
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        tagDao = new TagDaoImpl(ds);
     }
 
     @Test
@@ -49,6 +53,7 @@ public class TagDaoImplTest {
         Tag ch = tagDao.createTag(TAG_NAME);
 
         // Validations & Post Conditions
+        em.flush();
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.tags.name()));
         assertEquals(TAG_NAME, ch.getTag());
     }

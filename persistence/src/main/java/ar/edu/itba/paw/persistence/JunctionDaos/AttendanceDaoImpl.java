@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
+import ar.edu.itba.paw.compositeKeys.AttendanceKey;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.AttendanceDao;
 import ar.edu.itba.paw.models.JunctionEntities.Attendance;
@@ -51,7 +52,12 @@ public class AttendanceDaoImpl implements AttendanceDao {
     @Override
     public boolean deleteAttendee(long userId, long eventId) {
         LOGGER.debug("Deleting Attendance with userId {} and eventId {}", userId, eventId);
-        final String sql = "DELETE FROM events_users WHERE userid = ? AND eventid = ?";
-        return jdbcTemplate.update(sql, userId, eventId) > 0;
+        Attendance attendance = em.find(Attendance.class, new AttendanceKey(userId, eventId));
+        if (attendance != null) {
+            em.remove(attendance); // Delete the entity
+            return true;
+        } else {
+            return false;
+        }
     }
 }

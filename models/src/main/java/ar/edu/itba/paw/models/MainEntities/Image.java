@@ -19,6 +19,11 @@ public class Image {
     @OneToMany(mappedBy = "image")
     private Set<Resource> resources = new HashSet<>();
 
+    @OneToMany(mappedBy = "profilePicture")
+    private Set<User> users = new HashSet<>();
+
+    @OneToMany(mappedBy = "postPicture")
+    private Set<Post> posts = new HashSet<>();
 
     public Image() {
         // Default constructor

@@ -1,7 +1,10 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
+import ar.edu.itba.paw.compositeKeys.AttendanceKey;
+import ar.edu.itba.paw.compositeKeys.ChannelMappingKey;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.ChannelMappingDao;
+import ar.edu.itba.paw.models.JunctionEntities.Attendance;
 import ar.edu.itba.paw.models.JunctionEntities.ChannelMapping;
 import ar.edu.itba.paw.models.MainEntities.Channel;
 import ar.edu.itba.paw.models.MainEntities.Neighborhood;
@@ -42,5 +45,19 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
         ChannelMapping channelMapping = new ChannelMapping(em.find(Neighborhood.class, neighborhoodId), em.find(Channel.class, channelId));
         em.persist(channelMapping);
         return channelMapping;
+    }
+
+    // ---------------------------------- NEIGHBORHOODS_CHANNELS DELETE ------------------------------------------------
+
+
+    public boolean deleteChannelMapping(long channelId, long neighborhoodId) {
+        LOGGER.debug("Deleting ChannelMapping with channelId {} and neighborhoodId {}", channelId, neighborhoodId);
+        ChannelMapping channelMapping = em.find(ChannelMapping.class, new ChannelMappingKey(neighborhoodId, channelId));
+        if (channelMapping != null) {
+            em.remove(channelMapping);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

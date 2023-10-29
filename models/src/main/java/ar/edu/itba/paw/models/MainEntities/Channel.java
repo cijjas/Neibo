@@ -14,6 +14,9 @@ public class Channel {
     @Column(name = "channel", length = 64, unique = true, nullable = false)
     private String channel;
 
+    @OneToMany(mappedBy = "channel")
+    private Set<Post> posts;
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "neighborhoods_channels",

@@ -1,18 +1,59 @@
-package ar.edu.itba.paw.models.MainEntities;
-
+package ar.edu.itba.paw.models.MainEntities;// Post.java
+import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+@Entity
+@Table(name = "posts")
 public class Post {
-    private final Long postId;
-    private final String title;
-    private final String description;
-    private final Date date;
-    private final User user;
-    private final Channel channel;
-    private final Long postPictureId;
-    private final List<Tag> tags;
-    private final int likes;  // Added likes field
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "posts_postid_seq")
+    @SequenceGenerator(name = "posts_postid_seq", sequenceName = "posts_postid_seq", allocationSize = 1)
+    @Column(name = "postid")
+    private Long postId;
+
+    @Column(name = "title", length = 128, nullable = false)
+    private String title;
+
+    @Column(name = "description", columnDefinition = "text", nullable = false)
+    private String description;
+
+    @Column(name = "postdate", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "userid", nullable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "channelid", nullable = false)
+    private Channel channel;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "postpictureid")
+    private Image postPicture;
+
+    @OneToMany(mappedBy = "post")
+    private Set<Comment> comments;
+
+    @ManyToMany
+    @JoinTable(name = "posts_tags", joinColumns = @JoinColumn(name = "postid"), inverseJoinColumns = @JoinColumn(name = "tagid"))
+    private Set<Tag> tags;
+
+    @Column(name = "likes")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "posts_users_likes", joinColumns = @JoinColumn(name = "postid"), inverseJoinColumns = @JoinColumn(name = "userid"))
+    private Set<User> likedByUsers;
+
+    @ManyToMany
+    @JoinTable(name = "posts_users_subscriptions", joinColumns = @JoinColumn(name = "postid"), inverseJoinColumns = @JoinColumn(name = "userid"))
+    private Set<User> subscribers;
+
+    public Post() {
+        // Default constructor for JPA
+    }
 
     private Post(Builder builder) {
         this.postId = builder.postId;
@@ -21,9 +62,12 @@ public class Post {
         this.date = builder.date;
         this.user = builder.user;
         this.channel = builder.channel;
-        this.postPictureId = builder.postPictureId;
+        this.postPicture = builder.postPicture;
         this.tags = builder.tags;
-        this.likes = builder.likes;
+        this.likedByUsers = builder.likedByUsers;
+        this.comments = builder.comments;
+        this.date = new java.sql.Date(System.currentTimeMillis());
+        this.subscribers = builder.subscribers;
     }
 
     public Long getPostId() {
@@ -34,32 +78,80 @@ public class Post {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getDate() {
         return date;
     }
 
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     public User getUser() {
         return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Channel getChannel() {
         return channel;
     }
 
-    public Long getPostPictureId() {
-        return postPictureId;
+    public void setChannel(Channel channel) {
+        this.channel = channel;
     }
 
-    public List<Tag> getTags() {
+    public Image getPostPicture() {
+        return postPicture;
+    }
+
+    public void setPostPicture(Image postPicture) {
+        this.postPicture = postPicture;
+    }
+
+    public Set<Tag> getTags() {
         return tags;
     }
 
-    public int getLikes() {
-        return likes;
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public Set<User> getLikedByUsers() {
+        return likedByUsers;
+    }
+
+    public void setLikedByUsers(Set<User> likedByUsers) {
+        this.likedByUsers = likedByUsers;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public Set<User> getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(Set<User> subscribers) {
+        this.subscribers = subscribers;
     }
 
     @Override
@@ -71,9 +163,11 @@ public class Post {
                 ", date=" + date +
                 ", user=" + user +
                 ", channel=" + channel +
-                ", postPictureId=" + postPictureId +
+                ", postPicture=" + postPicture +
                 ", tags=" + tags +
-                ", likes=" + likes +
+                ", likedByUsers=" + likedByUsers +
+                ", comments=" + comments +
+                ", subscribers=" + subscribers +
                 '}';
     }
 
@@ -84,9 +178,11 @@ public class Post {
         private Date date;
         private User user;
         private Channel channel;
-        private Long postPictureId;
-        private List<Tag> tags;
-        private int likes;
+        private Image postPicture;
+        private Set<Tag> tags;
+        private Set<User> likedByUsers;
+        private Set<Comment> comments;
+        private Set<User> subscribers;
 
         public Builder postId(Long postId) {
             this.postId = postId;
@@ -118,18 +214,28 @@ public class Post {
             return this;
         }
 
-        public Builder postPictureId(Long postPictureId) {
-            this.postPictureId = postPictureId;
+        public Builder postPicture(Image postPicture) {
+            this.postPicture = postPicture;
             return this;
         }
 
-        public Builder tags(List<Tag> tags) {
+        public Builder tags(Set<Tag> tags) {
             this.tags = tags;
             return this;
         }
 
-        public Builder likes(int likes) {
-            this.likes = likes;
+        public Builder likedByUsers(Set<User> likedByUsers) {
+            this.likedByUsers = likedByUsers;
+            return this;
+        }
+
+        public Builder comments(Set<Comment> comments) {
+            this.comments = comments;
+            return this;
+        }
+
+        public Builder subscribers(Set<User> subscribers) {
+            this.subscribers = subscribers;
             return this;
         }
 

@@ -23,7 +23,7 @@
                         />
                         <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
                         <script>
-                            getImageInto("poster-image", ${post.user.profilePicture.getImageId}, "${pageContext.request.contextPath}");
+                            getImageInto("poster-image", ${post.user.profilePicture.imageId}, "${pageContext.request.contextPath}");
                         </script>
                         <c:out value="${post.user.name}"/>
                     </span>
@@ -48,7 +48,7 @@
         </div>
 
         <!-- Image section -->
-        <c:if test="${post.postPictureId != 0}">
+        <c:if test="${post.postPicture.imageId != 0}">
             <div class="placeholder-glow" style="display: flex; justify-content: center; align-items: center;">
                 <img id="postImage"
                      class="blogpost-image placeholder "
@@ -57,7 +57,7 @@
                      alt="post_${post.postId}_img"/>
             </div>
             <script>
-                getImageInto("postImage", ${post.postPictureId}, "${pageContext.request.contextPath}");
+                getImageInto("postImage", ${post.postPicture.imageId}, "${pageContext.request.contextPath}");
             </script>
         </c:if>
 
@@ -70,8 +70,8 @@
 
                     <span id="post-like-button" class="post-like-button pl-3 pr-3 pt-2 pb-2"
                           data-post-id="${post.postId}">
-                       <span class=" mr-1 " id="like-count" data-like-count="${post.likes}">
-                            <c:out value="${post.likes}"/>
+                       <span class=" mr-1 " id="like-count" data-like-count="${post.likedByUsers.size()}">
+                            <c:out value="${post.likedByUsers.size()}"/>
                         </span>
                         <i class="fa-solid fa-thumbs-up"></i>
                     </span>
@@ -256,7 +256,7 @@
                                 />
                                 <script>
                                     (function () {
-                                        getImageInto("comment-image-${comment.commentId}", ${comment.user.profilePicture.getImageId}, "${pageContext.request.contextPath}");
+                                        getImageInto("comment-image-${comment.commentId}", ${comment.user.profilePicture.imageId}, "${pageContext.request.contextPath}");
                                     })();
                                 </script>
 

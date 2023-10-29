@@ -19,7 +19,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
@@ -54,5 +54,34 @@ public class ChannelMappingDaoImplTest {
         // Validations & Post Conditions
         em.flush();
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods_channels.name()));
+    }
+
+    @Test
+    public void testDeleteChannelMapping() {
+        // Pre Conditions
+        long chKey = testInserter.createChannel();
+        long nhKey = testInserter.createNeighborhood();
+        testInserter.createChannelMapping(chKey, nhKey);
+
+        // Exercise
+        boolean deleted = channelMappingDao.deleteChannelMapping(chKey, nhKey);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertTrue(deleted);
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods_channels.name()));
+    }
+
+    @Test
+    public void testDeleteInvalidChannelMapping() {
+        // Pre Conditions
+
+        // Exercise
+        boolean deleted = channelMappingDao.deleteChannelMapping(1, 1);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods_channels.name()));
     }
 }

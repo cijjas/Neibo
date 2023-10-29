@@ -17,6 +17,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +77,9 @@ public class PostDaoImplTest {
     private long chKey1;
     private long chKey2;
 
+    @PersistenceContext
+    private EntityManager em;
+
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -92,6 +97,7 @@ public class PostDaoImplTest {
         Post createdPost = postDao.createPost(TITLE_1, DESC_1, uKey, chKey, iKey);
 
         // Validations & Post Conditions
+        em.flush();
         assertNotNull(createdPost);
         assertEquals(TITLE_1, createdPost.getTitle());
         assertEquals(DESC_1, createdPost.getDescription());

@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.MainEntities.Neighborhood;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -36,7 +37,7 @@ public class User {
     private Neighborhood neighborhood;
 
     @Column(name = "darkmode")
-    private boolean darkMode;
+    private Boolean darkMode;
 
     @Column(name = "language", length = 32)
     @Enumerated(EnumType.STRING)
@@ -49,12 +50,18 @@ public class User {
     @Column(name = "creationdate", nullable = false)
     private Date creationDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "profilepictureid", referencedColumnName = "imageId")
     private Image profilePicture;
 
     @Column(name = "identification")
-    private int identification;
+    private Integer identification;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Post> posts;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "users_availability",
@@ -62,9 +69,17 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "amenityavailabilityid"))
     private Set<Booking> bookings;
 
+    @ManyToMany
+    @JoinTable(name = "posts_users_subscriptions", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "postid"))
+    private Set<Post> subscribedPosts;
+
+    @ManyToMany
+    @JoinTable(name = "posts_users_likes", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "postid"))
+    private Set<Post> likedPosts;
+
     public User() {}
 
-    private User(Long userId, String mail, String name, String surname, String password, Neighborhood neighborhood, boolean darkMode, Language language, UserRole role, Date creationDate, Image profilePicture, int identification) {
+    private User(Long userId, String mail, String name, String surname, String password, Neighborhood neighborhood, Boolean darkMode, Language language, UserRole role, Date creationDate, Image profilePicture, Integer identification) {
         this.userId = userId;
         this.mail = mail;
         this.name = name;
@@ -103,7 +118,7 @@ public class User {
         return neighborhood;
     }
 
-    public boolean isDarkMode() {
+    public Boolean isDarkMode() {
         return darkMode;
     }
 
@@ -123,7 +138,7 @@ public class User {
         return profilePicture;
     }
 
-    public int getIdentification() {
+    public Integer getIdentification() {
         return identification;
     }
 
@@ -165,12 +180,12 @@ public class User {
         private String surname;
         private String password;
         private Neighborhood neighborhood;
-        private boolean darkMode;
+        private Boolean darkMode;
         private Language language;
         private UserRole role;
         private Date creationDate;
         private Image profilePicture;
-        private int identification;
+        private Integer identification;
 
         public Builder userId(Long userId) {
             this.userId = userId;
@@ -202,7 +217,7 @@ public class User {
             return this;
         }
 
-        public Builder darkMode(boolean darkMode) {
+        public Builder darkMode(Boolean darkMode) {
             this.darkMode = darkMode;
             return this;
         }
@@ -227,7 +242,7 @@ public class User {
             return this;
         }
 
-        public Builder identification(int identification) {
+        public Builder identification(Integer identification) {
             this.identification = identification;
             return this;
         }
@@ -235,5 +250,93 @@ public class User {
         public User build() {
             return new User(this.userId, this.mail, this.name, this.surname, this.password, this.neighborhood, this.darkMode, this.language, this.role, this.creationDate, this.profilePicture, this.identification);
         }
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setNeighborhood(Neighborhood neighborhood) {
+        this.neighborhood = neighborhood;
+    }
+
+    public void setDarkMode(Boolean darkMode) {
+        this.darkMode = darkMode;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setProfilePicture(Image profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public void setIdentification(Integer identification) {
+        this.identification = identification;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void setBookings(Set<Booking> bookings) {
+        this.bookings = bookings;
+    }
+
+    public void setSubscribedPosts(Set<Post> subscribedPosts) {
+        this.subscribedPosts = subscribedPosts;
+    }
+
+    public void setLikedPosts(Set<Post> likedPosts) {
+        this.likedPosts = likedPosts;
+    }
+
+    public Boolean getDarkMode() {
+        return darkMode;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public Set<Booking> getBookings() {
+        return bookings;
+    }
+
+    public Set<Post> getSubscribedPosts() {
+        return subscribedPosts;
+    }
+
+    public Set<Post> getLikedPosts() {
+        return likedPosts;
     }
 }

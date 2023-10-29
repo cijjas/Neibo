@@ -20,11 +20,11 @@
             </c:choose>
         </div>
         <div class="card-body" data-profile-image='<c:choose>
-            <c:when test="${worker.user.profilePicture.getImageId == 0}">
+            <c:when test="${worker.user.profilePicture.imageId == 0}">
                 ${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png
             </c:when>
             <c:otherwise>
-                ${pageContext.request.contextPath}/images/<c:out value="${worker.user.profilePicture.getImageId}"/>
+                ${pageContext.request.contextPath}/images/<c:out value="${worker.user.profilePicture.imageId}"/>
             </c:otherwise>
         </c:choose>'>
             <div class="inner">
