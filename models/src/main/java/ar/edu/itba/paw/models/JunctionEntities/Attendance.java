@@ -7,67 +7,53 @@ import ar.edu.itba.paw.models.MainEntities.User;
 import javax.persistence.*;
 import java.io.Serializable;
 
-// @Entity
+@Entity
 @Table(name = "events_users")
-@IdClass(AttendanceKey.class)
 public class Attendance implements Serializable {
-    @Id
+    @EmbeddedId
+    private AttendanceKey id;
+
     @ManyToOne
+    @MapsId("userId")
     @JoinColumn(name = "userid")
-    private Long userId;
+    private User user;
 
-    @Id
     @ManyToOne
+    @MapsId("eventId")
     @JoinColumn(name = "eventid")
-    private Long eventId;
+    private Event event;
 
-    // Other fields, if any
-
-    public Attendance() {}
-
-    public Attendance(Long userId, Long eventId) {
-        this.userId = userId;
-        this.eventId = eventId;
+    public Attendance() {
+        this.id = new AttendanceKey();
     }
 
-    public Long getUserId() {
-        return userId;
+    public Attendance(User user, Event event) {
+        this.id = new AttendanceKey(user.getUserId(), event.getEventId());
+        this.user = user;
+        this.event = event;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public AttendanceKey getId() {
+        return id;
     }
 
-    public Long getEventId() {
-        return eventId;
+    public User getUser() {
+        return user;
     }
 
-    public void setEventId(Long eventId) {
-        this.eventId = eventId;
+    public Event getEvent() {
+        return event;
     }
 
-    // Other getters and setters for additional fields
-
-    public static Builder builder() {
-        return new Builder();
+    public void setId(AttendanceKey id) {
+        this.id = id;
     }
 
-    public static class Builder {
-        private Long userId;
-        private Long eventId;
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-        public Builder userId(Long userId) {
-            this.userId = userId;
-            return this;
-        }
-
-        public Builder eventId(Long eventId) {
-            this.eventId = eventId;
-            return this;
-        }
-
-        public Attendance build() {
-            return new Attendance(userId, eventId);
-        }
+    public void setEvent(Event event) {
+        this.event = event;
     }
 }

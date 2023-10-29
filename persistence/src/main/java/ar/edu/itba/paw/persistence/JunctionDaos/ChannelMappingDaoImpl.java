@@ -2,6 +2,9 @@ package ar.edu.itba.paw.persistence.JunctionDaos;
 
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.ChannelMappingDao;
+import ar.edu.itba.paw.models.JunctionEntities.ChannelMapping;
+import ar.edu.itba.paw.models.MainEntities.Channel;
+import ar.edu.itba.paw.models.MainEntities.Neighborhood;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +22,8 @@ import java.util.Map;
 @Repository
 public class ChannelMappingDaoImpl implements ChannelMappingDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelMappingDaoImpl.class);
+    @PersistenceContext
+    private EntityManager em;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -30,17 +37,10 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
     // ---------------------------------- NEIGHBORHOODS_CHANNELS INSERT ------------------------------------------------
 
     @Override
-    public void createChannelMapping(long channelId, long neighborhoodId) {
+    public ChannelMapping createChannelMapping(long channelId, long neighborhoodId) {
         LOGGER.debug("Inserting Channel Mapping");
-        Map<String, Object> data = new HashMap<>();
-        data.put("channelid", channelId);
-        data.put("neighborhoodid", neighborhoodId);
-
-        try {
-            jdbcInsert.execute(data);
-        } catch (DataAccessException ex) {
-            LOGGER.error("Error inserting the Channel Mapping", ex);
-            throw new InsertionException("An error occurred whilst creating the channel");
-        }
+        ChannelMapping channelMapping = new ChannelMapping(em.find(Neighborhood.class, neighborhoodId), em.find(Channel.class, channelId));
+        em.persist(channelMapping);
+        return channelMapping;
     }
 }

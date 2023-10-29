@@ -4,19 +4,15 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class AttendanceKey implements Serializable {
-    private Long eventId;
     private Long userId;
+    private Long eventId;
 
-    private AttendanceKey() {
-        // Private constructor for the builder
+    public AttendanceKey() {
     }
 
-    public Long getEventId() {
-        return eventId;
-    }
-
-    public Long getUserId() {
-        return userId;
+    public AttendanceKey(Long userId, Long eventId) {
+        this.userId = userId;
+        this.eventId = eventId;
     }
 
     @Override
@@ -24,34 +20,11 @@ public class AttendanceKey implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AttendanceKey that = (AttendanceKey) o;
-        return Objects.equals(eventId, that.eventId) &&
-                Objects.equals(userId, that.userId);
+        return userId.equals(that.userId) && eventId.equals(that.eventId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(eventId, userId);
-    }
-
-    public static class Builder {
-        private final AttendanceKey attendanceKey = new AttendanceKey();
-
-        public Builder eventId(Long eventId) {
-            attendanceKey.eventId = eventId;
-            return this;
-        }
-
-        public Builder userId(Long userId) {
-            attendanceKey.userId = userId;
-            return this;
-        }
-
-        public AttendanceKey build() {
-            return attendanceKey;
-        }
-    }
-
-    public static Builder builder() {
-        return new Builder();
+        return Objects.hash(userId, eventId);
     }
 }

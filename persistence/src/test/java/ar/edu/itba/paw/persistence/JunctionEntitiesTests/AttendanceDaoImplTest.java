@@ -15,6 +15,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 import static org.junit.Assert.*;
@@ -32,12 +34,15 @@ public class AttendanceDaoImplTest {
     private TestInserter testInserter;
 
     private JdbcTemplate jdbcTemplate;
+    @Autowired
     private AttendanceDaoImpl attendanceDao;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        attendanceDao = new AttendanceDaoImpl(ds);
     }
 
     @Test
@@ -53,6 +58,7 @@ public class AttendanceDaoImplTest {
         attendanceDao.createAttendee(uKey, eKey);
 
         // Validations & Post Conditions
+        em.flush();
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events_users.name()));
     }
 
@@ -70,6 +76,7 @@ public class AttendanceDaoImplTest {
         boolean deleted = attendanceDao.deleteAttendee(uKey, eKey);
 
         // Validations & Post Conditions
+        em.flush();
         assertTrue(deleted);
         assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events_users.name()));
     }
