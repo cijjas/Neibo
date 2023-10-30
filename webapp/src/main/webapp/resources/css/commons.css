@@ -443,3 +443,7 @@ p {
 .fixed{
     position: fixed;
 }
+
+.g-05{
+    gap: 0.5em;
+}

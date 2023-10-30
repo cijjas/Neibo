@@ -105,6 +105,7 @@
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     & svg {
         width: 85px;

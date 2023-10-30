@@ -124,7 +124,6 @@
                                     <jsp:param name="postUserProfilePictureId" value="${post.user.profilePicture.imageId}"/>
 
                                 </jsp:include>
-
                             </c:forEach>
 
 
@@ -143,7 +142,7 @@
                         document.getElementById('actual-posts-container').style.display = 'block';
                     }
 
-                    setTimeout(showPostsAfterDelay, 1000);
+                    setTimeout(showPostsAfterDelay, 500);
 
                 </script>
             </div>

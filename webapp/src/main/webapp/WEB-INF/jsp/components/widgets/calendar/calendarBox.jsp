@@ -112,7 +112,7 @@
         }
 
         async function getEventTimestamps() {
-            await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate a 2-second delay
+            await new Promise(resolve => setTimeout(resolve, 500));
 
             try {
                 const response = await fetch("${pageContext.request.contextPath}/endpoint/get-event-timestamps");

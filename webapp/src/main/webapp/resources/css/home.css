@@ -113,10 +113,16 @@
 
 
 /*---------------------------------- Middle column ---------------------------------------------*/
+.filters{
+    background-color: var(--on-onbackground);
+    border-radius: var(--border-hard);
+    border: 1px solid var(--secondary);
+    padding: 10px;
+}
 .cool-feed-button:before{
 }
 .upper-feed-buttons-box {
-    padding: 1rem;
+    padding: 1em 1em 1em 1em;
     margin-bottom: 1.25rem;
     top: 20px;
     display: flex;
@@ -137,7 +143,7 @@
         overflow: hidden;
         font-weight: bold;
         cursor: pointer;
-        padding: 1em 1em;
+        padding: 0.7em 1em;
         background-color: var(--onbackground);
         color: var(--text);
         border: 1px solid var(--text);
@@ -167,7 +173,6 @@
 
         &.rounded {
             border-radius: var(--border-hard) !important;
-
         }
 
         &:hover,
@@ -188,13 +193,12 @@
         font-weight: bold;
         overflow: hidden;
         cursor: pointer;
-        padding: 1em 1em;
+        padding: 0.7em 1em;
         transition: all 0.3s;
         background-color: var(--onbackground);
         color: var(--text);
         border: 1px solid var(--text);
         border-radius: var(--border-hard);
-
         position: relative;
         transform: translateY(0);
         &::before{
@@ -207,6 +211,7 @@
             -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
             -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
             transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+            pointer-events: none;
         }
         &.active {
             border: 1px solid transparent;
@@ -242,6 +247,8 @@
 
 
     }
+
+
 }
 
 /*-----------COOLEST :........................*/
@@ -292,6 +299,7 @@
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     &:hover {
         transform: translateY(-5px);
@@ -415,15 +423,15 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    color: var(--text);
+    color: var(--lightertext);
     gap:10px;
 }
 
 .circle-icon {
-    border: var(--text) 2px solid;
+    border: var(--lightertext) 1px solid;
     border-radius: 50px;
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -517,7 +525,9 @@
 
 .container {
     position: relative;
+
 }
+
 
 /*--------------------LEFT COLUMN----------------------------*/
 
@@ -610,6 +620,7 @@
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
 
     &:hover,
@@ -648,7 +659,8 @@
 }
 
 
-.filtered-tags {
+.filtered-tags,
+.filtered-professions {
     display: flex;
     flex-direction: row;
     justify-content: start;
@@ -659,7 +671,8 @@
 }
 
 /*---------------------------- Tag selector filter ------------------------------------*/
-.tags-row {
+.tags-row,
+.professions-row {
     display: flex;
     flex-direction: row;
     justify-content: start;
@@ -668,7 +681,8 @@
     flex-wrap: wrap;
     width: 100%;
 
-    &.tags {
+    &.tags
+    {
         justify-content: start;
     }
 
@@ -680,7 +694,8 @@
 
 .filtered-tag,
 .post-tag,
-.tag-option {
+.tag-option,
+.profession-option {
     font-size: 14px;
     padding: 2px 5px 2px 5px;
     color: var(--accent);
@@ -700,6 +715,7 @@
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     &.static {
         margin-bottom: 2px;
@@ -795,7 +811,8 @@
     margin: 20px 0 20px 0;
 }
 
-.tags-input-wrapper {
+.tags-input-wrapper,
+.professions-input-wrapper {
     width: 100%;
     margin-top: 5px;
 
@@ -822,6 +839,7 @@
             -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
             -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
             transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+            pointer-events: none;
         }
         &::placeholder {
             color: var(--lighttext);
@@ -1041,6 +1059,7 @@ input[type=file]::file-selector-button:hover {
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     &.small-a {
         width: 30px;
@@ -1187,6 +1206,7 @@ footer div {
             -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
             -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
             transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+            pointer-events: none;
         }
         &:hover {
             border: 1px solid var(--error);
@@ -1228,6 +1248,7 @@ footer div {
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     &.outlined {
         color: var(--primary);
@@ -1286,6 +1307,39 @@ footer div {
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
+    }
+    &.old-primary {
+        padding: 7px 7px;
+        font-size: 12px;
+        color: var(--text);
+        background-color: var(--onbackground);
+        border: 1px solid var(--lighttext);
+        border-radius: var(--border-hard);
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+            border: 1px solid var(--old-primary);
+            transform: translateY(-4px);
+            box-shadow: 0 4px 0 0 var(--old-primary);
+            color: var(--old-primary);
+        }
+    }
+    &.primary {
+        padding: 7px 7px;
+        font-size: 12px;
+        color: var(--text);
+        background-color: var(--onbackground);
+        border: 1px solid var(--lighttext);
+        border-radius: var(--border-hard);
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+            border: 1px solid var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 4px 0 0 var(--primary);
+            color: var(--primary);
+        }
     }
     &.red {
         padding: 7px 7px;
@@ -1361,6 +1415,7 @@ footer div {
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     &::placeholder {
         color: var(--lighttext);
@@ -1390,6 +1445,7 @@ footer div {
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     &:active,
     &:hover,
@@ -1684,6 +1740,7 @@ h6 {
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     &:hover {
         transform: translateY(-4px);
@@ -1958,6 +2015,7 @@ input[type=time] {
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     &::-webkit-calendar-picker-indicator {
         color: var(--text);
@@ -2050,6 +2108,7 @@ input[type=time] {
                 -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
                 -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
                 transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+                pointer-events: none;
             }
             &.n-workers {
                 background-color: var(--onbackground);

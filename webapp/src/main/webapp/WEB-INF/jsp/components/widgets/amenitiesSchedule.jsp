@@ -7,7 +7,13 @@
                     <div class="col-md-8">
                         <h2><c:out value="${amenity.name}" /></h2>
                     </div>
-                    <div class="col-md-4 text-right">
+                    <div class="col-md-4 text-right f-r-sb-c">
+                        <a class="cool-button primary font-weight-bold "
+                           href="${pageContext.request.contextPath}/admin/edit-amenity/${amenity.amenityId}">
+                            <i class="fa-solid fa-pen"></i>
+                            <spring:message code="Edit"/>
+                        </a>
+
                         <a href="${pageContext.request.contextPath}/admin/delete-amenity/${amenity.amenityId}" class="btn btn-link">
                             <i class="fas fa-trash" style="color: var(--error);"></i>
                         </a>
@@ -21,6 +27,7 @@
             </c:otherwise>
         </c:choose>
         <p class="mb-3" style="color:var(--lighttext);"><c:out value="${amenity.description}"/></p>
+
 
         <div class="d-flex flex-column justify-content-center align-items-center w-100">
             <div class="cool-table w-100 ">
@@ -44,8 +51,9 @@
                             <c:forEach items="${daysPairs}" var="day">
                                 <td>
                                     <c:set var="available" value="false"/>
+
                                     <c:forEach items="${amenity.availableShifts}" var="shift">
-                                        <c:if test="${shift.day == day.value && shift.startTime == time.value.value}">
+                                        <c:if test="${shift.day.dayId == day.key && shift.startTime.timeId == time.key}">
                                             <c:set var="available" value="true"/>
                                             <span style="color: var(--primary);" class="col-12">
                                                                 <i class="fa-solid fa-check"></i>

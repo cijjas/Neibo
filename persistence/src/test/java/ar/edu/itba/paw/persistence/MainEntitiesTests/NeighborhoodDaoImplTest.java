@@ -48,7 +48,6 @@ public class NeighborhoodDaoImplTest {
     @Test
     public void testCreateNeighborhood() {
         // Pre Conditions
-        em.flush();
 
         // Exercise
         Neighborhood nh = neighborhoodDao.createNeighborhood(NEIGHBORHOOD_NAME);

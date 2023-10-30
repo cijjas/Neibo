@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.enums.DayOfTheWeek;
 import ar.edu.itba.paw.enums.StandardTime;
 import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.MainEntities.Amenity;
 import ar.edu.itba.paw.webapp.form.*;
@@ -204,12 +205,15 @@ public class AdminController {
         return mav;
     }
 
-    @RequestMapping(value = "/delete-amenity/{id}", method = RequestMethod.GET)
+
+
+
+    @RequestMapping(value = "/delete-amenity/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView deleteAmenity(
             @PathVariable(value = "id") Long amenityId
     ) {
         ModelAndView mav = new ModelAndView("redirect:/admin/amenities");
-        as.deleteAmenity(amenityId); //JOAAAAAAAAAAAAAAAAAAAEWQDSAFEDAs
+        as.deleteAmenity(amenityId);
         return mav;
     }
 
@@ -233,7 +237,7 @@ public class AdminController {
             final BindingResult errors
     ) {
         if (errors.hasErrors()) {
-            LOGGER.error("Error in Amenity Form");
+            LOGGER.error("Error in Create Amenity Form");
             return createAmenityForm(amenityForm);
         }
 
@@ -241,7 +245,35 @@ public class AdminController {
         as.createAmenity(amenityForm.getName(), amenityForm.getDescription(), sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), selectedShifts);
         return new ModelAndView("redirect:/admin/amenities");
     }
+    @RequestMapping(value = "/edit-amenity/{id:\\d+}", method = RequestMethod.GET)
+    public ModelAndView editAmenity(
+            @PathVariable(value = "id") Long amenityId,
+            @ModelAttribute("amenityForm") final AmenityForm amenityForm
+    ) {
+        LOGGER.info("User arriving at '/admin/edit-amenity'");
 
+        ModelAndView mav = new ModelAndView("admin/views/amenitiesEdit");
+        mav.addObject("amenity", as.findAmenityById(amenityId).orElseThrow(() -> new NotFoundException("Amenity not found")));
+        mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
+        mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
+        return mav;
+    }
+
+    @RequestMapping(value = "/edit-amenity/{id:\\d+}", method = RequestMethod.POST)
+    public ModelAndView saveEditAmenity(
+            @PathVariable(value = "id") Long amenityId,
+            @RequestParam(value = "selectedShifts", required = false) List<String> selectedShifts,
+            @Valid @ModelAttribute("amenityForm") final AmenityForm amenityForm,
+            final BindingResult errors
+    ) {
+        if (errors.hasErrors()) {
+            LOGGER.error("Error in Edit Amenity Form ");
+            return createAmenityForm(amenityForm);
+        }
+        as.updateAmenity(amenityId, amenityForm.getName(), amenityForm.getDescription());
+        //avs.updateAvailability(amenityId, selectedShifts);
+        //return mav;
+    }
     // ------------------------------------- CALENDAR --------------------------------------
 
     @RequestMapping(value = "/add-event", method = RequestMethod.GET)
@@ -268,7 +300,7 @@ public class AdminController {
         return mav;
     }
 
-    @RequestMapping(value = "/delete-event/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete-event/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView deleteEvent(
             @PathVariable(value = "id") int eventId,
             @RequestParam(required = false, defaultValue = "0") long timestamp
@@ -336,7 +368,7 @@ public class AdminController {
         return new ModelAndView("redirect:/admin/information");
     }
 
-    @RequestMapping(value = "/delete-resource/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete-resource/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView deleteResource(
             @PathVariable(value = "id") int resourceId
     ) {

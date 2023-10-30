@@ -30,7 +30,7 @@
                                 setTimeout(() => {
                                     image.classList.remove('placeholder');
                                     image.src = URL.createObjectURL(blob);
-                                }, 3000);
+                                }, 500);
 
                             } catch (e) {
                                 image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";
@@ -71,7 +71,7 @@
                                 setTimeout(() => {
                                     image.classList.remove('placeholder');
                                     image.src = URL.createObjectURL(blob);
-                                }, 3000);
+                                }, 500);
 
                             } catch (e) {
                                 image.src = "${pageContext.request.contextPath}/resources/images/errorImage.png";

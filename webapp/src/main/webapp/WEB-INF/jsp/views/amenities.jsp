@@ -57,7 +57,7 @@
 
                             <div class="col-md-12">
                                 <form:label path="date" class="mt-3 mb-1"><spring:message code="ChooseDate"/></form:label>
-                                <form:input path="date" id="date" type="date" required="true" class="cool-input ml-1 mb-1"/>
+                                <form:input path="date" id="date" type="date" required="true" class="cool-input mb-1"/>
                                 <form:errors path="date" cssClass="error" element="p"/>
                             </div>
 

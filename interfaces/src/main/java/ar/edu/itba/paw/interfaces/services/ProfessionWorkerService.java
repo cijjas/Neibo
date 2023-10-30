@@ -13,4 +13,6 @@ public interface ProfessionWorkerService {
     List<Profession> getWorkerProfessions(long workerId);
 
     String getWorkerProfessionsAsString(long workerId);
+
+    public String createURLForProfessionFilter(String professions, String currentUrl, long neighborhoodId);
 }

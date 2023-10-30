@@ -52,4 +52,40 @@ public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
         }
         return professionsString.toString();
     }
+
+    @Override
+    public String createURLForProfessionFilter(String professions, String currentUrl, long neighborhoodId) {
+        LOGGER.info("Creating URL for Profession Filter");
+        // Extract the base URL (path) without query parameters
+        String baseUrl;
+        int queryIndex = currentUrl.indexOf('?');
+        if (queryIndex != -1) {
+            baseUrl = currentUrl.substring(0, queryIndex);
+        } else {
+            baseUrl = currentUrl;
+        }
+
+        String[] professionArray = professions.split(",");
+
+        StringBuilder queryString = new StringBuilder();
+
+        for (String profession : professionArray) {
+            if (!profession.trim().isEmpty()) { // Skip empty tags
+                if (queryString.length() > 0) {
+                    queryString.append("&"); // Add '&' between tags
+                }
+                queryString.append("profession=").append(profession.trim()); // Append each tag
+            }
+        }
+
+        String formattedQueryString = queryString.toString();
+
+        if (!formattedQueryString.isEmpty()) {
+            // If there are tags to add, append them using '?' or '&' as separator
+            char separator = baseUrl.contains("?") ? '&' : '?';
+            return baseUrl + separator + formattedQueryString;
+        } else {
+            return baseUrl;
+        }
+    }
 }

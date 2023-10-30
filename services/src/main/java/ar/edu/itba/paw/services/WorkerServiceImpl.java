@@ -130,4 +130,10 @@ public class WorkerServiceImpl implements WorkerService {
         return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(null, neighborhoodIds) / size);
     }
 
+    @Override
+    public int getTotalWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size) {
+        LOGGER.info("Getting Pages of Workers with size {} from Neighborhoods {} with professions {}", size, neighborhoodIds, professions);
+        return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(professions, neighborhoodIds) / size);
+    }
+
 }

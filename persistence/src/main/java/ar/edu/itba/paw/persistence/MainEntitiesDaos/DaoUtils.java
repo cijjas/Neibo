@@ -81,16 +81,16 @@ class DaoUtils {
     }
 
     static void appendProfessionsCondition(StringBuilder query, List<Object> queryParams, List<String> professions) {
-        query.append(" AND EXISTS (");
-        query.append("SELECT 1 FROM workers_professions wp JOIN professions p ON wp.professionid = p.professionid");
+        query.append(" AND (");
+        query.append("SELECT COUNT(*) FROM workers_professions wp JOIN professions p ON wp.professionid = p.professionid");
         query.append(" WHERE wp.workerid = w.userid AND p.profession IN (");
 
         appendParams(query, queryParams, professions);
 
         query.append(")");
-        query.append(" HAVING COUNT(DISTINCT wp.professionid) = ?)"); // Ensure all specified professions exist
-        queryParams.add(professions.size());
+        query.append(") > 0");
     }
+
 
     static void appendTagsCondition(StringBuilder query, List<Object> queryParams, List<String> tags) {
         query.append(" AND EXISTS (");
