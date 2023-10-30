@@ -70,10 +70,10 @@
                 if (role === 'WORKER') {
                     document.getElementById('goback-button').href = '${pageContext.request.contextPath}/services';
                 } else {
-                    document.getElementById('goback-button').href = '${pageContext.request.contextPath}/';
+                    document.getElementById('goback-button').href = '${pageContext.request.contextPath}/feed';
                 }
             } else {
-                document.getElementById('goback-button').href = '${pageContext.request.contextPath}/';
+                document.getElementById('goback-button').href = '${pageContext.request.contextPath}/feed';
             }
             return role;
         } catch (error) {

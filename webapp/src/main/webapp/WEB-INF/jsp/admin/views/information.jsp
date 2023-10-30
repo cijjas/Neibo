@@ -35,7 +35,7 @@
         <div class="column-middle">
             <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
 
-                <p class="mb-3" style="color:var(--lighttext);"><spring:message code="ContactInformation"/></p>
+                <p class="mb-3 font-weight-bold c-text font-size-16" ><spring:message code="ContactInformation"/></p>
                 <c:choose>
                     <c:when test="${empty phoneNumbersList}">
                         <div class="no-posts-found">
@@ -84,34 +84,44 @@
                 </a>
             </div>
 
-            <c:forEach var="resource" items="${resourceList}">
-                <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <h2><c:out value="${resource.title}"/></h2>
-                        </div>
-                        <div class="col-md-4 text-right">
-                            <a href="${pageContext.request.contextPath}/admin/delete-resource/${resource.resourceId}"
-                               class="btn btn-link">
-                                <i class="fas fa-trash" style="color: var(--error);"></i>
-                            </a>
-                        </div>
+            <c:choose>
+                <c:when test="${empty resourceList}">
+                    <div class="no-posts-found">
+                        <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+                        <spring:message code="Resources.not.found"/>
                     </div>
-                    <div class="divider"></div>
-                    <h3 style="font-weight: normal "><c:out value="${resource.description}"/></h3>
-
-                    <div class="d-flex flex-column justify-content-center align-items-center w-100">
-
-                        <c:if test="${resource.image.imageId != 0}">
-                            <div style="display: flex; justify-content: center; align-items: center;">
-                                <img src="${pageContext.request.contextPath}/images/<c:out value="${resource.image.imageId}" />"
-                                     style="max-width: 100%; max-height: 100vh; border-radius: 5px;"
-                                     alt="resource_${resource.image.imageId}_img"/>
+                </c:when>
+                <c:otherwise>
+                    <c:forEach var="resource" items="${resourceList}">
+                        <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h2><c:out value="${resource.title}"/></h2>
+                                </div>
+                                <div class="col-md-4 text-right">
+                                    <a href="${pageContext.request.contextPath}/admin/delete-resource/${resource.resourceId}"
+                                       class="btn btn-link">
+                                        <i class="fas fa-trash" style="color: var(--error);"></i>
+                                    </a>
+                                </div>
                             </div>
-                        </c:if>
-                    </div>
-                </div>
-            </c:forEach>
+                            <div class="divider"></div>
+                            <h3 style="font-weight: normal "><c:out value="${resource.description}"/></h3>
+                            <div class="d-flex flex-column justify-content-center align-items-center w-100">
+                                <c:if test="${resource.image.imageId != 0}">
+                                    <div style="display: flex; justify-content: center; align-items: center;">
+                                        <img src="${pageContext.request.contextPath}/images/<c:out value="${resource.image.imageId}" />"
+                                             style="max-width: 100%; max-height: 100vh; border-radius: 5px;"
+                                             alt="resource_${resource.image.imageId}_img"/>
+                                    </div>
+                                </c:if>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </c:otherwise>
+            </c:choose>
+
+
 
         </div>
 

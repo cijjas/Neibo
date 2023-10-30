@@ -204,12 +204,24 @@ public class AdminController {
         return mav;
     }
 
-    @RequestMapping(value = "/delete-amenity/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/edit-amenity/{id:\\d+}", method = RequestMethod.GET)
+    public ModelAndView editAmenity(
+            @PathVariable(value = "id") Long amenityId,
+            @ModelAttribute("amenityForm") final AmenityForm amenityForm
+    ) {
+        ModelAndView mav = new ModelAndView("admin/views/amenitiesEdit");
+        mav.addObject("amenity", as.findAmenityById(amenityId));
+        mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
+        mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
+        return mav;
+    }
+
+    @RequestMapping(value = "/delete-amenity/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView deleteAmenity(
             @PathVariable(value = "id") Long amenityId
     ) {
         ModelAndView mav = new ModelAndView("redirect:/admin/amenities");
-        as.deleteAmenity(amenityId); //JOAAAAAAAAAAAAAAAAAAAEWQDSAFEDAs
+        as.deleteAmenity(amenityId);
         return mav;
     }
 
@@ -268,7 +280,7 @@ public class AdminController {
         return mav;
     }
 
-    @RequestMapping(value = "/delete-event/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete-event/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView deleteEvent(
             @PathVariable(value = "id") int eventId,
             @RequestParam(required = false, defaultValue = "0") long timestamp
@@ -336,7 +348,7 @@ public class AdminController {
         return new ModelAndView("redirect:/admin/information");
     }
 
-    @RequestMapping(value = "/delete-resource/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/delete-resource/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView deleteResource(
             @PathVariable(value = "id") int resourceId
     ) {

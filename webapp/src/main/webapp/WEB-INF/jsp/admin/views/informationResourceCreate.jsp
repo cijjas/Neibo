@@ -70,11 +70,48 @@
 
                     <%--Submit button --%>
                     <div class="d-flex justify-content-end">
-                        <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg"
+                        <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg w-25 font-weight-bold mt-2"
                                 style="height:40px;"><spring:message code="Create.verb"/></button>
                     </div>
 
-                    <script src="${pageContext.request.contextPath}/resources/js/publish.js"></script>
+                    <script>
+                        function submitForm() {
+                            document.getElementById("loader-container").style.display = "flex";
+                        }
+                        const dropContainer = document.getElementById("dropcontainer")
+                        const fileInput = document.getElementById("images")
+
+                        dropContainer.addEventListener("dragover", (e) => {
+                            // prevent default to allow drop
+                            e.preventDefault()
+                        }, false)
+
+                        dropContainer.addEventListener("dragenter", () => {
+                            dropContainer.classList.add("drag-active")
+                        })
+
+                        dropContainer.addEventListener("dragleave", () => {
+                            dropContainer.classList.remove("drag-active")
+                        })
+
+                        dropContainer.addEventListener("drop", (e) => {
+                            e.preventDefault()
+                            dropContainer.classList.remove("drag-active")
+                            fileInput.files = e.dataTransfer.files
+                        })
+
+                        // Show images preview
+                        function preview() {
+
+                            let frame = document.getElementById('frame');
+                            if (!frame.src || frame.src === "") {
+                                frame.style.display = "none";
+                            } else {
+                                frame.src = URL.createObjectURL(event.target.files[0]);
+                                frame.style.display = "block";
+                            }
+                        }
+                    </script>
                 </form:form>
             </div>
         </div>

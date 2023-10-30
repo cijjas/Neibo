@@ -2,30 +2,35 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 
 <c:if test="${channel != 'Announcements'}">
-    <div class="upper-feed-buttons-box ">
-        <div class="f-r-s-c">
-            <a onclick="hotPosts()" class="coolest-button ${param.postStatus == 'hot' ? 'active' : ''}">
-                <spring:message code="Hot"/>
+    <div class="upper-feed-buttons-box  ">
+        <div class="f-r-s-c filters g-05" >
+            <a onclick="newestPosts()"
+                   class="cool-feed-button  rounded ${(param.postStatus == 'none' || param.postStatus eq null) ? 'active' : ''}  ">
+                <i class="fa-solid fa-arrow-up-wide-short"></i>
+                <spring:message code="Newest"/>
+            </a>
+            <a onclick="hotPosts()" class="coolest-button  ${param.postStatus == 'hot' ? 'active' : ''}">
                 <i class="fa-solid fa-fire ml-1"></i>
+                <spring:message code="Hot"/>
             </a>
             <a onclick="trendingPosts()"
-               class="cool-feed-button rounded ${param.postStatus == 'trending' ? 'active' : ''}  ">
-                <spring:message code="Trending"/>
+               class="cool-feed-button  rounded ${param.postStatus == 'trending' ? 'active' : ''}  ">
                 <i class="fa-solid fa-arrow-trend-up ml-1"></i>
+                <spring:message code="Trending"/>
             </a>
         </div>
         <c:if test='${loggedUser.role != "ADMINISTRATOR"}'>
-            <a onclick="publishInChannel()" class="cool-feed-button">
+            <a onclick="publishInChannel()" class="cool-feed-button p-3 ">
+                <i class="fa-solid fa-plus"></i>
 
                 <c:choose>
                     <c:when test="${channel eq 'Feed'}">
-                            <spring:message code="CreateNewPost.button"/>
+                            <spring:message code="Create.post.button"/>
                     </c:when>
                     <c:when test="${channel eq 'Complaints'}">
-                            <spring:message code="Create.new.complaint"/>
+                            <spring:message code="Create.complaint.button"/>
                     </c:when>
                 </c:choose>
-                <i class="fa-solid fa-plus"></i>
             </a>
         </c:if>
     </div>
@@ -56,6 +61,12 @@
     function hotPosts() {
         const currentUrl = new URL(window.location.href);
         currentUrl.searchParams.set('postStatus', 'hot');
+        window.location.href = currentUrl.toString();
+    }
+
+    function newestPosts(){
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('postStatus', 'none');
         window.location.href = currentUrl.toString();
     }
 

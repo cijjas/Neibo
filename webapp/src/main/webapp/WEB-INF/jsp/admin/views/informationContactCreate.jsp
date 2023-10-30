@@ -63,7 +63,7 @@
 
                     <%--Submit button --%>
                     <div class="d-flex justify-content-end">
-                        <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg"
+                        <button onclick="submitForm()" type="submit" class="cool-button cool-small on-bg mt-2 w-25 font-weight-bold"
                                 style="height:40px;"><spring:message code="Create.verb"/></button>
                     </div>
 

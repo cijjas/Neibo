@@ -9,7 +9,6 @@
             <div class="f-r-sb-c ">
                 <div>
                     <span style="font-size: 14px" class="font-weight-bold">
-
                         <c:out value="${post.channel.channel}"/>
                     </span>
                     <span style="font-size: 12px; font-weight: normal" class="ml-1 placeholder-glow">
@@ -89,7 +88,7 @@
 
                             <c:forEach var="tag" items="${tags}">
                                 <a class="post-tag static m-l-3 m-r-3"
-                                   href="${pageContext.request.contextPath}/?tag=${tag.tag}">
+                                   href="${pageContext.request.contextPath}/${channel.toLowerCase()}?tag=${tag.tag}">
                                     <c:out value="${tag.tag}"/>
                                 </a>
                             </c:forEach>

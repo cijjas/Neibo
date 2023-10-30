@@ -6,7 +6,7 @@
             document.getElementById('actual-events').style.display = 'block';
         }
 
-        setTimeout(showPostsAfterDelay, 1000);
+        setTimeout(showPostsAfterDelay, 500);
     </script>
 
     <div id="placeholder-events">
