@@ -164,8 +164,8 @@ public class MainController {
 
     @RequestMapping(value = "/toggle-dark-mode", method = RequestMethod.POST)
     public String updateDarkModePreference() {
-//        sessionUtils.clearLoggedUser();
-//        sessionUtils.getLoggedUser();
+        sessionUtils.clearLoggedUser();
+        sessionUtils.getLoggedUser();
         System.out.println("Toggle Dark Mode");
         us.toggleDarkMode(sessionUtils.getLoggedUser().getUserId());
         return "redirect:/profile";

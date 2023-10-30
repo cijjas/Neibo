@@ -356,6 +356,13 @@ public class User {
         this.reviewsGiven = reviewsGiven;
     }
 
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public void setReviewsGiven(Set<Worker> reviewsGiven) {
+        this.reviewsGiven = reviewsGiven;
+    }
 //    public Worker getWorker() {
 //        return worker;
 //    }

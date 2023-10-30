@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.enums.BaseNeighborhood;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.exceptions.UnexpectedException;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
@@ -69,7 +70,13 @@ public class UserServiceImpl implements UserService {
             return createdUser;
         } else if (n.getPassword() == null) {
             // n is a user from an early version where signing up was not a requirement
-            // TODO userDao.setUserValues(n.getUserId(), passwordEncoder.encode(password), n.getName(), n.getSurname(), language, false, n.getProfilePictureId(), UserRole.UNVERIFIED_NEIGHBOR, id, n.getNeighborhoodId());
+            n.setPassword(passwordEncoder.encode(password));
+            n.setLanguage(language);
+            n.setRole(UserRole.UNVERIFIED_NEIGHBOR);
+            n.setIdentification(id);
+            n.setDarkMode(false);
+            n.setName(name);
+            n.setSurname(surname);
         }
         return n;
     }
@@ -139,25 +146,25 @@ public class UserServiceImpl implements UserService {
     public void updateProfilePicture(long userId, MultipartFile image) {
         LOGGER.info("Updating User {} profile picture", userId);
         Image i = imageService.storeImage(image);
-        findUserById(userId).ifPresent(n -> userDao.setUserValues(userId, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), i.getImageId(), n.getRole(), n.getIdentification(), n.getNeighborhood().getNeighborhoodId()));
+        User user = getUser(userId);
+        user.setProfilePicture(i);
     }
 
 
     @Override
     public void toggleDarkMode(long id) {
         LOGGER.info("Toggling Dark Mode for User {}", id);
-        // TODO userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), !n.isDarkMode(), n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
+        User user = getUser(id);
+        user.setDarkMode(!user.isDarkMode());
     }
 
     @Override
     public void verifyNeighbor(long id) {
         LOGGER.info("Verifying User {}", id);
-        User user = userDao.findUserById(id).orElse(null);
-        if (user == null)
-            return;
+        User user = getUser(id);
         // This method has to change
-        // TODO userDao.setUserValues(id, user.getPassword(), user.getName(), user.getSurname(), user.getLanguage(), user.isDarkMode(), user.getProfilePictureId(), UserRole.NEIGHBOR, user.getIdentification(), user.getNeighborhoodId());
-        String neighborhood = neighborhoodService.findNeighborhoodById(user.getNeighborhood().getNeighborhoodId()).orElse(null).getName();
+        user.setRole(UserRole.NEIGHBOR);
+        String neighborhood = neighborhoodService.findNeighborhoodById(user.getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
         Map<String, Object> vars = new HashMap<>();
         vars.put("name", user.getName());
         vars.put("neighborhood", neighborhood);
@@ -172,45 +179,49 @@ public class UserServiceImpl implements UserService {
     @Override
     public void unverifyNeighbor(long id, long neighborhoodId) {
         LOGGER.info("Un-verifying User {}", id);
-        // TODO userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), n.getProfilePictureId(), UserRole.UNVERIFIED_NEIGHBOR, n.getIdentification(), neighborhoodId));
+        User user = getUser(id);
+        user.setRole(UserRole.UNVERIFIED_NEIGHBOR);
     }
 
     @Override
     public void rejectNeighbor(long id) {
         LOGGER.info("Rejecting User {}", id);
-        // TODO userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), n.getProfilePictureId(), UserRole.REJECTED, n.getIdentification(), BaseNeighborhood.REJECTED_NEIGHBORHOOD.getId()));
+        User user = getUser(id);
+        user.setRole(UserRole.REJECTED);
     }
 
     @Override
     public void updateLanguage(long id, Language language) {
         LOGGER.info("Updating Language for User {} to {}", id, language);
-        // TODOuserDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), language, n.isDarkMode(), n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
+        User user = getUser(id);
+        // TODO userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), language, n.isDarkMode(), n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
     }
 
     // Will be deprecated if more languages are included
     @Override
     public void toggleLanguage(long id) {
         LOGGER.info("Toggling Language for User {}", id);
-        User user = userDao.findUserById(id).orElse(null);
-        if (user == null) {
-            return;
-        }
-
+        User user = getUser(id);
         Language newLanguage = (user.getLanguage() == Language.ENGLISH) ? Language.SPANISH : Language.ENGLISH;
-        updateLanguage(user.getUserId(), newLanguage);
+        user.setLanguage(newLanguage);
     }
 
 
     @Override
     public void resetPreferenceValues(long id) {
         LOGGER.info("Resetting preferences for User {}", id);
+        User user = getUser(id);
         // TODO userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), Language.ENGLISH, false, n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
     }
 
     @Override
     public void setNewPassword(long id, String newPassword) {
         LOGGER.info("Setting new password for User {}", id);
+        User user = getUser(id);
         // TODO userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, passwordEncoder.encode(newPassword), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
     }
 
+    private User getUser(long userId){
+        return userDao.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+    }
 }
