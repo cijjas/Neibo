@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 
 <c:if test="${channel != 'Announcements'}">
-    <div class="upper-feed-buttons-box  pt-3 pb-3 p-2 p-2">
+    <div class="upper-feed-buttons-box  ">
         <div class="f-r-s-c filters g-05" >
             <a onclick="newestPosts()"
                    class="cool-feed-button  rounded ${(param.postStatus == 'none' || param.postStatus eq null) ? 'active' : ''}  ">

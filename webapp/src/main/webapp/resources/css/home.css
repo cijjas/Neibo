@@ -122,7 +122,7 @@
 .cool-feed-button:before{
 }
 .upper-feed-buttons-box {
-    padding: 1rem;
+    padding: 1em 1em 1em 1em;
     margin-bottom: 1.25rem;
     top: 20px;
     display: flex;
@@ -211,6 +211,7 @@
             -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
             -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
             transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+            pointer-events: none;
         }
         &.active {
             border: 1px solid transparent;
@@ -298,6 +299,7 @@
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     &:hover {
         transform: translateY(-5px);
@@ -523,7 +525,9 @@
 
 .container {
     position: relative;
+
 }
+
 
 /*--------------------LEFT COLUMN----------------------------*/
 
@@ -616,6 +620,7 @@
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
 
     &:hover,
@@ -706,6 +711,7 @@
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     &.static {
         margin-bottom: 2px;
@@ -828,6 +834,7 @@
             -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
             -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
             transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+            pointer-events: none;
         }
         &::placeholder {
             color: var(--lighttext);
@@ -1047,6 +1054,7 @@ input[type=file]::file-selector-button:hover {
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     &.small-a {
         width: 30px;
@@ -1193,6 +1201,7 @@ footer div {
             -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
             -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
             transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+            pointer-events: none;
         }
         &:hover {
             border: 1px solid var(--error);
@@ -1234,6 +1243,7 @@ footer div {
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     &.outlined {
         color: var(--primary);
@@ -1292,6 +1302,7 @@ footer div {
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     &.old-primary {
         padding: 7px 7px;
@@ -1399,6 +1410,7 @@ footer div {
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     &::placeholder {
         color: var(--lighttext);
@@ -1428,6 +1440,7 @@ footer div {
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     &:active,
     &:hover,
@@ -1722,6 +1735,7 @@ h6 {
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     &:hover {
         transform: translateY(-4px);
@@ -1996,6 +2010,7 @@ input[type=time] {
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        pointer-events: none;
     }
     &::-webkit-calendar-picker-indicator {
         color: var(--text);
@@ -2088,6 +2103,7 @@ input[type=time] {
                 -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
                 -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
                 transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+                pointer-events: none;
             }
             &.n-workers {
                 background-color: var(--onbackground);
