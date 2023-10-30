@@ -158,7 +158,6 @@
     }
 
     function applyProfessionAsFilter(profession) {
-        console.log("wake up nigga");
         // Create a form element
         const professionsFilterForm = document.createElement('form');
         professionsFilterForm.setAttribute('method', 'POST');

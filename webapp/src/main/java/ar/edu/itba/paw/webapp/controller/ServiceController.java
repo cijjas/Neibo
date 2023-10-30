@@ -289,8 +289,6 @@ public class ServiceController {
 
         String baseUrl = scheme + "://" + serverName + ":" + serverPort + contextPath + "/services";
 
-        System.out.println(baseUrl);
-
         return new ModelAndView("redirect:" + pws.createURLForProfessionFilter(professions, baseUrl, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
     }
 
