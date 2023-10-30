@@ -90,7 +90,6 @@ public class WorkerServiceImpl implements WorkerService {
     @Transactional(readOnly = true)
     public List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long neighborhoodId, long loggedUserId) {
         LOGGER.info("Getting Workers from Neighborhoods {} with professions {}", neighborhoodId, professions);
-        System.out.println(professions);
         if (neighborhoodId != 0)
             return workerDao.getWorkersByCriteria(page, size, professions, new long[]{neighborhoodId});
 

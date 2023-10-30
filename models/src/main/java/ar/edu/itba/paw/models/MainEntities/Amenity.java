@@ -21,7 +21,7 @@ public class Amenity {
     @JoinColumn(name = "neighborhoodid")
     private Neighborhood neighborhood;
 
-    @ManyToMany(cascade=CascadeType.ALL)
+    @ManyToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "amenities_shifts_availability",
             joinColumns = @JoinColumn(name = "amenityid"),
             inverseJoinColumns = @JoinColumn(name = "shiftid"))
@@ -103,5 +103,25 @@ public class Amenity {
         public Amenity build() {
             return new Amenity(this);
         }
+    }
+
+    public void setAmenityId(Long amenityId) {
+        this.amenityId = amenityId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setNeighborhood(Neighborhood neighborhood) {
+        this.neighborhood = neighborhood;
+    }
+
+    public void setAvailableShifts(List<Shift> availableShifts) {
+        this.availableShifts = availableShifts;
     }
 }
