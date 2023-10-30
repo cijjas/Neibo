@@ -608,7 +608,6 @@ public class MainController {
         return mav;
     }
 
-
     // ------------------------------------- INFORMATION --------------------------------
     @RequestMapping(value = "/information", method = RequestMethod.GET)
     public ModelAndView information() {

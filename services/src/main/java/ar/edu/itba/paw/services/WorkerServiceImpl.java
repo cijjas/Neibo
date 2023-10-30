@@ -90,6 +90,7 @@ public class WorkerServiceImpl implements WorkerService {
     @Transactional(readOnly = true)
     public List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long neighborhoodId, long loggedUserId) {
         LOGGER.info("Getting Workers from Neighborhoods {} with professions {}", neighborhoodId, professions);
+        System.out.println(professions);
         if (neighborhoodId != 0)
             return workerDao.getWorkersByCriteria(page, size, professions, new long[]{neighborhoodId});
 
@@ -128,6 +129,12 @@ public class WorkerServiceImpl implements WorkerService {
         LOGGER.info("Getting Pages of Workers with size {} from Neighborhood {}", size, neighborhoodId);
         long[] neighborhoodIds = {neighborhoodId};
         return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(null, neighborhoodIds) / size);
+    }
+
+    @Override
+    public int getTotalWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size) {
+        LOGGER.info("Getting Pages of Workers with size {} from Neighborhoods {} with professions {}", size, neighborhoodIds, professions);
+        return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(professions, neighborhoodIds) / size);
     }
 
 }

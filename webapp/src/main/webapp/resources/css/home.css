@@ -648,7 +648,8 @@
 }
 
 
-.filtered-tags {
+.filtered-tags,
+.filtered-professions {
     display: flex;
     flex-direction: row;
     justify-content: start;
@@ -659,7 +660,8 @@
 }
 
 /*---------------------------- Tag selector filter ------------------------------------*/
-.tags-row {
+.tags-row,
+.professions-row {
     display: flex;
     flex-direction: row;
     justify-content: start;
@@ -668,7 +670,8 @@
     flex-wrap: wrap;
     width: 100%;
 
-    &.tags {
+    &.tags
+    {
         justify-content: start;
     }
 
@@ -680,7 +683,8 @@
 
 .filtered-tag,
 .post-tag,
-.tag-option {
+.tag-option,
+.profession-option {
     font-size: 14px;
     padding: 2px 5px 2px 5px;
     color: var(--accent);
@@ -795,7 +799,8 @@
     margin: 20px 0 20px 0;
 }
 
-.tags-input-wrapper {
+.tags-input-wrapper,
+.professions-input-wrapper {
     width: 100%;
     margin-top: 5px;
 
