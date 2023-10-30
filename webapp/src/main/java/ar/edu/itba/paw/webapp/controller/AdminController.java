@@ -270,8 +270,9 @@ public class AdminController {
             LOGGER.error("Error in Edit Amenity Form ");
             return createAmenityForm(amenityForm);
         }
+        as.updateAmenity(amenityId, amenityForm.getName(), amenityForm.getDescription());
         //avs.updateAvailability(amenityId, selectedShifts);
-        return mav;
+        //return mav;
     }
     // ------------------------------------- CALENDAR --------------------------------------
 
