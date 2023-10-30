@@ -60,10 +60,9 @@ public class ImageDaoImpl implements ImageDao {
             LOGGER.error("Error whilst getting the Image bytes", e);
             throw new InsertionException("An error occurred whilst storing the image");
         }
-
         Image img = new Image.Builder()
-                    .image(imageBytes)
-                    .build();
+            .image(imageBytes)
+            .build();
         em.persist(img);
         return img;
     }

@@ -15,6 +15,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 import static org.junit.Assert.assertEquals;
@@ -30,13 +32,14 @@ public class CategorizationDaoImplTest {
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
+    @Autowired
     private CategorizationDaoImpl categorizationDao;
-
+    @PersistenceContext
+    private EntityManager em;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        categorizationDao = new CategorizationDaoImpl(ds);
     }
 
     @Test
@@ -49,9 +52,10 @@ public class CategorizationDaoImplTest {
         long tKey = testInserter.createTag();
 
         // Exercise
-        categorizationDao.createCategory(tKey, pKey);
+        categorizationDao.createCategorization(tKey, pKey);
 
         // Validations & Post Conditions
+        em.flush();
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_tags.name()));
     }
 }

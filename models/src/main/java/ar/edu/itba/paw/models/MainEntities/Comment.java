@@ -1,20 +1,43 @@
 package ar.edu.itba.paw.models.MainEntities;
 
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "comments")
 public class Comment {
-    private final Long commentId;
-    private final String comment;
-    private final Date date;
-    private final User user;
-    private final Long postId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comments_commentid_seq")
+    @SequenceGenerator(name = "comments_commentid_seq", sequenceName = "comments_commentid_seq", allocationSize = 1)
+    @Column(name = "commentid")
+    private Long commentId;
+
+    @Column(name = "comment", length = 512, nullable = false)
+    private String comment;
+
+    @Column(name = "commentdate", nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Date date;
+
+    @ManyToOne
+    @JoinColumn(name = "userid", nullable = false)
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "postid", nullable = false)
+    private Post post;
+
+    public Comment() {
+        // Default constructor for JPA
+    }
 
     private Comment(Builder builder) {
         this.commentId = builder.commentId;
         this.comment = builder.comment;
         this.date = builder.date;
         this.user = builder.user;
-        this.postId = builder.postId;
+        this.post = builder.post;
+        this.date = new java.sql.Date(System.currentTimeMillis());
     }
 
     public Long getCommentId() {
@@ -25,16 +48,32 @@ public class Comment {
         return comment;
     }
 
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     public Date getDate() {
         return date;
     }
 
-    public User getUser() { // New getter for neighborId
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public User getUser() {
         return user;
     }
 
-    public Long getPostId() { // New getter for postId
-        return postId;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
     }
 
     @Override
@@ -43,8 +82,8 @@ public class Comment {
                 "commentId=" + commentId +
                 ", comment='" + comment + '\'' +
                 ", date=" + date +
-                ", neighborId=" + user +
-                ", postId=" + postId +
+                ", user=" + user +
+                ", post=" + post +
                 '}';
     }
 
@@ -53,7 +92,7 @@ public class Comment {
         private String comment;
         private Date date;
         private User user;
-        private Long postId;
+        private Post post;
 
         public Builder commentId(Long commentId) {
             this.commentId = commentId;
@@ -75,8 +114,8 @@ public class Comment {
             return this;
         }
 
-        public Builder postId(Long postId) {
-            this.postId = postId;
+        public Builder post(Post post) {
+            this.post = post;
             return this;
         }
 

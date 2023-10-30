@@ -16,6 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.sql.Time;
@@ -41,12 +43,14 @@ public class EventDaoImplTest {
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
+    @Autowired
     private EventDaoImpl eventDao;
+    @PersistenceContext
+    private EntityManager em;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        eventDao = new EventDaoImpl(ds);
     }
 
 
@@ -61,6 +65,7 @@ public class EventDaoImplTest {
         Event e = eventDao.createEvent(EVENT_NAME, EVENT_DESCRIPTION, EVENT_DATE, tKey1, tKey2, nhKey);
 
         // Validations & Post Conditions
+        em.flush();
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events.name()));
         assertEquals(EVENT_NAME, e.getName());
         assertEquals(EVENT_DESCRIPTION, e.getDescription());
@@ -127,8 +132,7 @@ public class EventDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime();
         long tKey2 = testInserter.createTime();
-        eventDao.createEvent(EVENT_NAME, EVENT_DESCRIPTION, EVENT_DATE, tKey1, tKey2, nhKey);
-
+        long eKey = testInserter.createEvent(EVENT_NAME, EVENT_DESCRIPTION, EVENT_DATE, tKey1, tKey2, nhKey);
 
         // Exercise
         List<Event> events = eventDao.getEventsByDate(EVENT_DATE, nhKey);
@@ -212,6 +216,7 @@ public class EventDaoImplTest {
         boolean deleted = eventDao.deleteEvent(eKey);
 
         // Validations & Post Conditions
+        em.flush();
         assertTrue(deleted);
         assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events.name()));
     }
@@ -224,6 +229,7 @@ public class EventDaoImplTest {
         boolean deleted = eventDao.deleteEvent(1);
 
         // Validations & Post Conditions
+        em.flush();
         assertFalse(deleted);
         assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events.name()));
     }

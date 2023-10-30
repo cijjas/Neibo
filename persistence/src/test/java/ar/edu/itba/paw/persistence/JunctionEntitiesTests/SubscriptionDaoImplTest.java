@@ -16,6 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 import static org.junit.Assert.assertEquals;
@@ -31,13 +33,14 @@ public class SubscriptionDaoImplTest {
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
+    @Autowired
     private SubscriptionDao subscriptionDao;
-
+    @PersistenceContext
+    private EntityManager em;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        subscriptionDao = new SubscriptionDaoImpl(ds);
     }
 
     @Test
@@ -53,6 +56,7 @@ public class SubscriptionDaoImplTest {
         subscriptionDao.createSubscription(uKey, pKey);
 
         // Validations & Post Conditions
+        em.flush();
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_subscriptions.name()));
     }
 }

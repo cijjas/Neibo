@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.enums.BaseChannel;
 import ar.edu.itba.paw.enums.BaseNeighborhood;
 import ar.edu.itba.paw.enums.PostStatus;
+import ar.edu.itba.paw.enums.Professions;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.MainEntities.Worker;
@@ -228,15 +229,19 @@ public class ServiceController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ModelAndView services(
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "profession", required = false) List <String> professions
     ) {
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
-        List<Worker> workerList = ws.getWorkersByCriteria(page, size, null, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId());
+        List<Worker> workerList = ws.getWorkersByCriteria(page, size, professions, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId());
         mav.addObject("workersList", workerList);
         mav.addObject("channel", "Services");
-        mav.addObject("totalPages", ws.getTotalWorkerPages(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
+        mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(professions, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size));
         mav.addObject("contextPath", "/services");
         mav.addObject("page", page);
+        mav.addObject("appliedProfessions", professions);
+        mav.addObject("professionList", Professions.getProfessionsList());
+        mav.addObject("inServices", true);
         return mav;
     }
 
@@ -267,6 +272,14 @@ public class ServiceController {
         mav.addObject("channel", "Neighborhood");
         nhws.removeWorkerFromNeighborhood(sessionUtils.getLoggedUser().getUserId(), neighborhoodId);
         return mav;
+    }
+
+    @RequestMapping(value = "/apply-professions-as-filter", method = RequestMethod.POST)
+    public ModelAndView applyProfessionsFilter(
+            @RequestParam("professions") String professions,
+            @RequestParam("currentUrl") String currentUrl
+    ) {
+        return new ModelAndView("redirect:" + pws.createURLForProfessionFilter(professions, currentUrl, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
     }
 
 }

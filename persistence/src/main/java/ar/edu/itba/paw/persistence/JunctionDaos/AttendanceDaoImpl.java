@@ -1,7 +1,14 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
+import ar.edu.itba.paw.compositeKeys.AttendanceKey;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.AttendanceDao;
+import ar.edu.itba.paw.models.JunctionEntities.Attendance;
+import ar.edu.itba.paw.models.JunctionEntities.ChannelMapping;
+import ar.edu.itba.paw.models.MainEntities.Channel;
+import ar.edu.itba.paw.models.MainEntities.Event;
+import ar.edu.itba.paw.models.MainEntities.Neighborhood;
+import ar.edu.itba.paw.models.MainEntities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +16,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +25,8 @@ import java.util.Map;
 @Repository
 public class AttendanceDaoImpl implements AttendanceDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(AttendanceDaoImpl.class);
+    @PersistenceContext
+    private EntityManager em;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
 
@@ -29,12 +40,11 @@ public class AttendanceDaoImpl implements AttendanceDao {
     // ---------------------------------------------- EVENTS_USERS INSERT ----------------------------------------------
 
     @Override
-    public void createAttendee(long userId, long eventId) {
+    public Attendance createAttendee(long userId, long eventId) {
         LOGGER.debug("Inserting Attendance");
-        Map<String, Object> data = new HashMap<>();
-        data.put("userid", userId);
-        data.put("eventid", eventId);
-        jdbcInsert.execute(data);
+        Attendance attendance = new Attendance(em.find(User.class, userId), em.find(Event.class, eventId));
+        em.persist(attendance);
+        return attendance;
     }
 
     // ---------------------------------------------- EVENTS_USERS DELETE ------------------------------------------------
@@ -42,7 +52,12 @@ public class AttendanceDaoImpl implements AttendanceDao {
     @Override
     public boolean deleteAttendee(long userId, long eventId) {
         LOGGER.debug("Deleting Attendance with userId {} and eventId {}", userId, eventId);
-        final String sql = "DELETE FROM events_users WHERE userid = ? AND eventid = ?";
-        return jdbcTemplate.update(sql, userId, eventId) > 0;
+        Attendance attendance = em.find(Attendance.class, new AttendanceKey(userId, eventId));
+        if (attendance != null) {
+            em.remove(attendance); // Delete the entity
+            return true;
+        } else {
+            return false;
+        }
     }
 }

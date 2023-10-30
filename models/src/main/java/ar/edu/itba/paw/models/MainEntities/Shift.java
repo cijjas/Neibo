@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models.MainEntities;
 
+import org.hibernate.annotations.Formula;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;

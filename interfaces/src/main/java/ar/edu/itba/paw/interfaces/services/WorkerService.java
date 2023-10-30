@@ -28,4 +28,6 @@ public interface WorkerService {
 
     int getTotalWorkerPages(long neighborhoodId, int size);
 
+    int getTotalWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size);
+
 }

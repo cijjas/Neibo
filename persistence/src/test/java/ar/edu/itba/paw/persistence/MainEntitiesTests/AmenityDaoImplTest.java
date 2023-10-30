@@ -30,8 +30,12 @@ import static org.junit.Assert.*;
 @Rollback
 public class AmenityDaoImplTest {
 
-    private final String AMENITY_NAME = "Amenity Name";
-    private final String AMENITY_DESCRIPTION = "Amenity Description";
+    private final String AMENITY_NAME_1 = "Amenity Name";
+    private final String AMENITY_NAME_2 = "Amenity Name 2";
+    private final String AMENITY_DESCRIPTION_1 = "Amenity Description";
+    private final String AMENITY_DESCRIPTION_2 = "Amenity Description 2";
+    private static final int BASE_PAGE = 1;
+    private static final int BASE_PAGE_SIZE = 10;
     @Autowired
     private DataSource ds;
     @Autowired
@@ -54,13 +58,13 @@ public class AmenityDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        Amenity createdAmenity = amenityDao.createAmenity(AMENITY_NAME, AMENITY_DESCRIPTION, nhKey);
+        Amenity createdAmenity = amenityDao.createAmenity(AMENITY_NAME_1, AMENITY_DESCRIPTION_2, nhKey);
 
         // Validations & Post Conditions
         em.flush();
         assertNotNull(createdAmenity);
-        assertEquals(AMENITY_NAME, createdAmenity.getName());
-        assertEquals(AMENITY_DESCRIPTION, createdAmenity.getDescription());
+        assertEquals(AMENITY_NAME_1, createdAmenity.getName());
+        assertEquals(AMENITY_DESCRIPTION_2, createdAmenity.getDescription());
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.amenities.name()));
     }
 
@@ -93,10 +97,35 @@ public class AmenityDaoImplTest {
         long aKey = testInserter.createAmenity(nhKey);
 
         // Exercise
-        List<Amenity> amenities = amenityDao.getAmenities(nhKey, 1, 10);
+        List<Amenity> amenities = amenityDao.getAmenities(nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(1, amenities.size());
+    }
+
+    @Test
+    public void testGetAmenitiesBySize() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey1 = testInserter.createAmenity(AMENITY_NAME_1, AMENITY_DESCRIPTION_1, nhKey);
+        long aKey2 = testInserter.createAmenity(AMENITY_NAME_2, AMENITY_DESCRIPTION_2, nhKey);
+
+        // Exercise
+        List<Amenity> amenities = amenityDao.getAmenities(nhKey, BASE_PAGE, 1);
+
+        // Validations & Post Conditions
+        assertEquals(1, amenities.size());
+    }
+
+    @Test
+    public void testGetNoAmenities() {
+        // Pre Conditions
+
+        // Exercise
+        List<Amenity> amenities = amenityDao.getAmenities(0, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertTrue(amenities.isEmpty());
     }
 
     @Test

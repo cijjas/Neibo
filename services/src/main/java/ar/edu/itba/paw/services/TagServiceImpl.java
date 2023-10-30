@@ -63,7 +63,7 @@ public class TagServiceImpl implements TagService {
                 tagMap.put(tagName, tag);
             }
             // Associate the post with the tag using the CategorizationDao
-            categorizationDao.createCategory(tag.getTagId(), postId);
+            categorizationDao.createCategorization(tag.getTagId(), postId);
         }
     }
 

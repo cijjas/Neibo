@@ -24,6 +24,6 @@ public class CategorizationServiceImpl implements CategorizationService {
     @Override
     public void createCategory(long tagId, long postId) {
         LOGGER.info("Creating Tag {} for Post", tagId, postId);
-        categorizationDao.createCategory(tagId, postId);
+        categorizationDao.createCategorization(tagId, postId);
     }
 }

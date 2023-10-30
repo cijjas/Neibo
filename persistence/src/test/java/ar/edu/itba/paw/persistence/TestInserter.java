@@ -51,6 +51,7 @@ public class TestInserter {
     private final SimpleJdbcInsert shiftInsert;
     private final SimpleJdbcInsert imageInsert;
     private final SimpleJdbcInsert professionInsertion;
+    private final SimpleJdbcInsert channelMappingInserter;
 
     @Autowired
     public TestInserter(DataSource dataSource) {
@@ -128,6 +129,8 @@ public class TestInserter {
         this.professionInsertion = new SimpleJdbcInsert(dataSource)
                 .withTableName("professions")
                 .usingGeneratedKeyColumns("professionid");
+        this.channelMappingInserter = new SimpleJdbcInsert(dataSource)
+                .withTableName("neighborhoods_channels");
     }
 
     public long createChannel(String channelName) {
@@ -257,6 +260,13 @@ public class TestInserter {
         data.put("starttime", startTime);
         data.put("endtime", endTime);
         return reservationInsert.executeAndReturnKey(data).longValue();
+    }
+
+    public void createChannelMapping(long channelId, long neighborhoodId) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("channelid", channelId);
+        data.put("neighborhoodid", neighborhoodId);
+        channelMappingInserter.execute(data);
     }
 
     public long createAvailability(long amenityId, long shiftId) {

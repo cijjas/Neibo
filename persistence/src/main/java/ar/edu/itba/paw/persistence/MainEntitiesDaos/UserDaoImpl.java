@@ -18,7 +18,9 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
 import javax.sql.DataSource;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -106,73 +108,128 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getNeighborsSubscribedByPostId(long postId) {
         LOGGER.debug("Selecting Neighbors that are subscribed to Post {}", postId);
-        return jdbcTemplate.query(USERS_JOIN_POSTS_USERS_AND_POSTS + " WHERE p.postid = ? AND role = ?", ROW_MAPPER, postId, UserRole.NEIGHBOR.toString());
+
+        String hql = "SELECT u FROM User u " +
+                "JOIN u.posts p " +
+                "WHERE p.postId = :postId AND u.role = :role";
+
+        return em.createQuery(hql, User.class)
+                .setParameter("postId", postId)
+                .setParameter("role", UserRole.NEIGHBOR)
+                .getResultList();
     }
 
     @Override
     public List<User> getUsersByCriteria(UserRole role, long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Users with Role {} and from Neighborhood {}", role, neighborhoodId);
-        StringBuilder query = new StringBuilder("SELECT * FROM users u WHERE 1 = 1");
-        List<Object> queryParams = new ArrayList<>();
 
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+
+        // First Query: Retrieve User IDs
+        CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
+        Root<User> idRoot = idQuery.from(User.class);
+        idQuery.select(idRoot.get("userId")); // Assuming "id" is the ID field
+        List<Predicate> predicates = new ArrayList<>();
         if (role != null)
-            appendRoleCondition(query, queryParams, role);
+            predicates.add(cb.equal(idRoot.get("role"), role));
+        if (neighborhoodId > 0) {
+            Join<User, Neighborhood> neighborhoodJoin = idRoot.join("neighborhood");
+            predicates.add(cb.equal(neighborhoodJoin.get("neighborhoodId"), neighborhoodId));
+        }
+        idQuery.where(predicates.toArray(new Predicate[0]));
+        TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
+        if (page > 0) {
+            idTypedQuery.setFirstResult((page - 1) * size);
+            idTypedQuery.setMaxResults(size);
+        }
+        List<Long> userIds = idTypedQuery.getResultList();
+        // Improved performance
+        if (userIds.isEmpty()) {
+            return Collections.emptyList();
+        }
 
-        if (neighborhoodId > 0)
-            appendNeighborhoodIdCondition(query, queryParams, neighborhoodId);
+        // Second Query: Retrieve Users based on User IDs
+        CriteriaQuery<User> dataQuery = cb.createQuery(User.class);
+        Root<User> dataRoot = dataQuery.from(User.class);
+        dataQuery.where(dataRoot.get("userId").in(userIds));
+        TypedQuery<User> dataTypedQuery = em.createQuery(dataQuery);
 
-        if (page != 0)
-            appendPaginationClause(query, queryParams, page, size);
-
-        // Log results
-        LOGGER.debug("{}", query);
-        LOGGER.debug("{}", queryParams);
-
-        return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
+        return dataTypedQuery.getResultList();
     }
 
-
+    @Override
     public int getTotalUsers(UserRole role, long neighborhoodId) {
         LOGGER.debug("Selecting Users Count that have Role {} and from Neighborhood {}", role, neighborhoodId);
-        StringBuilder query = new StringBuilder("SELECT COUNT(*) FROM users u WHERE 1 = 1");
-        List<Object> queryParams = new ArrayList<>();
-
+        StringBuilder jpqlConditions = new StringBuilder("SELECT COUNT(u) FROM User u WHERE 1 = 1");
         if (role != null)
-            appendRoleCondition(query, queryParams, role);
-
+            jpqlConditions.append(" AND u.role = :role");
         if (neighborhoodId > 0)
-            appendNeighborhoodIdCondition(query, queryParams, neighborhoodId);
-
-        // Log results
-        LOGGER.debug("{}", query);
-        LOGGER.debug("{}", queryParams);
-
-        // Use queryForObject to retrieve the count as an integer
-        return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());
+            jpqlConditions.append(" AND u.neighborhood.id = :neighborhoodId");
+        TypedQuery<Long> query = em.createQuery(jpqlConditions.toString(), Long.class);
+        if (role != null)
+            query.setParameter("role", role);
+        if (neighborhoodId > 0)
+            query.setParameter("neighborhoodId", neighborhoodId);
+        return query.getSingleResult().intValue();
     }
 
     @Override
     public List<User> getEventUsers(long eventId) {
-        LOGGER.debug("Selecting Users that will assist Event {}", eventId);
-        return jdbcTemplate.query(EVENTS_JOIN_USERS + " WHERE e.eventid = ?", ROW_MAPPER, eventId);
+        LOGGER.debug("Selecting Users that will attend Event {}", eventId);
+        String hql = "SELECT u FROM User u " +
+                "JOIN u.events e " +
+                "WHERE e.eventId = :eventId";
+        return em.createQuery(hql, User.class)
+                .setParameter("eventId", eventId)
+                .getResultList();
     }
+
 
     @Override
     public boolean isAttending(long eventId, long userId) {
-        LOGGER.debug("Selecting User {} that assists Event {}", userId, eventId);
-        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM events_users WHERE eventid = ? AND userid = ?", Integer.class, eventId, userId) == 1;
+        LOGGER.debug("Selecting User {} that attends Event {}", userId, eventId);
+
+        String sql = "SELECT COUNT(*) FROM events_users WHERE eventid = :eventId AND userid = :userId";
+        BigInteger result = (BigInteger) em.createNativeQuery(sql)
+                .setParameter("eventId", eventId)
+                .setParameter("userId", userId)
+                .getSingleResult();
+
+        return result.intValue() == 1;
     }
+
+
 
 
     // ---------------------------------------------- USERS UPDATE -----------------------------------------------------
 
     @Override
-    public void setUserValues(final long id, final String password, final String name, final String surname,
-                              final Language language, final boolean darkMode, final long profilePictureId,
-                              final UserRole role, final int identification, final long neighborhoodId
+    public void setUserValues(
+            final long id,
+            final String password,
+            final String name,
+            final String surname,
+            final Language language,
+            final boolean darkMode,
+            final long profilePictureId,
+            final UserRole role,
+            final int identification,
+            final long neighborhoodId
     ) {
         LOGGER.debug("Updating User {}", id);
-        jdbcTemplate.update("UPDATE users SET name = ?, surname = ?, password = ?, darkmode = ?, language = ?, role = ?, profilepictureid = ?, identification = ?, neighborhoodid = ? WHERE userid = ?",
-                name, surname, password, darkMode, language != null ? language.toString() : null, role != null ? role.toString() : null, profilePictureId == 0 ? null : profilePictureId, identification, neighborhoodId, id);
+
+        User user = em.find(User.class, id);
+        if (user != null) {
+            user.setPassword(password);
+            user.setName(name);
+            user.setSurname(surname);
+            user.setLanguage(language);
+            user.setDarkMode(darkMode);
+            user.setProfilePicture(em.find(Image.class, profilePictureId));
+            user.setRole(role);
+            user.setIdentification(identification);
+            user.setNeighborhood(em.find(Neighborhood.class, neighborhoodId));
+        }
     }
+
 }

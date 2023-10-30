@@ -1,7 +1,13 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
+import ar.edu.itba.paw.compositeKeys.ChannelMappingKey;
+import ar.edu.itba.paw.compositeKeys.LikeKey;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.LikeDao;
+import ar.edu.itba.paw.models.JunctionEntities.ChannelMapping;
+import ar.edu.itba.paw.models.JunctionEntities.Like;
+import ar.edu.itba.paw.models.MainEntities.Post;
+import ar.edu.itba.paw.models.MainEntities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +16,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -19,6 +27,8 @@ import java.util.Map;
 @Repository
 public class LikeDaoImpl implements LikeDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(LikeDaoImpl.class);
+    @PersistenceContext
+    private EntityManager em;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private final String COUNT_LIKES = "SELECT COUNT(*) FROM posts_users_likes";
@@ -33,31 +43,32 @@ public class LikeDaoImpl implements LikeDao {
     // ---------------------------------------------- POST_USERS_LIKES INSERT ------------------------------------------
 
     @Override
-    public void createLike(long postId, long userId) {
+    public Like createLike(long postId, long userId) {
         LOGGER.debug("Inserting Like");
-        Map<String, Object> data = new HashMap<>();
-        data.put("postid", postId);
-        data.put("likedate", Timestamp.valueOf(LocalDateTime.now()));
-        data.put("userid", userId);
-
-        try {
-            jdbcInsert.execute(data);
-        } catch (DataAccessException ex) {
-            LOGGER.error("Error inserting the Like", ex);
-            throw new InsertionException("An error occurred whilst liking the post");
-        }
+        Like like = new Like(em.find(Post.class, postId), em.find(User.class, userId));
+        em.persist(like);
+        return like;
     }
     // ---------------------------------------------- POST_USERS_LIKES SELECT ------------------------------------------
 
+    @Override
     public int getLikes(long postId) {
         LOGGER.debug("Selecting Likes from Post {}", postId);
-        return jdbcTemplate.queryForObject(COUNT_LIKES + " WHERE postid = ?", Integer.class, postId);
+        Long count = (Long) em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.post.postId = :postId")
+                .setParameter("postId", postId)
+                .getSingleResult();
+        return count != null ? count.intValue() : 0;
     }
 
     @Override
     public boolean isPostLiked(long postId, long userId) {
         LOGGER.debug("Selecting Likes from Post {} and userId {}", postId, userId);
-        return jdbcTemplate.queryForObject(COUNT_LIKES + " WHERE postid = ? AND userid = ?", Integer.class, postId, userId) > 0;
+        // Check if a like exists for the given post and user
+        Long count = (Long) em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.post.postId = :postId AND l.user.userId = :userId")
+                .setParameter("postId", postId)
+                .setParameter("userId", userId)
+                .getSingleResult();
+        return count != null && count > 0;
     }
 
     // ---------------------------------------------- POST_USERS_LIKES DELETE ------------------------------------------
@@ -65,6 +76,12 @@ public class LikeDaoImpl implements LikeDao {
     @Override
     public boolean deleteLike(long postId, long userId) {
         LOGGER.debug("Deleting Like from Post {} and userId {}", postId, userId);
-        return jdbcTemplate.update("DELETE FROM posts_users_likes WHERE postid = ? AND userid = ? ", postId, userId) > 0;
+        Like like = em.find(Like.class, new LikeKey(postId, userId));
+        if (like != null) {
+            em.remove(like);
+            return true;
+        }
+        return false;
+
     }
 }

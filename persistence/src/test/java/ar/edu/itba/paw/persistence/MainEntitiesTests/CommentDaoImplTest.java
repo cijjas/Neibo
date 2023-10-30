@@ -16,6 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +40,8 @@ public class CommentDaoImplTest {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private CommentDaoImpl commentDao;
+    @PersistenceContext
+    private EntityManager em;
 
     @Before
     public void setUp() {
@@ -57,6 +61,7 @@ public class CommentDaoImplTest {
         Comment c = commentDao.createComment(COMMENT_TEXT, uKey, pKey);
 
         // Validations & Post Conditions
+        em.flush();
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.comments.name()));
         assertEquals(COMMENT_TEXT, c.getComment());
     }
@@ -113,7 +118,39 @@ public class CommentDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Comment> comments = commentDao.getCommentsByPostId(1, 10, 1);
+        List<Comment> comments = commentDao.getCommentsByPostId(1, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertTrue(comments.isEmpty());
+    }
+
+    public void testGetComments(){
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey1 = testInserter.createPost(uKey, chKey, iKey);
+        long pKey2 = testInserter.createPost(uKey, chKey, iKey);
+        testInserter.createComment(uKey, pKey2);
+        // Same user commenting the same thing twice
+        testInserter.createComment(uKey, pKey1);
+        testInserter.createComment(uKey, pKey1);
+
+        // Exercise
+        List<Comment> comments = commentDao.getCommentsByPostId(pKey1, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertFalse(comments.isEmpty());
+        assertEquals(2, comments.size());
+    }
+
+    public void testGetNoComments(){
+        // Pre Conditions
+
+
+        // Exercise
+        List<Comment> comments = commentDao.getCommentsByPostId(1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(comments.isEmpty());

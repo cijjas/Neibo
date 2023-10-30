@@ -16,6 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
 
@@ -36,12 +38,14 @@ public class ContactDaoImplTest {
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
+    @Autowired
     private ContactDaoImpl contactDao;
+    @PersistenceContext
+    private EntityManager em;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        contactDao = new ContactDaoImpl(ds);
     }
 
     @Test
@@ -53,6 +57,7 @@ public class ContactDaoImplTest {
         Contact c = contactDao.createContact(nhKey, CONTACT_NAME, ADDRESS, NUMBER);
 
         // Validations & Post Conditions
+        em.flush();
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.contacts.name()));
         assertEquals(CONTACT_NAME, c.getContactName());
         assertEquals(ADDRESS, c.getContactAddress());
@@ -93,6 +98,7 @@ public class ContactDaoImplTest {
         boolean deleted = contactDao.deleteContact(contactId);
 
         // Validations & Post Conditions
+        em.flush();
         assertTrue(deleted);
         assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.contacts.name()));
     }
@@ -105,18 +111,7 @@ public class ContactDaoImplTest {
         boolean deleted = contactDao.deleteContact(1);
 
         // Validations & Post Conditions
-        assertFalse(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.contacts.name()));
-    }
-
-    @Test
-    public void testDeleteNonExistentContact() {
-        // Pre Conditions
-
-        // Exercise
-        boolean deleted = contactDao.deleteContact(1);
-
-        // Validations & Post Conditions
+        em.flush();
         assertFalse(deleted);
         assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.contacts.name()));
     }

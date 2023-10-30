@@ -44,9 +44,9 @@ public class UserDaoImplTest {
     private final String NAME = "John";
     private final String SURNAME = "Doe";
     private final Language LANGUAGE = Language.ENGLISH;
-    private final boolean DARK_MODE = false;
+    private final Boolean DARK_MODE = false;
     private final UserRole ROLE = UserRole.NEIGHBOR;
-    private final int ID = 12345;
+    private final Integer ID = 12345;
     @Autowired
     private DataSource ds;
     @Autowired
@@ -234,14 +234,9 @@ public class UserDaoImplTest {
     @Test
     public void testGetNoNeighborsSubscribedByPostId() {
         // Pre Conditions
-        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
-        long chKey = testInserter.createChannel();
-        long iKey = testInserter.createImage();
-        long pKey = testInserter.createPost(uKey1, chKey, iKey);
 
         // Exercise
-        List<User> subscribers = userDao.getNeighborsSubscribedByPostId(pKey);
+        List<User> subscribers = userDao.getNeighborsSubscribedByPostId(1);
 
         // Validations
         assertTrue(subscribers.isEmpty());

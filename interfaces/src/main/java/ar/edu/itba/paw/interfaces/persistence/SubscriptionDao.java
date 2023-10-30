@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
+import ar.edu.itba.paw.models.JunctionEntities.Subscription;
+
 public interface SubscriptionDao {
 
     // ---------------------------------------------- POST_USERS_SUBSCRIPTIONS INSERT ------------------------------------------------
 
-    void createSubscription(long neighborId, long postId);
+    Subscription createSubscription(long neighborId, long postId);
 }

@@ -24,6 +24,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import javax.sql.DataSource;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,15 +102,20 @@ public class AmenityDaoImpl implements AmenityDao {
         idTypedQuery.setMaxResults(size);
         // Results
         List<Long> amenityIds = idTypedQuery.getResultList();
+        // Check if amenityIds is empty, better performance
+        if (amenityIds.isEmpty())
+            return Collections.emptyList();
         // Second Query is also focused on Amenities
         CriteriaQuery<Amenity> dataQuery = cb.createQuery(Amenity.class);
         Root<Amenity> dataRoot = dataQuery.from(Amenity.class);
         // Add predicate that enforces existence within the IDs recovered in the first query
         dataQuery.where(dataRoot.get("amenityId").in(amenityIds));
+        // Create!
         TypedQuery<Amenity> dataTypedQuery = em.createQuery(dataQuery);
         // Return Results
         return dataTypedQuery.getResultList();
     }
+
 
 
     @Override

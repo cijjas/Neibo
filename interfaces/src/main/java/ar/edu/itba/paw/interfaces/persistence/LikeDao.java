@@ -1,11 +1,13 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 
+import ar.edu.itba.paw.models.JunctionEntities.Like;
+
 public interface LikeDao {
 
     // ---------------------------------------------- POST_USERS_LIKES INSERT ------------------------------------------
 
-    void createLike(long postId, long userId);
+    Like createLike(long postId, long userId);
 
     // ---------------------------------------------- POST_USERS_LIKES SELECT ------------------------------------------
 

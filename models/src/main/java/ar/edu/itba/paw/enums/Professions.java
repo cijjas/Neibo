@@ -15,6 +15,12 @@ public enum Professions {
             .map(profession -> new Pair<>(profession.getId(), profession.toString()))
             .collect(Collectors.toList());
 
+    public static List<String> getProfessionsList() {
+        return Arrays.stream(values())
+                .map(profession -> profession.toString().toLowerCase())
+                .collect(Collectors.toList());
+    }
+
     @Override
     public String toString() {
         String name = name().toLowerCase();

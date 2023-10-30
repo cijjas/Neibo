@@ -15,6 +15,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 import static org.junit.Assert.*;
@@ -30,13 +32,14 @@ public class LikeDaoImplTest {
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
+    @Autowired
     private LikeDaoImpl likeDao;
-
+    @PersistenceContext
+    private EntityManager em;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        likeDao = new LikeDaoImpl(ds);
     }
 
     @Test
@@ -52,6 +55,7 @@ public class LikeDaoImplTest {
         likeDao.createLike(pKey, uKey);
 
         // Validations & Post Conditions
+        em.flush();
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
     }
@@ -126,6 +130,7 @@ public class LikeDaoImplTest {
         boolean deleted = likeDao.deleteLike(pKey, uKey);
 
         // Validations & Post Conditions
+        em.flush();
         assertTrue(deleted);
         assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
     }
@@ -138,6 +143,7 @@ public class LikeDaoImplTest {
         boolean deleted = likeDao.deleteLike(1, 1);
 
         // Validations & Post Conditions
+        em.flush();
         assertFalse(deleted);
         assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
     }

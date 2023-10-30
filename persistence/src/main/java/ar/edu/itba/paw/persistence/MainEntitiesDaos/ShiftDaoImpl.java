@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.List;
@@ -106,9 +107,16 @@ public class ShiftDaoImpl implements ShiftDao {
     @Override
     public Optional<Shift> findShiftId(long startTime, long dayId) {
         LOGGER.debug("Selecting Shift with startTime {} and dayId {}", startTime, dayId);
-        final List<Shift> list = jdbcTemplate.query(SHIFTS + " WHERE s.starttime = ? and d.dayid = ?", ROW_MAPPER, startTime, dayId);
-        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+        String jpql = "SELECT s FROM Shift s " +
+                "JOIN s.day d " +
+                "WHERE s.startTime.timeId = :startTime AND d.dayId = :dayId";
+        TypedQuery<Shift> query = em.createQuery(jpql, Shift.class)
+                .setParameter("startTime", startTime)
+                .setParameter("dayId", dayId);
+        List<Shift> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
+
 
     @Override
     public List<Shift> getShifts(long amenityId, long dayId, Date date) {

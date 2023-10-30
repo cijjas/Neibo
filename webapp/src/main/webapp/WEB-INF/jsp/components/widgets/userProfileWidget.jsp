@@ -4,9 +4,9 @@
             <div class="col-4 f-c-c-c pr-2">
                 <div style="display: flex; justify-content: center; align-items: center;">
                     <c:choose>
-                        <c:when test="${loggedUser.profilePicture.getImageId != 0}">
+                        <c:when test="${loggedUser.profilePicture.imageId != 0}">
                             <img class="big-profile-picture" style="width: 40px; height: 40px"
-                                 src="${pageContext.request.contextPath}/images/<c:out value="${loggedUser.profilePicture.getImageId}"/>"
+                                 src="${pageContext.request.contextPath}/images/<c:out value="${loggedUser.profilePicture.imageId}"/>"
                                  alt="profile_picture_img"/>
                         </c:when>
                         <c:otherwise>

@@ -1,18 +1,38 @@
 package ar.edu.itba.paw.models.MainEntities;
 
-public class Contact {
-    private final Long contactId;
-    private final String contactName;
-    private final String contactAddress;
-    private final String contactPhone;
-    private final Long neighborhoodId;
+import javax.persistence.*;
 
-    private Contact(Builder builder) {
+@Entity
+@Table(name = "contacts")
+public class Contact {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "contacts_contactid_seq")
+    @SequenceGenerator(sequenceName = "contacts_contactid_seq", name = "contacts_contactid_seq", allocationSize = 1)
+    @Column(name = "contactid")
+    private Long contactId;
+
+    @Column(name = "contactname", length = 64, nullable = false)
+    private String contactName;
+
+    @Column(name = "contactaddress", length = 128)
+    private String contactAddress;
+
+    @Column(name = "contactphone", length = 32)
+    private String contactPhone;
+
+    @ManyToOne
+    @JoinColumn(name = "neighborhoodid", referencedColumnName = "neighborhoodid")
+    private Neighborhood neighborhood;
+
+    public Contact() {
+    }
+
+    public Contact(Builder builder) {
         this.contactId = builder.contactId;
         this.contactName = builder.contactName;
         this.contactAddress = builder.contactAddress;
         this.contactPhone = builder.contactPhone;
-        this.neighborhoodId = builder.neighborhoodId;
+        this.neighborhood = builder.neighborhood;
     }
 
     public Long getContactId() {
@@ -31,17 +51,18 @@ public class Contact {
         return contactPhone;
     }
 
-    public Long getNeighborhoodId() {
-        return neighborhoodId;
+    public Neighborhood getNeighborhood() {
+        return neighborhood;
     }
 
     @Override
     public String toString() {
         return "Contact{" +
                 "contactId=" + contactId +
-                "contactName='" + contactName + '\'' +
+                ", contactName='" + contactName + '\'' +
                 ", contactAddress='" + contactAddress + '\'' +
                 ", contactPhone='" + contactPhone + '\'' +
+                ", neighborhood=" + neighborhood +
                 '}';
     }
 
@@ -50,7 +71,7 @@ public class Contact {
         private String contactName;
         private String contactAddress;
         private String contactPhone;
-        private Long neighborhoodId;
+        private Neighborhood neighborhood;
 
         public Builder contactId(Long contactId) {
             this.contactId = contactId;
@@ -72,8 +93,8 @@ public class Contact {
             return this;
         }
 
-        public Builder neighborhoodId(Long neighborhoodId) {
-            this.neighborhoodId = neighborhoodId;
+        public Builder neighborhood(Neighborhood neighborhood) {
+            this.neighborhood = neighborhood;
             return this;
         }
 
@@ -82,3 +103,4 @@ public class Contact {
         }
     }
 }
+
