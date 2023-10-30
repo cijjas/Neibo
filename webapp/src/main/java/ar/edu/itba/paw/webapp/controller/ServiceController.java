@@ -15,8 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -276,10 +279,19 @@ public class ServiceController {
 
     @RequestMapping(value = "/apply-professions-as-filter", method = RequestMethod.POST)
     public ModelAndView applyProfessionsFilter(
-            @RequestParam("professions") String professions,
-            @RequestParam("currentUrl") String currentUrl
+            @RequestParam("professions") String professions
     ) {
-        return new ModelAndView("redirect:" + pws.createURLForProfessionFilter(professions, currentUrl, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        String scheme = request.getScheme();
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+        String contextPath = request.getContextPath();
+
+        String baseUrl = scheme + "://" + serverName + ":" + serverPort + contextPath + "/services";
+
+        System.out.println(baseUrl);
+
+        return new ModelAndView("redirect:" + pws.createURLForProfessionFilter(professions, baseUrl, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
     }
 
 }

@@ -33,8 +33,7 @@
                 </div>
                 <div class="c-light-text c-primary" style="font-size: 13px">
                     <c:forEach items="${professions}" var="profession" varStatus="loopStatus">
-                        <c:out value="${profession}"/>
-                        <c:if test="${!loopStatus.last}">,</c:if>
+                        <a class="profession-option" onclick="applyProfessionAsFilter('${profession}')"><c:out value="${profession}"/></a>
                     </c:forEach>
                 </div>
                 <span class="c-light-text" style="margin-left: 10px;"> <c:out value="${worker.phoneNumber}"/></span>
@@ -156,5 +155,35 @@
 
     function openEditDialog() {
         document.getElementById("editDialog").style.display = "flex";
+    }
+
+    function applyProfessionAsFilter(profession) {
+        console.log("wake up nigga");
+        // Create a form element
+        const professionsFilterForm = document.createElement('form');
+        professionsFilterForm.setAttribute('method', 'POST');
+        professionsFilterForm.setAttribute('action', '${pageContext.request.contextPath}/services/apply-professions-as-filter'); // Set your form action URL
+
+        // Create a hidden input field for the current URL
+        const currentUrlInput = document.createElement('input');
+        currentUrlInput.setAttribute('type', 'hidden');
+        currentUrlInput.setAttribute('name', 'currentUrl');
+        currentUrlInput.setAttribute('value', window.location.href); // Get the current URL
+
+        // Create a hidden input field for professions
+        const professionsFilterInput = document.createElement('input');
+        professionsFilterInput.setAttribute('type', 'hidden');
+        professionsFilterInput.setAttribute('name', 'professions');
+        professionsFilterInput.setAttribute('value', profession);
+
+        // Append the input fields to the form
+        professionsFilterForm.appendChild(currentUrlInput);
+        professionsFilterForm.appendChild(professionsFilterInput);
+
+        // Append the form to the document body (or any other suitable container)
+        document.body.appendChild(professionsFilterForm);
+
+        // Submit the form
+        professionsFilterForm.submit();
     }
 </script>
