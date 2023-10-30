@@ -19,6 +19,10 @@ public interface AmenityDao {
 
     int getAmenitiesCount(long neighborhoodId);
 
+    // --------------------------------------------- AMENITIES UPDATE --------------------------------------------------
+
+    void updateAmenity(final long id, final String name, final String description);
+
     // --------------------------------------------- AMENITIES DELETE --------------------------------------------------
 
     boolean deleteAmenity(long amenityId);

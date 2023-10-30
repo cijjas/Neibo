@@ -1,13 +1,13 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
+import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.Table;
+import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
-import ar.edu.itba.paw.models.MainEntities.Amenity;
-import ar.edu.itba.paw.models.MainEntities.Neighborhood;
-import ar.edu.itba.paw.models.MainEntities.Shift;
+import ar.edu.itba.paw.models.MainEntities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,6 +130,22 @@ public class AmenityDaoImpl implements AmenityDao {
         return query.getSingleResult().intValue();
     }
 
+    // ---------------------------------------------- AMENITY UPDATE ---------------------------------------------------
+
+    @Override
+    public void updateAmenity(
+            final long id,
+            final String name,
+            final String description
+    ) {
+        LOGGER.debug("Updating Amenity {}", id);
+
+        Amenity amenity = em.find(Amenity.class, id);
+        if (amenity != null) {
+            amenity.setName(name);
+            amenity.setDescription(description);
+        }
+    }
 
     // ---------------------------------------------- AMENITY DELETE ---------------------------------------------------
 
