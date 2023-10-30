@@ -19,7 +19,7 @@
 
                         <script>
                             (function () {
-                                getImageInto("worker-image-${param.postID}", ${param.postUserProfilePictureId}, "${pageContext.request.contextPath}");
+                                getImageInto("worker-image-${param.postID}", ${empty param.postUserProfilePictureId ? 0: param.postUserProfilePictureId}, "${pageContext.request.contextPath}");
                             })();
                         </script>
                         <span class="post-author"><c:out value="${param.postNeighborMail}"/></span>

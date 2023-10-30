@@ -164,8 +164,8 @@ public class MainController {
 
     @RequestMapping(value = "/toggle-dark-mode", method = RequestMethod.POST)
     public String updateDarkModePreference() {
-//        sessionUtils.clearLoggedUser();
-//        sessionUtils.getLoggedUser();
+        sessionUtils.clearLoggedUser();
+        sessionUtils.getLoggedUser();
         System.out.println("Toggle Dark Mode");
         us.toggleDarkMode(sessionUtils.getLoggedUser().getUserId());
         return "redirect:/profile";
@@ -178,7 +178,6 @@ public class MainController {
     ) {
         sessionUtils.clearLoggedUser();
         sessionUtils.getLoggedUser();
-        System.out.println("Toggle  LANGUAGE");
         request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, new Locale(language));
         us.toggleLanguage(sessionUtils.getLoggedUser().getUserId());
         String referer = request.getHeader("Referer");

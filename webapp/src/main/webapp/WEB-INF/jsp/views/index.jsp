@@ -142,7 +142,7 @@
                         document.getElementById('actual-posts-container').style.display = 'block';
                     }
 
-                    setTimeout(showPostsAfterDelay, 500);
+                    setTimeout(showPostsAfterDelay, 300);
 
                 </script>
             </div>
