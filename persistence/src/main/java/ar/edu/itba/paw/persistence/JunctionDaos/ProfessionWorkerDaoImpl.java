@@ -51,8 +51,6 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
     @Override
     public Specialization createSpecialization(long workerId, long professionId) {
         LOGGER.debug("Inserting Worker Profession");
-        System.out.println("Professionid:" + professionId + " profession: " + em.find(Profession.class, professionId));
-        System.out.println("workerid:" + workerId + " worker: " + em.find(Worker.class, workerId));
         Specialization specialization = new Specialization(em.find(Worker.class, workerId), em.find(Profession.class, professionId));
         em.persist(specialization);
         return specialization;

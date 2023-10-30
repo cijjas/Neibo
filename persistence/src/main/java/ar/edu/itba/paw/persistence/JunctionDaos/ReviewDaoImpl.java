@@ -86,7 +86,9 @@ public class ReviewDaoImpl implements ReviewDao {
         LOGGER.debug("Selecting Average Rating for Worker {}", workerId);
         TypedQuery<Double> query = em.createQuery("SELECT AVG(rating) FROM Review r WHERE r.worker.user.userId = :workerId", Double.class);
         query.setParameter("workerId", workerId);
-        return Optional.ofNullable(query.getSingleResult().floatValue());
+        if(query.getSingleResult() == null)
+            return Optional.of(0.0f);
+        return Optional.of(query.getSingleResult().floatValue());
 //        List<Float> rating = jdbcTemplate.query("SELECT AVG(rating) FROM reviews WHERE workerid = ?", ROW_MAPPER_2, workerId);
 //        return rating.isEmpty() ? Optional.empty() : Optional.of(rating.get(0));
     }

@@ -117,7 +117,7 @@
                                         }
                                     }
 
-                                    fetchUserData(${review.userId});
+                                    fetchUserData(${review.user.userId});
                                 </script>
                             </c:forEach>
 

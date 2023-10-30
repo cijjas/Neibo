@@ -48,7 +48,7 @@ public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
             if (professionsString.length() > 0) {
                 professionsString.append(", ");
             }
-            professionsString.append(profession.toString());
+            professionsString.append(profession.getProfession().name());
         }
         return professionsString.toString();
     }

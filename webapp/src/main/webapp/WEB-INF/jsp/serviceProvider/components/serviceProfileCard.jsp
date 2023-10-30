@@ -7,7 +7,7 @@
     <div class="service-card">
         <div class="card-header">
             <c:choose>
-                <c:when test="${worker.backgroundPictureId != 0}">
+                <c:when test="${not empty worker.backgroundPictureId }">
                     <img class="back-image"
                          src="${pageContext.request.contextPath}/images/<c:out value="${worker.backgroundPictureId}"/>"
                          alt="profile_picture_img"/>
@@ -20,7 +20,7 @@
             </c:choose>
         </div>
         <div class="card-body" data-profile-image='<c:choose>
-            <c:when test="${worker.user.profilePicture.imageId == 0}">
+            <c:when test="${empty worker.user.profilePicture.imageId}">
                 ${pageContext.request.contextPath}/resources/images/roundedPlaceholder.png
             </c:when>
             <c:otherwise>
@@ -33,7 +33,7 @@
                 </div>
                 <div class="c-light-text c-primary" style="font-size: 13px">
                     <c:forEach items="${professions}" var="profession" varStatus="loopStatus">
-                        <a class="profession-option" onclick="applyProfessionAsFilter('${profession}')"><c:out value="${profession}"/></a>
+                        <a class="profession-option" onclick="applyProfessionAsFilter('${profession}')"><c:out value="${profession.profession}"/></a>
                     </c:forEach>
                 </div>
                 <span class="c-light-text" style="margin-left: 10px;"> <c:out value="${worker.phoneNumber}"/></span>

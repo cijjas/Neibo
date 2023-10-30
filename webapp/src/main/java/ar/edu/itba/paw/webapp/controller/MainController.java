@@ -373,7 +373,6 @@ public class MainController {
 
         mav.addObject("email", email);
         mav.addObject("professionsPairs", Professions.PROF_PAIRS);
-        System.out.println("FELIX: PROFESSION PAIRS :" + Professions.PROF_PAIRS);
         mav.addObject("error", error);
         mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
         mav.addObject("openSignupDialog", false);
