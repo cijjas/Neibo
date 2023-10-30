@@ -10,7 +10,7 @@
                 />
                 <script>
                     (function () {
-                        getImageInto("worker-profile-image-${worker.user.userId}",${worker.user.profilePicture.imageId}, "${pageContext.request.contextPath}")
+                        getImageInto("worker-profile-image-${worker.user.userId}",${empty worker.user.profilePicture.imageId ? 0 : worker.user.profilePicture.imageId}, "${pageContext.request.contextPath}")
                     })();
 
                 </script>
@@ -27,7 +27,7 @@
                 <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
                 <script>
                     (function () {
-                        getImageInto("worker-background-image-${worker.user.userId}", ${worker.backgroundPictureId}, "${pageContext.request.contextPath}")
+                        getImageInto("worker-background-image-${worker.user.userId}", ${empty worker.backgroundPictureId ? 0 : worker.backgroundPictureId}, "${pageContext.request.contextPath}")
                     })();
 
                 </script>
