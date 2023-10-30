@@ -271,7 +271,7 @@ public class AdminController {
             return createAmenityForm(amenityForm);
         }
         as.updateAmenity(amenityId, amenityForm.getName(), amenityForm.getDescription());
-        //avs.updateAvailability(amenityId, selectedShifts);
+        avs.updateAvailability(amenityId, selectedShifts);
         return new ModelAndView("redirect:/admin/amenities");
     }
     // ------------------------------------- CALENDAR --------------------------------------

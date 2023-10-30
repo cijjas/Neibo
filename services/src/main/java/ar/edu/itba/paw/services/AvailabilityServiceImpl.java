@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,29 +31,48 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean updateAvailability(long amenityId, List<Long> newShifts) {
+    public boolean updateAvailability(long amenityId, List<String> newShiftDescriptions) {
         LOGGER.info("Updating the Availability for Amenity");
-        // Convert the List of Shift objects to a List of long shift IDs
+
+        // Convert the List of Shift descriptions to a List of shift IDs
+        List<Long> newShiftIds = newShiftDescriptions.stream()
+                .map(shiftDescription -> {
+                    String[] shiftParts = shiftDescription.split("-");
+                    long dayId = Long.parseLong(shiftParts[0]);
+                    long timeId = Long.parseLong(shiftParts[1]);
+                    Optional<Shift> existingShift = shiftDao.findShiftId(timeId, dayId);
+                    if (existingShift.isPresent()) {
+                        return existingShift.get().getShiftId();
+                    } else {
+                        Shift newShift = shiftDao.createShift(dayId, timeId);
+                        return newShift.getShiftId();
+                    }
+                })
+                .collect(Collectors.toList());
+
+        // Get the old shift IDs
         List<Long> oldShiftIds = shiftDao.getAmenityShifts(amenityId).stream()
                 .map(Shift::getShiftId)
                 .collect(Collectors.toList());
 
-        // All possible shift times are represented by the StandardTime enum
-        for (StandardTime standardTime : StandardTime.values()) {
-            long shiftId = standardTime.getId();
-            boolean inOldShifts = oldShiftIds.contains(shiftId);
-            boolean inNewShifts = newShifts.contains(shiftId);
-            if (inNewShifts && !inOldShifts) {
+        // Compare old and new shift IDs to update availability
+        for (Long shiftId : newShiftIds) {
+            if (!oldShiftIds.contains(shiftId)) {
                 // + newShifts and - oldShifts -> createAvailability
                 availabilityDao.createAvailability(amenityId, shiftId);
-            } else if (!inNewShifts && inOldShifts) {
+            }
+        }
+
+        for (Long shiftId : oldShiftIds) {
+            if (!newShiftIds.contains(shiftId)) {
                 // - newShifts and + oldShifts -> deleteAvailability
                 availabilityDao.deleteAvailability(amenityId, shiftId);
             }
-            // For other cases, do nothing
         }
+
         return true; // Indicate success
     }
+
 
 
 }
