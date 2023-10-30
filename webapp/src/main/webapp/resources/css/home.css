@@ -113,6 +113,12 @@
 
 
 /*---------------------------------- Middle column ---------------------------------------------*/
+.filters{
+    background-color: var(--on-onbackground);
+    border-radius: var(--border-hard);
+    border: 1px solid var(--secondary);
+    padding: 10px;
+}
 .cool-feed-button:before{
 }
 .upper-feed-buttons-box {
@@ -137,7 +143,7 @@
         overflow: hidden;
         font-weight: bold;
         cursor: pointer;
-        padding: 1em 1em;
+        padding: 0.7em 1em;
         background-color: var(--onbackground);
         color: var(--text);
         border: 1px solid var(--text);
@@ -167,7 +173,6 @@
 
         &.rounded {
             border-radius: var(--border-hard) !important;
-
         }
 
         &:hover,
@@ -188,13 +193,12 @@
         font-weight: bold;
         overflow: hidden;
         cursor: pointer;
-        padding: 1em 1em;
+        padding: 0.7em 1em;
         transition: all 0.3s;
         background-color: var(--onbackground);
         color: var(--text);
         border: 1px solid var(--text);
         border-radius: var(--border-hard);
-
         position: relative;
         transform: translateY(0);
         &::before{
@@ -242,6 +246,8 @@
 
 
     }
+
+
 }
 
 /*-----------COOLEST :........................*/
@@ -1286,6 +1292,38 @@ footer div {
         -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
         transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+    }
+    &.old-primary {
+        padding: 7px 7px;
+        font-size: 12px;
+        color: var(--text);
+        background-color: var(--onbackground);
+        border: 1px solid var(--lighttext);
+        border-radius: var(--border-hard);
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+            border: 1px solid var(--old-primary);
+            transform: translateY(-4px);
+            box-shadow: 0 4px 0 0 var(--old-primary);
+            color: var(--old-primary);
+        }
+    }
+    &.primary {
+        padding: 7px 7px;
+        font-size: 12px;
+        color: var(--text);
+        background-color: var(--onbackground);
+        border: 1px solid var(--lighttext);
+        border-radius: var(--border-hard);
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+            border: 1px solid var(--primary);
+            transform: translateY(-4px);
+            box-shadow: 0 4px 0 0 var(--primary);
+            color: var(--primary);
+        }
     }
     &.red {
         padding: 7px 7px;

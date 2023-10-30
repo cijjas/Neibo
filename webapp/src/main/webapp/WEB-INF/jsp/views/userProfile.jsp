@@ -96,12 +96,13 @@
                         </div>
                         <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600"><spring:message code="Preferences"/></h6>
                         <div class="row m-t-40">
+                            <%--Darkmode toggle --%>
                             <div class="col-sm-6">
                                 <p class="m-b-10 f-w-600 "><spring:message code="DarkMode"/></p>
                                 <div class="controlled">
                                     <h6 class="text-muted f-w-400"><spring:message code="Off"/></h6>
                                     <form id="dark-mode-form"
-                                          action="${pageContext.request.contextPath}/update-darkmode-preference"
+                                          action="${pageContext.request.contextPath}/toggle-dark-mode"
                                           method="POST">
                                         <label class="switch">
                                             <input class="toggle" type="checkbox" id="dark-mode-toggle" name="darkMode">
@@ -112,6 +113,8 @@
                                     <h6 class="text-muted f-w-400"><spring:message code="On"/></h6>
                                 </div>
                             </div>
+
+                            <%-- Language toggle--%>
                             <div class="col-sm-6">
                                 <p class="m-b-10 f-w-600 "><spring:message code="Language"/></p>
                                 <div class="controlled">
@@ -146,6 +149,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        console.log(document.getElementById("dark-mode-toggle-var").value);
         document.getElementById("dark-mode-toggle").checked = document.getElementById("dark-mode-toggle-var").value === "true";
 
         const darkModeToggle = document.getElementById("dark-mode-toggle");
@@ -164,7 +168,7 @@
         languageToggle.addEventListener("change", function () {
             const form = document.createElement('form');
             form.method = 'POST';
-            form.action = '${pageContext.request.contextPath}/change-language';
+            form.action = '${pageContext.request.contextPath}/toggle-language';
             const input = document.createElement('input');
             input.type = 'hidden';
             input.name = 'lang';
