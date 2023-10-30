@@ -19,7 +19,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title>Edit</title>
+    <title><spring:message code="Edit.amenity"/></title>
 </head>
 
 
@@ -33,15 +33,15 @@
 
         <div class="column-middle">
             <div class="cool-static-container shifts-reservation ">
-                <h2 class="card-title"><spring:message code="CreateNewAmenity.button"/></h2>
+                <h2 class="card-title c-primary"><c:out value="${amenity.name}"/> </h2>
                 <div class="divider"></div>
                 <div>
-                    <form:form method="post" action="${pageContext.request.contextPath}/admin/create-amenity"
+                    <form:form method="post" action="${pageContext.request.contextPath}/admin/edit-amenity/${amenity.amenityId}"
                                modelAttribute="amenityForm">
                         <div class="d-flex flex-column justify-content-between align-items-center mb-2 mt-2">
                             <div class="form-row">
                                 <spring:message code="Name" var="namePlaceholder"/>
-                                <form:input path="name" class="cool-input" placeholder="${namePlaceholder}"/>
+                                <form:input path="name" class="cool-input" placeholder="${namePlaceholder}" value="${amenity.name}"/>
                                 <div class="form-row form-error">
                                     <form:errors path="name" cssClass="error" element="p"/>
                                 </div>
@@ -51,7 +51,10 @@
                         <div class="d-flex flex-column justify-content-between align-items-center">
                             <spring:message code="Description" var="descriptionPlaceholder"/>
                             <form:textarea path="description" class="cool-input" rows="5"
-                                           placeholder="${descriptionPlaceholder}"/>
+                                           placeholder="${descriptionPlaceholder}" />
+                            <script>
+                                document.querySelector('textarea').value = "${amenity.description}";
+                            </script>
                             <div class="form-row form-error">
                                 <form:errors path="description" cssClass="error" element="p"/>
                             </div>
@@ -98,7 +101,8 @@
                                             <td>
                                                 <c:set var="available" value="false"/>
                                                 <c:forEach items="${amenity.availableShifts}" var="shift">
-                                                    <c:if test="${shift.day == day.value && shift.startTime == time.value.value}">
+
+                                                    <c:if test="${shift.day.dayId == day.key && shift.startTime.timeId == time.key}">
                                                         <c:set var="available" value="true"/>
                                                         <div class="cat creation">
                                                             <label class="w-100">
@@ -154,8 +158,7 @@
                                             checkbox.checked = true;
                                         }
                                     });
-                                    checkCheckboxes()
-                                }
+                                    }
 
                                 function clearAllCheckedHours() {
                                     var checkboxes = document.querySelectorAll('input[name="selectedShifts"]');
@@ -168,7 +171,6 @@
                                     rowCheckboxes.forEach(function (checkbox) {
                                         checkbox.checked = false;
                                     });
-                                    checkCheckboxes()
                                 }
 
                                 function toggleRow(checkbox) {
@@ -179,7 +181,6 @@
 
                                         checkbox.checked = !checkbox.checked;
                                     });
-                                    checkCheckboxes()
                                 }
 
                                 function uncheckWeekends() {
@@ -189,32 +190,10 @@
                                             checkbox.checked = false;
                                         }
                                     });
-                                    checkCheckboxes()
                                 }
 
-                                function checkCheckboxes() {
-                                    const checkboxes = document.querySelectorAll('input[name="selectedShifts"]');
-                                    const submitButton = document.getElementById("submit-checks");
 
-                                    let anyCheckboxChecked = false;
-                                    checkboxes.forEach(function (checkbox) {
-                                        if (checkbox.checked) {
-                                            anyCheckboxChecked = true;
 
-                                        }
-                                    });
-
-                                    submitButton.disabled = !anyCheckboxChecked;
-                                }
-
-                                // Attach an event listener to the checkboxes to call the checkCheckboxes function
-                                const checkboxes = document.querySelectorAll('input[name="selectedShifts"]');
-                                checkboxes.forEach(function (checkbox) {
-                                    checkbox.addEventListener('change', checkCheckboxes);
-                                });
-
-                                // Call checkCheckboxes initially to set the initial state of the submit button
-                                checkCheckboxes();
                             </script>
                         </div>
 
@@ -232,8 +211,8 @@
                         <%--Submit button --%>
                         <div class="d-flex justify-content-end m-t-40 ">
                             <button id="submit-checks" onclick="load()" type="submit"
-                                    class="cool-button cool-small on-bg w-25" disabled style="height:40px;">
-                                <spring:message code="Create.verb"/></button>
+                                    class="cool-button cool-small on-bg w-25" style="height:40px;">
+                                <spring:message code="SaveChanges"/></button>
                         </div>
                     </form:form>
                 </div>

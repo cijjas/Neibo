@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.MainEntities.Amenity;
 import ar.edu.itba.paw.models.MainEntities.Image;
 import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
@@ -668,6 +669,6 @@ public class MainController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public void test(){
-        chs.createChannel("testing");
+
     }
 }

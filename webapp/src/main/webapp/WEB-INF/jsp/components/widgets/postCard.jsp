@@ -47,7 +47,7 @@
         </div>
 
         <!-- Image section -->
-        <c:if test="${post.postPicture.imageId != 0}">
+        <c:if test="${post.postPicture.imageId ne null}">
             <div class="placeholder-glow" style="display: flex; justify-content: center; align-items: center;">
                 <img id="postImage"
                      class="blogpost-image placeholder "
@@ -181,7 +181,6 @@
     </script>
 
 
-    <!-- Tag section -->
 
 
     <!-- Comment section -->

@@ -124,7 +124,6 @@
                                     <jsp:param name="postUserProfilePictureId" value="${post.user.profilePicture.imageId}"/>
 
                                 </jsp:include>
-
                             </c:forEach>
 
 

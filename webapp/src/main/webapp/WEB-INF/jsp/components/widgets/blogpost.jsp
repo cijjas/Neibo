@@ -35,7 +35,7 @@
 
                                 <script>
                                     (function () {
-                                        getImageInto("postUserProfilePictureId-${param.postID}", ${param.postUserProfilePictureId}, "${pageContext.request.contextPath}");
+                                        getImageInto("postUserProfilePictureId-${param.postID}", ${empty param.postUserProfilePictureId ? 0 : param.postUserProfilePictureId}, "${pageContext.request.contextPath}");
                                     })();
                                 </script>
                                 <span class="post-author pt-1 pb-1 pl-1"><c:out value="${param.postNeighborMail}"/></span>
@@ -52,7 +52,7 @@
                         <h1 class="post-title"><c:out value="${param.postTitle}"/></h1>
                     </div>
                     <p class="post-description mb-2"><c:out value="${param.postDescription}"/></p>
-                    <c:if test="${ param.postImage != 0}">
+                    <c:if test="${not empty param.postImage }">
                         <div style="display: flex; justify-content: center; align-items: center;">
                             <img class="blogpost-image"
                                  src="${pageContext.request.contextPath}/images/<c:out value="${param.postImage}"/>"
