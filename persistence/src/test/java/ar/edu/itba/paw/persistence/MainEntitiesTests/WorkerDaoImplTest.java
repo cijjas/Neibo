@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
+import ar.edu.itba.paw.enums.Professions;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.MainEntities.Worker;
+import ar.edu.itba.paw.persistence.MainEntitiesDaos.WorkerDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -16,6 +18,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +53,10 @@ public class WorkerDaoImplTest {
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private WorkerDao workerDao;
+    private WorkerDaoImpl workerDao;
+
+    @PersistenceContext
+    private EntityManager em;
     private long nhKey1;
     private long nhKey2;
     private long uKey1;
@@ -74,6 +81,7 @@ public class WorkerDaoImplTest {
         Worker createdWorker = workerDao.createWorker(uKey, PHONE_NUMBER_1, ADDRESS_1, BUSINESS_1);
 
         // Validations & Post Conditions
+        em.flush();
         assertNotNull(createdWorker);
         assertEquals(uKey, createdWorker.getUser().getUserId().longValue());
         assertEquals(PHONE_NUMBER_1, createdWorker.getPhoneNumber());
@@ -89,7 +97,7 @@ public class WorkerDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(WORKER_MAIL_1, nhKey);
         testInserter.createWorker(uKey);
-        testInserter.createWorkerProfession(uKey, pKey);
+        testInserter.createSpecialization(uKey, pKey);
 
         // Exercise
         Optional<Worker> foundWorker = workerDao.findWorkerById(uKey);
@@ -144,7 +152,7 @@ public class WorkerDaoImplTest {
         long[] neighborhoods = {nhKey1};
 
         // Exercise
-        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, BASE_PAGE_SIZE, Collections.singletonList(PROFESSION_1), neighborhoods);
+        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, BASE_PAGE_SIZE, Collections.singletonList(Professions.PLUMBER.name()), neighborhoods);
 
         // Validations
         assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
@@ -195,21 +203,21 @@ public class WorkerDaoImplTest {
         uKey3 = testInserter.createUser(WORKER_MAIL_3, nhKey2);
         uKey4 = testInserter.createUser(WORKER_MAIL_4, nhKey2);
 
-        testInserter.addWorkerToNeighborhood(uKey1, nhKey1);
-        testInserter.addWorkerToNeighborhood(uKey2, nhKey1);
-        testInserter.addWorkerToNeighborhood(uKey3, nhKey2);
-        testInserter.addWorkerToNeighborhood(uKey4, nhKey2);
+        testInserter.createWorkerArea(uKey1, nhKey1);
+        testInserter.createWorkerArea(uKey2, nhKey1);
+        testInserter.createWorkerArea(uKey3, nhKey2);
+        testInserter.createWorkerArea(uKey4, nhKey2);
 
-        pKey1 = testInserter.createProfession(PROFESSION_1);
-        pKey2 = testInserter.createProfession(PROFESSION_2);
+        pKey1 = testInserter.createProfession(Professions.PLUMBER);
+        pKey2 = testInserter.createProfession(Professions.CARPENTER);
 
         testInserter.createWorker(uKey1);
         testInserter.createWorker(uKey2);
-        testInserter.createWorkerProfession(uKey2, pKey1);
+        testInserter.createSpecialization(uKey2, pKey1);
         testInserter.createWorker(uKey3);
-        testInserter.createWorkerProfession(uKey3, pKey2);
+        testInserter.createSpecialization(uKey3, pKey2);
         testInserter.createWorker(uKey4);
-        testInserter.createWorkerProfession(uKey4, pKey1);
-        testInserter.createWorkerProfession(uKey4, pKey2);
+        testInserter.createSpecialization(uKey4, pKey1);
+        testInserter.createSpecialization(uKey4, pKey2);
     }
 }

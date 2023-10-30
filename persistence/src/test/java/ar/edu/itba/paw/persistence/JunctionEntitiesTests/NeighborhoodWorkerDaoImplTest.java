@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
+import ar.edu.itba.paw.models.MainEntities.Neighborhood;
 import ar.edu.itba.paw.persistence.JunctionDaos.NeighborhoodWorkerDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -16,9 +17,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
@@ -31,41 +37,47 @@ public class NeighborhoodWorkerDaoImplTest {
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
-    private NeighborhoodWorkerDao neighborhoodWorkerDao;
 
+    @Autowired
+    private NeighborhoodWorkerDaoImpl neighborhoodWorkerDaoImpl;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        neighborhoodWorkerDao = new NeighborhoodWorkerDaoImpl(ds);
     }
 
     @Test
-    public void testAddWorkerToNeighborhood() {
+    public void testCreateWorkerArea() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
         testInserter.createWorker(uKey);
 
         // Exercise
-        neighborhoodWorkerDao.addWorkerToNeighborhood(uKey, nhKey);
+        neighborhoodWorkerDaoImpl.createWorkerArea(uKey, nhKey);
 
         // Validations & Post Conditions
+        em.flush();
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_neighborhoods.name()));
     }
 
     @Test
-    public void testRemoveWorkerFromNeighborhood() {
+    public void testDeleteWorkerArea() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
         testInserter.createWorker(uKey);
-        neighborhoodWorkerDao.addWorkerToNeighborhood(uKey, nhKey);
+        testInserter.createWorkerArea(uKey, nhKey);
 
         // Exercise
-        neighborhoodWorkerDao.removeWorkerFromNeighborhood(uKey, nhKey);
+        boolean deleted = neighborhoodWorkerDaoImpl.deleteWorkerArea(uKey, nhKey);
 
         // Validations & Post Conditions
+        em.flush();
+        assertTrue(deleted);
         assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_neighborhoods.name()));
     }
 
@@ -75,13 +87,13 @@ public class NeighborhoodWorkerDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
         testInserter.createWorker(uKey);
-        neighborhoodWorkerDao.addWorkerToNeighborhood(uKey, nhKey);
+        testInserter.createWorkerArea(uKey, nhKey);
 
         // Exercise
-        neighborhoodWorkerDao.getNeighborhoods(uKey);
+        List<Neighborhood> neighborhoods = neighborhoodWorkerDaoImpl.getNeighborhoods(uKey);
 
         // Validations & Post Conditions
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_neighborhoods.name()));
+        assertEquals(1, neighborhoods.size());
     }
 
     @Test
@@ -89,10 +101,10 @@ public class NeighborhoodWorkerDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        neighborhoodWorkerDao.getNeighborhoods(1);
+        List<Neighborhood> neighborhoods = neighborhoodWorkerDaoImpl.getNeighborhoods(1);
 
         // Validations & Post Conditions
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_neighborhoods.name()));
+        assertEquals(0, neighborhoods.size());
     }
 
 }

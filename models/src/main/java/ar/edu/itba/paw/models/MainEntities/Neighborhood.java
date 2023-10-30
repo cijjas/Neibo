@@ -32,6 +32,10 @@ public class Neighborhood {
     @OneToMany(mappedBy = "neighborhood")
     private Set<Resource> resources = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(name = "workers_neighborhoods", joinColumns = @JoinColumn(name = "neighborhoodid"), inverseJoinColumns = @JoinColumn(name = "workerid"))
+    private Set<Worker> workers;
+
     public Neighborhood(){}
 
     private Neighborhood(Builder builder) {

@@ -1,24 +1,37 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
-import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
-import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import org.springframework.stereotype.Repository;
+        import ar.edu.itba.paw.enums.Table;
+        import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
+        import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
+        import ar.edu.itba.paw.models.JunctionEntities.ChannelMapping;
+        import ar.edu.itba.paw.models.JunctionEntities.Specialization;
+        import ar.edu.itba.paw.models.MainEntities.Channel;
+        import ar.edu.itba.paw.models.MainEntities.Neighborhood;
+        import ar.edu.itba.paw.models.MainEntities.Profession;
+        import ar.edu.itba.paw.models.MainEntities.Worker;
+        import org.hibernate.jdbc.Work;
+        import org.slf4j.Logger;
+        import org.slf4j.LoggerFactory;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.dao.DataAccessException;
+        import org.springframework.jdbc.core.JdbcTemplate;
+        import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+        import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+        import javax.persistence.EntityManager;
+        import javax.persistence.PersistenceContext;
+        import javax.persistence.TypedQuery;
+        import javax.sql.DataSource;
+        import java.util.HashMap;
+        import java.util.List;
+        import java.util.Map;
 
 @Repository
 public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProfessionWorkerDaoImpl.class);
+
+    @PersistenceContext
+    private EntityManager em;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private final String WORKERS_PROFESSIONS_JOIN_PROFESSIONS =
@@ -36,28 +49,21 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
 
     // --------------------------------------- WORKERS_PROFESSIONS INSERT ----------------------------------------------
     @Override
-    public void addWorkerProfession(long workerId, long professionId) {
+    public Specialization createSpecialization(long workerId, long professionId) {
         LOGGER.debug("Inserting Worker Profession");
-        Map<String, Object> data = new HashMap<>();
-        data.put("workerid", workerId);
-        data.put("professionid", professionId);
-        try {
-            jdbcInsert.execute(data);
-        } catch (DataAccessException ex) {
-            LOGGER.error("Error inserting the Worker Profession", ex);
-            throw new InsertionException("An error occurred whilst inserting the Worker Profession");
-        }
+        System.out.println("Professionid:" + professionId + " profession: " + em.find(Profession.class, professionId));
+        System.out.println("workerid:" + workerId + " worker: " + em.find(Worker.class, workerId));
+        Specialization specialization = new Specialization(em.find(Worker.class, workerId), em.find(Profession.class, professionId));
+        em.persist(specialization);
+        return specialization;
     }
 
     // --------------------------------------- WORKERS_PROFESSIONS SELECT ----------------------------------------------
     @Override
-    public List<String> getWorkerProfessions(long workerId) {
+    public List<Profession> getWorkerProfessions(long workerId) {
         LOGGER.debug("Selecting Professions of Worker {}", workerId);
-        return jdbcTemplate.queryForList(
-                WORKERS_PROFESSIONS_JOIN_PROFESSIONS +
-                        "WHERE workerid = ?",
-                new Object[]{workerId},
-                String.class
-        );
+        TypedQuery<Profession> query = em.createQuery("SELECT p FROM Worker w JOIN w.professions p WHERE w.user.id = :workerId", Profession.class);
+        query.setParameter("workerId", workerId);
+        return query.getResultList();
     }
 }

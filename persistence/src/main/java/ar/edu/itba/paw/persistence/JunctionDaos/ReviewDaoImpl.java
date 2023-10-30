@@ -2,7 +2,7 @@ package ar.edu.itba.paw.persistence.JunctionDaos;
 
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.ReviewDao;
-import ar.edu.itba.paw.models.MainEntities.Review;
+import ar.edu.itba.paw.models.MainEntities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -23,12 +26,13 @@ import java.util.Optional;
 @Repository
 public class ReviewDaoImpl implements ReviewDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewDaoImpl.class);
+
+    @PersistenceContext
+    private EntityManager em;
     // ---------------------------------------------- REVIEWS SELECT ---------------------------------------------------
     private static final RowMapper<Review> ROW_MAPPER = (rs, rowNum) ->
             new Review.Builder()
                     .reviewId(rs.getLong("reviewid"))
-                    .workerId(rs.getLong("workerid"))
-                    .userId(rs.getLong("userid"))
                     .rating(rs.getFloat("rating"))
                     .review(rs.getString("review"))
                     .date(rs.getTimestamp("date"))
@@ -49,53 +53,51 @@ public class ReviewDaoImpl implements ReviewDao {
 
     // ---------------------------------------------- REVIEWS INSERT ---------------------------------------------------
     @Override
-    public Review createReview(long workerId, long userId, float rating, String review) {
+    public Review createReview(long workerId, long userId, float rating, String reviewString) {
         LOGGER.debug("Inserting Review");
-        Map<String, Object> data = new HashMap<>();
-        data.put("workerid", workerId);
-        data.put("userid", userId);
-        data.put("rating", rating);
-        data.put("review", review);
-        data.put("date", Timestamp.valueOf(LocalDateTime.now()));
-
-        try {
-            final Number key = jdbcInsert.executeAndReturnKey(data);
-            return new Review.Builder()
-                    .reviewId(key.longValue())
-                    .workerId(workerId)
-                    .userId(userId)
-                    .rating(rating)
-                    .review(review)
-                    .build();
-        } catch (DataAccessException ex) {
-            LOGGER.error("Error inserting the review", ex);
-            throw new InsertionException("An error occurred whilst creating the Review");
-        }
+        Review review = new Review.Builder()
+                .user(em.find(User.class, userId))
+                .worker(em.find(Worker.class, workerId))
+                .rating(rating)
+                .review(reviewString)
+                .build();
+        em.persist(review);
+        return review;
     }
 
     @Override
     public Review getReview(long reviewId) {
         LOGGER.debug("Selecting Reviews with reviewId {}", reviewId);
-        return jdbcTemplate.queryForObject(REVIEWS + " WHERE reviewid = ?", ROW_MAPPER, reviewId);
+        return em.find(Review.class, reviewId);
+        //DEBERIA SER OPTIONAL
+//        return Optional.ofNullable(em.find(Review.class, reviewId));
     }
 
     @Override
     public List<Review> getReviews(long workerId) {
         LOGGER.debug("Selecting Reviews from Worker {}", workerId);
-        return jdbcTemplate.query(REVIEWS + " WHERE workerid = ?", ROW_MAPPER, workerId);
+        TypedQuery<Review> query = em.createQuery("SELECT r FROM Review r WHERE r.worker.user.userId = :workerId", Review.class);
+        query.setParameter("workerId", workerId);
+        return query.getResultList();
     }
 
     @Override
     public Optional<Float> getAvgRating(long workerId) {
         LOGGER.debug("Selecting Average Rating for Worker {}", workerId);
-        List<Float> rating = jdbcTemplate.query("SELECT AVG(rating) FROM reviews WHERE workerid = ?", ROW_MAPPER_2, workerId);
-        return rating.isEmpty() ? Optional.empty() : Optional.of(rating.get(0));
+        TypedQuery<Double> query = em.createQuery("SELECT AVG(rating) FROM Review r WHERE r.worker.user.userId = :workerId", Double.class);
+        query.setParameter("workerId", workerId);
+        return Optional.ofNullable(query.getSingleResult().floatValue());
+//        List<Float> rating = jdbcTemplate.query("SELECT AVG(rating) FROM reviews WHERE workerid = ?", ROW_MAPPER_2, workerId);
+//        return rating.isEmpty() ? Optional.empty() : Optional.of(rating.get(0));
     }
 
     @Override
     public int getReviewsCount(long workerId) {
         LOGGER.debug("Selecting Review Count for Worker {}", workerId);
-        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM reviews WHERE workerid = ?", Integer.class, workerId);
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(*) FROM Review r WHERE r.worker.user.userId = :workerId", Long.class);
+        query.setParameter("workerId", workerId);
+        return query.getSingleResult().intValue();
+//        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM reviews WHERE workerid = ?", Integer.class, workerId);
     }
 
     // ---------------------------------------------- REVIEWS DELETE ---------------------------------------------------
@@ -103,6 +105,11 @@ public class ReviewDaoImpl implements ReviewDao {
     @Override
     public boolean deleteReview(long reviewId) {
         LOGGER.debug("Deleting Review with reviewId {}", reviewId);
-        return jdbcTemplate.update("DELETE FROM reviews WHERE reviewid = ?", reviewId) > 0;
+        Review review = em.find(Review.class, reviewId);
+        if (review != null) {
+            em.remove(review);
+            return true;
+        }
+        return false;
     }
 }

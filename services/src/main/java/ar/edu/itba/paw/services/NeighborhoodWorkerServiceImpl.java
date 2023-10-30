@@ -38,7 +38,7 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     @Override
     public void addWorkerToNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Adding Worker {} to Neighborhood {}", workerId, neighborhoodId);
-        neighborhoodWorkerDao.addWorkerToNeighborhood(workerId, neighborhoodId);
+        neighborhoodWorkerDao.createWorkerArea(workerId, neighborhoodId);
 
         //send admin email notifying new worker
         User worker = userDao.findUserById(workerId).orElse(null);
@@ -83,6 +83,6 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     @Override
     public void removeWorkerFromNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Removing Worker {} from Neighborhood {}", workerId, neighborhoodId);
-        neighborhoodWorkerDao.removeWorkerFromNeighborhood(workerId, neighborhoodId);
+        neighborhoodWorkerDao.deleteWorkerArea(workerId, neighborhoodId);
     }
 }

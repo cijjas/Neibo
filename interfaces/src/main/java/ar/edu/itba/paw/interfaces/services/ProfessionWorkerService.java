@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.models.MainEntities.Profession;
+
 import java.util.List;
 
 public interface ProfessionWorkerService {
@@ -8,7 +10,7 @@ public interface ProfessionWorkerService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    List<String> getWorkerProfessions(long workerId);
+    List<Profession> getWorkerProfessions(long workerId);
 
     String getWorkerProfessionsAsString(long workerId);
 }

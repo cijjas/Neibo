@@ -7,6 +7,7 @@ import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.MainEntities.Worker;
 import ar.edu.itba.paw.webapp.form.EditWorkerProfileForm;
+import ar.edu.itba.paw.webapp.form.NeighborhoodsForm;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -241,7 +242,7 @@ public class ServiceController {
     }
 
     @RequestMapping(value = "/neighborhoods", method = RequestMethod.GET)
-    public ModelAndView workersNeighborhoods() {
+    public ModelAndView workersNeighborhoods(@ModelAttribute("neighborhoodsForm") final NeighborhoodsForm neighborhoodsForm) {
         LOGGER.info("User arriving at '/services/neighborhoods'");
         ModelAndView mav = new ModelAndView("serviceProvider/views/neighborhoods");
         mav.addObject("channel", "Neighborhoods");
@@ -252,10 +253,14 @@ public class ServiceController {
 
     @RequestMapping(value = "/neighborhoods", method = RequestMethod.POST)
     public ModelAndView addWorkerToNeighborhood(
-            @RequestParam("neighborhoodIds") List<Long> neighborhoodIds
+            @ModelAttribute("neighborhoodsForm") final NeighborhoodsForm neighborhoodsForm,
+            final BindingResult errors
+//            @RequestParam("neighborhoodIds") List<Long> neighborhoodIds
     ) {
         long workerId = sessionUtils.getLoggedUser().getUserId();
-        nhws.addWorkerToNeighborhoods(workerId, neighborhoodIds);
+        System.out.println(neighborhoodsForm.getNeighborhoodIds());
+        //cambiar addWorkerToNeighborhoods para que acepte string y la parsea
+//        nhws.addWorkerToNeighborhoods(workerId, neighborhoodIds);
         return new ModelAndView("redirect:/services/neighborhoods");
     }
 

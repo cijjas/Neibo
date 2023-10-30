@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
 import ar.edu.itba.paw.interfaces.services.ProfessionWorkerService;
+import ar.edu.itba.paw.models.MainEntities.Profession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +27,14 @@ public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
     @Override
     public void addWorkerProfession(long workerId, long professionId) {
         LOGGER.info("Adding Profession {} to Worker {}", professionId, workerId);
-        professionWorkerDao.addWorkerProfession(workerId, professionId);
+        professionWorkerDao.createSpecialization(workerId, professionId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     @Transactional(readOnly = true)
-    public List<String> getWorkerProfessions(long workerId) {
+    public List<Profession> getWorkerProfessions(long workerId) {
         LOGGER.info("Adding Professions for Worker {}", workerId);
         return professionWorkerDao.getWorkerProfessions(workerId);
     }
@@ -41,13 +42,13 @@ public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
     @Override
     @Transactional(readOnly = true)
     public String getWorkerProfessionsAsString(long workerId) {
-        List<String> professions = getWorkerProfessions(workerId);
+        List<Profession> professions = getWorkerProfessions(workerId);
         StringBuilder professionsString = new StringBuilder();
-        for (String profession : professions) {
+        for (Profession profession : professions) {
             if (professionsString.length() > 0) {
                 professionsString.append(", ");
             }
-            professionsString.append(profession);
+            professionsString.append(profession.toString());
         }
         return professionsString.toString();
     }

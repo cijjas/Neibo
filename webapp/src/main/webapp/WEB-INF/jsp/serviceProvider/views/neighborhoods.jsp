@@ -87,13 +87,16 @@
                             </div>
                         </c:when>
                         <c:otherwise>
-                            <div class="f-c-c-c w-100">
+                        <form:form class="f-c-c-c w-100" method="post" action="neighborhoods" modelAttribute="neighborhoodsForm">
+                            <form:errors cssClass="error" element="p"/>
+
+                            <%--                            <form class="f-c-c-c w-100">--%>
                                 <span class="font-weight-bold " style="font-size: 20px">
                                     <spring:message code="Join.neighborhoods"/>
                                 </span>
 
                                 <div class="neighborhoods-select mb-4 w-100">
-                                    <input type="hidden" id="selectedNeighborhoods" name="neighborhoodIds"/>
+                                    <form:hidden path="neighborhoodIds" id="selectedNeighborhoods" name="neighborhoodIds"/>
                                     <div class="f-r-c-c w-100">
                                         <div class="container" style="margin:0 ">
                                             <div class="select-btn n-workers" style="width: 100%;">
@@ -116,7 +119,7 @@
                                                 </c:forEach>
                                             </ul>
                                         </div>
-                                        <button type="submit" onclick="submitNeighborhoods()"
+                                        <button type="submit"
                                                 class="cool-button cool-small on-bg font-weight-bold w-25">
                                             <spring:message code="Add"/>
                                             <i class="fa-solid fa-share ml-1"></i>
@@ -203,8 +206,7 @@
                                     </span>
                                 </div>
                             </div>
-
-
+                        </form:form>
                         </c:otherwise>
                     </c:choose>
 

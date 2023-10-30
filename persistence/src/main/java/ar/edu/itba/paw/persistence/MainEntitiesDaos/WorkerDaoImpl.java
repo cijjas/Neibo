@@ -3,6 +3,9 @@ package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.persistence.WorkerDao;
+import ar.edu.itba.paw.models.JunctionEntities.WorkerArea;
+import ar.edu.itba.paw.models.MainEntities.Event;
+import ar.edu.itba.paw.models.MainEntities.Post;
 import ar.edu.itba.paw.models.MainEntities.User;
 import ar.edu.itba.paw.models.MainEntities.Worker;
 import org.slf4j.Logger;
@@ -14,15 +17,21 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
 import javax.sql.DataSource;
 import java.util.*;
 
-import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.appendCommonWorkerConditions;
-import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.appendPaginationClause;
+import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.*;
 
 @Repository
 public class WorkerDaoImpl implements WorkerDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerDaoImpl.class);
+    @PersistenceContext
+    private EntityManager em;
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert jdbcInsert;
     private final String USERS_JOIN_WI =
@@ -30,10 +39,14 @@ public class WorkerDaoImpl implements WorkerDao {
                     "FROM users w " +
                     "JOIN workers_info wi ON w.userid = wi.workerid ";
     private final String USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
-            "SELECT DISTINCT ON (w.userid) w.*, wn.*, wi.* " +
+            "SELECT w.*, wn.*, wi.* " +
                     "FROM users w " +
                     "JOIN workers_neighborhoods wn ON w.userid = wn.workerId " +
-                    "JOIN workers_info wi ON w.userid = wi.workerid ";
+                    "JOIN workers_info wi ON w.userid = wi.workerid " +
+                    "WHERE w.userid IN ( " +
+                    "SELECT DISTINCT w.userid " +
+                    "FROM users w " +
+                    "JOIN workers_neighborhoods wn ON w.userid = wn.workerid ";
 
 
     private final String COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
@@ -71,33 +84,21 @@ public class WorkerDaoImpl implements WorkerDao {
     @Override
     public Worker createWorker(long workerId, String phoneNumber, String address, String businessName) {
         LOGGER.debug("Inserting Worker");
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("workerId", workerId);
-        data.put("phoneNumber", phoneNumber);
-        data.put("address", address);
-        data.put("businessName", businessName);
-
-        try {
-            jdbcInsert.execute(data);
-            Optional<User> optionalUser = userDao.findUserById(workerId);
-            return optionalUser.map(user -> new Worker.Builder()
-                    .user(user)
-                    .phoneNumber(phoneNumber)
-                    .address(address)
-                    .businessName(businessName)
-                    .build()).orElse(null);
-        } catch (DataAccessException ex) {
-            LOGGER.error("Error inserting the worker", ex);
-            throw new InsertionException("An error occurred whilst creating the Worker");
-        }
+        Worker worker = new Worker.Builder()
+                .workerId(workerId)
+                .user(em.find(User.class, workerId))
+                .phoneNumber(phoneNumber)
+                .address(address)
+                .businessName(businessName)
+                .build();
+        em.persist(worker);
+        return worker;
     }
 
     @Override
     public Optional<Worker> findWorkerById(long workerId) {
         LOGGER.debug("Selecting Worker with workerId {}", workerId);
-        final List<Worker> list = jdbcTemplate.query(USERS_JOIN_WI + " WHERE workerid = ?", ROW_MAPPER, workerId);
-        return list.isEmpty() ? Optional.empty() : Optional.of(list.get(0));
+        return Optional.ofNullable(em.find(Worker.class, workerId));
     }
 
     @Override
@@ -107,14 +108,21 @@ public class WorkerDaoImpl implements WorkerDao {
         List<Object> queryParams = new ArrayList<>();
 
         appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions);
+        query.append(") ");
 
         if (page != 0)
             appendPaginationClause(query, queryParams, page, size);
 
-        LOGGER.debug("{}", query);
-        LOGGER.debug("{}", queryParams);
+        // Create a native SQL query
+        Query sqlQuery = em.createNativeQuery(query.toString(), Worker.class);
 
-        return jdbcTemplate.query(query.toString(), ROW_MAPPER, queryParams.toArray());
+        // Set query parameters
+        for (int i = 0; i < queryParams.size(); i++) {
+            sqlQuery.setParameter(i + 1, queryParams.get(i));
+        }
+
+        // Return the result directly as a list of Worker entities
+        return sqlQuery.getResultList();
     }
 
     @Override
@@ -125,22 +133,32 @@ public class WorkerDaoImpl implements WorkerDao {
 
         appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions);
 
-        LOGGER.debug("{}", query);
-        LOGGER.debug("{}", queryParams);
+        // Create a native SQL query for counting
+        Query sqlQuery = em.createNativeQuery(query.toString());
 
-        return jdbcTemplate.queryForObject(query.toString(), Integer.class, queryParams.toArray());
+        // Set query parameters
+        for (int i = 0; i < queryParams.size(); i++) {
+            sqlQuery.setParameter(i + 1, queryParams.get(i));
+        }
+
+        // Execute the query and retrieve the count
+        Object result = sqlQuery.getSingleResult();
+        return Integer.parseInt(result.toString());
     }
 
     // ---------------------------------------------- WORKERS UPDATE -----------------------------------------------------
     @Override
     public void updateWorker(long workerId, String phoneNumber, String address, String businessName, long backgroundPictureId, String bio) {
         LOGGER.debug("Updating Worker {}", workerId);
-        try {
-            jdbcTemplate.update("UPDATE workers_info SET phoneNumber = ?, address = ?, businessName = ?, backgroundPictureId = ?, bio = ? WHERE workerId = ?",
-                    phoneNumber, address, businessName, backgroundPictureId, bio, workerId);
-        } catch (DataAccessException ex) {
-            LOGGER.error("Error updating the worker", ex);
-            throw new InsertionException("An error occurred whilst updating the Worker");
+        Worker worker = em.find(Worker.class, workerId);
+        if (worker == null) {
+            throw new InsertionException("Worker not found");
         }
+        worker.setPhoneNumber(phoneNumber);
+        worker.setAddress(address);
+        worker.setBusinessName(businessName);
+        worker.setBackgroundPictureId(backgroundPictureId);
+        worker.setBio(bio);
+        em.merge(worker);
     }
 }

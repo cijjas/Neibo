@@ -63,7 +63,7 @@ public class WorkerServiceImpl implements WorkerService {
         User user = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), language, false, UserRole.WORKER, id);
         Worker worker = workerDao.createWorker(user.getUserId(), phoneNumber, address, businessName);
         for (long professionId : professionIds) {
-            professionWorkerDao.addWorkerProfession(user.getUserId(), professionId);
+            professionWorkerDao.createSpecialization(user.getUserId(), professionId);
         }
         return worker;
     }

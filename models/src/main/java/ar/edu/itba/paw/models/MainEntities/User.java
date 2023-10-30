@@ -16,8 +16,8 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "channels_channelid_seq")
-    @SequenceGenerator(sequenceName = "channels_channelid_seq", name = "channels_channelid_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_userid_seq")
+    @SequenceGenerator(sequenceName = "users_userid_seq", name = "users_userid_seq", allocationSize = 1)
     private Long userId;
 
     @Column(name = "mail", length = 128, unique = true, nullable = false)
@@ -76,6 +76,14 @@ public class User {
     @ManyToMany
     @JoinTable(name = "posts_users_likes", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "postid"))
     private Set<Post> likedPosts;
+
+    @ManyToMany
+    @JoinTable(name = "reviews", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "workerid"))
+    private Set<Worker> reviewsGiven;
+
+//    @OneToOne
+//    @JoinColumn(name = "workerid", referencedColumnName = "workerid")
+//    private Worker worker;
 
     public User() {}
 
@@ -339,4 +347,20 @@ public class User {
     public Set<Post> getLikedPosts() {
         return likedPosts;
     }
+
+    public Set<Worker> getReviews() {
+        return reviewsGiven;
+    }
+
+    public void setReviews(Set<Worker> reviewsGiven) {
+        this.reviewsGiven = reviewsGiven;
+    }
+
+//    public Worker getWorker() {
+//        return worker;
+//    }
+//
+//    public void setWorker(Worker worker) {
+//        this.worker = worker;
+//    }
 }

@@ -152,10 +152,6 @@ public class PostDaoImpl implements PostDao {
             appendPaginationClause(query, queryParams, page, size);
         }
 
-        // Log results
-        LOGGER.debug("{}", query);
-        LOGGER.debug("{}", queryParams);
-
         // Create a native SQL query
         Query sqlQuery = em.createNativeQuery(query.toString(), Post.class);
 
@@ -177,10 +173,6 @@ public class PostDaoImpl implements PostDao {
         List<Object> queryParams = new ArrayList<>();
 
         appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags, postStatus);
-
-        // Log results
-        LOGGER.debug("{}", query);
-        LOGGER.debug("{}", queryParams);
 
         // Create a native SQL query for counting
         Query sqlQuery = em.createNativeQuery(query.toString());

@@ -17,6 +17,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
@@ -43,12 +45,15 @@ public class ReviewDaoImplTest {
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
-    private ReviewDao reviewDao;
+    @Autowired
+    private ReviewDaoImpl reviewDao;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        reviewDao = new ReviewDaoImpl(ds);
     }
 
     @Test
@@ -59,15 +64,16 @@ public class ReviewDaoImplTest {
         long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
-        testInserter.createWorkerProfession(uKey, pKey);
+        testInserter.createSpecialization(uKey, pKey);
 
         // Exercise
         Review createdReview = reviewDao.createReview(uKey, uKey2, RATING, REVIEW_TEXT);
 
         // Validations & Post Conditions
+        em.flush();
         assertNotNull(createdReview);
-        assertEquals(uKey, createdReview.getWorkerId().longValue());
-        assertEquals(uKey2, createdReview.getUserId().longValue());
+        assertEquals(uKey, createdReview.getWorker().getUser().getUserId().longValue());
+        assertEquals(uKey2, createdReview.getUser().getUserId().longValue());
         assertEquals(RATING, createdReview.getRating(), DELTA);
         assertEquals(REVIEW_TEXT, createdReview.getReview());
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.reviews.name()));
@@ -81,7 +87,7 @@ public class ReviewDaoImplTest {
         long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
-        testInserter.createWorkerProfession(uKey, pKey);
+        testInserter.createSpecialization(uKey, pKey);
         long rKey = testInserter.createReview(uKey, uKey2);
 
         // Exercise
@@ -99,7 +105,7 @@ public class ReviewDaoImplTest {
         long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
-        testInserter.createWorkerProfession(uKey, pKey);
+        testInserter.createSpecialization(uKey, pKey);
         testInserter.createReview(uKey, uKey2, RATING_1, REVIEW_1);
         testInserter.createReview(uKey, uKey2, RATING_2, REVIEW_2);
 
@@ -119,7 +125,7 @@ public class ReviewDaoImplTest {
         long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
-        testInserter.createWorkerProfession(uKey, pKey);
+        testInserter.createSpecialization(uKey, pKey);
         testInserter.createReview(uKey, uKey2, RATING_1, REVIEW_1);
         testInserter.createReview(uKey, uKey2, RATING_2, REVIEW_2);
 
@@ -139,7 +145,7 @@ public class ReviewDaoImplTest {
         long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
-        testInserter.createWorkerProfession(uKey, pKey);
+        testInserter.createSpecialization(uKey, pKey);
         testInserter.createReview(uKey, uKey2, RATING_1, REVIEW_1);
         testInserter.createReview(uKey, uKey2, RATING_2, REVIEW_2);
 
@@ -158,13 +164,14 @@ public class ReviewDaoImplTest {
         long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
-        testInserter.createWorkerProfession(uKey, pKey);
+        testInserter.createSpecialization(uKey, pKey);
         long rKey = testInserter.createReview(uKey, uKey2, RATING_1, REVIEW_1);
 
         // Exercise
         boolean deleted = reviewDao.deleteReview(rKey);
 
         // Validations & Post Conditions
+        em.flush();
         assertTrue(deleted);
         assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.reviews.name()));
     }

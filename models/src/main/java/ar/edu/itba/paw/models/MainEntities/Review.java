@@ -1,30 +1,55 @@
 package ar.edu.itba.paw.models.MainEntities;
 
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "reviews")
 public class Review {
-    private final Long reviewId;
-    private final Long workerId;
-    private final Long userId;
-    private final float rating;
-    private final String review;
-    private final Date date;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reviews_reviewid_seq")
+    @SequenceGenerator(sequenceName = "reviews_reviewid_seq", name = "reviews_reviewid_seq", allocationSize = 1)
+    private Long reviewId;
 
-    private Review(Builder builder) {
+    @ManyToOne
+    @JoinColumn(name = "workerid", referencedColumnName = "workerid")
+    private Worker worker;
+
+    @ManyToOne
+    @JoinColumn(name = "userid", referencedColumnName = "userid")
+    private User user;
+
+    @Column(name = "rating", nullable = false)
+    private float rating;
+
+    @Column(name = "review", length = 256, nullable = false)
+    private String review;
+
+    @Column(name = "date")
+    private Date date;
+
+    public Review() {
+    }
+
+    public Review(Builder builder) {
         this.reviewId = builder.reviewId;
-        this.workerId = builder.workerId;
-        this.userId = builder.userId;
+        this.worker = builder.worker;
+        this.user = builder.user;
         this.rating = builder.rating;
         this.review = builder.review;
-        this.date = builder.date;
+        this.date = new java.sql.Date(System.currentTimeMillis());
     }
 
-    public Long getWorkerId() {
-        return workerId;
+    public Long getReviewId() {
+        return reviewId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Worker getWorker() {
+        return worker;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public float getRating() {
@@ -39,16 +64,12 @@ public class Review {
         return date;
     }
 
-    public Long getReviewId() {
-        return reviewId;
-    }
-
     @Override
     public String toString() {
         return "Review{" +
                 "reviewId=" + reviewId +
-                "workerId=" + workerId +
-                ", userId=" + userId +
+                "worker=" + worker +
+                ", user=" + user +
                 ", rating=" + rating +
                 ", review='" + review + '\'' +
                 ", date=" + date +
@@ -57,19 +78,19 @@ public class Review {
 
     public static class Builder {
         private Long reviewId;
-        private Long workerId;
-        private Long userId;
+        private Worker worker;
+        private User user;
         private float rating;
         private String review;
         private Date date;
 
-        public Builder workerId(Long workerId) {
-            this.workerId = workerId;
+        public Builder worker(Worker worker) {
+            this.worker = worker;
             return this;
         }
 
-        public Builder userId(Long userId) {
-            this.userId = userId;
+        public Builder user(User user) {
+            this.user = user;
             return this;
         }
 

@@ -1,7 +1,10 @@
 package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
+import ar.edu.itba.paw.enums.Professions;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
+import ar.edu.itba.paw.models.JunctionEntities.Specialization;
+import ar.edu.itba.paw.models.MainEntities.Profession;
 import ar.edu.itba.paw.persistence.JunctionDaos.ProfessionWorkerDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -16,6 +19,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
 
@@ -28,45 +33,53 @@ import static org.junit.Assert.assertFalse;
 @Rollback
 public class ProfessionWorkerDaoImplTest {
 
-    private final String PROFESSION_NAME = "Argentinian President";
+    private final String PROFESSION_NAME = "Plumber";
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
-    private ProfessionWorkerDao professionWorkerDao;
+    @Autowired
+    private ProfessionWorkerDaoImpl professionWorkerDao;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
-        professionWorkerDao = new ProfessionWorkerDaoImpl(ds);
     }
 
     @Test
-    public void testAddWorkerProfession() {
+    public void testCreateSpecialization() {
         // Pre Conditions
-        Number pKey = testInserter.createProfession();
-        Number nhKey = testInserter.createNeighborhood();
-        Number uKey = testInserter.createUser(nhKey.longValue());
+        long pKey = testInserter.createProfession();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
+
 
         // Exercise
-        professionWorkerDao.addWorkerProfession(uKey.longValue(), pKey.longValue());
+        Specialization specialization = professionWorkerDao.createSpecialization(uKey, pKey);
 
         // Validations & Post Conditions
+        em.flush();
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_professions.name()));
+        assertEquals(Professions.PLUMBER.name(), specialization.getProfession().getProfession().name());
     }
 
     @Test
     public void testGetWorkerProfession() {
         // Pre Conditions
-        Number pKey = testInserter.createProfession(PROFESSION_NAME);
-        Number nhKey = testInserter.createNeighborhood();
-        Number uKey = testInserter.createUser(nhKey.longValue());
-        testInserter.createWorker(uKey.longValue());
-        testInserter.createWorkerProfession(uKey.longValue(), pKey.longValue());
+//        long pKey = testInserter.createProfession(PROFESSION_NAME);
+        long pKey = testInserter.createProfession();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createSpecialization(uKey, pKey);
 
         // Exercise
-        List<String> profession = professionWorkerDao.getWorkerProfessions(uKey.longValue());
+        List<Profession> profession = professionWorkerDao.getWorkerProfessions(uKey);
 
         // Validations & Post Conditions
         assertFalse(profession.isEmpty());

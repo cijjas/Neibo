@@ -7,13 +7,13 @@ import java.util.List;
 public class NeighborhoodsForm {
 
     @NeighborhoodsConstraint
-    private List<Long> neighborhoodIds;
+    private String neighborhoodIds;
 
-    public List<Long> getNeighborhoodIds() {
+    public String getNeighborhoodIds() {
         return neighborhoodIds;
     }
 
-    public void setNeighborhoodId(List<Long> neighborhoodIds) {
+    public void setNeighborhoodId(String neighborhoodIds) {
         this.neighborhoodIds = neighborhoodIds;
     }
 

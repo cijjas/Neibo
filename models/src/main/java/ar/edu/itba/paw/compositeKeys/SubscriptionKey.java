@@ -10,9 +10,9 @@ public class SubscriptionKey implements Serializable {
     public SubscriptionKey() {
     }
 
-    public SubscriptionKey(Long userId, Long eventId) {
-        this.postId = userId;
-        this.userId = eventId;
+    public SubscriptionKey(Long postId, Long userId) {
+        this.postId = postId;
+        this.userId = userId;
     }
 
     @Override

@@ -33,18 +33,19 @@ drop table if exists events_users cascade;
 drop table if exists amenities_hours cascade;
 -- post likes
 drop table if exists posts_users_likes cascade;
--- workers
-drop table if exists workers_info;
-drop table if exists workers_professions;
-drop table if exists professions;
-drop table if exists workers_neighborhoods;
-drop table if exists reviews;
 -- amenity refactor
 drop table if exists times cascade;
 drop table if exists days cascade;
 drop table if exists shifts cascade;
 drop table if exists users_availability cascade;
 drop table if exists amenities_shifts_availability cascade;
+
+-- workers
+drop table if exists workers_info cascade;
+drop table if exists workers_professions cascade;
+drop table if exists professions cascade;
+drop table if exists workers_neighborhoods cascade;
+drop table if exists reviews cascade;
 
 
 

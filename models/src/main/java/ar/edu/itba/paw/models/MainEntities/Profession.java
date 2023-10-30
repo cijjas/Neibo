@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models.MainEntities;
 import ar.edu.itba.paw.enums.Professions;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "professions")
@@ -15,6 +16,10 @@ public class Profession {
     @Column(length = 64)
     @Enumerated(EnumType.STRING)
     private Professions profession;
+
+    @ManyToMany
+    @JoinTable(name = "workers_professions", joinColumns = @JoinColumn(name = "professionid"), inverseJoinColumns = @JoinColumn(name = "workerid"))
+    private Set<Worker> workers;
 
     public Profession(){}
 
@@ -29,6 +34,14 @@ public class Profession {
 
     public Professions getProfession() {
         return profession;
+    }
+
+    public Set<Worker> getWorkers() {
+        return workers;
+    }
+
+    public void setWorkers(Set<Worker> workers) {
+        this.workers = workers;
     }
 
     @Override

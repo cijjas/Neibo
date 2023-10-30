@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.Professions;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
@@ -298,7 +299,7 @@ public class TestInserter {
         return timeInsert.executeAndReturnKey(data).longValue();
     }
 
-    public void addWorkerToNeighborhood(long workerId, long neighborhoodId) {
+    public void createWorkerArea(long workerId, long neighborhoodId) {
         Map<String, Object> data = new HashMap<>();
         data.put("workerid", workerId);
         data.put("neighborhoodid", neighborhoodId);
@@ -328,7 +329,7 @@ public class TestInserter {
     }
 
 
-    public void createWorkerProfession(long workerId, long professionId) {
+    public void createSpecialization(long workerId, long professionId) {
         Map<String, Object> data = new HashMap<>();
         data.put("workerid", workerId);
         data.put("professionid", professionId);
@@ -365,9 +366,9 @@ public class TestInserter {
         return imageInsert.executeAndReturnKey(data).longValue();
     }
 
-    public long createProfession(String profession) {
+    public long createProfession(Professions profession) {
         Map<String, Object> data = new HashMap<>();
-        data.put("profession", profession);
+        data.put("profession", profession.name());
         return professionInsertion.executeAndReturnKey(data).longValue();
     }
 
@@ -509,7 +510,7 @@ public class TestInserter {
     }
 
     public long createProfession() {
-        String profession = "Some Profession";
-        return createProfession(profession);
+        String profession = "Argentinian President";
+        return createProfession(Professions.PLUMBER);
     }
 }
