@@ -6,11 +6,11 @@
 
     <div class="f-c-c-c sticky">
 
-
+<%--        <c:url value="/services/profile/${loggedUser.userId}" var="testvar"/>--%>
         <c:choose>
             <c:when test='${loggedUser.role == "WORKER"}'>
                 <div class="left-box worker">
-                    <div class="f-c-c-c">
+                    <div class="f-c-c-c ">
                         <a id="profileButton"
                            href="${pageContext.request.contextPath}/services/profile/${loggedUser.userId}"
                            class="cool-left-button  ${channel == 'Profile'  ? 'active' : ''} f-r-sb-c">
@@ -31,15 +31,14 @@
             </c:when>
             <c:otherwise>
                 <div class="left-box">
-                    <div class="f-c-c-c">
+                    <div class="f-c-c-c first">
                         <c:if test='${loggedUser.role == "ADMINISTRATOR"}'>
-                            <a href="${pageContext.request.contextPath}/admin/publish">
-                                <div class="cool-left-button admin-button f-r-sb-c" style="width: 200px; ">
+                            <a href="${pageContext.request.contextPath}/admin/publish"
+                            class="cool-left-button admin-button f-r-sb-c">
                                     <i class="fa-solid fa-chart-pie"></i>
-                                    Admin panel
-                                </div>
+                                    <spring:message code="Admin.panel"/>
                             </a>
-                            <div class="    divider"></div>
+                            <div class="divider"></div>
                         </c:if>
                         <a id="announcementsButton" href="${pageContext.request.contextPath}/announcements"
                            class="cool-left-button  ${channel == 'Announcements' ? 'active' : ''} f-r-sb-c">
@@ -55,9 +54,12 @@
                             <i class="fas fa-envelope"></i> <spring:message code="Complaints"/>
                         </a>
                     </div>
-
-                    <div class="f-c-c-c">
+                    <div class="f-c-c-c second">
                         <div class="divider"></div>
+                        <a id="marketplaceButton" href="${pageContext.request.contextPath}/marketplace/products"
+                           class="cool-left-button lila ${channel == 'Marketplace' ? 'active' : ''} f-r-sb-c">
+                            <i class="fa-solid fa-store"></i> <spring:message code="Marketplace"/>
+                        </a>
                         <a id="servicesButton" href="${pageContext.request.contextPath}/services"
                            class="cool-left-button ${channel == 'Services' ? 'active' : ''} f-r-sb-c">
                             <i class="fa-solid fa-handshake-angle"></i> <spring:message code="Services"/>

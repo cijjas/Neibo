@@ -5,6 +5,11 @@ async function getImageInto(imageElementId, imageSrcId, contextPath) {
         image.classList.remove('placeholder');
         return;
     }
+    if(imageSrcId === -1){
+        image.src = contextPath + "/resources/images/workersBackground.png";
+        image.classList.remove('placeholder');
+        return;
+    }
     try {
         const response = await fetch(contextPath + '/images/' + imageSrcId);
         if (!response.ok) {
