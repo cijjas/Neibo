@@ -27,7 +27,7 @@
                 <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
                 <script>
                     (function () {
-                        getImageInto("worker-background-image-${worker.user.userId}", ${empty worker.backgroundPictureId ? 0 : worker.backgroundPictureId}, "${pageContext.request.contextPath}")
+                        getImageInto("worker-background-image-${worker.user.userId}", ${empty worker.backgroundPictureId ? -1 : worker.backgroundPictureId}, "${pageContext.request.contextPath}")
                     })();
 
                 </script>

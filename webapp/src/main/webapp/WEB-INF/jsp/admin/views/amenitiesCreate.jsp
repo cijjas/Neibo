@@ -26,7 +26,7 @@
 <body class="body ${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
 <div class="container">
-    <div class="row">
+    <div class="row init">
         <div class="column-left">
             <%@ include file="/WEB-INF/jsp/admin/components/controlPanelLeftButtons.jsp" %>
         </div>
@@ -249,6 +249,11 @@
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
         crossorigin="anonymous"></script>
 <%@ include file="/WEB-INF/jsp/components/displays/footer.jsp" %>
-
+<script>
+    const wave3= document.getElementById('wave3');
+    const wave2= document.getElementById('wave2');
+    wave2.classList.add('admin');
+    wave3.classList.add('admin');
+</script>
 </body>
 </html>

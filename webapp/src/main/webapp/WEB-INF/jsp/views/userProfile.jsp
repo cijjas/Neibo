@@ -41,7 +41,7 @@
                                     <form:input path="imageFile" id="file" type="file" accept="image/*"
                                                 onchange="loadFile()"/>
                                     <c:choose>
-                                        <c:when test="${ neighbor.profilePicture.imageId != 0}">
+                                        <c:when test="${not empty neighbor.profilePicture.imageId }">
                                             <img id="output"
                                                  src="${pageContext.request.contextPath}/images/<c:out value="${neighbor.profilePicture.imageId}"/>"
                                                  alt="profile_picture_img"/>
