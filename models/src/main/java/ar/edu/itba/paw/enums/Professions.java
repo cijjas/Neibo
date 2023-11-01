@@ -17,14 +17,13 @@ public enum Professions {
 
     public static List<String> getProfessionsList() {
         return Arrays.stream(values())
-                .map(profession -> profession.toString().toLowerCase())
+                .map(profession -> profession.toString().toUpperCase())
                 .collect(Collectors.toList());
     }
 
     @Override
     public String toString() {
-        String name = name().toLowerCase();
-        return name.substring(0, 1).toUpperCase() + name.substring(1);
+        return name().toUpperCase();
     }
 
     public int getId() {
