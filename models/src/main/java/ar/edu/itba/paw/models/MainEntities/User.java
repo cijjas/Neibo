@@ -95,6 +95,9 @@ public class User {
     @JoinTable(name = "users_products_inquiries", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "productid"))
     private Set<Product> inquiredProducts;
 
+    @ManyToMany
+    @JoinTable(name = "events_users", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "eventid"))
+    private Set<Event> events;
 
 //    @OneToOne
 //    @JoinColumn(name = "workerid", referencedColumnName = "workerid")

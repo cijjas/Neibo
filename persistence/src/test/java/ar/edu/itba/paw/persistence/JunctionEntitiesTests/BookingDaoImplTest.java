@@ -16,6 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.List;
@@ -36,6 +38,9 @@ public class BookingDaoImplTest {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private BookingDao bookingDao;
+    @PersistenceContext
+    private EntityManager em;
+
 
     @Before
     public void setUp() {
@@ -54,9 +59,10 @@ public class BookingDaoImplTest {
         long avKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        Number bookingId = bookingDao.createBooking(uKey, avKey, RESERVATION_DATE);
+        Booking bookingId = bookingDao.createBooking(uKey, avKey, RESERVATION_DATE);
 
         // Validations & Post Conditions
+        em.flush();
         assertNotNull(bookingId);
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users_availability.name()));
     }

@@ -161,7 +161,6 @@ public class Post {
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", date=" + date +
-                ", user=" + user +
                 ", channel=" + channel +
                 ", postPicture=" + postPicture +
                 ", tags=" + tags +

@@ -23,7 +23,7 @@
 <body class="body ${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
 <div class="container">
-    <div class="row">
+    <div class="row init">
         <div class="column-publish">
             <div class="cool-static-container">
 

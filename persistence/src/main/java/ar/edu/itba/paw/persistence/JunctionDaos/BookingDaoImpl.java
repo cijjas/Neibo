@@ -4,6 +4,7 @@ import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.*;
+import ar.edu.itba.paw.models.JunctionEntities.Availability;
 import ar.edu.itba.paw.models.MainEntities.Amenity;
 import ar.edu.itba.paw.models.JunctionEntities.Booking;
 import ar.edu.itba.paw.models.MainEntities.Day;
@@ -39,7 +40,7 @@ public class BookingDaoImpl implements BookingDao {
     private TimeDao timeDao;
 
     private final String BOOKINGS_JOIN_AVAILABILITY =
-            "SELECT bookingid, date, a.amenityid, s.shiftid, userid, a.name, d.dayid, t.timeid, timeinterval\n" +
+            "SELECT uav.*, bookingid, date, a.amenityid, s.shiftid, userid, a.name, d.dayid, t.timeid, timeinterval\n" +
                     "FROM users_availability uav\n" +
                     "INNER JOIN amenities_shifts_availability asa ON uav.amenityavailabilityid = asa.amenityavailabilityid\n" +
                     "INNER JOIN amenities a ON asa.amenityid = a.amenityid\n" +
@@ -78,31 +79,42 @@ public class BookingDaoImpl implements BookingDao {
     // ---------------------------------------- USERS_AVAILABILITY SELECT ----------------------------------------------
 
     @Override
-    public Number createBooking(long userId, long amenityAvailabilityId, Date reservationDate) {
+    public Booking createBooking(long userId, long amenityAvailabilityId, Date reservationDate) {
         LOGGER.debug("Inserting Booking");
-        Map<String, Object> data = new HashMap<>();
-        data.put("userid", userId);
-        data.put("amenityavailabilityid", amenityAvailabilityId);
-        data.put("date", reservationDate);
-        try {
-            return jdbcInsert.executeAndReturnKey(data);
-        } catch (DataAccessException ex) {
-            LOGGER.error("Error inserting the Booking", ex);
-            throw new InsertionException("An error occurred whilst creating the Booking for the User");
-        }
+        Booking booking = new Booking.Builder()
+                .user(em.find(User.class, userId))
+                .bookingDate(reservationDate)
+                .amenityAvailability(em.find(Availability.class, amenityAvailabilityId))
+                .build();
+        em.persist(booking);
+        return booking;
     }
 
     @Override
     public List<Booking> getUserBookings(long userId) {
         LOGGER.debug("Selecting Bookings from userId {}", userId);
-        return jdbcTemplate.query(BOOKINGS_JOIN_AVAILABILITY + " WHERE userid = ? ORDER BY uav.date, asa.amenityid, asa.shiftid;", ROW_MAPPER, userId);
+
+        String sql = BOOKINGS_JOIN_AVAILABILITY + " WHERE userid = :userId ORDER BY uav.date, asa.amenityid, asa.shiftid";
+
+        List<Booking> bookings = em.createNativeQuery(sql, Booking.class)
+                .setParameter("userId", userId)
+                .getResultList();
+
+        return bookings;
     }
+
+
 
     // ---------------------------------------- USERS_AVAILABILITY DELETE ----------------------------------------------
 
     @Override
     public boolean deleteBooking(long bookingId) {
         LOGGER.debug("Deleting Booking with bookingId {}", bookingId);
-        return jdbcTemplate.update("DELETE FROM users_availability WHERE bookingid = ? ", bookingId) > 0;
+        String hql = "DELETE FROM Booking b WHERE b.bookingId = :bookingId";
+        int deletedCount = em.createQuery(hql)
+                .setParameter("bookingId", bookingId)
+                .executeUpdate();
+        return deletedCount > 0;
     }
+
 }

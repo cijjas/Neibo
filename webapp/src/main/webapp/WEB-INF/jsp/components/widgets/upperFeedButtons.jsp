@@ -9,15 +9,16 @@
                 <i class="fa-solid fa-arrow-up-wide-short"></i>
                 <spring:message code="Newest"/>
             </a>
-            <a onclick="hotPosts()" class="coolest-button  ${param.postStatus == 'hot' ? 'active' : ''}">
-                <i class="fa-solid fa-fire ml-1"></i>
-                <spring:message code="Hot"/>
-            </a>
             <a onclick="trendingPosts()"
                class="cool-feed-button  rounded ${param.postStatus == 'trending' ? 'active' : ''}  ">
                 <i class="fa-solid fa-arrow-trend-up ml-1"></i>
                 <spring:message code="Trending"/>
             </a>
+            <a onclick="hotPosts()" class="coolest-button  ${param.postStatus == 'hot' ? 'active' : ''}">
+                <i class="fa-solid fa-fire ml-1"></i>
+                <spring:message code="Hot"/>
+            </a>
+
         </div>
         <c:if test='${loggedUser.role != "ADMINISTRATOR"}'>
             <a onclick="publishInChannel()" class="cool-feed-button p-3 ">

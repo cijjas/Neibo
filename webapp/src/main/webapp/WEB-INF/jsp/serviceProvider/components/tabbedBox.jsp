@@ -131,7 +131,7 @@
         <section id="content2">
             <div class="f-c-c-c w-100" style="gap:10px">
                 <c:if test='${loggedUser.userId == worker.user.userId}'>
-                    <a class="cool-button cool-small on-bg font-weight-bold mb-2" style="width: 200px" href="${pageContext.request.contextPath}/publish">
+                    <a class="cool-button cool-small on-bg font-weight-bold mb-2" style="width: 200px" href="${pageContext.request.contextPath}/publish?onChannelId=4">
                         <spring:message code="Post.verb"/>
                     </a>
                 </c:if>
