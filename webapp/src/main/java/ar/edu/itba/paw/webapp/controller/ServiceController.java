@@ -236,6 +236,7 @@ public class ServiceController {
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "profession", required = false) List <String> professions
     ) {
+        System.out.println(ws.getTotalWorkerPagesByCriteria(professions, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size));
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
         List<Worker> workerList = ws.getWorkersByCriteria(page, size, professions, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId());
         mav.addObject("workersList", workerList);

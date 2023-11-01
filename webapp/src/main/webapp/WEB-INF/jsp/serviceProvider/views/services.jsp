@@ -44,11 +44,24 @@
                         </div>
                     </c:when>
                     <c:otherwise>
+                        <c:if test="${totalPages >  1}">
+                            <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                                <jsp:param name="page" value="${page}"/>
+                                <jsp:param name="totalPages" value="${totalPages}"/>
+                            </jsp:include>
+                        </c:if>
                     <div class="f-c-c-c">
                         <c:forEach var="worker" items="${workersList}">
                             <%@ include file="/WEB-INF/jsp/serviceProvider/components/serviceProfileWidget.jsp" %>
                         </c:forEach>
                     </div>
+
+                        <c:if test="${totalPages >  1}">
+                            <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                                <jsp:param name="page" value="${page}"/>
+                                <jsp:param name="totalPages" value="${totalPages}"/>
+                            </jsp:include>
+                        </c:if>
                     </c:otherwise>
                 </c:choose>
             </div>
