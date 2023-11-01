@@ -27,6 +27,8 @@ public class Booking {
     @Column(name = "date")
     private Date bookingDate;
 
+    public Booking() {}
+
     private Booking(Builder builder) {
         this.bookingId = builder.bookingId;
         this.user = builder.user;

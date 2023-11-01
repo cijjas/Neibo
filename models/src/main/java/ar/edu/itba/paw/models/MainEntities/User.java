@@ -81,6 +81,10 @@ public class User {
     @JoinTable(name = "reviews", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "workerid"))
     private Set<Worker> reviewsGiven;
 
+    @ManyToMany
+    @JoinTable(name = "events_users", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "eventid"))
+    private Set<Event> events;
+
 //    @OneToOne
 //    @JoinColumn(name = "workerid", referencedColumnName = "workerid")
 //    private Worker worker;

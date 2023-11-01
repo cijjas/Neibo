@@ -72,8 +72,8 @@ public class TestConfig {
 
         // Si ponen esto en prod, hay tabla!!!
         // NUNCA DEPLOYAR ESTO; PRINTEA A STDOUTTTTT
-//        properties.setProperty("hibernate.show_sql", "true");
-//        properties.setProperty("format_sql", "true");
+        properties.setProperty("hibernate.show_sql", "true");
+        properties.setProperty("format_sql", "true");
 
         factoryBean.setJpaProperties(properties);
         return factoryBean;

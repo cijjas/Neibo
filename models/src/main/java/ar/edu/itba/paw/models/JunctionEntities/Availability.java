@@ -20,7 +20,7 @@ public class Availability {
     @JoinColumn(name = "amenityid")
     private Amenity amenity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "shiftid")
     private Shift shift;
 
@@ -29,6 +29,8 @@ public class Availability {
             joinColumns = @JoinColumn(name = "amenityavailabilityid"),
             inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> bookedByUsers;
+
+    public Availability(){}
 
     private Availability(Builder builder) {
         this.amenityAvailabilityId = builder.amenityAvailabilityId;
