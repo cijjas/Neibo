@@ -53,6 +53,11 @@ public class TestInserter {
     private final SimpleJdbcInsert imageInsert;
     private final SimpleJdbcInsert professionInsertion;
     private final SimpleJdbcInsert channelMappingInserter;
+    private final SimpleJdbcInsert productInserter;
+    private final SimpleJdbcInsert departmentInserter;
+    private final SimpleJdbcInsert classificationInserter;
+    private final SimpleJdbcInsert inquiryInserter;
+    private final SimpleJdbcInsert requestInserter;
 
     @Autowired
     public TestInserter(DataSource dataSource) {
@@ -132,6 +137,19 @@ public class TestInserter {
                 .usingGeneratedKeyColumns("professionid");
         this.channelMappingInserter = new SimpleJdbcInsert(dataSource)
                 .withTableName("neighborhoods_channels");
+        this.productInserter = new SimpleJdbcInsert(dataSource)
+                .usingGeneratedKeyColumns("productid")
+                .withTableName("products");
+        this.requestInserter = new SimpleJdbcInsert(dataSource)
+                .withTableName("products_users_requests");
+        this.inquiryInserter = new SimpleJdbcInsert(dataSource)
+                .usingGeneratedKeyColumns("inquiryid")
+                .withTableName("products_users_inquiries");
+        this.classificationInserter = new SimpleJdbcInsert(dataSource)
+                .withTableName("products_departments");
+        this.departmentInserter = new SimpleJdbcInsert(dataSource)
+                .usingGeneratedKeyColumns("departmentid")
+                .withTableName("departments");
     }
 
     public long createChannel(String channelName) {
@@ -372,6 +390,54 @@ public class TestInserter {
         return professionInsertion.executeAndReturnKey(data).longValue();
     }
 
+    public long createProduct(String name, String description, Float price, boolean used,
+                              long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
+                              long sellerId, long buyerId){
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", name);
+        data.put("description", description);
+        data.put("price", price);
+        data.put("used", used);
+        data.put("primarypictureid", primaryPictureId);
+        data.put("secondarypictureid", secondaryPictureId);
+        data.put("tertiarypictureid", tertiaryPictureId);
+        data.put("sellerid", sellerId);
+        data.put("buyerid", buyerId);
+
+        return productInserter.executeAndReturnKey(data).longValue();
+    }
+
+    public long createDepartment(String department){
+        Map<String, Object> data = new HashMap<>();
+        data.put("department", department);
+        return departmentInserter.executeAndReturnKey(data).longValue();
+
+    }
+
+    public long createInquiry(String message, String reply, long productId, long userId){
+        Map<String, Object> data = new HashMap<>();
+        data.put("productId", productId);
+        data.put("userId", userId);
+        data.put("message", message);
+        data.put("reply", reply);
+
+        return inquiryInserter.executeAndReturnKey(data).longValue();
+    }
+
+    public void createClassification(long productId, long departmentId){
+        Map<String, Object> data = new HashMap<>();
+        data.put("productId", productId);
+        data.put("departmentId", departmentId);
+        classificationInserter.execute(data);
+    }
+
+    public void createRequest(long productId, long userId){
+        Map<String, Object> data = new HashMap<>();
+        data.put("productId", productId);
+        data.put("userId", userId);
+        requestInserter.execute(data);
+    }
+
     // ----------------------------------------------------------------------------------------------------
     // OVERLOADS FOR SIMPLIFYING TESTING ------------------------------------------------------------------
     // ----------------------------------------------------------------------------------------------------
@@ -510,7 +576,27 @@ public class TestInserter {
     }
 
     public long createProfession() {
-        String profession = "Argentinian President";
         return createProfession(Professions.PLUMBER);
+    }
+
+    public long createProduct(long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
+                              long sellerId, long buyerId){
+        String name = "Iphone";
+        String description = "Super Iphone";
+        float price = 1234124f;
+        boolean used = true;
+
+        return createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, buyerId);
+    }
+
+    public long createDepartment(){
+        String name = "Super derpa duplex";
+        return createDepartment(name);
+    }
+
+    public long createInquiry(long productId, long userId){
+        String message = "Hohohoho que caro esta todo";
+        String reply = "Asi es la vida";
+        return createInquiry(message, reply, productId, userId);
     }
 }

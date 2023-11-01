@@ -29,6 +29,12 @@ public enum Table {
     professions,
     shifts,
     times,
-    resources;
+    resources,
+    products,
+    departments,
+    products_departments,
+    products_users_inquiries,
+    products_users_requests,
+    ;
 
 }

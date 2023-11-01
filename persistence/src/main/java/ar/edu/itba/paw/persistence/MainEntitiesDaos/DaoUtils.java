@@ -136,4 +136,18 @@ class DaoUtils {
         query.append(" ORDER BY postdate DESC");
     }
 
+    static void appendCommonProductConditions(StringBuilder query, List<Object> queryParams, long neighborhoodId, List<String> tags) {
+        appendInitialWhereClause(query);
+        appendProductNeighborhoodIdCondition(query, queryParams, neighborhoodId);
+
+        if (tags != null && !tags.isEmpty()) {
+            appendTagsCondition(query, queryParams, tags);
+        }
+    }
+
+    static void appendProductNeighborhoodIdCondition(StringBuilder query, List<Object> queryParams, long neighborhoodId) {
+        query.append(" AND u.neighborhoodid = ?");
+        queryParams.add(neighborhoodId);
+    }
+
 }
