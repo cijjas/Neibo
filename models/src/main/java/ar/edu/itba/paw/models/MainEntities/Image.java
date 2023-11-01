@@ -25,6 +25,15 @@ public class Image {
     @OneToMany(mappedBy = "postPicture")
     private Set<Post> posts = new HashSet<>();
 
+    @OneToMany(mappedBy = "primaryPicture")
+    private Set<Product> productsWithThisImageAsPrimary = new HashSet<>();
+
+    @OneToMany(mappedBy = "secondaryPicture")
+    private Set<Product> productsWithThisImageAsSecondary = new HashSet<>();
+
+    @OneToMany(mappedBy = "tertiaryPicture")
+    private Set<Product> productsWithThisImageAsTertiary = new HashSet<>();
+
     public Image() {
         // Default constructor
     }

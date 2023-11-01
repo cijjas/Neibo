@@ -120,7 +120,7 @@
                                                        target="_blank">
                                                         <img alt="Yourlogo Light"
                                                              src="https://cdn.discordapp.com/attachments/889581035195596800/1151956791417114654/mailbar.png"
-                                                             style="display: block; height: auto; border: 0; max-width: 268px; width: 100%;" title="Yourlogo Light" width="268">
+                                                             style="display: block; height: auto; border: 0; max-width: 268px; width: 100%;" title="Neibo" width="268">
                                                     </a>
                                                 </div>
                                             </td>
@@ -152,9 +152,9 @@
                                            width="100%">
                                         <tr>
                                             <td class="pad"
-                                                style="padding-bottom:25px;padding-left:20px;padding-right:20px;padding-top:10px;">
-                                                <div style="color:#2f2f2f;font-family:Georgia,Times,'Times New Roman',serif;font-size:42px;line-height:120%;text-align:center;mso-line-height-alt:50.4px;">
-                                                    <p style="margin: 0;" th:text="'Hola, ' + ${name} + '!'"></p>
+                                                style="padding-bottom: 25px; padding-left: 20px; padding-right: 20px; padding-top: 10px;">
+                                                <div style="color: #2f2f2f; font-family: Georgia, Times, 'Times New Roman', serif; font-size: 42px; line-height: 120%; text-align: center; mso-line-height-alt: 50.4px;">
+                                                    <p style="margin: 0;" th:text="'Hey, ' + ${name} + '!'"></p>
                                                 </div>
                                             </td>
                                         </tr>
@@ -164,11 +164,13 @@
                                            width="100%">
                                         <tr>
                                             <td class="pad"
-                                                style="padding-bottom:10px;padding-left:30px;padding-right:30px;padding-top:10px;">
-                                                <div style="color:#2f2f2f;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;font-size:16px;line-height:150%;text-align:left;mso-line-height-alt:24px;">
-                                                    <p style="margin: 0; word-break: break-word;">&nbsp;</p>
-                                                    <p style="margin: 0;"
-                                                       th:text="'Hay un nuevo anuncio: ' + ${postTitle}"></p>
+                                                style="padding-bottom: 10px; padding-left: 30px; padding-right: 30px; padding-top: 10px;">
+                                                <div style="color: #2f2f2f; font-family: Arial, Helvetica Neue, Helvetica, sans-serif; font-size: 16px; line-height: 150%; text-align: left; mso-line-height-alt: 24px;">
+                                                    <p style="margin: 0;" th:text=" ${customMessage} + 'for the product: ' + ${productName}"></p>
+                                                    <p style="margin: 0;" th:text="${replyOrMessage}"></p>
+                                                    <div style="font-size: 14px; background-color: #f0f0f0; padding: 10px; border: 1px solid #000; margin-top: 10px;">
+                                                        <p style="margin: 0; font-size: 12px; line-height: 150%;" th:text="${message}"></p>
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>
@@ -181,6 +183,7 @@
                 </tr>
                 </tbody>
             </table>
+
             <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-3" role="presentation"
                    style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
                 <tbody>
@@ -202,7 +205,7 @@
                                                 style="padding-left: 20px; padding-right: 20px; padding-top: 40px; text-align: center;">
                                                 <!-- Add text-align: center; -->
                                                 <div style="color: #2f2f2f; font-family: Arial, Helvetica Neue, Helvetica, sans-serif; font-size: 16px; letter-spacing: 0px; line-height: 150%; text-align: center; mso-line-height-alt: 24px;">
-                                                    <p style="margin: 0; word-break: break-word;"><strong><span>Haz click en el botón debajo para ver el anuncio!<br></span></strong>
+                                                    <p style="margin: 0; word-break: break-word;"><strong><span>Click on the button below to see the product!<br></span></strong>
                                                     </p>
                                                 </div>
                                             </td>
@@ -234,11 +237,11 @@
                                                         <v:textbox inset="0px,0px,0px,0px">
                                                             <center style="color:#ffffff; font-family:Arial, sans-serif; font-size:14px">
                                                     <![endif]--><a style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#9ad379;border-radius:0px;width:auto;border-top:0px solid #8a3b8f;font-weight:bold;border-right:0px solid #8a3b8f;border-bottom:0px solid #8a3b8f;border-left:0px solid #8a3b8f;padding-top:5px;padding-bottom:5px;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;font-size:14px;text-align:center;mso-border-alt:none;word-break:keep-all;" target="_blank"
-                                                                   th:href="@{${postPath}}"><span
+                                                                   th:href="@{${productPath}}"><span
                                                             style="padding-left:40px;padding-right:40px;font-size:14px;display:inline-block;letter-spacing:1px;"><span
                                                             style="word-break:break-word;"><span
                                                             data-mce-style
-                                                            style="line-height: 28px;">VER ANUNCIO<br></span></span></span></a>
+                                                            style="line-height: 28px;">SEE PRODUCT<br></span></span></span></a>
                                                     <!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>
                                             </td>
                                         </tr>
