@@ -20,6 +20,8 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Date;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -273,7 +275,8 @@ public class MainController {
             LOGGER.error("Error in Publish Form'");
             return publishForm(publishForm, onChannelId);
         }
-        ps.createPost(publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), publishForm.getChannel(), publishForm.getTags(), imageFile);
+
+        ps.createPost(publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), publishForm.getChannel() == null ? BaseChannel.WORKERS.getId() : publishForm.getChannel(), null, null);
         ModelAndView mav = new ModelAndView("views/publish");
         mav.addObject("channelId", publishForm.getChannel());
         mav.addObject("showSuccessMessage", true);
@@ -498,8 +501,6 @@ public class MainController {
 
         ModelAndView mav = new ModelAndView("views/amenities");
 
-        System.out.println(as.getAmenities(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size));
-
         mav.addObject("totalPages", as.getTotalAmenitiesPages(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
         mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
         mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
@@ -668,6 +669,6 @@ public class MainController {
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public void test(){
-
+        ps.createPost("Heñllo", "Description", 1, 1, null, null);
     }
 }

@@ -40,6 +40,9 @@ public class Tag {
         return posts;
     }
 
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
     @Override
     public String toString() {
         return "Tag{" +

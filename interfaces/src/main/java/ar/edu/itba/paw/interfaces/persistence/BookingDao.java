@@ -9,7 +9,7 @@ public interface BookingDao {
 
     // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY DELETE -----------------------------------------
 
-    Number createBooking(long userId, long amenityAvailabilityId, Date reservationDate);
+    Booking createBooking(long userId, long amenityAvailabilityId, Date reservationDate);
 
     // ----------------------------------------------- AMENITIES_SHIFTS SELECT -----------------------------------------
 

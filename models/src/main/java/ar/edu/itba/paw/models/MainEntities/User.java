@@ -81,6 +81,24 @@ public class User {
     @JoinTable(name = "reviews", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "workerid"))
     private Set<Worker> reviewsGiven;
 
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL) //cambiar a seller y tmb en Product??
+    private List<Product> productsSelling;
+
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
+    private List<Product> productsBought;
+
+    @ManyToMany
+    @JoinTable(name = "users_products_requests", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "productid"))
+    private Set<Product> requestedProducts;
+
+    @ManyToMany
+    @JoinTable(name = "users_products_inquiries", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "productid"))
+    private Set<Product> inquiredProducts;
+
+    @ManyToMany
+    @JoinTable(name = "events_users", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "eventid"))
+    private Set<Event> events;
+
 //    @OneToOne
 //    @JoinColumn(name = "workerid", referencedColumnName = "workerid")
 //    private Worker worker;

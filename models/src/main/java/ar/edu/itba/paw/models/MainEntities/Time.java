@@ -86,4 +86,16 @@ public class Time {
             return new Time(this);
         }
     }
+
+    public Set<Shift> getShifts() {
+        return shifts;
+    }
+
+    public Set<Event> getEventsStartingAtThisTime() {
+        return eventsStartingAtThisTime;
+    }
+
+    public Set<Event> getEventsEndingAtThisTime() {
+        return eventsEndingAtThisTime;
+    }
 }

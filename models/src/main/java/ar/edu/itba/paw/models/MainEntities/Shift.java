@@ -17,11 +17,11 @@ public class Shift {
     @ManyToMany(mappedBy = "availableShifts", cascade=CascadeType.ALL)
     private List<Amenity> amenities;
 
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "dayid")
     private Day day;
 
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "starttime")
     private Time startTime;
 
@@ -67,6 +67,9 @@ public class Shift {
     }
 
     public java.sql.Time getEndTime() {
+        if (endTime == null && startTime != null) {
+            endTime = calculateEndTime(startTime);
+        }
         return endTime;
     }
 
