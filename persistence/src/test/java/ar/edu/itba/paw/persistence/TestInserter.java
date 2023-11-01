@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.enums.Language;
-import ar.edu.itba.paw.enums.Professions;
-import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -55,7 +52,6 @@ public class TestInserter {
     private final SimpleJdbcInsert channelMappingInserter;
     private final SimpleJdbcInsert productInserter;
     private final SimpleJdbcInsert departmentInserter;
-    private final SimpleJdbcInsert classificationInserter;
     private final SimpleJdbcInsert inquiryInserter;
     private final SimpleJdbcInsert requestInserter;
 
@@ -145,8 +141,6 @@ public class TestInserter {
         this.inquiryInserter = new SimpleJdbcInsert(dataSource)
                 .usingGeneratedKeyColumns("inquiryid")
                 .withTableName("products_users_inquiries");
-        this.classificationInserter = new SimpleJdbcInsert(dataSource)
-                .withTableName("products_departments");
         this.departmentInserter = new SimpleJdbcInsert(dataSource)
                 .usingGeneratedKeyColumns("departmentid")
                 .withTableName("departments");
@@ -392,7 +386,7 @@ public class TestInserter {
 
     public long createProduct(String name, String description, Float price, boolean used,
                               long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
-                              long sellerId, long buyerId){
+                              long sellerId, Long buyerId, long departmentId){
         Map<String, Object> data = new HashMap<>();
         data.put("name", name);
         data.put("description", description);
@@ -403,13 +397,14 @@ public class TestInserter {
         data.put("tertiarypictureid", tertiaryPictureId);
         data.put("sellerid", sellerId);
         data.put("buyerid", buyerId);
+        data.put("departmentid", departmentId);
 
         return productInserter.executeAndReturnKey(data).longValue();
     }
 
-    public long createDepartment(String department){
+    public long createDepartment(Departments department){
         Map<String, Object> data = new HashMap<>();
-        data.put("department", department);
+        data.put("department", department.name());
         return departmentInserter.executeAndReturnKey(data).longValue();
 
     }
@@ -422,13 +417,6 @@ public class TestInserter {
         data.put("reply", reply);
 
         return inquiryInserter.executeAndReturnKey(data).longValue();
-    }
-
-    public void createClassification(long productId, long departmentId){
-        Map<String, Object> data = new HashMap<>();
-        data.put("productId", productId);
-        data.put("departmentId", departmentId);
-        classificationInserter.execute(data);
     }
 
     public void createRequest(long productId, long userId){
@@ -580,18 +568,17 @@ public class TestInserter {
     }
 
     public long createProduct(long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
-                              long sellerId, long buyerId){
+                              long sellerId, Long buyerId, long departmentId){
         String name = "Iphone";
         String description = "Super Iphone";
         float price = 1234124f;
         boolean used = true;
 
-        return createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, buyerId);
+        return createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, buyerId, departmentId);
     }
 
     public long createDepartment(){
-        String name = "Super derpa duplex";
-        return createDepartment(name);
+        return createDepartment(Departments.ARTS_CRAFTS);
     }
 
     public long createInquiry(long productId, long userId){

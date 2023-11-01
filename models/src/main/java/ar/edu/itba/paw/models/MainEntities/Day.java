@@ -75,4 +75,10 @@ public class Day {
             return new Day(this);
         }
     }
+
+    public Set<Shift> getShifts() {
+        return shifts;
+    }
+
+
 }

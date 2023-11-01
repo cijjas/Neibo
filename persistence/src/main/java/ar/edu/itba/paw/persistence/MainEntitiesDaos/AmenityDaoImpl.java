@@ -133,7 +133,7 @@ public class AmenityDaoImpl implements AmenityDao {
     // ---------------------------------------------- AMENITY UPDATE ---------------------------------------------------
 
     @Override
-    public void updateAmenity(
+    public Amenity updateAmenity(
             final long id,
             final String name,
             final String description
@@ -145,6 +145,7 @@ public class AmenityDaoImpl implements AmenityDao {
             amenity.setName(name);
             amenity.setDescription(description);
         }
+        return amenity;
     }
 
     // ---------------------------------------------- AMENITY DELETE ---------------------------------------------------

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.persistence.WorkerDao;
 import ar.edu.itba.paw.models.JunctionEntities.WorkerArea;
@@ -148,11 +149,11 @@ public class WorkerDaoImpl implements WorkerDao {
 
     // ---------------------------------------------- WORKERS UPDATE -----------------------------------------------------
     @Override
-    public void updateWorker(long workerId, String phoneNumber, String address, String businessName, long backgroundPictureId, String bio) {
+    public Worker updateWorker(long workerId, String phoneNumber, String address, String businessName, long backgroundPictureId, String bio) {
         LOGGER.debug("Updating Worker {}", workerId);
         Worker worker = em.find(Worker.class, workerId);
         if (worker == null) {
-            throw new InsertionException("Worker not found");
+            throw new NotFoundException("Worker not found");
         }
         worker.setPhoneNumber(phoneNumber);
         worker.setAddress(address);
@@ -160,5 +161,6 @@ public class WorkerDaoImpl implements WorkerDao {
         worker.setBackgroundPictureId(backgroundPictureId);
         worker.setBio(bio);
         em.merge(worker);
+        return worker;
     }
 }

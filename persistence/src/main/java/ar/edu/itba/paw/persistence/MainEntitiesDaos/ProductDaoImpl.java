@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
+import ar.edu.itba.paw.enums.Departments;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.models.MainEntities.*;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
@@ -20,13 +22,14 @@ public class ProductDaoImpl implements ProductDao {
     private EntityManager em;
 
     @Override
-    public Product createProduct(long userId, String name, String description, double price, boolean used, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) {
+    public Product createProduct(long userId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) {
         LOGGER.debug("Inserting Product {}", name);
         Product product = new Product.Builder()
                 .name(name)
                 .description(description)
                 .price(price)
                 .used(used)
+                .department(em.find(Department.class, departmentId))
                 .seller(em.find(User.class, userId))
                 .primaryPicture(em.find(Image.class, primaryPictureId))
                 .secondaryPicture(em.find(Image.class, secondaryPictureId))
@@ -37,7 +40,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public void updateProduct(long productId, String name, String description, double price, boolean used, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) {
+    public Product updateProduct(long productId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) {
         LOGGER.debug("Updating Product {}", productId);
 
         Product product = em.find(Product.class, productId);
@@ -46,10 +49,13 @@ public class ProductDaoImpl implements ProductDao {
             product.setDescription(description);
             product.setPrice(price);
             product.setUsed(used);
+            product.setDepartment(em.find(Department.class, departmentId));
             product.setPrimaryPicture(em.find(Image.class, primaryPictureId));
             product.setSecondaryPicture(em.find(Image.class, secondaryPictureId));
             product.setTertiaryPicture(em.find(Image.class, tertiaryPictureId));
         }
+
+        return product;
     }
 
     @Override
@@ -68,42 +74,47 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> getProductsByCriteria(long neighborhoodId, List<String> departments, int page, int size) {
-        LOGGER.debug("Selecting Products from neighborhood {}, with tags {}", neighborhoodId, departments);
-        if(page != 0) {
-            TypedQuery<Product> query = em.createQuery("SELECT DISTINCT p FROM Product p WHERE p.seller.neighborhood = :neighborhoodId AND p.departments IN (:departments)", Product.class)
+    public List<Product> getProductsByCriteria(long neighborhoodId, Departments department, int page, int size) {
+        LOGGER.debug("Selecting Products from neighborhood {}, with department {}", neighborhoodId, department);
+        TypedQuery<Product> query;
+        if(department != Departments.NONE) {
+            query = em.createQuery("SELECT DISTINCT p FROM Product p WHERE p.seller.neighborhood.neighborhoodId = :neighborhoodId AND p.department.department = (:department)", Product.class)
                     .setParameter("neighborhoodId", neighborhoodId)
-                    .setParameter("departments", departments)
-                    .setFirstResult((page - 1) * size)
-                    .setMaxResults(size);
-            return query.getResultList();
+                    .setParameter("department", department);
+        } else {
+            query = em.createQuery("SELECT DISTINCT p FROM Product p WHERE p.seller.neighborhood.neighborhoodId = :neighborhoodId", Product.class)
+                    .setParameter("neighborhoodId", neighborhoodId);
         }
-        TypedQuery<Product> query = em.createQuery("SELECT DISTINCT p FROM Product p WHERE p.seller.neighborhood = :neighborhoodId AND p.departments IN (:departments)", Product.class)
-                .setParameter("neighborhoodId", neighborhoodId)
-                .setParameter("departments", departments);
+
+        if(page != 0) {
+            query.setFirstResult((page - 1) * size).setMaxResults(size);
+        }
+
         return query.getResultList();
     }
 
     @Override
-    public int getProductsCountByCriteria(long neighborhoodId, List<String> departments) {
-        LOGGER.debug("Selecting Products Count from neighborhood {}, with tags {}", neighborhoodId, departments);
-        TypedQuery<Integer> count = em.createQuery("SELECT COUNT( DISTINCT p) FROM Product p WHERE p.seller.neighborhood = :neighborhoodId AND p.departments IN (:departments)", Integer.class)
+    public int getProductsCountByCriteria(long neighborhoodId, Departments department) {
+        LOGGER.debug("Selecting Products Count from neighborhood {}, with tags {}", neighborhoodId, department);
+        TypedQuery<Integer> count = em.createQuery("SELECT COUNT( DISTINCT p) FROM Product p WHERE p.seller.neighborhood = :neighborhoodId AND p.department.department = (:department)", Integer.class)
                 .setParameter("neighborhoodId", neighborhoodId)
-                .setParameter("departments", departments);
+                .setParameter("department", department);
         return count.getSingleResult();
     }
 
     @Override
     public List<Product> getProductsSelling(long userId) {
         LOGGER.debug("Selecting Selling Products from User {}", userId);
-        TypedQuery<Product> query = em.createQuery("SELECT p FROM User.productsSelling p WHERE p.buyer IS NULL", Product.class);
+        TypedQuery<Product> query = em.createQuery("SELECT p FROM Product p WHERE p.buyer IS NULL AND p.seller.userId = :userId", Product.class);
+        query.setParameter("userId", userId);
         return query.getResultList();
     }
 
     @Override
     public List<Product> getProductsSold(long userId) {
         LOGGER.debug("Selecting Sold Products from User {}", userId);
-        TypedQuery<Product> query = em.createQuery("SELECT p FROM User.productsSelling p WHERE p.buyer IS NOT NULL", Product.class);
+        TypedQuery<Product> query = em.createQuery("SELECT p FROM Product p WHERE p.buyer IS NOT NULL AND p.seller.userId = :userId", Product.class);
+        query.setParameter("userId", userId);
         return query.getResultList();
     }
 

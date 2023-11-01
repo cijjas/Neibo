@@ -24,7 +24,9 @@ public enum Departments {
     ARTS_CRAFTS,
     TRAVEL_LUGGAGE,
     MUSIC_INSTRUMENTS,
-    ELECTRONICS_ACCESSORIES;
+    ELECTRONICS_ACCESSORIES,
+    OTHER,
+    NONE;
 
 
     public static final List<Pair<Integer, String>> DEPARTMENT_PAIRS = Arrays.stream(values())

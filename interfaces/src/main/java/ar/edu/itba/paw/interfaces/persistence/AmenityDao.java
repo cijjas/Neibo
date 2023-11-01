@@ -21,7 +21,7 @@ public interface AmenityDao {
 
     // --------------------------------------------- AMENITIES UPDATE --------------------------------------------------
 
-    void updateAmenity(final long id, final String name, final String description);
+    Amenity updateAmenity(final long id, final String name, final String description);
 
     // --------------------------------------------- AMENITIES DELETE --------------------------------------------------
 

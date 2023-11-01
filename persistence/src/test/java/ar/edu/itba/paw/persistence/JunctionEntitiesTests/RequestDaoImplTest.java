@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
+import ar.edu.itba.paw.enums.Departments;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.JunctionEntities.Request;
 import ar.edu.itba.paw.persistence.JunctionDaos.RequestDaoImpl;
@@ -57,7 +58,8 @@ public class RequestDaoImplTest {
         long uKey1 = testInserter.createUser(MAIL1, nhKey);
         long uKey2 = testInserter.createUser(MAIL2, nhKey);
         long uKey3 = testInserter.createUser(MAIL3, nhKey);
-        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2);
+        long dKey1 = testInserter.createDepartment(Departments.ELECTRONICS);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
 
         // Exercise
         Request request = requestDao.createRequest(uKey3, pKey);
