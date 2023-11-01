@@ -345,6 +345,20 @@ p {
     gap: 1rem;
 }
 
+.f-r-e-c {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    gap: 1rem;
+}
+.f-r-c-e {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: end;
+    gap: 1rem;
+}
 .f-r-s-c {
     display: flex;
     flex-direction: row;

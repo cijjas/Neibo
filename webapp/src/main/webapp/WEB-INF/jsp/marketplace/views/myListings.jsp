@@ -21,7 +21,6 @@
 </head>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" scope="page" />
 <c:set var="channel" value="${channel}" scope="page" />
-
 <body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
 <div class="container">
@@ -32,6 +31,7 @@
 
         <div id="center-grid" class="column-center pl-3 ">
             <%@ include file="/WEB-INF/jsp/marketplace/components/upperMarketplaceButtons.jsp" %>
+
             <div class="row m-0 product-grid-row">
                 <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
                 <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
@@ -39,14 +39,7 @@
                 <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
                 <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
                 <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
+
             </div>
 
 

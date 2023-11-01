@@ -43,7 +43,8 @@
     </div>
 
 
-    <div class="f-c-c-s g-0 w-100  h-100">
+
+        <div class="f-c-c-s g-0 w-100  h-100">
         <div class="header w-100" >
             <div class="img-product placeholder-glow">
                 <img
@@ -66,7 +67,7 @@
             </div>
 
             <div class="container p-0 " style="height: 50%">
-                <div class="f-c-c-c w-100 h-100">
+                <div class="f-c-c-c w-100 h-100 g-0">
                     <div class="row w-100" >
                         <div class="col-7  font-weight-bold " >
                             <div class="f-r-c-c g-0">
@@ -86,6 +87,9 @@
                             See
                             <i class="fa-solid fa-share"></i>
                         </a>
+                    </div>
+                    <div class="row  pl-2 pr-2" style="max-width: 100%">
+                        <a class="tag-option marketplace-tag">Electrodomésticos, aires acondicionados y desfazade de ampere</a>
                     </div>
                 </div>
 
