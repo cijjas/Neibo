@@ -42,6 +42,7 @@
                         <jsp:param name="productDecimal" value="${product.priceDecimalString}"/>
                         <jsp:param name="productPrimaryPictureId" value="${product.primaryPicture}"/>
                         <jsp:param name="productId" value="${product.productId}"/>
+                        <jsp:param name="productUsed" value="${product.used}"/>
                     </jsp:include>
                 </c:forEach>
             </div>

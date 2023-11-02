@@ -419,7 +419,7 @@ public class TestInserter {
         return profession.getProfessionId();
     }
 
-    public long createProduct(String name, String description, Float price, boolean used,
+    public long createProduct(String name, String description, Double price, boolean used,
                               long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
                               long sellerId, Long buyerId, long departmentId){
         Product product = new Product.Builder()
@@ -617,7 +617,7 @@ public class TestInserter {
                               long sellerId, Long buyerId, long departmentId){
         String name = "Iphone";
         String description = "Super Iphone";
-        float price = 1234124f;
+        double price = 23432;
         boolean used = true;
 
         return createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, buyerId, departmentId);
