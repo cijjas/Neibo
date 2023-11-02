@@ -2,13 +2,18 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.Departments;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
+import ar.edu.itba.paw.interfaces.services.EmailService;
+import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.ProductService;
+import ar.edu.itba.paw.models.MainEntities.Image;
+import ar.edu.itba.paw.models.MainEntities.Post;
 import ar.edu.itba.paw.models.MainEntities.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,21 +23,33 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageServiceImpl.class);
     private final ProductDao productDao;
+    private final ImageService imageService;
+
 
     @Autowired
-    public ProductServiceImpl(final ProductDao productDao) {
+    public ProductServiceImpl(final ProductDao productDao, final ImageService imageService) {
         this.productDao = productDao;
+        this.imageService = imageService;
     }
     @Override
-    public Product createProduct(long userId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) {
+    public Product createProduct(long userId, String name, String description, double price, boolean used, long departmentId, MultipartFile primaryPictureFile, MultipartFile secondaryPictureFile, MultipartFile tertiaryPictureFile) {
         LOGGER.info("User {} Creating Product {}", userId, name);
-        return productDao.createProduct(userId, name, description, price, used, departmentId, primaryPictureId, secondaryPictureId, tertiaryPictureId);
+
+        return productDao.createProduct(userId, name, description, price, used, departmentId, getImageId(primaryPictureFile), getImageId(secondaryPictureFile), getImageId(tertiaryPictureFile));
+    }
+
+    private Long getImageId(MultipartFile imageFile) {
+        Image i = null;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            i = imageService.storeImage(imageFile);
+        }
+        return i == null ? 0 : i.getImageId();
     }
 
     @Override
-    public void updateProduct(long productId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) {
+    public void updateProduct(long productId, String name, String description, double price, boolean used, long departmentId, MultipartFile primaryPictureFile, MultipartFile secondaryPictureFile, MultipartFile tertiaryPictureFile) {
         LOGGER.info("Updating Product {}", productId);
-        productDao.updateProduct(productId, name, description, price, used, departmentId, primaryPictureId, secondaryPictureId, tertiaryPictureId);
+        productDao.updateProduct(productId, name, description, price, used, departmentId, getImageId(primaryPictureFile), getImageId(secondaryPictureFile), getImageId(tertiaryPictureFile));
     }
 
     @Override

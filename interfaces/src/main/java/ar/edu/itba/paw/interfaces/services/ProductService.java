@@ -2,14 +2,15 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.enums.Departments;
 import ar.edu.itba.paw.models.MainEntities.Product;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
-    Product createProduct(long userId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId);
+    Product createProduct(long userId, String name, String description, double price, boolean used, long departmentId, MultipartFile primaryPictureFile, MultipartFile secondaryPictureFile, MultipartFile tertiaryPictureFile);
 
-    void updateProduct(long productId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) ;
+    void updateProduct(long productId, String name, String description, double price, boolean used, long departmentId, MultipartFile primaryPictureFile, MultipartFile secondaryPictureFile, MultipartFile tertiaryPictureFile) ;
 
     boolean deleteProduct(final long productId);
 
