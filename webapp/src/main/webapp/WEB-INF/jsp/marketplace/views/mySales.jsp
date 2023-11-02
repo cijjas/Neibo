@@ -21,7 +21,6 @@
 </head>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" scope="page" />
 <c:set var="channel" value="${channel}" scope="page" />
-
 <body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
 <div class="container">
@@ -32,19 +31,9 @@
 
         <div id="center-grid" class="column-center pl-3 ">
             <%@ include file="/WEB-INF/jsp/marketplace/components/upperMarketplaceButtons.jsp" %>
+
             <div class="row m-0 product-grid-row">
-                <c:forEach var="product" items="${productList}">
-                    ${product.department}
-                    <jsp:include page="/WEB-INF/jsp/marketplace/components/productCard.jsp">
-                        <jsp:param name="productTitle" value="${product.name}"/>
-                        <jsp:param name="productDescription" value="${product.description}"/>
-                        <jsp:param name="productDepartment" value="${product.department}"/>
-                        <jsp:param name="productPrice" value="${product.priceIntegerString}"/>
-                        <jsp:param name="productDecimal" value="${product.priceDecimalString}"/>
-                        <jsp:param name="productPrimaryPictureId" value="${product.primaryPicture}"/>
-                        <jsp:param name="productId" value="${product.productId}"/>
-                    </jsp:include>
-                </c:forEach>
+
             </div>
 
 

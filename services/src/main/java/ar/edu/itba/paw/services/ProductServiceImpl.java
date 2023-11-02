@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.enums.Departments;
+import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
@@ -32,10 +32,10 @@ public class ProductServiceImpl implements ProductService {
         this.imageService = imageService;
     }
     @Override
-    public Product createProduct(long userId, String name, String description, double price, boolean used, long departmentId, MultipartFile primaryPictureFile, MultipartFile secondaryPictureFile, MultipartFile tertiaryPictureFile) {
+    public Product createProduct(long userId, String name, String description, String price, boolean used, long departmentId, MultipartFile primaryPictureFile, MultipartFile secondaryPictureFile, MultipartFile tertiaryPictureFile) {
         LOGGER.info("User {} Creating Product {}", userId, name);
-
-        return productDao.createProduct(userId, name, description, price, used, departmentId, getImageId(primaryPictureFile), getImageId(secondaryPictureFile), getImageId(tertiaryPictureFile));
+        double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
+        return productDao.createProduct(userId, name, description, priceDouble, used, departmentId, getImageId(primaryPictureFile), getImageId(secondaryPictureFile), getImageId(tertiaryPictureFile));
     }
 
     private Long getImageId(MultipartFile imageFile) {
@@ -47,9 +47,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateProduct(long productId, String name, String description, double price, boolean used, long departmentId, MultipartFile primaryPictureFile, MultipartFile secondaryPictureFile, MultipartFile tertiaryPictureFile) {
+    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile primaryPictureFile, MultipartFile secondaryPictureFile, MultipartFile tertiaryPictureFile) {
         LOGGER.info("Updating Product {}", productId);
-        productDao.updateProduct(productId, name, description, price, used, departmentId, getImageId(primaryPictureFile), getImageId(secondaryPictureFile), getImageId(tertiaryPictureFile));
+        double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
+        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, getImageId(primaryPictureFile), getImageId(secondaryPictureFile), getImageId(tertiaryPictureFile));
     }
 
     @Override
@@ -65,13 +66,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductsByCriteria(long neighborhoodId, Departments department, int page, int size) {
+    public List<Product> getProductsByCriteria(long neighborhoodId, Department department, int page, int size) {
         LOGGER.info("Selecting Products by neighborhood {} and departments {}", neighborhoodId, department);
         return productDao.getProductsByCriteria(neighborhoodId, department, page, size);
     }
 
     @Override
-    public int getProductsCountByCriteria(long neighborhoodId, Departments department) {
+    public int getProductsCountByCriteria(long neighborhoodId, Department department) {
         LOGGER.info("Counting Products by neighborhood {} and departments {}", neighborhoodId, department);
         return productDao.getProductsCountByCriteria(neighborhoodId, department);
     }
