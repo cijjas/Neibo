@@ -45,6 +45,8 @@ public interface UserService {
 
     public void toggleLanguage(long id);
 
+    void changeNeighborhood(long userId, long neighborhoodId);
+
     void updateLanguage(final long id, final Language language);
 
     void resetPreferenceValues(final long id);
