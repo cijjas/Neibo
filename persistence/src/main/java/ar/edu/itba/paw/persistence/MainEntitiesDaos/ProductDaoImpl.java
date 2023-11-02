@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.enums.Department;
+import ar.edu.itba.paw.enums.SearchVariant;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.models.MainEntities.*;
 import org.slf4j.Logger;
@@ -127,5 +128,48 @@ public class ProductDaoImpl implements ProductDao {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Product> searchInAllProductsBeingSold(String searchQuery){
+        LOGGER.debug("Searching for products with name containing: {} ", searchQuery);
+        String searchParam = "%" + searchQuery.toLowerCase() + "%";
+
+        // Initialize the SQL query
+        String sql = "SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(:search) AND p.buyer IS NULL";
+
+        TypedQuery<Product> query = em.createQuery(sql, Product.class);
+        query.setParameter("search", searchParam);
+
+        return query.getResultList();
+    }
+
+    public List<Product> searchProductsByName(long userId, String searchQuery, SearchVariant searchVariant) {
+        LOGGER.debug("Searching for products with name containing: {} for user {} with variant {}", searchQuery, userId, searchVariant);
+        String searchParam = "%" + searchQuery.toLowerCase() + "%";
+
+        // Initialize the SQL query
+        String sql = "SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(:search)";
+
+        // Set parameters based on the searchVariant
+        switch (searchVariant) {
+            case BOUGHT:
+                sql += " AND p.buyer.userId = :userId";
+                break;
+            case SOLD:
+                sql += " AND p.seller.userId = :userId AND p.buyer IS NOT NULL";
+                break;
+            case SELLING:
+                sql += " AND p.seller.userId = :userId AND p.buyer IS NULL";
+                break;
+        }
+
+        TypedQuery<Product> query = em.createQuery(sql, Product.class);
+        query.setParameter("search", searchParam);
+
+        // Set userId parameter if needed
+            query.setParameter("userId", userId);
+
+        return query.getResultList();
     }
 }

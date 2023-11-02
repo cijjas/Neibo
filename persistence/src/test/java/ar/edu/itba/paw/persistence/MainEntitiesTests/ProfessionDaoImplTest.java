@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
-import ar.edu.itba.paw.enums.Departments;
 import ar.edu.itba.paw.enums.Professions;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.MainEntities.Channel;

@@ -19,7 +19,7 @@ public class Day {
     @OneToMany(mappedBy = "day", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Shift> shifts = new HashSet<>();
 
-    public Day(){}
+    Day(){}
 
     private Day(Builder builder) {
         this.dayId = builder.dayId;

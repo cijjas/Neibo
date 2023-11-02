@@ -25,4 +25,12 @@ public interface ProductService {
     List<Product> getProductsSold(long userId);
 
     boolean markAsBought(long buyerId, long productId);
+
+    List<Product> searchInProductsBought(long userId, String searchQuery);
+
+    List<Product> searchInProductsSold(long userId, String searchQuery);
+
+    List<Product> searchInProductsSelling(long userId, String searchQuery);
+
+    List<Product> searchInProductsBeingSold(String searchQuery);
 }

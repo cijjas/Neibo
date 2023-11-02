@@ -623,6 +623,15 @@ public class TestInserter {
         return createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, buyerId, departmentId);
     }
 
+    public long createProduct(String name, long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
+                              long sellerId, Long buyerId, long departmentId){
+        String description = "Super Iphone";
+        double price = 23432;
+        boolean used = true;
+
+        return createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, buyerId, departmentId);
+    }
+
     public long createDepartment(){
         return createDepartment(ar.edu.itba.paw.enums.Department.ARTS_CRAFTS);
     }

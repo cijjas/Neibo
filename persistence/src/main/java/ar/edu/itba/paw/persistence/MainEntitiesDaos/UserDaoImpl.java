@@ -164,7 +164,7 @@ public class UserDaoImpl implements UserDao {
     // ---------------------------------------------- USERS UPDATE -----------------------------------------------------
 
     @Override
-    public void setUserValues(
+    public User setUserValues(
             final long id,
             final String password,
             final String name,
@@ -189,5 +189,6 @@ public class UserDaoImpl implements UserDao {
             user.setIdentification(identification);
             user.setNeighborhood(em.find(Neighborhood.class, neighborhoodId));
         }
+        return user;
     }
 }
