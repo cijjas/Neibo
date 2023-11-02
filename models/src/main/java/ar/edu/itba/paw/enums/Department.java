@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public enum Departments {
+public enum Department {
     ELECTRONICS,
     APPLIANCES,
     HOME_FURNITURE,
@@ -24,7 +24,7 @@ public enum Departments {
     ARTS_CRAFTS,
     TRAVEL_LUGGAGE,
     MUSIC_INSTRUMENTS,
-    ELECTRONICS_ACCESSORIES,
+    TECHNOLOGY,
     OTHER,
     NONE;
 
@@ -35,8 +35,21 @@ public enum Departments {
 
     public static List<String> getDepartmentsList() {
         return Arrays.stream(values())
-                .map(department -> department.toString().toLowerCase())
+                .map(Department::name)
                 .collect(Collectors.toList());
+    }
+
+    public static List<Pair<Integer, String>> getDepartments() {
+        return Arrays.stream(values())
+                .map(department -> new Pair<>(department.getId(), department.name()))
+                .collect(Collectors.toList());
+    }
+
+    public static Department fromId(int id) {
+        return Arrays.stream(values())
+                .filter(department -> department.getId() == id)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

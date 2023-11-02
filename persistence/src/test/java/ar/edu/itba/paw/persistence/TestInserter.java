@@ -402,7 +402,7 @@ public class TestInserter {
         return productInserter.executeAndReturnKey(data).longValue();
     }
 
-    public long createDepartment(Departments department){
+    public long createDepartment(Department department){
         Map<String, Object> data = new HashMap<>();
         data.put("department", department.name());
         return departmentInserter.executeAndReturnKey(data).longValue();
@@ -578,7 +578,7 @@ public class TestInserter {
     }
 
     public long createDepartment(){
-        return createDepartment(Departments.ARTS_CRAFTS);
+        return createDepartment(Department.ARTS_CRAFTS);
     }
 
     public long createInquiry(long productId, long userId){

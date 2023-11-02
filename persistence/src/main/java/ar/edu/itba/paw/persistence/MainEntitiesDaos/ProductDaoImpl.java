@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
-import ar.edu.itba.paw.enums.Departments;
+import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.models.MainEntities.*;
 import org.slf4j.Logger;
@@ -12,7 +12,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
@@ -29,7 +28,7 @@ public class ProductDaoImpl implements ProductDao {
                 .description(description)
                 .price(price)
                 .used(used)
-                .department(em.find(Department.class, departmentId))
+                .department(em.find(ar.edu.itba.paw.models.MainEntities.Department.class, departmentId))
                 .seller(em.find(User.class, userId))
                 .primaryPicture(em.find(Image.class, primaryPictureId))
                 .secondaryPicture(em.find(Image.class, secondaryPictureId))
@@ -49,7 +48,7 @@ public class ProductDaoImpl implements ProductDao {
             product.setDescription(description);
             product.setPrice(price);
             product.setUsed(used);
-            product.setDepartment(em.find(Department.class, departmentId));
+            product.setDepartment(em.find(ar.edu.itba.paw.models.MainEntities.Department.class, departmentId));
             product.setPrimaryPicture(em.find(Image.class, primaryPictureId));
             product.setSecondaryPicture(em.find(Image.class, secondaryPictureId));
             product.setTertiaryPicture(em.find(Image.class, tertiaryPictureId));
@@ -74,10 +73,10 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> getProductsByCriteria(long neighborhoodId, Departments department, int page, int size) {
+    public List<Product> getProductsByCriteria(long neighborhoodId, Department department, int page, int size) {
         LOGGER.debug("Selecting Products from neighborhood {}, with department {}", neighborhoodId, department);
         TypedQuery<Product> query;
-        if(department != Departments.NONE) {
+        if(department != Department.NONE) {
             query = em.createQuery("SELECT DISTINCT p FROM Product p WHERE p.seller.neighborhood.neighborhoodId = :neighborhoodId AND p.department.department = (:department)", Product.class)
                     .setParameter("neighborhoodId", neighborhoodId)
                     .setParameter("department", department);
@@ -94,7 +93,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public int getProductsCountByCriteria(long neighborhoodId, Departments department) {
+    public int getProductsCountByCriteria(long neighborhoodId, Department department) {
         LOGGER.debug("Selecting Products Count from neighborhood {}, with tags {}", neighborhoodId, department);
         TypedQuery<Integer> count = em.createQuery("SELECT COUNT( DISTINCT p) FROM Product p WHERE p.seller.neighborhood = :neighborhoodId AND p.department.department = (:department)", Integer.class)
                 .setParameter("neighborhoodId", neighborhoodId)

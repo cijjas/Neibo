@@ -39,11 +39,12 @@ public class Product {
     @JoinColumn(name = "sellerId", referencedColumnName = "userId")
     private User seller;
 
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "buyerId", referencedColumnName = "userId")
     private User buyer;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "departmentId", referencedColumnName = "departmentId")
     private Department department;
 
@@ -56,6 +57,12 @@ public class Product {
     @JoinTable(name = "users_products_requests", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> requesters;
 
+
+    @Transient
+    private String priceIntegerString;
+
+    @Transient
+    private String priceDecimalString;
 
     public Product() {
         // Default constructor
@@ -95,6 +102,21 @@ public class Product {
         return price;
     }
 
+
+    public String getPriceIntegerString() {
+        if(priceIntegerString == null){
+            this.priceIntegerString = "$" +String.format("%,.0f", this.price).replace(".0", "");
+        }
+        return priceIntegerString;
+    }
+    public String getPriceDecimalString() {
+        if(priceDecimalString == null){
+            this.priceDecimalString = String.valueOf(this.price).split("\\.")[1];
+            if(this.priceDecimalString.length() == 1)
+                this.priceDecimalString += "0";
+        }
+        return priceDecimalString;
+    }
     public void setPrice(double price) {
         this.price = price;
     }
@@ -181,6 +203,18 @@ public class Product {
 
     public Department getDepartment() {
         return department;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId=" + productId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", used=" + used +
+                ", department=" + department +
+                '}';
     }
 
     public void setDepartment(Department department) {

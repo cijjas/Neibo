@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.enums.Departments;
+import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.models.MainEntities.Product;
@@ -24,9 +24,10 @@ public class ProductServiceImpl implements ProductService {
         this.productDao = productDao;
     }
     @Override
-    public Product createProduct(long userId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) {
+    public Product createProduct(long userId, String name, String description, String price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) {
         LOGGER.info("User {} Creating Product {}", userId, name);
-        return productDao.createProduct(userId, name, description, price, used, departmentId, primaryPictureId, secondaryPictureId, tertiaryPictureId);
+        double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
+        return productDao.createProduct(userId, name, description, priceDouble, used, departmentId, primaryPictureId, secondaryPictureId, tertiaryPictureId);
     }
 
     @Override
@@ -48,13 +49,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductsByCriteria(long neighborhoodId, Departments department, int page, int size) {
+    public List<Product> getProductsByCriteria(long neighborhoodId, Department department, int page, int size) {
         LOGGER.info("Selecting Products by neighborhood {} and departments {}", neighborhoodId, department);
         return productDao.getProductsByCriteria(neighborhoodId, department, page, size);
     }
 
     @Override
-    public int getProductsCountByCriteria(long neighborhoodId, Departments department) {
+    public int getProductsCountByCriteria(long neighborhoodId, Department department) {
         LOGGER.info("Counting Products by neighborhood {} and departments {}", neighborhoodId, department);
         return productDao.getProductsCountByCriteria(neighborhoodId, department);
     }

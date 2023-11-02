@@ -1,9 +1,8 @@
 package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
-import ar.edu.itba.paw.enums.Departments;
+import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.JunctionEntities.Inquiry;
-import ar.edu.itba.paw.persistence.JunctionDaos.ChannelMappingDaoImpl;
 import ar.edu.itba.paw.persistence.JunctionDaos.InquiryDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -60,7 +59,7 @@ public class InquiryDaoImplTest {
         long uKey1 = testInserter.createUser(MAIL1, nhKey);
         long uKey2 = testInserter.createUser(MAIL2, nhKey);
         long uKey3 = testInserter.createUser(MAIL3, nhKey);
-        long dKey1 = testInserter.createDepartment(Departments.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
 
         // Exercise
@@ -81,7 +80,7 @@ public class InquiryDaoImplTest {
         long uKey1 = testInserter.createUser(MAIL1, nhKey);
         long uKey2 = testInserter.createUser(MAIL2, nhKey);
         long uKey3 = testInserter.createUser(MAIL3, nhKey);
-        long dKey1 = testInserter.createDepartment(Departments.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
         long iqKey = testInserter.createInquiry(pKey, uKey3);
 
@@ -100,7 +99,7 @@ public class InquiryDaoImplTest {
         long uKey1 = testInserter.createUser(MAIL1, nhKey);
         long uKey2 = testInserter.createUser(MAIL2, nhKey);
         long uKey3 = testInserter.createUser(MAIL3, nhKey);
-        long dKey1 = testInserter.createDepartment(Departments.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
         long iqKey = testInserter.createInquiry(pKey, uKey3);
 

@@ -39,27 +39,40 @@
                 <div class="f-c-c-c">
                     <div class="f-r-c-c">
                     <span class="font-size-24">
-                    Create listing
+                    <spring:message code="Create.listing"/>
                     </span>
                     </div>
                     <div class="divider w-75 mb-3"></div>
                 </div>
 
 
-                <form:form name="marketplaceForm" id="marketplaceForm" method="post" action="${contextPath}/marketplace/create-listing" enctype="multipart/form-data">
+                <form:form modelAttribute="listingForm" name="listingForm" id="listingForm" method="post" action="${contextPath}/marketplace/create-listing" enctype="multipart/form-data">
+                    <form:errors cssClass="error" element="p"/>
                     <div class="f-r-c-c w-100">
                         <div class="f-c-c-c w-75">
-                            <%--TITLE--%>
                             <div class="w-100 f-r-c-c">
+                                <%--TITLE--%>
                                 <div class="w-75">
-                                    <label for="title-field"></label>
-                                    <input type="text" class="cool-input marketplace-input font-weight-bold" name="title-field" id="title-field" placeholder="Title">
+                                    <form:input
+                                            path="title"
+                                            type="text"
+                                            class="cool-input marketplace-input font-weight-bold"
+                                            name="title-field"
+                                            id="title-field"
+                                            placeholder="Title"/>
                                 </div>
 
                                     <%--PRICE--%>
                                 <div class="w-25">
-                                    <label for="currency-field"></label>
-                                    <input type="text" class="cool-input marketplace-input font-weight-bold font-size-14" name="currency-field" id="currency-field" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" value="" data-type="currency" placeholder="$1,000.00">
+                                    <form:input
+                                            path="price"
+                                            type="text"
+                                            class="cool-input marketplace-input font-weight-bold font-size-14"
+                                            name="currency-field"
+                                            id="currency-field"
+                                            pattern=""
+                                            data-type="currency"
+                                            placeholder="$1,000.00"/>
                                 </div>
                             </div>
 
@@ -88,33 +101,18 @@
 
 
                             <%--Description--%>
-                            <label>
-                                <textarea  class="cool-input marketplace-input" rows="5" placeholder="Description"></textarea>
-                            </label>
+                            <form:textarea
+                                    path="description"
+                                    class="cool-input marketplace-input"
+                                    rows="5"
+                                    placeholder="Description"/>
 
                             <%--Department--%>
                             <label for="department"></label>
                             <select class="cool-input marketplace-input font-weight-bold font-size-12" name="department" id="department">
-                                <option value="ELECTRONICS"><spring:message code="ELECTRONICS"/></option>
-                                <option value="APPLIANCES"><spring:message code="APPLIANCES"/></option>
-                                <option value="HOME_FURNITURE"><spring:message code="HOME_FURNITURE"/></option>
-                                <option value="CLOTHING_FASHION"><spring:message code="CLOTHING_FASHION"/></option>
-                                <option value="HEALTH_BEAUTY"><spring:message code="HEALTH_BEAUTY"/></option>
-                                <option value="SPORTS_OUTDOORS"><spring:message code="SPORTS_OUTDOORS"/></option>
-                                <option value="BOOKS_MEDIA"><spring:message code="BOOKS_MEDIA"/></option>
-                                <option value="TOYS_GAMES"><spring:message code="TOYS_GAMES"/></option>
-                                <option value="JEWELRY_ACCESSORIES"><spring:message code="JEWELRY_ACCESSORIES"/></option>
-                                <option value="AUTOMOTIVE"><spring:message code="AUTOMOTIVE"/></option>
-                                <option value="GROCERIES_FOOD"><spring:message code="GROCERIES_FOOD"/></option>
-                                <option value="PETS_SUPPLIES"><spring:message code="PETS_SUPPLIES"/></option>
-                                <option value="HOME_IMPROVEMENT"><spring:message code="HOME_IMPROVEMENT"/></option>
-                                <option value="GARDEN_OUTDOOR"><spring:message code="GARDEN_OUTDOOR"/></option>
-                                <option value="OFFICE_SUPPLIES"><spring:message code="OFFICE_SUPPLIES"/></option>
-                                <option value="BABY_KIDS"><spring:message code="BABY_KIDS"/></option>
-                                <option value="ARTS_CRAFTS"><spring:message code="ARTS_CRAFTS"/></option>
-                                <option value="TRAVEL_LUGGAGE"><spring:message code="TRAVEL_LUGGAGE"/></option>
-                                <option value="MUSIC_INSTRUMENTS"><spring:message code="MUSIC_INSTRUMENTS"/></option>
-                                <option value="TECHNOLOGY"><spring:message code="TECHNOLOGY"/></option>
+                                <c:forEach items="${departmentList}" var="department">
+                                    <option value="${department.key}"><spring:message code="${department.value}"/></option>
+                                </c:forEach>
                             </select>
 
                             <%--Condition--%>
@@ -122,10 +120,11 @@
                                 <spring:message code="This.item.is"/>
 
                                 <div class="w-25">
-                                    <label for="condition"></label><select class="cool-input marketplace-input font-weight-bold font-size-14" name="condition" id="condition">
-                                    <option value="NEW"><spring:message code="New"/></option>
-                                    <option value="USED"><spring:message code="Used"/></option>
-                                </select>
+                                    <label for="condition"></label>
+                                    <select class="cool-input marketplace-input font-weight-bold font-size-14" name="condition" id="condition">
+                                        <option value="false"><spring:message code="New"/></option>
+                                        <option value="true"><spring:message code="Used"/></option>
+                                    </select>
                                 </div>
 
                             </div>
@@ -135,7 +134,7 @@
 
 
                     <div class="f-r-c-c mt-4 ">
-                        <button class="cool-button marketplace-button cool-button p-3  font-size-14 font-weight-bolder" style="width: 200px">
+                        <button class="cool-button marketplace-button cool-button p-3  font-size-14 font-weight-bolder" style="width: 200px" onclick="console.log(document.getElementById('currency-field').value)">
                             <spring:message code="Create.listing"/>
                         </button>
                     </div>
