@@ -4,6 +4,7 @@ import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.models.JunctionEntities.*;
 import ar.edu.itba.paw.models.MainEntities.*;
+import ar.edu.itba.paw.models.MainEntities.Department;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -439,7 +440,7 @@ public class TestInserter {
         return product.getProductId();
     }
 
-    public long createDepartment(Departments departmentType){
+    public long createDepartment(ar.edu.itba.paw.enums.Department departmentType){
         final Department department = new Department.Builder()
                 .department(departmentType)
                 .build();
@@ -623,7 +624,7 @@ public class TestInserter {
     }
 
     public long createDepartment(){
-        return createDepartment(Departments.ARTS_CRAFTS);
+        return createDepartment(ar.edu.itba.paw.enums.Department.ARTS_CRAFTS);
     }
 
     public long createInquiry(long productId, long userId){

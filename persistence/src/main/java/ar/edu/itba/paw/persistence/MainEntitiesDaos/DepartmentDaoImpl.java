@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
-import ar.edu.itba.paw.enums.Departments;
 import ar.edu.itba.paw.interfaces.persistence.DepartmentDao;
 import ar.edu.itba.paw.models.MainEntities.Department;
 import ar.edu.itba.paw.models.MainEntities.Profession;
@@ -20,7 +19,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
     // ---------------------------------------------- DEPARTMENT INSERT ------------------------------------------------
 
     @Override
-    public Department createDepartment(Departments departmentType) {
+    public Department createDepartment(ar.edu.itba.paw.enums.Department departmentType) {
         LOGGER.debug("Inserting Department {}", departmentType);
         final Department department = new Department.Builder()
                 .department(departmentType)

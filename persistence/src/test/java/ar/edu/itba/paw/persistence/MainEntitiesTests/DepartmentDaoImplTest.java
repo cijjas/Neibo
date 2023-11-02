@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
-import ar.edu.itba.paw.enums.Departments;
+
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.DepartmentDao;
 import ar.edu.itba.paw.models.MainEntities.Department;
@@ -50,7 +50,7 @@ public class DepartmentDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Department department = departmentDao.createDepartment(Departments.ELECTRONICS);
+        Department department = departmentDao.createDepartment(ar.edu.itba.paw.enums.Department.ELECTRONICS);
 
         // Validations & Post Conditions
         em.flush();

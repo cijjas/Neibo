@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
-import ar.edu.itba.paw.enums.Departments;
+import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.JunctionEntities.Request;
 import ar.edu.itba.paw.persistence.JunctionDaos.RequestDaoImpl;
@@ -20,8 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-
-import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -58,7 +56,7 @@ public class RequestDaoImplTest {
         long uKey1 = testInserter.createUser(MAIL1, nhKey);
         long uKey2 = testInserter.createUser(MAIL2, nhKey);
         long uKey3 = testInserter.createUser(MAIL3, nhKey);
-        long dKey1 = testInserter.createDepartment(Departments.ELECTRONICS);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
 
         // Exercise
