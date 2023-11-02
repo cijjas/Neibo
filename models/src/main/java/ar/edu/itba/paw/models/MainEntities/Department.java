@@ -19,9 +19,8 @@ public class Department {
     @Enumerated(EnumType.STRING)
     private Departments department;
 
-    @ManyToMany
-    @JoinTable(name = "products_departments", joinColumns = @JoinColumn(name = "departmentid"), inverseJoinColumns = @JoinColumn(name = "productid"))
-    private List<Product> products;
+    @OneToMany(mappedBy = "department")
+    private Set<Product> products;
 
     public Department(){}
 
@@ -46,11 +45,11 @@ public class Department {
         this.department = department;
     }
 
-    public List<Product> getProducts() {
+    public Set<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(Set<Product> products) {
         this.products = products;
     }
 

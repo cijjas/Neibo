@@ -21,6 +21,6 @@ public interface WorkerDao {
 
     // ---------------------------------------------- WORKERS UPDATE ---------------------------------------------------
 
-    void updateWorker(long userId, String phoneNumber, String address, String businessName, long backgroundPictureId, String bio);
+    Worker updateWorker(long userId, String phoneNumber, String address, String businessName, long backgroundPictureId, String bio);
 
 }

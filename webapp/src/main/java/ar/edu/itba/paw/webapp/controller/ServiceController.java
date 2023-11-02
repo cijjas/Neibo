@@ -236,6 +236,7 @@ public class ServiceController {
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "profession", required = false) List <String> professions
     ) {
+        System.out.println(ws.getTotalWorkerPagesByCriteria(professions, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size));
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
         List<Worker> workerList = ws.getWorkersByCriteria(page, size, professions, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId());
         mav.addObject("workersList", workerList);
@@ -266,7 +267,6 @@ public class ServiceController {
 //            @RequestParam("neighborhoodIds") List<Long> neighborhoodIds
     ) {
         long workerId = sessionUtils.getLoggedUser().getUserId();
-        System.out.println(neighborhoodsForm.getNeighborhoodIds());
         //cambiar addWorkerToNeighborhoods para que acepte string y la parsea
 //        nhws.addWorkerToNeighborhoods(workerId, neighborhoodIds);
         return new ModelAndView("redirect:/services/neighborhoods");

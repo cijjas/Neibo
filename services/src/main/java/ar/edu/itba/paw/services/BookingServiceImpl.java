@@ -63,10 +63,8 @@ public class BookingServiceImpl implements BookingService {
 
         for (Booking booking : userBookings) {
             if (currentGroupedBooking == null || !currentGroupedBooking.canCombine(booking)) {
-                System.out.println("DONT COMBINE");
                 // Create a new GroupedBooking when the current one cannot be continued
                 Time endTime = calculateEndTime(booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval());
-                System.out.println("SUSPOSEDLY NOT NULL END TIME = "+endTime);
                 currentGroupedBooking = new GroupedBooking(
                         booking.getAmenityAvailability().getAmenity().getName(),
                         booking.getBookingDate(),
@@ -77,7 +75,6 @@ public class BookingServiceImpl implements BookingService {
                 currentGroupedBooking.addBookingId(booking.getBookingId());
                 groupedBookings.add(currentGroupedBooking);
             } else {
-                System.out.println("COMBINE");
                 // Use the combine method to update the current GroupedBooking
                 Time endTime = calculateEndTime(booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval());
                 currentGroupedBooking.combine(booking);

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.Departments;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.models.MainEntities.Product;
@@ -23,15 +24,15 @@ public class ProductServiceImpl implements ProductService {
         this.productDao = productDao;
     }
     @Override
-    public Product createProduct(long userId, String name, String description, double price, boolean used, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) {
+    public Product createProduct(long userId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) {
         LOGGER.info("User {} Creating Product {}", userId, name);
-        return productDao.createProduct(userId, name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId);
+        return productDao.createProduct(userId, name, description, price, used, departmentId, primaryPictureId, secondaryPictureId, tertiaryPictureId);
     }
 
     @Override
-    public void updateProduct(long productId, String name, String description, double price, boolean used, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) {
+    public void updateProduct(long productId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) {
         LOGGER.info("Updating Product {}", productId);
-        productDao.updateProduct(productId, name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId);
+        productDao.updateProduct(productId, name, description, price, used, departmentId, primaryPictureId, secondaryPictureId, tertiaryPictureId);
     }
 
     @Override
@@ -47,15 +48,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductsByCriteria(long neighborhoodId, List<String> departments, int page, int size) {
-        LOGGER.info("Selecting Products by neighborhood {} and departments {}", neighborhoodId, departments);
-        return productDao.getProductsByCriteria(neighborhoodId, departments, page, size);
+    public List<Product> getProductsByCriteria(long neighborhoodId, Departments department, int page, int size) {
+        LOGGER.info("Selecting Products by neighborhood {} and departments {}", neighborhoodId, department);
+        return productDao.getProductsByCriteria(neighborhoodId, department, page, size);
     }
 
     @Override
-    public int getProductsCountByCriteria(long neighborhoodId, List<String> departments) {
-        LOGGER.info("Counting Products by neighborhood {} and departments {}", neighborhoodId, departments);
-        return productDao.getProductsCountByCriteria(neighborhoodId, departments);
+    public int getProductsCountByCriteria(long neighborhoodId, Departments department) {
+        LOGGER.info("Counting Products by neighborhood {} and departments {}", neighborhoodId, department);
+        return productDao.getProductsCountByCriteria(neighborhoodId, department);
     }
 
     @Override

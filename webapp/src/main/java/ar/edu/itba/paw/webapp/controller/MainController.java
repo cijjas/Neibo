@@ -168,7 +168,6 @@ public class MainController {
     public String updateDarkModePreference() {
         sessionUtils.clearLoggedUser();
         sessionUtils.getLoggedUser();
-        System.out.println("Toggle Dark Mode");
         us.toggleDarkMode(sessionUtils.getLoggedUser().getUserId());
         return "redirect:/profile";
     }

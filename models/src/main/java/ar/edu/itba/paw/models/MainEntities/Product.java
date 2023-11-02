@@ -43,6 +43,10 @@ public class Product {
     @JoinColumn(name = "buyerId", referencedColumnName = "userId")
     private User buyer;
 
+    @ManyToOne
+    @JoinColumn(name = "departmentId", referencedColumnName = "departmentId")
+    private Department department;
+
     //junction tables:
     @ManyToMany
     @JoinTable(name = "users_products_inquiries", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
@@ -52,9 +56,6 @@ public class Product {
     @JoinTable(name = "users_products_requests", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> requesters;
 
-    @ManyToMany
-    @JoinTable(name = "products_departments", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "departmentid"))
-    private Set<Department> departments;
 
     public Product() {
         // Default constructor
@@ -67,6 +68,7 @@ public class Product {
         this.price = builder.price;
         this.used = builder.used;
         this.seller = builder.seller;
+        this.department = builder.department;
     }
 
     public Long getProductId() {
@@ -165,12 +167,24 @@ public class Product {
         this.requesters = requesters;
     }
 
-    public Set<Department> getDepartments() {
-        return departments;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
-    public void setDepartments(Set<Department> departments) {
-        this.departments = departments;
+    public Boolean getUsed() {
+        return used;
+    }
+
+    public void setUsed(Boolean used) {
+        this.used = used;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 
     public static class Builder {
@@ -183,6 +197,7 @@ public class Product {
         private Image primaryPicture;
         private Image secondaryPicture;
         private Image tertiaryPicture;
+        private Department department;
 
         public Product.Builder productId(Long productId) {
             this.productId = productId;
@@ -226,6 +241,11 @@ public class Product {
 
         public Product.Builder tertiaryPicture(Image tertiaryPicture) {
             this.tertiaryPicture = tertiaryPicture;
+            return this;
+        }
+
+        public Product.Builder department(Department department) {
+            this.department = department;
             return this;
         }
 

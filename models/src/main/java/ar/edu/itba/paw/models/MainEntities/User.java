@@ -381,7 +381,52 @@ public class User {
     public void setReviewsGiven(Set<Worker> reviewsGiven) {
         this.reviewsGiven = reviewsGiven;
     }
-//    public Worker getWorker() {
+
+    public Set<Worker> getReviewsGiven() {
+        return reviewsGiven;
+    }
+
+    public List<Product> getProductsSelling() {
+        return productsSelling;
+    }
+
+    public void setProductsSelling(List<Product> productsSelling) {
+        this.productsSelling = productsSelling;
+    }
+
+    public List<Product> getProductsBought() {
+        return productsBought;
+    }
+
+    public void setProductsBought(List<Product> productsBought) {
+        this.productsBought = productsBought;
+    }
+
+    public Set<Product> getRequestedProducts() {
+        return requestedProducts;
+    }
+
+    public void setRequestedProducts(Set<Product> requestedProducts) {
+        this.requestedProducts = requestedProducts;
+    }
+
+    public Set<Product> getInquiredProducts() {
+        return inquiredProducts;
+    }
+
+    public void setInquiredProducts(Set<Product> inquiredProducts) {
+        this.inquiredProducts = inquiredProducts;
+    }
+
+    public Set<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(Set<Event> events) {
+        this.events = events;
+    }
+
+    //    public Worker getWorker() {
 //        return worker;
 //    }
 //
