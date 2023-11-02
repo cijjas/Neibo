@@ -2445,6 +2445,24 @@ input[type=time] {
     & .header{
         height: 60%;
 
+        & .used-tag{
+            font-size: 11px;
+            z-index: 2;
+            position: absolute;
+            top: 5px;
+            left:5px;
+            border-radius: 5px;
+            padding: 5px;
+            color: var(--always-background);
+            &.used{
+                background-color: var(--used);
+            }
+            &.new{
+                background-color: var(--new);
+
+            }
+        }
+
         & .img-product{
             width: 100%;
             height: 100%;

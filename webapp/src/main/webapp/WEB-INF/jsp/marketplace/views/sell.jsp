@@ -109,11 +109,11 @@
 
                             <%--Department--%>
                             <label for="department"></label>
-                            <select class="cool-input marketplace-input font-weight-bold font-size-12" name="department" id="department">
+                            <form:select path="departmentId" class="cool-input marketplace-input font-weight-bold font-size-12" name="department" id="department">
                                 <c:forEach items="${departmentList}" var="department">
                                     <option value="${department.key}"><spring:message code="${department.value}"/></option>
                                 </c:forEach>
-                            </select>
+                            </form:select>
 
                             <%--Condition--%>
                             <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
@@ -121,10 +121,10 @@
 
                                 <div class="w-25">
                                     <label for="condition"></label>
-                                    <select class="cool-input marketplace-input font-weight-bold font-size-14" name="condition" id="condition">
-                                        <option value="false"><spring:message code="New"/></option>
-                                        <option value="true"><spring:message code="Used"/></option>
-                                    </select>
+                                    <form:select path="used" class="cool-input marketplace-input font-weight-bold font-size-14" name="condition" id="condition">
+                                        <option value="${false}"><spring:message code="New"/></option>
+                                        <option value="${true}"><spring:message code="Used"/></option>
+                                    </form:select>
                                 </div>
 
                             </div>

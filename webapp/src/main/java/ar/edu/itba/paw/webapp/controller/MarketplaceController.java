@@ -92,8 +92,6 @@ public class MarketplaceController {
     ) {
         LOGGER.info("User arriving at '/marketplace'");
         List<Product> productList = prs.getProductsByCriteria(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.NONE , 1,10);
-        System.out.println(productList.size());
-        System.out.println(productList);
         ModelAndView mav = new ModelAndView("marketplace/views/marketplace");
         mav.addObject("productList", productList);
         mav.addObject("channel", "Marketplace");
@@ -130,6 +128,8 @@ public class MarketplaceController {
         LOGGER.info("User arriving at '/marketplace/my-listings'");
 
         ModelAndView mav = new ModelAndView("marketplace/views/myListings");
+        List<Product> myProductList =  prs.getProductsSelling(sessionUtils.getLoggedUser().getUserId());
+        mav.addObject("myProductList", myProductList);
         mav.addObject("channel", "MyListings");
         mav.addObject("loggedUser", sessionUtils.getLoggedUser());
         return mav;
@@ -156,13 +156,13 @@ public class MarketplaceController {
     ) {
         LOGGER.info("User arriving at '/marketplace/create-publishing'");
         if(bindingResult.hasErrors()){
-            LOGGER.info("Error in form");
+            LOGGER.info("Error in form 'listingForm'");
             return createListingForm(listingForm);
         }
         User user = sessionUtils.getLoggedUser();
-        prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), true, Department.ELECTRONICS.getId() , 1L, 1L, 1L);
-        ListingForm newListingForm = new ListingForm();
-        return createListingForm(newListingForm);
+        System.out.println(listingForm.getDepartmentId());
+        prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , 1L, 1L, 1L);
+        return new ModelAndView("redirect:/marketplace/my-listings");
     }
 
 

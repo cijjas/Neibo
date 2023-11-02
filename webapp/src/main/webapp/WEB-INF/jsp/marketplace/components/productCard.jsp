@@ -12,11 +12,20 @@
             <c:out value="${param.productDescription}"/>
         </div>
     </div>
-
-
-
         <div class="f-c-c-s g-0 w-100  h-100">
         <div class="header w-100" >
+                <c:choose>
+                    <c:when test="${param.productUsed}">
+                    <div class="used-tag used">
+                        <spring:message code="Used"/>
+                    </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="used-tag new">
+                            <spring:message code="New"/>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             <div class="img-product placeholder-glow">
                 <img
                         id="product-image-${param.productId}"

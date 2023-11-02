@@ -24,7 +24,7 @@ public class ListingForm {
     @Size(max = 2000)
     private String description;
 
-    private Integer department;
+    private Integer departmentId;
 
     private Boolean used;
 
@@ -60,8 +60,8 @@ public class ListingForm {
         return description;
     }
 
-    public Integer getDepartment() {
-        return department;
+    public Integer getDepartmentId() {
+        return departmentId;
     }
 
     public void setTitle(String title) {
@@ -88,8 +88,8 @@ public class ListingForm {
         this.description = description;
     }
 
-    public void setDepartment(Integer department) {
-        this.department = department;
+    public void setDepartmentId(Integer department) {
+        this.departmentId = department;
     }
 
 
@@ -103,7 +103,7 @@ public class ListingForm {
                 ", secondFile=" + secondFile +
                 ", thirdFile=" + thirdFile +
                 ", description='" + description + '\'' +
-                ", department=" + department +
+                ", department=" + departmentId +
                 '}';
     }
 }
