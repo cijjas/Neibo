@@ -20,31 +20,8 @@ import java.util.Optional;
 @Repository
 public class ChannelDaoImpl implements ChannelDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelDaoImpl.class);
-
     @PersistenceContext
     private EntityManager em;
-
-    private static final RowMapper<Channel> ROW_MAPPER = (rs, rowNum) ->
-            new Channel.Builder()
-                    .channelId(rs.getLong("channelid"))
-                    .channel(rs.getString("channel"))
-                    .build();
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-    private final String CHANNELS_JOIN_NEIGHBORHOODS =
-            "SELECT distinct c.* \n" +
-                    "FROM channels c " +
-                    "INNER JOIN neighborhoods_channels nc ON c.channelid = nc.channelid " +
-                    "INNER JOIN neighborhoods n ON n.neighborhoodid = nc.neighborhoodid ";
-
-    @Autowired
-    public ChannelDaoImpl(final DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .usingGeneratedKeyColumns("channelid")
-                .withTableName("channels");
-    }
-
 
     // -------------------------------------------- CHANNELS INSERT ----------------------------------------------------
 
@@ -57,7 +34,6 @@ public class ChannelDaoImpl implements ChannelDao {
         em.persist(channel);
         return channel;
     }
-
 
     // -------------------------------------------- CHANNELS SELECT ----------------------------------------------------
 
@@ -81,5 +57,4 @@ public class ChannelDaoImpl implements ChannelDao {
         query.setParameter("neighborhoodId", neighborhoodId);
         return query.getResultList();
     }
-
 }

@@ -37,6 +37,11 @@ public class EventDaoImplTest {
     private static final Date EVENT_DATE = Date.valueOf("2022-12-12");
     private static final Time EVENT_START_TIME = Time.valueOf("22:00:00");
     private static final Time EVENT_END_TIME = Time.valueOf("23:00:00");
+    public static final Date DATE = Date.valueOf("2024-3-14");
+    public static final Date START_DATE = Date.valueOf("2024-3-10");
+    public static final Date INVALID_START_DATE = Date.valueOf("2094-3-10");
+    public static final Date END_DATE = Date.valueOf("2024-3-24");
+    public static final Date INVALID_END_DATE = Date.valueOf("2094-3-24");
 
     @Autowired
     private DataSource ds;
@@ -202,6 +207,90 @@ public class EventDaoImplTest {
 
         // Validations & Post Conditions
         assertEquals(0, events.size());
+    }
+
+    @Test
+    public void testGetEventsByNeighborhoodIdAndDateRange(){
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long tKey1 = testInserter.createTime(EVENT_START_TIME);
+        long tKey2 = testInserter.createTime(EVENT_END_TIME);
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
+        long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
+
+        // Exercise
+        List<Event> events = eventDao.getEventsByNeighborhoodIdAndDateRange(nhKey, START_DATE, END_DATE);
+
+        // Validations & Post Conditions
+        assertEquals(3, events.size());
+    }
+
+    @Test
+    public void testGetEventsByInvalidNeighborhoodIdAndDateRange(){
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long tKey1 = testInserter.createTime(EVENT_START_TIME);
+        long tKey2 = testInserter.createTime(EVENT_END_TIME);
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
+        long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
+
+        // Exercise
+        List<Event> events = eventDao.getEventsByNeighborhoodIdAndDateRange(-4, START_DATE, END_DATE);
+
+        // Validations & Post Conditions
+        assertTrue(events.isEmpty());
+    }
+
+    @Test
+    public void testGetEventsByNeighborhoodIdAndInvalidDateRange(){
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long tKey1 = testInserter.createTime(EVENT_START_TIME);
+        long tKey2 = testInserter.createTime(EVENT_END_TIME);
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
+        long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
+
+        // Exercise
+        List<Event> events = eventDao.getEventsByNeighborhoodIdAndDateRange(nhKey, INVALID_START_DATE, INVALID_END_DATE);
+
+        // Validations & Post Conditions
+        assertTrue(events.isEmpty());
+    }
+
+    @Test
+    public void testIsUserSubscribedToEvent(){
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long tKey1 = testInserter.createTime(EVENT_START_TIME);
+        long tKey2 = testInserter.createTime(EVENT_END_TIME);
+        long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createAttendance(uKey, eKey);
+
+        // Exercise
+        boolean isSubscribed = eventDao.isUserSubscribedToEvent(uKey, eKey);
+
+        // Validations & Post Conditions
+        assertTrue(isSubscribed);
+    }
+
+    @Test
+    public void testIsUserNotSubscribedToEvent(){
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long tKey1 = testInserter.createTime(EVENT_START_TIME);
+        long tKey2 = testInserter.createTime(EVENT_END_TIME);
+        long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
+        long uKey = testInserter.createUser(nhKey);
+
+        // Exercise
+        boolean isSubscribed = eventDao.isUserSubscribedToEvent(uKey, eKey);
+
+        // Validations & Post Conditions
+        assertFalse(isSubscribed);
     }
 
     @Test

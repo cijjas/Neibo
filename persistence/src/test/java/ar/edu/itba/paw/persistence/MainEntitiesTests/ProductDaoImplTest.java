@@ -154,6 +154,21 @@ public class ProductDaoImplTest {
     }
 
     @Test
+    public void testGetNoProductsByNeighborhoodByDepartment() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+        long uKey2 = testInserter.createUser(MAIL2, nhKey);
+
+        // Exercise
+        List<Product> products = productDao.getProductsByCriteria(nhKey, ar.edu.itba.paw.enums.Department.APPLIANCES, 1, 10);
+
+        // Validations & Post Conditions
+        assertTrue(products.isEmpty());
+    }
+
+    @Test
     public void testGetProductsByNeighborhoodByInvalidDepartment() {
         // Pre Conditions
         long iKey = testInserter.createImage();

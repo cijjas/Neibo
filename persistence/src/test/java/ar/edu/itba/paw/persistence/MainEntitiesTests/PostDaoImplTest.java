@@ -57,8 +57,6 @@ public class PostDaoImplTest {
     private static final String TAG_NAME_2 = "Tag2";
     private static final int BASE_PAGE = 1;
     private static final int BASE_PAGE_SIZE = 10;
-    private static final boolean NOT_HOT = false;
-    private static final boolean HOT = true;
     @Autowired
     private DataSource ds;
     @Autowired
@@ -212,10 +210,7 @@ public class PostDaoImplTest {
         assertEquals(1, retrievedPosts.size());
     }
 
-
     // ------------------ !!! HOT & TRENDING POSTS CANT BE TESTED AS HSQL DOES NOT ACCEPT INTERVAL !!! -----------------
-    // ------ !!! SAME ISSUE WITH THE COUNT FUNCTION, BUT IT IS JUST AN EXTENSION OF THE GETPOSTSBYCRITERIA() !!! ------
-
 
     private void populatePosts() {
         /*

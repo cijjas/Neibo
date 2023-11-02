@@ -24,8 +24,7 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
@@ -83,5 +82,17 @@ public class ProfessionWorkerDaoImplTest {
 
         // Validations & Post Conditions
         assertFalse(profession.isEmpty());
+    }
+
+    @Test
+    public void testNoGetWorkerProfession() {
+        // Pre Conditions
+//        long pKey = testInserter.createProfession(PROFESSION_NAME);
+
+        // Exercise
+        List<Profession> profession = professionWorkerDao.getWorkerProfessions(1);
+
+        // Validations & Post Conditions
+        assertTrue(profession.isEmpty());
     }
 }

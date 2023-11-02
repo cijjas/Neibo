@@ -32,46 +32,8 @@ public class UserDaoImpl implements UserDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-    private final String USERS = "SELECT u.* FROM users u ";
-    private final String USERS_JOIN_POSTS_USERS_AND_POSTS =
-            "SELECT u.*\n" +
-                    "FROM posts p " +
-                    "INNER JOIN posts_users_subscriptions ON p.postid = posts_users_subscriptions.postid " +
-                    "INNER JOIN users u ON posts_users_subscriptions.userid = u.userid ";
-    private final String EVENTS_JOIN_USERS =
-            "SELECT u.* \n" +
-                    "FROM events e " +
-                    "INNER JOIN events_users ON e.eventid = events_users.eventid " +
-                    "INNER JOIN users u ON events_users.userid = u.userid ";
-    private final RowMapper<User> ROW_MAPPER = (rs, rowNum) -> {
-        return new User.Builder()
-                .userId(rs.getLong("userid"))
-                .mail(rs.getString("mail"))
-                .name(rs.getString("name"))
-                .surname(rs.getString("surname"))
-                .password(rs.getString("password"))
-                .creationDate(rs.getDate("creationdate"))
-                .darkMode(rs.getBoolean("darkmode"))
-                .language(rs.getString("language") != null ? Language.valueOf(rs.getString("language")) : null)
-                .role(rs.getString("role") != null ? UserRole.valueOf(rs.getString("role")) : null)
-                .build();
-    };
-    private BookingDao bookingDao;
 
     // ---------------------------------------------- USERS INSERT -----------------------------------------------------
-
-    @Autowired
-    public UserDaoImpl(final DataSource ds, final BookingDao bookingDao) {
-        this.bookingDao = bookingDao;
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .usingGeneratedKeyColumns("userid")
-                .withTableName("users");
-    }
-
-    // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
     @Override
     public User createUser(final String mail, final String password, final String name, final String surname,
@@ -90,6 +52,8 @@ public class UserDaoImpl implements UserDao {
         em.persist(user);
         return user;
     }
+
+    // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
     @Override
     public Optional<User> findUserById(final long userId) {
@@ -177,13 +141,12 @@ public class UserDaoImpl implements UserDao {
     public List<User> getEventUsers(long eventId) {
         LOGGER.debug("Selecting Users that will attend Event {}", eventId);
         String hql = "SELECT u FROM User u " +
-                "JOIN u.events e " +
+                "JOIN u.eventsSubscribed e " +
                 "WHERE e.eventId = :eventId";
         return em.createQuery(hql, User.class)
                 .setParameter("eventId", eventId)
                 .getResultList();
     }
-
 
     @Override
     public boolean isAttending(long eventId, long userId) {
@@ -197,9 +160,6 @@ public class UserDaoImpl implements UserDao {
 
         return result.intValue() == 1;
     }
-
-
-
 
     // ---------------------------------------------- USERS UPDATE -----------------------------------------------------
 
@@ -217,7 +177,6 @@ public class UserDaoImpl implements UserDao {
             final long neighborhoodId
     ) {
         LOGGER.debug("Updating User {}", id);
-
         User user = em.find(User.class, id);
         if (user != null) {
             user.setPassword(password);
@@ -231,5 +190,4 @@ public class UserDaoImpl implements UserDao {
             user.setNeighborhood(em.find(Neighborhood.class, neighborhoodId));
         }
     }
-
 }

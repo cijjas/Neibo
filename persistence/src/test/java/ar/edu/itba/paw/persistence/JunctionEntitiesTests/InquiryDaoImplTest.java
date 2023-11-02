@@ -92,6 +92,17 @@ public class InquiryDaoImplTest {
     }
 
     @Test
+    public void testFindInquiryByInvalidId() {
+        // Pre Conditions
+
+        // Exercise
+        Optional<Inquiry> maybeInquiry = inquiryDao.findInquiryById(1);
+
+        // Validations & Post Conditions
+        assertFalse(maybeInquiry.isPresent());
+    }
+
+    @Test
     public void testReplyInquiry() {
         // Pre Conditions
         long iKey = testInserter.createImage();
@@ -110,5 +121,16 @@ public class InquiryDaoImplTest {
         assertNotNull(inquiry);
         assertEquals(inquiry.getReply(), REPLY);
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_inquiries.name()));
+    }
+
+    @Test
+    public void testReplyInvalidInquiry() {
+        // Pre Conditions
+
+        // Exercise
+        Inquiry inquiry = inquiryDao.replyInquiry(1, REPLY);
+
+        // Validations & Post Conditions
+        assertNull(inquiry);
     }
 }

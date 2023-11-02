@@ -35,9 +35,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public Review getReview(long reviewId) {
+    public Optional<Review> getReview(long reviewId) {
         LOGGER.info("Finding Review with id {}", reviewId);
-        return reviewDao.getReview(reviewId);
+        return reviewDao.findReviewById(reviewId);
     }
 
     @Override

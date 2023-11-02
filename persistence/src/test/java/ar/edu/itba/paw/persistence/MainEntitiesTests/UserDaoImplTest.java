@@ -4,6 +4,7 @@ import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.persistence.*;
+import ar.edu.itba.paw.models.MainEntities.Event;
 import ar.edu.itba.paw.models.MainEntities.User;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -139,33 +140,21 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void testSetUserValues() {
+    public void testIsAttending() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
         uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
-        long iKey = testInserter.createImage();
+        long tKey1 = testInserter.createTime();
+        long tKey2 = testInserter.createTime();
+        long eKey = testInserter.createEvent(nhKey1, tKey1, tKey2);
+        testInserter.createAttendance(uKey1, eKey);
 
         // Exercise
-        userDao.setUserValues(uKey1, PASSWORD, NAME, SURNAME, LANGUAGE, DARK_MODE, iKey, ROLE, ID, nhKey1);
-
-        // Validations
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users.name()));
-    }
-
-    /*@Test
-    public void testIsAttending() {
-        // Pre Conditions
-        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
-        long eId = testInsertionUtils.createEvent(nhKey1);
-        testInsertionUtils.createAttendance(uKey1, nhKey1);
-
-        // Exercise
-        boolean isAttending = userDao.isAttending(eId, uKey1);
+        boolean isAttending = userDao.isAttending(eKey, uKey1);
 
         // Validations
         assertTrue(isAttending);
-    }*/
+    }
 
     @Test
     public void testIsNotAttending() {
@@ -183,35 +172,52 @@ public class UserDaoImplTest {
         assertFalse(isAttending);
     }
 
-    /*@Test
-    public void testGetEventUsers(){
+    @Test
+    public void testGetEventsByUser() {
         // Pre Conditions
-        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
-        long eId = testInsertionUtils.createEvent(nhKey1);
-        testInsertionUtils.createAttendance(uKey1, nhKey1);
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
+        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
+        long tKey1 = testInserter.createTime();
+        long tKey2 = testInserter.createTime();
+        long eKey = testInserter.createEvent(nhKey1, tKey1, tKey2);
+        testInserter.createAttendance(uKey1, eKey);
 
         // Exercise
-        List<User> attendees = userDao.getEventUsers(eId);
+        List<User> events = userDao.getEventUsers(eKey);
 
         // Validations
-        assertFalse(attendees.isEmpty());
-        assertEquals(1, attendees.size());
-    }*/
+        assertEquals(1, events.size());
+    }
 
-    /*@Test
-    public void testGetNoEventUsers(){
+    @Test
+    public void testGetNoEventsByUser() {
         // Pre Conditions
-        nhKey1 = testInsertionUtils.createNeighborhood(NH_NAME_1);
-        uKey1 = testInsertionUtils.createUser(USER_MAIL_1, nhKey1);
-        long eId = testInsertionUtils.createEvent(nhKey1);
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
+        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
+        long tKey1 = testInserter.createTime();
+        long tKey2 = testInserter.createTime();
+        long eKey = testInserter.createEvent(nhKey1, tKey1, tKey2);
 
         // Exercise
-        List<User> attendees = userDao.getEventUsers(eId);
+        List<User> events = userDao.getEventUsers(eKey);
 
         // Validations
-        assertTrue(attendees.isEmpty());
-    }*/
+        assertTrue(events.isEmpty());
+    }
+
+    @Test
+    public void testSetUserValues() {
+        // Pre Conditions
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
+        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
+        long iKey = testInserter.createImage();
+
+        // Exercise
+        userDao.setUserValues(uKey1, PASSWORD, NAME, SURNAME, LANGUAGE, DARK_MODE, iKey, ROLE, ID, nhKey1);
+
+        // Validations
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users.name()));
+    }
 
     @Test
     public void testGetNeighborsSubscribedByPostId() {

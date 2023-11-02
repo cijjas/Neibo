@@ -76,4 +76,15 @@ public class ImageDaoImplTest {
         // Validations & Post Conditions
         assertTrue(maybeImage.isPresent());
     }
+
+    @Test
+    public void testFindInvalidImage() {
+        // Pre Conditions
+
+        // Exercise
+        Optional<Image> maybeImage = imageDao.getImage(1);
+
+        // Validations & Post Conditions
+        assertFalse(maybeImage.isPresent());
+    }
 }

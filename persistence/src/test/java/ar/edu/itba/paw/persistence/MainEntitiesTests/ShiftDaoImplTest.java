@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
+import ar.edu.itba.paw.models.JunctionEntities.Availability;
 import ar.edu.itba.paw.models.MainEntities.Shift;
 import ar.edu.itba.paw.models.MainEntities.Time;
 import ar.edu.itba.paw.persistence.TestInserter;
@@ -34,6 +35,11 @@ import static org.junit.Assert.*;
 public class ShiftDaoImplTest {
 
     private final String DATE = "2022-12-12";
+    private final String AMENITY_NAME_1 = "Amenity Name";
+    private final String AMENITY_DESCRIPTION_1 = "Amenity Description";
+
+    private static final int BASE_PAGE = 1;
+    private static final int BASE_PAGE_SIZE = 10;
     @Autowired
     private DataSource ds;
     @Autowired
@@ -127,6 +133,7 @@ public class ShiftDaoImplTest {
         List<Shift> shifts = shiftDao.getShifts(aKey, dKey, Date.valueOf(DATE));
 
         // Validations & Post Conditions
+        System.out.println(shifts);
         assertEquals(1, shifts.size());
     }
 
@@ -136,6 +143,39 @@ public class ShiftDaoImplTest {
 
         // Exercise
         List<Shift> shifts = shiftDao.getShifts(1, 1, Date.valueOf(DATE));
+
+        // Validations & Post Conditions
+        assertEquals(0, shifts.size());
+    }
+
+    @Test
+    public void testGetAmenityShifts() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey1 = testInserter.createAmenity(AMENITY_NAME_1, AMENITY_DESCRIPTION_1, nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey,tKey);
+        testInserter.createAvailability(aKey1, sKey);
+
+        // Exercise
+        List<Shift> shifts = shiftDao.getAmenityShifts(aKey1);
+
+        // Validations & Post Conditions
+        assertEquals(1, shifts.size());
+    }
+
+    @Test
+    public void testGetNoAmenityShifts() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey1 = testInserter.createAmenity(AMENITY_NAME_1, AMENITY_DESCRIPTION_1, nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey,tKey);
+
+        // Exercise
+        List<Shift> shifts = shiftDao.getAmenityShifts(aKey1);
 
         // Validations & Post Conditions
         assertEquals(0, shifts.size());

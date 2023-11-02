@@ -166,7 +166,6 @@ public class WorkerDaoImplTest {
         assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
     }
 
-
     @Test
     public void testGetWorkersByNeighborhoodAndSize() {
         // Pre Conditions
@@ -211,11 +210,6 @@ public class WorkerDaoImplTest {
         uKey3 = testInserter.createUser(WORKER_MAIL_3, nhKey2);
         uKey4 = testInserter.createUser(WORKER_MAIL_4, nhKey2);
 
-        testInserter.createWorkerArea(uKey1, nhKey1);
-        testInserter.createWorkerArea(uKey2, nhKey1);
-        testInserter.createWorkerArea(uKey3, nhKey2);
-        testInserter.createWorkerArea(uKey4, nhKey2);
-
         pKey1 = testInserter.createProfession(Professions.PLUMBER);
         pKey2 = testInserter.createProfession(Professions.CARPENTER);
 
@@ -227,5 +221,10 @@ public class WorkerDaoImplTest {
         testInserter.createWorker(uKey4);
         testInserter.createSpecialization(uKey4, pKey1);
         testInserter.createSpecialization(uKey4, pKey2);
+
+        testInserter.createWorkerArea(uKey1, nhKey1);
+        testInserter.createWorkerArea(uKey2, nhKey1);
+        testInserter.createWorkerArea(uKey3, nhKey2);
+        testInserter.createWorkerArea(uKey4, nhKey2);
     }
 }

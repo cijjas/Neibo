@@ -25,15 +25,6 @@ public class CategorizationDaoImpl implements CategorizationDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(CategorizationDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-
-    @Autowired
-    public CategorizationDaoImpl(final DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName("posts_tags");
-    }
 
     // -------------------------------------------- POSTS_TAGS INSERT --------------------------------------------------
 

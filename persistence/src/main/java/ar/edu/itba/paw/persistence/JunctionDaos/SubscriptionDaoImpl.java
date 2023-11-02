@@ -24,15 +24,6 @@ public class SubscriptionDaoImpl implements SubscriptionDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(SubscriptionDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-
-    @Autowired
-    public SubscriptionDaoImpl(final DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName("posts_users_subscriptions");
-    }
 
     // ---------------------------------------------- POST_USERS_SUBSCRIPTIONS INSERT ----------------------------------
 

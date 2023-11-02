@@ -10,7 +10,7 @@ public interface ReviewDao {
     Review createReview(long workerId, long userId, float rating, String review);
 
     // -------------------------------------------- REVIEWS SELECT -----------------------------------------------------
-    Review getReview(long reviewId);
+    Optional<Review> findReviewById(long reviewId);
 
     List<Review> getReviews(long workerId);
 

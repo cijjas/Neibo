@@ -15,10 +15,11 @@ import java.util.Optional;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(PostDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
+
+    // ------------------------------------------------ PRODUCT INSERT -------------------------------------------------
 
     @Override
     public Product createProduct(long userId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) {

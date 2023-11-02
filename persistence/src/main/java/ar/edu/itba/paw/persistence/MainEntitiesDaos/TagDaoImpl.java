@@ -13,7 +13,6 @@ import java.util.List;
 @Repository
 public class TagDaoImpl implements TagDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(TagDaoImpl.class);
-
     @PersistenceContext
     private EntityManager em;
 
@@ -39,7 +38,6 @@ public class TagDaoImpl implements TagDao {
                 .getResultList();
     }
 
-
     @Override
     public List<Tag> getTags(long neighborhoodId) {
         LOGGER.debug("Selecting Tag List from Neighborhood {}", neighborhoodId);
@@ -52,11 +50,9 @@ public class TagDaoImpl implements TagDao {
                 .getResultList();
     }
 
-
     @Override
     public List<Tag> getAllTags() {
         LOGGER.debug("Selecting Complete Tag List");
         return em.createQuery("SELECT t FROM Tag t", Tag.class).getResultList();
     }
-
 }

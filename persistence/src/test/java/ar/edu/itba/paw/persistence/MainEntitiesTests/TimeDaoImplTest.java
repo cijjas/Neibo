@@ -20,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.Optional;
+import java.util.OptionalLong;
 
 import static org.junit.Assert.*;
 
@@ -29,6 +30,7 @@ import static org.junit.Assert.*;
 @Rollback
 public class TimeDaoImplTest {
 
+    public static final java.sql.Time TIME = new java.sql.Time(System.currentTimeMillis());
     private final java.sql.Time TIME_INTERVAL = new java.sql.Time(System.currentTimeMillis());
     @Autowired
     private DataSource ds;
@@ -76,6 +78,29 @@ public class TimeDaoImplTest {
 
         // Exercise
         Optional<Time> foundTime = timeDao.findTimeById(1);
+
+        // Validations & Post Conditions
+        assertFalse(foundTime.isPresent());
+    }
+
+    @Test
+    public void testFindIdByTime() {
+        // Pre Conditions
+        long timeKey = testInserter.createTime(TIME);
+
+        // Exercise
+        OptionalLong foundTime = timeDao.findIdByTime(TIME);
+
+        // Validations & Post Conditions
+        assertTrue(foundTime.isPresent());
+    }
+
+    @Test
+    public void testFindIdByInvalidTime() {
+        // Pre Conditions
+
+        // Exercise
+        OptionalLong foundTime = timeDao.findIdByTime(TIME);
 
         // Validations & Post Conditions
         assertFalse(foundTime.isPresent());

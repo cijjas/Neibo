@@ -3,8 +3,6 @@ package ar.edu.itba.paw.models.MainEntities;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.models.JunctionEntities.Booking;
-import ar.edu.itba.paw.models.MainEntities.Image;
-import ar.edu.itba.paw.models.MainEntities.Neighborhood;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -97,7 +95,7 @@ public class User {
 
     @ManyToMany
     @JoinTable(name = "events_users", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "eventid"))
-    private Set<Event> events;
+    private Set<Event> eventsSubscribed;
 
 //    @OneToOne
 //    @JoinColumn(name = "workerid", referencedColumnName = "workerid")
@@ -418,12 +416,12 @@ public class User {
         this.inquiredProducts = inquiredProducts;
     }
 
-    public Set<Event> getEvents() {
-        return events;
+    public Set<Event> getEventsSubscribed() {
+        return eventsSubscribed;
     }
 
-    public void setEvents(Set<Event> events) {
-        this.events = events;
+    public void setEventsSubscribed(Set<Event> events) {
+        this.eventsSubscribed = events;
     }
 
     //    public Worker getWorker() {
