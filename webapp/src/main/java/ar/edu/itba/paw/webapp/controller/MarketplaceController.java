@@ -160,8 +160,7 @@ public class MarketplaceController {
             return createListingForm(listingForm);
         }
         User user = sessionUtils.getLoggedUser();
-        System.out.println(listingForm.getDepartmentId());
-        prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , 1L, 1L, 1L);
+        prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , null, null, null);
         return new ModelAndView("redirect:/marketplace/my-listings");
     }
 
