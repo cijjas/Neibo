@@ -36,31 +36,106 @@
 
 
             <div class="cool-static-container w-100">
+                <div class="f-c-c-c">
+                    <div class="f-r-c-c">
+                    <span class="font-size-24">
+                    Create listing
+                    </span>
+                    </div>
+                    <div class="divider w-75 mb-3"></div>
+                </div>
+
+
                 <form:form name="marketplaceForm" id="marketplaceForm" method="post" action="${contextPath}/marketplace/create-listing" enctype="multipart/form-data">
+                    <div class="f-r-c-c w-100">
+                        <div class="f-c-c-c w-75">
+                            <%--TITLE--%>
+                            <div class="w-100 f-r-c-c">
+                                <div class="w-75">
+                                    <label for="title-field"></label>
+                                    <input type="text" class="cool-input marketplace-input font-weight-bold" name="title-field" id="title-field" placeholder="Title">
+                                </div>
 
-                    <div class="f-c-c-c">
-                        <label for="title-field"><spring:message code="Title"/></label>
-                        <input type="text" class="cool-input marketplace-input" name="title-field" id="title-field" placeholder="Title">
-
-                        <label for="currency-field"><spring:message code="Price"/></label>
-                        <input type="text" class="cool-input marketplace-input" name="currency-field" id="currency-field" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" value="" data-type="currency" placeholder="$1,000.00">
-
-
-                        <div class="upload__box">
-                            <div class="upload__btn-box">
-                                <label class="cool-button marketplace-button">
-                                    <span>
-                                        <i class="fa-regular fa-image"></i>
-                                        Upload images
-                                    </span>
-                                    <input type="file" multiple="" accept="image/*" data-max_length="3" class="upload__inputfile">
-                                </label>
+                                    <%--PRICE--%>
+                                <div class="w-25">
+                                    <label for="currency-field"></label>
+                                    <input type="text" class="cool-input marketplace-input font-weight-bold font-size-14" name="currency-field" id="currency-field" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" value="" data-type="currency" placeholder="$1,000.00">
+                                </div>
                             </div>
-                            <div class="upload__img-wrap"></div>
+
+                            <%--Image upload--%>
+                            <div class="w-100 lila-upload-box">
+                                <div class="upload__box w-100">
+                                    <div class="upload__btn-box">
+                                         <input id="image-input-id" type="file" multiple="" accept="image/*" data-max_length="3" class="upload__inputfile" hidden="hidden">
+                                    </div>
+                                    <div class="upload__img-wrap">
+                                        <a id="dummy-upload" class="dummy-upload" onclick="document.getElementById('image-input-id').click();">
+                                            <div class="f-c-c-c w-100 h-100">
+                                                <span>
+                                                     <i class="fa-regular fa-images"></i>
+                                                    <i class="fa fa-plus"></i>
+                                                </span>
+                                                <h3 id="add-photo-text" class="font-weight-bold">
+                                                    <spring:message code="Add.photo"/>
+                                                </h3>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <%--Description--%>
+                            <label>
+                                <textarea  class="cool-input marketplace-input" rows="5" placeholder="Description"></textarea>
+                            </label>
+
+                            <%--Department--%>
+                            <label for="department"></label>
+                            <select class="cool-input marketplace-input font-weight-bold font-size-12" name="department" id="department">
+                                <option value="ELECTRONICS"><spring:message code="ELECTRONICS"/></option>
+                                <option value="APPLIANCES"><spring:message code="APPLIANCES"/></option>
+                                <option value="HOME_FURNITURE"><spring:message code="HOME_FURNITURE"/></option>
+                                <option value="CLOTHING_FASHION"><spring:message code="CLOTHING_FASHION"/></option>
+                                <option value="HEALTH_BEAUTY"><spring:message code="HEALTH_BEAUTY"/></option>
+                                <option value="SPORTS_OUTDOORS"><spring:message code="SPORTS_OUTDOORS"/></option>
+                                <option value="BOOKS_MEDIA"><spring:message code="BOOKS_MEDIA"/></option>
+                                <option value="TOYS_GAMES"><spring:message code="TOYS_GAMES"/></option>
+                                <option value="JEWELRY_ACCESSORIES"><spring:message code="JEWELRY_ACCESSORIES"/></option>
+                                <option value="AUTOMOTIVE"><spring:message code="AUTOMOTIVE"/></option>
+                                <option value="GROCERIES_FOOD"><spring:message code="GROCERIES_FOOD"/></option>
+                                <option value="PETS_SUPPLIES"><spring:message code="PETS_SUPPLIES"/></option>
+                                <option value="HOME_IMPROVEMENT"><spring:message code="HOME_IMPROVEMENT"/></option>
+                                <option value="GARDEN_OUTDOOR"><spring:message code="GARDEN_OUTDOOR"/></option>
+                                <option value="OFFICE_SUPPLIES"><spring:message code="OFFICE_SUPPLIES"/></option>
+                                <option value="BABY_KIDS"><spring:message code="BABY_KIDS"/></option>
+                                <option value="ARTS_CRAFTS"><spring:message code="ARTS_CRAFTS"/></option>
+                                <option value="TRAVEL_LUGGAGE"><spring:message code="TRAVEL_LUGGAGE"/></option>
+                                <option value="MUSIC_INSTRUMENTS"><spring:message code="MUSIC_INSTRUMENTS"/></option>
+                                <option value="TECHNOLOGY"><spring:message code="TECHNOLOGY"/></option>
+                            </select>
+
+                            <%--Condition--%>
+                            <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
+                                <spring:message code="This.item.is"/>
+
+                                <div class="w-25">
+                                    <label for="condition"></label><select class="cool-input marketplace-input font-weight-bold font-size-14" name="condition" id="condition">
+                                    <option value="NEW"><spring:message code="New"/></option>
+                                    <option value="USED"><spring:message code="Used"/></option>
+                                </select>
+                                </div>
+
+                            </div>
+
                         </div>
                     </div>
-                    <div class="f-r-e-c">
-                        <button class="cool-button marketplace-button cool-button   w-25 font-weight-bolder">
+
+
+                    <div class="f-r-c-c mt-4 ">
+                        <button class="cool-button marketplace-button cool-button p-3  font-size-14 font-weight-bolder" style="width: 200px">
                             <spring:message code="Create.listing"/>
                         </button>
                     </div>
@@ -133,6 +208,7 @@
                 document.addEventListener('DOMContentLoaded', function () {
                     ImgUpload();
                 });
+                const uploadButton = document.getElementById('upload-photo');
 
                 function ImgUpload() {
                     let imgWrap = '';
@@ -146,7 +222,6 @@
                             const files = e.target.files;
                             const filesArr = Array.from(files);
                             let iterator = 0;
-
                             filesArr.forEach(function (f) {
                                 if (!f.type.match('image.*')) {
                                     return;
@@ -154,7 +229,16 @@
                                 if (imgArray.length+1 > maxLength) {
                                     return false;
                                 } else {
+                                    const length = imgArray.length+1;
+                                    if(length >= 3){
+                                        const dummyUpload = document.getElementById('dummy-upload');
+                                        dummyUpload.style.display = 'none';
+                                    }
+
                                     imgArray.push(f);
+                                    const addPhotoText = document.getElementById('add-photo-text');
+                                    addPhotoText.innerHTML = 'Add photo (' + length + '/3)';
+
                                     const reader = new FileReader();
                                     reader.onload = function (e) {
                                         const html = "<div class='upload__img-box'><div style='background-image: url(" + e.target.result + ")' data-number='" + document.querySelectorAll('.upload__img-close').length + "' data-file='" + f.name + "' class='img-bg'><div class='upload__img-close'></div></div></div>";
@@ -173,6 +257,15 @@
                             imgArray = imgArray.filter(function (item) {
                                 return item.name !== file;
                             });
+                            const length = imgArray.length+1;
+
+                            const addPhotoText = document.getElementById('add-photo-text');
+                            addPhotoText.innerHTML = 'Add photo (' + imgArray.length + '/3)';
+
+                            if(length <= 3){
+                                const dummyUpload = document.getElementById('dummy-upload');
+                                dummyUpload.style.display = 'block';
+                            }
                             e.target.parentElement.parentElement.remove();
                         }
                     });

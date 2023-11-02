@@ -327,7 +327,7 @@
 
 /*_----------------------------------------------*/
 .post-input {
-< width: 100 %;
+    width: 100%;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
@@ -1421,7 +1421,9 @@ footer div {
         border: 1px solid var(--lighttext);
         border-radius: var(--border-hard);
         transition: all 0.3s ease-in-out;
-
+        &:hover,
+        &:active,
+        &:focus-visible,
         &:hover {
             border: 1px solid var(--old-primary);
             transform: translateY(-4px);
@@ -1437,7 +1439,9 @@ footer div {
         border: 1px solid var(--lighttext);
         border-radius: var(--border-hard);
         transition: all 0.3s ease-in-out;
-
+        &:hover,
+        &:active,
+        &:focus-visible,
         &:hover {
             border: 1px solid var(--primary);
             transform: translateY(-4px);
@@ -1453,7 +1457,9 @@ footer div {
         border: 1px solid var(--lighttext);
         border-radius: var(--border-hard);
         transition: all 0.3s ease-in-out;
-
+        &:hover,
+        &:active,
+        &:focus-visible,
         &:hover {
             border: 1px solid var(--error);
             transform: translateY(-4px);
@@ -1471,7 +1477,9 @@ footer div {
         border-radius: var(--border-hard) 0 0 var(--border-hard) ;
         transition: all 0.3s ease-in-out;
         border-right: transparent;
-
+        &:hover,
+        &:active,
+        &:focus-visible,
         &:hover {
             border: 1px solid var(--lila);
             transform: translateY(-4px);
@@ -1490,7 +1498,12 @@ footer div {
         border: 1px solid var(--lighttext);
         border-radius: var(--border-hard) ;
         transition: all 0.3s ease-in-out;
-
+        &.square{
+            border-radius: var(--border-light);
+        }
+        &:hover,
+        &:active,
+        &:focus-visible,
         &:hover {
             border: 1px solid var(--lila);
             transform: translateY(-4px);
@@ -1564,6 +1577,7 @@ footer div {
 
     &.marketplace-input{
         border: 1px solid var(--lila);
+
         &:active,
         &:hover,
         &:focus-visible {
@@ -2512,14 +2526,33 @@ input[type=time] {
 }
 
 /*-------------------------------------------------------Publishing Sell Creation--------------------------*/
+.lila-upload-box{
+    background-color: var(--darkonbackground);
+    border: 1px dashed var(--lila);
+    border-radius: var(--border-radius);
+}
+
+.dummy-upload{
+    width: 180px;
+    height: 180px;
+    padding: 0 10px;
+    margin-bottom: 12px;
+    border: 1px dashed var(--lila);
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease-in-out;
+    &:hover{
+        box-shadow: 0 0 5px 0 var(--lila);
+        cursor: pointer;
+    }
+}
 
 .upload__box {
-    padding: 40px;
+    padding: 10px;
 }
 
 .upload__inputfile {
-    width: .1px;
-    height: .1px;
+    width: 0;
+    height: 0;
     opacity: 0;
     overflow: hidden;
     position: absolute;
@@ -2599,4 +2632,12 @@ input[type=time] {
     padding-bottom: 100%;
     border-radius: var(--border-radius);
 
+}
+
+
+@media (max-width: 775px) {
+    /* Add a CSS class to hide the icons when the screen width is 775 pixels or more */
+    .hide-text {
+        display: none;
+    }
 }

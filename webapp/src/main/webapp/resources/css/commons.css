@@ -344,6 +344,13 @@ p {
     align-items: center;
     gap: 1rem;
 }
+.f-r-sb-s {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: start;
+    gap: 1rem;
+}
 
 .f-r-e-c {
     display: flex;
@@ -364,6 +371,13 @@ p {
     flex-direction: row;
     justify-content: start;
     align-items: center;
+    gap: 1rem;
+}
+.f-r-s-s {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: start;
     gap: 1rem;
 }
 
@@ -431,18 +445,28 @@ p {
 }
 
 .font-size-12 {
-    font-size: 12px;
+    font-size: 12px !important;
 }
 
 .font-size-16 {
-    font-size: 16px;
+    font-size: 16px !important;
 }
 
+.font-size-14 {
+    font-size: 14px !important;
+}
+
+
+
 .font-size-24 {
-    font-size: 24px;
+    font-size: 24px  !important;
+}
+
+.font-size-30 {
+    font-size: 30px !important;
 }
 .font-size-20 {
-    font-size: 20px;
+    font-size: 20px !important;
 }
 
 .font-weight-bold {
