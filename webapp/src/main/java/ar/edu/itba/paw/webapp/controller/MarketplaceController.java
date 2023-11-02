@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -88,13 +89,14 @@ public class MarketplaceController {
 
     @RequestMapping(value = {"/products", "/"}, method = RequestMethod.GET)
     public ModelAndView marketplaceProducts(
-        @RequestParam(value = "department", required = false) Integer department
+        @RequestParam(value = "department", required = false, defaultValue = "22") Integer department
     ) {
         LOGGER.info("User arriving at '/marketplace'");
-        List<Product> productList = prs.getProductsByCriteria(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.NONE , 1,10);
+        List<Product> productList = prs.getProductsByCriteria(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.fromId(department) , 1,10);
         ModelAndView mav = new ModelAndView("marketplace/views/marketplace");
         mav.addObject("productList", productList);
         mav.addObject("channel", "Marketplace");
+        mav.addObject("departmentList", Department.getDepartments());
         mav.addObject("loggedUser", sessionUtils.getLoggedUser());
         return mav;
     }
@@ -154,13 +156,18 @@ public class MarketplaceController {
         @Valid @ModelAttribute("listingForm") ListingForm listingForm,
         final BindingResult bindingResult
     ) {
-        LOGGER.info("User arriving at '/marketplace/create-publishing'");
+        LOGGER.info("User arriving at '/marketplace/create-publishing' POST");
         if(bindingResult.hasErrors()){
             LOGGER.info("Error in form 'listingForm'");
             return createListingForm(listingForm);
         }
         User user = sessionUtils.getLoggedUser();
-        prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , null, null, null);
+        for(MultipartFile imageFile : listingForm.getImageFiles()){
+            System.out.println("--------------------------------------");
+            System.out.println(imageFile.getOriginalFilename());
+            System.out.println(imageFile.getSize());
+        }
+        prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles());
         return new ModelAndView("redirect:/marketplace/my-listings");
     }
 

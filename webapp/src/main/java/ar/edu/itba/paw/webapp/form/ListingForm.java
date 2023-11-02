@@ -14,11 +14,7 @@ public class ListingForm {
 
     private String price;
 
-    private MultipartFile mainFile;
-
-    private MultipartFile secondFile;
-
-    private MultipartFile thirdFile;
+    private MultipartFile[] imageFiles;
 
     @NotBlank
     @Size(max = 2000)
@@ -44,17 +40,6 @@ public class ListingForm {
         return price;
     }
 
-    public MultipartFile getMainFile() {
-        return mainFile;
-    }
-
-    public MultipartFile getSecondFile() {
-        return secondFile;
-    }
-
-    public MultipartFile getThirdFile() {
-        return thirdFile;
-    }
 
     public String getDescription() {
         return description;
@@ -72,17 +57,6 @@ public class ListingForm {
         this.price = price;
     }
 
-    public void setMainFile(MultipartFile mainFile) {
-        this.mainFile = mainFile;
-    }
-
-    public void setSecondFile(MultipartFile secondFile) {
-        this.secondFile = secondFile;
-    }
-
-    public void setThirdFile(MultipartFile thirdFile) {
-        this.thirdFile = thirdFile;
-    }
 
     public void setDescription(String description) {
         this.description = description;
@@ -92,16 +66,19 @@ public class ListingForm {
         this.departmentId = department;
     }
 
+    public MultipartFile[] getImageFiles() {
+        return imageFiles;
+    }
 
+    public void setImageFiles(MultipartFile[] imageFiles) {
+        this.imageFiles = imageFiles;
+    }
 
     @Override
     public String toString() {
         return "ListingForm{" +
                 "title='" + title + '\'' +
                 ", price='" + price + '\'' +
-                ", mainFile=" + mainFile +
-                ", secondFile=" + secondFile +
-                ", thirdFile=" + thirdFile +
                 ", description='" + description + '\'' +
                 ", department=" + departmentId +
                 '}';
