@@ -26,35 +26,8 @@ public class EventDaoImpl implements EventDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(EventDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
-    private static final RowMapper<Event> ROW_MAPPER = (rs, rowNum) -> new Event.Builder()
-            .eventId(rs.getLong("eventid"))
-            .name(rs.getString("name"))
-            .description(rs.getString("description"))
-            .date(rs.getDate("date"))
-            /*.startTime(rs.getTime("starttime"))
-            .endTime(rs.getTime("endtime"))
-            .neighborhoodId(rs.getLong("neighborhoodid"))*/
-            .build();
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-    private final String EVENTS = "SELECT e.* FROM events e";
-    private final String EVENTS_JOIN_TIMES =
-            "SELECT e.*, t1.timeinterval AS starttime, t2.timeinterval AS endtime\n" +
-                    "FROM events e\n" +
-                    "INNER JOIN times t1 ON e.starttimeid = t1.timeid\n" +
-                    "INNER JOIN times t2 ON e.endtimeid = t2.timeid ";
 
     // ---------------------------------------------- EVENT INSERT -----------------------------------------------------
-
-    @Autowired
-    public EventDaoImpl(final DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .usingGeneratedKeyColumns("eventid")
-                .withTableName("events");
-    }
-
-    // ---------------------------------------------- EVENT SELECT -----------------------------------------------------
 
     @Override
     public Event createEvent(final String name, final String description, final Date date, final long startTimeId, final long endTimeId, final long neighborhoodId) {
@@ -71,6 +44,8 @@ public class EventDaoImpl implements EventDao {
         return event;
     }
 
+    // ---------------------------------------------- EVENT SELECT -----------------------------------------------------
+
     @Override
     public Optional<Event> findEventById(long eventId) {
         LOGGER.debug("Selecting Event with id {}", eventId);
@@ -86,7 +61,6 @@ public class EventDaoImpl implements EventDao {
         query.setParameter("neighborhoodId", neighborhoodId);
         return query.getResultList();
     }
-
 
     @Override
     public List<Event> getEventsByNeighborhoodId(long neighborhoodId) {
@@ -109,7 +83,6 @@ public class EventDaoImpl implements EventDao {
         return query.getResultList();
     }
 
-
     @Override
     public List<Date> getEventDates(long neighborhoodId) {
         LOGGER.debug("Selecting Event Dates from Neighborhood {}", neighborhoodId);
@@ -118,7 +91,6 @@ public class EventDaoImpl implements EventDao {
         query.setParameter("neighborhoodId", neighborhoodId);
         return query.getResultList();
     }
-
 
     @Override
     public boolean isUserSubscribedToEvent(long userId, long eventId) {
@@ -131,7 +103,6 @@ public class EventDaoImpl implements EventDao {
         return count != null && count > 0;
     }
 
-
     // ---------------------------------------------- EVENT DELETE -----------------------------------------------------
 
     @Override
@@ -142,5 +113,6 @@ public class EventDaoImpl implements EventDao {
             em.remove(event);
             return true;
         }
-        return false;    }
+        return false;
+    }
 }

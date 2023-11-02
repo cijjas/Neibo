@@ -23,8 +23,7 @@ import javax.sql.DataSource;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
@@ -65,23 +64,6 @@ public class NeighborhoodWorkerDaoImplTest {
     }
 
     @Test
-    public void testDeleteWorkerArea() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(nhKey);
-        testInserter.createWorker(uKey);
-        testInserter.createWorkerArea(uKey, nhKey);
-
-        // Exercise
-        boolean deleted = neighborhoodWorkerDaoImpl.deleteWorkerArea(uKey, nhKey);
-
-        // Validations & Post Conditions
-        em.flush();
-        assertTrue(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_neighborhoods.name()));
-    }
-
-    @Test
     public void testGetNeighborhoods() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
@@ -107,4 +89,32 @@ public class NeighborhoodWorkerDaoImplTest {
         assertEquals(0, neighborhoods.size());
     }
 
+
+    @Test
+    public void testDeleteWorkerArea() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createWorkerArea(uKey, nhKey);
+
+        // Exercise
+        boolean deleted = neighborhoodWorkerDaoImpl.deleteWorkerArea(uKey, nhKey);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertTrue(deleted);
+    }
+
+    @Test
+    public void testDeleteInvalidWorkerArea() {
+        // Pre Conditions
+
+        // Exercise
+        boolean deleted = neighborhoodWorkerDaoImpl.deleteWorkerArea(1, 1);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
 }

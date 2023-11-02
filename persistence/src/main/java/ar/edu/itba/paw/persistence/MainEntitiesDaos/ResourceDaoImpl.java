@@ -27,29 +27,8 @@ public class ResourceDaoImpl implements ResourceDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
-    private static final RowMapper<Resource> ROW_MAPPER = (rs, rowNum) ->
-            new Resource.Builder()
-                    /*.resourceId(rs.getLong("resourceid"))*/
-                    .title(rs.getString("resourcetitle"))
-                    .description(rs.getString("resourcedescription"))
-                    /*.imageId(rs.getLong("resourceimageId"))
-                    .neighborhoodId(rs.getLong("neighborhoodid"))*/
-                    .build();
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-    private final String RESOURCES = "SELECT rs.* FROM resources rs";
 
     // --------------------------------------------- RESOURCES INSERT --------------------------------------------------
-
-    @Autowired
-    public ResourceDaoImpl(final DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .usingGeneratedKeyColumns("resourceid")
-                .withTableName("resources");
-    }
-
-    // --------------------------------------------- RESOURCES SELECT --------------------------------------------------
 
     @Override
     public Resource createResource(long neighborhoodId, String title, String description, long imageId) {
@@ -63,6 +42,8 @@ public class ResourceDaoImpl implements ResourceDao {
         em.persist(resource);
         return resource;
     }
+
+    // --------------------------------------------- RESOURCES SELECT --------------------------------------------------
 
     public List<Resource> getResources(long neighborhoodId) {
         LOGGER.debug("Selecting Resources from Neighborhood {}", neighborhoodId);

@@ -25,30 +25,11 @@ import java.util.Optional;
 
 @Repository
 public class ImageDaoImpl implements ImageDao {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
-    private static final RowMapper<Image> ROW_MAPPER = (rs, rowNum) ->
-            new Image.Builder()
-                    .imageId(rs.getLong("imageid"))
-                    .image(rs.getBytes("image"))
-                    .build();
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-    private final String IMAGES = "SELECT * FROM images ";
 
     // --------------------------------------------- IMAGES INSERT -----------------------------------------------------
-
-    @Autowired
-    public ImageDaoImpl(final DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .usingGeneratedKeyColumns("imageid")
-                .withTableName("images");
-    }
-
-    // --------------------------------------------- IMAGES SELECT -----------------------------------------------------
 
     @Override
     public Image storeImage(MultipartFile image) {
@@ -61,11 +42,13 @@ public class ImageDaoImpl implements ImageDao {
             throw new InsertionException("An error occurred whilst storing the image");
         }
         Image img = new Image.Builder()
-            .image(imageBytes)
-            .build();
+                .image(imageBytes)
+                .build();
         em.persist(img);
         return img;
     }
+
+    // --------------------------------------------- IMAGES SELECT -----------------------------------------------------
 
     @Override
     public Optional<Image> getImage(long imageId) {

@@ -30,28 +30,11 @@ import java.util.Map;
 @Repository
 public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodWorkerDaoImpl.class);
-
     @PersistenceContext
     private EntityManager em;
-    // --------------------------------------- NIEGHBORHOODWORKERS SELECT ------------------------------------------
-    private static final RowMapper<Neighborhood> ROW_MAPPER = (rs, rowNum) ->
-            new Neighborhood.Builder()
-                    .neighborhoodId(rs.getLong("neighborhoodid"))
-                    .name(rs.getString("neighborhoodname"))
-                    .build();
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-    private final String NEIGHBORHOODS_JOIN_WORKERS_NEIGHBORHOODS =
-            "SELECT * FROM workers_neighborhoods wn JOIN neighborhoods n ON wn.neighborhoodId = n.neighborhoodId";
-
-    @Autowired
-    public NeighborhoodWorkerDaoImpl(final DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName("workers_neighborhoods");
-    }
 
     // ----------------------------------------- NEIGHBORHOOD_WORKERS INSERT -------------------------------------------
+
     @Override
     public WorkerArea createWorkerArea(long workerId, long neighborhoodId) {
         LOGGER.debug("Inserting Worker {} to Neighborhood {}", workerId, neighborhoodId);
@@ -59,6 +42,8 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
         em.persist(workerArea);
         return workerArea;
     }
+
+    // ----------------------------------------- NEIGHBORHOOD_WORKERS SELECT -------------------------------------------
 
     @Override
     public List<Neighborhood> getNeighborhoods(long workerId) {
@@ -69,6 +54,7 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
     }
 
     // ----------------------------------------- NEIGHBORHOOD_WORKERS DELETE -------------------------------------------
+
     @Override
     public boolean deleteWorkerArea(long workerId, long neighborhoodId) {
         LOGGER.debug("Deleting Worker {} from Neighborhood {}", workerId, neighborhoodId);

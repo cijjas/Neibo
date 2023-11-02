@@ -100,7 +100,6 @@ public class ChannelDaoImplTest {
         assertEquals(CHANNEL_NAME_1, ch.get().getChannel());
     }
 
-
     @Test
     public void testFindChannelByInvalidName() {
         // Pre Conditions
@@ -119,8 +118,8 @@ public class ChannelDaoImplTest {
         long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         long chKey2 = testInserter.createChannel(CHANNEL_NAME_2);
         long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
-        testInserter.createNeighborhoodChannelMapping(nhKey1, chKey1);
-        testInserter.createNeighborhoodChannelMapping(nhKey2, chKey2);
+        testInserter.createChannelMapping(nhKey1, chKey1);
+        testInserter.createChannelMapping(nhKey2, chKey2);
 
         // Exercise
         List<Channel> channels = channelDao.getChannels(nhKey1);

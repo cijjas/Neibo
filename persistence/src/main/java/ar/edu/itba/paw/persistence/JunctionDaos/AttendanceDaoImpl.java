@@ -27,15 +27,6 @@ public class AttendanceDaoImpl implements AttendanceDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(AttendanceDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-
-    @Autowired
-    public AttendanceDaoImpl(final DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName(Table.events_users.name());
-    }
 
     // ---------------------------------------------- EVENTS_USERS INSERT ----------------------------------------------
 

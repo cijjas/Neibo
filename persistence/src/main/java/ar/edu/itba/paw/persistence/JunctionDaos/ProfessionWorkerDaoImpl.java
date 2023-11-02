@@ -29,25 +29,11 @@ package ar.edu.itba.paw.persistence.JunctionDaos;
 @Repository
 public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProfessionWorkerDaoImpl.class);
-
     @PersistenceContext
     private EntityManager em;
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-    private final String WORKERS_PROFESSIONS_JOIN_PROFESSIONS =
-            "SELECT profession " +
-                    "FROM workers_professions wp  " +
-                    "JOIN professions p ON wp.professionid = p.professionid ";
-
-
-    @Autowired
-    public ProfessionWorkerDaoImpl(final DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName(Table.workers_professions.name());
-    }
 
     // --------------------------------------- WORKERS_PROFESSIONS INSERT ----------------------------------------------
+
     @Override
     public Specialization createSpecialization(long workerId, long professionId) {
         LOGGER.debug("Inserting Worker Profession");
@@ -57,6 +43,7 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
     }
 
     // --------------------------------------- WORKERS_PROFESSIONS SELECT ----------------------------------------------
+
     @Override
     public List<Profession> getWorkerProfessions(long workerId) {
         LOGGER.debug("Selecting Professions of Worker {}", workerId);

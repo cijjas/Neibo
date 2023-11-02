@@ -17,6 +17,9 @@ public class RequestDaoImpl implements RequestDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(PostDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
+
+    // --------------------------------------- USERS_PRODUCTS_REQUESTS INSERT ------------------------------------------
+
     @Override
     public Request createRequest(long userId, long productId) {
         LOGGER.debug("Inserting Request for product with id {}", productId);

@@ -28,27 +28,8 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(AvailabilityDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
-    private static final RowMapper<Long> ROW_MAPPER = (rs, rowNum) -> {
-        return rs.getLong("amenityavailabilityid");
-    };
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-    private AmenityDao amenityDao;
-    private ShiftDao shiftDao;
 
     // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY INSERT -----------------------------------------
-
-    @Autowired
-    public AvailabilityDaoImpl(final DataSource ds, final AmenityDao amenityDao, final ShiftDao shiftDao) {
-        this.amenityDao = amenityDao;
-        this.shiftDao = shiftDao;
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName(Table.amenities_shifts_availability.name())
-                .usingGeneratedKeyColumns("amenityavailabilityid");
-    }
-
-    // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY SELECT -----------------------------------------
 
     @Override
     public Availability createAvailability(long amenityId, long shiftId) {
@@ -61,6 +42,7 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
         return availability;
     }
 
+    // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY SELECT -----------------------------------------
 
     public OptionalLong findAvailabilityId(long amenityId, long shiftId) {
         LOGGER.debug("Selecting Availability with amenityId {} and shiftId {}", amenityId, shiftId);
@@ -70,8 +52,6 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
         List<Long> resultList = query.getResultList();
         return resultList.isEmpty() ? OptionalLong.empty() : OptionalLong.of(resultList.get(0));
     }
-
-
 
     // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY DELETE -----------------------------------------
 
@@ -84,6 +64,4 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
                 .executeUpdate();
         return deletedCount > 0;
     }
-
-
 }

@@ -61,7 +61,7 @@ public class ChannelMappingDaoImplTest {
         // Pre Conditions
         long chKey = testInserter.createChannel();
         long nhKey = testInserter.createNeighborhood();
-        testInserter.createChannelMapping(chKey, nhKey);
+        testInserter.createChannelMapping(nhKey, chKey);
 
         // Exercise
         boolean deleted = channelMappingDao.deleteChannelMapping(chKey, nhKey);

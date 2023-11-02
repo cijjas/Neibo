@@ -27,15 +27,6 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelMappingDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-
-    @Autowired
-    public ChannelMappingDaoImpl(final DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName("neighborhoods_channels");
-    }
 
     // ---------------------------------- NEIGHBORHOODS_CHANNELS INSERT ------------------------------------------------
 
@@ -48,7 +39,6 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
     }
 
     // ---------------------------------- NEIGHBORHOODS_CHANNELS DELETE ------------------------------------------------
-
 
     public boolean deleteChannelMapping(long channelId, long neighborhoodId) {
         LOGGER.debug("Deleting ChannelMapping with channelId {} and neighborhoodId {}", channelId, neighborhoodId);
