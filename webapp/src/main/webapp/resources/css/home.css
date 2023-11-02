@@ -2445,23 +2445,33 @@ input[type=time] {
     & .header{
         height: 60%;
 
-        & .used-tag{
-            font-size: 11px;
-            z-index: 2;
+        & .tags-corner{
             position: absolute;
-            top: 5px;
+            top:5px;
             left:5px;
-            border-radius: 5px;
-            padding: 5px;
-            color: var(--always-background);
-            &.used{
-                background-color: var(--used);
-            }
-            &.new{
-                background-color: var(--new);
+            z-index: 2;
+            font-size: 11px;
+            & .used-tag{
+                border-radius: 5px;
+                padding: 5px;
+                color: var(--always-background);
+                &.used{
+                    background-color: var(--used);
+                }
+                &.new{
+                    background-color: var(--new);
 
+                }
+            }
+            & .department-tag{
+
+                border-radius: 5px;
+                padding: 5px;
+                color: var(--always-background);
+                background-color: var(--lila);
             }
         }
+
 
         & .img-product{
             width: 100%;

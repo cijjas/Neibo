@@ -14,11 +14,15 @@
     </div>
         <div class="f-c-c-s g-0 w-100  h-100">
         <div class="header w-100" >
+            <div class="tags-corner f-c-s-s g-05">
+                <div class="department-tag">
+                    <spring:message code="${param.productDepartment}"/>
+                </div>
                 <c:choose>
                     <c:when test="${param.productUsed}">
-                    <div class="used-tag used">
-                        <spring:message code="Used"/>
-                    </div>
+                        <div class="used-tag used">
+                            <spring:message code="Used"/>
+                        </div>
                     </c:when>
                     <c:otherwise>
                         <div class="used-tag new">
@@ -26,6 +30,7 @@
                         </div>
                     </c:otherwise>
                 </c:choose>
+            </div>
             <div class="img-product placeholder-glow">
                 <img
                         id="product-image-${param.productId}"
@@ -33,9 +38,13 @@
                         class="placeholder"
                         alt="product_image_${param.productId}"
                 />
+                <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
+
                 <script>
                     (function () {
-                        getImageInto("product-image-${param.productId}",${empty param.productPrimaryPictureId ? 0 : param.productPrimaryPictureId}, "${pageContext.request.contextPath}")
+                        console.log("product-image-${param.productId}");
+                        console.log("${param.productPrimaryPictureId}");
+                        getImageInto("product-image-${param.productId}",${param.productPrimaryPictureId}, "${pageContext.request.contextPath}")
                     })();
 
                 </script>
@@ -70,11 +79,7 @@
                             <i class="fa-solid fa-share"></i>
                         </a>
                     </div>
-                    <div class="row  pl-2 pr-2" style="max-width: 100%">
-                        <a class="tag-option tag">
-                            <c:out value="${param.productDepartment}"/>
-                        </a>
-                    </div>
+
                 </div>
 
             </div>

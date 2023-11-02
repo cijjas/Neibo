@@ -14,7 +14,7 @@
                </select>
                <script>
                    window.addEventListener('DOMContentLoaded', function () {
-                       const departmentValue = ${param.department};
+                       const departmentValue = ${empty param.department? 22 : param.department};
                        const select = document.getElementById("department");
                        for (const option of select.options) {
                            if (parseInt(option.value) === departmentValue) {

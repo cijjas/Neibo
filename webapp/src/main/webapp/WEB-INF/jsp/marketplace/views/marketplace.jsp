@@ -37,7 +37,7 @@
                     <jsp:include page="/WEB-INF/jsp/marketplace/components/productCard.jsp">
                         <jsp:param name="productTitle" value="${product.name}"/>
                         <jsp:param name="productDescription" value="${product.description}"/>
-                        <jsp:param name="productDepartment" value="${product.department}"/>
+                        <jsp:param name="productDepartment" value="${product.department.department}"/>
                         <jsp:param name="productPrice" value="${product.priceIntegerString}"/>
                         <jsp:param name="productDecimal" value="${product.priceDecimalString}"/>
                         <jsp:param name="productPrimaryPictureId" value="${product.primaryPicture}"/>

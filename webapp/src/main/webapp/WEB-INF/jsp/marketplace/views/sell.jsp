@@ -134,7 +134,7 @@
 
 
                     <div class="f-r-c-c mt-4 ">
-                        <button class="cool-button marketplace-button cool-button p-3  font-size-14 font-weight-bolder" style="width: 200px" onclick="console.log(document.getElementById('currency-field').value)">
+                        <button class="cool-button marketplace-button cool-button p-3  font-size-14 font-weight-bolder" style="width: 200px" >
                             <spring:message code="Create.listing"/>
                         </button>
                     </div>

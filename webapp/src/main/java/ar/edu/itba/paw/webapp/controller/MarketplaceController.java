@@ -89,7 +89,7 @@ public class MarketplaceController {
 
     @RequestMapping(value = {"/products", "/"}, method = RequestMethod.GET)
     public ModelAndView marketplaceProducts(
-        @RequestParam(value = "department", required = false, defaultValue = "22") Integer department
+        @RequestParam(value = "department", required = false, defaultValue = "0") Integer department
     ) {
         LOGGER.info("User arriving at '/marketplace'");
         List<Product> productList = prs.getProductsByCriteria(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.fromId(department) , 1,10);
@@ -162,11 +162,6 @@ public class MarketplaceController {
             return createListingForm(listingForm);
         }
         User user = sessionUtils.getLoggedUser();
-        for(MultipartFile imageFile : listingForm.getImageFiles()){
-            System.out.println("--------------------------------------");
-            System.out.println(imageFile.getOriginalFilename());
-            System.out.println(imageFile.getSize());
-        }
         prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles());
         return new ModelAndView("redirect:/marketplace/my-listings");
     }
