@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.enums;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,8 +44,11 @@ public enum Department {
     public static List<Pair<Integer, String>> getDepartments() {
         return Arrays.stream(values())
                 .map(department -> new Pair<>(department.getId(), department.name()))
+                .sorted(Comparator.comparing(Pair::getValue))
                 .collect(Collectors.toList());
     }
+
+
 
     public static Department fromId(int id) {
         return Arrays.stream(values())

@@ -133,7 +133,6 @@ public class ShiftDaoImplTest {
         List<Shift> shifts = shiftDao.getShifts(aKey, dKey, Date.valueOf(DATE));
 
         // Validations & Post Conditions
-        System.out.println(shifts);
         assertEquals(1, shifts.size());
     }
 

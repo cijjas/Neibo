@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.Department;
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.MainEntities.Product;
 import ar.edu.itba.paw.models.MainEntities.User;
@@ -92,7 +93,7 @@ public class MarketplaceController {
         @RequestParam(value = "department", required = false, defaultValue = "0") Integer department
     ) {
         LOGGER.info("User arriving at '/marketplace'");
-        List<Product> productList = prs.getProductsByCriteria(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.fromId(department) , 1,10);
+        List<Product> productList = prs.getProductsByCriteria(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.fromId(department) , 1,40);
         ModelAndView mav = new ModelAndView("marketplace/views/marketplace");
         mav.addObject("productList", productList);
         mav.addObject("channel", "Marketplace");
@@ -166,5 +167,15 @@ public class MarketplaceController {
         return new ModelAndView("redirect:/marketplace/my-listings");
     }
 
+
+    @RequestMapping(value = "/product/{id:\\d+}", method = RequestMethod.GET)
+    public ModelAndView product(
+            @PathVariable(value = "id") Long productId
+    ) {
+        LOGGER.info("User arriving at '/product/"+ productId +"' ");
+        ModelAndView mav = new ModelAndView("marketplace/views/product");
+        mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
+        return mav;
+    }
 
 }

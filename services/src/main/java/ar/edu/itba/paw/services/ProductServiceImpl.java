@@ -41,7 +41,6 @@ public class ProductServiceImpl implements ProductService {
         for(int i = 0; i < pictureFiles.length; i++){
             idArray[i] = getImageId(pictureFiles[i]);
         }
-        System.out.println(Arrays.toString(idArray));
         return productDao.createProduct(userId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2]);
     }
 

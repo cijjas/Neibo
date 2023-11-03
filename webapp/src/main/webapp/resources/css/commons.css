@@ -60,7 +60,7 @@ body {
     --lila: #7d7ae3;
     --to-lila: #dfdfea;
     --used: #5975d0;
-    --new: #9ad379;
+    --new: #6cb945;
 
     --border-light: 5px;
     --border-radius: 10px;
@@ -190,7 +190,7 @@ input[type="url"],
 input[type="search"],
 input[type="select"] {
     width: 100%;
-    height: 40px;
+    height: 35px;
 }
 
 input[type="checkbox"] {
@@ -458,6 +458,9 @@ p {
     font-size: 14px !important;
 }
 
+.font-size-22 {
+    font-size: 22px  !important;
+}
 
 
 .font-size-24 {
@@ -466,6 +469,9 @@ p {
 
 .font-size-30 {
     font-size: 30px !important;
+}
+.font-size-26 {
+    font-size: 26px !important;
 }
 .font-size-20 {
     font-size: 20px !important;
@@ -494,3 +500,8 @@ p {
 .g-05{
     gap: 0.5em;
 }
+
+
+
+
+
