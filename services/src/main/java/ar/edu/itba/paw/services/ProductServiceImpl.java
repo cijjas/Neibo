@@ -103,22 +103,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> searchInProductsBought(long userId, long neighborhoodId,String searchQuery){
-        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.BOUGHT);
+    public List<Product> searchInProductsBought(long userId, long neighborhoodId,String searchQuery, int page, int size){
+        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.BOUGHT, page, size);
     }
 
     @Override
-    public List<Product> searchInProductsSold(long userId, long neighborhoodId, String searchQuery){
-        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.SOLD);
+    public List<Product> searchInProductsSold(long userId, long neighborhoodId, String searchQuery, int page, int size){
+        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.SOLD, page, size);
     }
 
     @Override
-    public List<Product> searchInProductsSelling(long userId, long neighborhoodId, String searchQuery){
-        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.SELLING);
+    public List<Product> searchInProductsSelling(long userId, long neighborhoodId, String searchQuery, int page, int size){
+        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.SELLING, page, size);
     }
 
     @Override
-    public List<Product> searchInProductsBeingSold(long neighborhoodId, String searchQuery){
-        return productDao.searchInAllProductsBeingSold(neighborhoodId, searchQuery);
+    public List<Product> searchInProductsBeingSold(long neighborhoodId, String searchQuery, int page, int size){
+        return productDao.searchInAllProductsBeingSold(neighborhoodId, searchQuery, page, size);
     }
 }

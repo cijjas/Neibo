@@ -26,11 +26,11 @@ public interface ProductService {
 
     boolean markAsBought(long buyerId, long productId);
 
-    List<Product> searchInProductsBought(long userId, long neighborhoodId, String searchQuery);
+    List<Product> searchInProductsBought(long userId, long neighborhoodId, String searchQuery, int page, int size);
 
-    List<Product> searchInProductsSold(long userId, long neighborhoodId, String searchQuery);
+    List<Product> searchInProductsSold(long userId, long neighborhoodId, String searchQuery, int page, int size);
 
-    List<Product> searchInProductsSelling(long userId, long neighborhoodId, String searchQuery);
+    List<Product> searchInProductsSelling(long userId, long neighborhoodId, String searchQuery, int page, int size);
 
-    List<Product> searchInProductsBeingSold(long neighborhoodId, String searchQuery);
+    List<Product> searchInProductsBeingSold(long neighborhoodId, String searchQuery, int page, int size);
 }
