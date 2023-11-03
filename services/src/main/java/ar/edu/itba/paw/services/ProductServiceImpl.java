@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.Department;
+import ar.edu.itba.paw.enums.SearchVariant;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
@@ -99,5 +100,27 @@ public class ProductServiceImpl implements ProductService {
     public boolean markAsBought(long buyerId, long productId) {
         LOGGER.info("Marking Product {} as bought by user {}", productId, buyerId);
         return productDao.markAsBought(buyerId, productId);
+    }
+
+    // TODO : NOT NEIGHBORHOOD SPECIFIC
+
+    @Override
+    public List<Product> searchInProductsBought(long userId, long neighborhoodId,String searchQuery){
+        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.BOUGHT);
+    }
+
+    @Override
+    public List<Product> searchInProductsSold(long userId, long neighborhoodId, String searchQuery){
+        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.SOLD);
+    }
+
+    @Override
+    public List<Product> searchInProductsSelling(long userId, long neighborhoodId, String searchQuery){
+        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.SELLING);
+    }
+
+    @Override
+    public List<Product> searchInProductsBeingSold(long neighborhoodId, String searchQuery){
+        return productDao.searchInAllProductsBeingSold(neighborhoodId, searchQuery);
     }
 }

@@ -213,10 +213,16 @@ public class UserDaoImplTest {
         long iKey = testInserter.createImage();
 
         // Exercise
-        userDao.setUserValues(uKey1, PASSWORD, NAME, SURNAME, LANGUAGE, DARK_MODE, iKey, ROLE, ID, nhKey1);
+        User user = userDao.setUserValues(uKey1, PASSWORD, NAME, SURNAME, LANGUAGE, DARK_MODE, iKey, ROLE, ID, nhKey1);
 
         // Validations
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users.name()));
+        assertEquals(PASSWORD, user.getPassword());
+        assertEquals(NAME, user.getName());
+        assertEquals(SURNAME, user.getSurname());
+        assertEquals(LANGUAGE, user.getLanguage());
+        assertEquals(DARK_MODE, user.getDarkMode());
+        assertEquals(ROLE, user.getRole());
     }
 
     @Test

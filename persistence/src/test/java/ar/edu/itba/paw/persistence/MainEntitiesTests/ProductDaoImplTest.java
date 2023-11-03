@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Department;
+import ar.edu.itba.paw.enums.SearchVariant;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.MainEntities.Product;
 import ar.edu.itba.paw.persistence.MainEntitiesDaos.ProductDaoImpl;
@@ -41,6 +42,11 @@ public class ProductDaoImplTest {
     public static final String PRODUCT_DESCRIPTION1 = "New Product Description";
     public static final float PRICE1 = 30.12f;
     public static final boolean USED1 = false;
+    public static final String NAME = "Iphone";
+    public static final String STRING = "lala";
+    public static final String ANOTHER_PRODUCT = "AnotherProduct";
+    public static final String FIRST_NEIGHBORHOOD = "First Neighborhood";
+    public static final String SECOND_NEIGHBORHOOD = "Second Neighborhood";
 
     @Autowired
     private DataSource ds;
@@ -323,5 +329,97 @@ public class ProductDaoImplTest {
 
         // Validations & Post Conditions
         assertFalse(deleted);
+    }
+
+    @Test
+    public void testSearchInAllProductsBeingSold() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+        long uKey2 = testInserter.createUser(MAIL2, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey1 = testInserter.createProduct(STRING + NAME, iKey, iKey, iKey, uKey1, null, dKey1);
+        long pKey2 = testInserter.createProduct(NAME + STRING, iKey, iKey, iKey, uKey1, uKey2, dKey1);
+        long pKey3 = testInserter.createProduct(STRING + NAME + STRING, iKey, iKey, iKey, uKey2, uKey1, dKey1);
+        long pKey4 = testInserter.createProduct(NAME, iKey, iKey, iKey, uKey2, null, dKey1);
+
+        // Exercise
+        List<Product> searchResults = productDao.searchInAllProductsBeingSold(nhKey, NAME);
+
+        // Validations & Post Conditions
+        assertEquals(2, searchResults.size());
+    }
+
+    @Test
+    public void testSearchProductByNameBought() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood(FIRST_NEIGHBORHOOD);
+        long nhKey2 = testInserter.createNeighborhood(SECOND_NEIGHBORHOOD);
+        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+        long uKey2 = testInserter.createUser(MAIL2, nhKey);
+        long uKey3 = testInserter.createUser(MAIL3, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey1 = testInserter.createProduct(STRING + NAME, iKey, iKey, iKey, uKey1, null, dKey1);
+        long pKey2 = testInserter.createProduct(NAME + STRING, iKey, iKey, iKey, uKey1, uKey2, dKey1);
+        long pKey3 = testInserter.createProduct(STRING + NAME + STRING, iKey, iKey, iKey, uKey2, uKey1, dKey1);
+        long pKey4 = testInserter.createProduct(NAME, iKey, iKey, iKey, uKey2, null, dKey1);
+        long pKey5 = testInserter.createProduct(STRING + ANOTHER_PRODUCT, iKey, iKey, iKey, uKey1, null, dKey1);
+        long pKey6 = testInserter.createProduct(ANOTHER_PRODUCT + STRING, iKey, iKey, iKey, uKey1, uKey2, dKey1);
+        long pKey7 = testInserter.createProduct(STRING + ANOTHER_PRODUCT + STRING, iKey, iKey, iKey, uKey2, uKey1, dKey1);
+        long pKey8 = testInserter.createProduct(ANOTHER_PRODUCT, iKey, iKey, iKey, uKey2, null, dKey1);
+        long pKey9 = testInserter.createProduct(ANOTHER_PRODUCT, iKey, iKey, iKey, uKey3, null, dKey1);
+
+
+        // Exercise
+        List<Product> searchResults = productDao.searchProductsByName(uKey1, nhKey, NAME, SearchVariant.BOUGHT);
+
+        // Validations & Post Conditions
+        assertEquals(1, searchResults.size());
+    }
+
+    @Test
+    public void testSearchProductByNameSold() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+        long uKey2 = testInserter.createUser(MAIL2, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey1 = testInserter.createProduct(STRING + NAME, iKey, iKey, iKey, uKey1, null, dKey1);
+        long pKey5 = testInserter.createProduct(STRING + ANOTHER_PRODUCT, iKey, iKey, iKey, uKey1, null, dKey1);
+        long pKey2 = testInserter.createProduct(NAME + STRING, iKey, iKey, iKey, uKey1, uKey2, dKey1);
+        long pKey6 = testInserter.createProduct(ANOTHER_PRODUCT + STRING, iKey, iKey, iKey, uKey1, uKey2, dKey1);
+        long pKey3 = testInserter.createProduct(STRING + NAME + STRING, iKey, iKey, iKey, uKey2, uKey1, dKey1);
+        long pKey7 = testInserter.createProduct(STRING + ANOTHER_PRODUCT + STRING, iKey, iKey, iKey, uKey2, uKey1, dKey1);
+        long pKey4 = testInserter.createProduct(NAME, iKey, iKey, iKey, uKey2, null, dKey1);
+        long pKey8 = testInserter.createProduct(ANOTHER_PRODUCT, iKey, iKey, iKey, uKey2, null, dKey1);
+
+        // Exercise
+        List<Product> searchResults = productDao.searchProductsByName(uKey1, nhKey, NAME, SearchVariant.SOLD);
+
+        // Validations & Post Conditions
+        assertEquals(1, searchResults.size());
+    }
+
+    @Test
+    public void testSearchProductByNameSelling() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+        long uKey2 = testInserter.createUser(MAIL2, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey1 = testInserter.createProduct(STRING + NAME, iKey, iKey, iKey, uKey1, null, dKey1);
+        long pKey2 = testInserter.createProduct(NAME + STRING, iKey, iKey, iKey, uKey1, uKey2, dKey1);
+        long pKey3 = testInserter.createProduct(STRING + NAME + STRING, iKey, iKey, iKey, uKey2, uKey1, dKey1);
+        long pKey4 = testInserter.createProduct(NAME, iKey, iKey, iKey, uKey2, null, dKey1);
+
+        // Exercise
+        List<Product> searchResults = productDao.searchProductsByName(uKey1, nhKey, NAME, SearchVariant.SELLING);
+
+        // Validations & Post Conditions
+        assertEquals(1, searchResults.size());
     }
 }
