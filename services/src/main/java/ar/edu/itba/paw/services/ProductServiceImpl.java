@@ -103,23 +103,25 @@ public class ProductServiceImpl implements ProductService {
         return productDao.markAsBought(buyerId, productId);
     }
 
+    // TODO : NOT NEIGHBORHOOD SPECIFIC
+
     @Override
-    public List<Product> searchInProductsBought(long userId, String searchQuery){
-        return productDao.searchProductsByName(userId, searchQuery, SearchVariant.BOUGHT);
+    public List<Product> searchInProductsBought(long userId, long neighborhoodId,String searchQuery){
+        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.BOUGHT);
     }
 
     @Override
-    public List<Product> searchInProductsSold(long userId, String searchQuery){
-        return productDao.searchProductsByName(userId, searchQuery, SearchVariant.SOLD);
+    public List<Product> searchInProductsSold(long userId, long neighborhoodId, String searchQuery){
+        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.SOLD);
     }
 
     @Override
-    public List<Product> searchInProductsSelling(long userId, String searchQuery){
-        return productDao.searchProductsByName(userId, searchQuery, SearchVariant.SELLING);
+    public List<Product> searchInProductsSelling(long userId, long neighborhoodId, String searchQuery){
+        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.SELLING);
     }
 
     @Override
-    public List<Product> searchInProductsBeingSold(String searchQuery){
-        return productDao.searchInAllProductsBeingSold(searchQuery);
+    public List<Product> searchInProductsBeingSold(long neighborhoodId, String searchQuery){
+        return productDao.searchInAllProductsBeingSold(neighborhoodId, searchQuery);
     }
 }

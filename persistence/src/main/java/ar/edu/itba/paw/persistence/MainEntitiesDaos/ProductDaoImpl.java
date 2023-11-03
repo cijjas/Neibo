@@ -131,7 +131,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> searchInAllProductsBeingSold(String searchQuery){
+    public List<Product> searchInAllProductsBeingSold(long neighborhoodId, String searchQuery){
         LOGGER.debug("Searching for products with name containing: {} ", searchQuery);
         String searchParam = "%" + searchQuery.toLowerCase() + "%";
 
@@ -144,7 +144,7 @@ public class ProductDaoImpl implements ProductDao {
         return query.getResultList();
     }
 
-    public List<Product> searchProductsByName(long userId, String searchQuery, SearchVariant searchVariant) {
+    public List<Product> searchProductsByName(long userId, long neighborhoodId, String searchQuery, SearchVariant searchVariant) {
         LOGGER.debug("Searching for products with name containing: {} for user {} with variant {}", searchQuery, userId, searchVariant);
         String searchParam = "%" + searchQuery.toLowerCase() + "%";
 

@@ -28,7 +28,7 @@ public interface ProductDao {
 
     boolean markAsBought(long buyerId, long productId);
 
-    List<Product> searchProductsByName(long userId, String searchQuery, SearchVariant searchVariant) ;
+    List<Product> searchProductsByName(long userId, long neighborhoodId, String searchQuery, SearchVariant searchVariant) ;
 
-    List<Product> searchInAllProductsBeingSold(String searchQuery);
+    List<Product> searchInAllProductsBeingSold(long neighborhoodId, String searchQuery);
 }
