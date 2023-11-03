@@ -102,8 +102,6 @@ public class ProductServiceImpl implements ProductService {
         return productDao.markAsBought(buyerId, productId);
     }
 
-    // TODO : NOT NEIGHBORHOOD SPECIFIC
-
     @Override
     public List<Product> searchInProductsBought(long userId, long neighborhoodId,String searchQuery){
         return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.BOUGHT);
