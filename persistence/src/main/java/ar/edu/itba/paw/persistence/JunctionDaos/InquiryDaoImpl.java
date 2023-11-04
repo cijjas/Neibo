@@ -21,6 +21,8 @@ public class InquiryDaoImpl implements InquiryDao {
     @PersistenceContext
     private EntityManager em;
 
+    // ---------------------------------- USERS_PRODUCTS_INQUIRIES INSERT ----------------------------------------------
+
     @Override
     public Inquiry createInquiry(long userId, long productId, String message) {
         LOGGER.debug("Inserting Inquiry for product with id {}", productId);
@@ -43,6 +45,8 @@ public class InquiryDaoImpl implements InquiryDao {
         }
         return null;
     }
+
+    // ---------------------------------- USERS_PRODUCTS_INQUIRIES SELECT ----------------------------------------------
 
     @Override
     public Optional<Inquiry> findInquiryById(long inquiryId) {

@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.models.JunctionEntities;
 
-import ar.edu.itba.paw.compositeKeys.ChannelMappingKey;
+import ar.edu.itba.paw.models.compositeKeys.ChannelMappingKey;
 import ar.edu.itba.paw.models.MainEntities.Channel;
 import ar.edu.itba.paw.models.MainEntities.Neighborhood;
 

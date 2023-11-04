@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.compositeKeys;
+package ar.edu.itba.paw.models.compositeKeys;
 
 import java.io.Serializable;
 import java.util.Objects;

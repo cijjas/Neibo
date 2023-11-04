@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.models.JunctionEntities;
 
-import ar.edu.itba.paw.compositeKeys.CategorizationKey;
+import ar.edu.itba.paw.models.compositeKeys.CategorizationKey;
 import ar.edu.itba.paw.models.MainEntities.Post;
 import ar.edu.itba.paw.models.MainEntities.Tag;
 

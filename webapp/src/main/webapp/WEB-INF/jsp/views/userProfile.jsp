@@ -149,7 +149,6 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        console.log(document.getElementById("dark-mode-toggle-var").value);
         document.getElementById("dark-mode-toggle").checked = document.getElementById("dark-mode-toggle-var").value === "true";
 
         const darkModeToggle = document.getElementById("dark-mode-toggle");

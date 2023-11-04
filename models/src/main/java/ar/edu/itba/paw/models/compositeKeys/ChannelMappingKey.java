@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.compositeKeys;
+package ar.edu.itba.paw.models.compositeKeys;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -37,6 +37,19 @@ public class ChannelMappingKey implements Serializable {
 
     public Long getChannelId() {
         return channelId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChannelMappingKey that = (ChannelMappingKey) o;
+        return Objects.equals(neighborhoodId, that.neighborhoodId) && Objects.equals(channelId, that.channelId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(neighborhoodId, channelId);
     }
 }
 

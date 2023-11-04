@@ -2,6 +2,9 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
+import ar.edu.itba.paw.models.JunctionEntities.*;
+import ar.edu.itba.paw.models.MainEntities.*;
+import ar.edu.itba.paw.models.MainEntities.Department;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -9,6 +12,8 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Time;
@@ -54,6 +59,8 @@ public class TestInserter {
     private final SimpleJdbcInsert departmentInserter;
     private final SimpleJdbcInsert inquiryInserter;
     private final SimpleJdbcInsert requestInserter;
+    @PersistenceContext
+    private EntityManager em;
 
     @Autowired
     public TestInserter(DataSource dataSource) {
@@ -147,214 +154,237 @@ public class TestInserter {
     }
 
     public long createChannel(String channelName) {
-        Map<String, Object> channelData = new HashMap<>();
-        channelData.put("channel", channelName);
-        return channelInsert.executeAndReturnKey(channelData).longValue();
+        final Channel channel = new Channel.Builder()
+                .channel(channelName)
+                .build();
+        em.persist(channel);
+        em.flush();
+        return channel.getChannelId();
     }
 
     public long createNeighborhood(String neighborhoodName) {
-        Map<String, Object> neighborhoodData = new HashMap<>();
-        neighborhoodData.put("neighborhoodname", neighborhoodName);
-        return neighborhoodInsert.executeAndReturnKey(neighborhoodData).longValue();
-    }
-
-    public void createNeighborhoodChannelMapping(Number neighborhoodId, Number channelId) {
-        Map<String, Object> ncData = new HashMap<>();
-        ncData.put("neighborhoodid", neighborhoodId);
-        ncData.put("channelid", channelId);
-        channelNeighborhoodMappingInsert.execute(ncData);
+        Neighborhood neighborhood = new Neighborhood.Builder()
+                .name(neighborhoodName)
+                .build();
+        em.persist(neighborhood);
+        em.flush();
+        return neighborhood.getNeighborhoodId();
     }
 
     public void createLike(long postId, long userId) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("postid", postId);
-        data.put("likedate", Timestamp.valueOf(LocalDateTime.now()));
-        data.put("userid", userId);
-        likeInsert.execute(data);
+        Like like = new Like(em.find(Post.class, postId), em.find(User.class, userId));
+        em.persist(like);
+        em.flush();
     }
 
     public long createEvent(String name, String description, Date date, long startTimeId, long endTimeId, long neighborhoodId) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("name", name);
-        data.put("description", description);
-        data.put("date", date);
-        data.put("neighborhoodid", neighborhoodId);
-        data.put("starttimeid", startTimeId);
-        data.put("endtimeid", endTimeId);
-        return eventInsert.executeAndReturnKey(data).longValue();
+        Event event = new Event.Builder()
+                .name(name)
+                .description(description)
+                .date(date)
+                .startTime(em.find(ar.edu.itba.paw.models.MainEntities.Time.class, startTimeId))
+                .endTime(em.find(ar.edu.itba.paw.models.MainEntities.Time.class, endTimeId))
+                .neighborhood(em.find(Neighborhood.class, neighborhoodId))
+                .build();
+        em.persist(event);
+        em.flush();
+        return event.getEventId();
     }
 
     public long createContact(long neighborhoodId, String contactName, String contactAddress, String contactPhone) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("neighborhoodid", neighborhoodId);
-        data.put("contactname", contactName);
-        data.put("contactaddress", contactAddress);
-        data.put("contactphone", contactPhone);
-        return contactInsert.executeAndReturnKey(data).longValue();
+        Contact contact = new Contact.Builder()
+                .contactAddress(contactAddress)
+                .contactName(contactName)
+                .contactPhone(contactPhone)
+                .neighborhood(em.find(Neighborhood.class, neighborhoodId))
+                .build();
+        em.persist(contact);
+        em.flush();
+        return contact.getContactId();
     }
 
-    public long createComment(String comment, long userId, long postId) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("comment", comment);
-        data.put("commentdate", Timestamp.valueOf(LocalDateTime.now()));
-        data.put("userid", userId);
-        data.put("postid", postId);
-        return commentInsert.executeAndReturnKey(data).longValue();
+    public long createComment(String commentText, long userId, long postId) {
+        Comment comment = new Comment.Builder()
+                .comment(commentText)
+                .user(em.find(User.class, userId))
+                .post(em.find(Post.class, postId))
+                .build();
+        em.persist(comment);
+        em.flush();
+        return comment.getCommentId();
     }
 
     public void createCategorization(long tagId, long postId) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("tagid", tagId);
-        data.put("postid", postId);
-        categorizationInsert.execute(data);
+        Categorization categorization = new Categorization(em.find(Post.class, postId), em.find(Tag.class, tagId));
+        em.persist(categorization);
+        em.flush();
     }
 
     public void createAttendance(long userId, long eventId) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("userid", userId);
-        data.put("eventid", eventId);
-        attendanceInsert.execute(data);
+        Attendance attendance = new Attendance(em.find(User.class, userId), em.find(Event.class, eventId));
+        em.persist(attendance);
+        em.flush();
     }
 
     public long createPost(String title, String description, long userId, long channelId, long imageId) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("title", title);
-        data.put("description", description);
-        data.put("postdate", Timestamp.valueOf(LocalDateTime.now()));
-        data.put("userid", userId);
-        data.put("postPictureId", imageId == 0 ? null : imageId);
-        data.put("channelid", channelId);
-        return postInsert.executeAndReturnKey(data).longValue();
+        Post post = new Post.Builder()
+                .title(title)
+                .description(description)
+                .user(em.find(User.class, userId))
+                .channel(em.find(Channel.class, channelId))
+                .postPicture(em.find(Image.class, imageId))
+                .build();
+        em.persist(post);
+        em.flush();
+        return post.getPostId();
     }
 
     public long createUser(String mail, String password, String name, String surname,
                            long neighborhoodId, Language language, boolean darkMode, UserRole role, int identification) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("mail", mail);
-        data.put("password", password);
-        data.put("name", name);
-        data.put("creationDate", Timestamp.valueOf(LocalDateTime.now()));
-        data.put("surname", surname);
-        data.put("neighborhoodid", neighborhoodId);
-        data.put("darkmode", darkMode);
-        data.put("language", language != null ? language.toString() : null);
-        data.put("role", role != null ? role.toString() : null);
-        data.put("identification", identification);
-        return userInsert.executeAndReturnKey(data).longValue();
+        User user = new User.Builder()
+                .name(name).mail(mail)
+                .surname(surname)
+                .password(password)
+                .neighborhood(em.find(Neighborhood.class, neighborhoodId))
+                .darkMode(darkMode)
+                .language(language)
+                .role(role)
+                .identification(identification)
+                .build();
+        em.persist(user);
+        em.flush();
+        return user.getUserId();
     }
 
     public long createTag(String name) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("tag", name);
-        return tagInsert.executeAndReturnKey(data).longValue();
+        Tag tag = new Tag.Builder()
+                .tag(name)
+                .build();
+        em.persist(tag);
+        em.flush();
+        return tag.getTagId();
     }
 
     public void createSubscription(long userId, long postId) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("userid", userId);
-        data.put("postid", postId);
-        subscriptionInsert.execute(data);
+        Subscription subscription = new Subscription(em.find(Post.class, postId), em.find(User.class, userId));
+        em.persist(subscription);
+        em.flush();
     }
 
     public long createResource(long neighborhoodId, String title, String description, long imageId) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("neighborhoodid", neighborhoodId);
-        data.put("resourcetitle", title);
-        data.put("resourcedescription", description);
-        data.put("resourceimageid", imageId == 0 ? null : imageId);
-        return resourceInsert.executeAndReturnKey(data).longValue();
+        Resource resource = new Resource.Builder()
+                .title(title)
+                .description(description)
+                .image(em.find(Image.class,imageId))
+                .neighborhood(em.find(Neighborhood.class, neighborhoodId))
+                .build();
+        em.persist(resource);
+        em.flush();
+        return resource.getResourceId();
     }
 
-    public long createReservation(long amenityId, long userId, Date date, Time startTime, Time endTime) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("amenityid", amenityId);
-        data.put("userid", userId);
-        data.put("date", date);
-        data.put("starttime", startTime);
-        data.put("endtime", endTime);
-        return reservationInsert.executeAndReturnKey(data).longValue();
+    public long createReservation(long amenityId, long userId, java.sql.Date date, Time startTime, Time endTime) {
+        Booking booking = new Booking.Builder()
+                .user(em.find(User.class, userId))
+                .bookingDate(date)
+                .amenityAvailability(em.find(Availability.class, amenityId))
+                .build();
+        em.persist(booking);
+        return booking.getBookingId();
     }
 
-    public void createChannelMapping(long channelId, long neighborhoodId) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("channelid", channelId);
-        data.put("neighborhoodid", neighborhoodId);
-        channelMappingInserter.execute(data);
+    public void createChannelMapping(Number neighborhoodId, Number channelId) {
+        ChannelMapping channelMapping = new ChannelMapping(em.find(Neighborhood.class, neighborhoodId), em.find(Channel.class, channelId));
+        em.persist(channelMapping);
+        em.flush();
     }
 
     public long createAvailability(long amenityId, long shiftId) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("amenityid", amenityId);
-        data.put("shiftid", shiftId);
-        return availabilityInsert.executeAndReturnKey(data).longValue();
+        Availability availability = new Availability.Builder()
+                .amenity(em.find(Amenity.class, amenityId))
+                .shift(em.find(Shift.class, shiftId))
+                .build();
+        em.persist(availability);
+        em.flush();
+        return availability.getAmenityAvailabilityId();
     }
 
     public long createBooking(long userId, long amenityAvailabilityId, java.sql.Date reservationDate) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("userid", userId);
-        data.put("amenityavailabilityid", amenityAvailabilityId);
-        data.put("date", reservationDate);
-        return bookingInsert.executeAndReturnKey(data).longValue();
+        Booking booking = new Booking.Builder()
+                .user(em.find(User.class, userId))
+                .bookingDate(reservationDate)
+                .amenityAvailability(em.find(Availability.class, amenityAvailabilityId))
+                .build();
+        em.persist(booking);
+        em.flush();
+        return booking.getBookingId();
     }
 
-    public long createDay(String day) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("dayname", day);
-
-        return dayInsert.executeAndReturnKey(data).longValue();
+    public long createDay(String dayName) {
+        Day day = new Day.Builder()
+                .dayName(dayName)
+                .build();
+        em.persist(day);
+        em.flush();
+        return day.getDayId();
     }
 
     public long createTime(Time timeInterval) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("timeinterval", timeInterval);
-
-        return timeInsert.executeAndReturnKey(data).longValue();
+        ar.edu.itba.paw.models.MainEntities.Time time =  new ar.edu.itba.paw.models.MainEntities.Time.Builder()
+                .timeInterval(timeInterval)
+                .build();
+        em.persist(time);
+        em.flush();
+        return time.getTimeId();
     }
 
     public void createWorkerArea(long workerId, long neighborhoodId) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("workerid", workerId);
-        data.put("neighborhoodid", neighborhoodId);
-
-        neighborhoodWorkerInsert.execute(data);
+        WorkerArea workerArea = new WorkerArea(em.find(Worker.class, workerId), em.find(Neighborhood.class, neighborhoodId));
+        em.persist(workerArea);
+        em.flush();
     }
 
-    public long createReview(long workerId, long userId, float rating, String review) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("workerid", workerId);
-        data.put("userid", userId);
-        data.put("rating", rating);
-        data.put("review", review);
-        data.put("date", Timestamp.valueOf(LocalDateTime.now()));
-
-        return reviewInsert.executeAndReturnKey(data).longValue();
+    public long createReview(long workerId, long userId, float rating, String reviewString) {
+        Review review = new Review.Builder()
+                .user(em.find(User.class, userId))
+                .worker(em.find(Worker.class, workerId))
+                .rating(rating)
+                .review(reviewString)
+                .build();
+        em.persist(review);
+        em.flush();
+        return review.getReviewId();
     }
 
-    public void createWorker(long workerId, String phoneNumber, String address, String businessName) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("workerId", workerId);
-        data.put("phoneNumber", phoneNumber);
-        data.put("address", address);
-        data.put("businessName", businessName);
-
-        workerInsert.execute(data);
+    public long createWorker(long workerId, String phoneNumber, String address, String businessName) {
+        Worker worker = new Worker.Builder()
+                .workerId(workerId)
+                .user(em.find(User.class, workerId))
+                .phoneNumber(phoneNumber)
+                .address(address)
+                .businessName(businessName)
+                .build();
+        em.persist(worker);
+        em.flush();
+        return worker.getWorkerId();
     }
 
 
     public void createSpecialization(long workerId, long professionId) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("workerid", workerId);
-        data.put("professionid", professionId);
-        professionWorkerInsert.execute(data);
+        Specialization specialization = new Specialization(em.find(Worker.class, workerId), em.find(Profession.class, professionId));
+        em.persist(specialization);
+        em.flush();
     }
 
     public long createAmenity(String name, String description, long neighborhoodId) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("name", name);
-        data.put("description", description);
-        data.put("neighborhoodid", neighborhoodId);
-
-        return amenityInsert.executeAndReturnKey(data).longValue();
+        Amenity amenity = new Amenity.Builder()
+                .name(name)
+                .neighborhood(em.find(Neighborhood.class, neighborhoodId))
+                .description(description)
+                .build();
+        em.persist(amenity);
+        em.flush();
+        return amenity.getAmenityId();
     }
 
     public long createShift(long dayId, long startTimeId) {
@@ -366,64 +396,74 @@ public class TestInserter {
     }
 
     public long createImage(MultipartFile image) {
-        Map<String, Object> data = new HashMap<>();
         byte[] imageBytes;
         try {
             imageBytes = image.getBytes();
         } catch (IOException e) {
-            throw new InsertionException("An error occurred whilst setting up the test");
+            throw new InsertionException("An error occurred whilst storing the image");
         }
-
-        data.put("image", imageBytes);
-        return imageInsert.executeAndReturnKey(data).longValue();
+        Image img = new Image.Builder()
+                .image(imageBytes)
+                .build();
+        em.persist(img);
+        em.flush();
+        return img.getImageId();
     }
 
-    public long createProfession(Professions profession) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("profession", profession.name());
-        return professionInsertion.executeAndReturnKey(data).longValue();
+    public long createProfession(Professions professionType) {
+        final Profession profession = new Profession.Builder()
+                .profession(professionType)
+                .build();
+        em.persist(profession);
+        em.flush();
+        return profession.getProfessionId();
     }
 
-    public long createProduct(String name, String description, Float price, boolean used,
+    public long createProduct(String name, String description, Double price, boolean used,
                               long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
                               long sellerId, Long buyerId, long departmentId){
-        Map<String, Object> data = new HashMap<>();
-        data.put("name", name);
-        data.put("description", description);
-        data.put("price", price);
-        data.put("used", used);
-        data.put("primarypictureid", primaryPictureId);
-        data.put("secondarypictureid", secondaryPictureId);
-        data.put("tertiarypictureid", tertiaryPictureId);
-        data.put("sellerid", sellerId);
-        data.put("buyerid", buyerId);
-        data.put("departmentid", departmentId);
-
-        return productInserter.executeAndReturnKey(data).longValue();
+        Product product = new Product.Builder()
+                .name(name)
+                .description(description)
+                .price(price)
+                .used(used)
+                .department(em.find(Department.class, departmentId))
+                .seller(em.find(User.class, sellerId))
+                .primaryPicture(em.find(Image.class, primaryPictureId))
+                .secondaryPicture(em.find(Image.class, secondaryPictureId))
+                .tertiaryPicture(em.find(Image.class, tertiaryPictureId))
+                .build();
+        if (buyerId != null )
+            product.setBuyer(em.find(User.class, buyerId));
+        em.persist(product);
+        em.flush();
+        return product.getProductId();
     }
 
-    public long createDepartment(Department department){
-        Map<String, Object> data = new HashMap<>();
-        data.put("department", department.name());
-        return departmentInserter.executeAndReturnKey(data).longValue();
-
+    public long createDepartment(ar.edu.itba.paw.enums.Department departmentType){
+        final Department department = new Department.Builder()
+                .department(departmentType)
+                .build();
+        em.persist(department);
+        em.flush();
+        return department.getDepartmentId();
     }
 
     public long createInquiry(String message, String reply, long productId, long userId){
-        Map<String, Object> data = new HashMap<>();
-        data.put("productId", productId);
-        data.put("userId", userId);
-        data.put("message", message);
-        data.put("reply", reply);
-
-        return inquiryInserter.executeAndReturnKey(data).longValue();
+        Inquiry inquiry = new Inquiry.Builder()
+                .product(em.find(Product.class, productId))
+                .user(em.find(User.class, userId))
+                .message(message)
+                .build();
+        em.persist(inquiry);
+        em.flush();
+        return inquiry.getInquiryId();
     }
 
     public void createRequest(long productId, long userId){
-        Map<String, Object> data = new HashMap<>();
-        data.put("productId", productId);
-        data.put("userId", userId);
-        requestInserter.execute(data);
+        Request request = new Request(em.find(Product.class, productId), em.find(User.class, userId));
+        em.persist(request);
+        em.flush();
     }
 
     // ----------------------------------------------------------------------------------------------------
@@ -452,6 +492,12 @@ public class TestInserter {
         String name = "Dummy Event Name";
         String description = "Me estoy volviendo loco";
         Date date = java.sql.Date.valueOf("2001-3-14");
+        return createEvent(name, description, date, startTime, endTime, neighborhoodId);
+    }
+
+    public long createEvent(long neighborhoodId, long startTime, long endTime, Date date) {
+        String name = "Dummy Event Name";
+        String description = "Me estoy volviendo loco";
         return createEvent(name, description, date, startTime, endTime, neighborhoodId);
     }
 
@@ -514,7 +560,7 @@ public class TestInserter {
     }
 
     public long createReservation(long amenityId, long userId) {
-        Date date = new Date();
+        java.sql.Date date = java.sql.Date.valueOf("2022-12-12");
         Time startTime = Time.valueOf(LocalDateTime.now().toLocalTime());
         Time endTime = Time.valueOf(LocalDateTime.now().plusHours(1).toLocalTime());
         return createReservation(amenityId, userId, date, startTime, endTime);
@@ -571,14 +617,23 @@ public class TestInserter {
                               long sellerId, Long buyerId, long departmentId){
         String name = "Iphone";
         String description = "Super Iphone";
-        float price = 1234124f;
+        double price = 23432;
+        boolean used = true;
+
+        return createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, buyerId, departmentId);
+    }
+
+    public long createProduct(String name, long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
+                              long sellerId, Long buyerId, long departmentId){
+        String description = "Super Iphone";
+        double price = 23432;
         boolean used = true;
 
         return createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, buyerId, departmentId);
     }
 
     public long createDepartment(){
-        return createDepartment(Department.ARTS_CRAFTS);
+        return createDepartment(ar.edu.itba.paw.enums.Department.ARTS_CRAFTS);
     }
 
     public long createInquiry(long productId, long userId){

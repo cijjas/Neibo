@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.enums.Department;
+import ar.edu.itba.paw.enums.SearchVariant;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.models.MainEntities.*;
 import org.slf4j.Logger;
@@ -10,15 +11,18 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(PostDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
+
+    // ------------------------------------------------ PRODUCT INSERT -------------------------------------------------
 
     @Override
     public Product createProduct(long userId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) {
@@ -127,4 +131,126 @@ public class ProductDaoImpl implements ProductDao {
         }
         return false;
     }
+
+    @Override
+    public List<Product> searchInAllProductsBeingSold(long neighborhoodId, String searchQuery, int page, int size) {
+        LOGGER.debug("Searching for products with name containing: {} in neighborhood: {}", searchQuery, neighborhoodId);
+        String searchParam = "%" + searchQuery.toLowerCase() + "%";
+
+        // Initialize the first query to retrieve product IDs
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
+        Root<Product> idRoot = idQuery.from(Product.class);
+        idQuery.select(idRoot.get("productId"));
+
+        // Join through the neighborhoodId
+        Join<Product, User> sellerJoin = idRoot.join("seller");
+        Join<User, Neighborhood> neighborhoodJoin = sellerJoin.join("neighborhood");
+
+        idQuery.where(
+                cb.and(
+                        cb.like(cb.lower(idRoot.get("name")), searchParam),
+                        cb.isNull(idRoot.get("buyer")),
+                        cb.equal(neighborhoodJoin.get("neighborhoodId"), neighborhoodId)
+                )
+        );
+
+        TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
+        idTypedQuery.setFirstResult((page - 1) * size);
+        idTypedQuery.setMaxResults(size);
+
+        List<Long> productIds = idTypedQuery.getResultList();
+
+        // Check if productIds is empty for better performance
+        if (productIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // Initialize the second query to fetch product details
+        CriteriaQuery<Product> dataQuery = cb.createQuery(Product.class);
+        Root<Product> dataRoot = dataQuery.from(Product.class);
+
+        // Add a predicate to filter by the IDs retrieved in the first query
+        dataQuery.where(dataRoot.get("productId").in(productIds));
+
+        TypedQuery<Product> dataTypedQuery = em.createQuery(dataQuery);
+
+        return dataTypedQuery.getResultList();
+    }
+
+
+    @Override
+    public List<Product> searchProductsByName(long userId, long neighborhoodId, String searchQuery, SearchVariant searchVariant, int page, int size) {
+        LOGGER.debug("Searching for products with name containing: {} for user {} with variant {}", searchQuery, userId, searchVariant);
+        String searchParam = "%" + searchQuery.toLowerCase() + "%";
+
+        // Initialize the first query to retrieve product IDs
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
+        Root<Product> idRoot = idQuery.from(Product.class);
+        idQuery.select(idRoot.get("productId"));
+
+        Join<Product, User> sellerJoin = idRoot.join("seller");
+        Join<User, Neighborhood> neighborhoodJoin = sellerJoin.join("neighborhood");
+
+        Predicate conditions = cb.and(
+                cb.like(cb.lower(idRoot.get("name")), searchParam),
+                cb.equal(neighborhoodJoin.get("neighborhoodId"), neighborhoodId)
+        );
+
+        switch (searchVariant) {
+            case BOUGHT:
+                Join<Product, User> buyerJoinBought = idRoot.join("buyer");
+                conditions = cb.and(
+                        conditions,
+                        cb.equal(buyerJoinBought.get("userId"), userId),
+                        cb.isNotNull(buyerJoinBought.get("userId"))
+                );
+                break;
+            case SOLD:
+                Join<Product, User> buyerJoinSold = idRoot.join("buyer");
+                conditions = cb.and(
+                        conditions,
+                        cb.equal(sellerJoin.get("userId"), userId),
+                        cb.isNotNull(buyerJoinSold.get("userId"))
+                );
+                break;
+            case SELLING:
+                conditions = cb.and(
+                        conditions,
+                        cb.isNull(idRoot.get("buyer")),
+                        cb.equal(sellerJoin.get("userId"), userId)
+                );
+                break;
+        }
+
+        idQuery.where(conditions);
+
+        TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
+        idTypedQuery.setFirstResult((page - 1) * size);
+        idTypedQuery.setMaxResults(size);
+
+        List<Long> productIds = idTypedQuery.getResultList();
+
+        // Check if productIds is empty for better performance
+        if (productIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // Initialize the second query to fetch product details
+        CriteriaQuery<Product> dataQuery = cb.createQuery(Product.class);
+        Root<Product> dataRoot = dataQuery.from(Product.class);
+
+        // Add a predicate to filter by the IDs retrieved in the first query
+        dataQuery.where(dataRoot.get("productId").in(productIds));
+
+        TypedQuery<Product> dataTypedQuery = em.createQuery(dataQuery);
+
+        return dataTypedQuery.getResultList();
+    }
+
+
+
+
+
 }

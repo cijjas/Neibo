@@ -187,7 +187,6 @@ public class UserServiceImpl implements UserService {
     public void updateLanguage(long id, Language language) {
         LOGGER.info("Updating Language for User {} to {}", id, language);
         User user = getUser(id);
-        // TODO userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), language, n.isDarkMode(), n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
     }
 
     // Will be deprecated if more languages are included
@@ -204,14 +203,20 @@ public class UserServiceImpl implements UserService {
     public void resetPreferenceValues(long id) {
         LOGGER.info("Resetting preferences for User {}", id);
         User user = getUser(id);
-        // TODO userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), Language.ENGLISH, false, n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
     }
 
     @Override
     public void setNewPassword(long id, String newPassword) {
         LOGGER.info("Setting new password for User {}", id);
         User user = getUser(id);
-        // TODO userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, passwordEncoder.encode(newPassword), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
+    }
+
+    @Override
+    public void changeNeighborhood(long userId, long neighborhoodId) {
+        LOGGER.info("Setting new neighborhood for User {}", userId);
+        User user = getUser(userId);
+        userDao.setUserValues(userId, user.getPassword(), user.getName(), user.getSurname(), user.getLanguage(), user.getDarkMode(),
+                user.getProfilePicture().getImageId(), user.getRole(), user.getIdentification(), neighborhoodId);
     }
 
     private User getUser(long userId){

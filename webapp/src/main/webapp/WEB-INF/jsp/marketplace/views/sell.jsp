@@ -80,7 +80,7 @@
                             <div class="w-100 lila-upload-box">
                                 <div class="upload__box w-100">
                                     <div class="upload__btn-box">
-                                         <input id="image-input-id" type="file" multiple="" accept="image/*" data-max_length="3" class="upload__inputfile" hidden="hidden">
+                                         <form:input path="imageFiles" id="image-input-id" type="file" multiple="multiple" accept="image/*" data-max_length="3" class="upload__inputfile" hidden="hidden"/>
                                     </div>
                                     <div class="upload__img-wrap">
                                         <a id="dummy-upload" class="dummy-upload" onclick="document.getElementById('image-input-id').click();">
@@ -109,11 +109,11 @@
 
                             <%--Department--%>
                             <label for="department"></label>
-                            <select class="cool-input marketplace-input font-weight-bold font-size-12" name="department" id="department">
+                            <form:select path="departmentId" class="cool-input marketplace-input font-weight-bold font-size-12" name="department" id="department">
                                 <c:forEach items="${departmentList}" var="department">
                                     <option value="${department.key}"><spring:message code="${department.value}"/></option>
                                 </c:forEach>
-                            </select>
+                            </form:select>
 
                             <%--Condition--%>
                             <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
@@ -121,10 +121,10 @@
 
                                 <div class="w-25">
                                     <label for="condition"></label>
-                                    <select class="cool-input marketplace-input font-weight-bold font-size-14" name="condition" id="condition">
-                                        <option value="false"><spring:message code="New"/></option>
-                                        <option value="true"><spring:message code="Used"/></option>
-                                    </select>
+                                    <form:select path="used" class="cool-input marketplace-input font-weight-bold font-size-14" name="condition" id="condition">
+                                        <option value="${false}"><spring:message code="New"/></option>
+                                        <option value="${true}"><spring:message code="Used"/></option>
+                                    </form:select>
                                 </div>
 
                             </div>
@@ -134,7 +134,7 @@
 
 
                     <div class="f-r-c-c mt-4 ">
-                        <button class="cool-button marketplace-button cool-button p-3  font-size-14 font-weight-bolder" style="width: 200px" onclick="console.log(document.getElementById('currency-field').value)">
+                        <button class="cool-button marketplace-button cool-button p-3  font-size-14 font-weight-bolder" style="width: 200px" >
                             <spring:message code="Create.listing"/>
                         </button>
                     </div>

@@ -31,21 +31,41 @@
         </div>
 
         <div id="center-grid" class="column-center pl-3 ">
-            <%@ include file="/WEB-INF/jsp/marketplace/components/upperMarketplaceButtons.jsp" %>
-            <div class="row m-0 product-grid-row">
-                <c:forEach var="product" items="${productList}">
-                    ${product.department}
-                    <jsp:include page="/WEB-INF/jsp/marketplace/components/productCard.jsp">
-                        <jsp:param name="productTitle" value="${product.name}"/>
-                        <jsp:param name="productDescription" value="${product.description}"/>
-                        <jsp:param name="productDepartment" value="${product.department}"/>
-                        <jsp:param name="productPrice" value="${product.priceIntegerString}"/>
-                        <jsp:param name="productDecimal" value="${product.priceDecimalString}"/>
-                        <jsp:param name="productPrimaryPictureId" value="${product.primaryPicture}"/>
-                        <jsp:param name="productId" value="${product.productId}"/>
-                    </jsp:include>
-                </c:forEach>
+            <div style="position: relative">
+                <%@ include file="/WEB-INF/jsp/marketplace/components/upperMarketplaceButtons.jsp" %>
+
+                <c:choose>
+                    <c:when test="${empty productList}">
+                        <div class="cool-static-container w-100">
+                                <%--no products found --%>
+                            <div class="no-posts-found">
+                                <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+                                <spring:message code="Products.not.found"/>
+                            </div>
+
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="row m-0 product-grid-row">
+                            <c:forEach var="product" items="${productList}">
+                                <jsp:include page="/WEB-INF/jsp/marketplace/components/productCard.jsp">
+                                    <jsp:param name="productTitle" value="${product.name}"/>
+                                    <jsp:param name="productDescription" value="${product.description}"/>
+                                    <jsp:param name="productDepartment" value="${product.department.department}"/>
+                                    <jsp:param name="productPrice" value="${product.priceIntegerString}"/>
+                                    <jsp:param name="productDecimal" value="${product.priceDecimalString}"/>
+                                    <jsp:param name="productPrimaryPictureId" value="${product.primaryPicture.imageId}"/>
+                                    <jsp:param name="productId" value="${product.productId}"/>
+                                    <jsp:param name="productUsed" value="${product.used}"/>
+                                    <jsp:param name="productDepartmentId" value="${product.department.department.id}"/>
+                                </jsp:include>
+                            </c:forEach>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+
             </div>
+
 
 
         </div>

@@ -1,0 +1,211 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca&display=swap" rel="stylesheet">
+  <link href="${pageContext.request.contextPath}/resources/css/home.css" rel="stylesheet"/>
+  <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
+  <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
+  <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
+  <title><spring:message code="Marketplace"/></title>
+</head>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" scope="page" />
+
+<body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
+<%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
+<div class="container">
+  <div class="row init ">
+    <div class="column-left " >
+      <%@ include file="/WEB-INF/jsp/components/widgets/leftColumn.jsp" %>
+    </div>
+
+    <div id="center-grid" class="column-center pl-3 ">
+      <%@ include file="/WEB-INF/jsp/marketplace/components/upperMarketplaceButtons.jsp" %>
+
+
+
+
+      <div class="cool-static-container w-100 p-0">
+        <div class="container ">
+          <div class="row">
+            <%--LEFT SIDE--%>
+            <div class="col-8 pt-3 pb-3 pr-0"  >
+              <div class="row w-100 h-100" >
+                <div class="col-3 product-small-img f-c-s-c " >
+                  <img
+                          id="primary-product-image-${product.productId}"
+                          src=""
+                          class="placeholder active"
+                          alt="product_image_${product.productId}"
+                  />
+                  <c:if test="${not empty product.secondaryPicture.imageId}">
+                    <img
+                            id="secondary-product-image-${product.productId}"
+                            src=""
+                            class="placeholder "
+                            alt="product_image_${product.productId}"
+
+                    />
+                  </c:if>
+
+                  <c:if test="${not empty product.tertiaryPicture.imageId}">
+
+                    <img
+                            id="tertiary-product-image-${product.productId}"
+                            src=""
+                            class="placeholder"
+                            alt="product_image_${product.productId}"
+
+                    />
+                  </c:if>
+
+                </div>
+                <div class="col-9 h-100 w-100 p-0 ">
+                    <img
+                            id="imgBox"
+                            src=""
+                            class="placeholder product-image w-100 h-100"
+                            alt="product_image_${product.productId}"
+                            style="border-radius: var(--border-light);"
+                    />
+                </div>
+
+              </div>
+            </div>
+            <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
+            <script>
+
+              // Hover event listeners
+              document.querySelectorAll(".product-small-img img").forEach((img) => {
+                img.addEventListener("mouseover", () => {
+                  const prevActive = document.querySelector(".product-small-img img.active");
+                  if (prevActive) {
+                    prevActive.classList.remove("active");
+                  }
+                  img.classList.add("active");
+                  const fullImg = document.getElementById("imgBox");
+                  fullImg.src = img.src;
+                  fullImg.alt = img.alt;
+                });
+              });
+
+
+              var primaryImageId = ${empty product.primaryPicture.imageId ? -2 : product.primaryPicture.imageId};
+              var secondaryImageId = ${empty product.secondaryPicture.imageId ? -2 : product.secondaryPicture.imageId};
+              var tertiaryImageId = ${empty product.tertiaryPicture.imageId ? -2 : product.tertiaryPicture.imageId};
+
+              document.addEventListener("DOMContentLoaded", function () {
+                // Check for the existence of primary image and load if not null
+
+                // Check for the existence of secondary image and load if not null
+                if (secondaryImageId !== -2) {
+                  getImageInto("secondary-product-image-${product.productId}", secondaryImageId, "${pageContext.request.contextPath}");
+                }
+
+                // Check for the existence of tertiary image and load if not null
+                if (tertiaryImageId !== -2) {
+                  getImageInto("tertiary-product-image-${product.productId}", tertiaryImageId, "${pageContext.request.contextPath}");
+                }
+
+                getImageInto("primary-product-image-${product.productId}", primaryImageId, "${pageContext.request.contextPath}");
+                getImageInto("imgBox", primaryImageId, "${pageContext.request.contextPath}");
+              });
+
+
+            </script>
+            <%--RIGHT SIDE--%>
+            <div class="col-4 pt-3 pb-3" >
+              <div class="f-c-s-s w-100 g-05 p-3 pt-4" style="
+              border: 1px solid var(--lightertext);
+              border-radius: var(--border-radius);
+              box-shadow: -2px 4px 0 0 var(--lila)">
+                <span class="font-weight-normal font-size-16 f-r-sb-c w-100">
+                  <c:choose>
+                    <c:when test="${product.used}">
+                        <spring:message code="Used"/>
+                    </c:when>
+                    <c:otherwise>
+                        <spring:message code="New"/>
+                    </c:otherwise>
+                  </c:choose>
+                  <div class="department-tag" onclick='window.location.href = "${contextPath}/marketplace/products?department=${product.department.department.id}" '>
+                    <spring:message code="${product.department.department}"/>
+                  </div>
+
+                </span>
+
+                <h1 class="font-size-20 font-weight-bold mt-2" style="line-height: 1.2;">
+                  <c:out value="${product.name}"/>
+                </h1>
+                <div class="f-r-c-c g-0">
+                  <span class="price font-size-30 font-weight-normal">
+                      <c:out value="${product.priceIntegerString}"/>
+                  </span>
+                  <div class="f-c-s-c pl-1" style="height: 26px">
+                  <span class="cents c-light-text font-size-20 font-weight-normal">
+                      <c:out value="${product.priceDecimalString}"/>
+                  </span>
+                  </div>
+                </div>
+                <button class="mt-4 w-100 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
+                  <spring:message code="Buy"/>
+                </button>
+              </div>
+            </div>
+          </div>
+          <%--Description--%>
+          <div class="row pt-2 pl-2 pr-2" style="background-color: var(--on-onbackground);">
+            <div class="col-12 pt-3 pb-3 h-100" >
+              <div class="f-c-s-s">
+                <span class="c-text font-size-16 g-05"><spring:message code="Description"/></span>
+                <p class="c-light-text font-weight-normal" >
+                  <c:out value="${product.description}"/>
+                </p>
+              </div>
+
+              <div class="divider w-100 mt-3 mb-3"></div>
+
+              <div class="f-c-s-s">
+                <span class="c-text font-size-16 g-05"><spring:message code="Ask.the.seller"/></span>
+                <div class="f-r-sb-c w-100" >
+                  <label>
+                    <input type="text" class="cool-input marketplace-input background"/>
+                  </label>
+                  <button class="cool-button marketplace-button pure square-radius font-size-14 font-weight-bold">
+                    <spring:message code="Ask"/>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+<%@ include file="/WEB-INF/jsp/components/displays/footer.jsp" %>
+<script>
+  const wave3= document.getElementById('wave3');
+  const wave2= document.getElementById('wave2');
+  wave2.classList.add('lila');
+  wave3.classList.add('lila');
+</script>
+</body>
+</html>

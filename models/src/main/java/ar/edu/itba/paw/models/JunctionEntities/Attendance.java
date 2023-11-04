@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.models.JunctionEntities;
 
-import ar.edu.itba.paw.compositeKeys.AttendanceKey;
+import ar.edu.itba.paw.models.compositeKeys.AttendanceKey;
 import ar.edu.itba.paw.models.MainEntities.Event;
 import ar.edu.itba.paw.models.MainEntities.User;
 

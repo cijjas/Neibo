@@ -27,28 +27,8 @@ public class ContactDaoImpl implements ContactDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
-    private static final RowMapper<Contact> ROW_MAPPER = (rs, rowNum) ->
-            new Contact.Builder()
-                    .contactId(rs.getLong("contactid"))
-                    .contactAddress(rs.getString("contactaddress"))
-                    .contactName(rs.getString("contactname"))
-                    .contactPhone(rs.getString("contactphone"))
-                    .build();
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-    private final String CONTACTS = "SELECT ct.* FROM contacts ct";
 
     // --------------------------------------------- CONTACT INSERT ----------------------------------------------------
-
-    @Autowired
-    public ContactDaoImpl(final DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .usingGeneratedKeyColumns("contactid")
-                .withTableName("contacts");
-    }
-
-    // --------------------------------------------- CONTACT SELECT ----------------------------------------------------
 
     @Override
     public Contact createContact(long neighborhoodId, String contactName, String contactAddress, String contactPhone) {
@@ -63,6 +43,8 @@ public class ContactDaoImpl implements ContactDao {
         return contact;
     }
 
+    // --------------------------------------------- CONTACT SELECT ----------------------------------------------------
+
     @Override
     public List<Contact> getContacts(final long neighborhoodId) {
         LOGGER.debug("Selecting Contacts from Neighborhood {}", neighborhoodId);
@@ -70,7 +52,6 @@ public class ContactDaoImpl implements ContactDao {
         query.setParameter("neighborhoodId", neighborhoodId);
         return query.getResultList();
     }
-
 
     // --------------------------------------------- CONTACT DELETE ----------------------------------------------------
 

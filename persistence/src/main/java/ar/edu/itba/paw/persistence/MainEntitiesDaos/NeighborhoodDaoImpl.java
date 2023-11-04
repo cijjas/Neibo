@@ -22,26 +22,8 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
-    private static final RowMapper<Neighborhood> ROW_MAPPER = (rs, rowNum) ->
-            new Neighborhood.Builder()
-                    .neighborhoodId(rs.getLong("neighborhoodid"))
-                    .name(rs.getString("neighborhoodname"))
-                    .build();
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-    private final String NEIGHBORHOODS = "SELECT * FROM neighborhoods ";
 
     // ----------------------------------------- NEIGHBORHOODS INSERT --------------------------------------------------
-
-    @Autowired
-    public NeighborhoodDaoImpl(final DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .usingGeneratedKeyColumns("neighborhoodid")
-                .withTableName("neighborhoods");
-    }
-
-    // ----------------------------------------- NEIGHBORHOODS SELECT --------------------------------------------------
 
     @Override
     public Neighborhood createNeighborhood(String name) {
@@ -52,6 +34,8 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
         em.persist(neighborhood);
         return neighborhood;
     }
+
+    // ----------------------------------------- NEIGHBORHOODS SELECT --------------------------------------------------
 
     @Override
     public Optional<Neighborhood> findNeighborhoodById(long id) {

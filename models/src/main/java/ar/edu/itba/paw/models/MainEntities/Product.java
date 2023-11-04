@@ -75,6 +75,9 @@ public class Product {
         this.price = builder.price;
         this.used = builder.used;
         this.seller = builder.seller;
+        this.primaryPicture = builder.primaryPicture;
+        this.secondaryPicture = builder.secondaryPicture;
+        this.tertiaryPicture = builder.tertiaryPicture;
         this.department = builder.department;
     }
 
@@ -142,7 +145,7 @@ public class Product {
     }
 
     public Image getSecondaryPicture() {
-        return secondaryPicture;
+        return this.secondaryPicture;
     }
 
     public void setSecondaryPicture(Image secondaryPicture) {
@@ -150,7 +153,7 @@ public class Product {
     }
 
     public Image getTertiaryPicture() {
-        return tertiaryPicture;
+        return this.tertiaryPicture;
     }
 
     public void setTertiaryPicture(Image tertiaryPicture) {
@@ -205,6 +208,7 @@ public class Product {
         return department;
     }
 
+
     @Override
     public String toString() {
         return "Product{" +
@@ -213,7 +217,9 @@ public class Product {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", used=" + used +
-                ", department=" + department +
+                ", primaryPicture=" + primaryPicture.getImageId() +
+                ", secondaryPicture=" + secondaryPicture.getImageId() +
+                ", tertiaryPicture=" + tertiaryPicture.getImageId() +
                 '}';
     }
 
@@ -225,66 +231,95 @@ public class Product {
         private Long productId;
         private String name;
         private String description;
-        private double price;
-        private boolean used;
+        private Double price;
+        private Boolean used;
         private User seller;
         private Image primaryPicture;
         private Image secondaryPicture;
         private Image tertiaryPicture;
         private Department department;
+        private Set<User> inquirers;
+        private Set<User> requesters;
 
-        public Product.Builder productId(Long productId) {
+        public Builder productId(Long productId) {
             this.productId = productId;
             return this;
         }
 
-        public Product.Builder name(String name) {
+        public Builder name(String name) {
             this.name = name;
             return this;
         }
 
-        public Product.Builder description(String description) {
+        public Builder description(String description) {
             this.description = description;
             return this;
         }
 
-        public Product.Builder price(double price) {
+        public Builder price(Double price) {
             this.price = price;
             return this;
         }
 
-        public Product.Builder used(boolean used) {
+        public Builder used(Boolean used) {
             this.used = used;
             return this;
         }
 
-        public Product.Builder seller(User seller) {
+        public Builder seller(User seller) {
             this.seller = seller;
             return this;
         }
 
-        public Product.Builder primaryPicture(Image primaryPicture) {
+        public Builder primaryPicture(Image primaryPicture) {
             this.primaryPicture = primaryPicture;
             return this;
         }
 
-        public Product.Builder secondaryPicture(Image secondaryPicture) {
+        public Builder secondaryPicture(Image secondaryPicture) {
             this.secondaryPicture = secondaryPicture;
             return this;
         }
 
-        public Product.Builder tertiaryPicture(Image tertiaryPicture) {
+        public Builder tertiaryPicture(Image tertiaryPicture) {
             this.tertiaryPicture = tertiaryPicture;
             return this;
         }
 
-        public Product.Builder department(Department department) {
+        public Builder department(Department department) {
             this.department = department;
             return this;
         }
 
-        public Product build() {
-            return new Product(this);
+        public Builder inquirers(Set<User> inquirers) {
+            this.inquirers = inquirers;
+            return this;
         }
+
+        public Builder requesters(Set<User> requesters) {
+            this.requesters = requesters;
+            return this;
+        }
+
+        public Product build() {
+            Product product = new Product(this);
+            // Initialize inquirers and requesters if not set
+            if (inquirers != null) {
+                product.setInquirers(inquirers);
+            }
+            if (requesters != null) {
+                product.setRequesters(requesters);
+            }
+            return product;
+        }
+    }
+
+
+    public void setPriceIntegerString(String priceIntegerString) {
+        this.priceIntegerString = priceIntegerString;
+    }
+
+    public void setPriceDecimalString(String priceDecimalString) {
+        this.priceDecimalString = priceDecimalString;
     }
 }

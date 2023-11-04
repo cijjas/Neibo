@@ -21,28 +21,8 @@ public class TimeDaoImpl implements TimeDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(TimeDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
-    private static final RowMapper<Time> ROW_MAPPER =
-            (rs, rowNum) -> new Time.Builder()
-                    .timeId(rs.getLong("timeid"))
-                    .timeInterval(rs.getTime("timeinterval"))
-                    .build();
-    private static final RowMapper<Long> ROW_MAPPER_2 =
-            (rs, rowNum) -> rs.getLong("timeid");
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
 
     // ----------------------------------------------- TIMES INSERT ----------------------------------------------------
-    private final String TIMES = "SELECT * FROM times ";
-
-    // ----------------------------------------------- TIMES SELECT ----------------------------------------------------
-
-    @Autowired
-    public TimeDaoImpl(final DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName("times")
-                .usingGeneratedKeyColumns("timeid");
-    }
 
     @Override
     public Time createTime(java.sql.Time timeInterval) {
@@ -53,6 +33,8 @@ public class TimeDaoImpl implements TimeDao {
         em.persist(time);
         return time;
     }
+
+    // ----------------------------------------------- TIMES SELECT ----------------------------------------------------
 
     @Override
     public Optional<Time> findTimeById(long timeId) {

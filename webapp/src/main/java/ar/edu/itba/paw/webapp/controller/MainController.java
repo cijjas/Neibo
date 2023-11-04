@@ -275,7 +275,7 @@ public class MainController {
             return publishForm(publishForm, onChannelId);
         }
 
-        ps.createPost(publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), publishForm.getChannel() == null ? BaseChannel.WORKERS.getId() : publishForm.getChannel(), null, null);
+        ps.createPost(publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), publishForm.getChannel() == null ? BaseChannel.WORKERS.getId() : publishForm.getChannel(), publishForm.getTags(), publishForm.getImageFile());
         ModelAndView mav = new ModelAndView("views/publish");
         mav.addObject("channelId", publishForm.getChannel());
         mav.addObject("showSuccessMessage", true);

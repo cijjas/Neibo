@@ -12,11 +12,25 @@
             <c:out value="${param.productDescription}"/>
         </div>
     </div>
-
-
-
-        <div class="f-c-c-s g-0 w-100  h-100">
+    <div class="f-c-c-s g-0 w-100  h-100">
         <div class="header w-100" >
+            <div class="tags-corner f-c-s-s g-05">
+                <div class="department-tag" onclick='window.location.href = "${contextPath}/marketplace/products?department=${param.productDepartmentId}" '>
+                    <spring:message code="${param.productDepartment}"/>
+                </div>
+                <c:choose>
+                    <c:when test="${param.productUsed}">
+                        <div class="used-tag used">
+                            <spring:message code="Used"/>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="used-tag new">
+                            <spring:message code="New"/>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
             <div class="img-product placeholder-glow">
                 <img
                         id="product-image-${param.productId}"
@@ -24,22 +38,24 @@
                         class="placeholder"
                         alt="product_image_${param.productId}"
                 />
+                <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
+
                 <script>
                     (function () {
-                        getImageInto("product-image-${param.productId}",${empty param.productPrimaryPictureId ? 0 : param.productPrimaryPictureId}, "${pageContext.request.contextPath}")
+                        getImageInto("product-image-${param.productId}",${empty param.productPrimaryPictureId ? -2 : param.productPrimaryPictureId}, "${pageContext.request.contextPath}")
                     })();
 
                 </script>
             </div>
         </div>
         <div class="footer w-100" >
-            <div class="product-title p-2"  style="height: 50%">
-                <span>
+            <div class=" p-2 h-50"  >
+                <span class="product-title">
                     <c:out value="${param.productTitle}"/>
                 </span>
             </div>
 
-            <div class="container p-0 " style="height: 50%">
+            <div class="container p-0 h-50" style="height: 50%">
                 <div class="f-c-c-c w-100 h-100 g-0">
                     <div class="row w-100" >
                         <div class="col-7  font-weight-bold " >
@@ -56,16 +72,13 @@
                             </div>
 
                         </div>
-                        <a href="" class="col-5 cool-button product-button">
+                        <a href="${contextPath}/marketplace/product/${param.productId}" class="col-5 cool-button product-button">
                             <spring:message code="See"/>
                             <i class="fa-solid fa-share"></i>
                         </a>
                     </div>
-                    <div class="row  pl-2 pr-2" style="max-width: 100%">
-                        <a class="tag-option tag">
-                            <c:out value="${param.productDepartment}"/>
-                        </a>
-                    </div>
+
+
                 </div>
 
             </div>

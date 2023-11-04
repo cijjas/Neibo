@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.Department;
+import ar.edu.itba.paw.enums.SearchVariant;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
@@ -15,8 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.ConsoleHandler;
 
 @Service
 @Transactional
@@ -32,10 +35,14 @@ public class ProductServiceImpl implements ProductService {
         this.imageService = imageService;
     }
     @Override
-    public Product createProduct(long userId, String name, String description, String price, boolean used, long departmentId, MultipartFile primaryPictureFile, MultipartFile secondaryPictureFile, MultipartFile tertiaryPictureFile) {
+    public Product createProduct(long userId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
         LOGGER.info("User {} Creating Product {}", userId, name);
         double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
-        return productDao.createProduct(userId, name, description, priceDouble, used, departmentId, getImageId(primaryPictureFile), getImageId(secondaryPictureFile), getImageId(tertiaryPictureFile));
+        Long[] idArray = {0L, 0L, 0L};
+        for(int i = 0; i < pictureFiles.length; i++){
+            idArray[i] = getImageId(pictureFiles[i]);
+        }
+        return productDao.createProduct(userId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2]);
     }
 
     private Long getImageId(MultipartFile imageFile) {
@@ -47,10 +54,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile primaryPictureFile, MultipartFile secondaryPictureFile, MultipartFile tertiaryPictureFile) {
+    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
         LOGGER.info("Updating Product {}", productId);
         double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
-        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, getImageId(primaryPictureFile), getImageId(secondaryPictureFile), getImageId(tertiaryPictureFile));
+        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, getImageId(pictureFiles[0]), getImageId(pictureFiles[1]), getImageId(pictureFiles[2]));
     }
 
     @Override
@@ -93,5 +100,25 @@ public class ProductServiceImpl implements ProductService {
     public boolean markAsBought(long buyerId, long productId) {
         LOGGER.info("Marking Product {} as bought by user {}", productId, buyerId);
         return productDao.markAsBought(buyerId, productId);
+    }
+
+    @Override
+    public List<Product> searchInProductsBought(long userId, long neighborhoodId,String searchQuery, int page, int size){
+        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.BOUGHT, page, size);
+    }
+
+    @Override
+    public List<Product> searchInProductsSold(long userId, long neighborhoodId, String searchQuery, int page, int size){
+        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.SOLD, page, size);
+    }
+
+    @Override
+    public List<Product> searchInProductsSelling(long userId, long neighborhoodId, String searchQuery, int page, int size){
+        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.SELLING, page, size);
+    }
+
+    @Override
+    public List<Product> searchInProductsBeingSold(long neighborhoodId, String searchQuery, int page, int size){
+        return productDao.searchInAllProductsBeingSold(neighborhoodId, searchQuery, page, size);
     }
 }

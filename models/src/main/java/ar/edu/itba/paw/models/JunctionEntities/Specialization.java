@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.models.JunctionEntities;
 
-import ar.edu.itba.paw.compositeKeys.SpecializationKey;
+import ar.edu.itba.paw.models.compositeKeys.SpecializationKey;
 import ar.edu.itba.paw.models.MainEntities.Profession;
 import ar.edu.itba.paw.models.MainEntities.Worker;
 
