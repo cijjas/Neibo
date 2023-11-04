@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.enums.WorkerRole;
 
 import java.util.List;
 
@@ -32,9 +33,10 @@ class DaoUtils {
         }
     }
 
-    static void appendCommonWorkerConditions(StringBuilder query, List<Object> queryParams, long[] neighborhoodIds, List<String> professions) {
+    static void appendCommonWorkerConditions(StringBuilder query, List<Object> queryParams, long[] neighborhoodIds, List<String> professions, WorkerRole workerRole) {
         appendInitialWhereClause(query);
         appendWorkerNeighborhoodIdCondition(query, queryParams, neighborhoodIds);
+        appendWorkerNeighborhoodRoleCondition(query, queryParams, workerRole);
 
         if (professions != null && !professions.isEmpty()) {
             appendProfessionsCondition(query, queryParams, professions);
@@ -77,6 +79,13 @@ class DaoUtils {
                 }
             }
             query.append(")");
+        }
+    }
+
+    static void appendWorkerNeighborhoodRoleCondition(StringBuilder query, List<Object> queryParams, WorkerRole workerRole) {
+        if (workerRole != null) {
+            query.append(" AND wn.role = ?");
+            queryParams.add(workerRole.toString());
         }
     }
 

@@ -4,6 +4,8 @@ import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.services.AmenityService;
+import ar.edu.itba.paw.interfaces.services.EmailService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.MainEntities.Amenity;
 import ar.edu.itba.paw.models.MainEntities.Shift;
 import org.slf4j.Logger;
@@ -22,12 +24,17 @@ public class AmenityServiceImpl implements AmenityService {
     private final AmenityDao amenityDao;
     private final ShiftDao shiftDao;
     private final AvailabilityDao availabilityDao;
+    private final EmailService emailService;
+
+    private final UserService userService;
 
     @Autowired
-    public AmenityServiceImpl(final AmenityDao amenityDao, final ShiftDao shiftDao, final AvailabilityDao availabilityDao) {
+    public AmenityServiceImpl(final AmenityDao amenityDao, final ShiftDao shiftDao, final AvailabilityDao availabilityDao, final EmailService emailService, UserService userService) {
         this.availabilityDao = availabilityDao;
         this.shiftDao = shiftDao;
         this.amenityDao = amenityDao;
+        this.emailService = emailService;
+        this.userService = userService;
     }
 
 
@@ -54,6 +61,8 @@ public class AmenityServiceImpl implements AmenityService {
                 availabilityDao.createAvailability(amenity.getAmenityId(), newShift.getShiftId());
             }
         }
+
+        emailService.sendNewAmenityMail(neighborhoodId, name, description, userService.getNeighbors(neighborhoodId));
 
         return amenity;
     }

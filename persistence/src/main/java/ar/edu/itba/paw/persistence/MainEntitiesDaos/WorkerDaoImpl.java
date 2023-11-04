@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
+import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
@@ -77,12 +78,15 @@ public class WorkerDaoImpl implements WorkerDao {
 
 
     @Override
-    public List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long[] neighborhoodIds) {
+    public List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long[] neighborhoodIds, WorkerRole workerRole) {
         LOGGER.debug("Selecting Workers from Neighborhoods {} with professions {}", neighborhoodIds, professions);
         StringBuilder query = new StringBuilder(USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
+        if(neighborhoodIds.length == 0) {
+            return new ArrayList<>(); // empty list
+        }
 
-        appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions);
+        appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions, workerRole);
         query.append(") ");
 
         if (page != 0)
@@ -101,12 +105,15 @@ public class WorkerDaoImpl implements WorkerDao {
     }
 
     @Override
-    public int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds) {
+    public int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole){
         LOGGER.debug("Selecting Workers Count from Neighborhood {} with professions {}", neighborhoodIds, professions);
         StringBuilder query = new StringBuilder(COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
+        if(neighborhoodIds.length == 0) {
+            return 0;
+        }
 
-        appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions);
+        appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions, workerRole);
 
         // Create a native SQL query for counting
         Query sqlQuery = em.createNativeQuery(query.toString());

@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.enums.BaseChannel;
-import ar.edu.itba.paw.enums.BaseNeighborhood;
-import ar.edu.itba.paw.enums.PostStatus;
-import ar.edu.itba.paw.enums.Professions;
+import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.MainEntities.Worker;
@@ -236,11 +233,12 @@ public class ServiceController {
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "profession", required = false) List <String> professions
     ) {
+        System.out.println(ws.getTotalWorkerPagesByCriteria(professions, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER));
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
-        List<Worker> workerList = ws.getWorkersByCriteria(page, size, professions, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId());
+        List<Worker> workerList = ws.getWorkersByCriteria(page, size, professions, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER);
         mav.addObject("workersList", workerList);
         mav.addObject("channel", "Services");
-        mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(professions, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size));
+        mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(professions, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER));
         mav.addObject("contextPath", "/services");
         mav.addObject("page", page);
         mav.addObject("appliedProfessions", professions);

@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -41,7 +43,7 @@ public class InquiryServiceImpl implements InquiryService {
         //Send email to seller
         Product product = productDao.findProductById(productId).orElseThrow(() -> new IllegalStateException("Product not found"));
         User receiver = product.getSeller();
-        sendInquiryMail(receiver, product, message, false);
+        emailService.sendInquiryMail(receiver, product, message, false);
 
         return inquiryDao.createInquiry(userId, productId, message);
     }
@@ -53,25 +55,19 @@ public class InquiryServiceImpl implements InquiryService {
         Inquiry inquiry = inquiryDao.findInquiryById(inquiryId).orElseThrow(() -> new IllegalStateException("Inquiry not found"));
         Product product = inquiry.getProduct();
         User receiver = inquiry.getUser();
-        sendInquiryMail(receiver, product, reply, true);
+        emailService.sendInquiryMail(receiver, product, reply, true);
 
         inquiryDao.replyInquiry(inquiryId, reply);
     }
 
-    private void sendInquiryMail(User receiver, Product product, String message, boolean reply) {
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("name", receiver.getName());
-        variables.put("productName", product.getName());
-        variables.put("message", message);
-        variables.put("productPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/marketplace/" + product.getProductId());
-        boolean isEnglish = receiver.getLanguage() == Language.ENGLISH;
-        if(isEnglish) {
-            variables.put("customMessage", reply ? "Your inquiry has been replied " : "You have a new inquiry ");
-            variables.put("replyOrMessage", reply ? "The reply: " : "The message: ");
-            emailService.sendMessageUsingThymeleafTemplate(receiver.getMail(), reply ? "Response to Inquiry" : "New Inquiry", "inquiry-template_en.html", variables);
-        }
-        variables.put("customMessage", reply ? "Has recibido una respuesta a tu consulta " : "Tienes una nueva consulta ");
-        variables.put("replyOrMessage", reply ? "La respuesta: " : "El mensaje: ");
-        emailService.sendMessageUsingThymeleafTemplate(receiver.getMail(), reply ? "Respuesta a Consulta" : "Nueva Consulta", "inquiry-template_es.html", variables);
+    @Override
+    public Optional<Inquiry> findInquiryById(long inquiryId) {
+        return inquiryDao.findInquiryById(inquiryId);
     }
+
+    @Override
+    public List<Inquiry> getInquiriesByProduct(long productId) {
+        return inquiryDao.getInquiriesByProduct(productId);
+    }
+
 }
