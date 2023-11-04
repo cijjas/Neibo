@@ -23,67 +23,82 @@
                     </form:select>
                     <form:errors path="neighborhoodId" cssClass="landing-error" element="p"/>
                 </div>
-                <div class="row">
-                    <div class="col-6 pr-2">
-                        <div class="form-input mb-3">
-                            <form:label path="name">
-                                <c:set var="firstName"><spring:message code="First.name"/></c:set>
-                                <form:input path="name" placeholder="${firstName}" class="input"/>
-                            </form:label>
-                            <form:errors path="name" cssClass="landing-error" element="p"/>
-                        </div>
-                        <div class="form-input mb-3">
-                            <form:label path="mail">
-                                <c:set var="email"><spring:message code="Email"/></c:set>
-                                <form:input path="mail" placeholder="${email}" class="input"/>
-                            </form:label>
-                            <form:errors path="mail" cssClass="landing-error" element="p"/>
-                        </div>
-                        <div class="form-input ">
-                            <form:label path="identification">
-                                <c:set var="identification"><spring:message code="Identification"/></c:set>
-
-                                <form:input
-                                        type="number"
-                                        pattern="[0-9]*"
-                                        inputmode="numeric"
-                                        min="1" max="99999999"
-                                        path="identification"
-                                        placeholder="${identification}"
-                                        class="input"
-                                />
-                            </form:label>
-                            <form:errors path="identification" cssClass="landing-error" element="p"/>
-                        </div>
-                    </div>
-                    <div class="col-6 pl-2">
-                        <div class="form-input mb-3">
-                            <form:label path="surname">
-                                <c:set var="surname"><spring:message code="Surname"/></c:set>
-                                <form:input path="surname" placeholder="${surname}" class="input"/>
-                            </form:label>
-                            <form:errors path="surname" cssClass="landing-error" element="p"/>
-                        </div>
-                        <div class="form-input mb-3">
-                            <form:label path="password">
-                                <c:set var="password"><spring:message code="Password"/></c:set>
-                                <form:input type="password" path="password" autocomplete="true" placeholder="Password"
-                                            class="input"/>
-                            </form:label>
-                            <form:errors path="password" cssClass="landing-error" element="p"/>
-                        </div>
-                        <div class="form-input ">
-                            <form:label path="language">
-                                <form:select path="language" class="cool-select">
-                                    <form:option value="English"><spring:message code="English"/></form:option>
-                                    <form:option value="Spanish"><spring:message code="Spanish"/></form:option>
-                                </form:select>
-                            </form:label>
-                            <form:errors path="language" cssClass="landing-error" element="p"/>
+                    <div class="row w-100">
+                        <div class="col-6 pr-2">
+                            <div class="form-input">
+                                <form:label path="name">
+                                    <c:set var="firstName"><spring:message code="First.name"/></c:set>
+                                    <form:input path="name" placeholder="${firstName}" class="input"/>
+                                </form:label>
+                                <form:errors path="name" cssClass="landing-error" element="p"/>
+                            </div>
                         </div>
 
+                        <div class="col-6 pl-2">
+                            <div class="form-input ">
+                                <form:label path="surname">
+                                    <c:set var="surname"><spring:message code="Surname"/></c:set>
+                                    <form:input path="surname" placeholder="${surname}" class="input"/>
+                                </form:label>
+                                <form:errors path="surname" cssClass="landing-error" element="p"/>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                    <div class="row w-100">
+                        <div class="col-6 pr-2">
+
+                            <div class="form-input">
+                                <form:label path="mail">
+                                    <c:set var="email"><spring:message code="Email"/></c:set>
+                                    <form:input path="mail" placeholder="${email}" class="input"/>
+                                </form:label>
+                                <form:errors path="mail" cssClass="landing-error" element="p"/>
+                            </div>
+                        </div>
+                        <div class="col-6 pl-2">
+
+                            <div class="form-input">
+                                <form:label path="password">
+                                    <c:set var="password"><spring:message code="Password"/></c:set>
+                                    <form:input type="password" path="password" autocomplete="true" placeholder="Password"
+                                                class="input"/>
+                                </form:label>
+                                <form:errors path="password" cssClass="landing-error" element="p"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row w-100">
+                        <div class="col-6 pr-2">
+                            <div class="form-input ">
+                                <form:label path="identification">
+                                    <c:set var="identification"><spring:message code="Identification"/></c:set>
+
+                                    <form:input
+                                            type="number"
+                                            pattern="[0-9]*"
+                                            inputmode="numeric"
+                                            min="1" max="99999999"
+                                            path="identification"
+                                            placeholder="${identification}"
+                                            class="input"
+                                    />
+                                </form:label>
+                                <form:errors path="identification" cssClass="landing-error" element="p"/>
+                            </div>
+                        </div>
+                        <div class="col-6 pl-2">
+                            <div class="form-input ">
+                                <form:label path="language">
+                                    <form:select path="language" class="cool-select">
+                                        <form:option value="English"><spring:message code="English"/></form:option>
+                                        <form:option value="Spanish"><spring:message code="Spanish"/></form:option>
+                                    </form:select>
+                                </form:label>
+                                <form:errors path="language" cssClass="landing-error" element="p"/>
+                            </div>
+                        </div>
+                    </div>
+
 
 
                 <button onclick="submitSignupForm()" class="action-button font-weight-bolder mt-3"><spring:message

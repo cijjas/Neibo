@@ -494,6 +494,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    text-align: center;
     color: var(--lightertext);
     gap:10px;
 }
@@ -863,6 +864,10 @@
     border-radius: var(--border-radius);
     transform: translateY(-4px);
     box-shadow: 0 5px 0 0 var(--lighttext);
+    &.red{
+        border: 1px solid var(--error);
+        box-shadow: 0 5px 0 0 var(--error);
+    }
 }
 
 
@@ -1071,7 +1076,7 @@ input[type=file]::file-selector-button:hover {
 
 .small-size-container {
     width: 500px;
-    height: 400px;
+    height: 300px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -2235,7 +2240,14 @@ input[type=time] {
     align-items: center; /* Center vertically */
 }
 
-
+.boxy {
+    position: absolute;
+    top: 29%;
+    left: 43%;
+    height: 100px;
+    width: 215px;
+    transform: translate(-50%, -50%);
+}
 .dialog-content {
     position: relative; /* Add position relative to create a positioning context */
     min-width: 400px;
@@ -2245,6 +2257,12 @@ input[type=time] {
     border-radius: var(--border-radius);
     border: 2px solid var(--primary);
     box-shadow: -4px 4px var(--primary);
+
+    &.marketplace{
+        border: 2px solid var(--lila);
+        box-shadow: -4px 4px var(--lila);
+
+    }
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -2260,6 +2278,14 @@ input[type=time] {
     font-size: 24px;
     cursor: pointer;
     color: var(--text);
+    &:hover{
+        color: var(--primary);
+    }
+    &.marketplace{
+        &:hover{
+            color: var(--lila);
+        }
+    }
 }
 
 

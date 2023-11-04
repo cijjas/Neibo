@@ -32,10 +32,10 @@
     }
 
     // Add Tags
-    // Add Tags
     TagsInput.prototype.addTag = function (string) {
-        if (this.anyErrors(string))
+        if (this.anyErrors(string)){
             return;
+        }
 
         this.arr.push(string);
         var tagInput = this;
@@ -138,8 +138,7 @@
         });
 
         tags.input.addEventListener('keydown', function (e) {
-            const str = tags.input.value.trim();
-
+            const str = tags.input.value.trim().toLowerCase().charAt(0).toUpperCase();
             if (![13, 188, 32].includes(e.keyCode)) {
                 // If the key pressed is not Enter, Comma, or Space
                 filterTags(tags, str);
@@ -152,7 +151,8 @@
 
         });
         tags.input.addEventListener('blur', function (e) {
-            const str = tags.input.value.trim();
+            const str = tags.input.value.trim().toLowerCase().charAt(0).toUpperCase();
+            str.charAt(0).toUpperCase();
             if (str !== "") {
                 tags.addTag(str);
                 tags.input.value = ""; // Clear the input field
