@@ -11,6 +11,8 @@ public interface EventService {
 
     Event createEvent(String name, String description, Date date, String startTime, String endTime, long neighborhoodId);
 
+    Event updateEvent(long eventId, String name, String description, Date date, String startTime, String endTime);
+
     // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Event> findEventById(long eventId);

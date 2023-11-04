@@ -39,20 +39,9 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public Request createRequest(long userId, long productId, String message) {
         LOGGER.info("User {} Requesting Product {}", userId, productId);
-        //Send email to seller
         Product product = productDao.findProductById(productId).orElseThrow(() -> new IllegalStateException("Product not found"));
         User sender = userDao.findUserById(userId).orElseThrow(() -> new IllegalStateException("User not found"));
-        User receiver = product.getSeller();
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("name", receiver.getName());
-        variables.put("productName", product.getName());
-        variables.put("senderName", sender.getName());
-        variables.put("senderSurname", sender.getSurname());
-        variables.put("message", message);
-        variables.put("productPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/marketplace/" + product.getProductId());
-        boolean isEnglish = receiver.getLanguage() == Language.ENGLISH;
-        emailService.sendMessageUsingThymeleafTemplate(receiver.getMail(), isEnglish ? "New Request" : "Nueva Solicitud", isEnglish ? "request-template_en.html" : "request-template_es.html", variables);
-
+        emailService.sendNewRequestMail(product, sender, message);
         return requestDao.createRequest(userId, productId);
     }
 }

@@ -107,6 +107,9 @@ public class WorkerDaoImpl implements WorkerDao {
         LOGGER.debug("Selecting Workers from Neighborhoods {} with professions {}", neighborhoodIds, professions);
         StringBuilder query = new StringBuilder(USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
+        if(neighborhoodIds.length == 0) {
+            return new ArrayList<>(); // empty list
+        }
 
         appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions);
         query.append(") ");
@@ -131,6 +134,9 @@ public class WorkerDaoImpl implements WorkerDao {
         LOGGER.debug("Selecting Workers Count from Neighborhood {} with professions {}", neighborhoodIds, professions);
         StringBuilder query = new StringBuilder(COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
+        if(neighborhoodIds.length == 0) {
+            return 0;
+        }
 
         appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions);
 

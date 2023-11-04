@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -46,5 +48,13 @@ public class InquiryDaoImpl implements InquiryDao {
     public Optional<Inquiry> findInquiryById(long inquiryId) {
         LOGGER.debug("Selecting Inquiry with id {}", inquiryId);
         return Optional.ofNullable(em.find(Inquiry.class, inquiryId));
+    }
+
+    @Override
+    public List<Inquiry> getInquiriesByProduct(long productId) {
+        LOGGER.debug("Selecting Inquiries from Product with id {}", productId);
+        TypedQuery<Inquiry> inquiries = em.createQuery("SELECT DISTINCT i FROM Inquiry i WHERE i.product.productId = :productId", Inquiry.class)
+                .setParameter("productId", productId);
+        return inquiries.getResultList();
     }
 }

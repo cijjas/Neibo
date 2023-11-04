@@ -164,15 +164,8 @@ public class UserServiceImpl implements UserService {
         User user = getUser(id);
         // This method has to change
         user.setRole(UserRole.NEIGHBOR);
-        String neighborhood = neighborhoodService.findNeighborhoodById(user.getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
-        Map<String, Object> vars = new HashMap<>();
-        vars.put("name", user.getName());
-        vars.put("neighborhood", neighborhood);
-        vars.put("loginPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/");
-        if (user.getLanguage() == Language.ENGLISH)
-            emailService.sendMessageUsingThymeleafTemplate(user.getMail(), "Verification", "verification-template_en.html", vars);
-        else
-            emailService.sendMessageUsingThymeleafTemplate(user.getMail(), "Verificación", "verification-template_es.html", vars);
+        String neighborhoodName = neighborhoodService.findNeighborhoodById(user.getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
+        emailService.sendVerifiedNeighborMail(user, neighborhoodName);
     }
 
     //for users that were rejected/removed from a neighborhood and have selected a new one to become a part of

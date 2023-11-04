@@ -5,7 +5,9 @@ import ar.edu.itba.paw.enums.Month;
 import ar.edu.itba.paw.interfaces.exceptions.UnexpectedException;
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
+import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.EventService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.MainEntities.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,13 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalLong;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,11 +29,19 @@ public class EventServiceImpl implements EventService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
     private final EventDao eventDao;
     private final TimeDao timeDao;
+    private final EmailService emailService;
+
+    private final UserService userService;
+
+    @PersistenceContext
+    private EntityManager em;
 
     @Autowired
-    public EventServiceImpl(final EventDao eventDao, final TimeDao timeDao) {
+    public EventServiceImpl(final EventDao eventDao, final TimeDao timeDao, final EmailService emailService, UserService userService) {
         this.eventDao = eventDao;
         this.timeDao = timeDao;
+        this.emailService = emailService;
+        this.userService = userService;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -41,9 +50,60 @@ public class EventServiceImpl implements EventService {
     public Event createEvent(String name, String description, Date date, String startTime, String endTime, long neighborhoodId) {
         LOGGER.info("Creating Event {} for Neighborhood {}", name, neighborhoodId);
 
+        Long[] times = stringToTime(startTime, endTime);
+        Event createdEvent = eventDao.createEvent(name, description, date, times[0], times[1], neighborhoodId);
+        emailService.sendEventMail(createdEvent, "there's a new event!", "hay un nuevo evento!", userService.getNeighbors(neighborhoodId));
+        return createdEvent;
+
+//        Time startTimeInTime = null;
+//        Time endTimeInTime = null;
+//
+//        try {
+//            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+//            java.util.Date parsedStartTime = sdf.parse(startTime);
+//            java.util.Date parsedEndTime = sdf.parse(endTime);
+//            startTimeInTime = new Time(parsedStartTime.getTime());
+//            endTimeInTime = new Time(parsedEndTime.getTime());
+//        } catch (ParseException e) {
+//            LOGGER.error("Error whilst creating the Event");
+//            throw new UnexpectedException("Unexpected error while creating the Event");
+//        }
+//        OptionalLong startTimeId = getTimeId(startTimeInTime);
+//        OptionalLong endTimeId = getTimeId(endTimeInTime);
+//
+//        Event createdEvent;
+//        if (startTimeId.isPresent() && endTimeId.isPresent()) {
+//            createdEvent = eventDao.createEvent(name, description, date, startTimeId.getAsLong(), endTimeId.getAsLong(), neighborhoodId);
+//        } else {
+//            // Handle the case where one or both Time objects were not found
+//            if (!startTimeId.isPresent()) {
+//                startTimeId = OptionalLong.of(timeDao.createTime(startTimeInTime).getTimeId());
+//            }
+//            if (!endTimeId.isPresent()) {
+//                endTimeId = OptionalLong.of(timeDao.createTime(endTimeInTime).getTimeId());
+//            }
+//
+//            createdEvent = eventDao.createEvent(name, description, date, startTimeId.getAsLong(), endTimeId.getAsLong(), neighborhoodId);
+//        }
+    }
+
+    @Override
+    public Event updateEvent(long eventId, String name, String description, Date date, String startTime, String endTime) {
+        Long[] times = stringToTime(startTime, endTime);
+        Event event = em.find(Event.class, eventId);
+        event.setName(name);
+        event.setDescription(description);
+        event.setDate(date);
+        event.setStartTime(em.find(ar.edu.itba.paw.models.MainEntities.Time.class, times[0]));
+        event.setEndTime(em.find(ar.edu.itba.paw.models.MainEntities.Time.class, times[1]));
+        emailService.sendEventMail(event, "an event has been updated!", "se ha modificado un evento!", userService.getNeighbors(event.getNeighborhood().getNeighborhoodId()));
+        return event;
+    }
+
+    private Long[] stringToTime(String startTime, String endTime) {
         Time startTimeInTime = null;
         Time endTimeInTime = null;
-        
+
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             java.util.Date parsedStartTime = sdf.parse(startTime);
@@ -57,8 +117,10 @@ public class EventServiceImpl implements EventService {
         OptionalLong startTimeId = getTimeId(startTimeInTime);
         OptionalLong endTimeId = getTimeId(endTimeInTime);
 
+        Long[] timeArray = new Long[2];
         if (startTimeId.isPresent() && endTimeId.isPresent()) {
-            return eventDao.createEvent(name, description, date, startTimeId.getAsLong(), endTimeId.getAsLong(), neighborhoodId);
+            timeArray[0] = startTimeId.getAsLong();
+            timeArray[1] = endTimeId.getAsLong();
         } else {
             // Handle the case where one or both Time objects were not found
             if (!startTimeId.isPresent()) {
@@ -67,9 +129,10 @@ public class EventServiceImpl implements EventService {
             if (!endTimeId.isPresent()) {
                 endTimeId = OptionalLong.of(timeDao.createTime(endTimeInTime).getTimeId());
             }
-
-            return eventDao.createEvent(name, description, date, startTimeId.getAsLong(), endTimeId.getAsLong(), neighborhoodId);
+            timeArray[0] = startTimeId.getAsLong();
+            timeArray[1] = endTimeId.getAsLong();
         }
+        return timeArray;
     }
 
     private OptionalLong getTimeId(Time time) {

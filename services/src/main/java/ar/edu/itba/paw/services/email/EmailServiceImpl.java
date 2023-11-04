@@ -7,9 +7,7 @@ import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.models.MainEntities.Event;
-import ar.edu.itba.paw.models.MainEntities.Neighborhood;
-import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.MainEntities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,6 +123,30 @@ public class EmailServiceImpl implements EmailService {
             sendMessageUsingThymeleafTemplate(admin.getMail(), isEnglish ? "New User" : "Nuevo Usuario", isEnglish ? "newNeighbor-template_en.html" : "newNeighbor-template_es.html", variables);
         }
 
+    }
+
+    @Override
+    public void sendEventMail(Event event, String message_en, String message_es, List<User> receivers) {
+        for(User user : receivers) {
+            boolean isEnglish = user.getLanguage() == Language.ENGLISH;
+            Map<String, Object> variables = new HashMap<>();
+            variables.put("name", user.getName());
+            variables.put("message", isEnglish? message_en : message_es);
+            variables.put("eventPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/events/" + event.getEventId());
+            StringBuilder message = new StringBuilder("\n");
+            message.append(event.getName())
+                    .append("\n")
+                    .append(event.getDescription())
+                    .append("\n")
+                    .append(event.getDate())
+                    .append("\n")
+                    .append(event.getStartTime())
+                    .append(" - ")
+                    .append(event.getEndTime())
+                    .append("\n\n");
+            variables.put("event", message);
+            sendMessageUsingThymeleafTemplate(user.getMail(), isEnglish ? "Event" : "Evento", isEnglish ? "new-event-template_en.html" : "new-event-template_es.html", variables);
+        }
     }
 
     @Override
@@ -292,5 +314,91 @@ public class EmailServiceImpl implements EmailService {
                 sendMessageUsingThymeleafTemplate(to, subject, template, variables);
             }
         }
+    }
+
+    @Override
+    public void sendNewAmenityMail(long neighborhoodId, String amenityName, String amenityDescription, List<User> receivers) {
+        for(User user : receivers) {
+            boolean isEnglish = user.getLanguage() == Language.ENGLISH;
+            Map<String, Object> variables = new HashMap<>();
+            variables.put("name", user.getName());
+            variables.put("amenityPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/events/reservations");
+            variables.put("amenityName", amenityName);
+            variables.put("amenityDescription", amenityDescription);
+            sendMessageUsingThymeleafTemplate(user.getMail(), isEnglish ? "New Amenity" : "Nueva Amenidad", isEnglish ? "new-amenity-template_en.html" : "new-amenity-template_es.html", variables);
+        }
+    }
+
+    @Override
+    public void sendAnnouncementMail(Post post, List<User> receivers) {
+        for (User n : receivers) {
+            boolean isEnglish = n.getLanguage() == Language.ENGLISH;
+            Map<String, Object> vars = new HashMap<>();
+            vars.put("name", n.getName());
+            vars.put("postTitle", post.getTitle());
+            vars.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
+            sendMessageUsingThymeleafTemplate(n.getMail(), isEnglish ? "New Announcement" : "Nuevo Anuncio", isEnglish ? "announcement-template_en.html" : "announcement-template_es.html", vars);
+        }
+    }
+
+    @Override
+    public void sendNewCommentMail(Post post, List<User> receivers) {
+        User user = post.getUser();
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("name", user.getName());
+        variables.put("postTitle", post.getTitle());
+        variables.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
+        boolean isEnglish = user.getLanguage() == Language.ENGLISH;
+        sendMessageUsingThymeleafTemplate(user.getMail(), isEnglish ? "New comment" : "Nuevo Comentario", isEnglish ? "comment-template_en.html" : "comment-template_es.html", variables);
+
+        for (User n : receivers) {
+            Map<String, Object> vars = new HashMap<>();
+            vars.put("name", n.getName());
+            vars.put("postTitle", post.getTitle());
+            vars.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
+            sendMessageUsingThymeleafTemplate(user.getMail(), isEnglish ? "New comment" : "Nuevo Comentario", isEnglish ? "comment-template_en.html" : "comment-template_es.html", vars);
+        }
+    }
+
+    @Override
+    public void sendInquiryMail(User receiver, Product product, String message, boolean reply) {
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("name", receiver.getName());
+        variables.put("productName", product.getName());
+        variables.put("message", message);
+        variables.put("productPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/marketplace/" + product.getProductId());
+        boolean isEnglish = receiver.getLanguage() == Language.ENGLISH;
+        if(isEnglish) {
+            variables.put("customMessage", reply ? "Your inquiry has been replied " : "You have a new inquiry ");
+            variables.put("replyOrMessage", reply ? "The reply: " : "The message: ");
+            sendMessageUsingThymeleafTemplate(receiver.getMail(), reply ? "Response to Inquiry" : "New Inquiry", "inquiry-template_en.html", variables);
+        }
+        variables.put("customMessage", reply ? "Has recibido una respuesta a tu consulta " : "Tienes una nueva consulta ");
+        variables.put("replyOrMessage", reply ? "La respuesta: " : "El mensaje: ");
+        sendMessageUsingThymeleafTemplate(receiver.getMail(), reply ? "Respuesta a Consulta" : "Nueva Consulta", "inquiry-template_es.html", variables);
+    }
+
+    @Override
+    public void sendNewRequestMail(Product product, User sender, String message) {
+        User receiver = product.getSeller();
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("name", receiver.getName());
+        variables.put("productName", product.getName());
+        variables.put("senderName", sender.getName());
+        variables.put("senderSurname", sender.getSurname());
+        variables.put("message", message);
+        variables.put("productPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/marketplace/" + product.getProductId());
+        boolean isEnglish = receiver.getLanguage() == Language.ENGLISH;
+        sendMessageUsingThymeleafTemplate(receiver.getMail(), isEnglish ? "New Request" : "Nueva Solicitud", isEnglish ? "request-template_en.html" : "request-template_es.html", variables);
+    }
+
+    @Override
+    public void sendVerifiedNeighborMail(User user, String neighborhoodName) {
+        boolean isEnglish = user.getLanguage() == Language.ENGLISH;
+        Map<String, Object> vars = new HashMap<>();
+        vars.put("name", user.getName());
+        vars.put("neighborhood", neighborhoodName);
+        vars.put("loginPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/");
+        sendMessageUsingThymeleafTemplate(user.getMail(), isEnglish ? "Verification" : "Verificación", isEnglish? "verification-template_en.html" : "verification-template_es.html", vars);
     }
 }

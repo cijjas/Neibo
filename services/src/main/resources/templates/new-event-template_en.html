@@ -118,9 +118,9 @@
                         <div align="center" class="alignment" style="line-height: 10px">
                           <a href="http://pawserver.it.itba.edu.ar/paw-2023b-02/"
                              target="_blank">
-                            <img alt="Neibo"
+                            <img alt="Neibo logo"
                                  src="https://cdn.discordapp.com/attachments/889581035195596800/1151956791417114654/mailbar.png"
-                                 style="display: block; height: auto; border: 0; max-width: 268px; width: 100%;" title="Neibo - " width="268">
+                                 style="display: block; height: auto; border: 0; max-width: 268px; width: 100%;" title="Neibo logo" width="268">
                           </a>
                         </div>
                       </td>
@@ -168,10 +168,10 @@
                         <div style="color:#2f2f2f;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;font-size:16px;line-height:150%;text-align:left;mso-line-height-alt:24px;">
                           <p style="margin: 0; word-break: break-word;">&nbsp;</p>
                           <p style="margin: 0;"
-                             th:text="'You are subscribed to events happening ' + ${time}">
+                             th:text="${message}">
                           </p>
                           <p style="margin: 0;"
-                             th:text="${events}">
+                             th:text="${event}">
                           </p>
                         </div>
                       </td>
@@ -206,7 +206,7 @@
                           style="padding-left: 20px; padding-right: 20px; padding-top: 40px; text-align: center;">
                         <!-- Add text-align: center; -->
                         <div style="color: #2f2f2f; font-family: Arial, Helvetica Neue, Helvetica, sans-serif; font-size: 16px; letter-spacing: 0px; line-height: 150%; text-align: center; mso-line-height-alt: 24px;">
-                          <p style="margin: 0; word-break: break-word;"><strong><span>Click the button below to see events<br></span></strong>
+                          <p style="margin: 0; word-break: break-word;"><strong><span>Click the button below to see the event<br></span></strong>
                           </p>
                         </div>
                       </td>
@@ -238,10 +238,10 @@
                             <v:textbox inset="0px,0px,0px,0px">
                               <center style="color:#ffffff; font-family:Arial, sans-serif; font-size:14px">
                           <![endif]--><a style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#9ad379;border-radius:0px;width:auto;border-top:0px solid #8a3b8f;font-weight:bold;border-right:0px solid #8a3b8f;border-bottom:0px solid #8a3b8f;border-left:0px solid #8a3b8f;padding-top:5px;padding-bottom:5px;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;font-size:14px;text-align:center;mso-border-alt:none;word-break:keep-all;" target="_blank"
-                                         th:href="@{${eventsPath}}"><span
+                                         th:href="@{${eventPath}}"><span
                                   style="padding-left:40px;padding-right:40px;font-size:14px;display:inline-block;letter-spacing:1px;"><span
                                   style="word-break:break-word;"><span
-                                  data-mce-style style="line-height: 28px;">SEE EVENTS<br></span></span></span></a>
+                                  data-mce-style style="line-height: 28px;">SEE EVENT<br></span></span></span></a>
                           <!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>
                       </td>
                     </tr>
