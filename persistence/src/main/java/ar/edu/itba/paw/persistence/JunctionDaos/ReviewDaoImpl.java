@@ -26,32 +26,11 @@ import java.util.Optional;
 @Repository
 public class ReviewDaoImpl implements ReviewDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewDaoImpl.class);
-
     @PersistenceContext
     private EntityManager em;
-    // ---------------------------------------------- REVIEWS SELECT ---------------------------------------------------
-    private static final RowMapper<Review> ROW_MAPPER = (rs, rowNum) ->
-            new Review.Builder()
-                    .reviewId(rs.getLong("reviewid"))
-                    .rating(rs.getFloat("rating"))
-                    .review(rs.getString("review"))
-                    .date(rs.getTimestamp("date"))
-                    .build();
-    private static final RowMapper<Float> ROW_MAPPER_2 = (rs, rowNum) ->
-            rs.getFloat(1);
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-    private final String REVIEWS = "SELECT * FROM reviews ";
-
-    @Autowired
-    public ReviewDaoImpl(final DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .usingGeneratedKeyColumns("reviewid")
-                .withTableName("reviews");
-    }
 
     // ---------------------------------------------- REVIEWS INSERT ---------------------------------------------------
+
     @Override
     public Review createReview(long workerId, long userId, float rating, String reviewString) {
         LOGGER.debug("Inserting Review");
@@ -65,12 +44,12 @@ public class ReviewDaoImpl implements ReviewDao {
         return review;
     }
 
+    // ---------------------------------------------- REVIEWS SELECT ---------------------------------------------------
+
     @Override
-    public Review getReview(long reviewId) {
-        LOGGER.debug("Selecting Reviews with reviewId {}", reviewId);
-        return em.find(Review.class, reviewId);
-        //DEBERIA SER OPTIONAL
-//        return Optional.ofNullable(em.find(Review.class, reviewId));
+    public Optional<Review> findReviewById(long reviewId) {
+        LOGGER.debug("Selecting Review with reviewId {}", reviewId);
+        return Optional.ofNullable(em.find(Review.class, reviewId));
     }
 
     @Override
@@ -89,8 +68,6 @@ public class ReviewDaoImpl implements ReviewDao {
         if(query.getSingleResult() == null)
             return Optional.of(0.0f);
         return Optional.of(query.getSingleResult().floatValue());
-//        List<Float> rating = jdbcTemplate.query("SELECT AVG(rating) FROM reviews WHERE workerid = ?", ROW_MAPPER_2, workerId);
-//        return rating.isEmpty() ? Optional.empty() : Optional.of(rating.get(0));
     }
 
     @Override
@@ -99,7 +76,6 @@ public class ReviewDaoImpl implements ReviewDao {
         TypedQuery<Long> query = em.createQuery("SELECT COUNT(*) FROM Review r WHERE r.worker.user.userId = :workerId", Long.class);
         query.setParameter("workerId", workerId);
         return query.getSingleResult().intValue();
-//        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM reviews WHERE workerid = ?", Integer.class, workerId);
     }
 
     // ---------------------------------------------- REVIEWS DELETE ---------------------------------------------------

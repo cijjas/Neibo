@@ -33,38 +33,9 @@ public class AmenityDaoImpl implements AmenityDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(AmenityDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-    private ShiftDao shiftDao;
-    private NeighborhoodDao neighborhoodDao;
 
-    private final RowMapper<Amenity> ROW_MAPPER = (rs, rowNum) -> {
-        List<Shift> availableShifts = shiftDao.getAmenityShifts(rs.getLong("amenityid"));
-        Neighborhood neighborhood = neighborhoodDao.findNeighborhoodById(rs.getLong("neighborhoodid")).orElseThrow(()->new NotFoundException("Neighborhood Not Found"));
-        return new Amenity.Builder()
-                .amenityId(rs.getLong("amenityid"))
-                .name(rs.getString("name"))
-                .description(rs.getString("description"))
-                .neighborhood(neighborhood)
-                .availableShifts(availableShifts)
-                .build();
-    };
-    private String AMENITIES = "SELECT * FROM amenities";
-    private String COUNT_AMENITIES = "SELECT COUNT(*) FROM amenities";
 
-    // ---------------------------------------------- AMENITY INSERT ---------------------------------------------------
-
-    @Autowired
-    public AmenityDaoImpl(final DataSource ds, final ShiftDao shiftDao, final NeighborhoodDao neighborhoodDao) {
-        this.neighborhoodDao = neighborhoodDao;
-        this.shiftDao = shiftDao;
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .usingGeneratedKeyColumns("amenityid")
-                .withTableName(Table.amenities.name());
-    }
-
-    // ---------------------------------------------- AMENITY SELECT ---------------------------------------------------
+    // ---------------------------------------------- AMENITIES INSERT ---------------------------------------------------
 
     @Override
     public Amenity createAmenity(String name, String description, long neighborhoodId) {
@@ -77,6 +48,8 @@ public class AmenityDaoImpl implements AmenityDao {
         em.persist(amenity);
         return amenity;
     }
+
+    // ---------------------------------------------- AMENITIES SELECT ---------------------------------------------------
 
     @Override
     public Optional<Amenity> findAmenityById(long amenityId) {
@@ -116,8 +89,6 @@ public class AmenityDaoImpl implements AmenityDao {
         return dataTypedQuery.getResultList();
     }
 
-
-
     @Override
     public int getAmenitiesCount(long neighborhoodId) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -130,10 +101,10 @@ public class AmenityDaoImpl implements AmenityDao {
         return query.getSingleResult().intValue();
     }
 
-    // ---------------------------------------------- AMENITY UPDATE ---------------------------------------------------
+    // ---------------------------------------------- AMENITIES UPDATE ---------------------------------------------------
 
     @Override
-    public void updateAmenity(
+    public Amenity updateAmenity(
             final long id,
             final String name,
             final String description
@@ -145,9 +116,10 @@ public class AmenityDaoImpl implements AmenityDao {
             amenity.setName(name);
             amenity.setDescription(description);
         }
+        return amenity;
     }
 
-    // ---------------------------------------------- AMENITY DELETE ---------------------------------------------------
+    // ---------------------------------------------- AMENITIES DELETE ---------------------------------------------------
 
     @Override
     public boolean deleteAmenity(long amenityId) {

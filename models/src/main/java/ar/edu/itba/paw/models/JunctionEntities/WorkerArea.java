@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models.JunctionEntities;
 
-import ar.edu.itba.paw.compositeKeys.WorkerAreaKey;
 import ar.edu.itba.paw.enums.WorkerRole;
+import ar.edu.itba.paw.models.compositeKeys.WorkerAreaKey;
 import ar.edu.itba.paw.models.MainEntities.*;
 
 import javax.persistence.*;

@@ -3,8 +3,6 @@ package ar.edu.itba.paw.models.MainEntities;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.models.JunctionEntities.Booking;
-import ar.edu.itba.paw.models.MainEntities.Image;
-import ar.edu.itba.paw.models.MainEntities.Neighborhood;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -97,7 +95,7 @@ public class User {
 
     @ManyToMany
     @JoinTable(name = "events_users", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "eventid"))
-    private Set<Event> events;
+    private Set<Event> eventsSubscribed;
 
 //    @OneToOne
 //    @JoinColumn(name = "workerid", referencedColumnName = "workerid")
@@ -381,7 +379,52 @@ public class User {
     public void setReviewsGiven(Set<Worker> reviewsGiven) {
         this.reviewsGiven = reviewsGiven;
     }
-//    public Worker getWorker() {
+
+    public Set<Worker> getReviewsGiven() {
+        return reviewsGiven;
+    }
+
+    public List<Product> getProductsSelling() {
+        return productsSelling;
+    }
+
+    public void setProductsSelling(List<Product> productsSelling) {
+        this.productsSelling = productsSelling;
+    }
+
+    public List<Product> getProductsBought() {
+        return productsBought;
+    }
+
+    public void setProductsBought(List<Product> productsBought) {
+        this.productsBought = productsBought;
+    }
+
+    public Set<Product> getRequestedProducts() {
+        return requestedProducts;
+    }
+
+    public void setRequestedProducts(Set<Product> requestedProducts) {
+        this.requestedProducts = requestedProducts;
+    }
+
+    public Set<Product> getInquiredProducts() {
+        return inquiredProducts;
+    }
+
+    public void setInquiredProducts(Set<Product> inquiredProducts) {
+        this.inquiredProducts = inquiredProducts;
+    }
+
+    public Set<Event> getEventsSubscribed() {
+        return eventsSubscribed;
+    }
+
+    public void setEventsSubscribed(Set<Event> events) {
+        this.eventsSubscribed = events;
+    }
+
+    //    public Worker getWorker() {
 //        return worker;
 //    }
 //

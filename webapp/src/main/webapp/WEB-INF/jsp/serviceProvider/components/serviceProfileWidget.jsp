@@ -8,6 +8,7 @@
                         class="big-profile-picture placeholder"
                         alt="worker_picture_img_${worker.user.userId}"
                 />
+
                 <script>
                     (function () {
                         getImageInto("worker-profile-image-${worker.user.userId}",${empty worker.user.profilePicture.imageId ? 0 : worker.user.profilePicture.imageId}, "${pageContext.request.contextPath}")

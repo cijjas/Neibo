@@ -32,7 +32,7 @@ public interface UserDao {
 
     // ---------------------------------------------- USERS UPDATE -----------------------------------------------------
 
-    void setUserValues(final long id, final String password, final String name, final String surname,
+    User setUserValues(final long id, final String password, final String name, final String surname,
                        final Language language, final boolean darkMode, final long profilePictureId,
                        final UserRole role, final int identification, final long neighborhoodId);
 }

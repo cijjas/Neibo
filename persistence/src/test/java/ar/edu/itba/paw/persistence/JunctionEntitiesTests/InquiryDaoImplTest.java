@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
+import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.JunctionEntities.Inquiry;
-import ar.edu.itba.paw.persistence.JunctionDaos.ChannelMappingDaoImpl;
 import ar.edu.itba.paw.persistence.JunctionDaos.InquiryDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -59,7 +59,8 @@ public class InquiryDaoImplTest {
         long uKey1 = testInserter.createUser(MAIL1, nhKey);
         long uKey2 = testInserter.createUser(MAIL2, nhKey);
         long uKey3 = testInserter.createUser(MAIL3, nhKey);
-        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
 
         // Exercise
         Inquiry inquiry = inquiryDao.createInquiry(uKey3, pKey, MESSAGE);
@@ -79,7 +80,8 @@ public class InquiryDaoImplTest {
         long uKey1 = testInserter.createUser(MAIL1, nhKey);
         long uKey2 = testInserter.createUser(MAIL2, nhKey);
         long uKey3 = testInserter.createUser(MAIL3, nhKey);
-        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
         long iqKey = testInserter.createInquiry(pKey, uKey3);
 
         // Exercise
@@ -90,6 +92,17 @@ public class InquiryDaoImplTest {
     }
 
     @Test
+    public void testFindInquiryByInvalidId() {
+        // Pre Conditions
+
+        // Exercise
+        Optional<Inquiry> maybeInquiry = inquiryDao.findInquiryById(1);
+
+        // Validations & Post Conditions
+        assertFalse(maybeInquiry.isPresent());
+    }
+
+    @Test
     public void testReplyInquiry() {
         // Pre Conditions
         long iKey = testInserter.createImage();
@@ -97,7 +110,8 @@ public class InquiryDaoImplTest {
         long uKey1 = testInserter.createUser(MAIL1, nhKey);
         long uKey2 = testInserter.createUser(MAIL2, nhKey);
         long uKey3 = testInserter.createUser(MAIL3, nhKey);
-        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
         long iqKey = testInserter.createInquiry(pKey, uKey3);
 
         // Exercise
@@ -107,5 +121,16 @@ public class InquiryDaoImplTest {
         assertNotNull(inquiry);
         assertEquals(inquiry.getReply(), REPLY);
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_inquiries.name()));
+    }
+
+    @Test
+    public void testReplyInvalidInquiry() {
+        // Pre Conditions
+
+        // Exercise
+        Inquiry inquiry = inquiryDao.replyInquiry(1, REPLY);
+
+        // Validations & Post Conditions
+        assertNull(inquiry);
     }
 }

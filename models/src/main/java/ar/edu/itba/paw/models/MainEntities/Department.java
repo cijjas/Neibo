@@ -1,10 +1,6 @@
 package ar.edu.itba.paw.models.MainEntities;
 
-import ar.edu.itba.paw.enums.Departments;
-import ar.edu.itba.paw.enums.Professions;
-
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,11 +13,10 @@ public class Department {
 
     @Column(length = 64)
     @Enumerated(EnumType.STRING)
-    private Departments department;
+    private ar.edu.itba.paw.enums.Department department;
 
-    @ManyToMany
-    @JoinTable(name = "products_departments", joinColumns = @JoinColumn(name = "departmentid"), inverseJoinColumns = @JoinColumn(name = "productid"))
-    private List<Product> products;
+    @OneToMany(mappedBy = "department")
+    private Set<Product> products;
 
     public Department(){}
 
@@ -38,19 +33,19 @@ public class Department {
         this.departmentId = departmentId;
     }
 
-    public Departments getDepartment() {
+    public ar.edu.itba.paw.enums.Department getDepartment() {
         return department;
     }
 
-    public void setDepartment(Departments department) {
+    public void setDepartment(ar.edu.itba.paw.enums.Department department) {
         this.department = department;
     }
 
-    public List<Product> getProducts() {
+    public Set<Product> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(Set<Product> products) {
         this.products = products;
     }
 
@@ -64,14 +59,14 @@ public class Department {
 
     public static class Builder {
         private Long departmentId;
-        private Departments department;
+        private ar.edu.itba.paw.enums.Department department;
 
         public Builder departmentId(Long departmentId) {
             this.departmentId = departmentId;
             return this;
         }
 
-        public Builder department(Departments department) {
+        public Builder department(ar.edu.itba.paw.enums.Department department) {
             this.department = department;
             return this;
         }

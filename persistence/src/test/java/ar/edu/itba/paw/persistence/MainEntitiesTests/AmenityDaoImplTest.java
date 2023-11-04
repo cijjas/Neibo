@@ -2,7 +2,9 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
+import ar.edu.itba.paw.models.JunctionEntities.Availability;
 import ar.edu.itba.paw.models.MainEntities.Amenity;
+import ar.edu.itba.paw.models.MainEntities.Product;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -30,6 +32,8 @@ import static org.junit.Assert.*;
 @Rollback
 public class AmenityDaoImplTest {
 
+    public static final String NEW_AMENITY = "New Amenity";
+    public static final String NEW_DESCRIPTION = "New Description";
     private final String AMENITY_NAME_1 = "Amenity Name";
     private final String AMENITY_NAME_2 = "Amenity Name 2";
     private final String AMENITY_DESCRIPTION_1 = "Amenity Description";
@@ -126,6 +130,22 @@ public class AmenityDaoImplTest {
 
         // Validations & Post Conditions
         assertTrue(amenities.isEmpty());
+    }
+
+    @Test
+    public void testUpdateAmenity() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey1 = testInserter.createAmenity(nhKey);
+
+        // Exercise
+        Amenity amenity = amenityDao.updateAmenity(aKey1, NEW_AMENITY, NEW_DESCRIPTION);
+
+        // Validations & Post Conditions
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.amenities.name()));
+        assertNotNull(amenity);
+        assertEquals(NEW_AMENITY, amenity.getName());
+        assertEquals(NEW_DESCRIPTION, amenity.getDescription());
     }
 
     @Test

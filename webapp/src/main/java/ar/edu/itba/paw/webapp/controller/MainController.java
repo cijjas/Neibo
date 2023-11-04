@@ -125,7 +125,7 @@ public class MainController {
         return mav;
     }
 
-    @RequestMapping(value={"/", "/feed"})
+    @RequestMapping(value={"/feed", "/"})
     public ModelAndView index(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size,
@@ -168,7 +168,6 @@ public class MainController {
     public String updateDarkModePreference() {
         sessionUtils.clearLoggedUser();
         sessionUtils.getLoggedUser();
-        System.out.println("Toggle Dark Mode");
         us.toggleDarkMode(sessionUtils.getLoggedUser().getUserId());
         return "redirect:/profile";
     }
@@ -276,7 +275,7 @@ public class MainController {
             return publishForm(publishForm, onChannelId);
         }
 
-        ps.createPost(publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), publishForm.getChannel() == null ? BaseChannel.WORKERS.getId() : publishForm.getChannel(), null, null);
+        ps.createPost(publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), publishForm.getChannel() == null ? BaseChannel.WORKERS.getId() : publishForm.getChannel(), publishForm.getTags(), publishForm.getImageFile());
         ModelAndView mav = new ModelAndView("views/publish");
         mav.addObject("channelId", publishForm.getChannel());
         mav.addObject("showSuccessMessage", true);

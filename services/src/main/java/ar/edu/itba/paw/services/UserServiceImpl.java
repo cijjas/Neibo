@@ -164,15 +164,8 @@ public class UserServiceImpl implements UserService {
         User user = getUser(id);
         // This method has to change
         user.setRole(UserRole.NEIGHBOR);
-        String neighborhood = neighborhoodService.findNeighborhoodById(user.getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
-        Map<String, Object> vars = new HashMap<>();
-        vars.put("name", user.getName());
-        vars.put("neighborhood", neighborhood);
-        vars.put("loginPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/");
-        if (user.getLanguage() == Language.ENGLISH)
-            emailService.sendMessageUsingThymeleafTemplate(user.getMail(), "Verification", "verification-template_en.html", vars);
-        else
-            emailService.sendMessageUsingThymeleafTemplate(user.getMail(), "Verificación", "verification-template_es.html", vars);
+        String neighborhoodName = neighborhoodService.findNeighborhoodById(user.getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
+        emailService.sendVerifiedNeighborMail(user, neighborhoodName);
     }
 
     //for users that were rejected/removed from a neighborhood and have selected a new one to become a part of
@@ -194,7 +187,6 @@ public class UserServiceImpl implements UserService {
     public void updateLanguage(long id, Language language) {
         LOGGER.info("Updating Language for User {} to {}", id, language);
         User user = getUser(id);
-        // TODO userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), language, n.isDarkMode(), n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
     }
 
     // Will be deprecated if more languages are included
@@ -211,14 +203,20 @@ public class UserServiceImpl implements UserService {
     public void resetPreferenceValues(long id) {
         LOGGER.info("Resetting preferences for User {}", id);
         User user = getUser(id);
-        // TODO userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, n.getPassword(), n.getName(), n.getSurname(), Language.ENGLISH, false, n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
     }
 
     @Override
     public void setNewPassword(long id, String newPassword) {
         LOGGER.info("Setting new password for User {}", id);
         User user = getUser(id);
-        // TODO userDao.findUserById(id).ifPresent(n -> userDao.setUserValues(id, passwordEncoder.encode(newPassword), n.getName(), n.getSurname(), n.getLanguage(), n.isDarkMode(), n.getProfilePictureId(), n.getRole(), n.getIdentification(), n.getNeighborhoodId()));
+    }
+
+    @Override
+    public void changeNeighborhood(long userId, long neighborhoodId) {
+        LOGGER.info("Setting new neighborhood for User {}", userId);
+        User user = getUser(userId);
+        userDao.setUserValues(userId, user.getPassword(), user.getName(), user.getSurname(), user.getLanguage(), user.getDarkMode(),
+                user.getProfilePicture().getImageId(), user.getRole(), user.getIdentification(), neighborhoodId);
     }
 
     private User getUser(long userId){

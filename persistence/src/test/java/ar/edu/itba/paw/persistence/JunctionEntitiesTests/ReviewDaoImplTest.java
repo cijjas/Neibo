@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.interfaces.persistence.ReviewDao;
 import ar.edu.itba.paw.models.MainEntities.Review;
 import ar.edu.itba.paw.persistence.JunctionDaos.ReviewDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
@@ -80,7 +79,7 @@ public class ReviewDaoImplTest {
     }
 
     @Test
-    public void testGetReview() {
+    public void testGetReviews() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
@@ -91,30 +90,21 @@ public class ReviewDaoImplTest {
         long rKey = testInserter.createReview(uKey, uKey2);
 
         // Exercise
-        Review retrievedReview = reviewDao.getReview(rKey);
+        Optional<Review> retrievedReview = reviewDao.findReviewById(rKey);
 
         // Validations & Post Conditions
-        assertNotNull(retrievedReview);
+        assertTrue(retrievedReview.isPresent());
     }
 
     @Test
-    public void testGetReviews() {
+    public void testGetNoReviews() {
         // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
-        long pKey = testInserter.createProfession();
-        testInserter.createWorker(uKey);
-        testInserter.createSpecialization(uKey, pKey);
-        testInserter.createReview(uKey, uKey2, RATING_1, REVIEW_1);
-        testInserter.createReview(uKey, uKey2, RATING_2, REVIEW_2);
 
         // Exercise
-        List<Review> reviews = reviewDao.getReviews(uKey);
+        List<Review> reviews = reviewDao.getReviews(1);
 
         // Validations & Post Conditions
-        assertNotNull(reviews);
-        assertEquals(2, reviews.size());
+        assertTrue(reviews.isEmpty());
     }
 
     @Test
@@ -138,6 +128,24 @@ public class ReviewDaoImplTest {
     }
 
     @Test
+    public void testGetNullAvgRating() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
+        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long pKey = testInserter.createProfession();
+        testInserter.createWorker(uKey);
+        testInserter.createSpecialization(uKey, pKey);
+
+        // Exercise
+        Optional<Float> maybeAvgRating = reviewDao.getAvgRating(uKey);
+
+        // Validations & Post Conditions
+        assertTrue(maybeAvgRating.isPresent());
+        assertEquals(0, maybeAvgRating.get(), DELTA);
+    }
+
+    @Test
     public void testGetReviewsCount() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
@@ -154,6 +162,17 @@ public class ReviewDaoImplTest {
 
         // Validations & Post Conditions
         assertEquals(2, count);
+    }
+
+    @Test
+    public void testGetReviewsCountZero() {
+        // Pre Conditions
+
+        // Exercise
+        int count = reviewDao.getReviewsCount(1);
+
+        // Validations & Post Conditions
+        assertEquals(0, count);
     }
 
     @Test
@@ -174,5 +193,17 @@ public class ReviewDaoImplTest {
         em.flush();
         assertTrue(deleted);
         assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.reviews.name()));
+    }
+
+    @Test
+    public void testDeleteInvalidReview() {
+        // Pre Conditions
+
+        // Exercise
+        boolean deleted = reviewDao.deleteReview(1);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
     }
 }

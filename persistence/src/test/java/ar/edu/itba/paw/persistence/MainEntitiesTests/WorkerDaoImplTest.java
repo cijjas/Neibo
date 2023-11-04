@@ -38,6 +38,10 @@ public class WorkerDaoImplTest {
     private static final String NH_NAME_2 = "Neighborhood 2";
     private static final int BASE_PAGE = 1;
     private static final int BASE_PAGE_SIZE = 10;
+    public static final String NEW_PHONE = "New Phone";
+    public static final String NEW_ADDRESS = "New Address";
+    public static final String NEW_BUSINESS = "New Business";
+    public static final String NEW_BIO = "New Bio";
     private final String PHONE_NUMBER_1 = "123-456-7890";
     private final String ADDRESS_1 = "123 Worker St";
     private final String BUSINESS_1 = "Worker Business";
@@ -127,10 +131,14 @@ public class WorkerDaoImplTest {
         testInserter.createWorker(uKey);
 
         // Exercise
-        workerDao.updateWorker(uKey, PHONE_NUMBER_1, ADDRESS_1, BUSINESS_1, iKey, BIO_1);
+        Worker worker = workerDao.updateWorker(uKey, NEW_PHONE, NEW_ADDRESS, NEW_BUSINESS, iKey, NEW_BIO);
 
         // Validations & Post Conditions
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_info.name()));
+        assertEquals(NEW_PHONE, worker.getPhoneNumber());
+        assertEquals(NEW_ADDRESS, worker.getAddress());
+        assertEquals(NEW_BUSINESS, worker.getBusinessName());
+        assertEquals(NEW_BIO, worker.getBio());
     }
 
     @Test
@@ -158,7 +166,6 @@ public class WorkerDaoImplTest {
         // Validations
         assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
     }
-
 
     @Test
     public void testGetWorkersByNeighborhoodAndSize() {
@@ -204,11 +211,6 @@ public class WorkerDaoImplTest {
         uKey3 = testInserter.createUser(WORKER_MAIL_3, nhKey2);
         uKey4 = testInserter.createUser(WORKER_MAIL_4, nhKey2);
 
-        testInserter.createWorkerArea(uKey1, nhKey1);
-        testInserter.createWorkerArea(uKey2, nhKey1);
-        testInserter.createWorkerArea(uKey3, nhKey2);
-        testInserter.createWorkerArea(uKey4, nhKey2);
-
         pKey1 = testInserter.createProfession(Professions.PLUMBER);
         pKey2 = testInserter.createProfession(Professions.CARPENTER);
 
@@ -220,5 +222,10 @@ public class WorkerDaoImplTest {
         testInserter.createWorker(uKey4);
         testInserter.createSpecialization(uKey4, pKey1);
         testInserter.createSpecialization(uKey4, pKey2);
+
+        testInserter.createWorkerArea(uKey1, nhKey1);
+        testInserter.createWorkerArea(uKey2, nhKey1);
+        testInserter.createWorkerArea(uKey3, nhKey2);
+        testInserter.createWorkerArea(uKey4, nhKey2);
     }
 }

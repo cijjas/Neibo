@@ -59,19 +59,7 @@ public class PostServiceImpl implements PostService {
     public Post createAdminPost(final long neighborhoodId, final String title, final String description, final long neighborId, final int channelId, final String tags, final MultipartFile imageFile) {
         Post post = createPost(title, description, neighborId, channelId, tags, imageFile);
         assert post != null;
-        try {
-            for (User n : userService.getNeighbors(neighborhoodId)) {
-                boolean isEnglish = n.getLanguage() == Language.ENGLISH;
-                Map<String, Object> vars = new HashMap<>();
-                vars.put("name", n.getName());
-                vars.put("postTitle", post.getTitle());
-                vars.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
-                emailService.sendMessageUsingThymeleafTemplate(n.getMail(), isEnglish ? "New Announcement" : "Nuevo Anuncio", isEnglish ? "announcement-template_en.html" : "announcement-template_es.html", vars);
-            }
-        } catch (Exception e) {
-            LOGGER.error("Admin Post Email could not be sent");
-        }
-
+        emailService.sendAnnouncementMail(post, userService.getNeighbors(neighborhoodId));
         return post;
     }
 

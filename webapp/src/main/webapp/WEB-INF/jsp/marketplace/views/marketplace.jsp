@@ -19,6 +19,8 @@
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
     <title><spring:message code="Marketplace"/></title>
 </head>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" scope="page" />
+<c:set var="channel" value="${channel}" scope="page" />
 
 <body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
@@ -29,52 +31,41 @@
         </div>
 
         <div id="center-grid" class="column-center pl-3 ">
-            <div class="upper-feed-buttons-box w-100 mb-2">
-                <div class="f-r-s-c filters-marketplace g-05" >
-                    <a href="" class="cool-feed-button rounded  marketplace-button ${ channel == "Marketplace" ? 'active' : ''}">
-                        <i class="fas fa-shopping-cart"></i>
-                        <spring:message code="Marketplace"/>
-                    </a>
+            <div style="position: relative">
+                <%@ include file="/WEB-INF/jsp/marketplace/components/upperMarketplaceButtons.jsp" %>
 
-                    <a href="" class="cool-feed-button rounded marketplace-button">
-                        <i class="fa-solid fa-bag-shopping"></i>
-                        <spring:message code="My.purchases"/>
-                    </a>
+                <c:choose>
+                    <c:when test="${empty productList}">
+                        <div class="cool-static-container w-100">
+                                <%--no products found --%>
+                            <div class="no-posts-found">
+                                <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+                                <spring:message code="Products.not.found"/>
+                            </div>
 
-                    <div class="f-r-s-c sub-filters g-05">
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="row m-0 product-grid-row">
+                            <c:forEach var="product" items="${productList}">
+                                <jsp:include page="/WEB-INF/jsp/marketplace/components/productCard.jsp">
+                                    <jsp:param name="productTitle" value="${product.name}"/>
+                                    <jsp:param name="productDescription" value="${product.description}"/>
+                                    <jsp:param name="productDepartment" value="${product.department.department}"/>
+                                    <jsp:param name="productPrice" value="${product.priceIntegerString}"/>
+                                    <jsp:param name="productDecimal" value="${product.priceDecimalString}"/>
+                                    <jsp:param name="productPrimaryPictureId" value="${product.primaryPicture.imageId}"/>
+                                    <jsp:param name="productId" value="${product.productId}"/>
+                                    <jsp:param name="productUsed" value="${product.used}"/>
+                                    <jsp:param name="productDepartmentId" value="${product.department.department.id}"/>
+                                </jsp:include>
+                            </c:forEach>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
 
-                        <a href="" class="cool-feed-button rounded  marketplace-button">
-                            <i class="fa-solid fa-tags"></i>
-                            <spring:message code="My.sales"/>
-                        </a>
-                        <a href="" class="cool-feed-button rounded  marketplace-button">
-                            <i class="fas fa-shopping-cart"></i>
-                            <spring:message code="My.products"/>
-                        </a>
-                    </div>
-
-                </div>
-                <a href="" class="cool-feed-button marketplace-button">
-                    <i class="fa-solid fa-hand-holding-dollar"></i>
-                    <spring:message code="Sell"/>
-                </a>
             </div>
-            <div class="row m-0 product-grid-row">
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-                <%@ include file="/WEB-INF/jsp/marketplace/components/productCard.jsp"%>
-            </div>
+
 
 
         </div>

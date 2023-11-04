@@ -45,22 +45,7 @@ public class CommentServiceImpl implements CommentService {
 
         Post post = postService.findPostById(postId).orElse(null);
         assert post != null;
-        User user = post.getUser();
-        Map<String, Object> variables = new HashMap<>();
-        variables.put("name", user.getName());
-        variables.put("postTitle", post.getTitle());
-        variables.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
-        boolean isEnglish = user.getLanguage() == Language.ENGLISH;
-        emailService.sendMessageUsingThymeleafTemplate(user.getMail(), isEnglish ? "New comment" : "Nuevo Comentario", isEnglish ? "comment-template_en.html" : "comment-template_es.html", variables);
-
-        for (User n : userService.getNeighborsSubscribedByPostId(postId)) {
-            Map<String, Object> vars = new HashMap<>();
-            vars.put("name", n.getName());
-            vars.put("postTitle", post.getTitle());
-            vars.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
-            emailService.sendMessageUsingThymeleafTemplate(user.getMail(), isEnglish ? "New comment" : "Nuevo Comentario", isEnglish ? "comment-template_en.html" : "comment-template_es.html", vars);
-        }
-
+        emailService.sendNewCommentMail(post, userService.getNeighborsSubscribedByPostId(postId));
         return commentDao.createComment(comment, neighborId, postId);
     }
 

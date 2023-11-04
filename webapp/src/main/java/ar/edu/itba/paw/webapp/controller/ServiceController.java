@@ -264,7 +264,6 @@ public class ServiceController {
 //            @RequestParam("neighborhoodIds") List<Long> neighborhoodIds
     ) {
         long workerId = sessionUtils.getLoggedUser().getUserId();
-        System.out.println(neighborhoodsForm.getNeighborhoodIds());
         //cambiar addWorkerToNeighborhoods para que acepte string y la parsea
 //        nhws.addWorkerToNeighborhoods(workerId, neighborhoodIds);
         return new ModelAndView("redirect:/services/neighborhoods");

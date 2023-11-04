@@ -20,26 +20,8 @@ public class DayDaoImpl implements DayDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(DayDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
-    private static final RowMapper<Day> ROW_MAPPER =
-            (rs, rowNum) -> new Day.Builder()
-                    .dayId(rs.getLong("dayid"))
-                    .dayName(rs.getString("dayname"))
-                    .build();
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert jdbcInsert;
-    private final String DAYS = "SELECT * FROM days ";
 
     // ------------------------------------------------ DAYS INSERT ----------------------------------------------------
-
-    @Autowired
-    public DayDaoImpl(final DataSource ds) {
-        this.jdbcTemplate = new JdbcTemplate(ds);
-        this.jdbcInsert = new SimpleJdbcInsert(ds)
-                .withTableName("days")
-                .usingGeneratedKeyColumns("dayid");
-    }
-
-    // ------------------------------------------------ DAYS SELECT ----------------------------------------------------
 
     @Override
     public Day createDay(String dayName) {
@@ -50,6 +32,8 @@ public class DayDaoImpl implements DayDao {
         em.persist(day);
         return day;
     }
+
+    // ------------------------------------------------ DAYS SELECT ----------------------------------------------------
 
     @Override
     public Optional<Day> findDayById(long dayId) {

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.EmailConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.LanguageConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.NeighborhoodConstraint;
 import org.hibernate.validator.constraints.Email;
@@ -25,6 +26,7 @@ public class SignupForm {
     @NotBlank
     @Size(min = 6, max = 128)
     @Email
+    @EmailConstraint
     private String mail;
 
     @NotBlank

@@ -177,6 +177,7 @@
 .cool-feed-button:before{
 }
 .upper-feed-buttons-box {
+    z-index: 3;
     padding: 1em 1em 1em 1em;
     margin-bottom: 1.25rem;
     top: 20px;
@@ -327,7 +328,7 @@
 
 /*_----------------------------------------------*/
 .post-input {
-< width: 100 %;
+    width: 100%;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
@@ -484,10 +485,9 @@
 
 .no-posts-found {
     width: 100%;
-    height: 300px;
+    height: 400px;
     border: 2px solid var(--bordercolor);
     padding: 20px;
-    margin: 10px auto;
     background-color: var(--onbackground);
     border-radius: 10px;
     display: flex;
@@ -587,7 +587,7 @@
     top: 0;
     width: 100%;
     overflow: hidden;
-    z-index: -1;
+    z-index: -2;
 }
 
 .svg-logo {
@@ -814,6 +814,15 @@
             color: var(--background);
             background-color: var(--accent);
         }
+    }
+    &.marketplace-tag{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        font-size: 1em;
+        -webkit-box-orient: vertical;
+        line-height: 1.5;
     }
 
     &:hover {
@@ -1385,7 +1394,6 @@ footer div {
     width: 200px;
     transition: all 0.3s ease-in-out;
     border-radius: var(--border-hard);
-
     box-shadow: 0 0 0 0 var(--primary);
     background-color: var(--background);
     color: var(--primary);
@@ -1412,7 +1420,9 @@ footer div {
         border: 1px solid var(--lighttext);
         border-radius: var(--border-hard);
         transition: all 0.3s ease-in-out;
-
+        &:hover,
+        &:active,
+        &:focus-visible,
         &:hover {
             border: 1px solid var(--old-primary);
             transform: translateY(-4px);
@@ -1428,7 +1438,9 @@ footer div {
         border: 1px solid var(--lighttext);
         border-radius: var(--border-hard);
         transition: all 0.3s ease-in-out;
-
+        &:hover,
+        &:active,
+        &:focus-visible,
         &:hover {
             border: 1px solid var(--primary);
             transform: translateY(-4px);
@@ -1444,7 +1456,9 @@ footer div {
         border: 1px solid var(--lighttext);
         border-radius: var(--border-hard);
         transition: all 0.3s ease-in-out;
-
+        &:hover,
+        &:active,
+        &:focus-visible,
         &:hover {
             border: 1px solid var(--error);
             transform: translateY(-4px);
@@ -1462,7 +1476,9 @@ footer div {
         border-radius: var(--border-hard) 0 0 var(--border-hard) ;
         transition: all 0.3s ease-in-out;
         border-right: transparent;
-
+        &:hover,
+        &:active,
+        &:focus-visible,
         &:hover {
             border: 1px solid var(--lila);
             transform: translateY(-4px);
@@ -1475,18 +1491,46 @@ footer div {
     &.marketplace-button{
         padding: 7px 7px;
         font-size: 12px;
-
         color: var(--text);
         background-color: var(--onbackground);
         border: 1px solid var(--lighttext);
-        border-radius: var(--border-hard) ;
-        transition: all 0.3s ease-in-out;
+        &.pure{
+            color: var(--lila);
+            height: 35px;
 
+            border: 1px solid var(--lila);
+        }
+
+        border-radius: var(--border-hard);
+        transition: all 0.3s ease-in-out;
+        &.square{
+            border-radius: var(--border-light);
+        }
+        &.square-radius{
+            border-radius: var(--border-radius);
+        }
+        &:active,
+        &:focus-visible,
         &:hover {
             border: 1px solid var(--lila);
             transform: translateY(-4px);
             box-shadow: 0 4px 0 0 var(--lila);
             color: var(--lila);
+        }
+
+        &.filled-interesting{
+            background-color: var(--lila);
+            border: 1px solid var(--background);
+            transform: translateY(-4px);
+            box-shadow: 0 4px 0 0 var(--lila);
+            color: var(--always-background);
+            transition: all 30ms ease-in-out;
+
+            &:active{
+                border: 1px solid var(--background);
+                transform: translateY(4px) ;
+                box-shadow: 0 0 0 0;
+            }
         }
     }
 
@@ -1536,6 +1580,7 @@ footer div {
     transition: all 0.3s ease-in-out;
     position: relative;
     transform: translateY(0);
+
     &::before{
         content: "";
         position: absolute;
@@ -1553,6 +1598,17 @@ footer div {
         opacity: 0.8;
     }
 
+    &.marketplace-input{
+        border: 1px solid var(--lila);
+        background-color: var(--onbackground);
+
+        &:active,
+        &:hover,
+        &:focus-visible {
+            transform: translateY(-3px);
+            box-shadow: -1px 3px var(--lila);
+        }
+    }
     &:active,
     &:hover,
     &:focus-visible {
@@ -2375,10 +2431,13 @@ input[type=time] {
     grid-row-gap: 0;
     grid-column-gap: 1em;
     justify-content: start;
+    z-index: 1;
 }
 
 
 .product-card{
+    z-index: 1;
+    position: relative;
     margin-bottom: 1.25rem;
     padding: 0;
     width: 200px;
@@ -2388,7 +2447,6 @@ input[type=time] {
     border-radius: var(--border-radius);
     transition: all 0.3s ease-in-out;
     overflow: hidden;
-    position: relative;
     transform: translateY(0);
     color: var(--text);
     &::before{
@@ -2413,49 +2471,124 @@ input[type=time] {
     & .header{
         height: 60%;
 
+        & .tags-corner{
+            position: absolute;
+            top:5px;
+            left:5px;
+            z-index: 2;
+            font-size: 11px;
+
+        }
+
+
         & .img-product{
             width: 100%;
             height: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
             & img{
+                width: 100%;
                 object-fit: cover;
                 object-position: center bottom;
-                width: 100%;
-                max-height: 30vh;
             }
         }
     }
     & .footer{
         height: 40%;
+        border-top: 1px solid var(--lightertext);
         background-color: var(--on-onbackground);
         & .product-title{
             overflow: hidden;
-            text-overflow: ellipsis;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
-            font-size: 1em;
             -webkit-box-orient: vertical;
-            max-height: calc(1em * 3.5);
-            line-height: 1.5;
+            -webkit-line-clamp: 2; /* Number of lines to display */
+            /* Add line-height and max-height to prevent extra lines */
         }
     }
 
 }
 
+
+.department-tag{
+    cursor: pointer;
+    font-size: 11px;
+    border-radius: 5px;
+    padding: 5px;
+    color: var(--always-background);
+    background-color: var(--lila);
+}
+
+.product-small-img img{
+    height: 90px;
+    width: 90px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    display: block;
+    opacity: 0.5;
+    &.active,
+    &:hover{
+        opacity: 1;
+        border: 2px solid var(--lila);
+    }
+}
+
+.img-container{
+    height: 500px;
+}
+
+
+.product-image{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    & img{
+
+        width: 100%;
+        object-fit: contain;
+        object-position: center bottom;
+    }
+}
+
+
+.used-tag{
+    border-radius: 5px;
+    padding: 5px;
+    color: var(--always-background);
+    &.used{
+        background-color: var(--used);
+    }
+    &.new{
+        background-color: var(--new);
+
+    }
+}
+.department-tag{
+
+    border-radius: 5px;
+    padding: 5px;
+    color: var(--always-background);
+    background-color: var(--lila);
+}
+
+
 .inside{
-    z-index:9;
+    z-index:3;
     background: var(--lila);
     width:140px;
     height:140px;
     position: absolute;
-    top: -70px;
-    right: -70px;
-    border-radius: 0 0 200px 200px;
-    transition: all 0.5s, border-radius 2s, top 1s;
+    top: -85px;
+    right: -85px;
+    border-radius: 0 0 100px 50px;
+    transition: all 0.5s, border-radius 2s, top 0.5s;
     overflow: hidden;
     & .icon{
         position:absolute;
-        right:85px;
-        top:85px;
+        right:100px;
+        top:100px;
         color: var(--always-background);
         opacity: 1;
     }
@@ -2482,11 +2615,186 @@ input[type=time] {
             text-align:left;
             width:100%;
         }
-        & h1, p, table{
-            color: white;
+        & h1,
+        & p,
+        & table{
+            color: var(--always-background);
         }
         & p{
             font-size:13px;
         }
     }
+}
+
+/*-------------------------------------------------------Publishing Sell Creation--------------------------*/
+.lila-upload-box{
+    background-color: var(--darkonbackground);
+    border: 1px dashed var(--lila);
+    border-radius: var(--border-radius);
+}
+
+.dummy-upload{
+    width: 180px;
+    height: 180px;
+    padding: 0 10px;
+    margin-bottom: 12px;
+    border: 1px dashed var(--lila);
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease-in-out;
+    &:hover{
+        box-shadow: 0 0 5px 0 var(--lila);
+        cursor: pointer;
+    }
+}
+
+.upload__box {
+    padding: 10px;
+}
+
+.upload__inputfile {
+    width: 0;
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.upload__btn {
+    display: inline-block;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+    min-width: 116px;
+    padding: 5px;
+    transition: all .3s ease;
+    cursor: pointer;
+    border: 2px solid var(--lila);
+    background-color: var(--lila);
+    border-radius: 10px;
+    line-height: 26px;
+    font-size: 14px;
+}
+
+.upload__btn:hover {
+    background-color: unset;
+    color: var(--lila);
+    transition: all .3s ease;
+}
+
+.upload__btn-box {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: start;
+}
+
+.upload__img-wrap {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: start;
+    flex-wrap: wrap;
+    margin: 0 -10px;
+}
+
+.upload__img-box {
+    width: 200px;
+    padding: 0 10px;
+    margin-bottom: 12px;
+}
+
+.upload__img-close {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    text-align: center;
+    line-height: 24px;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.upload__img-close:after {
+    content: '\2716';
+    font-size: 14px;
+    color: var(--always-background);
+}
+
+.img-bg {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+    padding-bottom: 100%;
+    border-radius: var(--border-radius);
+
+}
+
+
+@media (max-width: 775px) {
+    /* Add a CSS class to hide the icons when the screen width is 775 pixels or more */
+    .hide-text {
+        display: none;
+    }
+}
+
+
+
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-options {
+    display: none;
+    position: absolute;
+    overflow: hidden;
+    z-index: 4 !important;
+    border-radius: var(--border-light);
+    top: 100%;
+    left: 0;
+    width: 200px;
+    padding: 0;
+    list-style: none;
+    background-color: var(--onbackground);
+    margin: 0;
+    border: 1px solid var(--lightertext);
+    transition: all 0.3s ease-in-out;
+}
+.dropdown-toggle {
+    padding: 10px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    &:hover{
+        color: var(--lila);
+    }
+}
+
+.dropdown-options li {
+    color: var(--text);
+    &:hover {
+        color: var(--always-background);
+        background-color: var(--lila);
+    }
+    z-index: 100;
+
+}
+
+.dropdown-options a {
+    padding: 4px 10px;
+
+    text-decoration: none;
+    color: var(--text);
+    display: block;
+}
+
+.dropdown-toggle:hover + .dropdown-options,
+.dropdown-options:hover {
+    display: block;
 }

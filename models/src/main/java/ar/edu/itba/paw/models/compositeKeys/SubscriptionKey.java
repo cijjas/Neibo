@@ -1,16 +1,16 @@
-package ar.edu.itba.paw.compositeKeys;
+package ar.edu.itba.paw.models.compositeKeys;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class LikeKey implements Serializable {
+public class SubscriptionKey implements Serializable {
     private Long postId;
     private Long userId;
 
-    public LikeKey() {
+    public SubscriptionKey() {
     }
 
-    public LikeKey(Long postId, Long userId) {
+    public SubscriptionKey(Long postId, Long userId) {
         this.postId = postId;
         this.userId = userId;
     }
@@ -19,7 +19,7 @@ public class LikeKey implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        LikeKey that = (LikeKey) o;
+        SubscriptionKey that = (SubscriptionKey) o;
         return postId.equals(that.postId) && userId.equals(that.userId);
     }
 
