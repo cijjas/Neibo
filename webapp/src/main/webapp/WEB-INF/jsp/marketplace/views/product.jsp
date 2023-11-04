@@ -191,11 +191,8 @@
                   <button id="ask-button" class="cool-button marketplace-button pure square-radius font-size-14 font-weight-bold">
                     <spring:message code="Ask"/>
                   </button>
-
                 </div>
-
               </div>
-
             </div>
           </div>
         </div>
@@ -209,6 +206,8 @@
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const requestError = ${requestError};
+
+
     if(requestError){
       document.getElementById('boxy').style.top = '27%';
       openRequestDialog();
@@ -274,13 +273,22 @@
           <form:textarea  path="requestMessage" class="cool-input marketplace-input" id="request-message" name="message" rows="5" placeholder="${messagePlaceholder}"/>
           <form:errors path="requestMessage" cssClass="error" element="p" cssStyle="padding-left: 5px"/>
         </div>
-        <button type="submit" class=" w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
+        <button type="submit" onclick="document.getElementById('loader-container').style.display = 'flex';" class=" w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
           <spring:message code="Send"/>
         </button>
     </form:form>
 
   </div>
 </div>
+
+<div id="loader-container" class="loader-container ">
+  <div class="cool-static-container small-size-container">
+
+    <div style="font-weight: bold; font-size: 16px"><spring:message code="Sending.your.message"/>...</div>
+    <div class="loader marketplace" style="margin-top: 20px"></div>
+  </div>
+</div>
+
 
 
 

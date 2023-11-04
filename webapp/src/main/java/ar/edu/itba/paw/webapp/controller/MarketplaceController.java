@@ -200,7 +200,7 @@ public class MarketplaceController {
         ModelAndView mav = new ModelAndView("marketplace/views/product");
         mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
         requestForm.setRequestMessage("");
-        mav.addObject("requestForm", "");
+        mav.addObject("requestForm", requestForm);
         return mav;
     }
 
