@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
+import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.models.JunctionEntities.WorkerArea;
 import ar.edu.itba.paw.models.MainEntities.Neighborhood;
 
@@ -18,4 +19,6 @@ public interface NeighborhoodWorkerDao {
     // --------------------------------------- NEIGHBORHOODS_WORKERS DELETE ----------------------------------------
 
     boolean deleteWorkerArea(long workerId, long neighborhoodId);
+
+    public void setNeighborhoodRole(long workerId, WorkerRole role, long neighborhoodId);
 }

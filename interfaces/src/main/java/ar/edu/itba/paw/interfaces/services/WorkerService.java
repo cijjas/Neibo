@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.models.MainEntities.Worker;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,9 +18,9 @@ public interface WorkerService {
 
     Optional<Worker> findWorkerByMail(String mail);
 
-    List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long neighborhoodId, long loggedUserId);
+    List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long neighborhoodId, long loggedUserId, WorkerRole workerRole);
 
-    int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds);
+    int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole);
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -28,6 +29,6 @@ public interface WorkerService {
 
     int getTotalWorkerPages(long neighborhoodId, int size);
 
-    int getTotalWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size);
+    int getTotalWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole);
 
 }

@@ -13,6 +13,10 @@
                class="cool-left-button admin-button ${panelOption == 'Requests' ? 'active' : ''} f-r-sb-c">
                 <i class="fa-solid fa-user-check m-r-5"></i> <spring:message code="Requests"/>
             </a>
+            <a href="${pageContext.request.contextPath}/admin/unverified-workers"
+               class="cool-left-button admin-button ${panelOption == 'WorkerRequests' ? 'active' : ''} f-r-sb-c">
+                <i class="fa-solid fa-hard-hat m-r-5"></i> <spring:message code="Worker.requests"/>
+            </a>
             <a href="${pageContext.request.contextPath}/admin/neighbors"
                class="cool-left-button admin-button ${panelOption == 'Neighbors' ? 'active' : ''} f-r-sb-c">
                 <i class="fa-solid fa-users m-r-5"></i><spring:message code="NeighborList"/>

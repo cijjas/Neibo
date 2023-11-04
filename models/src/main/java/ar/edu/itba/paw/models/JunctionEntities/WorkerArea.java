@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.JunctionEntities;
 
 import ar.edu.itba.paw.compositeKeys.WorkerAreaKey;
+import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.models.MainEntities.*;
 
 import javax.persistence.*;
@@ -22,6 +23,10 @@ public class WorkerArea implements Serializable {
     @JoinColumn(name = "neighborhoodid")
     private Neighborhood neighborhood;
 
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private WorkerRole role;
+
     public WorkerArea() {
         this.id = new WorkerAreaKey();
     }
@@ -40,6 +45,8 @@ public class WorkerArea implements Serializable {
         return worker;
     }
 
+    public WorkerRole getRole() { return role; }
+
     public Neighborhood getNeighborhood() {
         return neighborhood;
     }
@@ -55,4 +62,6 @@ public class WorkerArea implements Serializable {
     public void setNeighborhood(Neighborhood neighborhood) {
         this.neighborhood = neighborhood;
     }
+
+    public void setRole(WorkerRole role) { this.role = role; }
 }

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.enums.BaseNeighborhood;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.interfaces.exceptions.UnexpectedException;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
@@ -88,10 +89,10 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long neighborhoodId, long loggedUserId) {
+    public List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long neighborhoodId, long loggedUserId, WorkerRole workerRole) {
         LOGGER.info("Getting Workers from Neighborhoods {} with professions {}", neighborhoodId, professions);
         if (neighborhoodId != 0)
-            return workerDao.getWorkersByCriteria(page, size, professions, new long[]{neighborhoodId});
+            return workerDao.getWorkersByCriteria(page, size, professions, new long[]{neighborhoodId}, workerRole);
 
         List<Neighborhood> neighborhoods = neighborhoodWorkerDao.getNeighborhoods(loggedUserId);
 
@@ -99,14 +100,14 @@ public class WorkerServiceImpl implements WorkerService {
                 .mapToLong(Neighborhood::getNeighborhoodId)
                 .toArray();
 
-        return workerDao.getWorkersByCriteria(page, size, professions, neighborhoodIds);
+        return workerDao.getWorkersByCriteria(page, size, professions, neighborhoodIds, workerRole);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds) {
+    public int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole) {
         LOGGER.info("Getting Workers Count for Neighborhood {} with professions {}", neighborhoodIds, professions);
-        return workerDao.getWorkersCountByCriteria(professions, neighborhoodIds);
+        return workerDao.getWorkersCountByCriteria(professions, neighborhoodIds, workerRole);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -127,13 +128,13 @@ public class WorkerServiceImpl implements WorkerService {
     public int getTotalWorkerPages(long neighborhoodId, int size) {
         LOGGER.info("Getting Pages of Workers with size {} from Neighborhood {}", size, neighborhoodId);
         long[] neighborhoodIds = {neighborhoodId};
-        return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(null, neighborhoodIds) / size);
+        return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(null, neighborhoodIds, WorkerRole.VERIFIED_WORKER) / size);
     }
 
     @Override
-    public int getTotalWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size) {
+    public int getTotalWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole) {
         LOGGER.info("Getting Pages of Workers with size {} from Neighborhoods {} with professions {}", size, neighborhoodIds, professions);
-        return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(professions, neighborhoodIds) / size);
+        return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(professions, neighborhoodIds, workerRole) / size);
     }
 
 }
