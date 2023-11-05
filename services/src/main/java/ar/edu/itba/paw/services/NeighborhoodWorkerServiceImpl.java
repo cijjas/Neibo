@@ -110,4 +110,10 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
         LOGGER.info("Rejecting Worker {} from Neighborhood {}", workerId, neighborhoodId);
         neighborhoodWorkerDao.setNeighborhoodRole(workerId, WorkerRole.REJECTED, neighborhoodId);
     }
+
+    @Override
+    public void unverifyWorkerFromNeighborhood(long workerId, long neighborhoodId) {
+        LOGGER.info("Un-verifying Worker {} from Neighborhood {}", workerId, neighborhoodId);
+        neighborhoodWorkerDao.setNeighborhoodRole(workerId, WorkerRole.UNVERIFIED_WORKER, neighborhoodId);
+    }
 }

@@ -153,6 +153,24 @@ public class AdminController {
 
     // ------------------------------------- UNVERIFIED LIST --------------------------------------
 
+    @RequestMapping("/workers")
+    public ModelAndView workers(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size
+    ) {
+        LOGGER.info("User arriving at '/admin/workers'");
+
+        final ModelAndView mav = new ModelAndView("admin/views/adminWorkerRequestHandler");
+
+        mav.addObject("panelOption", "Workers");
+        mav.addObject("inWorkers", true);
+        mav.addObject("page", page);
+        mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(null, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER));
+        mav.addObject("workers", ws.getWorkersByCriteria(page, size, null, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER));
+        mav.addObject("contextPath", "/admin/workers");
+        return mav;
+    }
+
     @RequestMapping("/unverified-workers")
     public ModelAndView unverifiedWorkers(
             @RequestParam(value = "page", defaultValue = "1") int page,
@@ -163,7 +181,7 @@ public class AdminController {
         final ModelAndView mav = new ModelAndView("admin/views/adminWorkerRequestHandler");
 
         mav.addObject("panelOption", "WorkerRequests");
-        mav.addObject("neighbors", false);
+        mav.addObject("inWorkers", false);
         mav.addObject("page", page);
         mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(null, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.UNVERIFIED_WORKER));
         mav.addObject("workers", ws.getWorkersByCriteria(page, size, null, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId(), WorkerRole.UNVERIFIED_WORKER));
@@ -176,6 +194,14 @@ public class AdminController {
             @RequestParam("workerId") long workerId
     ) {
         nws.rejectWorkerFromNeighborhood(workerId, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId());
+        return new ModelAndView("redirect:/admin/unverified-workers");
+    }
+
+    @RequestMapping("/unverify-worker")
+    public ModelAndView unverifyWorker(
+            @RequestParam("workerId") long workerId
+    ) {
+        nws.unverifyWorkerFromNeighborhood(workerId, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId());
         return new ModelAndView("redirect:/admin/unverified-workers");
     }
 
