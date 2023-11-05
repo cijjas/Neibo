@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.enums.WorkerRole;
+import ar.edu.itba.paw.enums.WorkerStatus;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
@@ -78,7 +79,7 @@ public class WorkerDaoImpl implements WorkerDao {
 
 
     @Override
-    public List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long[] neighborhoodIds, WorkerRole workerRole) {
+    public List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus) {
         LOGGER.debug("Selecting Workers from Neighborhoods {} with professions {}", neighborhoodIds, professions);
         StringBuilder query = new StringBuilder(USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
@@ -86,7 +87,7 @@ public class WorkerDaoImpl implements WorkerDao {
             return new ArrayList<>(); // empty list
         }
 
-        appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions, workerRole);
+        appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions, workerRole, workerStatus);
         query.append(") ");
 
         if (page != 0)
@@ -105,7 +106,7 @@ public class WorkerDaoImpl implements WorkerDao {
     }
 
     @Override
-    public int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole){
+    public int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus){
         LOGGER.debug("Selecting Workers Count from Neighborhood {} with professions {}", neighborhoodIds, professions);
         StringBuilder query = new StringBuilder(COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
@@ -113,7 +114,7 @@ public class WorkerDaoImpl implements WorkerDao {
             return 0;
         }
 
-        appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions, workerRole);
+        appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions, workerRole, workerStatus);
 
         // Create a native SQL query for counting
         Query sqlQuery = em.createNativeQuery(query.toString());

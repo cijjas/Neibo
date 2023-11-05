@@ -233,12 +233,11 @@ public class ServiceController {
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "profession", required = false) List <String> professions
     ) {
-        System.out.println(ws.getTotalWorkerPagesByCriteria(professions, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER));
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
-        List<Worker> workerList = ws.getWorkersByCriteria(page, size, professions, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER);
+        List<Worker> workerList = ws.getWorkersByCriteria(page, size, professions, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
         mav.addObject("workersList", workerList);
         mav.addObject("channel", "Services");
-        mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(professions, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER));
+        mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(professions, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER, WorkerStatus.none));
         mav.addObject("contextPath", "/services");
         mav.addObject("page", page);
         mav.addObject("appliedProfessions", professions);

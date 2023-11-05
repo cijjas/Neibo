@@ -195,7 +195,6 @@ public class MarketplaceController {
             LOGGER.error("Error in form 'requestForm'");
             return product(productId, requestForm, true);
         }
-        System.out.println("User requesting product '/"+ productId +"' ");
         rqs.createRequest(sessionUtils.getLoggedUser().getUserId(), productId, requestForm.getRequestMessage());
         ModelAndView mav = new ModelAndView("marketplace/views/product");
         mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
