@@ -340,6 +340,7 @@ public class TestInserter {
 
     public void createWorkerArea(long workerId, long neighborhoodId) {
         WorkerArea workerArea = new WorkerArea(em.find(Worker.class, workerId), em.find(Neighborhood.class, neighborhoodId));
+        workerArea.setRole(WorkerRole.VERIFIED_WORKER);
         em.persist(workerArea);
         em.flush();
     }
@@ -388,11 +389,13 @@ public class TestInserter {
     }
 
     public long createShift(long dayId, long startTimeId) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("dayid", dayId);
-        data.put("starttime", startTimeId);
-
-        return shiftInsert.executeAndReturnKey(data).longValue();
+        Shift shift = new Shift.Builder()
+                .day(em.find(Day.class, dayId))
+                .startTime(em.find(ar.edu.itba.paw.models.MainEntities.Time.class, startTimeId))
+                .build();
+        em.persist(shift);
+        em.flush();
+        return shift.getShiftId();
     }
 
     public long createImage(MultipartFile image) {

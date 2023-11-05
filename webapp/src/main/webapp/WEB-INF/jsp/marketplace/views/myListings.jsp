@@ -33,7 +33,7 @@
             <%@ include file="/WEB-INF/jsp/marketplace/components/upperMarketplaceButtons.jsp" %>
 
             <div class="row m-0 product-grid-row">
-                <c:forEach var="product" items="${productList}">
+                <c:forEach var="product" items="${myProductList}">
                     <jsp:include page="/WEB-INF/jsp/marketplace/components/productCard.jsp">
                         <jsp:param name="productTitle" value="${product.name}"/>
                         <jsp:param name="productDescription" value="${product.description}"/>

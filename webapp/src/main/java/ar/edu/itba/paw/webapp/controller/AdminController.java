@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.enums.DayOfTheWeek;
-import ar.edu.itba.paw.enums.StandardTime;
-import ar.edu.itba.paw.enums.UserRole;
-import ar.edu.itba.paw.enums.WorkerRole;
+import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.MainEntities.Amenity;
@@ -183,8 +180,8 @@ public class AdminController {
         mav.addObject("panelOption", "WorkerRequests");
         mav.addObject("inWorkers", false);
         mav.addObject("page", page);
-        mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(null, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.UNVERIFIED_WORKER));
-        mav.addObject("workers", ws.getWorkersByCriteria(page, size, null, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId(), WorkerRole.UNVERIFIED_WORKER));
+        mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(null, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.UNVERIFIED_WORKER, WorkerStatus.none));
+        mav.addObject("workers", ws.getWorkersByCriteria(page, size, null, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId(), WorkerRole.UNVERIFIED_WORKER, WorkerStatus.none));
         mav.addObject("contextPath", "/admin/unverified-workers");
         return mav;
     }

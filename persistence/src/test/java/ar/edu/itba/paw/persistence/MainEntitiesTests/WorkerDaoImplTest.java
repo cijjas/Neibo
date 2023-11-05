@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 import ar.edu.itba.paw.enums.Professions;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.enums.WorkerRole;
+import ar.edu.itba.paw.enums.WorkerStatus;
 import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.models.MainEntities.Worker;
 import ar.edu.itba.paw.persistence.MainEntitiesDaos.WorkerDaoImpl;
@@ -148,7 +149,7 @@ public class WorkerDaoImplTest {
         long[] neighborhoods = {nhKey1};
 
         // Exercise
-        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, BASE_PAGE_SIZE, null, neighborhoods, WorkerRole.VERIFIED_WORKER);
+        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, BASE_PAGE_SIZE, null, neighborhoods, WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
 
         // Validations
         assertEquals(2, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
@@ -161,7 +162,7 @@ public class WorkerDaoImplTest {
         long[] neighborhoods = {nhKey1};
 
         // Exercise
-        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, BASE_PAGE_SIZE, Collections.singletonList(Professions.PLUMBER.name()), neighborhoods, WorkerRole.VERIFIED_WORKER);
+        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, BASE_PAGE_SIZE, Collections.singletonList(Professions.PLUMBER.name()), neighborhoods, WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
 
         // Validations
         assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
@@ -174,7 +175,7 @@ public class WorkerDaoImplTest {
         long[] neighborhoods = {nhKey1};
 
         // Exercise
-        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, 1, null, neighborhoods, WorkerRole.VERIFIED_WORKER);
+        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, 1, null, neighborhoods, WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
 
         // Validations
         assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
@@ -187,7 +188,7 @@ public class WorkerDaoImplTest {
         long[] neighborhoods = {nhKey1};
 
         // Exercise
-        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(2, 1, null, neighborhoods, WorkerRole.VERIFIED_WORKER);
+        List<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(2, 1, null, neighborhoods, WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
 
         // Validations
         assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers

@@ -101,11 +101,15 @@
 
 
                             <%--Description--%>
+
+                            <c:set var="descriptionPlaceholder">
+                                <spring:message code='Description'/>
+                            </c:set>
                             <form:textarea
                                     path="description"
                                     class="cool-input marketplace-input"
                                     rows="5"
-                                    placeholder="Description"/>
+                                    placeholder="${descriptionPlaceholder}"/>
 
                             <%--Department--%>
                             <label for="department"></label>

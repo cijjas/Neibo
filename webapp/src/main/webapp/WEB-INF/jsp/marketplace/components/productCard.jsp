@@ -72,7 +72,7 @@
                             </div>
 
                         </div>
-                        <a href="${contextPath}/marketplace/product/${param.productId}" class="col-5 cool-button product-button">
+                        <a href="${contextPath}/marketplace/products/${param.productId}" class="col-5 cool-button product-button">
                             <spring:message code="See"/>
                             <i class="fa-solid fa-share"></i>
                         </a>

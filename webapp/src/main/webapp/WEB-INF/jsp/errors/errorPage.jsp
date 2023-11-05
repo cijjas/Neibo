@@ -30,7 +30,7 @@
 <%@ include file="/WEB-INF/jsp/components/structure/backgroundDrawing.jsp" %>
 
 
-<div class="error-content-container">
+<div class="error-content-container f-c-c-c">
     <div class="error-code">
         <c:choose>
             <c:when test="${not empty errorMsg}">
