@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 public class CommentForm {
 
     @NotBlank
-    @Size(max = 255)
+    @Size(max = 500)
     private String comment;
 
 

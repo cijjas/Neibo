@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.enums.DayOfTheWeek;
-import ar.edu.itba.paw.enums.StandardTime;
-import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.MainEntities.Amenity;
@@ -38,6 +36,8 @@ public class AdminController {
     private final ContactService cos;
     private final ShiftService shs;
     private final AvailabilityService avs;
+    private final NeighborhoodWorkerService nws;
+    private final WorkerService ws;
 
     // ------------------------------------- INFORMATION --------------------------------------
 
@@ -57,7 +57,9 @@ public class AdminController {
                            final ResourceService res,
                            final ContactService cos,
                            final ShiftService shs,
-                           final AvailabilityService avs
+                           final AvailabilityService avs,
+                           final NeighborhoodWorkerService nws,
+                           final WorkerService ws
     ) {
         this.sessionUtils = sessionUtils;
         this.is = is;
@@ -75,6 +77,8 @@ public class AdminController {
         this.cos = cos;
         this.shs = shs;
         this.avs = avs;
+        this.nws = nws;
+        this.ws = ws;
     }
 
     @RequestMapping(value = "/information", method = RequestMethod.GET)
@@ -142,6 +146,68 @@ public class AdminController {
     ) {
         us.verifyNeighbor(userId);
         return new ModelAndView("redirect:/admin/unverified");
+    }
+
+    // ------------------------------------- UNVERIFIED LIST --------------------------------------
+
+    @RequestMapping("/workers")
+    public ModelAndView workers(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size
+    ) {
+        LOGGER.info("User arriving at '/admin/workers'");
+
+        final ModelAndView mav = new ModelAndView("admin/views/adminWorkerRequestHandler");
+
+        mav.addObject("panelOption", "Workers");
+        mav.addObject("inWorkers", true);
+        mav.addObject("page", page);
+        mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(null, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER, WorkerStatus.none));
+        mav.addObject("workers", ws.getWorkersByCriteria(page, size, null, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER, WorkerStatus.none));
+        mav.addObject("contextPath", "/admin/workers");
+        return mav;
+    }
+
+    @RequestMapping("/unverified-workers")
+    public ModelAndView unverifiedWorkers(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size
+    ) {
+        LOGGER.info("User arriving at '/admin/unverified-workers'");
+
+        final ModelAndView mav = new ModelAndView("admin/views/adminWorkerRequestHandler");
+
+        mav.addObject("panelOption", "WorkerRequests");
+        mav.addObject("inWorkers", false);
+        mav.addObject("page", page);
+        mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(null, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.UNVERIFIED_WORKER, WorkerStatus.none));
+        mav.addObject("workers", ws.getWorkersByCriteria(page, size, null, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId(), WorkerRole.UNVERIFIED_WORKER, WorkerStatus.none));
+        mav.addObject("contextPath", "/admin/unverified-workers");
+        return mav;
+    }
+
+    @RequestMapping("/reject-worker")
+    public ModelAndView rejectWorker(
+            @RequestParam("workerId") long workerId
+    ) {
+        nws.rejectWorkerFromNeighborhood(workerId, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId());
+        return new ModelAndView("redirect:/admin/unverified-workers");
+    }
+
+    @RequestMapping("/unverify-worker")
+    public ModelAndView unverifyWorker(
+            @RequestParam("workerId") long workerId
+    ) {
+        nws.unverifyWorkerFromNeighborhood(workerId, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId());
+        return new ModelAndView("redirect:/admin/unverified-workers");
+    }
+
+    @RequestMapping("/verify-worker")
+    public ModelAndView verifyWorker(
+            @RequestParam("workerId") long workerId
+    ) {
+        nws.verifyWorkerInNeighborhood(workerId, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId());
+        return new ModelAndView("redirect:/admin/unverified-workers");
     }
 
     // ------------------------------------- PUBLISH --------------------------------------

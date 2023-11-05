@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models.MainEntities;
 
+import ar.edu.itba.paw.enums.WorkerRole;
+
 import javax.persistence.*;
 import java.util.Set;
 

@@ -1,5 +1,9 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
+import ar.edu.itba.paw.models.compositeKeys.ChannelMappingKey;
+import ar.edu.itba.paw.models.compositeKeys.WorkerAreaKey;
+import ar.edu.itba.paw.enums.WorkerRole;
+import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.models.compositeKeys.WorkerAreaKey;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
 import ar.edu.itba.paw.models.JunctionEntities.WorkerArea;
@@ -51,6 +55,15 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
             return true;
         } else {
             return false;
+        }
+    }
+
+    @Override
+    public void setNeighborhoodRole(long workerId, WorkerRole role, long neighborhoodId) {
+        LOGGER.debug("Setting Worker {} role to {} in Neighborhood {}", workerId, role, neighborhoodId);
+        WorkerArea workerArea = em.find(WorkerArea.class, new WorkerAreaKey(workerId, neighborhoodId));
+        if (workerArea != null) {
+            workerArea.setRole(role);
         }
     }
 }

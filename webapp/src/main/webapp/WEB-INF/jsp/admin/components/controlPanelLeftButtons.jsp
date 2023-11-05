@@ -17,6 +17,14 @@
                class="cool-left-button admin-button ${panelOption == 'Neighbors' ? 'active' : ''} f-r-sb-c">
                 <i class="fa-solid fa-users m-r-5"></i><spring:message code="NeighborList"/>
             </a>
+            <a href="${pageContext.request.contextPath}/admin/unverified-workers"
+               class="cool-left-button admin-button ${panelOption == 'WorkerRequests' ? 'active' : ''} f-r-sb-c">
+                <i class="fa-solid fa-hard-hat m-r-5"></i> <spring:message code="Worker.requests"/>
+            </a>
+            <a href="${pageContext.request.contextPath}/admin/workers"
+               class="cool-left-button admin-button ${panelOption == 'Workers' ? 'active' : ''} f-r-sb-c">
+                <i class="fa-solid fa-hard-hat m-r-5"></i> <spring:message code="Workers"/>
+            </a>
             <a href="${pageContext.request.contextPath}/admin/amenities"
                class="cool-left-button admin-button ${panelOption == 'Amenities' ? 'active' : ''} f-r-sb-c">
                 <i class="fas fa-table-tennis-paddle-ball m-r-5"></i> <spring:message code="Amenities"/>

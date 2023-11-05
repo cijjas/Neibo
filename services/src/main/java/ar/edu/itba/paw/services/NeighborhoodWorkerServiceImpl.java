@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
@@ -8,6 +9,7 @@ import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodWorkerService;
 import ar.edu.itba.paw.models.MainEntities.Neighborhood;
 import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.MainEntities.Worker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,7 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     public void addWorkerToNeighborhoods(long workerId, List<Long> neighborhoodIds) {
         for (long neighborhoodId : neighborhoodIds) {
             addWorkerToNeighborhood(workerId, neighborhoodId);
+            neighborhoodWorkerDao.setNeighborhoodRole(workerId, WorkerRole.UNVERIFIED_WORKER, neighborhoodId);
         }
     }
 
@@ -84,5 +87,33 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     public void removeWorkerFromNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Removing Worker {} from Neighborhood {}", workerId, neighborhoodId);
         neighborhoodWorkerDao.deleteWorkerArea(workerId, neighborhoodId);
+    }
+
+    @Override
+    public void verifyWorkerInNeighborhood(long workerId, long neighborhoodId) {
+        LOGGER.info("Verifying Worker {} in Neighborhood {}", workerId, neighborhoodId);
+        // This method has to change
+        neighborhoodWorkerDao.setNeighborhoodRole(workerId, WorkerRole.VERIFIED_WORKER, neighborhoodId);
+//        String neighborhood = neighborhoodService.findNeighborhoodById(user.getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
+//        Map<String, Object> vars = new HashMap<>();
+//        vars.put("name", user.getName());
+//        vars.put("neighborhood", neighborhood);
+//        vars.put("loginPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/");
+//        if (user.getLanguage() == Language.ENGLISH)
+//            emailService.sendMessageUsingThymeleafTemplate(user.getMail(), "Verification", "verification-template_en.html", vars);
+//        else
+//            emailService.sendMessageUsingThymeleafTemplate(user.getMail(), "Verificación", "verification-template_es.html", vars);
+    }
+
+    @Override
+    public void rejectWorkerFromNeighborhood(long workerId, long neighborhoodId) {
+        LOGGER.info("Rejecting Worker {} from Neighborhood {}", workerId, neighborhoodId);
+        neighborhoodWorkerDao.setNeighborhoodRole(workerId, WorkerRole.REJECTED, neighborhoodId);
+    }
+
+    @Override
+    public void unverifyWorkerFromNeighborhood(long workerId, long neighborhoodId) {
+        LOGGER.info("Un-verifying Worker {} from Neighborhood {}", workerId, neighborhoodId);
+        neighborhoodWorkerDao.setNeighborhoodRole(workerId, WorkerRole.UNVERIFIED_WORKER, neighborhoodId);
     }
 }

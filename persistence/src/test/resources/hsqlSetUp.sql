@@ -198,6 +198,7 @@ CREATE TABLE IF NOT EXISTS workers_neighborhoods
 (
     workerId       INT,
     neighborhoodId INT,
+    role VARCHAR(128),
     PRIMARY KEY (workerId, neighborhoodId),
     FOREIGN KEY (workerId) REFERENCES users (userId) ON DELETE CASCADE,
     FOREIGN KEY (neighborhoodId) REFERENCES neighborhoods (neighborhoodId) ON DELETE CASCADE

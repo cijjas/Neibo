@@ -1,7 +1,7 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
 <head>
@@ -31,9 +31,6 @@
 
     <div id="center-grid" class="column-center pl-3 ">
       <%@ include file="/WEB-INF/jsp/marketplace/components/upperMarketplaceButtons.jsp" %>
-
-
-
 
       <div class="cool-static-container w-100 p-0">
         <div class="container ">
@@ -129,38 +126,48 @@
               border: 1px solid var(--lightertext);
               border-radius: var(--border-radius);
               box-shadow: -2px 4px 0 0 var(--lila)">
-                <span class="font-weight-normal font-size-16 f-r-sb-c w-100">
-                  <c:choose>
-                    <c:when test="${product.used}">
-                        <spring:message code="Used"/>
-                    </c:when>
-                    <c:otherwise>
-                        <spring:message code="New"/>
-                    </c:otherwise>
-                  </c:choose>
-                  <div class="department-tag" onclick='window.location.href = "${contextPath}/marketplace/products?department=${product.department.department.id}" '>
-                    <spring:message code="${product.department.department}"/>
-                  </div>
-
-                </span>
-
-                <h1 class="font-size-20 font-weight-bold mt-2" style="line-height: 1.2;">
-                  <c:out value="${product.name}"/>
-                </h1>
-                <div class="f-r-c-c g-0">
-                  <span class="price font-size-30 font-weight-normal">
-                      <c:out value="${product.priceIntegerString}"/>
-                  </span>
-                  <div class="f-c-s-c pl-1" style="height: 26px">
-                  <span class="cents c-light-text font-size-20 font-weight-normal">
-                      <c:out value="${product.priceDecimalString}"/>
-                  </span>
-                  </div>
+              <span class="font-weight-normal font-size-16 f-r-sb-c w-100">
+                <c:choose>
+                  <c:when test="${product.used}">
+                      <spring:message code="Used"/>
+                  </c:when>
+                  <c:otherwise>
+                      <spring:message code="New"/>
+                  </c:otherwise>
+                </c:choose>
+                <div class="department-tag" onclick='window.location.href = "${contextPath}/marketplace/products?department=${product.department.department.id}" '>
+                  <spring:message code="${product.department.department}"/>
                 </div>
-                <button class="mt-4 w-100 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
-                  <spring:message code="Buy"/>
-                </button>
+              </span>
+              <h1 class="font-size-20 font-weight-bold mt-2" style="line-height: 1.2;">
+                <c:out value="${product.name}"/>
+              </h1>
+              <div class="f-r-c-c g-0">
+                <span class="price font-size-30 font-weight-normal">
+                    <c:out value="${product.priceIntegerString}"/>
+                </span>
+                <div class="f-c-s-c pl-1" style="height: 26px">
+                <span class="cents c-light-text font-size-20 font-weight-normal">
+                    <c:out value="${product.priceDecimalString}"/>
+                </span>
+                </div>
               </div>
+              <button id="request-button" onclick="openRequestDialog()" class="mt-4 w-100 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
+                <spring:message code="Request"/>
+              </button>
+              <script>
+                function openRequestDialog() {
+                  const dialog = document.getElementById('request-dialog');
+                  dialog.style.display = 'flex';
+                }
+
+                function closeRequestDialog() {
+                  const dialog = document.getElementById('request-dialog');
+                  dialog.style.display = 'none';
+                }
+              </script>
+
+            </div>
             </div>
           </div>
           <%--Description--%>
@@ -181,12 +188,11 @@
                   <label>
                     <input type="text" class="cool-input marketplace-input background"/>
                   </label>
-                  <button class="cool-button marketplace-button pure square-radius font-size-14 font-weight-bold">
+                  <button id="ask-button" class="cool-button marketplace-button pure square-radius font-size-14 font-weight-bold">
                     <spring:message code="Ask"/>
                   </button>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -196,6 +202,95 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const requestError = ${requestError};
+
+
+    if(requestError){
+      document.getElementById('boxy').style.top = '27%';
+      openRequestDialog();
+    }
+  });
+</script>
+
+<div id="request-dialog" class="dialog" style="display: none" >
+  <div class="dialog-content marketplace" >
+    <div class="dialog-header">
+      <div class="dialog-svg">
+        <svg width="282" height="148" viewBox="0 0 282 148" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g filter="url(#filter0_d_0_1)">
+            <path d="M166 81C166 75.4771 170.477 71 176 71H266C271.523 71 276 75.4772 276 81V116.265C276 121.788 271.523 126.265 266 126.265H264.094C261.659 126.265 259.466 127.737 258.543 129.99L255.703 136.919C254.674 139.43 251.497 140.21 249.423 138.461L249.069 138.162L238.238 128.725C236.417 127.139 234.083 126.265 231.669 126.265H176C170.477 126.265 166 121.788 166 116.265V81Z" fill="#7D7AE3"></path>
+          </g>
+          <g filter="url(#filter1_d_0_1)">
+            <path d="M221 14C221 8.47715 216.523 4 211 4H16C10.4772 4 6 8.47715 6 14V97.5243C6 103.047 10.4772 107.524 16 107.524H33.178C35.58 107.524 37.7505 108.957 38.6948 111.165L45.2444 126.483C47.5005 131.759 54.1745 133.418 58.6379 129.811V129.811L82.5442 109.848C84.3425 108.347 86.6109 107.524 88.9537 107.524H211C216.523 107.524 221 103.047 221 97.5243V14Z" fill="#7D7AE3"></path>
+          </g>
+          <defs>
+            <filter id="filter0_d_0_1" x="160" y="67" width="122" height="80.4038" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+              <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+              <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix>
+              <feOffset dy="2"></feOffset>
+              <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+              <feComposite in2="hardAlpha" operator="out"></feComposite>
+              <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"></feColorMatrix>
+              <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"></feBlend>
+              <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"></feBlend>
+            </filter>
+            <filter id="filter1_d_0_1" x="0" y="0" width="227" height="139.736" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+              <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+              <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix>
+              <feOffset dy="2"></feOffset>
+              <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+              <feComposite in2="hardAlpha" operator="out"></feComposite>
+              <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"></feColorMatrix>
+              <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"></feBlend>
+              <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"></feBlend>
+            </filter>
+          </defs>
+        </svg>
+
+      </div>
+
+      <div class="boxy p-2" id="boxy">
+        <div style="position: relative; color:var(--always-background)" class="f-c-s-s g-05">
+          <h3 class="font-size-20 font-weight-bold" ><spring:message code="Request"/></h3>
+          <p style="text-align: start" class="font-weight-normal">
+            <spring:message code="Request.buy.message"/>
+          </p>
+        </div>
+
+      </div>
+      <a class="close-button marketplace" onclick="closeRequestDialog()">
+        <i class="fas fa-close"></i>
+      </a>
+    </div>
+    <form:form class="f-c-c-c w-100" name="requestForm" method="post" action="${contextPath}/marketplace/products/${product.productId}/request" modelAttribute="requestForm">
+        <div class="form-group w-75" >
+          <c:set var="messagePlaceholder">
+            <spring:message code="Message"/>
+          </c:set>
+          <form:textarea  path="requestMessage" class="cool-input marketplace-input" id="request-message" name="message" rows="5" placeholder="${messagePlaceholder}"/>
+          <form:errors path="requestMessage" cssClass="error" element="p" cssStyle="padding-left: 5px"/>
+        </div>
+        <button type="submit" onclick="document.getElementById('loader-container').style.display = 'flex';" class=" w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
+          <spring:message code="Send"/>
+        </button>
+    </form:form>
+
+  </div>
+</div>
+
+<div id="loader-container" class="loader-container ">
+  <div class="cool-static-container small-size-container">
+
+    <div style="font-weight: bold; font-size: 16px"><spring:message code="Sending.your.message"/>...</div>
+    <div class="loader marketplace" style="margin-top: 20px"></div>
+  </div>
+</div>
+
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
