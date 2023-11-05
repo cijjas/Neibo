@@ -204,7 +204,7 @@ public class ProductDaoImplTest {
         long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, null, dKey2);
 
         // Exercise
-        List<Product> products = productDao.getProductsSelling(uKey1);
+        List<Product> products = productDao.getProductsSelling(uKey1, 1, 10);
 
         // Validations & Post Conditions
         assertFalse(products.isEmpty());
@@ -216,7 +216,7 @@ public class ProductDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Product> products = productDao.getProductsSelling(1);
+        List<Product> products = productDao.getProductsSelling(1, 1, 10);
 
         // Validations & Post Conditions
         assertTrue(products.isEmpty());
@@ -236,7 +236,7 @@ public class ProductDaoImplTest {
 
 
         // Exercise
-        List<Product> products = productDao.getProductsSold(uKey1);
+        List<Product> products = productDao.getProductsSold(uKey1, 1, 10);
 
         // Validations & Post Conditions
         assertFalse(products.isEmpty());
@@ -250,7 +250,7 @@ public class ProductDaoImplTest {
         long uKey1 = testInserter.createUser(MAIL1, nhKey);
 
         // Exercise
-        List<Product> products = productDao.getProductsSold(uKey1);
+        List<Product> products = productDao.getProductsSold(uKey1, 1, 10);
 
         // Validations & Post Conditions
         assertTrue(products.isEmpty());

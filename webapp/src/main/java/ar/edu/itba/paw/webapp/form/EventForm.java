@@ -5,9 +5,6 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
 import java.sql.Date;
-import java.sql.Time;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 @ValidTimeRangeConstraint
 public class EventForm {
@@ -21,8 +18,10 @@ public class EventForm {
 
     private Date date;
 
+    @NotBlank
     private String startTime;
 
+    @NotBlank
     private String endTime;
 
     public String getName() {

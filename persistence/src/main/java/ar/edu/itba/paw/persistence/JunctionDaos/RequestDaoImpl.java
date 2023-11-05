@@ -23,7 +23,10 @@ public class RequestDaoImpl implements RequestDao {
     @Override
     public Request createRequest(long userId, long productId) {
         LOGGER.debug("Inserting Request for product with id {}", productId);
-        Request request = new Request(em.find(Product.class, productId), em.find(User.class, userId));
+        Request request = new Request.Builder()
+                .product(em.find(Product.class, productId))
+                .user(em.find(User.class, userId))
+                .build();
         em.persist(request);
         return request;
     }

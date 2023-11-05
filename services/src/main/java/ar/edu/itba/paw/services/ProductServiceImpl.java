@@ -85,15 +85,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductsSelling(long userId) {
+    public List<Product> getProductsSelling(long userId, int page, int size) {
         LOGGER.info("Selecting Products Selling by user {}", userId);
-        return productDao.getProductsSelling(userId);
+        return productDao.getProductsSelling(userId, page, size);
     }
 
     @Override
-    public List<Product> getProductsSold(long userId) {
+    public List<Product> getProductsSold(long userId, int page, int size) {
         LOGGER.info("Selecting Products Sold by user {}", userId);
-        return productDao.getProductsSold(userId);
+        return productDao.getProductsSold(userId, page, size);
+    }
+
+    @Override
+    public List<Product> getProductsBought(long userId, int page, int size) {
+        LOGGER.info("Selecting Products Bought by user {}", userId);
+        return productDao.getProductsBought(userId, page, size);
     }
 
     @Override

@@ -131,7 +131,9 @@ public class MarketplaceController {
         LOGGER.info("User arriving at '/marketplace/my-listings'");
 
         ModelAndView mav = new ModelAndView("marketplace/views/myListings");
-        List<Product> myProductList =  prs.getProductsSelling(sessionUtils.getLoggedUser().getUserId());
+
+        //TODO PAGINATION HARDCODEADO !!
+        List<Product> myProductList =  prs.getProductsSelling(sessionUtils.getLoggedUser().getUserId(), 1, 10);
         mav.addObject("myProductList", myProductList);
         mav.addObject("channel", "MyListings");
         mav.addObject("loggedUser", sessionUtils.getLoggedUser());

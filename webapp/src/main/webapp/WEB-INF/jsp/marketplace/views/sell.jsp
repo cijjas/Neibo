@@ -60,6 +60,7 @@
                                             name="title-field"
                                             id="title-field"
                                             placeholder="Title"/>
+                                    <form:errors path="title" cssClass="error" element="p"/>
                                 </div>
 
                                     <%--PRICE--%>
@@ -73,6 +74,7 @@
                                             pattern=""
                                             data-type="currency"
                                             placeholder="$1,000.00"/>
+                                    <form:errors path="price" cssClass="error" element="p"/>
                                 </div>
                             </div>
 
@@ -81,6 +83,7 @@
                                 <div class="upload__box w-100">
                                     <div class="upload__btn-box">
                                          <form:input path="imageFiles" id="image-input-id" type="file" multiple="multiple" accept="image/*" data-max_length="3" class="upload__inputfile" hidden="hidden"/>
+                                         <form:errors path="imageFiles" cssClass="error" element="p"/>
                                     </div>
                                     <div class="upload__img-wrap">
                                         <a id="dummy-upload" class="dummy-upload" onclick="document.getElementById('image-input-id').click();">
@@ -106,6 +109,7 @@
                                     class="cool-input marketplace-input"
                                     rows="5"
                                     placeholder="Description"/>
+                            <form:errors path="description" cssClass="error" element="p"/>
 
                             <%--Department--%>
                             <label for="department"></label>
@@ -114,6 +118,7 @@
                                     <option value="${department.key}"><spring:message code="${department.value}"/></option>
                                 </c:forEach>
                             </form:select>
+                            <form:errors path="departmentId" cssClass="error" element="p"/>
 
                             <%--Condition--%>
                             <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
@@ -125,6 +130,7 @@
                                         <option value="${false}"><spring:message code="New"/></option>
                                         <option value="${true}"><spring:message code="Used"/></option>
                                     </form:select>
+                                    <form:errors path="used" cssClass="error" element="p"/>
                                 </div>
 
                             </div>

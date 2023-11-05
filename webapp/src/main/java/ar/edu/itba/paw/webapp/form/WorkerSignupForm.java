@@ -23,6 +23,7 @@ public class WorkerSignupForm {
 
     @NotBlank
     @Size(max = 64)
+    @Pattern(regexp = "^[0-9+\\- ]+")
     private String phoneNumber;
 
     @NotBlank

@@ -20,9 +20,11 @@ public interface ProductService {
 
     int getProductsCountByCriteria(long neighborhoodId, Department department) ;
 
-    List<Product> getProductsSelling(long userId);
+    List<Product> getProductsSelling(long userId, int page, int size);
 
-    List<Product> getProductsSold(long userId);
+    List<Product> getProductsSold(long userId, int page, int size);
+
+    List<Product> getProductsBought(long userId, int page, int size);
 
     boolean markAsBought(long buyerId, long productId);
 

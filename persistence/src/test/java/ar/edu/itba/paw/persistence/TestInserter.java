@@ -461,7 +461,10 @@ public class TestInserter {
     }
 
     public void createRequest(long productId, long userId){
-        Request request = new Request(em.find(Product.class, productId), em.find(User.class, userId));
+        Request request = new Request.Builder()
+                .product(em.find(Product.class, productId))
+                .user(em.find(User.class, userId))
+                .build();
         em.persist(request);
         em.flush();
     }
