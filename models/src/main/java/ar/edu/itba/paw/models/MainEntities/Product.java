@@ -217,9 +217,6 @@ public class Product {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", used=" + used +
-                ", primaryPicture=" + primaryPicture.getImageId() +
-                ", secondaryPicture=" + secondaryPicture.getImageId() +
-                ", tertiaryPicture=" + tertiaryPicture.getImageId() +
                 '}';
     }
 

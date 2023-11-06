@@ -128,7 +128,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<Product> getProductsBought(long userId, int page, int size) {
         LOGGER.debug("Selecting Bought Products from User {}", userId);
-        TypedQuery<Product> query = em.createQuery("SELECT p FROM Product p WHERE p.buyer = :userId", Product.class);
+        TypedQuery<Product> query = em.createQuery("SELECT p FROM Product p WHERE p.buyer.id = :userId", Product.class);
         query.setParameter("userId", userId);
         query.setFirstResult((page - 1) * size);
         query.setMaxResults(size);

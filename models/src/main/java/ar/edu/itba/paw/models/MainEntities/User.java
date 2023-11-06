@@ -82,7 +82,7 @@ public class User {
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL) //cambiar a seller y tmb en Product??
     private List<Product> productsSelling;
 
-    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Product> productsBought;
 
     @ManyToMany

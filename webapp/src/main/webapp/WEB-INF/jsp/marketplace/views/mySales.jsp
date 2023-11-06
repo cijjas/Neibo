@@ -34,6 +34,9 @@
 
             <div class="row m-0 product-grid-row">
 
+                <c:forEach var="product" items="${products}" varStatus="loop">
+                    ${product}
+                </c:forEach>
             </div>
 
 
