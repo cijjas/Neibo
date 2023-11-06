@@ -50,11 +50,11 @@ public class Product {
 
     //junction tables:
     @ManyToMany
-    @JoinTable(name = "users_products_inquiries", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
+    @JoinTable(name = "products_users_inquiries", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> inquirers;
 
     @ManyToMany
-    @JoinTable(name = "users_products_requests", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
+    @JoinTable(name = "products_users_requests", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> requesters;
 
 
@@ -217,6 +217,8 @@ public class Product {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", used=" + used +
+                ", inquirers=" + inquirers.size() +
+                ", requesters=" + requesters.size() +
                 '}';
     }
 
