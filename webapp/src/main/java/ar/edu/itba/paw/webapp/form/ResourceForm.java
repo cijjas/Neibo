@@ -15,7 +15,7 @@ public class ResourceForm {
     private MultipartFile imageFile;
 
     @NotBlank
-    @Size(max = 64)
+    @Size(min = 0, max = 64)
     private String title;
 
     public String getDescription() {

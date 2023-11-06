@@ -9,11 +9,11 @@ import java.sql.Date;
 @ValidTimeRangeConstraint
 public class EventForm {
     @NotBlank
-    @Size(max = 100)
+    @Size(min = 0, max = 100)
     private String name;
 
     @NotBlank
-    @Size(max = 2000)
+    @Size(min = 0, max = 2000)
     private String description;
 
     private Date date;

@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 public class RequestForm {
 
     @NotBlank
-    @Size(max = 500)
+    @Size(min = 0, max = 500)
     private String requestMessage;
 
 

@@ -12,7 +12,7 @@ public class ReviewForm {
     private Float rating;
 
     @NotBlank
-    @Size(max = 255)
+    @Size(min = 0, max = 255)
     private String review;
 
     public Float getRating() {

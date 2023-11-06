@@ -9,11 +9,11 @@ import javax.validation.constraints.Size;
 
 public class PublishForm {
     @NotBlank
-    @Size(max = 100)
+    @Size(min = 0, max = 100)
     private String subject;
 
     @NotBlank
-    @Size(max = 2000)
+    @Size(min = 0, max = 2000)
     private String message;
 
 

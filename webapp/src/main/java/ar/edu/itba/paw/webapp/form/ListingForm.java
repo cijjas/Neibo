@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.DepartmentConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ImageConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.TagsConstraint;
 import org.hibernate.validator.constraints.NotBlank;
@@ -9,7 +10,7 @@ import javax.validation.constraints.Size;
 
 public class ListingForm {
     @NotBlank
-    @Size(max = 100)
+    @Size(min = 0, max = 100)
     private String title;
 
     @NotBlank
@@ -18,9 +19,10 @@ public class ListingForm {
     private MultipartFile[] imageFiles;
 
     @NotBlank
-    @Size(max = 2000)
+    @Size(min = 0, max = 2000)
     private String description;
 
+    @DepartmentConstraint
     private Integer departmentId;
 
     private Boolean used;
