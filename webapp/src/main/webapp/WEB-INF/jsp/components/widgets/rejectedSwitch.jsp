@@ -20,7 +20,7 @@
         <c:param name="verified" value="false"/>
     </c:url>
 
-    <a class="switch-button ${verified == false ? 'rejected' : ''}"
+    <a class="switch-button ${verified == false ? 'rejected' : 'non-rejected'}"
        href="${baseUrl}${contextPath}/${rejectedUrl}">
         <spring:message code="Rejected"/>
     </a>

@@ -1240,6 +1240,13 @@ input[type=file]::file-selector-button:hover {
         color: var(--primary);
     }
 
+    &.non-rejected:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 0 0 var(--error);
+        color: var(--error);
+    }
+
+
     &.active {
         transform: translateY(-4px);
         border: 1px solid var(--background);
