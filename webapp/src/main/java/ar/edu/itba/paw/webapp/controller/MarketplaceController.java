@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.MainEntities.Product;
 import ar.edu.itba.paw.models.MainEntities.User;
 import ar.edu.itba.paw.webapp.form.ListingForm;
+import ar.edu.itba.paw.webapp.form.QuestionForm;
 import ar.edu.itba.paw.webapp.form.RequestForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,7 +122,7 @@ public class MarketplaceController {
         LOGGER.info("User arriving at '/marketplace/my-sales'");
 
         ModelAndView mav = new ModelAndView("marketplace/views/mySales");
-        mav.addObject("soldProductsList", prs.getProductsSold(sessionUtils.getLoggedUser().getUserId()));
+        mav.addObject("soldProductsList", prs.getProductsSold(sessionUtils.getLoggedUser().getUserId(), 1, 10));
         mav.addObject("channel", "MySales");
         mav.addObject("loggedUser", sessionUtils.getLoggedUser());
         return mav;
@@ -176,12 +177,13 @@ public class MarketplaceController {
     public ModelAndView product(
             @PathVariable(value = "id") Long productId,
             @ModelAttribute("requestForm") RequestForm requestForm,
+            @ModelAttribute("questionForm") QuestionForm questionForm,
             @RequestParam(value = "requestError", required = false, defaultValue = "false") Boolean requestError
     ) {
         LOGGER.info("User arriving at '/products/"+ productId +"' ");
         ModelAndView mav = new ModelAndView("marketplace/views/product");
-        mav.addObject("requestForm", requestForm);
         mav.addObject("requestError", requestError);
+        mav.addObject("questions", inqs.getInquiriesByProduct(productId));
         mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
         return mav;
     }
@@ -190,19 +192,36 @@ public class MarketplaceController {
     public ModelAndView buyProduct(
             @PathVariable(value = "id") Long productId,
             @Valid @ModelAttribute("requestForm") RequestForm requestForm,
-            final BindingResult bindingResult
+            final BindingResult bindingResult,
+            @ModelAttribute("questionForm") QuestionForm questionForm
     ) {
         LOGGER.info("User requesting product '/"+ productId +"' ");
         if(bindingResult.hasErrors()){
             LOGGER.error("Error in form 'requestForm'");
-            return product(productId, requestForm, true);
+            return product(productId, requestForm, new QuestionForm(), true);
         }
         rqs.createRequest(sessionUtils.getLoggedUser().getUserId(), productId, requestForm.getRequestMessage());
         ModelAndView mav = new ModelAndView("marketplace/views/product");
         mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
-        requestForm.setRequestMessage("");
-        mav.addObject("requestForm", requestForm);
         return mav;
     }
 
+    @RequestMapping(value = "/products/{id:\\d+}/ask", method = RequestMethod.POST)
+    public ModelAndView askProduct(
+            @PathVariable(value = "id") Long productId,
+            @Valid @ModelAttribute("questionForm") QuestionForm questionForm,
+            final BindingResult bindingResult,
+            @ModelAttribute("requestForm") RequestForm requestForm
+    ) {
+        LOGGER.info("User asking on product '/"+ productId +"' ");
+        if(bindingResult.hasErrors()){
+            LOGGER.error("Error in form 'questionForm'");
+            return product(productId, new RequestForm(), questionForm, true);
+        }
+        System.out.println("creating question" + questionForm.getQuestionMessage());
+        inqs.createInquiry(sessionUtils.getLoggedUser().getUserId(), productId, questionForm.getQuestionMessage());
+        ModelAndView mav = new ModelAndView("marketplace/views/product");
+        mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
+        return mav;
+    }
 }

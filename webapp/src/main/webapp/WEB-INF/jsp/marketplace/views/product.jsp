@@ -184,14 +184,37 @@
 
               <div class="f-c-s-s">
                 <span class="c-text font-size-16 g-05"><spring:message code="Ask.the.seller"/></span>
-                <div class="f-r-sb-c w-100" >
-                  <label>
-                    <input type="text" class="cool-input marketplace-input background"/>
-                  </label>
-                  <button id="ask-button" class="cool-button marketplace-button pure square-radius font-size-14 font-weight-bold">
-                    <spring:message code="Ask"/>
-                  </button>
-                </div>
+
+                <form:form class="f-r-sb-c w-100" method="post" action="${pageContext.request.contextPath}/marketplace/products/${product.productId}/ask" modelAttribute="questionForm">
+                    <form:input path="questionMessage" type="text" class="cool-input marketplace-input background"/>
+                    <a onclick="submitQuestion()"   id="ask-button" class="cool-button marketplace-button pure square-radius font-size-14 font-weight-bold">
+                      <spring:message code="Ask"/>
+                    </a>
+                    <script>
+                      function submitQuestion(){
+                        const form = document.forms['questionForm'];
+                        form.submit();
+                      }
+                    </script>
+                </form:form>
+                <c:forEach var="question" items="${questions}">
+                  <div class="f-c-s-s w-100 mt-3">
+                    <div class="f-c-s-s w-100">
+                      <div class="f-c-s-s w-100">
+                        <span class="c-text font-size-16 g-05">Question</span>
+                        <span class="c-light-text font-weight-normal" >
+                          <c:out value="${question.message}"/>
+                        </span>
+                      </div>
+                      <div class="f-c-s-s w-100">
+                        <span class="c-text font-size-16 g-05">Answer</span>
+                        <span class="c-light-text font-weight-normal" >
+                          <c:out value="${question.reply}"/>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </c:forEach>
               </div>
             </div>
           </div>
@@ -273,9 +296,15 @@
           <form:textarea  path="requestMessage" class="cool-input marketplace-input" id="request-message" name="message" rows="5" placeholder="${messagePlaceholder}"/>
           <form:errors path="requestMessage" cssClass="error" element="p" cssStyle="padding-left: 5px"/>
         </div>
-        <button type="submit" onclick="document.getElementById('loader-container').style.display = 'flex';" class=" w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
+        <a onclick="submitRequest()" type="submit" onclick="document.getElementById('loader-container').style.display = 'flex';" class=" w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
           <spring:message code="Send"/>
-        </button>
+        </a>
+        <script>
+          function submitRequest(){
+            const form = document.forms['requestForm'];
+            form.submit();
+          }
+        </script>
     </form:form>
 
   </div>
