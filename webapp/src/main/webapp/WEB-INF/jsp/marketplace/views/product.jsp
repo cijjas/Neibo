@@ -185,7 +185,7 @@
               <div class="f-c-s-s">
                 <span class="c-text font-size-16 g-05"><spring:message code="Ask.the.seller"/></span>
 
-                <form:form class="f-r-sb-c w-100" method="post" action="${pageContext.request.contextPath}/marketplace/products/${product.productId}/ask" modelAttribute="questionForm">
+                <form:form class="f-r-sb-c w-100" id="questionForm" method="post" action="${pageContext.request.contextPath}/marketplace/products/${product.productId}/ask" modelAttribute="questionForm">
                     <form:input path="questionMessage" type="text" class="cool-input marketplace-input background"/>
                     <a onclick="submitQuestion()"   id="ask-button" class="cool-button marketplace-button pure square-radius font-size-14 font-weight-bold">
                       <spring:message code="Ask"/>
@@ -197,24 +197,41 @@
                       }
                     </script>
                 </form:form>
-                <c:forEach var="question" items="${questions}">
-                  <div class="f-c-s-s w-100 mt-3">
-                    <div class="f-c-s-s w-100">
-                      <div class="f-c-s-s w-100">
-                        <span class="c-text font-size-16 g-05">Question</span>
-                        <span class="c-light-text font-weight-normal" >
+                <c:choose>
+                  <c:when test="${not empty questions}">
+                    <c:forEach var="question" items="${questions}">
+                      <div class="f-c-s-s w-100 mt-3">
+                        <div class="f-c-s-s w-100">
+                          <div class="f-c-s-s w-100">
+                            <span class="c-text font-size-16 g-05"><spring:message code="Question"/></span>
+                            <span class="c-light-text font-weight-normal" >
                           <c:out value="${question.message}"/>
                         </span>
-                      </div>
-                      <div class="f-c-s-s w-100">
-                        <span class="c-text font-size-16 g-05">Answer</span>
-                        <span class="c-light-text font-weight-normal" >
+                          </div>
+                          <div class="f-c-s-s w-100">
+                            <span class="c-text font-size-16 g-05"><spring:message code="Answer"/></span>
+                            <span class="c-light-text font-weight-normal" >
                           <c:out value="${question.reply}"/>
                         </span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </c:forEach>
+                    </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="f-c-s-s w-100 ">
+                            <div class="f-r-s-c w-100 g-05">
+                              <span class="c-text font-size-14 font-weight-bold ">
+                                <spring:message code="No.one.asked"/>
+                              </span>
+                              <span class="c-light-text font-weight-normal font-size-12">
+                                <spring:message code="Ask.first"/>
+                              </span>
+                            </div>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+
               </div>
             </div>
           </div>
@@ -288,7 +305,7 @@
         <i class="fas fa-close"></i>
       </a>
     </div>
-    <form:form class="f-c-c-c w-100" name="requestForm" method="post" action="${contextPath}/marketplace/products/${product.productId}/request" modelAttribute="requestForm">
+    <form:form class="f-c-c-c w-100" id="requestForm" name="requestForm" method="post" action="${contextPath}/marketplace/products/${product.productId}/request" modelAttribute="requestForm">
         <div class="form-group w-75" >
           <c:set var="messagePlaceholder">
             <spring:message code="Message"/>

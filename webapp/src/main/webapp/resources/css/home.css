@@ -853,6 +853,16 @@
     align-items: center;
 }
 
+.hover-a{
+    color: var(--accent);
+    &.marketplace{
+        &:hover{
+            cursor: pointer;
+            color: var(--lila);
+        }
+    }
+
+}
 
 .cool-static-container {
     overflow: hidden;

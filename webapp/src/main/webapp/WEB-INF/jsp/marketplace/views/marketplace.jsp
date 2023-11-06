@@ -46,6 +46,7 @@
                         </div>
                     </c:when>
                     <c:otherwise>
+
                         <div class="row m-0 product-grid-row">
                             <c:forEach var="product" items="${productList}">
                                 <jsp:include page="/WEB-INF/jsp/marketplace/components/productCard.jsp">

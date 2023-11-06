@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/marketplace")
@@ -90,17 +91,19 @@ public class MarketplaceController {
 
     // ------------------------------------- Market --------------------------------------
 
-    @RequestMapping(value = {"/products", "/"}, method = RequestMethod.GET)
+
+    @RequestMapping(value = {"/products/{department}"}, method = RequestMethod.GET)
     public ModelAndView marketplaceProducts(
-        @RequestParam(value = "department", required = false, defaultValue = "0") Integer department
+            @PathVariable(value = "department") String department
     ) {
+        System.out.println("THIS DEPARTMENT"+ department);
         LOGGER.info("User arriving at '/marketplace'");
-        List<Product> productList = prs.getProductsByCriteria(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.fromId(department) , 1,40);
+        List<Product> productList = prs.getProductsByCriteria(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.fromURLString(department) , 1,40);
         ModelAndView mav = new ModelAndView("marketplace/views/marketplace");
         mav.addObject("productList", productList);
         mav.addObject("channel", "Marketplace");
-        mav.addObject("departmentList", Department.getDepartments());
-        mav.addObject("loggedUser", sessionUtils.getLoggedUser());
+        mav.addObject("departmentList", Department.getDepartmentsWithUrls());
+        mav.addObject("departmentName", Objects.requireNonNull(Department.fromURLString(department)).name());
         return mav;
     }
 

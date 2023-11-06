@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.enums;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public enum Department {
@@ -35,19 +32,33 @@ public enum Department {
             .map(department -> new Pair<>(department.getId(), department.toString()))
             .collect(Collectors.toList());
 
-    public static List<String> getDepartmentsList() {
-        return Arrays.stream(values())
-                .map(Department::name)
-                .collect(Collectors.toList());
+    public static Department fromURLString(String urlString) {
+        if(Objects.equals(urlString, "all")){
+            return Department.NONE;
+        }
+        for (Department department : values()) {
+            if (department.toURLString().equals(urlString)) {
+                return department;
+            }
+        }
+        return null;
     }
 
+    private String toURLString() {
+        return name().toLowerCase().replace("_", "-");
+    }
+
+    public static List<Pair<String, String>> getDepartmentsWithUrls() {
+        return Arrays.stream(values())
+                .map(department -> new Pair<>(department.toURLString(), department.name()))
+                .collect(Collectors.toList());
+    }
     public static List<Pair<Integer, String>> getDepartments() {
         return Arrays.stream(values())
                 .map(department -> new Pair<>(department.getId(), department.name()))
                 .sorted(Comparator.comparing(Pair::getValue))
                 .collect(Collectors.toList());
     }
-
 
 
     public static Department fromId(int id) {
