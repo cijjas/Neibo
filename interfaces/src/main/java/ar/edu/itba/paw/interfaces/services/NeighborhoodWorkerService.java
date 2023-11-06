@@ -23,4 +23,7 @@ public interface NeighborhoodWorkerService {
     void verifyWorkerInNeighborhood(long workerId, long neighborhoodId);
 
     void rejectWorkerFromNeighborhood(long workerId, long neighborhoodId);
-}
+
+    void unverifyWorkerFromNeighborhood(long workerId, long neighborhoodId);
+
+    }

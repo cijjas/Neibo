@@ -10,8 +10,10 @@ import java.io.Serializable;
 @Entity
 @Table(name = "products_users_requests")
 public class Request implements Serializable {
-    @EmbeddedId
-    private RequestKey id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "products_users_requests_requestid_seq")
+    @SequenceGenerator(sequenceName = "products_users_requests_requestid_seq", name = "products_users_requests_requestid_seq", allocationSize = 1)
+    private Long requestId;
 
     @ManyToOne
     @MapsId("productId")
@@ -24,21 +26,20 @@ public class Request implements Serializable {
     private User user;
 
     public Request() {
-        this.id = new RequestKey();
     }
 
-    public Request(Product product, User user) {
-        this.id = new RequestKey(product.getProductId(), user.getUserId());
-        this.product = product;
-        this.user = user;
+    public Request(Request.Builder builder) {
+        this.requestId = builder.requestId;
+        this.product = builder.product;
+        this.user = builder.user;
     }
 
-    public RequestKey getId() {
-        return id;
+    public Long getRequestId() {
+        return requestId;
     }
 
-    public void setId(RequestKey id) {
-        this.id = id;
+    public void setRequestId(Long requestId) {
+        this.requestId = requestId;
     }
 
     public Product getProduct() {
@@ -62,11 +63,31 @@ public class Request implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Request that = (Request) o;
-        return id.equals(that.id);
+        return requestId.equals(that.requestId);
     }
 
-    @Override
-    public int hashCode() {
-        return id.hashCode();
+    public static class Builder {
+        private Long requestId;
+        private Product product;
+        private User user;
+
+        public Request.Builder requestId(Long requestId) {
+            this.requestId = requestId;
+            return this;
+        }
+
+        public Request.Builder product(Product product) {
+            this.product = product;
+            return this;
+        }
+
+        public Request.Builder user(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public Request build() {
+            return new Request(this);
+        }
     }
 }

@@ -106,18 +106,32 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> getProductsSelling(long userId) {
+    public List<Product> getProductsSelling(long userId, int page, int size) {
         LOGGER.debug("Selecting Selling Products from User {}", userId);
         TypedQuery<Product> query = em.createQuery("SELECT p FROM Product p WHERE p.buyer IS NULL AND p.seller.userId = :userId", Product.class);
         query.setParameter("userId", userId);
+        query.setFirstResult((page - 1) * size);
+        query.setMaxResults(size);
         return query.getResultList();
     }
 
     @Override
-    public List<Product> getProductsSold(long userId) {
+    public List<Product> getProductsSold(long userId, int page, int size) {
         LOGGER.debug("Selecting Sold Products from User {}", userId);
         TypedQuery<Product> query = em.createQuery("SELECT p FROM Product p WHERE p.buyer IS NOT NULL AND p.seller.userId = :userId", Product.class);
         query.setParameter("userId", userId);
+        query.setFirstResult((page - 1) * size);
+        query.setMaxResults(size);
+        return query.getResultList();
+    }
+
+    @Override
+    public List<Product> getProductsBought(long userId, int page, int size) {
+        LOGGER.debug("Selecting Bought Products from User {}", userId);
+        TypedQuery<Product> query = em.createQuery("SELECT p FROM Product p WHERE p.buyer.id = :userId", Product.class);
+        query.setParameter("userId", userId);
+        query.setFirstResult((page - 1) * size);
+        query.setMaxResults(size);
         return query.getResultList();
     }
 

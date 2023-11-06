@@ -367,6 +367,7 @@ public class MainController {
             @ModelAttribute("signupForm") final SignupForm signupform,
             @ModelAttribute("workerSignupForm") final WorkerSignupForm workerSignupForm,
             @RequestParam(value = "error", required = false, defaultValue = "false") boolean error,
+            @RequestParam(value = "signup-error", required = false, defaultValue = "false") boolean signupError,
             @RequestParam(value = "email", required = false) String email
     ) {
         LOGGER.info("User arriving at '/login'");
@@ -375,6 +376,7 @@ public class MainController {
         mav.addObject("email", email);
         mav.addObject("professionsPairs", Professions.PROF_PAIRS);
         mav.addObject("error", error);
+        mav.addObject("signupError", signupError);
         mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
         mav.addObject("openSignupDialog", false);
         return mav;
@@ -407,7 +409,7 @@ public class MainController {
     ) {
         if (errors.hasErrors()) {
             LOGGER.error("Error in Sign Up Form");
-            ModelAndView mav = logIn(signupForm, new WorkerSignupForm(), true, "");
+            ModelAndView mav = logIn(signupForm, new WorkerSignupForm(), false, true, "");
             mav.addObject("openSignupDialog", true);
             return mav;
         }
@@ -441,7 +443,7 @@ public class MainController {
     ) {
         if (errors.hasErrors()) {
             LOGGER.error("Error in Sign Up Form");
-            ModelAndView mav = logIn(new SignupForm(), workerSignupForm, true, "");
+            ModelAndView mav = logIn(new SignupForm(), workerSignupForm, false, true, "");
             mav.addObject("openWorkerSignupDialog", true);
             return mav;
         }

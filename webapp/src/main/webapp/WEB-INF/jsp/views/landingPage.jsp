@@ -39,6 +39,18 @@
     </jsp:include>
 </c:if>
 
+<c:if test="${signupError == true}">
+    <c:set var="errorMessage">
+        <spring:message code="Signup.error.message.1"/>
+        <spring:message code="Signup.error.message.2"/>
+    </c:set>
+
+    <jsp:include page="/WEB-INF/jsp/errors/errorDialog.jsp">
+        <jsp:param name="errorMessage" value="${errorMessage}"/>
+        <jsp:param name="openLoginAgain" value="${true}"/>
+    </jsp:include>
+</c:if>
+
 <c:if test="${successfullySignup == true}">
     <c:set var="successMessage">
         <spring:message code="Successfully.signup"/>

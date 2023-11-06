@@ -12,6 +12,7 @@ public class ListingForm {
     @Size(max = 100)
     private String title;
 
+    @NotBlank
     private String price;
 
     private MultipartFile[] imageFiles;
