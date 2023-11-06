@@ -47,7 +47,7 @@ public class WorkerServiceImpl implements WorkerService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Worker createWorker(String mail, String name, String surname, String password, String identification, String phoneNumber, String address, Language language, long[] professionIds, String businessName) {
+    public Worker createWorker(String mail, String name, String surname, String password, String identification, String phoneNumber, String address, Language language, Long[] professionIds, String businessName) {
         LOGGER.info("Creating Worker with mail {}", mail);
 
         int id = 0;

@@ -121,7 +121,7 @@ public class MarketplaceController {
         LOGGER.info("User arriving at '/marketplace/my-sales'");
 
         ModelAndView mav = new ModelAndView("marketplace/views/mySales");
-        mav.addObject("soldProductsList", prs.getProductsSold(sessionUtils.getLoggedUser().getUserId()));
+        mav.addObject("soldProductsList", prs.getProductsSold(sessionUtils.getLoggedUser().getUserId(), 1, 10));
         mav.addObject("channel", "MySales");
         mav.addObject("loggedUser", sessionUtils.getLoggedUser());
         return mav;

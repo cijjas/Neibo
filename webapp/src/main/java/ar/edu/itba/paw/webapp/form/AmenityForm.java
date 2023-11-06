@@ -7,13 +7,13 @@ import javax.validation.constraints.Size;
 
 public class AmenityForm {
     @NotBlank
-    @Size(max = 100)
-    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]+")
+    @Size(min = 0, max = 100)
+    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*")
     private String name;
 
     @NotBlank
-    @Size(max = 1000)
-    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]+")
+    @Size(min = 0, max = 1000)
+    @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*")
     private String description;
 
 

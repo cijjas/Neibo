@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.EmailConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.LanguageConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.ProfessionsConstraint;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -10,46 +11,47 @@ import javax.validation.constraints.Size;
 
 public class WorkerSignupForm {
     @NotBlank
-    @Size(max = 64)
-    @Pattern(regexp = "^[a-zA-Z ]+")
+    @Size(min = 0, max = 64)
+    @Pattern(regexp = "^[a-zA-Z ]*")
     private String w_name;
 
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z ]+")
-    @Size(max = 64)
+    @Pattern(regexp = "^[a-zA-Z ]*")
+    @Size(min = 0, max = 64)
     private String w_surname;
 
-    private long[] professionIds;
+    @ProfessionsConstraint
+    private Long[] professionIds;
 
     @NotBlank
-    @Size(max = 64)
-    @Pattern(regexp = "^[0-9+\\- ]+")
+    @Size(min = 0, max = 64)
+    @Pattern(regexp = "^[0-9+\\- ]*")
     private String phoneNumber;
 
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9 -]+")
-    @Size(max = 128)
+    @Pattern(regexp = "^[a-zA-Z0-9 -]*")
+    @Size(min = 0, max = 128)
     private String businessName;
 
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9 -]+")
-    @Size(max = 128)
+    @Pattern(regexp = "^[a-zA-Z0-9 -]*")
+    @Size(min = 0, max = 128)
     private String address;
 
     @NotBlank
-    @Size(min = 6, max = 128)
+    @Size(min = 0, max = 128)
     @Email
     @EmailConstraint
     private String w_mail;
 
     @NotBlank
-    @Size(max = 50)
-    @Pattern(regexp = "^[a-zA-Z0-9]+$")
+    @Size(min = 0, max = 50)
+    @Pattern(regexp = "^[a-zA-Z0-9]*")
     private String w_password;
 
     @NotBlank
-    @Size(max = 9)
-    @Pattern(regexp = "^[0-9]+$")
+    @Size(min = 0, max = 9)
+    @Pattern(regexp = "^[0-9]*")
     private String w_identification;
 
     @LanguageConstraint
@@ -103,11 +105,11 @@ public class WorkerSignupForm {
         this.w_password = password;
     }
 
-    public long[] getProfessionIds() {
+    public Long[] getProfessionIds() {
         return professionIds;
     }
 
-    public void setProfessionIds(long[] professionIds) {
+    public void setProfessionIds(Long[] professionIds) {
         this.professionIds = professionIds;
     }
 

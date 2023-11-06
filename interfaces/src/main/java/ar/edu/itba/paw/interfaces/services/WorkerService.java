@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface WorkerService {
 
-    Worker createWorker(String mail, String name, String surname, String password, String identification, String phoneNumber, String address, Language language, long[] professionIds, String businessName);
+    Worker createWorker(String mail, String name, String surname, String password, String identification, String phoneNumber, String address, Language language, Long[] professionIds, String businessName);
 
     // -----------------------------------------------------------------------------------------------------------------
 

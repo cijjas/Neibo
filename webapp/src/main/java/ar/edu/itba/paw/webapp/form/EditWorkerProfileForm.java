@@ -10,22 +10,22 @@ import javax.validation.constraints.Size;
 public class EditWorkerProfileForm {
 
     @NotBlank
-    @Size(max = 64)
+    @Size(min = 0, max = 64)
     private String phoneNumber;
 
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9 -]+")
-    @Size(max = 128)
+    @Pattern(regexp = "^[a-zA-Z0-9 -]*")
+    @Size(min = 0, max = 128)
     private String businessName;
 
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9 -]+")
-    @Size(max = 128)
+    @Pattern(regexp = "^[a-zA-Z0-9 -]*")
+    @Size(min = 0, max = 128)
     private String address;
 
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9 -]+")
-    @Size(max = 255)
+    @Pattern(regexp = "^[a-zA-Z0-9 -]*")
+    @Size(min = 0, max = 255)
     private String bio;
 
     @ImageConstraint

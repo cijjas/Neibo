@@ -7,14 +7,14 @@ import javax.validation.constraints.Size;
 public class ContactForm {
 
     @NotBlank
-    @Size(max = 64)
+    @Size(min = 0, max = 64)
     private String contactName;
 
     @Size(max = 64)
     private String contactAddress;
 
     @NotBlank
-    @Size(max = 20)
+    @Size(min = 0, max = 20)
     private String contactPhone;
 
     public String getContactName() {

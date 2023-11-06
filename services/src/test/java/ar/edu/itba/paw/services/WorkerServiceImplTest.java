@@ -95,7 +95,7 @@ public class WorkerServiceImplTest {
         when(workerDao.createWorker(eq(mockUser.getUserId()), eq(PHONE_NUMBER), eq(ADDRESS), eq(BUSINESS_NAME))).thenThrow(RuntimeException.class);
 
         // 2. Exercise
-        Worker newWorker = ws.createWorker(EMAIL, NAME, SURNAME, PASSWORD, IDENTIFICATION, PHONE_NUMBER, ADDRESS, LANGUAGE, new long[]{1}, BUSINESS_NAME);
+        Worker newWorker = ws.createWorker(EMAIL, NAME, SURNAME, PASSWORD, IDENTIFICATION, PHONE_NUMBER, ADDRESS, LANGUAGE, new Long[]{1L}, BUSINESS_NAME);
 
         // 3. Postconditions
     }

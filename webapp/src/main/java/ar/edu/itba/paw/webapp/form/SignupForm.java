@@ -11,32 +11,32 @@ import javax.validation.constraints.Size;
 
 public class SignupForm {
     @NotBlank
-    @Size(max = 64)
-    @Pattern(regexp = "^[a-zA-Z ]+")
+    @Size(min = 0, max = 64)
+    @Pattern(regexp = "^[a-zA-Z ]*")
     private String name;
 
     @NotBlank
-    @Pattern(regexp = "^[a-zA-Z ]+")
-    @Size(max = 64)
+    @Pattern(regexp = "^[a-zA-Z ]*")
+    @Size(min = 0, max = 64)
     private String surname;
 
     @NeighborhoodConstraint
     private long neighborhoodId;
 
     @NotBlank
-    @Size(min = 6, max = 128)
+    @Size(min = 0, max = 128)
     @Email
     @EmailConstraint
     private String mail;
 
     @NotBlank
-    @Size(max = 50)
-    @Pattern(regexp = "^[a-zA-Z0-9]+$")
+    @Size(min = 0, max = 50)
+    @Pattern(regexp = "^[a-zA-Z0-9]*")
     private String password;
 
     @NotBlank
-    @Size(max = 9)
-    @Pattern(regexp = "^[0-9]+$")
+    @Size(min = 0, max = 9)
+    @Pattern(regexp = "^[0-9]*")
     private String identification;
 
     @LanguageConstraint
