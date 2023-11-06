@@ -68,6 +68,9 @@ public enum Department {
                 .orElse(null);
     }
 
+    public String getDepartmentUrl(){
+        return toURLString();
+    }
     @Override
     public String toString() {
         String name = name().toLowerCase();

@@ -23,10 +23,11 @@
             <c:forEach var="profession" items="${professionList}" varStatus="loop">
                 <c:choose>
                     <c:when test="${loop.index < 20}">
-                        <a class="profession-option" onclick="addProfessionToApply('${profession}', professionInput2)"><c:out value="${profession}"/></a>
+                        <spring:message code='${profession}' var="professionVar"/>
+                        <a class="profession-option" onclick='addProfessionToApply(`${professionVar}`)'><c:out value="${professionVar}"/></a>
                     </c:when>
                     <c:otherwise>
-                        <a class="profession-option" onclick="addProfessionToApply('${profession}',professionInput2)" style="display: none"><c:out value="${profession}"/></a>
+                        <a class="profession-option" onclick="addProfessionToApply(`${professionVar}`)" style="display: none"><spring:message code="${profession}"/></a>
                     </c:otherwise>
                 </c:choose>
 
@@ -38,22 +39,17 @@
         <script>
             // Function to initialize applied professions from the data attribute
             function initializeAppliedProfessions() {
-                const appliedProfessionsDiv = document.getElementById('applied-professions');
-                const professionsString = appliedProfessionsDiv.getAttribute('data-professions');
-
+                const professionsString = document.getElementById('applied-professions').getAttribute('data-professions');
                 if (professionsString) {
-                    // Use a regular expression to match professions
-                    const professionRegex = /\w+/g; // This regex matches one or more word characters
-
-                    // Extract professions from the string
-                    const professionsArray = professionsString.match(professionRegex);
-
-                    if (professionsArray) {
-                        // Loop through the professions and add them
-                        professionRegex.forEach(function (professionText) {
-                            addProfessionToApply(professionText, professionInput2);
-                        });
-                    }
+                    //remove [] from string
+                    const professionsArray = professionsString
+                        .substring(1, professionsString.length - 1)
+                        .split(',')
+                        .map((profession) => profession.trim());
+                    console.log(professionsArray);
+                    professionsArray.forEach(function (profession) {
+                        professionInput2.addProfession(profession);
+                    });
                 }
             }
 
@@ -115,8 +111,9 @@
     });
 
     // Add a profession from the dropdown
-    function addProfessionToApply(professionText, professionInput) {
-        professionInput.addProfession(professionText); // Assuming professionInput2 is your ProfessionsInput instance
+    function addProfessionToApply(professionText) {
+        console.log(professionText);
+        professionInput2.addProfession(professionText);
     }
 
     function applyProfessionsAsFilter() {

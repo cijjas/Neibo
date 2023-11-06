@@ -17,7 +17,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title><spring:message code="Marketplace"/></title>
+    <title><spring:message code="My.listings"/></title>
 </head>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" scope="page" />
 <c:set var="channel" value="${channel}" scope="page" />
@@ -58,7 +58,7 @@
                                 <jsp:param name="productPrimaryPictureId" value="${product.primaryPicture.imageId}"/>
                                 <jsp:param name="productId" value="${product.productId}"/>
                                 <jsp:param name="productUsed" value="${product.used}"/>
-                                <jsp:param name="productDepartmentId" value="${product.department.department.id}"/>
+                                <jsp:param name="productDepartmentURL" value="${product.department.department.departmentUrl}"/>
                             </jsp:include>
                         </c:forEach>
                     </div>

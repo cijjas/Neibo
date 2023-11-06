@@ -58,7 +58,7 @@
                                     <jsp:param name="productPrimaryPictureId" value="${product.primaryPicture.imageId}"/>
                                     <jsp:param name="productId" value="${product.productId}"/>
                                     <jsp:param name="productUsed" value="${product.used}"/>
-                                    <jsp:param name="productDepartmentId" value="${product.department.department.id}"/>
+                                    <jsp:param name="productDepartmentURL" value="${product.department.department.departmentUrl}"/>
                                 </jsp:include>
                             </c:forEach>
                         </div>

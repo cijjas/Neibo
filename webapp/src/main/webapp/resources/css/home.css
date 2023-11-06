@@ -2494,7 +2494,7 @@ input[type=time] {
     width: 200px;
     height: 300px;
     background-color: var(--onbackground);
-    border: 1px solid var(--text);
+    border: 1px solid var(--lightertext);
     border-radius: var(--border-radius);
     transition: all 0.3s ease-in-out;
     overflow: hidden;
@@ -2513,6 +2513,7 @@ input[type=time] {
         pointer-events: none;
     }
     &:hover {
+        cursor: pointer;
         transform: translateY(-5px);
         box-shadow: 0 5px 0 0 var(--lila);
         border: 1px solid var(--lila);
@@ -2617,11 +2618,13 @@ input[type=time] {
     }
 }
 .department-tag{
-
     border-radius: 5px;
     padding: 5px;
     color: var(--always-background);
     background-color: var(--lila);
+    &:hover{
+       scale: 1.05;
+    }
 }
 
 
@@ -2848,4 +2851,17 @@ input[type=time] {
 .dropdown-toggle:hover + .dropdown-options,
 .dropdown-options:hover {
     display: block;
+}
+
+.purchased-product-image{
+    width: 100px;
+    height: 100px;
+
+    & img{
+
+        border-radius: var(--border-radius);
+        width: 100%;
+        object-fit: contain;
+        object-position: center bottom;
+    }
 }

@@ -95,6 +95,9 @@ public class MarketplaceController {
     public ModelAndView marketplaceProducts(
             @PathVariable(value = "department") String department
     ) {
+        if(department == null || department.isEmpty()){
+            department = "all";
+        }
         System.out.println("THIS DEPARTMENT"+ department);
         LOGGER.info("User arriving at '/marketplace'");
         List<Product> productList = prs.getProductsByCriteria(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.fromURLString(department) , 1,40);
@@ -104,6 +107,10 @@ public class MarketplaceController {
         mav.addObject("departmentList", Department.getDepartmentsWithUrls());
         mav.addObject("departmentName", Objects.requireNonNull(Department.fromURLString(department)).name());
         return mav;
+    }
+    @RequestMapping(value = { "/"}, method = RequestMethod.GET)
+    public String redirectToMarketplace() {
+        return "redirect:/marketplace/products/all";
     }
 
     @RequestMapping(value = "/my-purchases" , method = RequestMethod.GET)
@@ -193,8 +200,6 @@ public class MarketplaceController {
         @ModelAttribute("listingForm") ListingForm listingForm
     ) {
         LOGGER.info("User arriving at '/marketplace/create-publishing'");
-
-
         ModelAndView mav = new ModelAndView("marketplace/views/sell");
         mav.addObject("channel", "Sell");
         mav.addObject("departmentList", Department.getDepartments());
@@ -218,9 +223,10 @@ public class MarketplaceController {
     }
 
 
-    @RequestMapping(value = "/products/{id:\\d+}", method = RequestMethod.GET)
+    @RequestMapping(value = "/products/{department}/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView product(
             @PathVariable(value = "id") Long productId,
+            @PathVariable(value = "department") String department,
             @ModelAttribute("requestForm") RequestForm requestForm,
             @ModelAttribute("questionForm") QuestionForm questionForm,
             @RequestParam(value = "requestError", required = false, defaultValue = "false") Boolean requestError
@@ -233,9 +239,10 @@ public class MarketplaceController {
         return mav;
     }
 
-    @RequestMapping(value = "/products/{id:\\d+}/request", method = RequestMethod.POST)
+    @RequestMapping(value = "/products/{department}/{id:\\d+}/request", method = RequestMethod.POST)
     public ModelAndView buyProduct(
             @PathVariable(value = "id") Long productId,
+            @PathVariable(value = "department") String department,
             @Valid @ModelAttribute("requestForm") RequestForm requestForm,
             final BindingResult bindingResult,
             @ModelAttribute("questionForm") QuestionForm questionForm
@@ -243,7 +250,7 @@ public class MarketplaceController {
         LOGGER.info("User requesting product '/"+ productId +"' ");
         if(bindingResult.hasErrors()){
             LOGGER.error("Error in form 'requestForm'");
-            return product(productId, requestForm, new QuestionForm(), true);
+            return product(productId, department, requestForm, new QuestionForm(), true);
         }
         rqs.createRequest(sessionUtils.getLoggedUser().getUserId(), productId, requestForm.getRequestMessage());
         ModelAndView mav = new ModelAndView("marketplace/views/product");
@@ -251,9 +258,10 @@ public class MarketplaceController {
         return mav;
     }
 
-    @RequestMapping(value = "/products/{id:\\d+}/ask", method = RequestMethod.POST)
+    @RequestMapping(value = "/products/{department}/{id:\\d+}/ask", method = RequestMethod.POST)
     public ModelAndView askProduct(
             @PathVariable(value = "id") Long productId,
+            @PathVariable(value = "department") String department,
             @Valid @ModelAttribute("questionForm") QuestionForm questionForm,
             final BindingResult bindingResult,
             @ModelAttribute("requestForm") RequestForm requestForm
@@ -261,7 +269,7 @@ public class MarketplaceController {
         LOGGER.info("User asking on product '/"+ productId +"' ");
         if(bindingResult.hasErrors()){
             LOGGER.error("Error in form 'questionForm'");
-            return product(productId, new RequestForm(), questionForm, true);
+            return product(productId,department,  new RequestForm(), questionForm, true);
         }
         System.out.println("creating question" + questionForm.getQuestionMessage());
         inqs.createInquiry(sessionUtils.getLoggedUser().getUserId(), productId, questionForm.getQuestionMessage());

@@ -17,7 +17,7 @@
   <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
   <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
   <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-  <title><spring:message code="Marketplace"/></title>
+  <title><c:out value="${product.name}"/></title>
 </head>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" scope="page" />
 
@@ -135,7 +135,7 @@
                       <spring:message code="New"/>
                   </c:otherwise>
                 </c:choose>
-                <div class="department-tag" onclick='window.location.href = "${contextPath}/marketplace/products?department=${product.department.department.id}" '>
+                <div class="department-tag" onclick='window.location.href = "${contextPath}/marketplace/products/${product.department.department.departmentUrl}"  '>
                   <spring:message code="${product.department.department}"/>
                 </div>
               </span>

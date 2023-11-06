@@ -8,6 +8,7 @@
                         class="big-profile-picture placeholder"
                         alt="worker_picture_img_${worker.user.userId}"
                 />
+                <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
 
                 <script>
                     (function () {
@@ -25,7 +26,6 @@
                         class="background-cover placeholder"
                         alt="worker_background_img_${worker.user.userId}"
                 />
-                <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
                 <script>
                     (function () {
                         getImageInto("worker-background-image-${worker.user.userId}", ${empty worker.backgroundPictureId ? -1 : worker.backgroundPictureId}, "${pageContext.request.contextPath}")
@@ -35,7 +35,7 @@
             </div>
             <div class="title-total">
                 <div class="title">
-                    <span id="professionPlaceholder-${worker.user.userId}"><spring:message code="Loading."/></span>
+                    <span id="professionPlaceholder-${worker.user.userId}"><spring:message code="Loading." /></span>
                 </div>
                 <h2><c:out value="${worker.user.name}"/></h2>
                 <div class="desc">
@@ -48,6 +48,7 @@
                             if (!response.ok) {
                                 throw new Error("Failed to fetch data from the endpoint.");
                             }
+
                             const professionElement = document.getElementById("professionPlaceholder-${worker.user.userId}");
                             professionElement.textContent = await response.text(); // Set the response as text content
                         } catch (error) {

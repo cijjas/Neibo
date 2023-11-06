@@ -58,21 +58,6 @@
     const wave2 = document.getElementById('wave2');
     wave2.classList.add('lila');
     wave3.classList.add('lila');
-
-    function handleUserTransaction(buyerId) {
-        const form = document.createElement('form');
-        form.method = 'POST';
-
-        form.action = '${pageContext.request.contextPath}/marketplace/mark-as-bought';
-
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'buyerId';
-        input.value = buyerId;
-        form.appendChild(input);
-        document.body.appendChild(form);
-        form.submit();
-    }
 </script>
 </body>
 </html>

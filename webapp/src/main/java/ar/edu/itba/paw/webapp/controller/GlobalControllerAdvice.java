@@ -22,9 +22,5 @@ public class GlobalControllerAdvice {
         return sessionUtils.getLoggedUser();
     }
 
-    @ModelAttribute("neighborhoodName")
-    @Cacheable("neighborhoodName")
-    public String getNeighborhoodName() {
-        return sessionUtils.getLoggedUserNeighborhoodName();
-    }
+
 }
