@@ -86,11 +86,11 @@ public class User {
     private List<Product> productsBought;
 
     @ManyToMany
-    @JoinTable(name = "users_products_requests", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "productid"))
+    @JoinTable(name = "products_users_requests", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "productid"))
     private Set<Product> requestedProducts;
 
     @ManyToMany
-    @JoinTable(name = "users_products_inquiries", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "productid"))
+    @JoinTable(name = "products_users_inquiries", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "productid"))
     private Set<Product> inquiredProducts;
 
     @ManyToMany
@@ -179,7 +179,6 @@ public class User {
                 ", language=" + language +
                 ", role=" + role +
                 ", creationDate=" + creationDate +
-                ", profilePicture=" + profilePicture +
                 ", identification=" + identification +
                 '}';
     }

@@ -31,6 +31,8 @@ public interface UserService {
 
     List<User> getEventUsers(long eventId);
 
+    List<User> getProductRequesters(long productId, int page, int size);
+
     // -----------------------------------------------------------------------------------------------------------------
 
     void updateProfilePicture(long userId, MultipartFile image);
