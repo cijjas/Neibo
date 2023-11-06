@@ -109,8 +109,11 @@ public class MarketplaceController {
     ) {
         LOGGER.info("User arriving at '/marketplace/my-purchases'");
 
+        List<Product> products = sessionUtils.getLoggedUser().getProductsBought();
+
         ModelAndView mav = new ModelAndView("marketplace/views/myPurchases");
         mav.addObject("channel", "MyPurchases");
+        mav.addObject("products", products);
         mav.addObject("loggedUser", sessionUtils.getLoggedUser());
         return mav;
     }
@@ -121,7 +124,7 @@ public class MarketplaceController {
         LOGGER.info("User arriving at '/marketplace/my-sales'");
 
         ModelAndView mav = new ModelAndView("marketplace/views/mySales");
-        mav.addObject("soldProductsList", prs.getProductsSold(sessionUtils.getLoggedUser().getUserId()));
+        mav.addObject("products", prs.getProductsSold(sessionUtils.getLoggedUser().getUserId()));
         mav.addObject("channel", "MySales");
         mav.addObject("loggedUser", sessionUtils.getLoggedUser());
         return mav;
@@ -133,8 +136,8 @@ public class MarketplaceController {
         LOGGER.info("User arriving at '/marketplace/my-listings'");
 
         ModelAndView mav = new ModelAndView("marketplace/views/myListings");
-        List<Product> myProductList =  prs.getProductsSelling(sessionUtils.getLoggedUser().getUserId());
-        mav.addObject("myProductList", myProductList);
+
+        mav.addObject("myProductList", prs.getProductsSelling(sessionUtils.getLoggedUser().getUserId()));
         mav.addObject("channel", "MyListings");
         mav.addObject("loggedUser", sessionUtils.getLoggedUser());
         return mav;

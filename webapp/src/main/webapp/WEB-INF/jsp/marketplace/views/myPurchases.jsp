@@ -28,15 +28,14 @@
         <div class="column-left " >
             <%@ include file="/WEB-INF/jsp/components/widgets/leftColumn.jsp" %>
         </div>
-
         <div id="center-grid" class="column-center pl-3 ">
             <%@ include file="/WEB-INF/jsp/marketplace/components/upperMarketplaceButtons.jsp" %>
-
             <div class="row m-0 product-grid-row">
 
+                <c:forEach var="product" items="${products}" varStatus="loop">
+                    ${product}
+                </c:forEach>
             </div>
-
-
         </div>
     </div>
 </div>
