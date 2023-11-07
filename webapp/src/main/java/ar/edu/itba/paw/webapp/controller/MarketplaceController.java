@@ -219,10 +219,11 @@ public class MarketplaceController {
             LOGGER.error("Error in form 'questionForm'");
             return product(productId, new RequestForm(), questionForm, true);
         }
-        System.out.println("creating question" + questionForm.getQuestionMessage());
+//        System.out.println("creating question" + questionForm.getQuestionMessage());
         inqs.createInquiry(sessionUtils.getLoggedUser().getUserId(), productId, questionForm.getQuestionMessage());
-        ModelAndView mav = new ModelAndView("marketplace/views/product");
-        mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
-        return mav;
+        return new ModelAndView("redirect:/products/" + productId);
+//        ModelAndView mav = new ModelAndView("marketplace/views/product");
+//        mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
+//        return mav;
     }
 }

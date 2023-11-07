@@ -372,10 +372,11 @@ public class EmailServiceImpl implements EmailService {
             variables.put("customMessage", reply ? "Your inquiry has been replied " : "You have a new inquiry ");
             variables.put("replyOrMessage", reply ? "The reply: " : "The message: ");
             sendMessageUsingThymeleafTemplate(receiver.getMail(), reply ? "Response to Inquiry" : "New Inquiry", "inquiry-template_en.html", variables);
+        } else {
+            variables.put("customMessage", reply ? "Has recibido una respuesta a tu consulta " : "Tienes una nueva consulta ");
+            variables.put("replyOrMessage", reply ? "La respuesta: " : "El mensaje: ");
+            sendMessageUsingThymeleafTemplate(receiver.getMail(), reply ? "Respuesta a Consulta" : "Nueva Consulta", "inquiry-template_es.html", variables);
         }
-        variables.put("customMessage", reply ? "Has recibido una respuesta a tu consulta " : "Tienes una nueva consulta ");
-        variables.put("replyOrMessage", reply ? "La respuesta: " : "El mensaje: ");
-        sendMessageUsingThymeleafTemplate(receiver.getMail(), reply ? "Respuesta a Consulta" : "Nueva Consulta", "inquiry-template_es.html", variables);
     }
 
     @Override

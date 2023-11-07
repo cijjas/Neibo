@@ -26,12 +26,15 @@ public class InquiryDaoImpl implements InquiryDao {
     @Override
     public Inquiry createInquiry(long userId, long productId, String message) {
         LOGGER.debug("Inserting Inquiry for product with id {}", productId);
+        System.out.println("INQUIRYYYY: productid: " + productId + "| product: " + em.find(Product.class, productId) + " | userid: " + userId + " | user: " + em.find(User.class, userId) + " | message: " + message);
         Inquiry inquiry = new Inquiry.Builder()
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
                 .message(message)
                 .build();
+        System.out.println("CREATED INQUIRY: " + inquiry);
         em.persist(inquiry);
+
         return inquiry;
     }
 
