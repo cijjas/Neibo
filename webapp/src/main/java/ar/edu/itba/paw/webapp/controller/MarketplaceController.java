@@ -14,11 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/marketplace")
@@ -90,18 +90,27 @@ public class MarketplaceController {
 
     // ------------------------------------- Market --------------------------------------
 
-    @RequestMapping(value = {"/products", "/"}, method = RequestMethod.GET)
+
+    @RequestMapping(value = {"/products/{department}"}, method = RequestMethod.GET)
     public ModelAndView marketplaceProducts(
-        @RequestParam(value = "department", required = false, defaultValue = "0") Integer department
+            @PathVariable(value = "department") String department
     ) {
+        if(department == null || department.isEmpty()){
+            department = "all";
+        }
+        System.out.println("THIS DEPARTMENT"+ department);
         LOGGER.info("User arriving at '/marketplace'");
-        List<Product> productList = prs.getProductsByCriteria(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.fromId(department) , 1,40);
+        List<Product> productList = prs.getProductsByCriteria(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.fromURLString(department) , 1,40);
         ModelAndView mav = new ModelAndView("marketplace/views/marketplace");
         mav.addObject("productList", productList);
         mav.addObject("channel", "Marketplace");
-        mav.addObject("departmentList", Department.getDepartments());
-        mav.addObject("loggedUser", sessionUtils.getLoggedUser());
+        mav.addObject("departmentList", Department.getDepartmentsWithUrls());
+        mav.addObject("departmentName", Objects.requireNonNull(Department.fromURLString(department)).name());
         return mav;
+    }
+    @RequestMapping(value = { "/"}, method = RequestMethod.GET)
+    public String redirectToMarketplace() {
+        return "redirect:/marketplace/products/all";
     }
 
     @RequestMapping(value = "/my-purchases" , method = RequestMethod.GET)
@@ -130,6 +139,48 @@ public class MarketplaceController {
         mav.addObject("loggedUser", sessionUtils.getLoggedUser());
         return mav;
     }
+
+    @RequestMapping(value = "/my-requests", method = RequestMethod.GET)
+    public ModelAndView myRequests(
+
+    ) {
+        LOGGER.info("User arriving at '/marketplace/my-requests'");
+
+        System.out.println(prs.getProductsSelling(sessionUtils.getLoggedUser().getUserId(), 1, 10));
+
+        ModelAndView mav = new ModelAndView("marketplace/views/mySalesRequests");
+        mav.addObject("products", prs.getProductsSelling(sessionUtils.getLoggedUser().getUserId(), 1, 10));
+        mav.addObject("channel", "MySales");    // this is wrong
+        return mav;
+    }
+
+    @RequestMapping(value = "/my-requests/{productId:\\d+}", method = RequestMethod.GET)
+    public ModelAndView saleRequests(
+            @PathVariable(value = "productId") int productId
+    ) {
+        LOGGER.info("User arriving at '/marketplace/my-requests/{}'", productId);
+
+        System.out.println(prs.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")).getRequesters());
+        System.out.println(us.getProductRequesters(productId, 1, 10));
+        ModelAndView mav = new ModelAndView("marketplace/views/saleRequests");
+        mav.addObject("requests", prs.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")).getRequesters());
+        mav.addObject("productId", productId);
+        mav.addObject("channel", "MySales");  // this is wrong
+        return mav;
+    }
+
+    @RequestMapping(value = "/mark-as-bought", method = RequestMethod.POST)
+    public ModelAndView markAsBought(
+            @RequestParam(value = "buyerId") int buyerId,
+            @RequestParam(value = "productId") int productId
+
+    ) {
+        LOGGER.info("User arriving at '/marketplace/mark-as-bought'");
+        prs.markAsBought(buyerId, productId);
+        return new ModelAndView("redirect:/marketplace/my-requests/" + productId);
+
+    }
+
     @RequestMapping(value = "/my-listings", method = RequestMethod.GET)
     public ModelAndView myListings(
 
@@ -149,8 +200,6 @@ public class MarketplaceController {
         @ModelAttribute("listingForm") ListingForm listingForm
     ) {
         LOGGER.info("User arriving at '/marketplace/create-publishing'");
-
-
         ModelAndView mav = new ModelAndView("marketplace/views/sell");
         mav.addObject("channel", "Sell");
         mav.addObject("departmentList", Department.getDepartments());
@@ -174,9 +223,10 @@ public class MarketplaceController {
     }
 
 
-    @RequestMapping(value = "/products/{id:\\d+}", method = RequestMethod.GET)
+    @RequestMapping(value = "/products/{department}/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView product(
             @PathVariable(value = "id") Long productId,
+            @PathVariable(value = "department") String department,
             @ModelAttribute("requestForm") RequestForm requestForm,
             @ModelAttribute("questionForm") QuestionForm questionForm,
             @RequestParam(value = "requestError", required = false, defaultValue = "false") Boolean requestError
@@ -189,9 +239,10 @@ public class MarketplaceController {
         return mav;
     }
 
-    @RequestMapping(value = "/products/{id:\\d+}/request", method = RequestMethod.POST)
+    @RequestMapping(value = "/products/{department}/{id:\\d+}/request", method = RequestMethod.POST)
     public ModelAndView buyProduct(
             @PathVariable(value = "id") Long productId,
+            @PathVariable(value = "department") String department,
             @Valid @ModelAttribute("requestForm") RequestForm requestForm,
             final BindingResult bindingResult,
             @ModelAttribute("questionForm") QuestionForm questionForm
@@ -199,7 +250,7 @@ public class MarketplaceController {
         LOGGER.info("User requesting product '/"+ productId +"' ");
         if(bindingResult.hasErrors()){
             LOGGER.error("Error in form 'requestForm'");
-            return product(productId, requestForm, new QuestionForm(), true);
+            return product(productId, department, requestForm, new QuestionForm(), true);
         }
         rqs.createRequest(sessionUtils.getLoggedUser().getUserId(), productId, requestForm.getRequestMessage());
         ModelAndView mav = new ModelAndView("marketplace/views/product");
@@ -207,9 +258,10 @@ public class MarketplaceController {
         return mav;
     }
 
-    @RequestMapping(value = "/products/{id:\\d+}/ask", method = RequestMethod.POST)
+    @RequestMapping(value = "/products/{department}/{id:\\d+}/ask", method = RequestMethod.POST)
     public ModelAndView askProduct(
             @PathVariable(value = "id") Long productId,
+            @PathVariable(value = "department") String department,
             @Valid @ModelAttribute("questionForm") QuestionForm questionForm,
             final BindingResult bindingResult,
             @ModelAttribute("requestForm") RequestForm requestForm
@@ -217,11 +269,13 @@ public class MarketplaceController {
         LOGGER.info("User asking on product '/"+ productId +"' ");
         if(bindingResult.hasErrors()){
             LOGGER.error("Error in form 'questionForm'");
-            return product(productId, new RequestForm(), questionForm, true);
+            return product(productId,department,  new RequestForm(), questionForm, true);
         }
 //        System.out.println("creating question" + questionForm.getQuestionMessage());
         inqs.createInquiry(sessionUtils.getLoggedUser().getUserId(), productId, questionForm.getQuestionMessage());
-        return new ModelAndView("redirect:/products/" + productId);
+//        return new ModelAndView("redirect:/services");
+//        return product(productId,department,  new RequestForm(), new QuestionForm(), false);
+        return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
 //        ModelAndView mav = new ModelAndView("marketplace/views/product");
 //        mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
 //        return mav;

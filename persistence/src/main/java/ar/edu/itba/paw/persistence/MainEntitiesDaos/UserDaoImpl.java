@@ -161,6 +161,17 @@ public class UserDaoImpl implements UserDao {
         return result.intValue() == 1;
     }
 
+    @Override
+    public List<User> getProductRequesters(long productId, int page, int size) {
+        LOGGER.debug("Selecting Users that requested product {}", productId);
+        TypedQuery<User> query = em.createQuery("SELECT u FROM User u JOIN u.requestedProducts p WHERE p.productId = :productId", User.class);
+        query.setParameter("productId", productId);
+        query.setFirstResult((page - 1) * size);
+        query.setMaxResults(size);
+        return query.getResultList();
+    }
+
+
     // ---------------------------------------------- USERS UPDATE -----------------------------------------------------
 
     @Override

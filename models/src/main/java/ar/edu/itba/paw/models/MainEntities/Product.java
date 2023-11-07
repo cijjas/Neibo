@@ -217,6 +217,8 @@ public class Product {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", used=" + used +
+                ", inquirers=" + inquirers.size() +
+                ", requesters=" + requesters.size() +
                 '}';
     }
 

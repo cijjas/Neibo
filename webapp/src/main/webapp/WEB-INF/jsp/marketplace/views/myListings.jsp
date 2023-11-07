@@ -17,7 +17,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title><spring:message code="Marketplace"/></title>
+    <title><spring:message code="My.listings"/></title>
 </head>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" scope="page" />
 <c:set var="channel" value="${channel}" scope="page" />
@@ -32,21 +32,39 @@
         <div id="center-grid" class="column-center pl-3 ">
             <%@ include file="/WEB-INF/jsp/marketplace/components/upperMarketplaceButtons.jsp" %>
 
-            <div class="row m-0 product-grid-row">
-                <c:forEach var="product" items="${myProductList}">
-                    <jsp:include page="/WEB-INF/jsp/marketplace/components/productCard.jsp">
-                        <jsp:param name="productTitle" value="${product.name}"/>
-                        <jsp:param name="productDescription" value="${product.description}"/>
-                        <jsp:param name="productDepartment" value="${product.department.department}"/>
-                        <jsp:param name="productPrice" value="${product.priceIntegerString}"/>
-                        <jsp:param name="productDecimal" value="${product.priceDecimalString}"/>
-                        <jsp:param name="productPrimaryPictureId" value="${product.primaryPicture.imageId}"/>
-                        <jsp:param name="productId" value="${product.productId}"/>
-                        <jsp:param name="productUsed" value="${product.used}"/>
-                        <jsp:param name="productDepartmentId" value="${product.department.department.id}"/>
-                    </jsp:include>
-                </c:forEach>
-            </div>
+
+            <c:choose>
+                <c:when test="${empty myProductList}">
+                    <div class="cool-static-container w-100">
+                        <%--no Listing found --%>
+                        <div class="no-posts-found">
+                            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+                            <spring:message code="Listings.not.found"/>
+                            <a href="${contextPath}/marketplace/create-listing" class="hover-a marketplace">
+                                <spring:message code="Create.one"/>
+                            </a>
+                        </div>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="row m-0 product-grid-row">
+                        <c:forEach var="product" items="${myProductList}">
+                            <jsp:include page="/WEB-INF/jsp/marketplace/components/productCard.jsp">
+                                <jsp:param name="productTitle" value="${product.name}"/>
+                                <jsp:param name="productDescription" value="${product.description}"/>
+                                <jsp:param name="productDepartment" value="${product.department.department}"/>
+                                <jsp:param name="productPrice" value="${product.priceIntegerString}"/>
+                                <jsp:param name="productDecimal" value="${product.priceDecimalString}"/>
+                                <jsp:param name="productPrimaryPictureId" value="${product.primaryPicture.imageId}"/>
+                                <jsp:param name="productId" value="${product.productId}"/>
+                                <jsp:param name="productUsed" value="${product.used}"/>
+                                <jsp:param name="productDepartmentURL" value="${product.department.department.departmentUrl}"/>
+                            </jsp:include>
+                        </c:forEach>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+
 
 
         </div>

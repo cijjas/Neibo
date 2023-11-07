@@ -139,6 +139,11 @@ public class UserServiceImpl implements UserService {
         return userDao.getEventUsers(eventId);
     }
 
+    @Override
+    public List<User> getProductRequesters(long productId, int page, int size) {
+        return userDao.getProductRequesters(productId, page, size);
+    }
+
 
     // -----------------------------------------------------------------------------------------------------------------
 

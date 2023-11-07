@@ -56,7 +56,7 @@
                     </div>
                     <div class="f-c-c-c second">
                         <div class="divider"></div>
-                        <a id="marketplaceButton" href="${pageContext.request.contextPath}/marketplace/products"
+                        <a id="marketplaceButton" href="${pageContext.request.contextPath}/marketplace/products/all"
                            class="cool-left-button lila ${channel == 'Marketplace' ? 'active' : ''} f-r-sb-c">
                             <i class="fa-solid fa-store"></i> <spring:message code="Marketplace"/>
                         </a>

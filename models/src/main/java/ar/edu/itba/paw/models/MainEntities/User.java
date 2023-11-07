@@ -179,7 +179,6 @@ public class User {
                 ", language=" + language +
                 ", role=" + role +
                 ", creationDate=" + creationDate +
-                ", profilePicture=" + profilePicture +
                 ", identification=" + identification +
                 '}';
     }

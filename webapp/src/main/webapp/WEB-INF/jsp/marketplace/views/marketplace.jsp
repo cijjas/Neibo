@@ -46,6 +46,7 @@
                         </div>
                     </c:when>
                     <c:otherwise>
+
                         <div class="row m-0 product-grid-row">
                             <c:forEach var="product" items="${productList}">
                                 <jsp:include page="/WEB-INF/jsp/marketplace/components/productCard.jsp">
@@ -57,7 +58,7 @@
                                     <jsp:param name="productPrimaryPictureId" value="${product.primaryPicture.imageId}"/>
                                     <jsp:param name="productId" value="${product.productId}"/>
                                     <jsp:param name="productUsed" value="${product.used}"/>
-                                    <jsp:param name="productDepartmentId" value="${product.department.department.id}"/>
+                                    <jsp:param name="productDepartmentURL" value="${product.department.department.departmentUrl}"/>
                                 </jsp:include>
                             </c:forEach>
                         </div>
