@@ -17,26 +17,68 @@
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title><spring:message code="Marketplace"/></title>
+    <title><spring:message code="My.listings"/></title>
 </head>
-<c:set var="contextPath" value="${pageContext.request.contextPath}" scope="page"/>
-<c:set var="channel" value="${channel}" scope="page"/>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" scope="page" />
+<c:set var="channel" value="${channel}" scope="page" />
 <body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
 <div class="container">
     <div class="row init ">
-        <div class="column-left ">
+        <div class="column-left " >
             <%@ include file="/WEB-INF/jsp/components/widgets/leftColumn.jsp" %>
         </div>
-        <div id="center-grid" class="column-center pl-3 ">
 
-            <h1>List of Interested People</h1>
-            <c:forEach var="request" items="${requests}" varStatus="loop">
-                Name of the dude : ${request.name} </br>
-                <a onclick="handleUserTransaction(${request.userId}, ${productId})" style="width: 200px">
-                    Mark as Bought By This Dude
-                </a>
-            </c:forEach>
+        <div id="center-grid" class="column-center pl-3 ">
+            <%@ include file="/WEB-INF/jsp/marketplace/components/upperMarketplaceButtons.jsp" %>
+
+
+            <div class="w-100 f-c-c-c g-1 cool-static-container">
+                <div class="f-r-c-c w-100 pt-2 pb-2">
+                    <h1 class="font-weight-bold font-size-20 "><spring:message code="List.of.interested.people"/></h1>
+                </div>
+                <c:choose>
+                    <c:when test="${empty requests}">
+                        <div class="no-posts-found">
+                            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+                            <spring:message code="No.new.requests"/>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach var="request" items="${requests}" varStatus="loop">
+                            <div class="cool-static-container   ">
+                                <div class="f-r-sb-c w-100">
+                                    <div class="f-r-c-c">
+                                        <div class="f-c-s-s">
+                                            <div>
+                                                <spring:message code="Requester"/>:
+                                                <span style="color: var(--lila)">
+                                                    <c:out value="${request.name}"/>
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <spring:message code="Email"/>:
+                                                <span style="color: var(--lila)">
+                                                    <c:out value="${request.mail}"/>
+
+                                                </span>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <a onclick="handleUserTransaction(${request.userId}, ${productId})" class="cool-button small-a marketplace-button  font-weight-bold ">
+                                        <spring:message code="Mark.as.sold"/>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
+
+            </div>
+
 
         </div>
     </div>

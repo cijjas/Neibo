@@ -22,14 +22,7 @@
                         </span>
                     </span>
                     </a>
-                    <a href="${contextPath}/marketplace/my-sales" class="cool-feed-button rounded marketplace-button ${channel == "MySales" ? 'active' : ''}">
-                        <span class="font-size-12">
-                            <i class="fa-solid fa-box-open hide-icons"></i>
-                            <span class="hide-text">
-                                <spring:message code="My.sales"/>
-                            </span>
-                        </span>
-                    </a>
+
 
                     <a href="${contextPath}/marketplace/my-listings" class="cool-feed-button rounded marketplace-button ${channel == "MyListings" ? 'active' : ''}">
                         <span class="font-size-12">
