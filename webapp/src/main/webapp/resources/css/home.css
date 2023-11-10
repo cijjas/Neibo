@@ -1360,6 +1360,11 @@ footer div {
     justify-content: center;
     align-items: start;
 }
+.lila-hover{
+    &:hover{
+        color: var(--lila);
+    }
+}
 
 .divider {
     margin: 5px 0 5px 0;
@@ -1622,6 +1627,16 @@ footer div {
                 transform: translateY(4px) ;
                 box-shadow: 0 0 0 0;
             }
+        }
+        &.active{
+            background-color: var(--lila);
+            border: 1px solid var(--background);
+            transform: translateY(-4px);
+            box-shadow: 0 4px 0 0 var(--lila);
+            color: var(--always-background);
+            transition: all 30ms ease-in-out;
+
+
         }
     }
 

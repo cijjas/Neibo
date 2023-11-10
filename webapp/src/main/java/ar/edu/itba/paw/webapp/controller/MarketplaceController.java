@@ -140,19 +140,7 @@ public class MarketplaceController {
         return mav;
     }
 
-    @RequestMapping(value = "/my-requests", method = RequestMethod.GET)
-    public ModelAndView myRequests(
 
-    ) {
-        LOGGER.info("User arriving at '/marketplace/my-requests'");
-
-        System.out.println(prs.getProductsSelling(sessionUtils.getLoggedUser().getUserId(), 1, 10));
-
-        ModelAndView mav = new ModelAndView("marketplace/views/mySalesRequests");
-        mav.addObject("products", prs.getProductsSelling(sessionUtils.getLoggedUser().getUserId(), 1, 10));
-        mav.addObject("channel", "MySales");    // this is wrong
-        return mav;
-    }
 
     @RequestMapping(value = "/my-requests/{productId:\\d+}", method = RequestMethod.GET)
     public ModelAndView saleRequests(
@@ -177,8 +165,7 @@ public class MarketplaceController {
     ) {
         LOGGER.info("User arriving at '/marketplace/mark-as-bought'");
         prs.markAsBought(buyerId, productId);
-        return new ModelAndView("redirect:/marketplace/my-requests/" + productId);
-
+        return new ModelAndView("redirect:/marketplace/my-sales");
     }
 
     @RequestMapping(value = "/my-listings", method = RequestMethod.GET)

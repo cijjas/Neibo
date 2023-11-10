@@ -200,21 +200,60 @@
                 <c:choose>
                   <c:when test="${not empty questions}">
                     <c:forEach var="question" items="${questions}">
-                      <div class="f-c-s-s w-100 mt-3">
-                        <div class="f-c-s-s w-100">
-                          <div class="f-c-s-s w-100">
-                            <span class="c-text font-size-16 g-05"><spring:message code="Question"/></span>
-                            <span class="c-light-text font-weight-normal" >
-                          <c:out value="${question.message}"/>
-                        </span>
-                          </div>
-                          <div class="f-c-s-s w-100">
-                            <span class="c-text font-size-16 g-05"><spring:message code="Answer"/></span>
-                            <span class="c-light-text font-weight-normal" >
-                          <c:out value="${question.reply}"/>
-                        </span>
-                          </div>
+                      <div class="f-c-s-s w-100 g-05">
+                        <div class="f-r-s-s ">
+                          <span id="question-span-${question.inquiryId}" class="font-weight-normal c-text font-size-14">
+                            <c:out value="${question.message}"/>
+                          </span>
+                            <%--REQUESTER and not replied--%>
+                          <c:if test="${loggedUser.userId == product.seller.userId && empty question.reply}">
+                            <a class="btn p-0 " id="reply-button-${question.inquiryId}" onclick="showReplyInput()">
+                              <i class="fa-solid fa-reply c-light-text lila-hover"></i>
+                            </a>
+
+                           <%-- <script>
+                              function showReplyInput(){
+                                const replyButton = document.getElementById('reply-button-${question.inquiryId}');
+                                replyButton.style.display = 'none';
+                                const questionSpan = document.getElementById('question-span-${question.inquiryId}');
+                                const replyInput = document.createElement('input');
+                                replyInput.setAttribute('type', 'text');
+                                replyInput.setAttribute('name', 'reply');
+                                replyInput.setAttribute('class', 'cool-input marketplace-input background');
+                                replyInput.setAttribute('form', 'questionForm');
+                                replyInput.setAttribute('value', '');
+                                replyInput.setAttribute('placeholder', 'Reply');
+                                replyInput.setAttribute('style', 'width: 100%; margin-left: 10px');
+                                replyInput.setAttribute('onblur', 'submitReply()');
+                                questionSpan.appendChild(replyInput);
+                                const submitReply = document.createElement('a');
+                                submitReply.setAttribute('class', 'cool-button marketplace-button pure square-radius font-size-14 font-weight-bold');
+                                submitReply.setAttribute('onclick', 'submitReply()');
+                                submitReply.setAttribute('style', 'margin-left: 10px');
+                                submitReply.innerHTML = 'Reply';
+                                questionSpan.appendChild(submitReply);
+                                const replyForm = document.createElement('form');
+                                replyForm.setAttribute('id', 'questionForm');
+                                replyForm.setAttribute('method', 'post');
+                                replyForm.setAttribute('action', '${pageContext.request.contextPath}/marketplace/products/${department}/${product.productId}/reply/${question.inquiryId}');
+
+
+                              }
+                              function submitReply(){
+                                const form = document.forms['questionForm'];
+                                form.submit();
+                              }
+                            </script>--%>
+                          </c:if>
                         </div>
+                        <c:if test="${not empty question.reply}">
+                          <div class="f-r-s-s w-100 g-05">
+                            <i class="fa-solid fa-l c-light-text pl-2"></i>
+                            <span class="font-weight-normal c-light-text font-size-12">
+                              <c:out value="${question.reply}"/>
+                            </span>
+                          </div>
+                        </c:if>
                       </div>
                     </c:forEach>
                     </c:when>
@@ -231,7 +270,6 @@
                         </div>
                     </c:otherwise>
                 </c:choose>
-
               </div>
             </div>
           </div>
@@ -305,7 +343,7 @@
         <i class="fas fa-close"></i>
       </a>
     </div>
-    <form:form class="f-c-c-c w-100" id="requestForm" name="requestForm" method="post" action="${contextPath}/marketplace/products/${product.productId}/request" modelAttribute="requestForm">
+    <form:form class="f-c-c-c w-100" id="requestForm" name="requestForm" method="post" action="${contextPath}/marketplace/products/${product.department.department.departmentUrl}/${product.productId}/request" modelAttribute="requestForm" enctype="multipart/form-data">
         <div class="form-group w-75" >
           <c:set var="messagePlaceholder">
             <spring:message code="Message"/>
@@ -313,15 +351,10 @@
           <form:textarea  path="requestMessage" class="cool-input marketplace-input" id="request-message" name="message" rows="5" placeholder="${messagePlaceholder}"/>
           <form:errors path="requestMessage" cssClass="error" element="p" cssStyle="padding-left: 5px"/>
         </div>
-        <a onclick="submitRequest()" type="submit" onclick="document.getElementById('loader-container').style.display = 'flex';" class=" w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
+        <button type="submit"  onclick="document.getElementById('loader-container').style.display = 'flex';" class=" w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
           <spring:message code="Send"/>
-        </a>
-        <script>
-          function submitRequest(){
-            const form = document.forms['requestForm'];
-            form.submit();
-          }
-        </script>
+        </button>
+
     </form:form>
 
   </div>
