@@ -3,6 +3,8 @@ package ar.edu.itba.paw.models.MainEntities;
 import ar.edu.itba.paw.enums.WorkerRole;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -107,6 +109,14 @@ public class Worker{
 
     public Set<Profession> getProfessions() {
         return professions;
+    }
+
+    public List<String> getProfessionsAsStrings() {
+        List<String> professionsList = new ArrayList<String>();
+        for (Profession profession : professions) {
+            professionsList.add(profession.getProfession().toString());
+        }
+        return professionsList;
     }
 
     public void setProfessions(Set<Profession> professions) {

@@ -205,6 +205,7 @@
                         </c:otherwise>
                     </c:choose>
                 </div>
+            </div>
             <div class="column-right">
                 <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %>
             </div>
