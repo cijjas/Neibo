@@ -2926,3 +2926,16 @@ input[type=time] {
         object-position: center bottom;
     }
 }
+
+.custom-dropdown-alternative {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-dropdown-alternative .dropdown-toggle:hover {
+    color: var(--primary);
+}
+
+.custom-dropdown-alternative .dropdown-options li:hover {
+    background-color: var(--primary);
+}

@@ -35,6 +35,7 @@
                 <%@ include file="/WEB-INF/jsp/components/widgets/leftColumn.jsp" %>
             </div>
             <div class="column-middle">
+                <%@include file="/WEB-INF/jsp/serviceProvider/components/upperServiceButtons.jsp"%>
                 <c:choose>
                     <c:when test='${empty workersList}'>
                         <div class="no-posts-found">
@@ -68,7 +69,6 @@
             <div class="column-right">
                 <div class="column justify-content-center align-items-center" style="gap: 1em">
                     <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %>
-                    <%@ include file="/WEB-INF/jsp/serviceProvider/components/professionsFilterWidget.jsp" %>
                 </div>
             </div>
 

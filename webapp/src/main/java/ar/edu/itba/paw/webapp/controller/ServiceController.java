@@ -233,6 +233,11 @@ public class ServiceController {
             @RequestParam(value = "size", defaultValue = "10") int size,
             @RequestParam(value = "profession", required = false) List <String> professions
     ) {
+        String profession = "";
+        if(professions != null) {
+            profession = professions.get(0);
+        }
+
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
         List<Worker> workerList = ws.getWorkersByCriteria(page, size, professions, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
         mav.addObject("workersList", workerList);
@@ -242,6 +247,7 @@ public class ServiceController {
         mav.addObject("page", page);
         mav.addObject("appliedProfessions", professions);
         mav.addObject("professionList", Professions.getProfessionsList());
+        mav.addObject("profession", profession);
         mav.addObject("inServices", true);
         return mav;
     }
