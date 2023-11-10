@@ -16,14 +16,15 @@ public class Request implements Serializable {
     private Long requestId;
 
     @ManyToOne
-    @MapsId("productId")
-    @JoinColumn(name = "productid")
+    @JoinColumn(name = "productid", referencedColumnName = "productid")
     private Product product;
 
     @ManyToOne
-    @MapsId("userId")
-    @JoinColumn(name = "userid")
+    @JoinColumn(name = "userid", referencedColumnName = "userid")
     private User user;
+
+    @Column(name = "message")
+    private String message;
 
     public Request() {
     }
@@ -31,6 +32,7 @@ public class Request implements Serializable {
     public Request(Request.Builder builder) {
         this.requestId = builder.requestId;
         this.product = builder.product;
+        this.message = builder.message;
         this.user = builder.user;
     }
 
@@ -58,6 +60,14 @@ public class Request implements Serializable {
         this.user = user;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -71,6 +81,8 @@ public class Request implements Serializable {
         private Product product;
         private User user;
 
+        private String message;
+
         public Request.Builder requestId(Long requestId) {
             this.requestId = requestId;
             return this;
@@ -83,6 +95,11 @@ public class Request implements Serializable {
 
         public Request.Builder user(User user) {
             this.user = user;
+            return this;
+        }
+
+        public Request.Builder message(String message) {
+            this.message = message;
             return this;
         }
 

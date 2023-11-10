@@ -21,11 +21,12 @@ public class RequestDaoImpl implements RequestDao {
     // --------------------------------------- PRODUCTS_USERS_REQUESTS INSERT ------------------------------------------
 
     @Override
-    public Request createRequest(long userId, long productId) {
+    public Request createRequest(long userId, long productId, String message) {
         LOGGER.debug("Inserting Request for product with id {}", productId);
         Request request = new Request.Builder()
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
+                .message(message)
                 .build();
         em.persist(request);
         return request;

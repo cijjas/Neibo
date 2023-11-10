@@ -42,6 +42,6 @@ public class RequestServiceImpl implements RequestService {
         Product product = productDao.findProductById(productId).orElseThrow(() -> new IllegalStateException("Product not found"));
         User sender = userDao.findUserById(userId).orElseThrow(() -> new IllegalStateException("User not found"));
         emailService.sendNewRequestMail(product, sender, message);
-        return requestDao.createRequest(userId, productId);
+        return requestDao.createRequest(userId, productId, message);
     }
 }
