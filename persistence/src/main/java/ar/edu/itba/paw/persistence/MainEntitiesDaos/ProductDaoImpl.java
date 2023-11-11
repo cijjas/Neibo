@@ -37,6 +37,7 @@ public class ProductDaoImpl implements ProductDao {
                 .primaryPicture(em.find(Image.class, primaryPictureId))
                 .secondaryPicture(em.find(Image.class, secondaryPictureId))
                 .tertiaryPicture(em.find(Image.class, tertiaryPictureId))
+                .creationDate(new java.sql.Date(System.currentTimeMillis()))
                 .build();
         em.persist(product);
         return product;
@@ -88,7 +89,6 @@ public class ProductDaoImpl implements ProductDao {
         // Add conditions for filtering
         Predicate predicate = cb.equal(idRoot.get("seller").get("neighborhood").get("neighborhoodId"), neighborhoodId);
         if (department != Department.NONE) {
-            LOGGER.info("Department is not NONE");
             predicate = cb.and(predicate, cb.equal(idRoot.get("department").get("departmentId"), department.getId()));
         }
         idQuery.where(predicate);

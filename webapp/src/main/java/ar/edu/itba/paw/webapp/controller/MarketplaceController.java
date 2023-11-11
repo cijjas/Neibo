@@ -99,7 +99,6 @@ public class MarketplaceController {
         if(department == null || department.isEmpty()){
             department = "all";
         }
-        System.out.println("THIS DEPARTMENT"+ department);
         LOGGER.info("User arriving at '/marketplace'");
         List<Product> productList = prs.getProductsByCriteria(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.fromURLString(department) , 1,40);
         ModelAndView mav = new ModelAndView("marketplace/views/marketplace");
@@ -149,8 +148,6 @@ public class MarketplaceController {
     ) {
         LOGGER.info("User arriving at '/marketplace/my-requests/{}'", productId);
 
-        System.out.println(prs.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")).getRequesters());
-        System.out.println(us.getProductRequesters(productId, 1, 10));
         ModelAndView mav = new ModelAndView("marketplace/views/saleRequests");
         mav.addObject("requests", prs.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")).getRequesters());
         mav.addObject("productId", productId);
@@ -260,10 +257,7 @@ public class MarketplaceController {
             LOGGER.error("Error in form 'questionForm'");
             return product(productId,department,  new RequestForm(), questionForm, new ReplyForm(),true);
         }
-//        System.out.println("creating question" + questionForm.getQuestionMessage());
         inqs.createInquiry(sessionUtils.getLoggedUser().getUserId(), productId, questionForm.getQuestionMessage());
-//        return new ModelAndView("redirect:/services");
-//        return product(productId,department,  new RequestForm(), new QuestionForm(), false);
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
     }
 
