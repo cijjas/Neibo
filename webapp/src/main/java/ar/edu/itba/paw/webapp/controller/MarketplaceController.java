@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.MainEntities.Product;
 import ar.edu.itba.paw.models.MainEntities.User;
 import ar.edu.itba.paw.webapp.form.ListingForm;
 import ar.edu.itba.paw.webapp.form.QuestionForm;
+import ar.edu.itba.paw.webapp.form.ReplyForm;
 import ar.edu.itba.paw.webapp.form.RequestForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -216,6 +217,7 @@ public class MarketplaceController {
             @PathVariable(value = "department") String department,
             @ModelAttribute("requestForm") RequestForm requestForm,
             @ModelAttribute("questionForm") QuestionForm questionForm,
+            @ModelAttribute("replyForm") ReplyForm replyForm,
             @RequestParam(value = "requestError", required = false, defaultValue = "false") Boolean requestError
     ) {
         LOGGER.info("User arriving at '/products/"+ productId +"' ");
@@ -232,17 +234,16 @@ public class MarketplaceController {
             @PathVariable(value = "department") String department,
             @Valid @ModelAttribute("requestForm") RequestForm requestForm,
             final BindingResult bindingResult,
-            @ModelAttribute("questionForm") QuestionForm questionForm
+            @ModelAttribute("questionForm") QuestionForm questionForm,
+            @ModelAttribute("replyForm") ReplyForm replyForm
     ) {
         LOGGER.info("User requesting product '/"+ productId +"' ");
         if(bindingResult.hasErrors()){
             LOGGER.error("Error in form 'requestForm'");
-            return product(productId, department, requestForm, new QuestionForm(), true);
+            return product(productId, department, requestForm, new QuestionForm(), new ReplyForm(), true);
         }
         rqs.createRequest(sessionUtils.getLoggedUser().getUserId(), productId, requestForm.getRequestMessage());
-        ModelAndView mav = new ModelAndView("marketplace/views/product");
-        mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
-        return mav;
+        return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
     }
 
     @RequestMapping(value = "/products/{department}/{id:\\d+}/ask", method = RequestMethod.POST)
@@ -251,20 +252,36 @@ public class MarketplaceController {
             @PathVariable(value = "department") String department,
             @Valid @ModelAttribute("questionForm") QuestionForm questionForm,
             final BindingResult bindingResult,
-            @ModelAttribute("requestForm") RequestForm requestForm
+            @ModelAttribute("requestForm") RequestForm requestForm,
+            @ModelAttribute("replyForm") ReplyForm replyForm
     ) {
         LOGGER.info("User asking on product '/"+ productId +"' ");
         if(bindingResult.hasErrors()){
             LOGGER.error("Error in form 'questionForm'");
-            return product(productId,department,  new RequestForm(), questionForm, true);
+            return product(productId,department,  new RequestForm(), questionForm, new ReplyForm(),true);
         }
 //        System.out.println("creating question" + questionForm.getQuestionMessage());
         inqs.createInquiry(sessionUtils.getLoggedUser().getUserId(), productId, questionForm.getQuestionMessage());
 //        return new ModelAndView("redirect:/services");
 //        return product(productId,department,  new RequestForm(), new QuestionForm(), false);
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
-//        ModelAndView mav = new ModelAndView("marketplace/views/product");
-//        mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
-//        return mav;
+    }
+
+    @RequestMapping(value = "/products/{department}/{id:\\d+}/reply", method = RequestMethod.POST)
+    public ModelAndView replyInquiry(
+            @PathVariable(value = "id") Long productId,
+            @PathVariable(value = "department") String department,
+            @Valid @ModelAttribute("replyForm") ReplyForm replyForm,
+            final BindingResult bindingResult,
+            @ModelAttribute("questionForm") QuestionForm questionForm,
+            @ModelAttribute("requestForm") RequestForm requestForm
+    ) {
+        LOGGER.info("User replying inquiry in product '/"+ productId +"' ");
+        if(bindingResult.hasErrors()){
+            LOGGER.error("Error in form 'replyForm'");
+            return product(productId, department, new RequestForm(), new QuestionForm(), replyForm,true);
+        }
+        inqs.replyInquiry(replyForm.getInquiryId(), replyForm.getReplyMessage());
+        return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
     }
 }
