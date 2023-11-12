@@ -23,10 +23,8 @@ public class NeighborhoodsSelectionValidator implements ConstraintValidator<Neig
     @Override
     public boolean isValid(String ids, ConstraintValidatorContext constraintValidatorContext) {
         if(ids == null){
-            System.out.println("ids is null");
             return false;
         }
-        System.out.println(ids);
         //convert the id's string into a List<Long>, where the values are comma separated in the string
         String[] idsString = ids.split(",");
         Long[] idsLong = new Long[idsString.length];
@@ -51,11 +49,7 @@ public class NeighborhoodsSelectionValidator implements ConstraintValidator<Neig
                 return false;
             }
         }
-
-        constraintValidatorContext.disableDefaultConstraintViolation();
-        constraintValidatorContext.buildConstraintViolationWithTemplate("Invalid neighborhood")
-                .addConstraintViolation();
-        return false;
+        return true;
     }
 
 }
