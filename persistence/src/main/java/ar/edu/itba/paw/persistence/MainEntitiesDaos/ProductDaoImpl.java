@@ -138,6 +138,68 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    public int getProductsSellingCount(long userId) {
+        LOGGER.debug("Selecting Products Count from User {}", userId);
+        // Initialize CriteriaBuilder
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        // First Query to retrieve product count
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<Product> countRoot = countQuery.from(Product.class);
+        countQuery.select(cb.countDistinct(countRoot));
+        // Add conditions for filtering
+        Predicate predicate = cb.equal(countRoot.get("seller").get("userId"), userId);
+        predicate = cb.and(predicate, cb.isNull(countRoot.get("buyer")));
+        countQuery.where(predicate);
+        // Create the query
+        TypedQuery<Long> countTypedQuery = em.createQuery(countQuery);
+        // Result
+        Long countResult = countTypedQuery.getSingleResult();
+        // Return the count as an integer
+        return countResult.intValue();
+    }
+
+    @Override
+    public int getProductsSoldCount(long userId) {
+        LOGGER.debug("Selecting Products Count from User {}", userId);
+        // Initialize CriteriaBuilder
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        // First Query to retrieve product count
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<Product> countRoot = countQuery.from(Product.class);
+        countQuery.select(cb.countDistinct(countRoot));
+        // Add conditions for filtering
+        Predicate predicate = cb.equal(countRoot.get("seller").get("userId"), userId);
+        predicate = cb.and(predicate, cb.isNotNull(countRoot.get("buyer")));
+        countQuery.where(predicate);
+        // Create the query
+        TypedQuery<Long> countTypedQuery = em.createQuery(countQuery);
+        // Result
+        Long countResult = countTypedQuery.getSingleResult();
+        // Return the count as an integer
+        return countResult.intValue();
+    }
+
+    @Override
+    public int getProductsBoughtCount(long userId) {
+        LOGGER.debug("Selecting Products Count from User {}", userId);
+        // Initialize CriteriaBuilder
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        // First Query to retrieve product count
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<Product> countRoot = countQuery.from(Product.class);
+        countQuery.select(cb.countDistinct(countRoot));
+        // Add conditions for filtering
+        Predicate predicate = cb.equal(countRoot.get("buyer").get("userId"), userId);
+        countQuery.where(predicate);
+        // Create the query
+        TypedQuery<Long> countTypedQuery = em.createQuery(countQuery);
+        // Result
+        Long countResult = countTypedQuery.getSingleResult();
+        // Return the count as an integer
+        return countResult.intValue();
+    }
+
+    @Override
     public List<Product> getProductsSelling(long userId, int page, int size) {
         LOGGER.debug("Selecting Selling Products from User {}", userId);
         TypedQuery<Product> query = em.createQuery("SELECT p FROM Product p WHERE p.buyer IS NULL AND p.seller.userId = :userId", Product.class);

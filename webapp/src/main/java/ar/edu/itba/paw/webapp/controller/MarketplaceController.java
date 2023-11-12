@@ -121,28 +121,36 @@ public class MarketplaceController {
 
     @RequestMapping(value = "/my-purchases" , method = RequestMethod.GET)
     public ModelAndView myPurchases(
-
+        @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+        @RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
         LOGGER.info("User arriving at '/marketplace/my-purchases'");
 
-        List<Product> products = prs.getProductsBought(sessionUtils.getLoggedUser().getUserId(), 1, 10);
+        List<Product> products = prs.getProductsBought(sessionUtils.getLoggedUser().getUserId(), page, size);
 
         ModelAndView mav = new ModelAndView("marketplace/views/myPurchases");
         mav.addObject("channel", "MyPurchases");
         mav.addObject("products", products);
         mav.addObject("loggedUser", sessionUtils.getLoggedUser());
+        mav.addObject("page", page);
+        mav.addObject("totalPages", prs.getProductsBoughtTotalPages(sessionUtils.getLoggedUser().getUserId(), size));
+        mav.addObject("contextPath", "/marketplace/my-purchases");
         return mav;
     }
     @RequestMapping(value = "/my-sales", method = RequestMethod.GET)
     public ModelAndView mySales(
-
+        @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+        @RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
         LOGGER.info("User arriving at '/marketplace/my-sales'");
 
         ModelAndView mav = new ModelAndView("marketplace/views/mySales");
-        mav.addObject("products", prs.getProductsSold(sessionUtils.getLoggedUser().getUserId(), 1, 10));
+        mav.addObject("products", prs.getProductsSold(sessionUtils.getLoggedUser().getUserId(), page, size));
         mav.addObject("channel", "MySales");
         mav.addObject("loggedUser", sessionUtils.getLoggedUser());
+        mav.addObject("page", page);
+        mav.addObject("totalPages", prs.getProductsSoldTotalPages(sessionUtils.getLoggedUser().getUserId(), size));
+        mav.addObject("contextPath", "/marketplace/my-sales");
         return mav;
     }
 
@@ -174,15 +182,19 @@ public class MarketplaceController {
 
     @RequestMapping(value = "/my-listings", method = RequestMethod.GET)
     public ModelAndView myListings(
-
+        @RequestParam (value = "page", required = false, defaultValue = "1") int page,
+        @RequestParam (value = "size", required = false, defaultValue = "10") int size
     ) {
         LOGGER.info("User arriving at '/marketplace/my-listings'");
 
         ModelAndView mav = new ModelAndView("marketplace/views/myListings");
 
-        mav.addObject("myProductList", prs.getProductsSelling(sessionUtils.getLoggedUser().getUserId(), 1, 10));
+        mav.addObject("myProductList", prs.getProductsSelling(sessionUtils.getLoggedUser().getUserId(), page, size));
         mav.addObject("channel", "MyListings");
         mav.addObject("loggedUser", sessionUtils.getLoggedUser());
+        mav.addObject("page", page);
+        mav.addObject("totalPages", prs.getProductsSellingTotalPages(sessionUtils.getLoggedUser().getUserId(), size));
+        mav.addObject("contextPath", "/marketplace/my-listings");
         return mav;
     }
 

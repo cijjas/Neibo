@@ -22,6 +22,12 @@ public interface ProductDao {
 
     int getProductsCountByCriteria(long neighborhoodId, Department department);
 
+    int getProductsSellingCount(long userId);
+
+    int getProductsSoldCount(long userId);
+
+    int getProductsBoughtCount(long userId);
+
     List<Product> getProductsSelling(long userId, int page, int size);
 
     List<Product> getProductsSold(long userId, int page, int size);

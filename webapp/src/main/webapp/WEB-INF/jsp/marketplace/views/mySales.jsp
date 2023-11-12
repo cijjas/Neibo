@@ -32,6 +32,12 @@
         <div id="center-grid" class="column-center pl-3 ">
             <%@ include file="/WEB-INF/jsp/marketplace/components/upperMarketplaceButtons.jsp" %>
 
+            <c:if test="${totalPages >  1}">
+                <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                    <jsp:param name="page" value="${page}"/>
+                    <jsp:param name="totalPages" value="${totalPages}"/>
+                </jsp:include>
+            </c:if>
 
             <div class="w-100 f-c-c-c g-1 cool-static-container">
                 <div class="f-r-c-c w-50 pt-2 pb-2">
@@ -137,6 +143,12 @@
 
             </div>
 
+            <c:if test="${totalPages >  1}">
+                <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                    <jsp:param name="page" value="${page}"/>
+                    <jsp:param name="totalPages" value="${totalPages}"/>
+                </jsp:include>
+            </c:if>
 
         </div>
     </div>

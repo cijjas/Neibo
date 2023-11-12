@@ -85,6 +85,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public int getProductsSellingCount(long userId) {
+        LOGGER.info("Counting Products Selling by user {}", userId);
+        return productDao.getProductsSellingCount(userId);
+    }
+
+    @Override
+    public int getProductsSoldCount(long userId) {
+        LOGGER.info("Counting Products Sold by user {}", userId);
+        return productDao.getProductsSoldCount(userId);
+    }
+
+    @Override
+    public int getProductsBoughtCount(long userId) {
+        LOGGER.info("Counting Products Bought by user {}", userId);
+        return productDao.getProductsBoughtCount(userId);
+    }
+
+    @Override
     public List<Product> getProductsSelling(long userId, int page, int size) {
         LOGGER.info("Selecting Products Selling by user {}", userId);
         return productDao.getProductsSelling(userId, page, size);
@@ -131,5 +149,20 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public int getProductsTotalPages(long neighborhoodId, int size, Department department){
         return (int) Math.ceil((double) getProductsCountByCriteria(neighborhoodId, department) / size);
+    }
+
+    @Override
+    public int getProductsSellingTotalPages(long userId, int size){
+        return (int) Math.ceil((double) getProductsSellingCount(userId) / size);
+    }
+
+    @Override
+    public int getProductsSoldTotalPages(long userId, int size){
+        return (int) Math.ceil((double) getProductsSoldCount(userId) / size);
+    }
+
+    @Override
+    public int getProductsBoughtTotalPages(long userId, int size){
+        return (int) Math.ceil((double) getProductsBoughtCount(userId) / size);
     }
 }
