@@ -271,7 +271,6 @@ public class ServiceController {
             LOGGER.error("Error in Neighborhoods Form");
             return workersNeighborhoods(neighborhoodsForm);
         }
-        System.out.println("sabe" + neighborhoodsForm.getNeighborhoodIds());
         long workerId = sessionUtils.getLoggedUser().getUserId();
         nhws.addWorkerToNeighborhoods(workerId, neighborhoodsForm.getNeighborhoodIds());
         return new ModelAndView("redirect:/services/neighborhoods");
