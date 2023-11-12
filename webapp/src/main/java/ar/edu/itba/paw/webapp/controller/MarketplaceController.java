@@ -101,7 +101,6 @@ public class MarketplaceController {
         if(department == null || department.isEmpty()){
             department = "all";
         }
-        System.out.println("THIS DEPARTMENT"+ department);
         LOGGER.info("User arriving at '/marketplace'");
         List<Product> productList = prs.getProductsByCriteria(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.fromURLString(department) , page,size);
         ModelAndView mav = new ModelAndView("marketplace/views/marketplace");

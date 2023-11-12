@@ -57,7 +57,14 @@
                             <div class="information">
                                 <c:choose>
                                     <c:when test="${inWorkers}">
-                                        <spring:message code="No.verified.workers"/>
+                                        <c:choose>
+                                            <c:when test="${verified}">
+                                                <spring:message code="No.verified.workers"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <spring:message code="No.rejected.workers"/>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:when>
                                     <c:otherwise>
                                         <spring:message code="No.new.requests"/>

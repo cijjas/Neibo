@@ -57,7 +57,14 @@
                             <div class="information">
                                 <c:choose>
                                     <c:when test="${neighbors}">
-                                        <spring:message code="No.verified.Users"/>
+                                        <c:choose>
+                                            <c:when test="${verified}">
+                                                <spring:message code="No.verified.Users"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <spring:message code="No.rejected.Users"/>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:when>
                                     <c:otherwise>
                                         <spring:message code="No.new.requests"/>
@@ -122,7 +129,7 @@
                                                 </c:when>
                                                 <c:otherwise>
                                                     <button class="cool-button cool-small font-weight-bold on-bg p-2"
-                                                            onclick="verifyUser(${user.userId})">
+                                                            onclick="verifyRejectedUser(${user.userId})">
                                                         <spring:message code="Accept"/>
                                                     </button>
                                                 </c:otherwise>
@@ -148,6 +155,19 @@
                                     function rejectUser(userId) {
                                         const verify = false;
                                         handleUserVerification(userId, verify)
+                                    }
+
+                                    function verifyRejectedUser(userId) {
+                                        const form = document.createElement('form');
+                                        form.method = 'POST';
+                                        form.action = '${pageContext.request.contextPath}/admin/verify-rejected-user';
+                                        const input = document.createElement('input');
+                                        input.type = 'hidden';
+                                        input.name = 'userId';
+                                        input.value = userId;
+                                        form.appendChild(input);
+                                        document.body.appendChild(form);
+                                        form.submit();
                                     }
 
                                     function handleUserVerification(userId, verify) {
