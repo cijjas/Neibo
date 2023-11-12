@@ -50,8 +50,15 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
 
 
     @Override
-    public void addWorkerToNeighborhoods(long workerId, List<Long> neighborhoodIds) {
-        for (long neighborhoodId : neighborhoodIds) {
+    public void addWorkerToNeighborhoods(long workerId, String neighborhoodIds) {
+        //convert the id's string into a List<Long>, where the values are comma separated in the string
+        String[] idsString = neighborhoodIds.split(",");
+        Long[] idsLong = new Long[idsString.length];
+        for(int i = 0; i < idsString.length; i++) {
+            idsLong[i] = Long.parseLong(idsString[i]);
+        }
+
+        for (long neighborhoodId : idsLong) {
             addWorkerToNeighborhood(workerId, neighborhoodId);
             neighborhoodWorkerDao.setNeighborhoodRole(workerId, WorkerRole.UNVERIFIED_WORKER, neighborhoodId);
         }

@@ -28,7 +28,7 @@ public class ProfessionsSelectorValidator implements ConstraintValidator<Profess
         for(Long id : professions) {
             int found = 0;
             for (Professions profession : Professions.values()) {
-                if (Objects.equals(profession.getId(), id)) {
+                if (profession.getId() == id) {
                     found = 1;
                     break;
                 }
