@@ -126,7 +126,7 @@ public class ProductDaoImpl implements ProductDao {
         // Add conditions for filtering
         Predicate predicate = cb.equal(countRoot.get("seller").get("neighborhood").get("neighborhoodId"), neighborhoodId);
         if (department != Department.NONE) {
-            predicate = cb.and(predicate, cb.equal(countRoot.get("department"), department));
+            predicate = cb.and(predicate, cb.equal(countRoot.get("department").get("departmentId"), department.getId()));
         }
         countQuery.where(predicate);
         // Create the query
