@@ -264,7 +264,6 @@
                             function submitReply() {
                               // You can access the current questionId from the id-t span
                               document.getElementById('replying-id').value = getId();
-                              console.log(document.getElementById('replying-id').value);
                               const form = document.forms['replyForm'];
                               form.submit();
                             }
