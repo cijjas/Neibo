@@ -123,6 +123,7 @@
                                         </button>
                                     </div>
                                 </div>
+                                <form:errors path="neighborhoodIds" cssClass="error" element="p"/>
                                 <script>
                                     function submitNeighborhoods() {
                                         const form = document.createElement("form");

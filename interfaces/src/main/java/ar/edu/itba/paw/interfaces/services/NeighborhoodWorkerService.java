@@ -8,7 +8,7 @@ public interface NeighborhoodWorkerService {
 
     void addWorkerToNeighborhood(long workerId, long neighborhoodId);
 
-    void addWorkerToNeighborhoods(long workerId, List<Long> neighborhoodIds);
+    void addWorkerToNeighborhoods(long workerId, String neighborhoodIds);
 
     // -----------------------------------------------------------------------------------------------------------------
 

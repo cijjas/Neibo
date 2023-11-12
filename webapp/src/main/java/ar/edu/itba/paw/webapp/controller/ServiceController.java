@@ -264,13 +264,15 @@ public class ServiceController {
 
     @RequestMapping(value = "/neighborhoods", method = RequestMethod.POST)
     public ModelAndView addWorkerToNeighborhood(
-            @ModelAttribute("neighborhoodsForm") final NeighborhoodsForm neighborhoodsForm,
+            @Valid @ModelAttribute("neighborhoodsForm") final NeighborhoodsForm neighborhoodsForm,
             final BindingResult errors
-//            @RequestParam("neighborhoodIds") List<Long> neighborhoodIds
     ) {
+        if (errors.hasErrors()) {
+            LOGGER.error("Error in Neighborhoods Form");
+            return workersNeighborhoods(neighborhoodsForm);
+        }
         long workerId = sessionUtils.getLoggedUser().getUserId();
-        //cambiar addWorkerToNeighborhoods para que acepte string y la parsea
-//        nhws.addWorkerToNeighborhoods(workerId, neighborhoodIds);
+        nhws.addWorkerToNeighborhoods(workerId, neighborhoodsForm.getNeighborhoodIds());
         return new ModelAndView("redirect:/services/neighborhoods");
     }
 
