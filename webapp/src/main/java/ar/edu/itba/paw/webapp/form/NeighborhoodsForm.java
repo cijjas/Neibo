@@ -15,7 +15,7 @@ public class NeighborhoodsForm {
         return neighborhoodIds;
     }
 
-    public void setNeighborhoodId(String neighborhoodIds) {
+    public void setNeighborhoodIds(String neighborhoodIds) {
         this.neighborhoodIds = neighborhoodIds;
     }
 

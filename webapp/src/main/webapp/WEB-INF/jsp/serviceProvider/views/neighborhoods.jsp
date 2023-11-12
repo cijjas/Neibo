@@ -93,7 +93,7 @@
                                 </span>
 
                                 <div class="neighborhoods-select mb-4 w-100">
-                                    <form:hidden path="neighborhoodIds" id="selectedNeighborhoods" name="neighborhoodIds"/>
+                                    <form:hidden  path="neighborhoodIds" id="selectedNeighborhoods" name="neighborhoodIds"/>
                                     <div class="f-r-c-c w-100">
                                         <div class="container m-0" >
                                             <div class="select-btn n-workers" style="width: 100%;">
@@ -116,28 +116,20 @@
                                                 </c:forEach>
                                             </ul>
                                         </div>
-                                        <button type="submit"
+                                        <form:button type="submit" onclick="printSubmitting()"
                                                 class="cool-button cool-small on-bg font-weight-bold w-25">
                                             <spring:message code="Add"/>
                                             <i class="fa-solid fa-share ml-1"></i>
-                                        </button>
+                                        </form:button>
+                                        <script>
+                                            function printSubmitting() {
+                                                console.log(document.getElementById("selectedNeighborhoods").value);
+                                            }
+                                        </script>
                                     </div>
                                 </div>
                                 <form:errors path="neighborhoodIds" cssClass="error" element="p"/>
-                                <script>
-                                    function submitNeighborhoods() {
-                                        const form = document.createElement("form");
-                                        form.method = "POST";
-                                        form.action = "${pageContext.request.contextPath}/services/neighborhoods";
-                                        const hiddenField = document.createElement("input");
-                                        hiddenField.type = "hidden";
-                                        hiddenField.name = "neighborhoodIds";
-                                        hiddenField.value = document.getElementById("selectedNeighborhoods").value;
-                                        form.appendChild(hiddenField);
-                                        document.body.appendChild(form);
-                                        form.submit();
-                                    }
-                                </script>
+
                                 <script>
                                     const btnText = document.querySelector(".btn-text");
                                     const arrow = document.querySelector(".arrow-dwn");
