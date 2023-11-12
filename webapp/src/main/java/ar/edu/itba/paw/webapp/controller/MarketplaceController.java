@@ -279,9 +279,9 @@ public class MarketplaceController {
         LOGGER.info("User replying inquiry in product '/"+ productId +"' ");
         if(bindingResult.hasErrors()){
             LOGGER.error("Error in form 'replyForm'");
-            return product(productId, department, new RequestForm(), new QuestionForm(), replyForm,true);
+            return product(productId, department, new RequestForm(), new QuestionForm(), replyForm,false);
         }
-        inqs.replyInquiry(replyForm.getInquiryId(), replyForm.getReplyMessage());
+        inqs.replyInquiry(Long.parseLong(replyForm.getInquiryId()), replyForm.getReplyMessage());
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
     }
 }

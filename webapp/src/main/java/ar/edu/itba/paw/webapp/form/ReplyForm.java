@@ -8,11 +8,10 @@ import javax.validation.constraints.Size;
 public class ReplyForm {
 
     @NotBlank
-    //validator para ver que exista el inquiry?????????????
-    private long inquiryId;
+    private String inquiryId;
 
     @NotBlank
-    @Size(max = 500)
+    @Size(max = 300)
     private String replyMessage;
 
     public String getReplyMessage() {
@@ -23,11 +22,11 @@ public class ReplyForm {
         this.replyMessage = replyMessage;
     }
 
-    public long getInquiryId() {
+    public String getInquiryId() {
         return inquiryId;
     }
 
-    public void setInquiryId(long inquiryId) {
+    public void setInquiryId(String inquiryId) {
         this.inquiryId = inquiryId;
     }
 
