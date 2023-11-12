@@ -152,9 +152,12 @@
                 </span>
                 </div>
               </div>
-              <button id="request-button" onclick="openRequestDialog()" class="mt-4 w-100 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
-                <spring:message code="Request"/>
-              </button>
+              <c:if test="${loggedUser.userId != product.seller.userId}">
+                <button id="request-button" onclick="openRequestDialog()" class="mt-4 w-100 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
+                  <spring:message code="Request"/>
+                </button>
+              </c:if>
+
               <script>
                 function openRequestDialog() {
                   const dialog = document.getElementById('request-dialog');
@@ -289,9 +292,11 @@
                               <span class="c-text font-size-14 font-weight-bold ">
                                 <spring:message code="No.one.asked"/>
                               </span>
-                              <span class="c-light-text font-weight-normal font-size-12">
-                                <spring:message code="Ask.first"/>
-                              </span>
+                              <c:if test="${loggedUser.userId != product.seller.userId}">
+                               <span class="c-light-text font-weight-normal font-size-12">
+                                  <spring:message code="Ask.first"/>
+                                </span>
+                              </c:if>
                             </div>
                         </div>
                     </c:otherwise>
