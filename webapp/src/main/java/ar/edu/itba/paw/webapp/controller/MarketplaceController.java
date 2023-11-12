@@ -94,18 +94,24 @@ public class MarketplaceController {
 
     @RequestMapping(value = {"/products/{department}"}, method = RequestMethod.GET)
     public ModelAndView marketplaceProducts(
-            @PathVariable(value = "department") String department
+            @PathVariable(value = "department") String department,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "20") int size
     ) {
         if(department == null || department.isEmpty()){
             department = "all";
         }
+        System.out.println("THIS DEPARTMENT"+ department);
         LOGGER.info("User arriving at '/marketplace'");
-        List<Product> productList = prs.getProductsByCriteria(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.fromURLString(department) , 1,40);
+        List<Product> productList = prs.getProductsByCriteria(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.fromURLString(department) , page,size);
         ModelAndView mav = new ModelAndView("marketplace/views/marketplace");
         mav.addObject("productList", productList);
         mav.addObject("channel", "Marketplace");
         mav.addObject("departmentList", Department.getDepartmentsWithUrls());
         mav.addObject("departmentName", Objects.requireNonNull(Department.fromURLString(department)).name());
+        mav.addObject("page", page);
+        mav.addObject("totalPages", prs.getProductsTotalPages(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), size, Department.fromURLString(department)));
+        mav.addObject("contextPath", "/marketplace/products/" + department);
         return mav;
     }
     @RequestMapping(value = { "/"}, method = RequestMethod.GET)

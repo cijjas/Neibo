@@ -1,9 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+<c:set var="baseUrl"
+       value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}"/>
+
 <div class="product-card" >
     <%--information corner--%>
-    <div class="inside" onclick="window.location.href='${contextPath}/marketplace/products/${param.productDepartmentURL}/${param.productId}'">
+    <div class="inside" onclick="window.location.href='${baseUrl}/marketplace/products/${param.productDepartmentURL}/${param.productId}'">
         <div class="icon">
             <i class="fa-solid fa-circle-info"></i>
         </div>
@@ -14,7 +17,7 @@
     <div class="f-c-c-s g-0 w-100  h-100" >
         <div class="header w-100" >
             <div class="tags-corner f-c-s-s g-05">
-                <div class="department-tag" onclick='window.location.href = "${contextPath}/marketplace/products/${param.productDepartmentURL}" '>
+                <div class="department-tag" onclick='window.location.href = "${baseUrl}/marketplace/products/${param.productDepartmentURL}" '>
                     <spring:message code="${param.productDepartment}"/>
                 </div>
                 <c:choose>
@@ -30,7 +33,7 @@
                     </c:otherwise>
                 </c:choose>
             </div>
-            <div class="img-product placeholder-glow" onclick="window.location.href='${contextPath}/marketplace/products/${param.productDepartmentURL}/${param.productId}'">
+            <div class="img-product placeholder-glow" onclick="window.location.href='${baseUrl}/marketplace/products/${param.productDepartmentURL}/${param.productId}'">
                 <img
                         id="product-image-${param.productId}"
                         src=""
@@ -47,7 +50,7 @@
                 </script>
             </div>
         </div>
-        <div class="footer w-100" onclick="window.location.href='${contextPath}/marketplace/products/${param.productDepartmentURL}/${param.productId}'">
+        <div class="footer w-100" onclick="window.location.href='${baseUrl}/marketplace/products/${param.productDepartmentURL}/${param.productId}'">
             <div class=" p-2 h-50"  >
                 <span class="product-title">
                     <c:out value="${param.productTitle}"/>

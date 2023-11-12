@@ -127,4 +127,9 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> searchInProductsBeingSold(long neighborhoodId, String searchQuery, int page, int size){
         return productDao.searchInAllProductsBeingSold(neighborhoodId, searchQuery, page, size);
     }
+
+    @Override
+    public int getProductsTotalPages(long neighborhoodId, int size, Department department){
+        return (int) Math.ceil((double) getProductsCountByCriteria(neighborhoodId, department) / size);
+    }
 }
