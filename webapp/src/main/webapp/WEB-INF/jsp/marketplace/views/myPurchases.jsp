@@ -43,7 +43,7 @@
                            <c:forEach var="product" items="${products}">
                                <div class="cool-static-container w-100 f-c-s-s g-0 p-0">
                                     <div class="p-3 pl-4 w-100 h-100">
-                                        FECHA
+                                        <c:out value="${product.purchaseDate}"/>
                                     </div>
                                    <div class="divider m-0"></div>
                                    <div class="container">

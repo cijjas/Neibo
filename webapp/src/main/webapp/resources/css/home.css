@@ -91,6 +91,9 @@
 .c-text {
     color: var(--text);
 }
+.c-lila{
+    color: var(--lila);
+}
 
 .c-old-primary {
     color: var(--old-primary);
