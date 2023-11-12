@@ -272,7 +272,7 @@ public class MarketplaceController {
         LOGGER.info("User asking on product '/"+ productId +"' ");
         if(bindingResult.hasErrors()){
             LOGGER.error("Error in form 'questionForm'");
-            return product(productId,department,  new RequestForm(), questionForm, new ReplyForm(),true);
+            return product(productId,department,  new RequestForm(), questionForm, new ReplyForm(),false);
         }
         inqs.createInquiry(sessionUtils.getLoggedUser().getUserId(), productId, questionForm.getQuestionMessage());
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
