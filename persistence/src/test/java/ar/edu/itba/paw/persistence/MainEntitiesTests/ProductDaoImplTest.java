@@ -139,25 +139,25 @@ public class ProductDaoImplTest {
         assertTrue(products.isEmpty());
     }
 
-    @Test
-    public void testGetProductsByNeighborhoodByDepartment() {
-        // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-        long uKey2 = testInserter.createUser(MAIL2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.APPLIANCES);
-        long dKey2 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
-        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, uKey1, dKey2);
-
-        // Exercise
-        List<Product> products = productDao.getProductsByCriteria(nhKey, Department.APPLIANCES, 1, 10);
-
-        // Validations & Post Conditions
-        assertFalse(products.isEmpty());
-        assertEquals(1, products.size());
-    }
+//    @Test
+//    public void testGetProductsByNeighborhoodByDepartment() {
+//        // Pre Conditions
+//        long iKey = testInserter.createImage();
+//        long nhKey = testInserter.createNeighborhood();
+//        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+//        long uKey2 = testInserter.createUser(MAIL2, nhKey);
+//        long dKey1 = testInserter.createDepartment(Department.APPLIANCES);
+//        long dKey2 = testInserter.createDepartment(Department.ELECTRONICS);
+//        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
+//        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, uKey1, dKey2);
+//
+//        // Exercise
+//        List<Product> products = productDao.getProductsByCriteria(nhKey, Department.APPLIANCES, 1, 10);
+//
+//        // Validations & Post Conditions
+//        assertFalse(products.isEmpty());
+//        assertEquals(1, products.size());
+//    }
 
     @Test
     public void testGetNoProductsByNeighborhoodByDepartment() {

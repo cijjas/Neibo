@@ -61,6 +61,8 @@ public class Product {
     @Column(name = "purchaseDate")
     private Date purchaseDate;
 
+    @Column(name = "creationDate")
+    private Date creationDate;
     @Transient
     private String priceIntegerString;
 
@@ -82,6 +84,7 @@ public class Product {
         this.secondaryPicture = builder.secondaryPicture;
         this.tertiaryPicture = builder.tertiaryPicture;
         this.department = builder.department;
+        this.creationDate = builder.creationDate;
     }
 
     public Long getProductId() {
@@ -108,6 +111,13 @@ public class Product {
         return price;
     }
 
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
 
     public String getPriceIntegerString() {
         if(priceIntegerString == null){
@@ -227,7 +237,6 @@ public class Product {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", used=" + used +
-                ", inquirers=" + inquirers.size() +
                 ", requesters=" + requesters.size() +
                 '}';
     }
@@ -249,6 +258,7 @@ public class Product {
         private Department department;
         private Set<User> inquirers;
         private Set<User> requesters;
+        private Date creationDate;
 
         public Builder productId(Long productId) {
             this.productId = productId;
@@ -307,6 +317,11 @@ public class Product {
 
         public Builder requesters(Set<User> requesters) {
             this.requesters = requesters;
+            return this;
+        }
+
+        public Builder creationDate(Date creationDate) {
+            this.creationDate = creationDate;
             return this;
         }
 

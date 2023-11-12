@@ -306,6 +306,7 @@ CREATE TABLE IF NOT EXISTS products (
     sellerId INTEGER NOT NULL,
     buyerId INTEGER,
     departmentId INTEGER,
+    creationDate DATE,
     purchaseDate DATE,
 
     FOREIGN KEY (departmentId) references departments(departmentId) ON DELETE CASCADE,
