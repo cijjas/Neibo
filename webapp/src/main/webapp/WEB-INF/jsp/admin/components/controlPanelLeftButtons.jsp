@@ -1,5 +1,5 @@
 <div class="left-column-container">
-    <div class="left-box">
+    <div class="left-box admin-box">
         <div class="f-c-c-c">
             <a href="${pageContext.request.contextPath}/" class="cool-left-button admin-button f-r-sb-c">
                 <i class="fa-solid fa-chevron-left mr-5"></i><spring:message code="User.view"/>
@@ -19,12 +19,13 @@
             </a>
             <a href="${pageContext.request.contextPath}/admin/unverified-workers"
                class="cool-left-button admin-button ${panelOption == 'WorkerRequests' ? 'active' : ''} f-r-sb-c">
-                <i class="fa-solid fa-hard-hat m-r-5"></i> <spring:message code="Worker.requests"/>
+                <i class="fa-solid fa-clipboard-check"></i> <spring:message code="Worker.requests"/>
             </a>
             <a href="${pageContext.request.contextPath}/admin/workers"
                class="cool-left-button admin-button ${panelOption == 'Workers' ? 'active' : ''} f-r-sb-c">
-                <i class="fa-solid fa-hard-hat m-r-5"></i> <spring:message code="Workers"/>
+                <i class="fa-solid fa-hard-hat m-r-5"></i> <spring:message code="Workers.lit"/>
             </a>
+            <div class="divider"></div>
             <a href="${pageContext.request.contextPath}/admin/amenities"
                class="cool-left-button admin-button ${panelOption == 'Amenities' ? 'active' : ''} f-r-sb-c">
                 <i class="fas fa-table-tennis-paddle-ball m-r-5"></i> <spring:message code="Amenities"/>

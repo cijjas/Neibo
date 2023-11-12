@@ -165,6 +165,14 @@ public class AdminController {
         return new ModelAndView("redirect:/admin/unverified");
     }
 
+    @RequestMapping("/verify-rejected-user")
+    public ModelAndView verifyRejectedUser(
+            @RequestParam("userId") long userId
+    ) {
+        us.verifyNeighbor(userId);
+        return new ModelAndView("redirect:/admin/neighbors");
+    }
+
     // ------------------------------------- UNVERIFIED LIST --------------------------------------
 
     @RequestMapping("/workers")
@@ -239,6 +247,14 @@ public class AdminController {
     ) {
         nws.verifyWorkerInNeighborhood(workerId, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId());
         return new ModelAndView("redirect:/admin/unverified-workers");
+    }
+
+    @RequestMapping("/verify-rejected-worker")
+    public ModelAndView verifyRejectedWorker(
+            @RequestParam("workerId") long workerId
+    ) {
+        nws.verifyWorkerInNeighborhood(workerId, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId());
+        return new ModelAndView("redirect:/admin/workers");
     }
 
     // ------------------------------------- PUBLISH --------------------------------------
