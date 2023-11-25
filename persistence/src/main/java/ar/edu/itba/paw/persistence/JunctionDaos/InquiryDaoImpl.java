@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Repository
 public class InquiryDaoImpl implements InquiryDao {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PostDaoImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(InquiryDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
 

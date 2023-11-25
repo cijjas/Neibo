@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Repository
 public class ProductDaoImpl implements ProductDao {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PostDaoImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
 

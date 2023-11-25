@@ -22,7 +22,7 @@ import java.util.Optional;
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ImageServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
     private final ProductDao productDao;
     private final PurchaseDao purchaseDao;
     private final ImageService imageService;

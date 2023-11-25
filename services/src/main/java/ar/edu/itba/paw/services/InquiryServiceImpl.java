@@ -23,7 +23,7 @@ import java.util.Optional;
 @Service
 @Transactional
 public class InquiryServiceImpl implements InquiryService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ImageServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(InquiryServiceImpl.class);
     private final InquiryDao inquiryDao;
     private final EmailService emailService;
     private final UserDao userDao;
