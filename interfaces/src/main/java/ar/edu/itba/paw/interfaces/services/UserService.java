@@ -48,10 +48,4 @@ public interface UserService {
     void toggleLanguage(long id);
 
     void changeNeighborhood(long userId, long neighborhoodId);
-
-    void updateLanguage(final long id, final Language language);
-
-    void resetPreferenceValues(final long id);
-
-    void setNewPassword(long id, String newPassword);
 }

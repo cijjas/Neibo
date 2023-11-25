@@ -123,22 +123,4 @@ public class WorkerDaoImpl implements WorkerDao {
         Object result = sqlQuery.getSingleResult();
         return Integer.parseInt(result.toString());
     }
-
-    // ---------------------------------------------- WORKERS UPDATE -----------------------------------------------------
-
-    @Override
-    public Worker updateWorker(long workerId, String phoneNumber, String address, String businessName, long backgroundPictureId, String bio) {
-        LOGGER.debug("Updating Worker {}", workerId);
-        Worker worker = em.find(Worker.class, workerId);
-        if (worker == null) {
-            throw new NotFoundException("Worker not found");
-        }
-        worker.setPhoneNumber(phoneNumber);
-        worker.setAddress(address);
-        worker.setBusinessName(businessName);
-        worker.setBackgroundPictureId(backgroundPictureId);
-        worker.setBio(bio);
-        em.merge(worker);
-        return worker;
-    }
 }

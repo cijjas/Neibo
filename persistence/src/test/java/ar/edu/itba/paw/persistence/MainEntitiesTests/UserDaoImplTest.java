@@ -206,26 +206,6 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void testSetUserValues() {
-        // Pre Conditions
-        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
-        long iKey = testInserter.createImage();
-
-        // Exercise
-        User user = userDao.setUserValues(uKey1, PASSWORD, NAME, SURNAME, LANGUAGE, DARK_MODE, iKey, ROLE, ID, nhKey1);
-
-        // Validations
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users.name()));
-        assertEquals(PASSWORD, user.getPassword());
-        assertEquals(NAME, user.getName());
-        assertEquals(SURNAME, user.getSurname());
-        assertEquals(LANGUAGE, user.getLanguage());
-        assertEquals(DARK_MODE, user.getDarkMode());
-        assertEquals(ROLE, user.getRole());
-    }
-
-    @Test
     public void testGetNeighborsSubscribedByPostId() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NH_NAME_1);

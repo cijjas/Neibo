@@ -101,36 +101,4 @@ public class InquiryDaoImplTest {
         // Validations & Post Conditions
         assertFalse(maybeInquiry.isPresent());
     }
-
-    @Test
-    public void testReplyInquiry() {
-        // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-        long uKey2 = testInserter.createUser(MAIL2, nhKey);
-        long uKey3 = testInserter.createUser(MAIL3, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
-        long iqKey = testInserter.createInquiry(pKey, uKey3);
-
-        // Exercise
-        Inquiry inquiry = inquiryDao.replyInquiry(iqKey, REPLY);
-
-        // Validations & Post Conditions
-        assertNotNull(inquiry);
-        assertEquals(inquiry.getReply(), REPLY);
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_inquiries.name()));
-    }
-
-    @Test
-    public void testReplyInvalidInquiry() {
-        // Pre Conditions
-
-        // Exercise
-        Inquiry inquiry = inquiryDao.replyInquiry(1, REPLY);
-
-        // Validations & Post Conditions
-        assertNull(inquiry);
-    }
 }

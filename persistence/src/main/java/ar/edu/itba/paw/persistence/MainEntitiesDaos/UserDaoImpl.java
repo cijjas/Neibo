@@ -167,36 +167,4 @@ public class UserDaoImpl implements UserDao {
         query.setMaxResults(size);
         return query.getResultList();
     }
-
-
-    // ---------------------------------------------- USERS UPDATE -----------------------------------------------------
-
-    @Override
-    public User setUserValues(
-            final long id,
-            final String password,
-            final String name,
-            final String surname,
-            final Language language,
-            final boolean darkMode,
-            final long profilePictureId,
-            final UserRole role,
-            final int identification,
-            final long neighborhoodId
-    ) {
-        LOGGER.debug("Updating User {}", id);
-        User user = em.find(User.class, id);
-        if (user != null) {
-            user.setPassword(password);
-            user.setName(name);
-            user.setSurname(surname);
-            user.setLanguage(language);
-            user.setDarkMode(darkMode);
-            user.setProfilePicture(em.find(Image.class, profilePictureId));
-            user.setRole(role);
-            user.setIdentification(identification);
-            user.setNeighborhood(em.find(Neighborhood.class, neighborhoodId));
-        }
-        return user;
-    }
 }

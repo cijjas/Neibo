@@ -16,8 +16,4 @@ public interface InquiryDao {
     Optional<Inquiry> findInquiryById(final long inquiryId);
 
     List<Inquiry> getInquiriesByProduct(long productId);
-
-    // ---------------------------------------------- INQUIRY UPDATE ---------------------------------------------------
-
-    Inquiry replyInquiry(final long inquiryId, final String reply);
 }

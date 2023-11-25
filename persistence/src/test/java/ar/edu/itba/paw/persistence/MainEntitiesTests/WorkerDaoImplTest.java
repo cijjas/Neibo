@@ -124,25 +124,6 @@ public class WorkerDaoImplTest {
     }
 
     @Test
-    public void testUpdateWorker() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL_1, nhKey);
-        long iKey = testInserter.createImage();
-        testInserter.createWorker(uKey);
-
-        // Exercise
-        Worker worker = workerDao.updateWorker(uKey, NEW_PHONE, NEW_ADDRESS, NEW_BUSINESS, iKey, NEW_BIO);
-
-        // Validations & Post Conditions
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_info.name()));
-        assertEquals(NEW_PHONE, worker.getPhoneNumber());
-        assertEquals(NEW_ADDRESS, worker.getAddress());
-        assertEquals(NEW_BUSINESS, worker.getBusinessName());
-        assertEquals(NEW_BIO, worker.getBio());
-    }
-
-    @Test
     public void testGetWorkersByNeighborhood() {
         // Pre Conditions
         populateWorkers();

@@ -69,10 +69,10 @@ public class InquiryServiceImpl implements InquiryService {
         LOGGER.info("Replying to Inquiry with id {}", inquiryId);
         //Send email to inquirer
         Inquiry inquiry = inquiryDao.findInquiryById(inquiryId).orElseThrow(() -> new IllegalStateException("Inquiry not found"));
+        inquiry.setReply(reply);
+
         Product product = inquiry.getProduct();
         User receiver = inquiry.getUser();
         emailService.sendInquiryMail(receiver, product, reply, true);
-
-        inquiryDao.replyInquiry(inquiryId, reply);
     }
 }

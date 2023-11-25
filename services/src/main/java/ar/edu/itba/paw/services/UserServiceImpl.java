@@ -188,12 +188,6 @@ public class UserServiceImpl implements UserService {
         user.setRole(UserRole.REJECTED);
     }
 
-    @Override
-    public void updateLanguage(long id, Language language) {
-        LOGGER.info("Updating Language for User {} to {}", id, language);
-        User user = getUser(id);
-    }
-
     // Will be deprecated if more languages are included
     @Override
     public void toggleLanguage(long id) {
@@ -203,25 +197,11 @@ public class UserServiceImpl implements UserService {
         user.setLanguage(newLanguage);
     }
 
-
-    @Override
-    public void resetPreferenceValues(long id) {
-        LOGGER.info("Resetting preferences for User {}", id);
-        User user = getUser(id);
-    }
-
-    @Override
-    public void setNewPassword(long id, String newPassword) {
-        LOGGER.info("Setting new password for User {}", id);
-        User user = getUser(id);
-    }
-
     @Override
     public void changeNeighborhood(long userId, long neighborhoodId) {
         LOGGER.info("Setting new neighborhood for User {}", userId);
         User user = getUser(userId);
-        userDao.setUserValues(userId, user.getPassword(), user.getName(), user.getSurname(), user.getLanguage(), user.getDarkMode(),
-                user.getProfilePicture().getImageId(), user.getRole(), user.getIdentification(), neighborhoodId);
+        user.setNeighborhood(neighborhoodService.findNeighborhoodById(neighborhoodId).orElseThrow(()-> new NotFoundException("Neighborhood Not Found")));
     }
 
     private User getUser(long userId){

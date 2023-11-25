@@ -133,22 +133,6 @@ public class AmenityDaoImplTest {
     }
 
     @Test
-    public void testUpdateAmenity() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long aKey1 = testInserter.createAmenity(nhKey);
-
-        // Exercise
-        Amenity amenity = amenityDao.updateAmenity(aKey1, NEW_AMENITY, NEW_DESCRIPTION);
-
-        // Validations & Post Conditions
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.amenities.name()));
-        assertNotNull(amenity);
-        assertEquals(NEW_AMENITY, amenity.getName());
-        assertEquals(NEW_DESCRIPTION, amenity.getDescription());
-    }
-
-    @Test
     public void testDeleteAmenity() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();

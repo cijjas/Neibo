@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
@@ -96,7 +97,9 @@ public class AmenityServiceImpl implements AmenityService {
 
     @Override
     public void updateAmenity(long id, String name, String description){
-        amenityDao.updateAmenity(id, name, description);
+        Amenity amenity = amenityDao.findAmenityById(id).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
+        amenity.setName(name);
+        amenity.setDescription(description);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

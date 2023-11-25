@@ -20,9 +20,4 @@ public interface WorkerDao {
     List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus);
 
     int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus);
-
-    // ---------------------------------------------- WORKERS UPDATE ---------------------------------------------------
-
-    Worker updateWorker(long userId, String phoneNumber, String address, String businessName, long backgroundPictureId, String bio);
-
 }

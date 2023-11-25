@@ -51,17 +51,4 @@ public class InquiryDaoImpl implements InquiryDao {
                 .setParameter("productId", productId);
         return inquiries.getResultList();
     }
-
-    // ------------------------------------------ INQUIRIES UPDATE -----------------------------------------------------
-
-    @Override
-    public Inquiry replyInquiry(long inquiryId, String reply) {
-        LOGGER.debug("Inserting Inquiry Reply with inquiry id {}", inquiryId);
-        Inquiry inquiry = em.find(Inquiry.class, inquiryId);
-        if (inquiry != null) {
-            inquiry.setReply(reply);
-            return inquiry;
-        }
-        return null;
-    }
 }
