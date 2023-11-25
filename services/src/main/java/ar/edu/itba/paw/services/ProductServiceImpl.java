@@ -57,7 +57,11 @@ public class ProductServiceImpl implements ProductService {
     public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
         LOGGER.info("Updating Product {}", productId);
         double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
-        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, getImageId(pictureFiles[0]), getImageId(pictureFiles[1]), getImageId(pictureFiles[2]));
+        Long[] idArray = {0L, 0L, 0L};
+        for(int i = 0; i < pictureFiles.length; i++){
+            idArray[i] = getImageId(pictureFiles[i]);
+        }
+        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2]);
     }
 
     @Override

@@ -20,7 +20,6 @@
     <title><spring:message code="Create.listing"/></title>
 </head>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" scope="page" />
-<c:set var="channel" value="${channel}" scope="page" />
 
 <body class="${loggedUser.darkMode ? 'dark-mode' : ''}">
 <%@ include file="/WEB-INF/jsp/components/displays/navbar.jsp" %>
@@ -39,19 +38,20 @@
                 <div class="f-c-c-c">
                     <div class="f-r-c-c">
                     <span class="font-size-24">
-                    <spring:message code="Create.listing"/>
+                    <spring:message code="Edit.listing"/>
                     </span>
                     </div>
                     <div class="divider w-75 mb-3"></div>
                 </div>
 
 
-                <form:form modelAttribute="listingForm" name="listingForm" id="listingForm" method="post" action="${contextPath}/marketplace/create-listing" enctype="multipart/form-data">
+
+                <form:form modelAttribute="listingForm" name="listingForm" id="listingForm" method="post" action="${contextPath}/marketplace/products/${product.department.department.departmentUrl}/${product.productId}/edit" enctype="multipart/form-data">
                     <form:errors cssClass="error" element="p"/>
                     <div class="f-r-c-c w-100">
                         <div class="f-c-c-c w-75">
                             <div class="w-100 f-r-c-c">
-                                <%--TITLE--%>
+                                    <%--TITLE--%>
                                 <div class="w-75">
                                     <spring:message code="Title" var="titlePlaceholder"/>
                                     <form:input
@@ -60,6 +60,7 @@
                                             class="cool-input marketplace-input font-weight-bold"
                                             name="title-field"
                                             id="title-field"
+                                            value="${product.name}"
                                             placeholder="${titlePlaceholder}"/>
                                     <form:errors path="title" cssClass="error" element="p"/>
                                 </div>
@@ -73,66 +74,66 @@
                                             name="currency-field"
                                             id="currency-field"
                                             pattern=""
+                                            value="${product.price}"
                                             data-type="currency"
                                             placeholder="$1,000.00"/>
                                     <form:errors path="price" cssClass="error" element="p"/>
                                 </div>
-                            </div>
 
-                            <%--Image upload--%>
-                            <div class="w-100 lila-upload-box">
-                                <div class="upload__box w-100">
-                                    <div class="upload__btn-box">
-                                         <form:input path="imageFiles" id="image-input-id" type="file" multiple="multiple" accept="image/*" data-max_length="3" class="upload__inputfile" hidden="hidden"/>
-                                         <form:errors path="imageFiles" cssClass="error" element="p"/>
-                                    </div>
-                                    <div class="upload__img-wrap">
-                                        <a id="dummy-upload" class="dummy-upload" onclick="document.getElementById('image-input-id').click();">
-                                            <div class="f-c-c-c w-100 h-100">
-                                                <span>
-                                                     <i class="fa-regular fa-images"></i>
-                                                    <i class="fa fa-plus"></i>
-                                                </span>
-                                                <h3 id="add-photo-text" class="font-weight-bold">
-                                                    <spring:message code="Add.photo"/>
-                                                </h3>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
+
+
+
                             </div>
 
 
+                                        <form:input path="imageFiles" id="image-input-id" type="file" multiple="multiple" accept="image/*" data-max_length="3" class="upload__inputfile" hidden="hidden"/>
+                                        <form:errors path="imageFiles" cssClass="error" element="p"/>
 
-                            <%--Description--%>
 
+
+                                <%--Description--%>
                             <spring:message code='Description' var="descriptionPlaceholder"/>
                             <form:textarea
+                                    id="description-textarea"
                                     path="description"
                                     class="cool-input marketplace-input"
                                     rows="5"
                                     placeholder="${descriptionPlaceholder}"/>
                             <form:errors path="description" cssClass="error" element="p"/>
-
-                            <%--Department--%>
+                            <script>
+                                document.getElementById('description-textarea').value = "${product.description}";
+                            </script>
+                                <%--Department--%>
                             <label for="department"></label>
                             <form:select path="departmentId" class="cool-input marketplace-input font-weight-bold font-size-12" name="department" id="department">
                                 <c:forEach items="${departmentList}" var="department">
-                                    <option value="${department.key}"><spring:message code="${department.value}"/></option>
+                                    <c:if test="${department.key eq product.department.departmentId}">
+                                        <option value="${department.key}" selected="selected"><spring:message code="${department.value}"/></option>
+                                    </c:if>
+                                    <c:if test="${department.key ne product.department.departmentId}">
+                                        <option value="${department.key}"><spring:message code="${department.value}"/></option>
+                                    </c:if>
                                 </c:forEach>
                             </form:select>
+
                             <form:errors path="departmentId" cssClass="error" element="p"/>
 
-                            <%--Condition--%>
+                                <%--Condition--%>
                             <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
                                 <spring:message code="This.item.is"/>
-
                                 <div class="w-25">
                                     <label for="condition"></label>
                                     <form:select path="used" class="cool-input marketplace-input font-weight-bold font-size-14" name="condition" id="condition">
-                                        <option value="${false}"><spring:message code="New"/></option>
-                                        <option value="${true}"><spring:message code="Used"/></option>
+                                        <c:if test="${product.used eq true}">
+                                            <option value="${false}"><spring:message code="New"/></option>
+                                            <option value="${true}" selected="selected"><spring:message code="Used"/></option>
+                                        </c:if>
+                                        <c:if test="${product.used ne true}">
+                                            <option value="${false}" selected="selected"><spring:message code="New"/></option>
+                                            <option value="${true}" ><spring:message code="Used"/></option>
+                                        </c:if>
                                     </form:select>
+
                                     <form:errors path="used" cssClass="error" element="p"/>
                                 </div>
 
@@ -143,16 +144,19 @@
 
 
                     <div class="f-r-c-c mt-4 ">
-                        <button class="cool-button marketplace-button cool-button p-3  font-size-14 font-weight-bolder" style="width: 200px" >
-                            <spring:message code="Create.listing"/>
+                        <button  class="cool-button marketplace-button cool-button p-3  font-size-14 font-weight-bolder" style="width: 200px" >
+                            <spring:message code="SaveChanges"/>
                         </button>
                     </div>
                 </form:form>
 
 
-
             </div>
             <script>
+                window.onload = function () {
+                    const currencyInput = document.getElementById('currency-field');
+                    formatCurrency(currencyInput, "blur");
+                }
                 const currencyInput = document.getElementById('currency-field');
                 currencyInput.addEventListener('keyup', (e) => {
                     formatCurrency(currencyInput, "focus");
@@ -212,18 +216,43 @@
                     input.setSelectionRange(caret_pos, caret_pos);
                 }
             </script>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    ImgUpload();
-                });
-                const uploadButton = document.getElementById('upload-photo');
 
-                function ImgUpload() {
+
+            <script>
+                let imgArray = [];
+
+                document.addEventListener('DOMContentLoaded', async function () {
+
+                   /* await preloadDefaultImages();
+                    ImgUpload();*/
+                /*    triggerFileInputChange();*/
+
+                });
+                /*function triggerFileInputChange() {
+                    const inputElement = document.getElementById('image-input-id');
+                    console.log(imgArray);
+                    // Clear existing files
+                    inputElement.value = null;
+
+                    // Add preloaded files from imgArray
+                    for (let i = 0; i < imgArray.length; i++) {
+                        const file = imgArray[i];
+                        console.log(new File([file], file.name, {type: file.type}));
+                    }
+                    console.log(inputElement.files);
+
+                    // Trigger the 'change' event
+                    inputElement.dispatchEvent(new Event('change'));
+                }*/
+                /*function ImgUpload() {
                     let imgWrap = '';
-                    let imgArray = [];
 
                     const uploadInputFiles = document.querySelectorAll('.upload__inputfile');
                     uploadInputFiles.forEach(function (inputFile) {
+                        inputFile.addEventListener('load', function (e) {
+
+                        });
+
                         inputFile.addEventListener('change', function (e) {
                             imgWrap = this.closest('.upload__box').querySelector('.upload__img-wrap');
                             const maxLength = this.getAttribute('data-max_length');
@@ -234,11 +263,11 @@
                                 if (!f.type.match('image.*')) {
                                     return;
                                 }
-                                if (imgArray.length+1 > maxLength) {
+                                if (imgArray.length + 1 > maxLength) {
                                     return false;
                                 } else {
-                                    const length = imgArray.length+1;
-                                    if(length >= 3){
+                                    const length = imgArray.length + 1;
+                                    if (length >= 3) {
                                         const dummyUpload = document.getElementById('dummy-upload');
                                         dummyUpload.style.display = 'none';
                                     }
@@ -265,12 +294,12 @@
                             imgArray = imgArray.filter(function (item) {
                                 return item.name !== file;
                             });
-                            const length = imgArray.length+1;
+                            const length = imgArray.length + 1;
 
                             const addPhotoText = document.getElementById('add-photo-text');
                             addPhotoText.innerHTML = 'Add photo (' + imgArray.length + '/3)';
 
-                            if(length <= 3){
+                            if (length <= 3) {
                                 const dummyUpload = document.getElementById('dummy-upload');
                                 dummyUpload.style.display = 'block';
                             }
@@ -278,7 +307,49 @@
                         }
                     });
                 }
+
+
+                async function preloadDefaultImages() {
+                    const defaultImages = [
+                        "${product.primaryPicture.imageId}",
+                        "${product.secondaryPicture.imageId}",
+                        "${product.tertiaryPicture.imageId}"
+                    ];
+
+                    const imgWrap = document.querySelector('.upload__img-wrap');
+                    let iterator = 0;
+
+                    for (let i = 0; i < defaultImages.length; i++) {
+                        const imageUrl = defaultImages[i].trim();
+                        if (imageUrl !== "") {
+                            const response = await fetch("${contextPath}/images/" + imageUrl);
+                            const blob = await response.blob();
+
+                            const dummyFile = new File([blob], "default_image_" + i + ".png", { type: "image/png" });
+                            const length = imgArray.length + 1;
+
+                            if (length >= 3) {
+                                const dummyUpload = document.getElementById('dummy-upload');
+                                dummyUpload.style.display = 'none';
+                            }
+
+                            imgArray.push(dummyFile);
+                            const addPhotoText = document.getElementById('add-photo-text');
+                            addPhotoText.innerHTML = 'Add photo (' + length + '/3)';
+
+                            const reader = new FileReader();
+                            reader.onload = function (e) {
+                                const html = "<div class='upload__img-box'><div style='background-image: url(" + URL.createObjectURL(blob) + ")' data-number='" + iterator + "' data-file='" + dummyFile.name + "' class='img-bg'><div class='upload__img-close'></div></div></div>";
+                                imgWrap.innerHTML += html;
+                                iterator++;
+                            };
+                            reader.readAsDataURL(dummyFile);
+
+                        }
+                    }
+                }*/
             </script>
+
         </div>
     </div>
 </div>

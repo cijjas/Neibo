@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -304,6 +305,37 @@ public class MarketplaceController {
             return product(productId, department, new RequestForm(), new QuestionForm(), replyForm,false);
         }
         inqs.replyInquiry(Long.parseLong(replyForm.getInquiryId()), replyForm.getReplyMessage());
+        return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
+    }
+
+
+    @RequestMapping(value = "/products/{department}/{id:\\d+}/edit", method = RequestMethod.GET)
+    public ModelAndView editProduct(
+            @PathVariable(value = "id") Long productId,
+            @PathVariable(value = "department") String department,
+            @ModelAttribute("listingForm") ListingForm listingForm
+    ) {
+        LOGGER.info("User arriving at '/marketplace/products/" + department + "/" + productId +"/edit'");
+        ModelAndView mav = new ModelAndView("marketplace/views/productEdit");
+        mav.addObject("departmentList", Department.getDepartments());
+        mav.addObject("loggedUser", sessionUtils.getLoggedUser());
+        mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
+        return mav;
+    }
+
+    @RequestMapping(value = "/products/{department}/{id:\\d+}/edit", method = RequestMethod.POST)
+    public ModelAndView editProduct(
+            @PathVariable(value = "id") Long productId,
+            @PathVariable(value = "department") String department,
+            @Valid @ModelAttribute("listingForm") ListingForm listingForm,
+            final BindingResult bindingResult
+    ) {
+        LOGGER.info("User editing product '/"+ productId +"' ");
+        if(bindingResult.hasErrors()){
+            LOGGER.error("Error in form 'listingForm'");
+            return product(productId, department, new RequestForm(), new QuestionForm(), new ReplyForm(),false);
+        }
+        prs.updateProduct(productId, listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles());
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
     }
 }
