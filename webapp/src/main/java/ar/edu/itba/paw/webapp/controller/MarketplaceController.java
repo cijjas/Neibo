@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -132,6 +131,23 @@ public class MarketplaceController {
         mav.addObject("contextPath", "/marketplace/my-purchases");
         return mav;
     }
+
+    @RequestMapping(value = "/currently-requesting", method = RequestMethod.GET)
+    public ModelAndView listingRequests(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size
+    ) {
+        LOGGER.info("User arriving at '/marketplace/currently-requesting'");
+
+        ModelAndView mav = new ModelAndView("marketplace/views/currentlyRequesting");
+        mav.addObject("channel", "CurrentlyRequesting");
+        mav.addObject("page", page);
+        mav.addObject("totalPages", prs.getProductsBoughtTotalPages(sessionUtils.getLoggedUser().getUserId(), size));
+        mav.addObject("contextPath", "/marketplace/currently-requesting");
+        mav.addObject("requestList", sessionUtils.getLoggedUser().getRequestedProducts());
+        return mav;
+    }
+
     @RequestMapping(value = "/my-sales", method = RequestMethod.GET)
     public ModelAndView mySales(
         @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -152,17 +168,23 @@ public class MarketplaceController {
 
 
     @RequestMapping(value = "/my-requests/{productId:\\d+}", method = RequestMethod.GET)
-    public ModelAndView saleRequests(
+    public ModelAndView listingRequests(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size,
             @PathVariable(value = "productId") int productId
     ) {
         LOGGER.info("User arriving at '/marketplace/my-requests/{}'", productId);
 
-        ModelAndView mav = new ModelAndView("marketplace/views/saleRequests");
+        ModelAndView mav = new ModelAndView("marketplace/views/listingRequests");
+        mav.addObject("requestList", rqs.getRequestsByProductId(productId, page, size));
+        System.out.println("HOLA" + rqs.getRequestsByProductId(productId, 1, 10));
         mav.addObject("requests", prs.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")).getRequesters());
         mav.addObject("product", prs.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")));
-        mav.addObject("channel", "MySales");  // this is wrong
         return mav;
     }
+
+
+
 
     @RequestMapping(value = "/requested-listings" , method = RequestMethod.GET)
     public ModelAndView requestedListings(
@@ -174,6 +196,7 @@ public class MarketplaceController {
         ModelAndView mav = new ModelAndView("marketplace/views/requestedListings");
         mav.addObject("channel", "MyRequested");
         mav.addObject("page", page);
+
         mav.addObject("totalPages", prs.getProductsBoughtTotalPages(sessionUtils.getLoggedUser().getUserId(), size));
         mav.addObject("contextPath", "/marketplace/my-purchases");
         return mav;
