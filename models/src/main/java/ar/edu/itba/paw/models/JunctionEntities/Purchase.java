@@ -68,19 +68,6 @@ public class Purchase implements Serializable {
         this.units = units;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Purchase purchase = (Purchase) o;
-        return Objects.equals(purchaseId, purchase.purchaseId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(purchaseId, product, user, units);
-    }
-
     public static class Builder {
         private Long purchaseId;
         private Product product;
@@ -110,5 +97,18 @@ public class Purchase implements Serializable {
         public Purchase build() {
             return new Purchase(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Purchase)) return false;
+        Purchase purchase = (Purchase) o;
+        return Objects.equals(purchaseId, purchase.purchaseId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(purchaseId);
     }
 }

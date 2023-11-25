@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.MainEntities.Product;
 import ar.edu.itba.paw.models.MainEntities.User;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "products_users_inquiries")
@@ -80,14 +81,6 @@ public class Inquiry {
         this.reply = reply;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Inquiry that = (Inquiry) o;
-        return inquiryId.equals(that.inquiryId);
-    }
-
     public static class Builder {
         private Long inquiryId;
         private Product product;
@@ -119,5 +112,16 @@ public class Inquiry {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Inquiry)) return false;
+        Inquiry inquiry = (Inquiry) o;
+        return Objects.equals(inquiryId, inquiry.inquiryId);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(inquiryId);
+    }
 }

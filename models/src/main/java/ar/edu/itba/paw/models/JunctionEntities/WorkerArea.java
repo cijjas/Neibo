@@ -7,6 +7,7 @@ import ar.edu.itba.paw.models.compositeKeys.WorkerAreaKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "workers_neighborhoods")
@@ -68,5 +69,18 @@ public class WorkerArea implements Serializable {
 
     public void setNeighborhood(Neighborhood neighborhood) {
         this.neighborhood = neighborhood;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WorkerArea)) return false;
+        WorkerArea that = (WorkerArea) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

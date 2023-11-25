@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models.MainEntities;
 import ar.edu.itba.paw.enums.Professions;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -70,5 +71,18 @@ public class Profession {
         public Profession build() {
             return new Profession(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Profession)) return false;
+        Profession that = (Profession) o;
+        return Objects.equals(professionId, that.professionId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(professionId);
     }
 }

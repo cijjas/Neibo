@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models.MainEntities;// Post.java
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -240,5 +241,18 @@ public class Post {
         public Post build() {
             return new Post(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Post)) return false;
+        Post post = (Post) o;
+        return Objects.equals(postId, post.postId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(postId);
     }
 }

@@ -233,19 +233,6 @@ public class User {
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User otherUser = (User) o;
-        return userId.equals(otherUser.userId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId);
-    }
-
     public Boolean getDarkMode() {
         return darkMode;
     }
@@ -421,11 +408,16 @@ public class User {
         }
     }
 
-    //    public Worker getWorker() {
-//        return worker;
-//    }
-//
-//    public void setWorker(Worker worker) {
-//        this.worker = worker;
-//    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(userId, user.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
+    }
 }

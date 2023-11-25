@@ -18,9 +18,9 @@ public class ClassificationKey implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof ClassificationKey)) return false;
         ClassificationKey that = (ClassificationKey) o;
-        return productId.equals(that.productId) && tagId.equals(that.tagId);
+        return Objects.equals(productId, that.productId) && Objects.equals(tagId, that.tagId);
     }
 
     @Override

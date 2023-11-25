@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.MainEntities.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "products_users_requests")
@@ -67,14 +68,6 @@ public class Request implements Serializable {
         this.message = message;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Request that = (Request) o;
-        return requestId.equals(that.requestId);
-    }
-
     public static class Builder {
         private Long requestId;
         private Product product;
@@ -105,5 +98,18 @@ public class Request implements Serializable {
         public Request build() {
             return new Request(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Request)) return false;
+        Request request = (Request) o;
+        return Objects.equals(requestId, request.requestId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(requestId);
     }
 }

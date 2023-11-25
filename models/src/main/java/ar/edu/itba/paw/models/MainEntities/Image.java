@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models.MainEntities;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -83,5 +84,18 @@ public class Image {
         public Image build() {
             return new Image(this.imageId, this.image);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Image)) return false;
+        Image image = (Image) o;
+        return Objects.equals(imageId, image.imageId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(imageId);
     }
 }

@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.MainEntities.User;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users_availability")
@@ -90,5 +91,18 @@ public class Booking {
         public Booking build() {
             return new Booking(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Booking)) return false;
+        Booking booking = (Booking) o;
+        return Objects.equals(bookingId, booking.bookingId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bookingId);
     }
 }

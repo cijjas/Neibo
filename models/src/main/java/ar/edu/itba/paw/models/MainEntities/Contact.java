@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.MainEntities;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "contacts")
@@ -101,6 +102,19 @@ public class Contact {
         public Contact build() {
             return new Contact(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Contact)) return false;
+        Contact contact = (Contact) o;
+        return Objects.equals(contactId, contact.contactId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(contactId);
     }
 }
 

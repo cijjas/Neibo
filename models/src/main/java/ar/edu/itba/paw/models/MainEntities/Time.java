@@ -49,24 +49,11 @@ public class Time {
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Time time = (Time) o;
-        return Objects.equals(timeId, time.timeId) && Objects.equals(timeInterval, time.timeInterval);
-    }
-
     public Time plusHours(int hours) {
         return new Time.Builder()
                 .timeId(this.timeId)
                 .timeInterval(new java.sql.Time(this.timeInterval.getTime() + hours * 3600000L))
                 .build();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(timeId, timeInterval);
     }
 
     public Set<Shift> getShifts() {
@@ -98,5 +85,18 @@ public class Time {
         public Time build() {
             return new Time(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Time)) return false;
+        Time time = (Time) o;
+        return Objects.equals(timeId, time.timeId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(timeId);
     }
 }

@@ -18,9 +18,9 @@ public class InquiryKey implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof InquiryKey)) return false;
         InquiryKey that = (InquiryKey) o;
-        return productId.equals(that.productId) && userId.equals(that.userId);
+        return Objects.equals(productId, that.productId) && Objects.equals(userId, that.userId);
     }
 
     @Override

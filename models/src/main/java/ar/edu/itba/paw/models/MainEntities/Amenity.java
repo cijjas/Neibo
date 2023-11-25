@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models.MainEntities;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "amenities")
@@ -27,8 +28,7 @@ public class Amenity {
             inverseJoinColumns = @JoinColumn(name = "shiftid"))
     private List<Shift> availableShifts;
 
-    Amenity() {
-    }
+    Amenity() {}
 
     private Amenity(Builder builder) {
         this.amenityId = builder.amenityId;
@@ -124,5 +124,19 @@ public class Amenity {
         public Amenity build() {
             return new Amenity(this);
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Builder)) return false;
+            Builder builder = (Builder) o;
+            return Objects.equals(amenityId, builder.amenityId);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(amenityId);
+        }
     }
+
 }

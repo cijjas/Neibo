@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models.MainEntities;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -77,5 +78,18 @@ public class Neighborhood {
         public Neighborhood build() {
             return new Neighborhood(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Neighborhood)) return false;
+        Neighborhood that = (Neighborhood) o;
+        return Objects.equals(neighborhoodId, that.neighborhoodId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(neighborhoodId);
     }
 }

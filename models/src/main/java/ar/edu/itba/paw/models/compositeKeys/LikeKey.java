@@ -18,9 +18,9 @@ public class LikeKey implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        LikeKey that = (LikeKey) o;
-        return postId.equals(that.postId) && userId.equals(that.userId);
+        if (!(o instanceof LikeKey)) return false;
+        LikeKey likeKey = (LikeKey) o;
+        return Objects.equals(postId, likeKey.postId) && Objects.equals(userId, likeKey.userId);
     }
 
     @Override

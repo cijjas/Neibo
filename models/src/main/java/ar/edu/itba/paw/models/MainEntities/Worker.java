@@ -3,6 +3,7 @@ package ar.edu.itba.paw.models.MainEntities;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -202,5 +203,18 @@ public class Worker {
         public Worker build() {
             return new Worker(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Worker)) return false;
+        Worker worker = (Worker) o;
+        return Objects.equals(workerId, worker.workerId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(workerId);
     }
 }

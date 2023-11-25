@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.compositeKeys.ChannelMappingKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "neighborhoods_channels")
@@ -69,13 +70,13 @@ public class ChannelMapping implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof ChannelMapping)) return false;
         ChannelMapping that = (ChannelMapping) o;
-        return id.equals(that.id);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(id);
     }
 }

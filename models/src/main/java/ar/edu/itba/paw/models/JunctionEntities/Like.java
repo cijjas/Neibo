@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.compositeKeys.LikeKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "posts_users_likes")
@@ -60,13 +61,13 @@ public class Like implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Like that = (Like) o;
-        return id.equals(that.id);
+        if (!(o instanceof Like)) return false;
+        Like like = (Like) o;
+        return Objects.equals(id, like.id);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(id);
     }
 }

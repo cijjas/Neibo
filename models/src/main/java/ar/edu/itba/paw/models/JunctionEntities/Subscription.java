@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.compositeKeys.SubscriptionKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "posts_users_subscriptions")
@@ -60,13 +61,13 @@ public class Subscription implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Subscription)) return false;
         Subscription that = (Subscription) o;
-        return id.equals(that.id);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(id);
     }
 }

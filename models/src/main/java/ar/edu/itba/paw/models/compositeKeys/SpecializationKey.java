@@ -18,9 +18,9 @@ public class SpecializationKey implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof SpecializationKey)) return false;
         SpecializationKey that = (SpecializationKey) o;
-        return workerId.equals(that.workerId) && professionId.equals(that.professionId);
+        return Objects.equals(workerId, that.workerId) && Objects.equals(professionId, that.professionId);
     }
 
     @Override

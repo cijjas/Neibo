@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models.MainEntities;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "comments")
@@ -121,5 +122,18 @@ public class Comment {
         public Comment build() {
             return new Comment(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Comment)) return false;
+        Comment comment = (Comment) o;
+        return Objects.equals(commentId, comment.commentId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(commentId);
     }
 }
