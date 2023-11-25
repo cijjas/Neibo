@@ -47,8 +47,6 @@ public class ProductServiceImpl implements ProductService {
         return productDao.createProduct(userId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2], units);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     @Override
     public Optional<Product> findProductById(long productId) {
         LOGGER.info("Selecting Product with id {}", productId);
@@ -134,17 +132,21 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
-        LOGGER.info("Updating Product {}", productId);
-        double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
-        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, getImageId(pictureFiles[0]), getImageId(pictureFiles[1]), getImageId(pictureFiles[2]));
-    }
-
-    @Override
     public void restockProduct(long productId, long extraUnits) {
         LOGGER.info("Restocking Product {}", productId);
         Product product = productDao.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
         product.setRemainingUnits(product.getRemainingUnits()+extraUnits);
+    }
+
+    @Override
+    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
+        LOGGER.info("Updating Product {}", productId);
+        double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
+        Long[] idArray = {0L, 0L, 0L};
+        for(int i = 0; i < pictureFiles.length; i++){
+            idArray[i] = getImageId(pictureFiles[i]);
+        }
+        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2]);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -164,4 +166,5 @@ public class ProductServiceImpl implements ProductService {
         }
         return i == null ? 0 : i.getImageId();
     }
+
 }

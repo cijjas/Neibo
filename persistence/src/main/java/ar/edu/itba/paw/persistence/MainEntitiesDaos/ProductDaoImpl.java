@@ -55,9 +55,9 @@ public class ProductDaoImpl implements ProductDao {
             product.setPrice(price);
             product.setUsed(used);
             product.setDepartment(em.find(ar.edu.itba.paw.models.MainEntities.Department.class, departmentId));
-            product.setPrimaryPicture(em.find(Image.class, primaryPictureId));
+            /*product.setPrimaryPicture(em.find(Image.class, primaryPictureId));
             product.setSecondaryPicture(em.find(Image.class, secondaryPictureId));
-            product.setTertiaryPicture(em.find(Image.class, tertiaryPictureId));
+            product.setTertiaryPicture(em.find(Image.class, tertiaryPictureId));*/
         }
 
         return product;

@@ -138,23 +138,26 @@
         });
 
         tags.input.addEventListener('keydown', function (e) {
-            const str = tags.input.value.trim().toLowerCase().charAt(0).toUpperCase();
+            const str = tags.input.value.trim().toLowerCase();
+            const capitalizedStr = str.charAt(0).toUpperCase() + str.slice(1);
+
             if (![13, 188, 32].includes(e.keyCode)) {
                 // If the key pressed is not Enter, Comma, or Space
-                filterTags(tags, str);
+                filterTags(tags, capitalizedStr);
             } else {
                 e.preventDefault();
                 tags.input.value = '';
-                if (str !== '') tags.addTag(str);
+                if (capitalizedStr !== '') tags.addTag(capitalizedStr);
 
             }
 
         });
         tags.input.addEventListener('blur', function (e) {
-            const str = tags.input.value.trim().toLowerCase().charAt(0).toUpperCase();
-            str.charAt(0).toUpperCase();
+            const str = tags.input.value.trim().toLowerCase();
+            const capitalizedStr = str.charAt(0).toUpperCase() + str.slice(1);
+
             if (str !== "") {
-                tags.addTag(str);
+                tags.addTag(capitalizedStr);
                 tags.input.value = ""; // Clear the input field
             }
 

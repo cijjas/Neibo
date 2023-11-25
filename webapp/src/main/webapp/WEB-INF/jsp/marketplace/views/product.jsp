@@ -68,13 +68,16 @@
 
                 </div>
                 <div class="col-9 h-100 w-100 p-0 ">
+                  <div class="w-100" style="max-height: 500px">
                     <img
                             id="imgBox"
                             src=""
-                            class="placeholder product-image w-100 h-100"
+                            class="placeholder product-image w-100 h-100 standard-img"
                             alt="product_image_${product.productId}"
                             style="border-radius: var(--border-light);"
                     />
+                  </div>
+
                 </div>
 
               </div>
@@ -152,11 +155,19 @@
                 </span>
                 </div>
               </div>
-              <c:if test="${loggedUser.userId != product.seller.userId}">
-                <button id="request-button" onclick="openRequestDialog()" class="mt-4 w-100 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
-                  <spring:message code="Request"/>
-                </button>
-              </c:if>
+                <c:choose>
+                  <c:when test="${loggedUser.userId != product.seller.userId}">
+                      <button id="request-button" onclick="openRequestDialog()" class="mt-4 w-100 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
+                        <spring:message code="Request"/>
+                      </button>
+                  </c:when>
+                    <c:otherwise>
+                      <a href="${pageContext.request.contextPath}/marketplace/products/${department}/${product.productId}/edit" class="mt-4 w-100 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        <spring:message code="Edit.listing"/>
+                      </a>
+                    </c:otherwise>
+                </c:choose>
 
               <script>
                 function openRequestDialog() {
