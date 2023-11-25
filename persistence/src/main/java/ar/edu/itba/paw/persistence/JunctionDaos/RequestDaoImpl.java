@@ -18,7 +18,7 @@ public class RequestDaoImpl implements RequestDao {
     @PersistenceContext
     private EntityManager em;
 
-    // --------------------------------------- PRODUCTS_USERS_REQUESTS INSERT ------------------------------------------
+    // --------------------------------------------- REQUESTS INSERT ---------------------------------------------------
 
     @Override
     public Request createRequest(long userId, long productId) {

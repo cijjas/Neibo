@@ -77,6 +77,4 @@ public class CommentServiceImpl implements CommentService {
         LOGGER.info("Getting Total Comment Pages for size {}", size);
         return (int) Math.ceil((double) commentDao.getCommentsCountByPostId(id) / size);
     }
-
-
 }

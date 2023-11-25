@@ -27,7 +27,6 @@ public class RequestServiceImpl implements RequestService {
     private final ProductDao productDao;
     private final EmailService emailService;
 
-
     @Autowired
     public RequestServiceImpl(final RequestDao requestDao, final UserDao userDao, final ProductDao productDao, final EmailService emailService) {
         this.requestDao = requestDao;
@@ -35,6 +34,8 @@ public class RequestServiceImpl implements RequestService {
         this.productDao = productDao;
         this.emailService = emailService;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public Request createRequest(long userId, long productId, String message) {

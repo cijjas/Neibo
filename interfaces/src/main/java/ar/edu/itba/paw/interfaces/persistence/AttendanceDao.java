@@ -4,11 +4,11 @@ import ar.edu.itba.paw.models.JunctionEntities.Attendance;
 
 public interface AttendanceDao {
 
-    // ---------------------------------------------- EVENTS_USERS INSERT ----------------------------------------------
+    // ---------------------------------------------- ATTENDANCE INSERT ------------------------------------------------
 
     Attendance createAttendee(long userId, long eventId);
 
-    // ---------------------------------------------- EVENTS_USERS DELETE ------------------------------------------------
+    // ---------------------------------------------- ATTENDANCE DELETE ------------------------------------------------
 
     boolean deleteAttendee(long userId, long eventId);
 }

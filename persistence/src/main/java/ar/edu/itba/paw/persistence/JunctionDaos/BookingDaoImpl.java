@@ -33,7 +33,7 @@ public class BookingDaoImpl implements BookingDao {
     @PersistenceContext
     private EntityManager em;
 
-    // ---------------------------------------- USERS_AVAILABILITY CREATE ----------------------------------------------
+    // --------------------------------------------- BOOKINGS INSERT ---------------------------------------------------
 
     @Override
     public Booking createBooking(long userId, long amenityAvailabilityId, Date reservationDate) {
@@ -47,7 +47,7 @@ public class BookingDaoImpl implements BookingDao {
         return booking;
     }
 
-    // ---------------------------------------- USERS_AVAILABILITY SELECT ----------------------------------------------
+    // --------------------------------------------- BOOKINGS SELECT ---------------------------------------------------
 
     private final String BOOKINGS_JOIN_AVAILABILITY =
             "SELECT uav.*, bookingid, date, a.amenityid, s.shiftid, userid, a.name, d.dayid, t.timeid, timeinterval\n" +

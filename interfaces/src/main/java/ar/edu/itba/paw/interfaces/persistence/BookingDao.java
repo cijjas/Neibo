@@ -7,13 +7,15 @@ import java.util.List;
 
 public interface BookingDao {
 
-    // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY DELETE -----------------------------------------
+    // ------------------------------------------------- BOOKINGS INSERT -----------------------------------------------
 
     Booking createBooking(long userId, long amenityAvailabilityId, Date reservationDate);
 
-    // ----------------------------------------------- AMENITIES_SHIFTS SELECT -----------------------------------------
+    // ------------------------------------------------- BOOKINGS SELECT -----------------------------------------------
 
     List<Booking> getUserBookings(long userId);
+
+    // ------------------------------------------------- BOOKINGS DELETE -----------------------------------------------
 
     boolean deleteBooking(long bookingId);
 }

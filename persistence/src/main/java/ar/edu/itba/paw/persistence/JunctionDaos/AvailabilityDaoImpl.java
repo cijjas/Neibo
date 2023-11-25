@@ -29,7 +29,7 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
     @PersistenceContext
     private EntityManager em;
 
-    // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY INSERT -----------------------------------------
+    // -------------------------------------------- AVAILABILITY INSERT ------------------------------------------------
 
     @Override
     public Availability createAvailability(long amenityId, long shiftId) {
@@ -42,7 +42,7 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
         return availability;
     }
 
-    // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY SELECT -----------------------------------------
+    // -------------------------------------------- AVAILABILITY SELECT ------------------------------------------------
 
     public OptionalLong findAvailabilityId(long amenityId, long shiftId) {
         LOGGER.debug("Selecting Availability with amenityId {} and shiftId {}", amenityId, shiftId);
@@ -53,7 +53,7 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
         return resultList.isEmpty() ? OptionalLong.empty() : OptionalLong.of(resultList.get(0));
     }
 
-    // ---------------------------------- AMENITIES_SHIFTS_AVAILABILITY DELETE -----------------------------------------
+    // -------------------------------------------- AVAILABILITY DELETE ------------------------------------------------
 
     @Override
     public boolean deleteAvailability(long amenityId, long shiftId) {

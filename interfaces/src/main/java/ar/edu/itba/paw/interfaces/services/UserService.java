@@ -45,7 +45,7 @@ public interface UserService {
 
     void rejectNeighbor(final long id);
 
-    public void toggleLanguage(long id);
+    void toggleLanguage(long id);
 
     void changeNeighborhood(long userId, long neighborhoodId);
 

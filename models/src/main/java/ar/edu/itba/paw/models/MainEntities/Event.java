@@ -55,7 +55,7 @@ public class Event {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
     // Constructor
-    public Event() {   }
+    Event() {}
 
 
     // Getters and Setters

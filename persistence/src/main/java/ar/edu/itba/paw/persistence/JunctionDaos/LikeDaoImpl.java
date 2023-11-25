@@ -18,7 +18,7 @@ public class LikeDaoImpl implements LikeDao {
     @PersistenceContext
     private EntityManager em;
 
-    // ---------------------------------------------- POST_USERS_LIKES INSERT ------------------------------------------
+    // -------------------------------------------------- LIKES INSERT -------------------------------------------------
 
     @Override
     public Like createLike(long postId, long userId) {
@@ -28,7 +28,7 @@ public class LikeDaoImpl implements LikeDao {
         return like;
     }
 
-    // ---------------------------------------------- POST_USERS_LIKES SELECT ------------------------------------------
+    // -------------------------------------------------- LIKES SELECT -------------------------------------------------
 
     @Override
     public int getLikes(long postId) {
@@ -49,7 +49,7 @@ public class LikeDaoImpl implements LikeDao {
         return count != null && count > 0;
     }
 
-    // ---------------------------------------------- POST_USERS_LIKES DELETE ------------------------------------------
+    // -------------------------------------------------- LIKES DELETE -------------------------------------------------
 
     @Override
     public boolean deleteLike(long postId, long userId) {

@@ -36,7 +36,7 @@ public class Neighborhood {
     @JoinTable(name = "workers_neighborhoods", joinColumns = @JoinColumn(name = "neighborhoodid"), inverseJoinColumns = @JoinColumn(name = "workerid"))
     private Set<Worker> workers;
 
-    public Neighborhood(){}
+    Neighborhood(){}
 
     private Neighborhood(Builder builder) {
         this.neighborhoodId = builder.neighborhoodId;

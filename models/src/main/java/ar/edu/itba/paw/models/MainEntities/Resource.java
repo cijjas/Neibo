@@ -25,9 +25,7 @@ public class Resource {
     @JoinColumn(name = "neighborhoodid", nullable = false)
     private Neighborhood neighborhood;
 
-    protected Resource() {
-        // Default constructor for JPA
-    }
+    Resource() {}
 
     private Resource(Builder builder) {
         this.title = builder.title;

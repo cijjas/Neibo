@@ -24,7 +24,7 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
     @PersistenceContext
     private EntityManager em;
 
-    // ----------------------------------------- NEIGHBORHOOD_WORKERS INSERT -------------------------------------------
+    // ----------------------------------------- NEIGHBORHOOD WORKERS INSERT -------------------------------------------
 
     @Override
     public WorkerArea createWorkerArea(long workerId, long neighborhoodId) {
@@ -34,7 +34,7 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
         return workerArea;
     }
 
-    // ----------------------------------------- NEIGHBORHOOD_WORKERS SELECT -------------------------------------------
+    // ----------------------------------------- NEIGHBORHOOD WORKERS SELECT -------------------------------------------
 
     @Override
     public List<Neighborhood> getNeighborhoods(long workerId) {
@@ -44,7 +44,18 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
         return query.getResultList();
     }
 
-    // ----------------------------------------- NEIGHBORHOOD_WORKERS DELETE -------------------------------------------
+    // ----------------------------------------- NEIGHBORHOOD WORKERS UPDATE -------------------------------------------
+
+    @Override
+    public void setNeighborhoodRole(long workerId, WorkerRole role, long neighborhoodId) {
+        LOGGER.debug("Setting Worker {} role to {} in Neighborhood {}", workerId, role, neighborhoodId);
+        WorkerArea workerArea = em.find(WorkerArea.class, new WorkerAreaKey(workerId, neighborhoodId));
+        if (workerArea != null) {
+            workerArea.setRole(role);
+        }
+    }
+
+    // ----------------------------------------- NEIGHBORHOOD WORKERS DELETE -------------------------------------------
 
     @Override
     public boolean deleteWorkerArea(long workerId, long neighborhoodId) {
@@ -55,15 +66,6 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
             return true;
         } else {
             return false;
-        }
-    }
-
-    @Override
-    public void setNeighborhoodRole(long workerId, WorkerRole role, long neighborhoodId) {
-        LOGGER.debug("Setting Worker {} role to {} in Neighborhood {}", workerId, role, neighborhoodId);
-        WorkerArea workerArea = em.find(WorkerArea.class, new WorkerAreaKey(workerId, neighborhoodId));
-        if (workerArea != null) {
-            workerArea.setRole(role);
         }
     }
 }

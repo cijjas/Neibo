@@ -21,7 +21,7 @@ public class InquiryDaoImpl implements InquiryDao {
     @PersistenceContext
     private EntityManager em;
 
-    // ---------------------------------- USERS_PRODUCTS_INQUIRIES INSERT ----------------------------------------------
+    // ------------------------------------------ INQUIRIES INSERT -----------------------------------------------------
 
     @Override
     public Inquiry createInquiry(long userId, long productId, String message) {
@@ -35,18 +35,7 @@ public class InquiryDaoImpl implements InquiryDao {
         return inquiry;
     }
 
-    @Override
-    public Inquiry replyInquiry(long inquiryId, String reply) {
-        LOGGER.debug("Inserting Inquiry Reply with inquiry id {}", inquiryId);
-        Inquiry inquiry = em.find(Inquiry.class, inquiryId);
-        if (inquiry != null) {
-            inquiry.setReply(reply);
-            return inquiry;
-        }
-        return null;
-    }
-
-    // ---------------------------------- USERS_PRODUCTS_INQUIRIES SELECT ----------------------------------------------
+    // ------------------------------------------ INQUIRIES INSERT -----------------------------------------------------
 
     @Override
     public Optional<Inquiry> findInquiryById(long inquiryId) {
@@ -60,5 +49,18 @@ public class InquiryDaoImpl implements InquiryDao {
         TypedQuery<Inquiry> inquiries = em.createQuery("SELECT DISTINCT i FROM Inquiry i WHERE i.product.productId = :productId", Inquiry.class)
                 .setParameter("productId", productId);
         return inquiries.getResultList();
+    }
+
+    // ------------------------------------------ INQUIRIES UPDATE -----------------------------------------------------
+
+    @Override
+    public Inquiry replyInquiry(long inquiryId, String reply) {
+        LOGGER.debug("Inserting Inquiry Reply with inquiry id {}", inquiryId);
+        Inquiry inquiry = em.find(Inquiry.class, inquiryId);
+        if (inquiry != null) {
+            inquiry.setReply(reply);
+            return inquiry;
+        }
+        return null;
     }
 }

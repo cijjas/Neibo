@@ -34,6 +34,9 @@ public class ProductServiceImpl implements ProductService {
         this.productDao = productDao;
         this.imageService = imageService;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public Product createProduct(long userId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
         LOGGER.info("User {} Creating Product {}", userId, name);
@@ -45,26 +48,7 @@ public class ProductServiceImpl implements ProductService {
         return productDao.createProduct(userId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2]);
     }
 
-    private Long getImageId(MultipartFile imageFile) {
-        Image i = null;
-        if (imageFile != null && !imageFile.isEmpty()) {
-            i = imageService.storeImage(imageFile);
-        }
-        return i == null ? 0 : i.getImageId();
-    }
-
-    @Override
-    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
-        LOGGER.info("Updating Product {}", productId);
-        double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
-        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, getImageId(pictureFiles[0]), getImageId(pictureFiles[1]), getImageId(pictureFiles[2]));
-    }
-
-    @Override
-    public boolean deleteProduct(long productId) {
-        LOGGER.info("Deleting Product {}", productId);
-        return productDao.deleteProduct(productId);
-    }
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public Optional<Product> findProductById(long productId) {
@@ -102,11 +86,7 @@ public class ProductServiceImpl implements ProductService {
         return productDao.getProductsBought(userId, page, size);
     }
 
-    @Override
-    public boolean markAsBought(long buyerId, long productId) {
-        LOGGER.info("Marking Product {} as bought by user {}", productId, buyerId);
-        return productDao.markAsBought(buyerId, productId);
-    }
+
 
     @Override
     public List<Product> searchInProductsBought(long userId, long neighborhoodId,String searchQuery, int page, int size){
@@ -126,5 +106,38 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> searchInProductsBeingSold(long neighborhoodId, String searchQuery, int page, int size){
         return productDao.searchInAllProductsBeingSold(neighborhoodId, searchQuery, page, size);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
+        LOGGER.info("Updating Product {}", productId);
+        double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
+        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, getImageId(pictureFiles[0]), getImageId(pictureFiles[1]), getImageId(pictureFiles[2]));
+    }
+
+    @Override
+    public boolean markAsBought(long buyerId, long productId) {
+        LOGGER.info("Marking Product {} as bought by user {}", productId, buyerId);
+        return productDao.markAsBought(buyerId, productId);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean deleteProduct(long productId) {
+        LOGGER.info("Deleting Product {}", productId);
+        return productDao.deleteProduct(productId);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    private Long getImageId(MultipartFile imageFile) {
+        Image i = null;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            i = imageService.storeImage(imageFile);
+        }
+        return i == null ? 0 : i.getImageId();
     }
 }

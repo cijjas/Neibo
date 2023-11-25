@@ -18,7 +18,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
     @PersistenceContext
     private EntityManager em;
 
-    // ---------------------------------------------- EVENTS_USERS INSERT ----------------------------------------------
+    // ---------------------------------------------- ATTENDANCE INSERT ------------------------------------------------
 
     @Override
     public Attendance createAttendee(long userId, long eventId) {
@@ -28,14 +28,14 @@ public class AttendanceDaoImpl implements AttendanceDao {
         return attendance;
     }
 
-    // ---------------------------------------------- EVENTS_USERS DELETE ------------------------------------------------
+    // ---------------------------------------------- ATTENDANCE DELETE ------------------------------------------------
 
     @Override
     public boolean deleteAttendee(long userId, long eventId) {
         LOGGER.debug("Deleting Attendance with userId {} and eventId {}", userId, eventId);
         Attendance attendance = em.find(Attendance.class, new AttendanceKey(userId, eventId));
         if (attendance != null) {
-            em.remove(attendance); // Delete the entity
+            em.remove(attendance);
             return true;
         } else {
             return false;

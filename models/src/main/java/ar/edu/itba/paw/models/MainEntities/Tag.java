@@ -19,9 +19,7 @@ public class Tag {
     @JoinTable(name = "posts_tags", joinColumns = @JoinColumn(name = "tagid"), inverseJoinColumns = @JoinColumn(name = "postid"))
     private List<Post> posts;
 
-    public Tag() {
-        // Default constructor for JPA
-    }
+    Tag() {}
 
     private Tag(Builder builder) {
         this.tagId = builder.tagId;

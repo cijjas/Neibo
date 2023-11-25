@@ -34,9 +34,7 @@ public class Image {
     @OneToMany(mappedBy = "tertiaryPicture")
     private Set<Product> productsWithThisImageAsTertiary = new HashSet<>();
 
-    public Image() {
-        // Default constructor
-    }
+    Image() {}
 
     public Image(Long imageId, byte[] image) {
         this.imageId = imageId;

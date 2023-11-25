@@ -84,7 +84,7 @@ public class WorkerDaoImpl implements WorkerDao {
         StringBuilder query = new StringBuilder(USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
         if(neighborhoodIds.length == 0) {
-            return new ArrayList<>(); // empty list
+            return new ArrayList<>();
         }
 
         appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions, workerRole, workerStatus);
@@ -93,7 +93,6 @@ public class WorkerDaoImpl implements WorkerDao {
         if (page != 0)
             appendPaginationClause(query, queryParams, page, size);
 
-        // Create a native SQL query
         Query sqlQuery = em.createNativeQuery(query.toString(), Worker.class);
 
         // Set query parameters
@@ -101,7 +100,6 @@ public class WorkerDaoImpl implements WorkerDao {
             sqlQuery.setParameter(i + 1, queryParams.get(i));
         }
 
-        // Return the result directly as a list of Worker entities
         return sqlQuery.getResultList();
     }
 
@@ -116,15 +114,12 @@ public class WorkerDaoImpl implements WorkerDao {
 
         appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions, workerRole, workerStatus);
 
-        // Create a native SQL query for counting
         Query sqlQuery = em.createNativeQuery(query.toString());
 
-        // Set query parameters
         for (int i = 0; i < queryParams.size(); i++) {
             sqlQuery.setParameter(i + 1, queryParams.get(i));
         }
 
-        // Execute the query and retrieve the count
         Object result = sqlQuery.getSingleResult();
         return Integer.parseInt(result.toString());
     }

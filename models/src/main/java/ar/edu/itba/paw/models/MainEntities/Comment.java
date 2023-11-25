@@ -27,8 +27,7 @@ public class Comment {
     @JoinColumn(name = "postid", nullable = false)
     private Post post;
 
-    public Comment() {
-        // Default constructor for JPA
+    Comment() {
     }
 
     private Comment(Builder builder) {

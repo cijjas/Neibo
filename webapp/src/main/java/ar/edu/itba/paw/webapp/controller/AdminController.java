@@ -27,7 +27,6 @@ public class AdminController {
     private final CommentService cs;
     private final TagService ts;
     private final ChannelService chs;
-    private final SubscriptionService ss;
     private final CategorizationService cas;
     private final ImageService is;
     private final AmenityService as;
@@ -49,7 +48,6 @@ public class AdminController {
                            final CommentService cs,
                            final TagService ts,
                            final ChannelService chs,
-                           final SubscriptionService ss,
                            final CategorizationService cas,
                            final ImageService is,
                            final AmenityService as,
@@ -69,7 +67,6 @@ public class AdminController {
         this.cs = cs;
         this.ts = ts;
         this.chs = chs;
-        this.ss = ss;
         this.cas = cas;
         this.as = as;
         this.es = es;
@@ -93,7 +90,7 @@ public class AdminController {
         return mav;
     }
 
-    // ------------------------------------- NEIGHBORS LIST --------------------------------------
+    // ----------------------------------------------- NEIGHBORS LIST --------------------------------------------------
 
     @RequestMapping("/neighbors")
     public ModelAndView neighbors(
@@ -112,7 +109,7 @@ public class AdminController {
         return mav;
     }
 
-    // ------------------------------------- UNVERIFIED LIST --------------------------------------
+    // ----------------------------------------------- UNVERIFIED LIST -------------------------------------------------
 
     @RequestMapping("/unverified")
     public ModelAndView unverified(
@@ -148,7 +145,7 @@ public class AdminController {
         return new ModelAndView("redirect:/admin/unverified");
     }
 
-    // ------------------------------------- UNVERIFIED LIST --------------------------------------
+    // --------------------------------------------------- WORKERS LIST ------------------------------------------------
 
     @RequestMapping("/workers")
     public ModelAndView workers(
@@ -210,7 +207,7 @@ public class AdminController {
         return new ModelAndView("redirect:/admin/unverified-workers");
     }
 
-    // ------------------------------------- PUBLISH --------------------------------------
+    // ----------------------------------------------------- PUBLISH ---------------------------------------------------
 
     @RequestMapping(value = "/publish", method = RequestMethod.GET)
     public ModelAndView publishAdminForm(
@@ -247,7 +244,7 @@ public class AdminController {
         return mav;
     }
 
-    // ------------------------------------- AMENITIES --------------------------------------
+    // ------------------------------------------------- AMENITIES -----------------------------------------------------
 
     @RequestMapping(value = "/amenities", method = RequestMethod.GET)
     public ModelAndView adminAmenities(
@@ -270,9 +267,6 @@ public class AdminController {
 
         return mav;
     }
-
-
-
 
     @RequestMapping(value = "/delete-amenity/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView deleteAmenity(
@@ -340,7 +334,7 @@ public class AdminController {
         avs.updateAvailability(amenityId, selectedShifts);
         return new ModelAndView("redirect:/admin/amenities");
     }
-    // ------------------------------------- CALENDAR --------------------------------------
+    // -------------------------------------------------- CALENDAR -----------------------------------------------------
 
     @RequestMapping(value = "/add-event", method = RequestMethod.GET)
     public ModelAndView eventForm(
@@ -377,7 +371,7 @@ public class AdminController {
         return mav;
     }
 
-    // ------------------------------------- CONTACT --------------------------------------
+    // ------------------------------------------------ CONTACT --------------------------------------------------------
 
     @RequestMapping(value = "/create-contact", method = RequestMethod.GET)
     public ModelAndView createContact(
@@ -411,7 +405,7 @@ public class AdminController {
     }
 
 
-    // ------------------------------------- CONTACT --------------------------------------
+    // ------------------------------------------------ RESOURCES ------------------------------------------------------
 
     @RequestMapping(value = "/create-resource", method = RequestMethod.GET)
     public ModelAndView createResourceForm(

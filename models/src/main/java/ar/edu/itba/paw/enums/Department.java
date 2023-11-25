@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.enums;
 
-import java.util.ArrayList;
+import ar.edu.itba.paw.Pair;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;

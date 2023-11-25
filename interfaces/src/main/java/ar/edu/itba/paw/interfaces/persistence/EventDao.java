@@ -20,11 +20,11 @@ public interface EventDao {
 
     List<Event> getEventsByNeighborhoodId(long neighborhoodId);
 
-    public List<Event> getEventsByNeighborhoodIdAndDateRange(long neighborhoodId, Date startDate, Date endDate);
+    List<Event> getEventsByNeighborhoodIdAndDateRange(long neighborhoodId, Date startDate, Date endDate);
 
     List<Date> getEventDates(long neighborhoodId);
 
-    public boolean isUserSubscribedToEvent(long userId, long eventId);
+    boolean isUserSubscribedToEvent(long userId, long eventId);
 
         // ---------------------------------------------- EVENTS DELETE ----------------------------------------------------
 

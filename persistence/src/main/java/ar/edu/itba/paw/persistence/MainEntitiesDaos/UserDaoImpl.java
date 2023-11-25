@@ -89,10 +89,9 @@ public class UserDaoImpl implements UserDao {
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
 
-        // First Query: Retrieve User IDs
         CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
         Root<User> idRoot = idQuery.from(User.class);
-        idQuery.select(idRoot.get("userId")); // Assuming "id" is the ID field
+        idQuery.select(idRoot.get("userId"));
         List<Predicate> predicates = new ArrayList<>();
         if (role != null)
             predicates.add(cb.equal(idRoot.get("role"), role));
@@ -107,12 +106,10 @@ public class UserDaoImpl implements UserDao {
             idTypedQuery.setMaxResults(size);
         }
         List<Long> userIds = idTypedQuery.getResultList();
-        // Improved performance
         if (userIds.isEmpty()) {
             return Collections.emptyList();
         }
 
-        // Second Query: Retrieve Users based on User IDs
         CriteriaQuery<User> dataQuery = cb.createQuery(User.class);
         Root<User> dataRoot = dataQuery.from(User.class);
         dataQuery.where(dataRoot.get("userId").in(userIds));

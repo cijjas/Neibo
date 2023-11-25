@@ -36,7 +36,6 @@ public class MainController {
     private final CommentService cs;
     private final TagService ts;
     private final ChannelService chs;
-    private final SubscriptionService ss;
     private final CategorizationService cas;
     private final ImageService is;
     private final AmenityService as;
@@ -63,7 +62,6 @@ public class MainController {
                           final CommentService cs,
                           final TagService ts,
                           final ChannelService chs,
-                          final SubscriptionService ss,
                           final CategorizationService cas,
                           final ImageService is,
                           final AmenityService as,
@@ -88,7 +86,6 @@ public class MainController {
         this.cs = cs;
         this.ts = ts;
         this.chs = chs;
-        this.ss = ss;
         this.cas = cas;
         this.as = as;
         this.es = es;
@@ -137,7 +134,7 @@ public class MainController {
     }
 
 
-    // ------------------------------------- PROFILE --------------------------------------
+    // ------------------------------------------------- PROFILE -------------------------------------------------------
 
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public ModelAndView profile(
@@ -193,7 +190,7 @@ public class MainController {
         return new ModelAndView("redirect:" + ts.createURLForTagFilter(tags, currentUrl, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
     }
 
-    // ------------------------------------- ANNOUNCEMENTS --------------------------------------
+    // ------------------------------------------------ ANNOUNCEMENTS --------------------------------------------------
 
     @RequestMapping("/announcements")
     public ModelAndView announcements(
@@ -206,7 +203,7 @@ public class MainController {
         return handleChannelRequest(BaseChannel.ANNOUNCEMENTS.toString(), page, size, tags, postStatus);
     }
 
-    // ------------------------------------- FORUM --------------------------------------
+    // --------------------------------------------------- FORUM -------------------------------------------------------
 
     @RequestMapping("/complaints")
     public ModelAndView complaints(
@@ -248,7 +245,7 @@ public class MainController {
         return new ModelAndView("redirect:/logout");
     }
 
-    // ------------------------------------- PUBLISH --------------------------------------
+    // ------------------------------------------------ PUBLISH --------------------------------------------------------
 
     @RequestMapping(value = "/publish", method = RequestMethod.GET)
     public ModelAndView publishForm(
@@ -303,7 +300,7 @@ public class MainController {
         return new ModelAndView("redirect:/publish?onChannelId=" + channelId);
     }
 
-    // ------------------------------------- POSTS --------------------------------------
+    // ------------------------------------------------- POSTS ---------------------------------------------------------
 
     @RequestMapping(value = "/posts/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView viewPost(
@@ -349,7 +346,7 @@ public class MainController {
     }
 
 
-    // ------------------------------------- RESOURCES --------------------------------------
+    // ------------------------------------------------ RESOURCES ------------------------------------------------------
 
     @RequestMapping(value = "/images/{imageId:\\d+}")
     @ResponseBody
@@ -360,7 +357,7 @@ public class MainController {
         return is.getImage(imageId).map(Image::getImage).orElse(null);
     }
 
-    // ---------------------------------- LOGIN SIGNUP AND SESSION  -----------------------------------
+    // ---------------------------------------------- LOGIN & SIGNUP ---------------------------------------------------
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView logIn(
@@ -461,7 +458,7 @@ public class MainController {
     }
 
 
-    //------------------------------------- USER AMENITIES & RESERVATIONS --------------------------------------
+    // ----------------------------------------- AMENITIES & RESERVATIONS ----------------------------------------------
 
     @RequestMapping(value = "/reservation", method = RequestMethod.GET)
     public ModelAndView reservation(
@@ -537,7 +534,7 @@ public class MainController {
         return new ModelAndView("redirect:/amenities");
     }
 
-    // ------------------------------------- CALENDAR --------------------------------------
+    // ------------------------------------------------ CALENDAR -------------------------------------------------------
 
     @RequestMapping("/calendar")
     public ModelAndView calendar(
@@ -565,7 +562,7 @@ public class MainController {
         return new ModelAndView("redirect:/" + site);
     }
 
-    // ------------------------------------- EVENTS --------------------------------------
+    // -------------------------------------------------- EVENTS -------------------------------------------------------
 
     @RequestMapping(value = "/events/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView viewEvent(
@@ -602,7 +599,8 @@ public class MainController {
         return mav;
     }
 
-    // ------------------------------------- INFORMATION --------------------------------
+    // -------------------------------------------------- INFORMATION --------------------------------------------------
+
     @RequestMapping(value = "/information", method = RequestMethod.GET)
     public ModelAndView information() {
         LOGGER.info("User arriving at '/information'");
@@ -616,7 +614,7 @@ public class MainController {
         return mav;
     }
 
-    // ------------------------------------- EXCEPTIONS --------------------------------------
+    // -------------------------------------------------- EXCEPTIONS ---------------------------------------------------
 
     @ExceptionHandler({NotFoundException.class})
     @ResponseStatus(code = HttpStatus.NOT_FOUND)

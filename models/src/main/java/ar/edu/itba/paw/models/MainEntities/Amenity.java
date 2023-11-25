@@ -27,7 +27,7 @@ public class Amenity {
             inverseJoinColumns = @JoinColumn(name = "shiftid"))
     private List<Shift> availableShifts;
 
-    public Amenity() {}
+    Amenity() {}
 
     private Amenity(Builder builder) {
         this.amenityId = builder.amenityId;
