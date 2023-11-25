@@ -28,12 +28,14 @@ public class ProductServiceImpl implements ProductService {
     private final ProductDao productDao;
     private final ImageService imageService;
 
-
     @Autowired
     public ProductServiceImpl(final ProductDao productDao, final ImageService imageService) {
         this.productDao = productDao;
         this.imageService = imageService;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public Product createProduct(long userId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
         LOGGER.info("User {} Creating Product {}", userId, name);
@@ -45,26 +47,7 @@ public class ProductServiceImpl implements ProductService {
         return productDao.createProduct(userId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2]);
     }
 
-    private Long getImageId(MultipartFile imageFile) {
-        Image i = null;
-        if (imageFile != null && !imageFile.isEmpty()) {
-            i = imageService.storeImage(imageFile);
-        }
-        return i == null ? 0 : i.getImageId();
-    }
-
-    @Override
-    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
-        LOGGER.info("Updating Product {}", productId);
-        double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
-        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, getImageId(pictureFiles[0]), getImageId(pictureFiles[1]), getImageId(pictureFiles[2]));
-    }
-
-    @Override
-    public boolean deleteProduct(long productId) {
-        LOGGER.info("Deleting Product {}", productId);
-        return productDao.deleteProduct(productId);
-    }
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public Optional<Product> findProductById(long productId) {
@@ -164,5 +147,32 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public int getProductsBoughtTotalPages(long userId, int size){
         return (int) Math.ceil((double) getProductsBoughtCount(userId) / size);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
+        LOGGER.info("Updating Product {}", productId);
+        double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
+        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, getImageId(pictureFiles[0]), getImageId(pictureFiles[1]), getImageId(pictureFiles[2]));
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean deleteProduct(long productId) {
+        LOGGER.info("Deleting Product {}", productId);
+        return productDao.deleteProduct(productId);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    private Long getImageId(MultipartFile imageFile) {
+        Image i = null;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            i = imageService.storeImage(imageFile);
+        }
+        return i == null ? 0 : i.getImageId();
     }
 }

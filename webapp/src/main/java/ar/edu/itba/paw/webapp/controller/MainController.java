@@ -463,8 +463,8 @@ public class MainController {
     @RequestMapping(value = "/reservation", method = RequestMethod.GET)
     public ModelAndView reservation(
             @ModelAttribute("reservationTimeForm") final ReservationTimeForm reservationTimeForm,
-            @RequestParam(value = "amenityId", required = false) long amenityId,
-            @RequestParam(value = "date", required = false) java.sql.Date date
+            @RequestParam(value = "amenityId") long amenityId,
+            @RequestParam(value = "date") java.sql.Date date
     ) {
         LOGGER.info("User arriving at '/reservation'");
         ModelAndView mav = new ModelAndView("views/reservation");
@@ -611,58 +611,6 @@ public class MainController {
         mav.addObject("channel", BaseChannel.INFORMATION.toString());
         mav.addObject("resourceMap", res.getResources(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
         mav.addObject("phoneNumbersMap", cos.getContacts(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
-        return mav;
-    }
-
-    // -------------------------------------------------- EXCEPTIONS ---------------------------------------------------
-
-    @ExceptionHandler({NotFoundException.class})
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    public ModelAndView notFound(RuntimeException ex) {
-        LOGGER.info("Not Found Exception was Thrown", ex);
-        ModelAndView mav = new ModelAndView("errors/errorPage");
-        mav.addObject("errorCode", "404");
-        mav.addObject("errorMsg", ex.getMessage());
-        return mav;
-    }
-
-    @ExceptionHandler({DuplicateKeyException.class})
-    @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    public ModelAndView duplicated(RuntimeException ex) {
-        LOGGER.info("Duplicate Key Exception was Thrown", ex);
-        ModelAndView mav = new ModelAndView("errors/errorPage");
-        mav.addObject("errorCode", "409"); // 409 = Conflict
-        mav.addObject("errorMsg", ex.getMessage());
-        return mav;
-    }
-
-    @ExceptionHandler(InsertionException.class)
-    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ModelAndView insertion(RuntimeException ex) {
-        LOGGER.info("Insertion Exception was Thrown", ex);
-        ModelAndView mav = new ModelAndView("errors/errorPage");
-        mav.addObject("errorCode", "500");
-        mav.addObject("errorMsg", ex.getMessage());
-        return mav;
-    }
-
-    @ExceptionHandler(MailingException.class)
-    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ModelAndView mailing(RuntimeException ex) {
-        LOGGER.info("Mailing Exception was Thrown", ex);
-        ModelAndView mav = new ModelAndView("errors/errorPage");
-        mav.addObject("errorCode", "500");
-        mav.addObject("errorMsg", ex.getMessage());
-        return mav;
-    }
-
-    @ExceptionHandler(UnexpectedException.class)
-    @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ModelAndView unexpected(RuntimeException ex) {
-        LOGGER.info("Unexpected Exception was Thrown", ex);
-        ModelAndView mav = new ModelAndView("errors/errorPage");
-        mav.addObject("errorCode", "500");
-        mav.addObject("errorMsg", ex.getMessage());
         return mav;
     }
 

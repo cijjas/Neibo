@@ -5,7 +5,12 @@ import ar.edu.itba.paw.models.JunctionEntities.Request;
 import java.util.List;
 
 public interface RequestDao {
+
+    // --------------------------------------------- REQUESTS INSERT ---------------------------------------------------
+
     Request createRequest(final long userId, final long productId, final String message);
+
+    // --------------------------------------------- REQUESTS SELECT ---------------------------------------------------
 
     List<Request> getRequestsByProductId(long productId, int page, int size);
 
