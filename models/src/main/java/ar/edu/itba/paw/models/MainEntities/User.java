@@ -82,16 +82,17 @@ public class User {
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL) //cambiar a seller y tmb en Product??
     private List<Product> productsSelling;
 
-    @OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Product> productsBought;
-
     @ManyToMany
     @JoinTable(name = "products_users_requests", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "productid"))
     private Set<Product> requestedProducts;
 
     @ManyToMany
-    @JoinTable(name = "products_users__inquiries", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "productid"))
+    @JoinTable(name = "products_users_inquiries", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "productid"))
     private Set<Product> inquiredProducts;
+
+    @ManyToMany
+    @JoinTable(name = "products_users_purchases", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "productid"))
+    private Set<Product> purchasedProducts;
 
     @ManyToMany
     @JoinTable(name = "events_users", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "eventid"))
@@ -160,6 +161,14 @@ public class User {
 
     public Integer getIdentification() {
         return identification;
+    }
+
+    public Set<Product> getPurchasedProducts() {
+        return purchasedProducts;
+    }
+
+    public void setPurchasedProducts(Set<Product> purchasedProducts) {
+        this.purchasedProducts = purchasedProducts;
     }
 
     @Override
@@ -385,14 +394,6 @@ public class User {
 
     public void setProductsSelling(List<Product> productsSelling) {
         this.productsSelling = productsSelling;
-    }
-
-    public List<Product> getProductsBought() {
-        return productsBought;
-    }
-
-    public void setProductsBought(List<Product> productsBought) {
-        this.productsBought = productsBought;
     }
 
     public Set<Product> getRequestedProducts() {

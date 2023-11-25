@@ -186,7 +186,7 @@ public class MarketplaceController {
 
     ) {
         LOGGER.info("User arriving at '/marketplace/mark-as-bought'");
-        prs.markAsBought(buyerId, productId);
+        /*prs.markAsBought(buyerId, productId, units!); ahora falta units que se compraron*/
         return new ModelAndView("redirect:/marketplace/my-sales");
     }
 
@@ -221,7 +221,7 @@ public class MarketplaceController {
     }
 
     @RequestMapping(value = "/create-listing", method = RequestMethod.POST)
-    public ModelAndView crateListing(
+    public ModelAndView createListing(
         @Valid @ModelAttribute("listingForm") ListingForm listingForm,
         final BindingResult bindingResult
     ) {
@@ -231,7 +231,10 @@ public class MarketplaceController {
             return createListingForm(listingForm);
         }
         User user = sessionUtils.getLoggedUser();
+/*
         prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles());
+        ahora tienen que venir las units tambn
+*/
         return new ModelAndView("redirect:/marketplace/my-listings");
     }
 

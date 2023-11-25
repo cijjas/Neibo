@@ -307,7 +307,8 @@ public class TestInserter {
 
     public long createProduct(String name, String description, Double price, boolean used,
                               long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
-                              long sellerId, Long buyerId, long departmentId){
+                              long sellerId,
+                              long departmentId, long units){
         Product product = new Product.Builder()
                 .name(name)
                 .description(description)
@@ -318,9 +319,9 @@ public class TestInserter {
                 .primaryPicture(em.find(Image.class, primaryPictureId))
                 .secondaryPicture(em.find(Image.class, secondaryPictureId))
                 .tertiaryPicture(em.find(Image.class, tertiaryPictureId))
+                .remainingUnits(units)
                 .build();
-        if (buyerId != null )
-            product.setBuyer(em.find(User.class, buyerId));
+
         em.persist(product);
         em.flush();
         return product.getProductId();
@@ -353,6 +354,17 @@ public class TestInserter {
                 .build();
         em.persist(request);
         em.flush();
+    }
+
+    public Purchase createPurchase(long productId, long userId, long unitsBought) {
+        Purchase purchase = new Purchase.Builder()
+                .product(em.find(Product.class, productId))
+                .user(em.find(User.class, userId))
+                .units(unitsBought)
+                .build();
+        em.persist(purchase);
+        em.flush();
+        return purchase;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -508,17 +520,22 @@ public class TestInserter {
         String description = "Super Iphone";
         double price = 23432;
         boolean used = true;
-
-        return createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, buyerId, departmentId);
-    }
+        long units = 1L;
+        long longProduct = createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, departmentId, units);
+        if ( buyerId != null )
+            createPurchase(longProduct, buyerId, 1L);
+        return longProduct;    }
 
     public long createProduct(String name, long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
                               long sellerId, Long buyerId, long departmentId){
         String description = "Super Iphone";
         double price = 23432;
         boolean used = true;
-
-        return createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, buyerId, departmentId);
+        long units = 1L;
+        long longProduct = createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, departmentId, units);
+        if ( buyerId != null )
+            createPurchase(longProduct, buyerId, 1L);
+        return longProduct;
     }
 
     public long createDepartment(){

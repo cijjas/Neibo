@@ -24,6 +24,9 @@ public class Product {
     @Column(name = "used")
     private Boolean used;
 
+    @Column(name = "remainingunits")
+    private Long remainingUnits;
+
     @ManyToOne
     @JoinColumn(name = "primaryPictureId", referencedColumnName = "imageId")
     private Image primaryPicture;
@@ -40,11 +43,6 @@ public class Product {
     @JoinColumn(name = "sellerId", referencedColumnName = "userId")
     private User seller;
 
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "buyerId", referencedColumnName = "userId")
-    private User buyer;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "departmentId", referencedColumnName = "departmentId")
     private Department department;
@@ -57,6 +55,10 @@ public class Product {
     @ManyToMany
     @JoinTable(name = "products_users_requests", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> requesters;
+
+    @ManyToMany
+    @JoinTable(name = "products_users_purchases", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
+    private Set<User> purchasers;
 
     @Column(name = "purchaseDate")
     private Date purchaseDate;
@@ -75,6 +77,7 @@ public class Product {
         this.productId = builder.productId;
         this.name = builder.name;
         this.description = builder.description;
+        this.remainingUnits = builder.remainingUnits;
         this.price = builder.price;
         this.used = builder.used;
         this.seller = builder.seller;
@@ -103,6 +106,22 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<User> getPurchasers() {
+        return purchasers;
+    }
+
+    public void setPurchasers(Set<User> purchasers) {
+        this.purchasers = purchasers;
+    }
+
+    public Long getRemainingUnits() {
+        return remainingUnits;
+    }
+
+    public void setRemainingUnits(Long remainingUnits) {
+        this.remainingUnits = remainingUnits;
     }
 
     public double getPrice() {
@@ -179,14 +198,6 @@ public class Product {
         this.seller = seller;
     }
 
-    public User getBuyer() {
-        return buyer;
-    }
-
-    public void setBuyer(User buyer) {
-        this.buyer = buyer;
-    }
-
     public Set<User> getInquirers() {
         return inquirers;
     }
@@ -235,7 +246,12 @@ public class Product {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", used=" + used +
-                ", requesters=" + requesters.size() +
+                ", remainingUnits=" + remainingUnits +
+                ", department=" + department +
+                ", purchaseDate=" + purchaseDate +
+                ", creationDate=" + creationDate +
+                ", priceIntegerString='" + priceIntegerString + '\'' +
+                ", priceDecimalString='" + priceDecimalString + '\'' +
                 '}';
     }
 
@@ -249,6 +265,7 @@ public class Product {
         private String description;
         private Double price;
         private Boolean used;
+        private Long remainingUnits;
         private User seller;
         private Image primaryPicture;
         private Image secondaryPicture;
@@ -260,6 +277,11 @@ public class Product {
 
         public Builder productId(Long productId) {
             this.productId = productId;
+            return this;
+        }
+
+        public Builder remainingUnits(Long remainingUnits) {
+            this.remainingUnits = remainingUnits;
             return this;
         }
 
