@@ -34,9 +34,30 @@
 
 
             <div class="w-100 f-c-c-c g-1 cool-static-container">
-                <div class="f-r-c-c w-100 pt-2 pb-2">
-                    <h1 class="font-weight-bold font-size-20 "><spring:message code="List.of.interested.people"/></h1>
+                <div class="f-c-c-c">
+                    <div class="f-r-c-c w-100 pt-2 pb-2">
+                        <h1 class="font-weight-bolder font-size-24">
+                            <c:out value="${product.name}"/>
+                        </h1>
+                    </div>
+                        <div class="f-r-c-c g-0">
+                           <span class="price font-size-20 font-weight-normal ">
+                                <c:out value="${product.priceIntegerString}"/>
+                           </span>
+                            <div class="f-c-s-c pl-1" style="height: 20px">
+                               <span class="cents c-light-text font-size-12 font-weight-normal">
+                                    <c:out value="${product.priceDecimalString}"/>
+                               </span>
+                            </div>
+                        </div>
                 </div>
+
+                <div class="f-r-c-c w-100 pt-2 pb-2">
+                    <h1 class="font-weight-normal font-size-16">
+                        <spring:message code="List.of.interested.people"/>
+                    </h1>
+                </div>
+
                 <c:choose>
                     <c:when test="${empty requests}">
                         <div class="no-posts-found">
@@ -46,10 +67,16 @@
                     </c:when>
                     <c:otherwise>
                         <c:forEach var="request" items="${requests}" varStatus="loop">
-                            <div class="cool-static-container   ">
+                            <div class="cool-static-container">
                                 <div class="f-r-sb-c w-100">
                                     <div class="f-r-c-c">
                                         <div class="f-c-s-s">
+                                            <div>
+                                                <spring:message code="Request.date"/>:
+                                                <span style="color: var(--lila)">
+                                                    <c:out value="${request.creationDate}"/>
+                                                </span>
+                                            </div>
                                             <div>
                                                 <spring:message code="Requester"/>:
                                                 <span style="color: var(--lila)">
@@ -60,14 +87,12 @@
                                                 <spring:message code="Email"/>:
                                                 <span style="color: var(--lila)">
                                                     <c:out value="${request.mail}"/>
-
                                                 </span>
                                             </div>
-
                                         </div>
 
                                     </div>
-                                    <a onclick="handleUserTransaction(${request.userId}, ${productId})" class="cool-button small-a marketplace-button  font-weight-bold ">
+                                    <a onclick="handleUserTransaction(${request.userId}, ${product.productId})" class="cool-button small-a marketplace-button  font-weight-bold ">
                                         <spring:message code="Mark.as.sold"/>
                                     </a>
                                 </div>

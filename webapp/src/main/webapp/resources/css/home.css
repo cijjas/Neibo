@@ -364,6 +364,13 @@
     overflow: hidden;
     position: relative;
     transform: translateY(0);
+    &.marketplace{
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: -3px 5px 0 0 var(--lila);
+            border: var(--border);
+        }
+    }
     &::before{
         content: "";
         position: absolute;

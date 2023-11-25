@@ -163,10 +163,26 @@ public class MarketplaceController {
 
         ModelAndView mav = new ModelAndView("marketplace/views/saleRequests");
         mav.addObject("requests", prs.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")).getRequesters());
-        mav.addObject("productId", productId);
+        mav.addObject("product", prs.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")));
         mav.addObject("channel", "MySales");  // this is wrong
         return mav;
     }
+
+    @RequestMapping(value = "/requested-listings" , method = RequestMethod.GET)
+    public ModelAndView requestedListings(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size
+    ) {
+        LOGGER.info("User arriving at /requested-listings");
+
+        ModelAndView mav = new ModelAndView("marketplace/views/requestedListings");
+        mav.addObject("channel", "MyRequested");
+        mav.addObject("page", page);
+        mav.addObject("totalPages", prs.getProductsBoughtTotalPages(sessionUtils.getLoggedUser().getUserId(), size));
+        mav.addObject("contextPath", "/marketplace/my-purchases");
+        return mav;
+    }
+
 
     @RequestMapping(value = "/mark-as-bought", method = RequestMethod.POST)
     public ModelAndView markAsBought(
