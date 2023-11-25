@@ -91,12 +91,6 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void removeWorkerFromNeighborhood(long workerId, long neighborhoodId) {
-        LOGGER.info("Removing Worker {} from Neighborhood {}", workerId, neighborhoodId);
-        neighborhoodWorkerDao.deleteWorkerArea(workerId, neighborhoodId);
-    }
-
-    @Override
     public void verifyWorkerInNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Verifying Worker {} in Neighborhood {}", workerId, neighborhoodId);
         // This method has to change
@@ -123,4 +117,14 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
         LOGGER.info("Un-verifying Worker {} from Neighborhood {}", workerId, neighborhoodId);
         neighborhoodWorkerDao.setNeighborhoodRole(workerId, WorkerRole.UNVERIFIED_WORKER, neighborhoodId);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void removeWorkerFromNeighborhood(long workerId, long neighborhoodId) {
+        LOGGER.info("Removing Worker {} from Neighborhood {}", workerId, neighborhoodId);
+        neighborhoodWorkerDao.deleteWorkerArea(workerId, neighborhoodId);
+    }
 }
+
+

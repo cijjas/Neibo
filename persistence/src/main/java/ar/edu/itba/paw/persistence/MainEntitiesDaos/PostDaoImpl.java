@@ -87,12 +87,9 @@ public class PostDaoImpl implements PostDao {
         appendDateClause(query);
         if (page != 0)
             appendPaginationClause(query, queryParams, page, size);
-        // Create a native SQL query
         Query sqlQuery = em.createNativeQuery(query.toString(), Post.class);
-        // Set query parameters
         for (int i = 0; i < queryParams.size(); i++)
             sqlQuery.setParameter(i + 1, queryParams.get(i));
-        // Return the result directly as a list of Post entities
         return sqlQuery.getResultList();
     }
 
@@ -105,15 +102,12 @@ public class PostDaoImpl implements PostDao {
 
         appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags, postStatus);
 
-        // Create a native SQL query for counting
         Query sqlQuery = em.createNativeQuery(query.toString());
 
-        // Set query parameters
         for (int i = 0; i < queryParams.size(); i++) {
             sqlQuery.setParameter(i + 1, queryParams.get(i));
         }
 
-        // Execute the query and retrieve the count
         Object result = sqlQuery.getSingleResult();
         return Integer.parseInt(result.toString());
     }

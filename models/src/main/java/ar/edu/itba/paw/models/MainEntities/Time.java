@@ -25,7 +25,7 @@ public class Time {
     private Set<Event> eventsEndingAtThisTime = new HashSet<>();
 
 
-    public Time(){}
+    Time(){}
 
     private Time(Builder builder) {
         this.timeId = builder.timeId;

@@ -28,8 +28,7 @@ public class Review {
     @Column(name = "date")
     private Date date;
 
-    public Review() {
-    }
+    Review() {}
 
     public Review(Builder builder) {
         this.reviewId = builder.reviewId;

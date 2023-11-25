@@ -6,11 +6,18 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InquiryDao {
+
+    // ---------------------------------------------- INQUIRY INSERT ---------------------------------------------------
+
     Inquiry createInquiry(final long userId, final long productId, final String message);
 
-    Inquiry replyInquiry(final long inquiryId, final String reply);
+    // ---------------------------------------------- INQUIRY INSERT ---------------------------------------------------
 
     Optional<Inquiry> findInquiryById(final long inquiryId);
 
     List<Inquiry> getInquiriesByProduct(long productId);
+
+    // ---------------------------------------------- INQUIRY UPDATE ---------------------------------------------------
+
+    Inquiry replyInquiry(final long inquiryId, final String reply);
 }

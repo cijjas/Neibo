@@ -32,7 +32,6 @@ public class MarketplaceController {
     private final CommentService cs;
     private final TagService ts;
     private final ChannelService chs;
-    private final SubscriptionService ss;
     private final CategorizationService cas;
     private final ImageService is;
     private final AmenityService as;
@@ -45,8 +44,6 @@ public class MarketplaceController {
     private final RequestService rqs;
     private final InquiryService inqs;
 
-    // ------------------------------------- INFORMATION --------------------------------------
-
     @Autowired
     public MarketplaceController(SessionUtils sessionUtils,
                            final PostService ps,
@@ -55,7 +52,6 @@ public class MarketplaceController {
                            final CommentService cs,
                            final TagService ts,
                            final ChannelService chs,
-                           final SubscriptionService ss,
                            final CategorizationService cas,
                            final ImageService is,
                            final AmenityService as,
@@ -76,7 +72,6 @@ public class MarketplaceController {
         this.cs = cs;
         this.ts = ts;
         this.chs = chs;
-        this.ss = ss;
         this.cas = cas;
         this.as = as;
         this.es = es;
@@ -89,7 +84,7 @@ public class MarketplaceController {
         this.inqs = inqs;
     }
 
-    // ------------------------------------- Market --------------------------------------
+    // --------------------------------------------------- MARKET ------------------------------------------------------
 
 
     @RequestMapping(value = {"/products/{department}"}, method = RequestMethod.GET)

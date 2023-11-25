@@ -8,17 +8,17 @@ import java.util.List;
 
 public interface NeighborhoodWorkerDao {
 
-    // --------------------------------------- NEIGHBORHOODS_WORKERS SELECT ----------------------------------------
+    // --------------------------------------- NEIGHBORHOODS WORKERS SELECT ----------------------------------------
 
     WorkerArea createWorkerArea(long workerId, long neighborhoodId);
 
-    // --------------------------------------- NIEGHBORHOODWORKERS SELECT ------------------------------------------
+    // --------------------------------------- NEIGHBORHOODS WORKERS SELECT ------------------------------------------
 
     List<Neighborhood> getNeighborhoods(long workerId);
 
-    // --------------------------------------- NEIGHBORHOODS_WORKERS DELETE ----------------------------------------
+    // --------------------------------------- NEIGHBORHOODS WORKERS DELETE ----------------------------------------
 
     boolean deleteWorkerArea(long workerId, long neighborhoodId);
 
-    public void setNeighborhoodRole(long workerId, WorkerRole role, long neighborhoodId);
+    void setNeighborhoodRole(long workerId, WorkerRole role, long neighborhoodId);
 }

@@ -37,6 +37,8 @@ public class InquiryServiceImpl implements InquiryService {
         this.emailService = emailService;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public Inquiry createInquiry(long userId, long productId, String message) {
         LOGGER.info("User {} Inquiring on Product {}", userId, productId);
@@ -47,6 +49,20 @@ public class InquiryServiceImpl implements InquiryService {
 
         return inquiryDao.createInquiry(userId, productId, message);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public Optional<Inquiry> findInquiryById(long inquiryId) {
+        return inquiryDao.findInquiryById(inquiryId);
+    }
+
+    @Override
+    public List<Inquiry> getInquiriesByProduct(long productId) {
+        return inquiryDao.getInquiriesByProduct(productId);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public void replyInquiry(long inquiryId, String reply) {
@@ -59,15 +75,4 @@ public class InquiryServiceImpl implements InquiryService {
 
         inquiryDao.replyInquiry(inquiryId, reply);
     }
-
-    @Override
-    public Optional<Inquiry> findInquiryById(long inquiryId) {
-        return inquiryDao.findInquiryById(inquiryId);
-    }
-
-    @Override
-    public List<Inquiry> getInquiriesByProduct(long productId) {
-        return inquiryDao.getInquiriesByProduct(productId);
-    }
-
 }

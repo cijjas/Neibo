@@ -26,9 +26,7 @@ public class Channel {
     private Set<Neighborhood> neighborhoods;
 
 
-    public Channel() {
-        // Default no-argument constructor is required for Hibernate
-    }
+    Channel() {}
 
     private Channel(Builder builder) {
         this.channelId = builder.channelId;

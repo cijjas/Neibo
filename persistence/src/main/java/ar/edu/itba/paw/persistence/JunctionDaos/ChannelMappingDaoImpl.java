@@ -18,7 +18,7 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
     @PersistenceContext
     private EntityManager em;
 
-    // ---------------------------------- NEIGHBORHOODS_CHANNELS INSERT ------------------------------------------------
+    // ---------------------------------- NEIGHBORHOODS CHANNELS INSERT ------------------------------------------------
 
     @Override
     public ChannelMapping createChannelMapping(long channelId, long neighborhoodId) {
@@ -28,7 +28,7 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
         return channelMapping;
     }
 
-    // ---------------------------------- NEIGHBORHOODS_CHANNELS DELETE ------------------------------------------------
+    // ---------------------------------- NEIGHBORHOODS CHANNELS DELETE ------------------------------------------------
 
     public boolean deleteChannelMapping(long channelId, long neighborhoodId) {
         LOGGER.debug("Deleting ChannelMapping with channelId {} and neighborhoodId {}", channelId, neighborhoodId);

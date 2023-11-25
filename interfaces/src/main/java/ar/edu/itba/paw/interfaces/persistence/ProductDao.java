@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductDao {
+
+    // --------------------------------------------- PRODUCTS INSERT ---------------------------------------------------
+
     Product createProduct(final long userId, final String name, final String description, final double price, final boolean used, final long departmentId,
                           final Long primaryPictureId, final Long secondaryPictureId, final Long tertiaryPictureId);
 
-    Product updateProduct(final long productId, final String name, final String description, final double price, final boolean used, final long departmentId,
-                          final Long primaryPictureId, final Long secondaryPictureId, final Long tertiaryPictureId);
-
-    boolean deleteProduct(final long productId);
+    // --------------------------------------------- PRODUCTS SELECT ---------------------------------------------------
 
     Optional<Product> findProductById(final long productId);
 
@@ -39,4 +39,13 @@ public interface ProductDao {
     List<Product> searchProductsByName(long userId, long neighborhoodId, String searchQuery, SearchVariant searchVariant, int page, int size);
 
     List<Product> searchInAllProductsBeingSold(long neighborhoodId, String searchQuery, int page, int size);
+
+    // --------------------------------------------- PRODUCTS UPDATE ---------------------------------------------------
+
+    Product updateProduct(final long productId, final String name, final String description, final double price, final boolean used, final long departmentId,
+                          final Long primaryPictureId, final Long secondaryPictureId, final Long tertiaryPictureId);
+
+    // --------------------------------------------- PRODUCTS DELETE ---------------------------------------------------
+
+    boolean deleteProduct(final long productId);
 }

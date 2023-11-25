@@ -246,13 +246,11 @@ public class ProductDaoImpl implements ProductDao {
         LOGGER.debug("Searching for products with name containing: {} in neighborhood: {}", searchQuery, neighborhoodId);
         String searchParam = "%" + searchQuery.toLowerCase() + "%";
 
-        // Initialize the first query to retrieve product IDs
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
         Root<Product> idRoot = idQuery.from(Product.class);
         idQuery.select(idRoot.get("productId"));
 
-        // Join through the neighborhoodId
         Join<Product, User> sellerJoin = idRoot.join("seller");
         Join<User, Neighborhood> neighborhoodJoin = sellerJoin.join("neighborhood");
 
@@ -270,16 +268,13 @@ public class ProductDaoImpl implements ProductDao {
 
         List<Long> productIds = idTypedQuery.getResultList();
 
-        // Check if productIds is empty for better performance
         if (productIds.isEmpty()) {
             return Collections.emptyList();
         }
 
-        // Initialize the second query to fetch product details
         CriteriaQuery<Product> dataQuery = cb.createQuery(Product.class);
         Root<Product> dataRoot = dataQuery.from(Product.class);
 
-        // Add a predicate to filter by the IDs retrieved in the first query
         dataQuery.where(dataRoot.get("productId").in(productIds));
 
         TypedQuery<Product> dataTypedQuery = em.createQuery(dataQuery);
@@ -293,7 +288,6 @@ public class ProductDaoImpl implements ProductDao {
         LOGGER.debug("Searching for products with name containing: {} for user {} with variant {}", searchQuery, userId, searchVariant);
         String searchParam = "%" + searchQuery.toLowerCase() + "%";
 
-        // Initialize the first query to retrieve product IDs
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
         Root<Product> idRoot = idQuery.from(Product.class);
@@ -341,25 +335,17 @@ public class ProductDaoImpl implements ProductDao {
 
         List<Long> productIds = idTypedQuery.getResultList();
 
-        // Check if productIds is empty for better performance
         if (productIds.isEmpty()) {
             return Collections.emptyList();
         }
 
-        // Initialize the second query to fetch product details
         CriteriaQuery<Product> dataQuery = cb.createQuery(Product.class);
         Root<Product> dataRoot = dataQuery.from(Product.class);
 
-        // Add a predicate to filter by the IDs retrieved in the first query
         dataQuery.where(dataRoot.get("productId").in(productIds));
 
         TypedQuery<Product> dataTypedQuery = em.createQuery(dataQuery);
 
         return dataTypedQuery.getResultList();
     }
-
-
-
-
-
 }

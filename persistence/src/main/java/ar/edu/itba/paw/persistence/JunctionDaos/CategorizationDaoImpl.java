@@ -26,7 +26,7 @@ public class CategorizationDaoImpl implements CategorizationDao {
     @PersistenceContext
     private EntityManager em;
 
-    // -------------------------------------------- POSTS_TAGS INSERT --------------------------------------------------
+    // ---------------------------------------------- TAGS INSERT ------------------------------------------------------
 
     @Override
     public Categorization createCategorization(final long tagId, final long postId) {

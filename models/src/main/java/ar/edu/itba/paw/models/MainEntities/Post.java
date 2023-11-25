@@ -51,9 +51,7 @@ public class Post {
     @JoinTable(name = "posts_users_subscriptions", joinColumns = @JoinColumn(name = "postid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> subscribers;
 
-    public Post() {
-        // Default constructor for JPA
-    }
+    Post() {}
 
     private Post(Builder builder) {
         this.postId = builder.postId;

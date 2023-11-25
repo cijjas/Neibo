@@ -31,7 +31,7 @@ public class Shift {
     @Transient
     private boolean taken;
 
-    public Shift(){}
+    Shift(){}
 
     private Shift(Builder builder) {
         this.shiftId = builder.shiftId;

@@ -12,24 +12,24 @@ import java.util.Map;
 
 public interface EmailService {
 
-    public void sendNewUserMail(long neighborhoodId, String userName, UserRole role);
+    void sendNewUserMail(long neighborhoodId, String userName, UserRole role);
 
-    public void sendEventMail(Event event, String message_en, String message_es, List<User> receivers);
+    void sendEventMail(Event event, String message_en, String message_es, List<User> receivers);
 
-    public void sendWeeklyEventNotifications();
+    void sendWeeklyEventNotifications();
 
-    public void sendDailyEventNotifications();
+    void sendDailyEventNotifications();
 
-    public void sendNewAmenityMail(long neighborhoodId, String amenityName, String amenityDescription, List<User> receivers);
+    void sendNewAmenityMail(long neighborhoodId, String amenityName, String amenityDescription, List<User> receivers);
 
-    public void sendAnnouncementMail(Post post, List<User> receivers);
+    void sendAnnouncementMail(Post post, List<User> receivers);
 
-    public void sendNewCommentMail(Post post, List<User> receivers);
+    void sendNewCommentMail(Post post, List<User> receivers);
 
-    public void sendInquiryMail(User receiver, Product product, String message, boolean reply);
+    void sendInquiryMail(User receiver, Product product, String message, boolean reply);
 
-    public void sendNewRequestMail(Product product, User sender, String message);
+    void sendNewRequestMail(Product product, User sender, String message);
 
-    public void sendVerifiedNeighborMail(User user, String neighborhoodName);
+    void sendVerifiedNeighborMail(User user, String neighborhoodName);
 
     }

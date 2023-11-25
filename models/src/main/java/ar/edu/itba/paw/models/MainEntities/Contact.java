@@ -24,8 +24,7 @@ public class Contact {
     @JoinColumn(name = "neighborhoodid", referencedColumnName = "neighborhoodid")
     private Neighborhood neighborhood;
 
-    public Contact() {
-    }
+    Contact() {}
 
     public Contact(Builder builder) {
         this.contactId = builder.contactId;

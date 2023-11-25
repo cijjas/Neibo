@@ -54,37 +54,6 @@ public class EventServiceImpl implements EventService {
         Event createdEvent = eventDao.createEvent(name, description, date, times[0], times[1], neighborhoodId);
         emailService.sendEventMail(createdEvent, "there's a new event!", "hay un nuevo evento!", userService.getNeighbors(neighborhoodId));
         return createdEvent;
-
-//        Time startTimeInTime = null;
-//        Time endTimeInTime = null;
-//
-//        try {
-//            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-//            java.util.Date parsedStartTime = sdf.parse(startTime);
-//            java.util.Date parsedEndTime = sdf.parse(endTime);
-//            startTimeInTime = new Time(parsedStartTime.getTime());
-//            endTimeInTime = new Time(parsedEndTime.getTime());
-//        } catch (ParseException e) {
-//            LOGGER.error("Error whilst creating the Event");
-//            throw new UnexpectedException("Unexpected error while creating the Event");
-//        }
-//        OptionalLong startTimeId = getTimeId(startTimeInTime);
-//        OptionalLong endTimeId = getTimeId(endTimeInTime);
-//
-//        Event createdEvent;
-//        if (startTimeId.isPresent() && endTimeId.isPresent()) {
-//            createdEvent = eventDao.createEvent(name, description, date, startTimeId.getAsLong(), endTimeId.getAsLong(), neighborhoodId);
-//        } else {
-//            // Handle the case where one or both Time objects were not found
-//            if (!startTimeId.isPresent()) {
-//                startTimeId = OptionalLong.of(timeDao.createTime(startTimeInTime).getTimeId());
-//            }
-//            if (!endTimeId.isPresent()) {
-//                endTimeId = OptionalLong.of(timeDao.createTime(endTimeInTime).getTimeId());
-//            }
-//
-//            createdEvent = eventDao.createEvent(name, description, date, startTimeId.getAsLong(), endTimeId.getAsLong(), neighborhoodId);
-//        }
     }
 
     @Override

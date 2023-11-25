@@ -97,11 +97,7 @@ public class User {
     @JoinTable(name = "events_users", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "eventid"))
     private Set<Event> eventsSubscribed;
 
-//    @OneToOne
-//    @JoinColumn(name = "workerid", referencedColumnName = "workerid")
-//    private Worker worker;
-
-    public User() {}
+    User() {}
 
     private User(Long userId, String mail, String name, String surname, String password, Neighborhood neighborhood, Boolean darkMode, Language language, UserRole role, Date creationDate, Image profilePicture, Integer identification) {
         this.userId = userId;

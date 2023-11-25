@@ -69,9 +69,7 @@ public class Product {
     @Transient
     private String priceDecimalString;
 
-    public Product() {
-        // Default constructor
-    }
+    Product() {}
 
     private Product(Product.Builder builder) {
         this.productId = builder.productId;

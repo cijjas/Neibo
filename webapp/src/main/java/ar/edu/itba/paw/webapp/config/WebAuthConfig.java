@@ -31,7 +31,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetails;
 
-    // This defines that whenever spring has to compare passwords the strategy is to use the following encoder
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -80,7 +79,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
         return (request, response, authentication) -> {
-            // Get the authorities of the authenticated user
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 
             for (GrantedAuthority authority : authorities) {
@@ -88,12 +86,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 switch (authorityName) {
                     case "ROLE_UNVERIFIED_NEIGHBOR":
-                        // Redirect to the "/unverified" page for unverified neighbors
                         String unverifiedRedirectUrl = request.getContextPath() + "/unverified";
                         response.sendRedirect(unverifiedRedirectUrl);
                         return;
                     case "ROLE_WORKER":
-                        // Redirect to the "/services" page for workers
                         String workerRedirectUrl = request.getContextPath() + "/services";
                         response.sendRedirect(workerRedirectUrl);
                         return;
@@ -104,7 +100,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 }
             }
 
-            // Default case: Redirect to the default page for other roles
             String defaultRedirectUrl = request.getContextPath() + "/";
             response.sendRedirect(defaultRedirectUrl);
         };
