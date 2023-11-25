@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.MainEntities;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.util.Set;
 
 @Entity
@@ -50,14 +51,18 @@ public class Product {
 
     //junction tables:
     @ManyToMany
-    @JoinTable(name = "products_users_inquiries", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
+    @JoinTable(name = "products_users__inquiries", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> inquirers;
 
     @ManyToMany
     @JoinTable(name = "products_users_requests", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> requesters;
 
+    @Column(name = "purchaseDate")
+    private Date purchaseDate;
 
+    @Column(name = "creationDate")
+    private Date creationDate;
     @Transient
     private String priceIntegerString;
 
@@ -77,6 +82,7 @@ public class Product {
         this.secondaryPicture = builder.secondaryPicture;
         this.tertiaryPicture = builder.tertiaryPicture;
         this.department = builder.department;
+        this.creationDate = builder.creationDate;
     }
 
     public Long getProductId() {
@@ -103,6 +109,13 @@ public class Product {
         return price;
     }
 
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
 
     public String getPriceIntegerString() {
         if(priceIntegerString == null){
@@ -206,6 +219,13 @@ public class Product {
         return department;
     }
 
+    public Date getPurchaseDate() {
+        return purchaseDate;
+    }
+
+    public void setPurchaseDate(Date purchaseDate) {
+        this.purchaseDate = purchaseDate;
+    }
 
     @Override
     public String toString() {
@@ -215,7 +235,6 @@ public class Product {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", used=" + used +
-                ", inquirers=" + inquirers.size() +
                 ", requesters=" + requesters.size() +
                 '}';
     }
@@ -237,6 +256,7 @@ public class Product {
         private Department department;
         private Set<User> inquirers;
         private Set<User> requesters;
+        private Date creationDate;
 
         public Builder productId(Long productId) {
             this.productId = productId;
@@ -295,6 +315,11 @@ public class Product {
 
         public Builder requesters(Set<User> requesters) {
             this.requesters = requesters;
+            return this;
+        }
+
+        public Builder creationDate(Date creationDate) {
+            this.creationDate = creationDate;
             return this;
         }
 

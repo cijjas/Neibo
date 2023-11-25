@@ -37,6 +37,7 @@ public class ProductDaoImpl implements ProductDao {
                 .primaryPicture(em.find(Image.class, primaryPictureId))
                 .secondaryPicture(em.find(Image.class, secondaryPictureId))
                 .tertiaryPicture(em.find(Image.class, tertiaryPictureId))
+                .creationDate(new java.sql.Date(System.currentTimeMillis()))
                 .build();
         em.persist(product);
         return product;
@@ -78,31 +79,124 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getProductsByCriteria(long neighborhoodId, Department department, int page, int size) {
-        LOGGER.debug("Selecting Products from neighborhood {}, with department {}", neighborhoodId, department);
-        TypedQuery<Product> query;
-        if(department != Department.NONE) {
-            query = em.createQuery("SELECT DISTINCT p FROM Product p WHERE p.seller.neighborhood.neighborhoodId = :neighborhoodId AND p.department.department = (:department)", Product.class)
-                    .setParameter("neighborhoodId", neighborhoodId)
-                    .setParameter("department", department);
-        } else {
-            query = em.createQuery("SELECT DISTINCT p FROM Product p WHERE p.seller.neighborhood.neighborhoodId = :neighborhoodId", Product.class)
-                    .setParameter("neighborhoodId", neighborhoodId);
+        LOGGER.debug("Selecting Products from neighborhood {}, in departments {}", neighborhoodId, department);
+        // Initialize CriteriaBuilder
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        // First Query to retrieve product ids
+        CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
+        Root<Product> idRoot = idQuery.from(Product.class);
+        idQuery.select(idRoot.get("productId"));
+        // Add conditions for filtering
+        Predicate predicate = cb.equal(idRoot.get("seller").get("neighborhood").get("neighborhoodId"), neighborhoodId);
+        if (department != Department.NONE) {
+            predicate = cb.and(predicate, cb.equal(idRoot.get("department").get("departmentId"), department.getId()));
         }
-
-        if(page != 0) {
-            query.setFirstResult((page - 1) * size).setMaxResults(size);
+        idQuery.where(predicate);
+        // Create the query
+        TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
+        // Implement pagination in the first query
+        idTypedQuery.setFirstResult((page - 1) * size);
+        idTypedQuery.setMaxResults(size);
+        // Results
+        List<Long> productIds = idTypedQuery.getResultList();
+        // Check if productIds is empty for better performance
+        if (productIds.isEmpty()) {
+            return Collections.emptyList();
         }
-
-        return query.getResultList();
+        // Second Query to retrieve actual products
+        CriteriaQuery<Product> dataQuery = cb.createQuery(Product.class);
+        Root<Product> dataRoot = dataQuery.from(Product.class);
+        // Add predicate that enforces existence within the IDs recovered in the first query
+        dataQuery.where(dataRoot.get("productId").in(productIds));
+        // Create the query
+        TypedQuery<Product> dataTypedQuery = em.createQuery(dataQuery);
+        // Return Results
+        return dataTypedQuery.getResultList();
     }
 
     @Override
     public int getProductsCountByCriteria(long neighborhoodId, Department department) {
-        LOGGER.debug("Selecting Products Count from neighborhood {}, with tags {}", neighborhoodId, department);
-        TypedQuery<Integer> count = em.createQuery("SELECT COUNT( DISTINCT p) FROM Product p WHERE p.seller.neighborhood = :neighborhoodId AND p.department.department = (:department)", Integer.class)
-                .setParameter("neighborhoodId", neighborhoodId)
-                .setParameter("department", department);
-        return count.getSingleResult();
+        LOGGER.debug("Selecting Products Count from neighborhood {}, in departments {}", neighborhoodId, department);
+        // Initialize CriteriaBuilder
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        // First Query to retrieve product count
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<Product> countRoot = countQuery.from(Product.class);
+        countQuery.select(cb.countDistinct(countRoot));
+        // Add conditions for filtering
+        Predicate predicate = cb.equal(countRoot.get("seller").get("neighborhood").get("neighborhoodId"), neighborhoodId);
+        if (department != Department.NONE) {
+            predicate = cb.and(predicate, cb.equal(countRoot.get("department").get("departmentId"), department.getId()));
+        }
+        countQuery.where(predicate);
+        // Create the query
+        TypedQuery<Long> countTypedQuery = em.createQuery(countQuery);
+        // Result
+        Long countResult = countTypedQuery.getSingleResult();
+        // Return the count as an integer
+        return countResult.intValue();
+    }
+
+    @Override
+    public int getProductsSellingCount(long userId) {
+        LOGGER.debug("Selecting Products Count from User {}", userId);
+        // Initialize CriteriaBuilder
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        // First Query to retrieve product count
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<Product> countRoot = countQuery.from(Product.class);
+        countQuery.select(cb.countDistinct(countRoot));
+        // Add conditions for filtering
+        Predicate predicate = cb.equal(countRoot.get("seller").get("userId"), userId);
+        predicate = cb.and(predicate, cb.isNull(countRoot.get("buyer")));
+        countQuery.where(predicate);
+        // Create the query
+        TypedQuery<Long> countTypedQuery = em.createQuery(countQuery);
+        // Result
+        Long countResult = countTypedQuery.getSingleResult();
+        // Return the count as an integer
+        return countResult.intValue();
+    }
+
+    @Override
+    public int getProductsSoldCount(long userId) {
+        LOGGER.debug("Selecting Products Count from User {}", userId);
+        // Initialize CriteriaBuilder
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        // First Query to retrieve product count
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<Product> countRoot = countQuery.from(Product.class);
+        countQuery.select(cb.countDistinct(countRoot));
+        // Add conditions for filtering
+        Predicate predicate = cb.equal(countRoot.get("seller").get("userId"), userId);
+        predicate = cb.and(predicate, cb.isNotNull(countRoot.get("buyer")));
+        countQuery.where(predicate);
+        // Create the query
+        TypedQuery<Long> countTypedQuery = em.createQuery(countQuery);
+        // Result
+        Long countResult = countTypedQuery.getSingleResult();
+        // Return the count as an integer
+        return countResult.intValue();
+    }
+
+    @Override
+    public int getProductsBoughtCount(long userId) {
+        LOGGER.debug("Selecting Products Count from User {}", userId);
+        // Initialize CriteriaBuilder
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        // First Query to retrieve product count
+        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
+        Root<Product> countRoot = countQuery.from(Product.class);
+        countQuery.select(cb.countDistinct(countRoot));
+        // Add conditions for filtering
+        Predicate predicate = cb.equal(countRoot.get("buyer").get("userId"), userId);
+        countQuery.where(predicate);
+        // Create the query
+        TypedQuery<Long> countTypedQuery = em.createQuery(countQuery);
+        // Result
+        Long countResult = countTypedQuery.getSingleResult();
+        // Return the count as an integer
+        return countResult.intValue();
     }
 
     @Override
@@ -141,6 +235,7 @@ public class ProductDaoImpl implements ProductDao {
         Product product = em.find(Product.class, productId);
         if (product != null && product.getBuyer() == null) {
             product.setBuyer(em.find(User.class, buyerId));
+            product.setPurchaseDate( new java.sql.Date(System.currentTimeMillis()));
             return true;
         }
         return false;

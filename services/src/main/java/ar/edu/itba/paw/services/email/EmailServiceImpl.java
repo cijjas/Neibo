@@ -47,23 +47,7 @@ public class EmailServiceImpl implements EmailService {
         this.eventDao = eventDao;
     }
 
-    @Override
-    @Async
-    public void sendSimpleMessage(
-            String to, String subject, String text) {
-        LOGGER.info("Sending simple message to {}", to);
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("neibonotifs@gmail.com");
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(text);
-        emailSender.send(message);
-    }
-
-    @Override
-    @Async
-    //Can add a third parameter to receive a specific template
-    public void sendHtmlMessage(String to, String subject, Map<String, Object> variables, String templateModel) {
+    private void sendHtmlMessage(String to, String subject, Map<String, Object> variables, String templateModel) {
         LOGGER.info("Sending HTML message to {}", to);
         try {
             final Context context = new Context();
@@ -84,9 +68,7 @@ public class EmailServiceImpl implements EmailService {
         }
     }
 
-    @Override
-    @Async
-    public void sendMessageUsingThymeleafTemplate(String to, String subject, String templateModel, Map<String, Object> variables) {
+    private void sendMessageUsingThymeleafTemplate(String to, String subject, String templateModel, Map<String, Object> variables) {
         LOGGER.info("Sending message with Thymeleaf Template to {}", to);
 
         Context thymeleafContext = new Context();
@@ -97,6 +79,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    @Async
     public void sendNewUserMail(long neighborhoodId, String userName, UserRole role) {
         LOGGER.info("Sending New User message to {}", userName);
 
@@ -126,6 +109,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    @Async
     public void sendEventMail(Event event, String message_en, String message_es, List<User> receivers) {
         for(User user : receivers) {
             boolean isEnglish = user.getLanguage() == Language.ENGLISH;
@@ -150,6 +134,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    @Async
     @Scheduled(cron = "0 0 9 ? * MON") // CRON expression for weekly on Mondays at 8 PM
     public void sendWeeklyEventNotifications() {
         // Fetch the list of neighborhoods
@@ -232,6 +217,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    @Async
     @Scheduled(cron = "0 0 9 ? * *") // CRON expression for weekly on Mondays at 8 PM
     public void sendDailyEventNotifications() {
         // Fetch the list of neighborhoods
@@ -317,6 +303,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    @Async
     public void sendNewAmenityMail(long neighborhoodId, String amenityName, String amenityDescription, List<User> receivers) {
         for(User user : receivers) {
             boolean isEnglish = user.getLanguage() == Language.ENGLISH;
@@ -330,6 +317,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    @Async
     public void sendAnnouncementMail(Post post, List<User> receivers) {
         for (User n : receivers) {
             boolean isEnglish = n.getLanguage() == Language.ENGLISH;
@@ -342,6 +330,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    @Async
     public void sendNewCommentMail(Post post, List<User> receivers) {
         User user = post.getUser();
         Map<String, Object> variables = new HashMap<>();
@@ -361,6 +350,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    @Async
     public void sendInquiryMail(User receiver, Product product, String message, boolean reply) {
         Map<String, Object> variables = new HashMap<>();
         variables.put("name", receiver.getName());
@@ -372,13 +362,15 @@ public class EmailServiceImpl implements EmailService {
             variables.put("customMessage", reply ? "Your inquiry has been replied " : "You have a new inquiry ");
             variables.put("replyOrMessage", reply ? "The reply: " : "The message: ");
             sendMessageUsingThymeleafTemplate(receiver.getMail(), reply ? "Response to Inquiry" : "New Inquiry", "inquiry-template_en.html", variables);
+        } else {
+            variables.put("customMessage", reply ? "Has recibido una respuesta a tu consulta " : "Tienes una nueva consulta ");
+            variables.put("replyOrMessage", reply ? "La respuesta: " : "El mensaje: ");
+            sendMessageUsingThymeleafTemplate(receiver.getMail(), reply ? "Respuesta a Consulta" : "Nueva Consulta", "inquiry-template_es.html", variables);
         }
-        variables.put("customMessage", reply ? "Has recibido una respuesta a tu consulta " : "Tienes una nueva consulta ");
-        variables.put("replyOrMessage", reply ? "La respuesta: " : "El mensaje: ");
-        sendMessageUsingThymeleafTemplate(receiver.getMail(), reply ? "Respuesta a Consulta" : "Nueva Consulta", "inquiry-template_es.html", variables);
     }
 
     @Override
+    @Async
     public void sendNewRequestMail(Product product, User sender, String message) {
         User receiver = product.getSeller();
         Map<String, Object> variables = new HashMap<>();
@@ -393,6 +385,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    @Async
     public void sendVerifiedNeighborMail(User user, String neighborhoodName) {
         boolean isEnglish = user.getLanguage() == Language.ENGLISH;
         Map<String, Object> vars = new HashMap<>();

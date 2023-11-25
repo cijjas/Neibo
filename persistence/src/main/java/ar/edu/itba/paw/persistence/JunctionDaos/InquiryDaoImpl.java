@@ -32,6 +32,7 @@ public class InquiryDaoImpl implements InquiryDao {
                 .message(message)
                 .build();
         em.persist(inquiry);
+
         return inquiry;
     }
 

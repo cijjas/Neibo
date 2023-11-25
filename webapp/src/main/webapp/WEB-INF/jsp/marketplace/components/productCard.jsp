@@ -1,10 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
+<c:set var="baseUrl"
+       value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}"/>
 
-<div class="product-card ">
+<div class="product-card" >
     <%--information corner--%>
-    <div class="inside">
+    <div class="inside" onclick="window.location.href='${baseUrl}/marketplace/products/${param.productDepartmentURL}/${param.productId}'">
         <div class="icon">
             <i class="fa-solid fa-circle-info"></i>
         </div>
@@ -12,10 +14,10 @@
             <c:out value="${param.productDescription}"/>
         </div>
     </div>
-    <div class="f-c-c-s g-0 w-100  h-100">
+    <div class="f-c-c-s g-0 w-100  h-100" >
         <div class="header w-100" >
             <div class="tags-corner f-c-s-s g-05">
-                <div class="department-tag" onclick='window.location.href = "${contextPath}/marketplace/products?department=${param.productDepartmentId}" '>
+                <div class="department-tag" onclick='window.location.href = "${baseUrl}/marketplace/products/${param.productDepartmentURL}" '>
                     <spring:message code="${param.productDepartment}"/>
                 </div>
                 <c:choose>
@@ -31,7 +33,7 @@
                     </c:otherwise>
                 </c:choose>
             </div>
-            <div class="img-product placeholder-glow">
+            <div class="img-product placeholder-glow" onclick="window.location.href='${baseUrl}/marketplace/products/${param.productDepartmentURL}/${param.productId}'">
                 <img
                         id="product-image-${param.productId}"
                         src=""
@@ -48,7 +50,7 @@
                 </script>
             </div>
         </div>
-        <div class="footer w-100" >
+        <div class="footer w-100" onclick="window.location.href='${baseUrl}/marketplace/products/${param.productDepartmentURL}/${param.productId}'">
             <div class=" p-2 h-50"  >
                 <span class="product-title">
                     <c:out value="${param.productTitle}"/>
@@ -58,8 +60,8 @@
             <div class="container p-0 h-50" style="height: 50%">
                 <div class="f-c-c-c w-100 h-100 g-0">
                     <div class="row w-100" >
-                        <div class="col-7  font-weight-bold " >
-                            <div class="f-r-c-c g-0">
+                        <div class="col-12  font-weight-bold " >
+                            <div class="f-r-s-c g-0">
                                 <span class="price font-size-20 ">
                                     <c:out value="${param.productPrice}"/>
                                 </span>
@@ -72,10 +74,7 @@
                             </div>
 
                         </div>
-                        <a href="${contextPath}/marketplace/products/${param.productId}" class="col-5 cool-button product-button">
-                            <spring:message code="See"/>
-                            <i class="fa-solid fa-share"></i>
-                        </a>
+
                     </div>
 
 

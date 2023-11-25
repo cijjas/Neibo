@@ -34,9 +34,6 @@ public class ProductServiceImpl implements ProductService {
         this.productDao = productDao;
         this.imageService = imageService;
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
     @Override
     public Product createProduct(long userId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
         LOGGER.info("User {} Creating Product {}", userId, name);
@@ -48,7 +45,26 @@ public class ProductServiceImpl implements ProductService {
         return productDao.createProduct(userId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2]);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    private Long getImageId(MultipartFile imageFile) {
+        Image i = null;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            i = imageService.storeImage(imageFile);
+        }
+        return i == null ? 0 : i.getImageId();
+    }
+
+    @Override
+    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
+        LOGGER.info("Updating Product {}", productId);
+        double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
+        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, getImageId(pictureFiles[0]), getImageId(pictureFiles[1]), getImageId(pictureFiles[2]));
+    }
+
+    @Override
+    public boolean deleteProduct(long productId) {
+        LOGGER.info("Deleting Product {}", productId);
+        return productDao.deleteProduct(productId);
+    }
 
     @Override
     public Optional<Product> findProductById(long productId) {
@@ -69,6 +85,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public int getProductsSellingCount(long userId) {
+        LOGGER.info("Counting Products Selling by user {}", userId);
+        return productDao.getProductsSellingCount(userId);
+    }
+
+    @Override
+    public int getProductsSoldCount(long userId) {
+        LOGGER.info("Counting Products Sold by user {}", userId);
+        return productDao.getProductsSoldCount(userId);
+    }
+
+    @Override
+    public int getProductsBoughtCount(long userId) {
+        LOGGER.info("Counting Products Bought by user {}", userId);
+        return productDao.getProductsBoughtCount(userId);
+    }
+
+    @Override
     public List<Product> getProductsSelling(long userId, int page, int size) {
         LOGGER.info("Selecting Products Selling by user {}", userId);
         return productDao.getProductsSelling(userId, page, size);
@@ -86,7 +120,11 @@ public class ProductServiceImpl implements ProductService {
         return productDao.getProductsBought(userId, page, size);
     }
 
-
+    @Override
+    public boolean markAsBought(long buyerId, long productId) {
+        LOGGER.info("Marking Product {} as bought by user {}", productId, buyerId);
+        return productDao.markAsBought(buyerId, productId);
+    }
 
     @Override
     public List<Product> searchInProductsBought(long userId, long neighborhoodId,String searchQuery, int page, int size){
@@ -108,36 +146,23 @@ public class ProductServiceImpl implements ProductService {
         return productDao.searchInAllProductsBeingSold(neighborhoodId, searchQuery, page, size);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     @Override
-    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
-        LOGGER.info("Updating Product {}", productId);
-        double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
-        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, getImageId(pictureFiles[0]), getImageId(pictureFiles[1]), getImageId(pictureFiles[2]));
+    public int getProductsTotalPages(long neighborhoodId, int size, Department department){
+        return (int) Math.ceil((double) getProductsCountByCriteria(neighborhoodId, department) / size);
     }
 
     @Override
-    public boolean markAsBought(long buyerId, long productId) {
-        LOGGER.info("Marking Product {} as bought by user {}", productId, buyerId);
-        return productDao.markAsBought(buyerId, productId);
+    public int getProductsSellingTotalPages(long userId, int size){
+        return (int) Math.ceil((double) getProductsSellingCount(userId) / size);
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteProduct(long productId) {
-        LOGGER.info("Deleting Product {}", productId);
-        return productDao.deleteProduct(productId);
+    public int getProductsSoldTotalPages(long userId, int size){
+        return (int) Math.ceil((double) getProductsSoldCount(userId) / size);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    private Long getImageId(MultipartFile imageFile) {
-        Image i = null;
-        if (imageFile != null && !imageFile.isEmpty()) {
-            i = imageService.storeImage(imageFile);
-        }
-        return i == null ? 0 : i.getImageId();
+    @Override
+    public int getProductsBoughtTotalPages(long userId, int size){
+        return (int) Math.ceil((double) getProductsBoughtCount(userId) / size);
     }
 }

@@ -20,13 +20,14 @@ public class Inquiry {
     private String reply;
 
     @ManyToOne
-    @MapsId("productId")
-    @JoinColumn(name = "productid")
+//    @MapsId("productId")
+    @JoinColumn(name = "productid", referencedColumnName = "productid")
     private Product product;
 
     @ManyToOne
-    @MapsId("userId")
-    @JoinColumn(name = "userid")
+//    @MapsId("userId")
+//    @JoinColumn(name = "userid")
+    @JoinColumn(name = "userid", referencedColumnName = "userid")
     private User user;
 
     public Inquiry() {

@@ -44,10 +44,9 @@
 
         <div class="column-middle">
 
-            <c:if test="${totalPages > 1}">
-                <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
-                    <jsp:param name="page" value="${page}"/>
-                    <jsp:param name="totalPages" value="${totalPages}"/>
+            <c:if test="${neighbors}">
+                <jsp:include page="/WEB-INF/jsp/components/widgets/rejectedSwitch.jsp">
+                    <jsp:param name="verified" value="${verified}"/>
                 </jsp:include>
             </c:if>
 
@@ -58,7 +57,14 @@
                             <div class="information">
                                 <c:choose>
                                     <c:when test="${neighbors}">
-                                        <spring:message code="No.verified.Users"/>
+                                        <c:choose>
+                                            <c:when test="${verified}">
+                                                <spring:message code="No.verified.Users"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <spring:message code="No.rejected.Users"/>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:when>
                                     <c:otherwise>
                                         <spring:message code="No.new.requests"/>
@@ -114,10 +120,20 @@
                                         <%--If its only neighbors display the unverify button--%>
                                     <c:choose>
                                         <c:when test="${neighbors}">
-                                            <button class="ignore-button  outlined on-bg"
-                                                    onclick="rejectUser(${user.userId})">
-                                                <spring:message code="Remove"/>
-                                            </button>
+                                            <c:choose>
+                                                <c:when test="${verified}">
+                                                    <button class="ignore-button  outlined on-bg"
+                                                            onclick="rejectUser(${user.userId})">
+                                                        <spring:message code="Remove"/>
+                                                    </button>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <button class="cool-button cool-small font-weight-bold on-bg p-2"
+                                                            onclick="verifyRejectedUser(${user.userId})">
+                                                        <spring:message code="Accept"/>
+                                                    </button>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </c:when>
                                         <c:otherwise>
                                             <button class="ignore-button outlined on-bg"
@@ -139,6 +155,19 @@
                                     function rejectUser(userId) {
                                         const verify = false;
                                         handleUserVerification(userId, verify)
+                                    }
+
+                                    function verifyRejectedUser(userId) {
+                                        const form = document.createElement('form');
+                                        form.method = 'POST';
+                                        form.action = '${pageContext.request.contextPath}/admin/verify-rejected-user';
+                                        const input = document.createElement('input');
+                                        input.type = 'hidden';
+                                        input.name = 'userId';
+                                        input.value = userId;
+                                        form.appendChild(input);
+                                        document.body.appendChild(form);
+                                        form.submit();
                                     }
 
                                     function handleUserVerification(userId, verify) {
@@ -168,6 +197,13 @@
 
             </div>
 
+            <c:if test="${totalPages > 1}">
+                <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                    <jsp:param name="page" value="${page}"/>
+                    <jsp:param name="totalPages" value="${totalPages}"/>
+                </jsp:include>
+            </c:if>
+
         </div>
 
         <div class="column-right">
@@ -182,6 +218,11 @@
 <%----%>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
-        crossorigin="anonymous"></script>
+        crossorigin="anonymous">
+
+</script>
+
+<%@ include file="/WEB-INF/jsp/components/displays/footer.jsp" %>
+
 </body>
 </html>

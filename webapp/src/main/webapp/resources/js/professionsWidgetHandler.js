@@ -31,14 +31,13 @@
     }
 
     // Add Professions
-    // Add Professions
     ProfessionsInput.prototype.addProfession = function (string) {
-        if (this.anyErrors(string))
+        if (this.anyErrors(string)){
             return;
+        }
         if (!this.professionExistsInOptions(string)) {
             return;
         }
-
 
         this.arr.push(string);
         var professionInput = this;
@@ -72,6 +71,7 @@
     ProfessionsInput.prototype.professionExistsInOptions = function (profession) {
         const professionOptions = document.querySelectorAll('.profession-option');
         for (var i = 0; i < professionOptions.length; i++) {
+            // Convert lowecase stirng into uppercase with _ in between to match the profession options
             if (professionOptions[i].textContent === profession) {
                 return true;
             }
@@ -92,7 +92,7 @@
         this.arr = [];
         this.orignal_input.value = '';
         this.wrapper.querySelectorAll('.profession').forEach(function (profession) {
-            profession.remove();
+                profession.remove();
             }
         );
 
@@ -106,11 +106,9 @@
             return true;
         }
 
-        if (!this.options.duplicate && this.arr.indexOf(string) !== -1) {
-            return true;
-        }
+        return !this.options.duplicate && this.arr.indexOf(string) !== -1;
 
-        return false;
+
     }
 
     // Add professions programmatically

@@ -4,6 +4,8 @@ import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.MainEntities.Amenity;
+import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.MainEntities.Worker;
 import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,17 +97,32 @@ public class AdminController {
     @RequestMapping("/neighbors")
     public ModelAndView neighbors(
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "5") int size
+            @RequestParam(value = "size", defaultValue = "5") int size,
+            @RequestParam(value = "verified", defaultValue = "true") boolean verified
     ) {
         LOGGER.info("User arriving at '/admin/neighbors'");
 
         final ModelAndView mav = new ModelAndView("admin/views/adminRequestHandler");
 
+        int totalPages;
+        List<User> users;
+
+        if(verified){
+            totalPages = us.getTotalPages(UserRole.NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), size);
+            users = us.getUsersPage(UserRole.NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size);
+        }
+        else {
+            totalPages = us.getTotalPages(UserRole.REJECTED, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), size);
+            users = us.getUsersPage(UserRole.REJECTED, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size);
+        }
+
         mav.addObject("panelOption", "Neighbors");
         mav.addObject("neighbors", true);
         mav.addObject("page", page);
-        mav.addObject("totalPages", us.getTotalPages(UserRole.NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
-        mav.addObject("users", us.getUsersPage(UserRole.NEIGHBOR, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size));
+        mav.addObject("totalPages", totalPages);
+        mav.addObject("users", users);
+        mav.addObject("contextPath", "/admin/neighbors");
+        mav.addObject("verified", verified);
         return mav;
     }
 
@@ -145,23 +162,45 @@ public class AdminController {
         return new ModelAndView("redirect:/admin/unverified");
     }
 
+    @RequestMapping("/verify-rejected-user")
+    public ModelAndView verifyRejectedUser(
+            @RequestParam("userId") long userId
+    ) {
+        us.verifyNeighbor(userId);
+        return new ModelAndView("redirect:/admin/neighbors");
+    }
+
     // --------------------------------------------------- WORKERS LIST ------------------------------------------------
 
     @RequestMapping("/workers")
     public ModelAndView workers(
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "5") int size
+            @RequestParam(value = "size", defaultValue = "5") int size,
+            @RequestParam(value = "verified", defaultValue = "true") boolean verified
     ) {
         LOGGER.info("User arriving at '/admin/workers'");
 
         final ModelAndView mav = new ModelAndView("admin/views/adminWorkerRequestHandler");
 
+        int totalPages;
+        List<Worker> workers;
+
+        if(verified){
+            totalPages = ws.getTotalWorkerPagesByCriteria(null, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
+            workers = ws.getWorkersByCriteria(page, size, null, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
+        }
+        else {
+            totalPages = ws.getTotalWorkerPagesByCriteria(null, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.REJECTED, WorkerStatus.none);
+            workers = ws.getWorkersByCriteria(page, size, null, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId(), WorkerRole.REJECTED, WorkerStatus.none);
+        }
+
         mav.addObject("panelOption", "Workers");
         mav.addObject("inWorkers", true);
         mav.addObject("page", page);
-        mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(null, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER, WorkerStatus.none));
-        mav.addObject("workers", ws.getWorkersByCriteria(page, size, null, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER, WorkerStatus.none));
+        mav.addObject("totalPages", totalPages);
+        mav.addObject("workers", workers);
         mav.addObject("contextPath", "/admin/workers");
+        mav.addObject("verified", verified);
         return mav;
     }
 
@@ -205,6 +244,14 @@ public class AdminController {
     ) {
         nws.verifyWorkerInNeighborhood(workerId, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId());
         return new ModelAndView("redirect:/admin/unverified-workers");
+    }
+
+    @RequestMapping("/verify-rejected-worker")
+    public ModelAndView verifyRejectedWorker(
+            @RequestParam("workerId") long workerId
+    ) {
+        nws.verifyWorkerInNeighborhood(workerId, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId());
+        return new ModelAndView("redirect:/admin/workers");
     }
 
     // ----------------------------------------------------- PUBLISH ---------------------------------------------------

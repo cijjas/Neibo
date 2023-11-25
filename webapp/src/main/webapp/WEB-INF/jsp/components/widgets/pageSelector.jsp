@@ -6,7 +6,17 @@
 <c:set var="baseUrl"
        value="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}"/>
 
-<div class="pagination">
+<c:set var="paginationClass" value=""/>
+<c:choose>
+    <c:when test="${contextPath.startsWith('/marketplace')}">
+        <c:set var="paginationClass" value="pagination-marketplace"/>
+    </c:when>
+    <c:otherwise>
+        <c:set var="paginationClass" value="pagination"/>
+    </c:otherwise>
+</c:choose>
+
+<div class="${paginationClass}">
     <c:url var="prevUrl" value="">
         <c:param name="page" value="${page - 1}"/>
         <c:if test="${param.tag ne null}">
@@ -16,7 +26,7 @@
         </c:if>
     </c:url>
 
-    <a class="pagination-button small-a ${page <= 1 ? 'disabled' : ''}"
+    <a class="${paginationClass}-button small-a ${page <= 1 ? 'disabled' : ''}"
        href="${baseUrl}${contextPath}/${prevUrl}"
        onclick="return ${page <= 1 ? 'false' : 'true'}">
         <i class="fas fa-chevron-left"></i>
@@ -31,7 +41,7 @@
                 </c:forEach>
             </c:if>
         </c:url>
-        <a class="pagination-button ${page == pageNumber ? 'active' : ''}"
+        <a class="${paginationClass}-button ${page == pageNumber ? 'active' : ''}"
            href="${baseUrl}${contextPath}/${pageUrl}">
                 ${pageNumber}
         </a>
@@ -45,7 +55,7 @@
             </c:forEach>
         </c:if>
     </c:url>
-    <a class="pagination-button small-a ${page >= totalPages ? 'disabled' : ''}"
+    <a class="${paginationClass}-button small-a ${page >= totalPages ? 'disabled' : ''}"
        href="${baseUrl}${contextPath}/${nextUrl}"
        onclick="return ${page >= totalPages ? 'false' : 'true'}">
         <i class="fas fa-chevron-right"></i>

@@ -18,7 +18,13 @@ public interface ProductService {
 
     List<Product> getProductsByCriteria(long neighborhoodId, Department department, int page, int size);
 
-    int getProductsCountByCriteria(long neighborhoodId, Department department) ;
+    int getProductsCountByCriteria(long neighborhoodId, Department department);
+
+    int getProductsSellingCount(long userId);
+
+    int getProductsSoldCount(long userId);
+
+    int getProductsBoughtCount(long userId);
 
     List<Product> getProductsSelling(long userId, int page, int size);
 
@@ -35,4 +41,12 @@ public interface ProductService {
     List<Product> searchInProductsSelling(long userId, long neighborhoodId, String searchQuery, int page, int size);
 
     List<Product> searchInProductsBeingSold(long neighborhoodId, String searchQuery, int page, int size);
+
+    int getProductsTotalPages(long neighborhoodId, int size, Department department);
+
+    int getProductsSellingTotalPages(long userId, int size);
+
+    int getProductsSoldTotalPages(long userId, int size);
+
+    int getProductsBoughtTotalPages(long userId, int size);
 }

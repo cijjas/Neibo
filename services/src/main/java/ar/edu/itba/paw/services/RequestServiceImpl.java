@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -43,6 +44,26 @@ public class RequestServiceImpl implements RequestService {
         Product product = productDao.findProductById(productId).orElseThrow(() -> new IllegalStateException("Product not found"));
         User sender = userDao.findUserById(userId).orElseThrow(() -> new IllegalStateException("User not found"));
         emailService.sendNewRequestMail(product, sender, message);
-        return requestDao.createRequest(userId, productId);
+        return requestDao.createRequest(userId, productId, message);
+    }
+
+    @Override
+    public List<Request> getRequestsByProductId(long productId, int page, int size) {
+        return requestDao.getRequestsByProductId(productId, page, size);
+    }
+
+    @Override
+    public int getRequestsCountByProductId(long productId) {
+        return requestDao.getRequestsCountByProductId(productId);
+    }
+
+    @Override
+    public List<Request> getRequestsByProductAndUser(long productId, long userId, int page, int size) {
+        return requestDao.getRequestsByProductAndUser(productId, userId, page, size);
+    }
+
+    @Override
+    public int getRequestsCountByProductAndUser(long productId, long userId) {
+        return requestDao.getRequestsCountByProductAndUser(productId, userId);
     }
 }

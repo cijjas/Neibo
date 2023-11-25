@@ -90,7 +90,7 @@ public class User {
     private Set<Product> requestedProducts;
 
     @ManyToMany
-    @JoinTable(name = "products_users_inquiries", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "productid"))
+    @JoinTable(name = "products_users__inquiries", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "productid"))
     private Set<Product> inquiredProducts;
 
     @ManyToMany

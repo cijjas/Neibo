@@ -60,7 +60,7 @@ public class RequestDaoImplTest {
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
 
         // Exercise
-        Request request = requestDao.createRequest(uKey3, pKey);
+        Request request = requestDao.createRequest(uKey3, pKey, "hola");
 
         // Validations & Post Conditions
         em.flush();

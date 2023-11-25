@@ -12,12 +12,6 @@ import java.util.Map;
 
 public interface EmailService {
 
-    void sendSimpleMessage(String to, String subject, String text);
-
-    void sendHtmlMessage(String to, String subject, Map<String, Object> variables, String template);
-
-    void sendMessageUsingThymeleafTemplate(String to, String subject, String templateModel, Map<String, Object> variables);
-
     void sendNewUserMail(long neighborhoodId, String userName, UserRole role);
 
     void sendEventMail(Event event, String message_en, String message_es, List<User> receivers);

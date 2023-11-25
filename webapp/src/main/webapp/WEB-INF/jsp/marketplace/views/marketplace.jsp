@@ -46,6 +46,14 @@
                         </div>
                     </c:when>
                     <c:otherwise>
+
+                        <c:if test="${totalPages >  1}">
+                            <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                                <jsp:param name="page" value="${page}"/>
+                                <jsp:param name="totalPages" value="${totalPages}"/>
+                            </jsp:include>
+                        </c:if>
+
                         <div class="row m-0 product-grid-row">
                             <c:forEach var="product" items="${productList}">
                                 <jsp:include page="/WEB-INF/jsp/marketplace/components/productCard.jsp">
@@ -57,10 +65,17 @@
                                     <jsp:param name="productPrimaryPictureId" value="${product.primaryPicture.imageId}"/>
                                     <jsp:param name="productId" value="${product.productId}"/>
                                     <jsp:param name="productUsed" value="${product.used}"/>
-                                    <jsp:param name="productDepartmentId" value="${product.department.department.id}"/>
+                                    <jsp:param name="productDepartmentURL" value="${product.department.department.departmentUrl}"/>
                                 </jsp:include>
                             </c:forEach>
                         </div>
+
+                        <c:if test="${totalPages >  1}">
+                            <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                                <jsp:param name="page" value="${page}"/>
+                                <jsp:param name="totalPages" value="${totalPages}"/>
+                            </jsp:include>
+                        </c:if>
                     </c:otherwise>
                 </c:choose>
 
