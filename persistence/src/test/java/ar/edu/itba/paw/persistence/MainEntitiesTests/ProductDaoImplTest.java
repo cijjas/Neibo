@@ -239,6 +239,39 @@ public class ProductDaoImplTest {
     }
 
     @Test
+    public void testGetProductsBought() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+        long uKey2 = testInserter.createUser(MAIL2, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long dKey2 = testInserter.createDepartment(Department.APPLIANCES);
+        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
+        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, uKey1, dKey2);
+
+        // Exercise
+        List<Product> products = productDao.getProductsBought(uKey1, 1, 10);
+
+        // Validations & Post Conditions
+        assertFalse(products.isEmpty());
+        assertEquals(1, products.size());
+    }
+
+    @Test
+    public void testGetNoProductsBought() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+
+        // Exercise
+        List<Product> products = productDao.getProductsBought(uKey1, 1, 10);
+
+        // Validations & Post Conditions
+        assertTrue(products.isEmpty());
+    }
+
+    @Test
     public void testUpdateProduct() {
         // Pre Conditions
         long iKey = testInserter.createImage();

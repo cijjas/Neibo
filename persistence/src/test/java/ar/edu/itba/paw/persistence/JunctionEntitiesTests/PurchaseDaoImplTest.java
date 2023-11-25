@@ -2,8 +2,11 @@ package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
 import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.models.JunctionEntities.Inquiry;
-import ar.edu.itba.paw.persistence.JunctionDaos.InquiryDaoImpl;
+import ar.edu.itba.paw.models.JunctionEntities.Purchase;
+import ar.edu.itba.paw.models.JunctionEntities.Request;
+import ar.edu.itba.paw.models.JunctionEntities.WorkerArea;
+import ar.edu.itba.paw.persistence.JunctionDaos.PurchaseDaoImpl;
+import ar.edu.itba.paw.persistence.JunctionDaos.RequestDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -21,39 +24,37 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Transactional
 @Rollback
-public class InquiryDaoImplTest {
-
-    public static final String MESSAGE = "message";
-    public static final String MAIL1 = "user1@gmail.com";
-    public static final String MAIL2 = "user2@gmail.com";
-    public static final String MAIL3 = "user3@gmail.com";
-    public static final String REPLY = "This is a reply";
+public class PurchaseDaoImplTest {
+    public static final int UNITS_BOUGHT = 2;
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private InquiryDaoImpl inquiryDao;
+    private PurchaseDaoImpl purchaseDao;
     @PersistenceContext
     private EntityManager em;
+
+    public static final String MAIL1 = "user1@gmail.com";
+    public static final String MAIL2 = "user2@gmail.com";
+    public static final String MAIL3 = "user3@gmail.com";
 
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
     }
-
     @Test
-    public void testCreateInquiry() {
+    public void testCreateRequest() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -61,20 +62,19 @@ public class InquiryDaoImplTest {
         long uKey2 = testInserter.createUser(MAIL2, nhKey);
         long uKey3 = testInserter.createUser(MAIL3, nhKey);
         long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, null, dKey1);
 
         // Exercise
-        Inquiry inquiry = inquiryDao.createInquiry(uKey3, pKey, MESSAGE);
+        Purchase purchase = purchaseDao.createPurchase(uKey1, pKey, UNITS_BOUGHT);
 
         // Validations & Post Conditions
         em.flush();
-        assertNotNull(inquiry);
-        assertEquals(inquiry.getMessage(), MESSAGE);
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_inquiries.name()));
+        assertNotNull(purchase);
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_purchases.name()));
     }
 
     @Test
-    public void testFindInquiryById() {
+    public void testFindPurchase() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -83,42 +83,23 @@ public class InquiryDaoImplTest {
         long uKey3 = testInserter.createUser(MAIL3, nhKey);
         long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
-        long iqKey = testInserter.createInquiry(pKey, uKey3);
+        long pcKey = testInserter.createPurchase(pKey, uKey1, UNITS_BOUGHT);
 
         // Exercise
-        Optional<Inquiry> maybeInquiry = inquiryDao.findInquiryById(iqKey);
+        Optional<Purchase> purchase = purchaseDao.findPurchase(pcKey);
 
         // Validations & Post Conditions
-        assertTrue(maybeInquiry.isPresent());
+        assertTrue(purchase.isPresent());
     }
 
     @Test
-    public void testFindInquiryByInvalidId() {
-        // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-        long uKey2 = testInserter.createUser(MAIL2, nhKey);
-        long uKey3 = testInserter.createUser(MAIL3, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
-        long iqKey = testInserter.createInquiry(pKey, uKey3);
-
-        // Exercise
-        List<Inquiry> inquiries = inquiryDao.getInquiriesByProduct(pKey);
-
-        // Validations & Post Conditions
-        assertFalse(inquiries.isEmpty());
-    }
-
-    @Test
-    public void testGetInquiriesByProduct() {
+    public void testFindPurchaseInvalidId() {
         // Pre Conditions
 
         // Exercise
-        Optional<Inquiry> maybeInquiry = inquiryDao.findInquiryById(1);
+        Optional<Purchase> purchase = purchaseDao.findPurchase(1);
 
         // Validations & Post Conditions
-        assertFalse(maybeInquiry.isPresent());
+        assertFalse(purchase.isPresent());
     }
 }

@@ -347,16 +347,17 @@ public class TestInserter {
         return inquiry.getInquiryId();
     }
 
-    public void createRequest(long productId, long userId){
+    public void createRequest(long productId, long userId, String message){
         Request request = new Request.Builder()
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
+                .message(message)
                 .build();
         em.persist(request);
         em.flush();
     }
 
-    public Purchase createPurchase(long productId, long userId, long unitsBought) {
+    public long createPurchase(long productId, long userId, long unitsBought) {
         Purchase purchase = new Purchase.Builder()
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
@@ -364,7 +365,7 @@ public class TestInserter {
                 .build();
         em.persist(purchase);
         em.flush();
-        return purchase;
+        return purchase.getPurchaseId();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -546,5 +547,10 @@ public class TestInserter {
         String message = "Hohohoho que caro esta todo";
         String reply = "Asi es la vida";
         return createInquiry(message, reply, productId, userId);
+    }
+
+    public void createRequest(long productId, long userId){
+        String message = "Hello";
+        createRequest(productId, userId, message);
     }
 }

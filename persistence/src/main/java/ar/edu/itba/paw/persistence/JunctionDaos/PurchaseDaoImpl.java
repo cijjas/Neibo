@@ -8,11 +8,13 @@ import ar.edu.itba.paw.models.MainEntities.Review;
 import ar.edu.itba.paw.models.MainEntities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
+@Repository
 public class PurchaseDaoImpl implements PurchaseDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PurchaseDaoImpl.class);
