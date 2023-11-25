@@ -34,14 +34,6 @@ public interface ProductService {
 
     void markAsBought(long buyerId, long productId, long units);
 
-    List<Product> searchInProductsBought(long userId, long neighborhoodId, String searchQuery, int page, int size);
-
-    List<Product> searchInProductsSold(long userId, long neighborhoodId, String searchQuery, int page, int size);
-
-    List<Product> searchInProductsSelling(long userId, long neighborhoodId, String searchQuery, int page, int size);
-
-    List<Product> searchInProductsBeingSold(long neighborhoodId, String searchQuery, int page, int size);
-
     int getProductsTotalPages(long neighborhoodId, int size, Department department);
 
     int getProductsSellingTotalPages(long userId, int size);
@@ -49,4 +41,6 @@ public interface ProductService {
     int getProductsSoldTotalPages(long userId, int size);
 
     int getProductsBoughtTotalPages(long userId, int size);
+
+    void restockProduct(long productId, long extraUnits);
 }

@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.models.JunctionEntities;
 
-import ar.edu.itba.paw.models.compositeKeys.RequestKey;
 import ar.edu.itba.paw.models.MainEntities.Product;
 import ar.edu.itba.paw.models.MainEntities.User;
 

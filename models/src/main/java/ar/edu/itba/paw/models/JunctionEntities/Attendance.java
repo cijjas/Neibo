@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.models.JunctionEntities;
 
-import ar.edu.itba.paw.models.compositeKeys.AttendanceKey;
 import ar.edu.itba.paw.models.MainEntities.Event;
 import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.compositeKeys.AttendanceKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -37,20 +37,20 @@ public class Attendance implements Serializable {
         return id;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
     public void setId(AttendanceKey id) {
         this.id = id;
     }
 
+    public User getUser() {
+        return user;
+    }
+
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Event getEvent() {
+        return event;
     }
 
     public void setEvent(Event event) {

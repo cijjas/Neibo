@@ -26,7 +26,8 @@ public class Channel {
     private Set<Neighborhood> neighborhoods;
 
 
-    Channel() {}
+    Channel() {
+    }
 
     private Channel(Builder builder) {
         this.channelId = builder.channelId;

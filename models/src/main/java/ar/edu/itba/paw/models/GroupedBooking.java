@@ -8,11 +8,11 @@ import java.util.Date;
 import java.util.List;
 
 public class GroupedBooking {
-    private List<Long> bookingIds;
-    private String amenityName;
-    private Date date;
-    private String day;
-    private Time startTime;
+    private final List<Long> bookingIds;
+    private final String amenityName;
+    private final Date date;
+    private final String day;
+    private final Time startTime;
     private Time endTime;
 
     public GroupedBooking(String amenityName, Date date, String day, Time startTime, Time endTime) {

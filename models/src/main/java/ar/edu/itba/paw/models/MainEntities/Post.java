@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models.MainEntities;// Post.java
+
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -51,7 +51,8 @@ public class Post {
     @JoinTable(name = "posts_users_subscriptions", joinColumns = @JoinColumn(name = "postid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> subscribers;
 
-    Post() {}
+    Post() {
+    }
 
     private Post(Builder builder) {
         this.postId = builder.postId;

@@ -19,7 +19,8 @@ public class Tag {
     @JoinTable(name = "posts_tags", joinColumns = @JoinColumn(name = "tagid"), inverseJoinColumns = @JoinColumn(name = "postid"))
     private List<Post> posts;
 
-    Tag() {}
+    Tag() {
+    }
 
     private Tag(Builder builder) {
         this.tagId = builder.tagId;
@@ -41,6 +42,7 @@ public class Tag {
     public void setPosts(List<Post> posts) {
         this.posts = posts;
     }
+
     @Override
     public String toString() {
         return "Tag{" +

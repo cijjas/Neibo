@@ -85,7 +85,7 @@ public class AvailabilityDaoImplTest {
     @Test
     public void testFindInvalidAvailabilityId() {
         // Exercise
-        OptionalLong foundAvailability = availabilityDao.findAvailabilityId(1L, 1L); // Invalid ID
+        OptionalLong foundAvailability = availabilityDao.findAvailabilityId(1, 1);
 
         // Validations & Post Conditions
         assertFalse(foundAvailability.isPresent());

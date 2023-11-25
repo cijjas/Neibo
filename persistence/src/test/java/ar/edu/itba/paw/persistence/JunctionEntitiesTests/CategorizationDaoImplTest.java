@@ -27,6 +27,7 @@ import static org.junit.Assert.assertEquals;
 @Rollback
 public class CategorizationDaoImplTest {
 
+    public static final int IMAGE_ID = 0;
     @Autowired
     private DataSource ds;
     @Autowired
@@ -48,7 +49,8 @@ public class CategorizationDaoImplTest {
         long chKey = testInserter.createChannel();
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
-        long pKey = testInserter.createPost(uKey, chKey, 0);
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
         long tKey = testInserter.createTag();
 
         // Exercise

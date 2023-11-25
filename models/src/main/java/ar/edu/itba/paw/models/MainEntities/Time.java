@@ -16,16 +16,17 @@ public class Time {
     private java.sql.Time timeInterval;
 
     @OneToMany(mappedBy = "startTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<Shift> shifts = new HashSet<>();
+    private final Set<Shift> shifts = new HashSet<>();
 
     @OneToMany(mappedBy = "startTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<Event> eventsStartingAtThisTime = new HashSet<>();
+    private final Set<Event> eventsStartingAtThisTime = new HashSet<>();
 
     @OneToMany(mappedBy = "endTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<Event> eventsEndingAtThisTime = new HashSet<>();
+    private final Set<Event> eventsEndingAtThisTime = new HashSet<>();
 
 
-    Time(){}
+    Time() {
+    }
 
     private Time(Builder builder) {
         this.timeId = builder.timeId;
@@ -68,6 +69,18 @@ public class Time {
         return Objects.hash(timeId, timeInterval);
     }
 
+    public Set<Shift> getShifts() {
+        return shifts;
+    }
+
+    public Set<Event> getEventsStartingAtThisTime() {
+        return eventsStartingAtThisTime;
+    }
+
+    public Set<Event> getEventsEndingAtThisTime() {
+        return eventsEndingAtThisTime;
+    }
+
     public static class Builder {
         private Long timeId;
         private java.sql.Time timeInterval;
@@ -85,17 +98,5 @@ public class Time {
         public Time build() {
             return new Time(this);
         }
-    }
-
-    public Set<Shift> getShifts() {
-        return shifts;
-    }
-
-    public Set<Event> getEventsStartingAtThisTime() {
-        return eventsStartingAtThisTime;
-    }
-
-    public Set<Event> getEventsEndingAtThisTime() {
-        return eventsEndingAtThisTime;
     }
 }

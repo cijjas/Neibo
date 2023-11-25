@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models.MainEntities;
 
-import org.hibernate.annotations.Formula;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -14,7 +12,7 @@ public class Shift {
     @SequenceGenerator(sequenceName = "shifts_shiftid_seq", name = "shifts_shiftid_seq", allocationSize = 1)
     private Long shiftId;
 
-    @ManyToMany(mappedBy = "availableShifts", cascade=CascadeType.ALL)
+    @ManyToMany(mappedBy = "availableShifts", cascade = CascadeType.ALL)
     private List<Amenity> amenities;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -31,7 +29,8 @@ public class Shift {
     @Transient
     private boolean taken;
 
-    Shift(){}
+    Shift() {
+    }
 
     private Shift(Builder builder) {
         this.shiftId = builder.shiftId;

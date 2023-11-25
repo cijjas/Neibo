@@ -30,7 +30,8 @@ public class Availability {
             inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> bookedByUsers;
 
-    public Availability(){}
+    public Availability() {
+    }
 
     private Availability(Builder builder) {
         this.amenityAvailabilityId = builder.amenityAvailabilityId;

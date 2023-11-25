@@ -17,17 +17,18 @@ public class Amenity {
     @Column(name = "description", length = 512, unique = true, nullable = false)
     private String description;
 
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "neighborhoodid")
     private Neighborhood neighborhood;
 
-    @ManyToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "amenities_shifts_availability",
             joinColumns = @JoinColumn(name = "amenityid"),
             inverseJoinColumns = @JoinColumn(name = "shiftid"))
     private List<Shift> availableShifts;
 
-    Amenity() {}
+    Amenity() {
+    }
 
     private Amenity(Builder builder) {
         this.amenityId = builder.amenityId;
@@ -41,20 +42,40 @@ public class Amenity {
         return amenityId;
     }
 
+    public void setAmenityId(Long amenityId) {
+        this.amenityId = amenityId;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Neighborhood getNeighborhood() {
         return neighborhood;
     }
 
+    public void setNeighborhood(Neighborhood neighborhood) {
+        this.neighborhood = neighborhood;
+    }
+
     public List<Shift> getAvailableShifts() {
         return availableShifts;
+    }
+
+    public void setAvailableShifts(List<Shift> availableShifts) {
+        this.availableShifts = availableShifts;
     }
 
     @Override
@@ -103,25 +124,5 @@ public class Amenity {
         public Amenity build() {
             return new Amenity(this);
         }
-    }
-
-    public void setAmenityId(Long amenityId) {
-        this.amenityId = amenityId;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setNeighborhood(Neighborhood neighborhood) {
-        this.neighborhood = neighborhood;
-    }
-
-    public void setAvailableShifts(List<Shift> availableShifts) {
-        this.availableShifts = availableShifts;
     }
 }

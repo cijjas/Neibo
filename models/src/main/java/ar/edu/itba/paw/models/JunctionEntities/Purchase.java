@@ -26,44 +26,14 @@ public class Purchase implements Serializable {
     @Column(name = "units")
     private Long units;
 
-    public Purchase() {}
+    public Purchase() {
+    }
 
     public Purchase(Builder builder) {
         this.purchaseId = builder.purchaseId;
         this.product = builder.product;
         this.user = builder.user;
         this.units = builder.units;
-    }
-
-    public static class Builder {
-        private Long purchaseId;
-        private Product product;
-        private User user;
-        private Long units;
-
-        public Builder purchaseId(Long purchaseId) {
-            this.purchaseId = purchaseId;
-            return this;
-        }
-
-        public Builder product(Product product) {
-            this.product = product;
-            return this;
-        }
-
-        public Builder user(User user) {
-            this.user = user;
-            return this;
-        }
-
-        public Builder units(Long units) {
-            this.units = units;
-            return this;
-        }
-
-        public Purchase build() {
-            return new Purchase(this);
-        }
     }
 
     public Long getPurchaseId() {
@@ -109,5 +79,36 @@ public class Purchase implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(purchaseId, product, user, units);
+    }
+
+    public static class Builder {
+        private Long purchaseId;
+        private Product product;
+        private User user;
+        private Long units;
+
+        public Builder purchaseId(Long purchaseId) {
+            this.purchaseId = purchaseId;
+            return this;
+        }
+
+        public Builder product(Product product) {
+            this.product = product;
+            return this;
+        }
+
+        public Builder user(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public Builder units(Long units) {
+            this.units = units;
+            return this;
+        }
+
+        public Purchase build() {
+            return new Purchase(this);
+        }
     }
 }

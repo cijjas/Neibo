@@ -18,7 +18,8 @@ public class Department {
     @OneToMany(mappedBy = "department")
     private Set<Product> products;
 
-    Department(){}
+    Department() {
+    }
 
     private Department(Builder builder) {
         this.departmentId = builder.departmentId;

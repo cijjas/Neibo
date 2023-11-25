@@ -17,24 +17,25 @@ public class Image {
     private byte[] image;
 
     @OneToMany(mappedBy = "image")
-    private Set<Resource> resources = new HashSet<>();
+    private final Set<Resource> resources = new HashSet<>();
 
     @OneToMany(mappedBy = "profilePicture")
-    private Set<User> users = new HashSet<>();
+    private final Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "postPicture")
-    private Set<Post> posts = new HashSet<>();
+    private final Set<Post> posts = new HashSet<>();
 
     @OneToMany(mappedBy = "primaryPicture")
-    private Set<Product> productsWithThisImageAsPrimary = new HashSet<>();
+    private final Set<Product> productsWithThisImageAsPrimary = new HashSet<>();
 
     @OneToMany(mappedBy = "secondaryPicture")
-    private Set<Product> productsWithThisImageAsSecondary = new HashSet<>();
+    private final Set<Product> productsWithThisImageAsSecondary = new HashSet<>();
 
     @OneToMany(mappedBy = "tertiaryPicture")
-    private Set<Product> productsWithThisImageAsTertiary = new HashSet<>();
+    private final Set<Product> productsWithThisImageAsTertiary = new HashSet<>();
 
-    Image() {}
+    Image() {
+    }
 
     public Image(Long imageId, byte[] image) {
         this.imageId = imageId;
@@ -45,12 +46,12 @@ public class Image {
         return imageId;
     }
 
-    public byte[] getImage() {
-        return image;
-    }
-
     public void setImageId(Long imageId) {
         this.imageId = imageId;
+    }
+
+    public byte[] getImage() {
+        return image;
     }
 
     public void setImage(byte[] image) {

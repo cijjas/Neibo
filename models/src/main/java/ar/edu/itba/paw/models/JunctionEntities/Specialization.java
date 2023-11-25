@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.models.JunctionEntities;
 
-import ar.edu.itba.paw.models.compositeKeys.SpecializationKey;
 import ar.edu.itba.paw.models.MainEntities.Profession;
 import ar.edu.itba.paw.models.MainEntities.Worker;
+import ar.edu.itba.paw.models.compositeKeys.SpecializationKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -33,12 +33,12 @@ public class Specialization implements Serializable {
         this.profession = profession;
     }
 
-    public void setId(SpecializationKey id) {
-        this.id = id;
-    }
-
     public SpecializationKey getId() {
         return id;
+    }
+
+    public void setId(SpecializationKey id) {
+        this.id = id;
     }
 
     public Worker getWorker() {

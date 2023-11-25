@@ -49,7 +49,7 @@ public class Product {
 
     //junction tables:
     @ManyToMany
-    @JoinTable(name = "products_users__inquiries", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
+    @JoinTable(name = "products_users_inquiries", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> inquirers;
 
     @ManyToMany
@@ -71,7 +71,8 @@ public class Product {
     @Transient
     private String priceDecimalString;
 
-    Product() {}
+    Product() {
+    }
 
     private Product(Product.Builder builder) {
         this.productId = builder.productId;
@@ -90,6 +91,10 @@ public class Product {
 
     public Long getProductId() {
         return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public String getName() {
@@ -128,6 +133,14 @@ public class Product {
         return price;
     }
 
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
     public Date getCreationDate() {
         return creationDate;
     }
@@ -137,33 +150,31 @@ public class Product {
     }
 
     public String getPriceIntegerString() {
-        if(priceIntegerString == null){
-            this.priceIntegerString = "$" +String.format("%,.0f", this.price).replace(".0", "");
+        if (priceIntegerString == null) {
+            this.priceIntegerString = "$" + String.format("%,.0f", this.price).replace(".0", "");
         }
         return priceIntegerString;
     }
+
+    public void setPriceIntegerString(String priceIntegerString) {
+        this.priceIntegerString = priceIntegerString;
+    }
+
     public String getPriceDecimalString() {
-        if(priceDecimalString == null){
+        if (priceDecimalString == null) {
             this.priceDecimalString = String.valueOf(this.price).split("\\.")[1];
-            if(this.priceDecimalString.length() == 1)
+            if (this.priceDecimalString.length() == 1)
                 this.priceDecimalString += "0";
         }
         return priceDecimalString;
     }
-    public void setPrice(double price) {
-        this.price = price;
+
+    public void setPriceDecimalString(String priceDecimalString) {
+        this.priceDecimalString = priceDecimalString;
     }
 
     public boolean isUsed() {
         return used;
-    }
-
-    public void setUsed(boolean used) {
-        this.used = used;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
     }
 
     public Image getPrimaryPicture() {
@@ -214,12 +225,12 @@ public class Product {
         this.requesters = requesters;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
     public Boolean getUsed() {
         return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
     }
 
     public void setUsed(Boolean used) {
@@ -228,6 +239,10 @@ public class Product {
 
     public Department getDepartment() {
         return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 
     public Date getPurchaseDate() {
@@ -253,10 +268,6 @@ public class Product {
                 ", priceIntegerString='" + priceIntegerString + '\'' +
                 ", priceDecimalString='" + priceDecimalString + '\'' +
                 '}';
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
     }
 
     public static class Builder {
@@ -356,14 +367,5 @@ public class Product {
             }
             return product;
         }
-    }
-
-
-    public void setPriceIntegerString(String priceIntegerString) {
-        this.priceIntegerString = priceIntegerString;
-    }
-
-    public void setPriceDecimalString(String priceDecimalString) {
-        this.priceDecimalString = priceDecimalString;
     }
 }

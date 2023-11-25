@@ -25,7 +25,8 @@ public class Resource {
     @JoinColumn(name = "neighborhoodid", nullable = false)
     private Neighborhood neighborhood;
 
-    Resource() {}
+    Resource() {
+    }
 
     private Resource(Builder builder) {
         this.title = builder.title;

@@ -35,6 +35,8 @@ public class RequestDaoImplTest {
     public static final String MAIL2 = "user2@gmail.com";
     public static final String MAIL3 = "user3@gmail.com";
     public static final String REPLY = "This is a reply";
+    public static final int PAGE = 1;
+    public static final int SIZE = 10;
     @Autowired
     private DataSource ds;
     @Autowired
@@ -84,7 +86,7 @@ public class RequestDaoImplTest {
         testInserter.createRequest(pKey, uKey1);
 
         // Exercise
-        List<Request> requests = requestDao.getRequestsByProductId(pKey, 1, 10);
+        List<Request> requests = requestDao.getRequestsByProductId(pKey, PAGE, SIZE);
 
         // Validations & Post Conditions
         assertFalse(requests.isEmpty());
@@ -96,7 +98,7 @@ public class RequestDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Request> requests = requestDao.getRequestsByProductId(1, 1, 10);
+        List<Request> requests = requestDao.getRequestsByProductId(1, PAGE, SIZE);
 
         // Validations & Post Conditions
         assertFalse(requests.isEmpty());
@@ -116,7 +118,7 @@ public class RequestDaoImplTest {
         testInserter.createRequest(pKey, uKey1);
 
         // Exercise
-        List<Request> requests = requestDao.getRequestsByProductAndUser(pKey, uKey1, 1, 10);
+        List<Request> requests = requestDao.getRequestsByProductAndUser(pKey, uKey1, PAGE, SIZE);
 
         // Validations & Post Conditions
         assertFalse(requests.isEmpty());
@@ -135,7 +137,7 @@ public class RequestDaoImplTest {
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
 
         // Exercise
-        List<Request> requests = requestDao.getRequestsByProductAndUser(pKey, uKey1, 1, 10);
+        List<Request> requests = requestDao.getRequestsByProductAndUser(pKey, uKey1, PAGE, SIZE);
 
         // Validations & Post Conditions
         assertTrue(requests.isEmpty());

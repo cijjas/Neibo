@@ -21,7 +21,8 @@ public class Profession {
     @JoinTable(name = "workers_professions", joinColumns = @JoinColumn(name = "professionid"), inverseJoinColumns = @JoinColumn(name = "workerid"))
     private Set<Worker> workers;
 
-    Profession(){}
+    Profession() {
+    }
 
     private Profession(Builder builder) {
         this.professionId = builder.professionId;

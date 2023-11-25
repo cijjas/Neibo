@@ -525,7 +525,8 @@ public class TestInserter {
         long longProduct = createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, departmentId, units);
         if ( buyerId != null )
             createPurchase(longProduct, buyerId, 1L);
-        return longProduct;    }
+        return longProduct;
+    }
 
     public long createProduct(String name, long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
                               long sellerId, Long buyerId, long departmentId){

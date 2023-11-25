@@ -1,11 +1,9 @@
 package ar.edu.itba.paw.models.JunctionEntities;
 
-import java.sql.Date;
-
-import ar.edu.itba.paw.models.MainEntities.Amenity;
 import ar.edu.itba.paw.models.MainEntities.User;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 @Entity
 @Table(name = "users_availability")
@@ -27,7 +25,8 @@ public class Booking {
     @Column(name = "date")
     private Date bookingDate;
 
-    public Booking() {}
+    public Booking() {
+    }
 
     private Booking(Builder builder) {
         this.bookingId = builder.bookingId;

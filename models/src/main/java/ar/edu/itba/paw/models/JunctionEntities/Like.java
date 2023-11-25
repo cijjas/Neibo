@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.models.JunctionEntities;
 
-import ar.edu.itba.paw.models.compositeKeys.LikeKey;
 import ar.edu.itba.paw.models.MainEntities.Post;
 import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.compositeKeys.LikeKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -33,28 +33,28 @@ public class Like implements Serializable {
         this.user = user;
     }
 
-    public void setId(LikeKey id) {
-        this.id = id;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public LikeKey getId() {
         return id;
+    }
+
+    public void setId(LikeKey id) {
+        this.id = id;
     }
 
     public Post getPost() {
         return post;
     }
 
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
     public User getUser() {
         return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override

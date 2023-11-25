@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.models.JunctionEntities;
 
-import ar.edu.itba.paw.models.compositeKeys.ChannelMappingKey;
 import ar.edu.itba.paw.models.MainEntities.Channel;
 import ar.edu.itba.paw.models.MainEntities.Neighborhood;
+import ar.edu.itba.paw.models.compositeKeys.ChannelMappingKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -42,28 +42,28 @@ public class ChannelMapping implements Serializable {
                 '}';
     }
 
-    public void setId(ChannelMappingKey id) {
-        this.id = id;
-    }
-
-    public void setNeighborhood(Neighborhood neighborhood) {
-        this.neighborhood = neighborhood;
-    }
-
-    public void setChannel(Channel channel) {
-        this.channel = channel;
-    }
-
     public ChannelMappingKey getId() {
         return id;
+    }
+
+    public void setId(ChannelMappingKey id) {
+        this.id = id;
     }
 
     public Neighborhood getNeighborhood() {
         return neighborhood;
     }
 
+    public void setNeighborhood(Neighborhood neighborhood) {
+        this.neighborhood = neighborhood;
+    }
+
     public Channel getChannel() {
         return channel;
+    }
+
+    public void setChannel(Channel channel) {
+        this.channel = channel;
     }
 
     @Override

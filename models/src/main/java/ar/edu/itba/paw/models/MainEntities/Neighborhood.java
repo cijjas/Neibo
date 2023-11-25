@@ -21,22 +21,23 @@ public class Neighborhood {
     private Set<Neighborhood> channels;
 
     @OneToMany(mappedBy = "neighborhood")  // mappedBy refers to the field in the User entity
-    private Set<User> users = new HashSet<>();
+    private final Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "neighborhood")
-    private Set<Contact> contacts = new HashSet<>();
+    private final Set<Contact> contacts = new HashSet<>();
 
     @OneToMany(mappedBy = "neighborhood")
-    private Set<Event> events = new HashSet<>();
+    private final Set<Event> events = new HashSet<>();
 
     @OneToMany(mappedBy = "neighborhood")
-    private Set<Resource> resources = new HashSet<>();
+    private final Set<Resource> resources = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "workers_neighborhoods", joinColumns = @JoinColumn(name = "neighborhoodid"), inverseJoinColumns = @JoinColumn(name = "workerid"))
     private Set<Worker> workers;
 
-    Neighborhood(){}
+    Neighborhood() {
+    }
 
     private Neighborhood(Builder builder) {
         this.neighborhoodId = builder.neighborhoodId;

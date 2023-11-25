@@ -112,26 +112,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> searchInProductsBought(long userId, long neighborhoodId,String searchQuery, int page, int size){
-        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, ProductStatus.BOUGHT, page, size);
-    }
-
-    @Override
-    public List<Product> searchInProductsSold(long userId, long neighborhoodId, String searchQuery, int page, int size){
-        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, ProductStatus.SOLD, page, size);
-    }
-
-    @Override
-    public List<Product> searchInProductsSelling(long userId, long neighborhoodId, String searchQuery, int page, int size){
-        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, ProductStatus.SELLING, page, size);
-    }
-
-    @Override
-    public List<Product> searchInProductsBeingSold(long neighborhoodId, String searchQuery, int page, int size){
-        return productDao.searchInAllProductsBeingSold(neighborhoodId, searchQuery, page, size);
-    }
-
-    @Override
     public int getProductsTotalPages(long neighborhoodId, int size, Department department){
         return (int) Math.ceil((double) getProductsCountByCriteria(neighborhoodId, department) / size);
     }
@@ -158,6 +138,13 @@ public class ProductServiceImpl implements ProductService {
         LOGGER.info("Updating Product {}", productId);
         double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
         productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, getImageId(pictureFiles[0]), getImageId(pictureFiles[1]), getImageId(pictureFiles[2]));
+    }
+
+    @Override
+    public void restockProduct(long productId, long extraUnits) {
+        LOGGER.info("Restocking Product {}", productId);
+        Product product = productDao.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        product.setRemainingUnits(product.getRemainingUnits()+extraUnits);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

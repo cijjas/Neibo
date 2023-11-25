@@ -23,20 +23,20 @@ public class ChannelMappingKey implements Serializable {
                 '}';
     }
 
-    public void setNeighborhoodId(Long neighborhoodId) {
-        this.neighborhoodId = neighborhoodId;
-    }
-
-    public void setChannelId(Long channelId) {
-        this.channelId = channelId;
-    }
-
     public Long getNeighborhoodId() {
         return neighborhoodId;
     }
 
+    public void setNeighborhoodId(Long neighborhoodId) {
+        this.neighborhoodId = neighborhoodId;
+    }
+
     public Long getChannelId() {
         return channelId;
+    }
+
+    public void setChannelId(Long channelId) {
+        this.channelId = channelId;
     }
 
     @Override

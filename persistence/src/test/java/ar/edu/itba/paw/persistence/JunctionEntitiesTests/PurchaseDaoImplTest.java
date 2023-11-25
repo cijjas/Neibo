@@ -54,7 +54,7 @@ public class PurchaseDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
     @Test
-    public void testCreateRequest() {
+    public void testCreatePurchase() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -65,7 +65,7 @@ public class PurchaseDaoImplTest {
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, null, dKey1);
 
         // Exercise
-        Purchase purchase = purchaseDao.createPurchase(uKey1, pKey, UNITS_BOUGHT);
+        Purchase purchase = purchaseDao.createPurchase(pKey, uKey1, UNITS_BOUGHT);
 
         // Validations & Post Conditions
         em.flush();
