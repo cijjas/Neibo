@@ -405,7 +405,7 @@
           <c:set var="messagePlaceholder">
             <spring:message code="Message"/>
           </c:set>
-          <form:textarea  path="requestMessage" class="cool-input marketplace-input" id="request-message" name="message" rows="5" placeholder="${messagePlaceholder}"/>
+          <form:textarea  path="requestMessage" class="cool-input marketplace-input textarea-min-max" id="request-message" name="message" rows="5" placeholder="${messagePlaceholder}"/>
           <form:errors path="requestMessage" cssClass="error" element="p" cssStyle="padding-left: 5px"/>
         </div>
         <button type="submit"  onclick="document.getElementById('loader-container').style.display = 'flex';" class=" w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">

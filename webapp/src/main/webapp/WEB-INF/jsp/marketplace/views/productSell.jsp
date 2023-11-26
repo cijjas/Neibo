@@ -109,7 +109,7 @@
                             <spring:message code='Description' var="descriptionPlaceholder"/>
                             <form:textarea
                                     path="description"
-                                    class="cool-input marketplace-input"
+                                    class="cool-input marketplace-input textarea-min-max"
                                     rows="5"
                                     placeholder="${descriptionPlaceholder}"/>
                             <form:errors path="description" cssClass="error pt-1" element="p"/>

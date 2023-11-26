@@ -82,10 +82,6 @@ public class MarketplaceController extends GlobalControllerAdvice{
         ModelAndView mav = new ModelAndView("marketplace/views/myPurchases");
         mav.addObject("channel", "MyPurchases");
         mav.addObject("products", products);
-<<<<<<< HEAD
-=======
-        mav.addObject("loggedUser", getLoggedUser());
->>>>>>> 1d87f535747d89d027fde8c54858eb1c29e1e7b1
         mav.addObject("page", page);
         mav.addObject("totalPages", prs.getProductsBoughtTotalPages(getLoggedUser().getUserId(), size));
         mav.addObject("contextPath", "/marketplace/my-purchases");
@@ -118,10 +114,6 @@ public class MarketplaceController extends GlobalControllerAdvice{
         ModelAndView mav = new ModelAndView("marketplace/views/mySales");
         mav.addObject("products", prs.getProductsSold(getLoggedUser().getUserId(), page, size));
         mav.addObject("channel", "MySales");
-<<<<<<< HEAD
-=======
-        mav.addObject("loggedUser", getLoggedUser());
->>>>>>> 1d87f535747d89d027fde8c54858eb1c29e1e7b1
         mav.addObject("page", page);
         mav.addObject("totalPages", prs.getProductsSoldTotalPages(getLoggedUser().getUserId(), size));
         mav.addObject("contextPath", "/marketplace/my-sales");
@@ -139,8 +131,9 @@ public class MarketplaceController extends GlobalControllerAdvice{
         LOGGER.info("User arriving at '/marketplace/my-requests/{}'", productId);
 
         ModelAndView mav = new ModelAndView("marketplace/views/listingRequests");
-        mav.addObject("requestList", rqs.getRequestsByProductId(productId, page, size));
         System.out.println("HOLA" + rqs.getRequestsByProductId(productId, 1, 10));
+
+        mav.addObject("requestList", rqs.getRequestsByProductId(productId, page, size));
         mav.addObject("requests", prs.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")).getRequesters());
         mav.addObject("product", prs.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")));
         return mav;
@@ -188,10 +181,6 @@ public class MarketplaceController extends GlobalControllerAdvice{
 
         mav.addObject("myProductList", prs.getProductsSelling(getLoggedUser().getUserId(), page, size));
         mav.addObject("channel", "MyListings");
-<<<<<<< HEAD
-=======
-        mav.addObject("loggedUser", getLoggedUser());
->>>>>>> 1d87f535747d89d027fde8c54858eb1c29e1e7b1
         mav.addObject("page", page);
         mav.addObject("totalPages", prs.getProductsSellingTotalPages(getLoggedUser().getUserId(), size));
         mav.addObject("contextPath", "/marketplace/my-listings");
@@ -206,10 +195,6 @@ public class MarketplaceController extends GlobalControllerAdvice{
         ModelAndView mav = new ModelAndView("marketplace/views/productSell");
         mav.addObject("channel", "Sell");
         mav.addObject("departmentList", Department.getDepartments());
-<<<<<<< HEAD
-=======
-        mav.addObject("loggedUser", getLoggedUser());
->>>>>>> 1d87f535747d89d027fde8c54858eb1c29e1e7b1
         return mav;
     }
 
@@ -223,16 +208,8 @@ public class MarketplaceController extends GlobalControllerAdvice{
             LOGGER.error("Error in form 'listingForm'");
             return createListingForm(listingForm);
         }
-<<<<<<< HEAD
-        User user = sessionUtils.getLoggedUser();
-        prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles(), listingForm.getQuantity());
-=======
         User user = getLoggedUser();
-/*
-        prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles());
-        ahora tienen que venir las units tambn
-*/
->>>>>>> 1d87f535747d89d027fde8c54858eb1c29e1e7b1
+        prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles(), listingForm.getQuantity());
         return new ModelAndView("redirect:/marketplace/my-listings");
     }
 
@@ -318,10 +295,6 @@ public class MarketplaceController extends GlobalControllerAdvice{
         LOGGER.info("User arriving at '/marketplace/products/" + department + "/" + productId +"/edit'");
         ModelAndView mav = new ModelAndView("marketplace/views/productEdit");
         mav.addObject("departmentList", Department.getDepartments());
-<<<<<<< HEAD
-=======
-        mav.addObject("loggedUser", getLoggedUser());
->>>>>>> 1d87f535747d89d027fde8c54858eb1c29e1e7b1
         mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
         return mav;
     }

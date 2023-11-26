@@ -96,7 +96,7 @@
                             <form:textarea
                                     id="description-textarea"
                                     path="description"
-                                    class="cool-input marketplace-input"
+                                    class="cool-input marketplace-input textarea-min-max"
                                     rows="5"
                                     placeholder="${descriptionPlaceholder}"/>
                             <form:errors path="description" cssClass="error" element="p"/>

@@ -50,7 +50,7 @@
 
                         <div class="d-flex flex-column justify-content-between align-items-center">
                             <spring:message code="Description" var="descriptionPlaceholder"/>
-                            <form:textarea path="description" class="cool-input" rows="5"
+                            <form:textarea path="description" class="cool-input textarea-min-max" rows="5"
                                            placeholder="${descriptionPlaceholder}" />
                             <script>
                                 document.querySelector('textarea').value = "${amenity.description}";
