@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models.MainEntities;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tags")
@@ -19,8 +20,7 @@ public class Tag {
     @JoinTable(name = "posts_tags", joinColumns = @JoinColumn(name = "tagid"), inverseJoinColumns = @JoinColumn(name = "postid"))
     private List<Post> posts;
 
-    public Tag() {
-        // Default constructor for JPA
+    Tag() {
     }
 
     private Tag(Builder builder) {
@@ -43,6 +43,7 @@ public class Tag {
     public void setPosts(List<Post> posts) {
         this.posts = posts;
     }
+
     @Override
     public String toString() {
         return "Tag{" +
@@ -68,5 +69,18 @@ public class Tag {
         public Tag build() {
             return new Tag(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Tag)) return false;
+        Tag tag = (Tag) o;
+        return Objects.equals(tagId, tag.tagId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tagId);
     }
 }

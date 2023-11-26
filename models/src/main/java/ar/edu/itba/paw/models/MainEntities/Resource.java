@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.MainEntities;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "resources")
@@ -25,8 +26,7 @@ public class Resource {
     @JoinColumn(name = "neighborhoodid", nullable = false)
     private Neighborhood neighborhood;
 
-    protected Resource() {
-        // Default constructor for JPA
+    Resource() {
     }
 
     private Resource(Builder builder) {
@@ -111,5 +111,18 @@ public class Resource {
         public Resource build() {
             return new Resource(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Resource)) return false;
+        Resource resource = (Resource) o;
+        return Objects.equals(resourceId, resource.resourceId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(resourceId);
     }
 }

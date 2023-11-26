@@ -53,13 +53,14 @@
                             <div class="w-100 f-r-c-c">
                                 <%--TITLE--%>
                                 <div class="w-75">
+                                    <spring:message code="Title" var="titlePlaceholder"/>
                                     <form:input
                                             path="title"
                                             type="text"
                                             class="cool-input marketplace-input font-weight-bold"
                                             name="title-field"
                                             id="title-field"
-                                            placeholder="Title"/>
+                                            placeholder="${titlePlaceholder}"/>
                                     <form:errors path="title" cssClass="error" element="p"/>
                                 </div>
 
@@ -105,9 +106,7 @@
 
                             <%--Description--%>
 
-                            <c:set var="descriptionPlaceholder">
-                                <spring:message code='Description'/>
-                            </c:set>
+                            <spring:message code='Description' var="descriptionPlaceholder"/>
                             <form:textarea
                                     path="description"
                                     class="cool-input marketplace-input"

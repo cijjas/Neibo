@@ -22,11 +22,11 @@ import java.util.List;
 
 @Repository
 public class RequestDaoImpl implements RequestDao {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PostDaoImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RequestDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
 
-    // --------------------------------------- PRODUCTS_USERS_REQUESTS INSERT ------------------------------------------
+    // --------------------------------------------- REQUESTS INSERT ---------------------------------------------------
 
     @Override
     public Request createRequest(long userId, long productId, String message) {

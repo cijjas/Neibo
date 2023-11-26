@@ -31,10 +31,4 @@ public interface UserDao {
     boolean isAttending(long eventId, long userId);
 
     List<User> getProductRequesters(long productId, int page, int size);
-
-    // ---------------------------------------------- USERS UPDATE -----------------------------------------------------
-
-    User setUserValues(final long id, final String password, final String name, final String surname,
-                       final Language language, final boolean darkMode, final long profilePictureId,
-                       final UserRole role, final int identification, final long neighborhoodId);
 }

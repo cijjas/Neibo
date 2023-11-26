@@ -56,7 +56,6 @@
         </c:choose>
     </p>
 
-
     <a id="goback-button" class="goback-button font-weight-bold"><spring:message code="GoBackToMainPage"/></a>
 
 </div>
@@ -69,7 +68,11 @@
             if (response.status === 200) {
                 if (role === 'WORKER') {
                     document.getElementById('goback-button').href = '${pageContext.request.contextPath}/services';
-                } else {
+                }
+                else if(role === 'UNVERIFIED'){
+                    document.getElementById('goback-button').href = '${pageContext.request.contextPath}/login';
+                }
+                else {
                     document.getElementById('goback-button').href = '${pageContext.request.contextPath}/feed';
                 }
             } else {

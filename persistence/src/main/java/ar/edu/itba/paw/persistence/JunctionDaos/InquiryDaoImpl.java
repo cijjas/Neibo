@@ -17,11 +17,11 @@ import java.util.Optional;
 
 @Repository
 public class InquiryDaoImpl implements InquiryDao {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PostDaoImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(InquiryDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
 
-    // ---------------------------------- USERS_PRODUCTS_INQUIRIES INSERT ----------------------------------------------
+    // ------------------------------------------ INQUIRIES INSERT -----------------------------------------------------
 
     @Override
     public Inquiry createInquiry(long userId, long productId, String message) {
@@ -36,18 +36,7 @@ public class InquiryDaoImpl implements InquiryDao {
         return inquiry;
     }
 
-    @Override
-    public Inquiry replyInquiry(long inquiryId, String reply) {
-        LOGGER.debug("Inserting Inquiry Reply with inquiry id {}", inquiryId);
-        Inquiry inquiry = em.find(Inquiry.class, inquiryId);
-        if (inquiry != null) {
-            inquiry.setReply(reply);
-            return inquiry;
-        }
-        return null;
-    }
-
-    // ---------------------------------- USERS_PRODUCTS_INQUIRIES SELECT ----------------------------------------------
+    // ------------------------------------------ INQUIRIES INSERT -----------------------------------------------------
 
     @Override
     public Optional<Inquiry> findInquiryById(long inquiryId) {

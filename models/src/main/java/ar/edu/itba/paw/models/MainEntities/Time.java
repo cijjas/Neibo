@@ -16,16 +16,17 @@ public class Time {
     private java.sql.Time timeInterval;
 
     @OneToMany(mappedBy = "startTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<Shift> shifts = new HashSet<>();
+    private final Set<Shift> shifts = new HashSet<>();
 
     @OneToMany(mappedBy = "startTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<Event> eventsStartingAtThisTime = new HashSet<>();
+    private final Set<Event> eventsStartingAtThisTime = new HashSet<>();
 
     @OneToMany(mappedBy = "endTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<Event> eventsEndingAtThisTime = new HashSet<>();
+    private final Set<Event> eventsEndingAtThisTime = new HashSet<>();
 
 
-    public Time(){}
+    Time() {
+    }
 
     private Time(Builder builder) {
         this.timeId = builder.timeId;
@@ -48,14 +49,6 @@ public class Time {
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Time time = (Time) o;
-        return Objects.equals(timeId, time.timeId) && Objects.equals(timeInterval, time.timeInterval);
-    }
-
     public Time plusHours(int hours) {
         return new Time.Builder()
                 .timeId(this.timeId)
@@ -63,9 +56,16 @@ public class Time {
                 .build();
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(timeId, timeInterval);
+    public Set<Shift> getShifts() {
+        return shifts;
+    }
+
+    public Set<Event> getEventsStartingAtThisTime() {
+        return eventsStartingAtThisTime;
+    }
+
+    public Set<Event> getEventsEndingAtThisTime() {
+        return eventsEndingAtThisTime;
     }
 
     public static class Builder {
@@ -87,15 +87,16 @@ public class Time {
         }
     }
 
-    public Set<Shift> getShifts() {
-        return shifts;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Time)) return false;
+        Time time = (Time) o;
+        return Objects.equals(timeId, time.timeId);
     }
 
-    public Set<Event> getEventsStartingAtThisTime() {
-        return eventsStartingAtThisTime;
-    }
-
-    public Set<Event> getEventsEndingAtThisTime() {
-        return eventsEndingAtThisTime;
+    @Override
+    public int hashCode() {
+        return Objects.hash(timeId);
     }
 }

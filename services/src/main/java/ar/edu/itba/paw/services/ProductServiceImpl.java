@@ -1,13 +1,13 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.Department;
-import ar.edu.itba.paw.enums.SearchVariant;
+import ar.edu.itba.paw.enums.ProductStatus;
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
-import ar.edu.itba.paw.interfaces.services.EmailService;
+import ar.edu.itba.paw.interfaces.persistence.PurchaseDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.models.MainEntities.Image;
-import ar.edu.itba.paw.models.MainEntities.Post;
 import ar.edu.itba.paw.models.MainEntities.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,54 +16,35 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.ConsoleHandler;
 
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ImageServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
     private final ProductDao productDao;
+    private final PurchaseDao purchaseDao;
     private final ImageService imageService;
 
-
     @Autowired
-    public ProductServiceImpl(final ProductDao productDao, final ImageService imageService) {
+    public ProductServiceImpl(final ProductDao productDao, final PurchaseDao purchaseDao, final ImageService imageService) {
         this.productDao = productDao;
+        this.purchaseDao = purchaseDao;
         this.imageService = imageService;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
-    public Product createProduct(long userId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
+    public Product createProduct(long userId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, long units) {
         LOGGER.info("User {} Creating Product {}", userId, name);
         double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
         Long[] idArray = {0L, 0L, 0L};
         for(int i = 0; i < pictureFiles.length; i++){
             idArray[i] = getImageId(pictureFiles[i]);
         }
-        return productDao.createProduct(userId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2]);
-    }
-
-    private Long getImageId(MultipartFile imageFile) {
-        Image i = null;
-        if (imageFile != null && !imageFile.isEmpty()) {
-            i = imageService.storeImage(imageFile);
-        }
-        return i == null ? 0 : i.getImageId();
-    }
-
-    @Override
-    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
-        LOGGER.info("Updating Product {}", productId);
-        double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
-        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, getImageId(pictureFiles[0]), getImageId(pictureFiles[1]), getImageId(pictureFiles[2]));
-    }
-
-    @Override
-    public boolean deleteProduct(long productId) {
-        LOGGER.info("Deleting Product {}", productId);
-        return productDao.deleteProduct(productId);
+        return productDao.createProduct(userId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2], units);
     }
 
     @Override
@@ -121,29 +102,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean markAsBought(long buyerId, long productId) {
+    public void markAsBought(long buyerId, long productId, long units) {
         LOGGER.info("Marking Product {} as bought by user {}", productId, buyerId);
-        return productDao.markAsBought(buyerId, productId);
-    }
-
-    @Override
-    public List<Product> searchInProductsBought(long userId, long neighborhoodId,String searchQuery, int page, int size){
-        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.BOUGHT, page, size);
-    }
-
-    @Override
-    public List<Product> searchInProductsSold(long userId, long neighborhoodId, String searchQuery, int page, int size){
-        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.SOLD, page, size);
-    }
-
-    @Override
-    public List<Product> searchInProductsSelling(long userId, long neighborhoodId, String searchQuery, int page, int size){
-        return productDao.searchProductsByName(userId, neighborhoodId, searchQuery, SearchVariant.SELLING, page, size);
-    }
-
-    @Override
-    public List<Product> searchInProductsBeingSold(long neighborhoodId, String searchQuery, int page, int size){
-        return productDao.searchInAllProductsBeingSold(neighborhoodId, searchQuery, page, size);
+        purchaseDao.createPurchase(productId, buyerId, units);
+        Product product = productDao.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        product.setRemainingUnits(product.getRemainingUnits()-units);
     }
 
     @Override
@@ -165,4 +128,43 @@ public class ProductServiceImpl implements ProductService {
     public int getProductsBoughtTotalPages(long userId, int size){
         return (int) Math.ceil((double) getProductsBoughtCount(userId) / size);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void restockProduct(long productId, long extraUnits) {
+        LOGGER.info("Restocking Product {}", productId);
+        Product product = productDao.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        product.setRemainingUnits(product.getRemainingUnits()+extraUnits);
+    }
+
+    @Override
+    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
+        LOGGER.info("Updating Product {}", productId);
+        double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
+        Long[] idArray = {0L, 0L, 0L};
+        for(int i = 0; i < pictureFiles.length; i++){
+            idArray[i] = getImageId(pictureFiles[i]);
+        }
+        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2]);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean deleteProduct(long productId) {
+        LOGGER.info("Deleting Product {}", productId);
+        return productDao.deleteProduct(productId);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    private Long getImageId(MultipartFile imageFile) {
+        Image i = null;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            i = imageService.storeImage(imageFile);
+        }
+        return i == null ? 0 : i.getImageId();
+    }
+
 }

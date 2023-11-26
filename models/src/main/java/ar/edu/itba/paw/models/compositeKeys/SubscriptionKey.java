@@ -18,9 +18,9 @@ public class SubscriptionKey implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof SubscriptionKey)) return false;
         SubscriptionKey that = (SubscriptionKey) o;
-        return postId.equals(that.postId) && userId.equals(that.userId);
+        return Objects.equals(postId, that.postId) && Objects.equals(userId, that.userId);
     }
 
     @Override

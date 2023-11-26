@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.enums;
 
 
+import ar.edu.itba.paw.Pair;
+
 import java.sql.Time;
 import java.util.Arrays;
 import java.util.List;
@@ -59,11 +61,10 @@ public enum StandardTime {
 
     @Override
     public String toString() {
-        // Remove the last section (seconds) from the time value
         String[] parts = value.split(":");
         if (parts.length >= 2) {
             return parts[0] + ":" + parts[1];
         }
-        return value; // Return the original value if splitting fails
+        return value;
     }
 }

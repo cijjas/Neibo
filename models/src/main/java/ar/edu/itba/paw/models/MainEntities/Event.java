@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.models.MainEntities;
 
-import ar.edu.itba.paw.models.MainEntities.Neighborhood;
-
 import javax.persistence.*;
-import java.sql.Time;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -15,34 +12,29 @@ import java.util.Set;
 @Table(name = "events")
 public class Event {
 
+    @Transient
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "events_eventid_seq")
     @SequenceGenerator(sequenceName = "events_eventid_seq", name = "events_eventid_seq", allocationSize = 1)
     @Column(name = "eventid")
     private Long eventId;
-
     @Column(name = "name", length = 255, nullable = false)
     private String name;
-
     @Column(name = "description", length = 512, nullable = false)
     private String description;
-
     @Column(name = "date", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date date;
-
     @ManyToOne
     @JoinColumn(name = "neighborhoodid")
     private Neighborhood neighborhood;
-
     @ManyToOne
     @JoinColumn(name = "starttimeid")
     private ar.edu.itba.paw.models.MainEntities.Time startTime;
-
     @ManyToOne
     @JoinColumn(name = "endtimeid")
     private ar.edu.itba.paw.models.MainEntities.Time endTime;
-
     @ManyToMany
     @JoinTable(
             name = "events_users",
@@ -51,11 +43,9 @@ public class Event {
     )
     private Set<User> attendees;
 
-    @Transient
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-
     // Constructor
-    public Event() {   }
+    Event() {
+    }
 
 
     // Getters and Setters
@@ -211,7 +201,7 @@ public class Event {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Event)) return false;
         Event event = (Event) o;
         return Objects.equals(eventId, event.eventId);
     }

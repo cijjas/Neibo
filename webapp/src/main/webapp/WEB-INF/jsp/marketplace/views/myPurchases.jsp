@@ -38,91 +38,111 @@
                 </jsp:include>
             </c:if>
 
-            <div class="row m-0 product-grid-row">
-               <c:choose>
-                   <c:when test="${empty products}">
-                       <div class="no-posts-found">
-                           <i class="circle-icon fa-solid fa-magnifying-glass"></i>
-                           <spring:message code="Purchases.not.found"/>
-                       </div>
-                   </c:when>
-                   <c:otherwise>
-                       <div class="w-100 f-c-c-c g-1 ">
-                           <c:forEach var="product" items="${products}">
-                               <div class="cool-static-container w-100 f-c-s-s g-0 p-0">
+            <div class="cool-static-container w-100">
+                <div class="f-c-c-c w-100 mb-3">
+                    <div class="f-r-c-c w-50 pt-2 pb-2">
+                        <a href="${contextPath}/marketplace/my-purchases" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "MyPurchases" ? 'active' : ''}">
+                        <span class="font-size-12">
+                            <i class="fa-solid fa-bag-shopping"></i>
+                            <span class="hide-text">
+                                <spring:message code="My.purchases"/>
+                            </span>
+                        </span>
+                        </a>
+                        <a href="${contextPath}/marketplace/currently-requesting" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "CurrentlyRequesting" ? 'active' : ''}">
+                        <span class="font-size-12">
+                            <i class="fa-solid fa-rectangle-list"></i>
+                            <span class="hide-text">
+                                <spring:message code="My.requests"/>
+                            </span>
+                        </span>
+                        </a>
+                    </div>
+                </div>
+
+                <c:choose>
+                    <c:when test="${empty products}">
+                        <div class="no-posts-found">
+                            <i class="circle-icon fa-solid fa-magnifying-glass"></i>
+                            <spring:message code="Purchases.not.found"/>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="w-100 f-c-c-c g-1 ">
+                            <c:forEach var="product" items="${products}">
+                                <div class="cool-static-container w-100 f-c-s-s g-0 p-0">
                                     <div class="p-3 pl-4 w-100 h-100">
                                         <c:out value="${product.purchaseDate}"/>
                                     </div>
-                                   <div class="divider m-0"></div>
-                                   <div class="container">
-                                       <div class="f-r-c-c w-100 g-1">
-                                           <div class="pl-0">
-                                               <div class="purchased-product-image f-c-c-c placeholder-glow">
-                                                   <img
-                                                           id="purchased-product-image-${product.productId}"
-                                                           src=""
-                                                           class="placeholder"
-                                                           alt="purchased_product_image_${product.productId}"
-                                                   />
-                                                   <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
-                                                   <script>
-                                                       (function () {
-                                                           getImageInto("purchased-product-image-${product.productId}",${empty product.primaryPicture.imageId ? -2 : product.primaryPicture.imageId}, "${pageContext.request.contextPath}")
-                                                       })();
-                                                   </script>
-                                               </div>
-                                           </div>
+                                    <div class="divider m-0"></div>
+                                    <div class="container">
+                                        <div class="f-r-c-c w-100 g-1">
+                                            <div class="pl-0">
+                                                <div class="purchased-product-image f-c-c-c placeholder-glow">
+                                                    <img
+                                                            id="purchased-product-image-${product.productId}"
+                                                            src=""
+                                                            class="placeholder"
+                                                            alt="purchased_product_image_${product.productId}"
+                                                    />
+                                                    <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
+                                                    <script>
+                                                        (function () {
+                                                            getImageInto("purchased-product-image-${product.productId}",${empty product.primaryPicture.imageId ? -2 : product.primaryPicture.imageId}, "${pageContext.request.contextPath}")
+                                                        })();
+                                                    </script>
+                                                </div>
+                                            </div>
 
-                                           <div class="f-c-s-s  w-100 p-4">
-                                               <div class="f-r-sb-c g-0 w-100">
+                                            <div class="f-c-s-s  w-100 p-4">
+                                                <div class="f-r-sb-c g-0 w-100">
                                                     <span class="font-weight-bold font-size-16">
-                                                        ${product.name}
+                                                            ${product.name}
                                                     </span>
-                                                   <c:choose>
-                                                       <c:when test="${product.used}">
-                                                           <div class="used-tag used font-weight-normal">
-                                                               <spring:message code="Used"/>
-                                                           </div>
-                                                       </c:when>
-                                                       <c:otherwise>
-                                                           <div class="used-tag new font-weight-normal">
-                                                               <spring:message code="New"/>
-                                                           </div>
-                                                       </c:otherwise>
-                                                   </c:choose>
+                                                    <c:choose>
+                                                        <c:when test="${product.used}">
+                                                            <div class="used-tag used font-weight-normal">
+                                                                <spring:message code="Used"/>
+                                                            </div>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <div class="used-tag new font-weight-normal">
+                                                                <spring:message code="New"/>
+                                                            </div>
+                                                        </c:otherwise>
+                                                    </c:choose>
 
-                                               </div>
-                                               <div class="f-r-c-c g-05" >
+                                                </div>
+                                                <div class="f-r-c-c g-05" >
                                                    <span class="font-weight-normal">
                                                     <spring:message code="Sold.by"/>
                                                    </span>
-                                                   <span style="color: var(--lila)">
+                                                    <span style="color: var(--lila)">
                                                        <c:out value="${product.seller.name}"/>
                                                    </span>
-                                               </div>
+                                                </div>
 
-                                               <div class="f-r-c-c g-0">
+                                                <div class="f-r-c-c g-0">
                                                    <span class="price font-size-20 font-weight-normal ">
                                                         <c:out value="${product.priceIntegerString}"/>
                                                    </span>
-                                                   <div class="f-c-s-c pl-1" style="height: 20px">
+                                                    <div class="f-c-s-c pl-1" style="height: 20px">
                                                        <span class="cents c-light-text font-size-12 font-weight-normal">
                                                             <c:out value="${product.priceDecimalString}"/>
                                                        </span>
-                                                   </div>
-                                               </div>
-                                           </div>
-                                       </div>
-                                   </div>
-                               </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                           </c:forEach>
-                       </div>
-                   </c:otherwise>
-               </c:choose>
-
-
+                            </c:forEach>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
+
 
             <c:if test="${totalPages >  1}">
                 <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">

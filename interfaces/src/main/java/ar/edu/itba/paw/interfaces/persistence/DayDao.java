@@ -8,7 +8,6 @@ public interface DayDao {
 
     // ------------------------------------------------ DAYS INSERT ----------------------------------------------------
 
-    // Weirdly used, maybe to add some special day like holidays
     Day createDay(String day);
 
     // ------------------------------------------------ DAYS SELECT ----------------------------------------------------

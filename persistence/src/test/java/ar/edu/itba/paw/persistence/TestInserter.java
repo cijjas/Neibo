@@ -27,130 +27,13 @@ import java.util.Map;
 public class TestInserter {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert channelInsert;
-    private final SimpleJdbcInsert neighborhoodInsert;
-    private final SimpleJdbcInsert channelNeighborhoodMappingInsert;
-    private final SimpleJdbcInsert likeInsert;
-    private final SimpleJdbcInsert eventInsert;
-    private final SimpleJdbcInsert contactInsert;
-    private final SimpleJdbcInsert commentInsert;
-    private final SimpleJdbcInsert categorizationInsert;
-    private final SimpleJdbcInsert attendanceInsert;
-    private final SimpleJdbcInsert postInsert;
-    private final SimpleJdbcInsert userInsert;
-    private final SimpleJdbcInsert tagInsert;
-    private final SimpleJdbcInsert subscriptionInsert;
-    private final SimpleJdbcInsert resourceInsert;
-    private final SimpleJdbcInsert reservationInsert;
-    private final SimpleJdbcInsert availabilityInsert;
-    private final SimpleJdbcInsert bookingInsert;
-    private final SimpleJdbcInsert dayInsert;
-    private final SimpleJdbcInsert timeInsert;
-    private final SimpleJdbcInsert neighborhoodWorkerInsert;
-    private final SimpleJdbcInsert reviewInsert;
-    private final SimpleJdbcInsert workerInsert;
-    private final SimpleJdbcInsert professionWorkerInsert;
-    private final SimpleJdbcInsert amenityInsert;
-    private final SimpleJdbcInsert shiftInsert;
-    private final SimpleJdbcInsert imageInsert;
-    private final SimpleJdbcInsert professionInsertion;
-    private final SimpleJdbcInsert channelMappingInserter;
-    private final SimpleJdbcInsert productInserter;
-    private final SimpleJdbcInsert departmentInserter;
-    private final SimpleJdbcInsert inquiryInserter;
-    private final SimpleJdbcInsert requestInserter;
+
     @PersistenceContext
     private EntityManager em;
 
     @Autowired
     public TestInserter(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
-        this.channelInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(Table.channels.name())
-                .usingGeneratedKeyColumns("channelid");
-        this.neighborhoodInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(Table.neighborhoods.name())
-                .usingGeneratedKeyColumns("neighborhoodid");
-        this.channelNeighborhoodMappingInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(Table.neighborhoods_channels.name());
-        this.likeInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(Table.posts_users_likes.name());
-        this.eventInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(Table.events.name())
-                .usingGeneratedKeyColumns("eventid");
-        this.contactInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(Table.contacts.name())
-                .usingGeneratedKeyColumns("contactid");
-        this.commentInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(Table.comments.name())
-                .usingGeneratedKeyColumns("commentid");
-        this.categorizationInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(Table.posts_tags.name());
-        this.attendanceInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(Table.events_users.name());
-        this.postInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(Table.posts.name())
-                .usingGeneratedKeyColumns("postid");
-        this.userInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(Table.users.name())
-                .usingGeneratedKeyColumns("userid");
-        this.tagInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(Table.tags.name())
-                .usingGeneratedKeyColumns("tagid");
-        this.subscriptionInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(Table.posts_users_subscriptions.name());
-        this.resourceInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(Table.resources.name())
-                .usingGeneratedKeyColumns("resourceid");
-        this.reservationInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName(Table.reservations.name())
-                .usingGeneratedKeyColumns("reservationid");
-        this.availabilityInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("amenities_shifts_availability")
-                .usingGeneratedKeyColumns("amenityavailabilityid");
-        this.bookingInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("users_availability")
-                .usingGeneratedKeyColumns("bookingid");
-        this.dayInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("days")
-                .usingGeneratedKeyColumns("dayid");
-        this.timeInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("times")
-                .usingGeneratedKeyColumns("timeid");
-        this.neighborhoodWorkerInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("workers_neighborhoods");
-        this.professionWorkerInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("workers_professions");
-        this.reviewInsert = new SimpleJdbcInsert(dataSource)
-                .usingGeneratedKeyColumns("reviewid")
-                .withTableName("reviews");
-        this.workerInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("workers_info");
-        this.amenityInsert = new SimpleJdbcInsert(dataSource)
-                .usingGeneratedKeyColumns("amenityid")
-                .withTableName("amenities");
-        this.shiftInsert = new SimpleJdbcInsert(dataSource)
-                .withTableName("shifts")
-                .usingGeneratedKeyColumns("shiftid");
-        this.imageInsert = new SimpleJdbcInsert(dataSource)
-                .usingGeneratedKeyColumns("imageid")
-                .withTableName("images");
-        this.professionInsertion = new SimpleJdbcInsert(dataSource)
-                .withTableName("professions")
-                .usingGeneratedKeyColumns("professionid");
-        this.channelMappingInserter = new SimpleJdbcInsert(dataSource)
-                .withTableName("neighborhoods_channels");
-        this.productInserter = new SimpleJdbcInsert(dataSource)
-                .usingGeneratedKeyColumns("productid")
-                .withTableName("products");
-        this.requestInserter = new SimpleJdbcInsert(dataSource)
-                .withTableName("products_users_requests");
-        this.inquiryInserter = new SimpleJdbcInsert(dataSource)
-                .usingGeneratedKeyColumns("inquiryid")
-                .withTableName("products_users_inquiries");
-        this.departmentInserter = new SimpleJdbcInsert(dataSource)
-                .usingGeneratedKeyColumns("departmentid")
-                .withTableName("departments");
     }
 
     public long createChannel(String channelName) {
@@ -424,7 +307,8 @@ public class TestInserter {
 
     public long createProduct(String name, String description, Double price, boolean used,
                               long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
-                              long sellerId, Long buyerId, long departmentId){
+                              long sellerId,
+                              long departmentId, long units){
         Product product = new Product.Builder()
                 .name(name)
                 .description(description)
@@ -435,9 +319,9 @@ public class TestInserter {
                 .primaryPicture(em.find(Image.class, primaryPictureId))
                 .secondaryPicture(em.find(Image.class, secondaryPictureId))
                 .tertiaryPicture(em.find(Image.class, tertiaryPictureId))
+                .remainingUnits(units)
                 .build();
-        if (buyerId != null )
-            product.setBuyer(em.find(User.class, buyerId));
+
         em.persist(product);
         em.flush();
         return product.getProductId();
@@ -463,18 +347,30 @@ public class TestInserter {
         return inquiry.getInquiryId();
     }
 
-    public void createRequest(long productId, long userId){
+    public void createRequest(long productId, long userId, String message){
         Request request = new Request.Builder()
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
+                .message(message)
                 .build();
         em.persist(request);
         em.flush();
     }
 
-    // ----------------------------------------------------------------------------------------------------
-    // OVERLOADS FOR SIMPLIFYING TESTING ------------------------------------------------------------------
-    // ----------------------------------------------------------------------------------------------------
+    public long createPurchase(long productId, long userId, long unitsBought) {
+        Purchase purchase = new Purchase.Builder()
+                .product(em.find(Product.class, productId))
+                .user(em.find(User.class, userId))
+                .units(unitsBought)
+                .build();
+        em.persist(purchase);
+        em.flush();
+        return purchase.getPurchaseId();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------- OVERLOADS -----------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     public long createContact(long neighborhoodId) {
         String contactName = "Dummy Contact";
@@ -625,8 +521,11 @@ public class TestInserter {
         String description = "Super Iphone";
         double price = 23432;
         boolean used = true;
-
-        return createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, buyerId, departmentId);
+        long units = 1L;
+        long longProduct = createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, departmentId, units);
+        if ( buyerId != null )
+            createPurchase(longProduct, buyerId, 1L);
+        return longProduct;
     }
 
     public long createProduct(String name, long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
@@ -634,8 +533,11 @@ public class TestInserter {
         String description = "Super Iphone";
         double price = 23432;
         boolean used = true;
-
-        return createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, buyerId, departmentId);
+        long units = 1L;
+        long longProduct = createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, departmentId, units);
+        if ( buyerId != null )
+            createPurchase(longProduct, buyerId, 1L);
+        return longProduct;
     }
 
     public long createDepartment(){
@@ -646,5 +548,10 @@ public class TestInserter {
         String message = "Hohohoho que caro esta todo";
         String reply = "Asi es la vida";
         return createInquiry(message, reply, productId, userId);
+    }
+
+    public void createRequest(long productId, long userId){
+        String message = "Hello";
+        createRequest(productId, userId, message);
     }
 }

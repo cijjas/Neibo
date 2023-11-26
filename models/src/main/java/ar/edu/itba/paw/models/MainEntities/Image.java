@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models.MainEntities;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -17,25 +18,24 @@ public class Image {
     private byte[] image;
 
     @OneToMany(mappedBy = "image")
-    private Set<Resource> resources = new HashSet<>();
+    private final Set<Resource> resources = new HashSet<>();
 
     @OneToMany(mappedBy = "profilePicture")
-    private Set<User> users = new HashSet<>();
+    private final Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "postPicture")
-    private Set<Post> posts = new HashSet<>();
+    private final Set<Post> posts = new HashSet<>();
 
     @OneToMany(mappedBy = "primaryPicture")
-    private Set<Product> productsWithThisImageAsPrimary = new HashSet<>();
+    private final Set<Product> productsWithThisImageAsPrimary = new HashSet<>();
 
     @OneToMany(mappedBy = "secondaryPicture")
-    private Set<Product> productsWithThisImageAsSecondary = new HashSet<>();
+    private final Set<Product> productsWithThisImageAsSecondary = new HashSet<>();
 
     @OneToMany(mappedBy = "tertiaryPicture")
-    private Set<Product> productsWithThisImageAsTertiary = new HashSet<>();
+    private final Set<Product> productsWithThisImageAsTertiary = new HashSet<>();
 
-    public Image() {
-        // Default constructor
+    Image() {
     }
 
     public Image(Long imageId, byte[] image) {
@@ -47,12 +47,12 @@ public class Image {
         return imageId;
     }
 
-    public byte[] getImage() {
-        return image;
-    }
-
     public void setImageId(Long imageId) {
         this.imageId = imageId;
+    }
+
+    public byte[] getImage() {
+        return image;
     }
 
     public void setImage(byte[] image) {
@@ -84,5 +84,18 @@ public class Image {
         public Image build() {
             return new Image(this.imageId, this.image);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Image)) return false;
+        Image image = (Image) o;
+        return Objects.equals(imageId, image.imageId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(imageId);
     }
 }

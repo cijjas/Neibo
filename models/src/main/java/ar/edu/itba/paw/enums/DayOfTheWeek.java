@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.enums;
 
+import ar.edu.itba.paw.Pair;
+
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;

@@ -18,9 +18,9 @@ public class WorkerAreaKey implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof WorkerAreaKey)) return false;
         WorkerAreaKey that = (WorkerAreaKey) o;
-        return workerId.equals(that.workerId) && neighborhoodId.equals(that.neighborhoodId);
+        return Objects.equals(workerId, that.workerId) && Objects.equals(neighborhoodId, that.neighborhoodId);
     }
 
     @Override

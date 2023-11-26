@@ -101,24 +101,6 @@ public class AmenityDaoImpl implements AmenityDao {
         return query.getSingleResult().intValue();
     }
 
-    // ---------------------------------------------- AMENITIES UPDATE ---------------------------------------------------
-
-    @Override
-    public Amenity updateAmenity(
-            final long id,
-            final String name,
-            final String description
-    ) {
-        LOGGER.debug("Updating Amenity {}", id);
-
-        Amenity amenity = em.find(Amenity.class, id);
-        if (amenity != null) {
-            amenity.setName(name);
-            amenity.setDescription(description);
-        }
-        return amenity;
-    }
-
     // ---------------------------------------------- AMENITIES DELETE ---------------------------------------------------
 
     @Override

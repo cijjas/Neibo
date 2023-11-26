@@ -17,9 +17,10 @@ public class Day {
     private String dayName;
 
     @OneToMany(mappedBy = "day", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<Shift> shifts = new HashSet<>();
+    private final Set<Shift> shifts = new HashSet<>();
 
-    Day(){}
+    Day() {
+    }
 
     private Day(Builder builder) {
         this.dayId = builder.dayId;
@@ -44,17 +45,8 @@ public class Day {
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Day day = (Day) o;
-        return Objects.equals(dayId, day.dayId) && Objects.equals(dayName, day.dayName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(dayId, dayName);
+    public Set<Shift> getShifts() {
+        return shifts;
     }
 
     public static class Builder {
@@ -76,9 +68,16 @@ public class Day {
         }
     }
 
-    public Set<Shift> getShifts() {
-        return shifts;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Day)) return false;
+        Day day = (Day) o;
+        return Objects.equals(dayId, day.dayId);
     }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(dayId);
+    }
 }

@@ -22,12 +22,11 @@ import java.util.Map;
 @Service
 @Transactional
 public class RequestServiceImpl implements RequestService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ImageServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RequestServiceImpl.class);
     private final RequestDao requestDao;
     private final UserDao userDao;
     private final ProductDao productDao;
     private final EmailService emailService;
-
 
     @Autowired
     public RequestServiceImpl(final RequestDao requestDao, final UserDao userDao, final ProductDao productDao, final EmailService emailService) {
@@ -36,6 +35,8 @@ public class RequestServiceImpl implements RequestService {
         this.productDao = productDao;
         this.emailService = emailService;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public Request createRequest(long userId, long productId, String message) {

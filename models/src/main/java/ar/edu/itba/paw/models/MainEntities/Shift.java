@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models.MainEntities;
 
-import org.hibernate.annotations.Formula;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -14,7 +12,7 @@ public class Shift {
     @SequenceGenerator(sequenceName = "shifts_shiftid_seq", name = "shifts_shiftid_seq", allocationSize = 1)
     private Long shiftId;
 
-    @ManyToMany(mappedBy = "availableShifts", cascade=CascadeType.ALL)
+    @ManyToMany(mappedBy = "availableShifts", cascade = CascadeType.ALL)
     private List<Amenity> amenities;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -31,7 +29,8 @@ public class Shift {
     @Transient
     private boolean taken;
 
-    public Shift(){}
+    Shift() {
+    }
 
     private Shift(Builder builder) {
         this.shiftId = builder.shiftId;
@@ -88,19 +87,6 @@ public class Shift {
                 '}';
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Shift shift = (Shift) o;
-        return Objects.equals(shiftId, shift.shiftId) && taken == shift.taken && Objects.equals(day, shift.day) && Objects.equals(startTime, shift.startTime);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(shiftId, amenities, day, startTime, endTime, taken);
-    }
-
     public static class Builder {
         private Long shiftId;
         private Day day;
@@ -130,5 +116,18 @@ public class Shift {
         public Shift build() {
             return new Shift(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Shift)) return false;
+        Shift shift = (Shift) o;
+        return Objects.equals(shiftId, shift.shiftId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(shiftId);
     }
 }

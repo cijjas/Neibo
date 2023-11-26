@@ -1,11 +1,12 @@
 package ar.edu.itba.paw.models.JunctionEntities;
 
-import ar.edu.itba.paw.models.compositeKeys.SpecializationKey;
 import ar.edu.itba.paw.models.MainEntities.Profession;
 import ar.edu.itba.paw.models.MainEntities.Worker;
+import ar.edu.itba.paw.models.compositeKeys.SpecializationKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "workers_professions")
@@ -33,12 +34,12 @@ public class Specialization implements Serializable {
         this.profession = profession;
     }
 
-    public void setId(SpecializationKey id) {
-        this.id = id;
-    }
-
     public SpecializationKey getId() {
         return id;
+    }
+
+    public void setId(SpecializationKey id) {
+        this.id = id;
     }
 
     public Worker getWorker() {
@@ -60,13 +61,13 @@ public class Specialization implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Specialization)) return false;
         Specialization that = (Specialization) o;
-        return id.equals(that.id);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(id);
     }
 }

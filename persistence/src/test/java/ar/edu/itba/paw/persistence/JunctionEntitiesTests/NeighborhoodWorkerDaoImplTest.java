@@ -2,7 +2,10 @@ package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
+import ar.edu.itba.paw.models.JunctionEntities.WorkerArea;
+import ar.edu.itba.paw.models.MainEntities.Event;
 import ar.edu.itba.paw.models.MainEntities.Neighborhood;
+import ar.edu.itba.paw.models.MainEntities.Worker;
 import ar.edu.itba.paw.persistence.JunctionDaos.NeighborhoodWorkerDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -22,6 +25,7 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -62,6 +66,33 @@ public class NeighborhoodWorkerDaoImplTest {
         em.flush();
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_neighborhoods.name()));
     }
+
+    @Test
+    public void testFindWorkerByArea() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createWorkerArea(uKey, nhKey);
+
+        // Exercise
+        Optional<WorkerArea> workerArea = neighborhoodWorkerDaoImpl.findWorkerArea(uKey, nhKey);
+
+        // Validations & Post Conditions
+        assertTrue(workerArea.isPresent());
+    }
+
+    @Test
+    public void testFindWorkerByInvalidArea() {
+        // Pre Conditions
+
+        // Exercise
+        Optional<WorkerArea> workerArea = neighborhoodWorkerDaoImpl.findWorkerArea(1, 1);
+
+        // Validations & Post Conditions
+        assertFalse(workerArea.isPresent());
+    }
+
 
     @Test
     public void testGetNeighborhoods() {

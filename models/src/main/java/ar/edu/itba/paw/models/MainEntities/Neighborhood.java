@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models.MainEntities;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -21,22 +22,23 @@ public class Neighborhood {
     private Set<Neighborhood> channels;
 
     @OneToMany(mappedBy = "neighborhood")  // mappedBy refers to the field in the User entity
-    private Set<User> users = new HashSet<>();
+    private final Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "neighborhood")
-    private Set<Contact> contacts = new HashSet<>();
+    private final Set<Contact> contacts = new HashSet<>();
 
     @OneToMany(mappedBy = "neighborhood")
-    private Set<Event> events = new HashSet<>();
+    private final Set<Event> events = new HashSet<>();
 
     @OneToMany(mappedBy = "neighborhood")
-    private Set<Resource> resources = new HashSet<>();
+    private final Set<Resource> resources = new HashSet<>();
 
     @ManyToMany
     @JoinTable(name = "workers_neighborhoods", joinColumns = @JoinColumn(name = "neighborhoodid"), inverseJoinColumns = @JoinColumn(name = "workerid"))
     private Set<Worker> workers;
 
-    public Neighborhood(){}
+    Neighborhood() {
+    }
 
     private Neighborhood(Builder builder) {
         this.neighborhoodId = builder.neighborhoodId;
@@ -76,5 +78,18 @@ public class Neighborhood {
         public Neighborhood build() {
             return new Neighborhood(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Neighborhood)) return false;
+        Neighborhood that = (Neighborhood) o;
+        return Objects.equals(neighborhoodId, that.neighborhoodId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(neighborhoodId);
     }
 }

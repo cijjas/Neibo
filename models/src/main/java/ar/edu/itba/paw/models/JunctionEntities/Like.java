@@ -1,11 +1,12 @@
 package ar.edu.itba.paw.models.JunctionEntities;
 
-import ar.edu.itba.paw.models.compositeKeys.LikeKey;
 import ar.edu.itba.paw.models.MainEntities.Post;
 import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.compositeKeys.LikeKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "posts_users_likes")
@@ -33,40 +34,40 @@ public class Like implements Serializable {
         this.user = user;
     }
 
-    public void setId(LikeKey id) {
-        this.id = id;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public LikeKey getId() {
         return id;
+    }
+
+    public void setId(LikeKey id) {
+        this.id = id;
     }
 
     public Post getPost() {
         return post;
     }
 
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
     public User getUser() {
         return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Like that = (Like) o;
-        return id.equals(that.id);
+        if (!(o instanceof Like)) return false;
+        Like like = (Like) o;
+        return Objects.equals(id, like.id);
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Objects.hash(id);
     }
 }

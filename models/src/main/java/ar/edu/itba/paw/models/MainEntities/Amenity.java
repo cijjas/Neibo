@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models.MainEntities;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "amenities")
@@ -17,17 +18,17 @@ public class Amenity {
     @Column(name = "description", length = 512, unique = true, nullable = false)
     private String description;
 
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "neighborhoodid")
     private Neighborhood neighborhood;
 
-    @ManyToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "amenities_shifts_availability",
             joinColumns = @JoinColumn(name = "amenityid"),
             inverseJoinColumns = @JoinColumn(name = "shiftid"))
     private List<Shift> availableShifts;
 
-    public Amenity() {}
+    Amenity() {}
 
     private Amenity(Builder builder) {
         this.amenityId = builder.amenityId;
@@ -41,20 +42,40 @@ public class Amenity {
         return amenityId;
     }
 
+    public void setAmenityId(Long amenityId) {
+        this.amenityId = amenityId;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Neighborhood getNeighborhood() {
         return neighborhood;
     }
 
+    public void setNeighborhood(Neighborhood neighborhood) {
+        this.neighborhood = neighborhood;
+    }
+
     public List<Shift> getAvailableShifts() {
         return availableShifts;
+    }
+
+    public void setAvailableShifts(List<Shift> availableShifts) {
+        this.availableShifts = availableShifts;
     }
 
     @Override
@@ -103,25 +124,19 @@ public class Amenity {
         public Amenity build() {
             return new Amenity(this);
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Builder)) return false;
+            Builder builder = (Builder) o;
+            return Objects.equals(amenityId, builder.amenityId);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(amenityId);
+        }
     }
 
-    public void setAmenityId(Long amenityId) {
-        this.amenityId = amenityId;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setNeighborhood(Neighborhood neighborhood) {
-        this.neighborhood = neighborhood;
-    }
-
-    public void setAvailableShifts(List<Shift> availableShifts) {
-        this.availableShifts = availableShifts;
-    }
 }

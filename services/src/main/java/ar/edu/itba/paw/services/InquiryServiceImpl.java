@@ -23,7 +23,7 @@ import java.util.Optional;
 @Service
 @Transactional
 public class InquiryServiceImpl implements InquiryService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ImageServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(InquiryServiceImpl.class);
     private final InquiryDao inquiryDao;
     private final EmailService emailService;
     private final UserDao userDao;
@@ -37,6 +37,8 @@ public class InquiryServiceImpl implements InquiryService {
         this.emailService = emailService;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public Inquiry createInquiry(long userId, long productId, String message) {
         LOGGER.info("User {} Inquiring on Product {}", userId, productId);
@@ -48,17 +50,7 @@ public class InquiryServiceImpl implements InquiryService {
         return inquiryDao.createInquiry(userId, productId, message);
     }
 
-    @Override
-    public void replyInquiry(long inquiryId, String reply) {
-        LOGGER.info("Replying to Inquiry with id {}", inquiryId);
-        //Send email to inquirer
-        Inquiry inquiry = inquiryDao.findInquiryById(inquiryId).orElseThrow(() -> new IllegalStateException("Inquiry not found"));
-        Product product = inquiry.getProduct();
-        User receiver = inquiry.getUser();
-        emailService.sendInquiryMail(receiver, product, reply, true);
-
-        inquiryDao.replyInquiry(inquiryId, reply);
-    }
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public Optional<Inquiry> findInquiryById(long inquiryId) {
@@ -70,4 +62,17 @@ public class InquiryServiceImpl implements InquiryService {
         return inquiryDao.getInquiriesByProduct(productId);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void replyInquiry(long inquiryId, String reply) {
+        LOGGER.info("Replying to Inquiry with id {}", inquiryId);
+        //Send email to inquirer
+        Inquiry inquiry = inquiryDao.findInquiryById(inquiryId).orElseThrow(() -> new IllegalStateException("Inquiry not found"));
+        inquiry.setReply(reply);
+
+        Product product = inquiry.getProduct();
+        User receiver = inquiry.getUser();
+        emailService.sendInquiryMail(receiver, product, reply, true);
+    }
 }

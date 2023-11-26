@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
-    Product createProduct(long userId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles);
+    Product createProduct(long userId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, long units);
 
     void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) ;
 
@@ -32,15 +32,7 @@ public interface ProductService {
 
     List<Product> getProductsBought(long userId, int page, int size);
 
-    boolean markAsBought(long buyerId, long productId);
-
-    List<Product> searchInProductsBought(long userId, long neighborhoodId, String searchQuery, int page, int size);
-
-    List<Product> searchInProductsSold(long userId, long neighborhoodId, String searchQuery, int page, int size);
-
-    List<Product> searchInProductsSelling(long userId, long neighborhoodId, String searchQuery, int page, int size);
-
-    List<Product> searchInProductsBeingSold(long neighborhoodId, String searchQuery, int page, int size);
+    void markAsBought(long buyerId, long productId, long units);
 
     int getProductsTotalPages(long neighborhoodId, int size, Department department);
 
@@ -49,4 +41,6 @@ public interface ProductService {
     int getProductsSoldTotalPages(long userId, int size);
 
     int getProductsBoughtTotalPages(long userId, int size);
+
+    void restockProduct(long productId, long extraUnits);
 }

@@ -21,6 +21,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -94,17 +95,6 @@ public class InquiryDaoImplTest {
     @Test
     public void testFindInquiryByInvalidId() {
         // Pre Conditions
-
-        // Exercise
-        Optional<Inquiry> maybeInquiry = inquiryDao.findInquiryById(1);
-
-        // Validations & Post Conditions
-        assertFalse(maybeInquiry.isPresent());
-    }
-
-    @Test
-    public void testReplyInquiry() {
-        // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(MAIL1, nhKey);
@@ -115,22 +105,20 @@ public class InquiryDaoImplTest {
         long iqKey = testInserter.createInquiry(pKey, uKey3);
 
         // Exercise
-        Inquiry inquiry = inquiryDao.replyInquiry(iqKey, REPLY);
+        List<Inquiry> inquiries = inquiryDao.getInquiriesByProduct(pKey);
 
         // Validations & Post Conditions
-        assertNotNull(inquiry);
-        assertEquals(inquiry.getReply(), REPLY);
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_inquiries.name()));
+        assertFalse(inquiries.isEmpty());
     }
 
     @Test
-    public void testReplyInvalidInquiry() {
+    public void testGetInquiriesByProduct() {
         // Pre Conditions
 
         // Exercise
-        Inquiry inquiry = inquiryDao.replyInquiry(1, REPLY);
+        Optional<Inquiry> maybeInquiry = inquiryDao.findInquiryById(1);
 
         // Validations & Post Conditions
-        assertNull(inquiry);
+        assertFalse(maybeInquiry.isPresent());
     }
 }

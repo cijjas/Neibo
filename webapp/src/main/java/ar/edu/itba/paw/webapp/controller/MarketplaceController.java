@@ -32,7 +32,6 @@ public class MarketplaceController {
     private final CommentService cs;
     private final TagService ts;
     private final ChannelService chs;
-    private final SubscriptionService ss;
     private final CategorizationService cas;
     private final ImageService is;
     private final AmenityService as;
@@ -45,8 +44,6 @@ public class MarketplaceController {
     private final RequestService rqs;
     private final InquiryService inqs;
 
-    // ------------------------------------- INFORMATION --------------------------------------
-
     @Autowired
     public MarketplaceController(SessionUtils sessionUtils,
                            final PostService ps,
@@ -55,7 +52,6 @@ public class MarketplaceController {
                            final CommentService cs,
                            final TagService ts,
                            final ChannelService chs,
-                           final SubscriptionService ss,
                            final CategorizationService cas,
                            final ImageService is,
                            final AmenityService as,
@@ -76,7 +72,6 @@ public class MarketplaceController {
         this.cs = cs;
         this.ts = ts;
         this.chs = chs;
-        this.ss = ss;
         this.cas = cas;
         this.as = as;
         this.es = es;
@@ -89,7 +84,7 @@ public class MarketplaceController {
         this.inqs = inqs;
     }
 
-    // ------------------------------------- Market --------------------------------------
+    // --------------------------------------------------- MARKET ------------------------------------------------------
 
 
     @RequestMapping(value = {"/products/{department}"}, method = RequestMethod.GET)
@@ -136,6 +131,23 @@ public class MarketplaceController {
         mav.addObject("contextPath", "/marketplace/my-purchases");
         return mav;
     }
+
+    @RequestMapping(value = "/currently-requesting", method = RequestMethod.GET)
+    public ModelAndView listingRequests(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size
+    ) {
+        LOGGER.info("User arriving at '/marketplace/currently-requesting'");
+
+        ModelAndView mav = new ModelAndView("marketplace/views/currentlyRequesting");
+        mav.addObject("channel", "CurrentlyRequesting");
+        mav.addObject("page", page);
+        mav.addObject("totalPages", prs.getProductsBoughtTotalPages(sessionUtils.getLoggedUser().getUserId(), size));
+        mav.addObject("contextPath", "/marketplace/currently-requesting");
+        mav.addObject("requestList", sessionUtils.getLoggedUser().getRequestedProducts());
+        return mav;
+    }
+
     @RequestMapping(value = "/my-sales", method = RequestMethod.GET)
     public ModelAndView mySales(
         @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -156,17 +168,40 @@ public class MarketplaceController {
 
 
     @RequestMapping(value = "/my-requests/{productId:\\d+}", method = RequestMethod.GET)
-    public ModelAndView saleRequests(
+    public ModelAndView listingRequests(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size,
             @PathVariable(value = "productId") int productId
     ) {
         LOGGER.info("User arriving at '/marketplace/my-requests/{}'", productId);
 
-        ModelAndView mav = new ModelAndView("marketplace/views/saleRequests");
+        ModelAndView mav = new ModelAndView("marketplace/views/listingRequests");
+        mav.addObject("requestList", rqs.getRequestsByProductId(productId, page, size));
+        System.out.println("HOLA" + rqs.getRequestsByProductId(productId, 1, 10));
         mav.addObject("requests", prs.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")).getRequesters());
-        mav.addObject("productId", productId);
-        mav.addObject("channel", "MySales");  // this is wrong
+        mav.addObject("product", prs.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")));
         return mav;
     }
+
+
+
+
+    @RequestMapping(value = "/requested-listings" , method = RequestMethod.GET)
+    public ModelAndView requestedListings(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size
+    ) {
+        LOGGER.info("User arriving at /requested-listings");
+
+        ModelAndView mav = new ModelAndView("marketplace/views/requestedListings");
+        mav.addObject("channel", "MyRequested");
+        mav.addObject("page", page);
+
+        mav.addObject("totalPages", prs.getProductsBoughtTotalPages(sessionUtils.getLoggedUser().getUserId(), size));
+        mav.addObject("contextPath", "/marketplace/my-purchases");
+        return mav;
+    }
+
 
     @RequestMapping(value = "/mark-as-bought", method = RequestMethod.POST)
     public ModelAndView markAsBought(
@@ -175,7 +210,7 @@ public class MarketplaceController {
 
     ) {
         LOGGER.info("User arriving at '/marketplace/mark-as-bought'");
-        prs.markAsBought(buyerId, productId);
+        /*prs.markAsBought(buyerId, productId, units!); ahora falta units que se compraron*/
         return new ModelAndView("redirect:/marketplace/my-sales");
     }
 
@@ -210,7 +245,7 @@ public class MarketplaceController {
     }
 
     @RequestMapping(value = "/create-listing", method = RequestMethod.POST)
-    public ModelAndView crateListing(
+    public ModelAndView createListing(
         @Valid @ModelAttribute("listingForm") ListingForm listingForm,
         final BindingResult bindingResult
     ) {
@@ -220,7 +255,10 @@ public class MarketplaceController {
             return createListingForm(listingForm);
         }
         User user = sessionUtils.getLoggedUser();
+/*
         prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles());
+        ahora tienen que venir las units tambn
+*/
         return new ModelAndView("redirect:/marketplace/my-listings");
     }
 
@@ -293,6 +331,37 @@ public class MarketplaceController {
             return product(productId, department, new RequestForm(), new QuestionForm(), replyForm,false);
         }
         inqs.replyInquiry(Long.parseLong(replyForm.getInquiryId()), replyForm.getReplyMessage());
+        return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
+    }
+
+
+    @RequestMapping(value = "/products/{department}/{id:\\d+}/edit", method = RequestMethod.GET)
+    public ModelAndView editProduct(
+            @PathVariable(value = "id") Long productId,
+            @PathVariable(value = "department") String department,
+            @ModelAttribute("listingForm") ListingForm listingForm
+    ) {
+        LOGGER.info("User arriving at '/marketplace/products/" + department + "/" + productId +"/edit'");
+        ModelAndView mav = new ModelAndView("marketplace/views/productEdit");
+        mav.addObject("departmentList", Department.getDepartments());
+        mav.addObject("loggedUser", sessionUtils.getLoggedUser());
+        mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
+        return mav;
+    }
+
+    @RequestMapping(value = "/products/{department}/{id:\\d+}/edit", method = RequestMethod.POST)
+    public ModelAndView editProduct(
+            @PathVariable(value = "id") Long productId,
+            @PathVariable(value = "department") String department,
+            @Valid @ModelAttribute("listingForm") ListingForm listingForm,
+            final BindingResult bindingResult
+    ) {
+        LOGGER.info("User editing product '/"+ productId +"' ");
+        if(bindingResult.hasErrors()){
+            LOGGER.error("Error in form 'listingForm'");
+            return product(productId, department, new RequestForm(), new QuestionForm(), new ReplyForm(),false);
+        }
+        prs.updateProduct(productId, listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles());
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
     }
 }

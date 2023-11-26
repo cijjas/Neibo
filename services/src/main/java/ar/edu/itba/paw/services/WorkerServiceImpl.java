@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.*;
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.exceptions.UnexpectedException;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
@@ -107,21 +108,6 @@ public class WorkerServiceImpl implements WorkerService {
         return workerDao.getWorkersCountByCriteria(professions, neighborhoodIds, workerRole, workerStatus);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void updateWorker(long userId, String phoneNumber, String address, String businessName,
-                             MultipartFile backgroundPicture, String bio) {
-        LOGGER.info("Updating Worker {}", userId);
-        if(backgroundPicture.isEmpty()) {
-            workerDao.updateWorker(userId, phoneNumber, address, businessName, 0, bio);
-        } else {
-            Image i = imageService.storeImage(backgroundPicture);
-            workerDao.updateWorker(userId, phoneNumber, address, businessName, i.getImageId(), bio);
-        }
-    }
-
-    // SERVICIO NO UTILIZADO BORRAR?
     @Override
     public int getTotalWorkerPages(long neighborhoodId, int size) {
         LOGGER.info("Getting Pages of Workers with size {} from Neighborhood {}", size, neighborhoodId);
@@ -135,4 +121,20 @@ public class WorkerServiceImpl implements WorkerService {
         return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(professions, neighborhoodIds, workerRole, workerStatus) / size);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void updateWorker(long userId, String phoneNumber, String address, String businessName,
+                             MultipartFile backgroundPicture, String bio) {
+        LOGGER.info("Updating Worker {}", userId);
+        Worker worker = workerDao.findWorkerById(userId).orElseThrow(()-> new NotFoundException("Worker Not Found"));
+        worker.setPhoneNumber(phoneNumber);
+        worker.setAddress(address);
+        worker.setBusinessName(businessName);
+        worker.setBio(bio);
+        if(!backgroundPicture.isEmpty()) {
+            Image i = imageService.storeImage(backgroundPicture);
+            worker.setBackgroundPictureId(i.getImageId());
+        }
+    }
 }

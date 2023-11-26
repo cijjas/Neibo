@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.MainEntities;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -26,8 +27,7 @@ public class Channel {
     private Set<Neighborhood> neighborhoods;
 
 
-    public Channel() {
-        // Default no-argument constructor is required for Hibernate
+    Channel() {
     }
 
     private Channel(Builder builder) {
@@ -72,5 +72,18 @@ public class Channel {
         public Channel build() {
             return new Channel(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Channel)) return false;
+        Channel channel = (Channel) o;
+        return Objects.equals(channelId, channel.channelId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(channelId);
     }
 }

@@ -1,15 +1,14 @@
 package ar.edu.itba.paw.models.MainEntities;
 
-import ar.edu.itba.paw.enums.WorkerRole;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "workers_info")
-public class Worker{
+public class Worker {
     @Id
     @Column(name = "workerid")
     private Long workerId;
@@ -45,8 +44,7 @@ public class Worker{
     @JoinTable(name = "workers_neighborhoods", joinColumns = @JoinColumn(name = "workerid"), inverseJoinColumns = @JoinColumn(name = "neighborhoodid"))
     private Set<Neighborhood> workNeighborhoods;
 
-    public Worker() {
-
+    Worker() {
     }
 
     public Worker(Builder builder) {
@@ -63,36 +61,36 @@ public class Worker{
         return phoneNumber;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public String getBusinessName() {
-        return businessName;
-    }
-
-    public String getBio() {
-        return bio;
-    }
-
-    public Long getBackgroundPictureId() {
-        return backgroundPictureId;
-    }
-
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setBusinessName(String businessName) {
-        this.businessName = businessName;
+    public String getAddress() {
+        return address;
     }
 
     public void setAddress(String address) {
         this.address = address;
     }
 
+    public String getBusinessName() {
+        return businessName;
+    }
+
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public Long getBackgroundPictureId() {
+        return backgroundPictureId;
     }
 
     public void setBackgroundPictureId(Long backgroundPictureId) {
@@ -111,16 +109,16 @@ public class Worker{
         return professions;
     }
 
+    public void setProfessions(Set<Profession> professions) {
+        this.professions = professions;
+    }
+
     public List<String> getProfessionsAsStrings() {
         List<String> professionsList = new ArrayList<String>();
         for (Profession profession : professions) {
             professionsList.add(profession.getProfession().toString());
         }
         return professionsList;
-    }
-
-    public void setProfessions(Set<Profession> professions) {
-        this.professions = professions;
     }
 
     public Set<Neighborhood> getWorkNeighborhoods() {
@@ -205,5 +203,18 @@ public class Worker{
         public Worker build() {
             return new Worker(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Worker)) return false;
+        Worker worker = (Worker) o;
+        return Objects.equals(workerId, worker.workerId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(workerId);
     }
 }

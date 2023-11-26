@@ -23,26 +23,26 @@ public class ChannelMappingKey implements Serializable {
                 '}';
     }
 
-    public void setNeighborhoodId(Long neighborhoodId) {
-        this.neighborhoodId = neighborhoodId;
-    }
-
-    public void setChannelId(Long channelId) {
-        this.channelId = channelId;
-    }
-
     public Long getNeighborhoodId() {
         return neighborhoodId;
+    }
+
+    public void setNeighborhoodId(Long neighborhoodId) {
+        this.neighborhoodId = neighborhoodId;
     }
 
     public Long getChannelId() {
         return channelId;
     }
 
+    public void setChannelId(Long channelId) {
+        this.channelId = channelId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof ChannelMappingKey)) return false;
         ChannelMappingKey that = (ChannelMappingKey) o;
         return Objects.equals(neighborhoodId, that.neighborhoodId) && Objects.equals(channelId, that.channelId);
     }

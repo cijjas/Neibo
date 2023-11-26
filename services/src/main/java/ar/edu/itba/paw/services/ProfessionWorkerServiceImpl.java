@@ -53,6 +53,8 @@ public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
         return professionsString.toString();
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public String createURLForProfessionFilter(String professions, String currentUrl, long neighborhoodId) {
         LOGGER.info("Creating URL for Profession Filter");

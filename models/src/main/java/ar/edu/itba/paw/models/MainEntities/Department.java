@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.MainEntities;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -18,7 +19,8 @@ public class Department {
     @OneToMany(mappedBy = "department")
     private Set<Product> products;
 
-    public Department(){}
+    Department() {
+    }
 
     private Department(Builder builder) {
         this.departmentId = builder.departmentId;
@@ -74,5 +76,18 @@ public class Department {
         public Department build() {
             return new Department(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Department)) return false;
+        Department that = (Department) o;
+        return Objects.equals(departmentId, that.departmentId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(departmentId);
     }
 }

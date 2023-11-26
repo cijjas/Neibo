@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models.MainEntities;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -24,6 +25,9 @@ public class Product {
     @Column(name = "used")
     private Boolean used;
 
+    @Column(name = "remainingunits")
+    private Long remainingUnits;
+
     @ManyToOne
     @JoinColumn(name = "primaryPictureId", referencedColumnName = "imageId")
     private Image primaryPicture;
@@ -40,23 +44,22 @@ public class Product {
     @JoinColumn(name = "sellerId", referencedColumnName = "userId")
     private User seller;
 
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "buyerId", referencedColumnName = "userId")
-    private User buyer;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "departmentId", referencedColumnName = "departmentId")
     private Department department;
 
     //junction tables:
     @ManyToMany
-    @JoinTable(name = "products_users__inquiries", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
+    @JoinTable(name = "products_users_inquiries", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> inquirers;
 
     @ManyToMany
     @JoinTable(name = "products_users_requests", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> requesters;
+
+    @ManyToMany
+    @JoinTable(name = "products_users_purchases", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
+    private Set<User> purchasers;
 
     @Column(name = "purchaseDate")
     private Date purchaseDate;
@@ -69,14 +72,14 @@ public class Product {
     @Transient
     private String priceDecimalString;
 
-    public Product() {
-        // Default constructor
+    Product() {
     }
 
     private Product(Product.Builder builder) {
         this.productId = builder.productId;
         this.name = builder.name;
         this.description = builder.description;
+        this.remainingUnits = builder.remainingUnits;
         this.price = builder.price;
         this.used = builder.used;
         this.seller = builder.seller;
@@ -89,6 +92,10 @@ public class Product {
 
     public Long getProductId() {
         return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public String getName() {
@@ -107,8 +114,32 @@ public class Product {
         this.description = description;
     }
 
+    public Set<User> getPurchasers() {
+        return purchasers;
+    }
+
+    public void setPurchasers(Set<User> purchasers) {
+        this.purchasers = purchasers;
+    }
+
+    public Long getRemainingUnits() {
+        return remainingUnits;
+    }
+
+    public void setRemainingUnits(Long remainingUnits) {
+        this.remainingUnits = remainingUnits;
+    }
+
     public double getPrice() {
         return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public Date getCreationDate() {
@@ -120,33 +151,31 @@ public class Product {
     }
 
     public String getPriceIntegerString() {
-        if(priceIntegerString == null){
-            this.priceIntegerString = "$" +String.format("%,.0f", this.price).replace(".0", "");
+        if (priceIntegerString == null) {
+            this.priceIntegerString = "$" + String.format("%,.0f", this.price).replace(".0", "");
         }
         return priceIntegerString;
     }
+
+    public void setPriceIntegerString(String priceIntegerString) {
+        this.priceIntegerString = priceIntegerString;
+    }
+
     public String getPriceDecimalString() {
-        if(priceDecimalString == null){
+        if (priceDecimalString == null) {
             this.priceDecimalString = String.valueOf(this.price).split("\\.")[1];
-            if(this.priceDecimalString.length() == 1)
+            if (this.priceDecimalString.length() == 1)
                 this.priceDecimalString += "0";
         }
         return priceDecimalString;
     }
-    public void setPrice(double price) {
-        this.price = price;
+
+    public void setPriceDecimalString(String priceDecimalString) {
+        this.priceDecimalString = priceDecimalString;
     }
 
     public boolean isUsed() {
         return used;
-    }
-
-    public void setUsed(boolean used) {
-        this.used = used;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
     }
 
     public Image getPrimaryPicture() {
@@ -181,14 +210,6 @@ public class Product {
         this.seller = seller;
     }
 
-    public User getBuyer() {
-        return buyer;
-    }
-
-    public void setBuyer(User buyer) {
-        this.buyer = buyer;
-    }
-
     public Set<User> getInquirers() {
         return inquirers;
     }
@@ -205,12 +226,12 @@ public class Product {
         this.requesters = requesters;
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
     public Boolean getUsed() {
         return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
     }
 
     public void setUsed(Boolean used) {
@@ -219,6 +240,10 @@ public class Product {
 
     public Department getDepartment() {
         return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 
     public Date getPurchaseDate() {
@@ -237,12 +262,13 @@ public class Product {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", used=" + used +
-                ", requesters=" + requesters.size() +
+                ", remainingUnits=" + remainingUnits +
+                ", department=" + department +
+                ", purchaseDate=" + purchaseDate +
+                ", creationDate=" + creationDate +
+                ", priceIntegerString='" + priceIntegerString + '\'' +
+                ", priceDecimalString='" + priceDecimalString + '\'' +
                 '}';
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
     }
 
     public static class Builder {
@@ -251,6 +277,7 @@ public class Product {
         private String description;
         private Double price;
         private Boolean used;
+        private Long remainingUnits;
         private User seller;
         private Image primaryPicture;
         private Image secondaryPicture;
@@ -262,6 +289,11 @@ public class Product {
 
         public Builder productId(Long productId) {
             this.productId = productId;
+            return this;
+        }
+
+        public Builder remainingUnits(Long remainingUnits) {
+            this.remainingUnits = remainingUnits;
             return this;
         }
 
@@ -338,12 +370,16 @@ public class Product {
         }
     }
 
-
-    public void setPriceIntegerString(String priceIntegerString) {
-        this.priceIntegerString = priceIntegerString;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product)) return false;
+        Product product = (Product) o;
+        return Objects.equals(productId, product.productId);
     }
 
-    public void setPriceDecimalString(String priceDecimalString) {
-        this.priceDecimalString = priceDecimalString;
+    @Override
+    public int hashCode() {
+        return Objects.hash(productId);
     }
 }

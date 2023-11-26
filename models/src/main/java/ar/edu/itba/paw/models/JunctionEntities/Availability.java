@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.MainEntities.Shift;
 import ar.edu.itba.paw.models.MainEntities.User;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -30,7 +31,8 @@ public class Availability {
             inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> bookedByUsers;
 
-    public Availability(){}
+    public Availability() {
+    }
 
     private Availability(Builder builder) {
         this.amenityAvailabilityId = builder.amenityAvailabilityId;
@@ -85,6 +87,19 @@ public class Availability {
 
         public Availability build() {
             return new Availability(this);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Builder)) return false;
+            Builder builder = (Builder) o;
+            return Objects.equals(amenityAvailabilityId, builder.amenityAvailabilityId);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(amenityAvailabilityId);
         }
     }
 }

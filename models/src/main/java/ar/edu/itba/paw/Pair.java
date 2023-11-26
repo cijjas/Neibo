@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.enums;
+package ar.edu.itba.paw;
 
 public class Pair<K, V> {
     private final K key;

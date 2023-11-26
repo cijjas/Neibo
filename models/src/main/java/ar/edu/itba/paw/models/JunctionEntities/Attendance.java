@@ -1,11 +1,12 @@
 package ar.edu.itba.paw.models.JunctionEntities;
 
-import ar.edu.itba.paw.models.compositeKeys.AttendanceKey;
 import ar.edu.itba.paw.models.MainEntities.Event;
 import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.compositeKeys.AttendanceKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name = "events_users")
@@ -37,23 +38,36 @@ public class Attendance implements Serializable {
         return id;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
     public void setId(AttendanceKey id) {
         this.id = id;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public void setUser(User user) {
         this.user = user;
     }
 
+    public Event getEvent() {
+        return event;
+    }
+
     public void setEvent(Event event) {
         this.event = event;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Attendance)) return false;
+        Attendance that = (Attendance) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

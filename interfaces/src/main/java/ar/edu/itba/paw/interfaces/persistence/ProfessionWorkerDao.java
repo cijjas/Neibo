@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface ProfessionWorkerDao {
 
-    // --------------------------------------- WORKERS_PROFESSIONS INSERT ----------------------------------------------
+    // --------------------------------------- WORKERS PROFESSIONS INSERT ----------------------------------------------
 
     Specialization createSpecialization(long workerId, long professionId);
 
-    // --------------------------------------- WORKERS_PROFESSIONS SELECT ----------------------------------------------
+    // --------------------------------------- WORKERS PROFESSIONS SELECT ----------------------------------------------
 
     List<Profession> getWorkerProfessions(long workerId);
 }

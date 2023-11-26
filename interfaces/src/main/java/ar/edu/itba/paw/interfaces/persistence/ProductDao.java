@@ -1,20 +1,19 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.enums.Department;
-import ar.edu.itba.paw.enums.SearchVariant;
+import ar.edu.itba.paw.enums.ProductStatus;
 import ar.edu.itba.paw.models.MainEntities.Product;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ProductDao {
-    Product createProduct(final long userId, final String name, final String description, final double price, final boolean used, final long departmentId,
-                          final Long primaryPictureId, final Long secondaryPictureId, final Long tertiaryPictureId);
 
-    Product updateProduct(final long productId, final String name, final String description, final double price, final boolean used, final long departmentId,
-                          final Long primaryPictureId, final Long secondaryPictureId, final Long tertiaryPictureId);
+    // --------------------------------------------- PRODUCTS INSERT ---------------------------------------------------
 
-    boolean deleteProduct(final long productId);
+    Product createProduct(long userId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId, Long units);
+
+    // --------------------------------------------- PRODUCTS SELECT ---------------------------------------------------
 
     Optional<Product> findProductById(final long productId);
 
@@ -34,9 +33,12 @@ public interface ProductDao {
 
     List<Product> getProductsBought(long userId, int page, int size);
 
-    boolean markAsBought(long buyerId, long productId);
+    // --------------------------------------------- PRODUCTS UPDATE ---------------------------------------------------
 
-    List<Product> searchProductsByName(long userId, long neighborhoodId, String searchQuery, SearchVariant searchVariant, int page, int size);
+    Product updateProduct(final long productId, final String name, final String description, final double price, final boolean used, final long departmentId,
+                          final Long primaryPictureId, final Long secondaryPictureId, final Long tertiaryPictureId);
 
-    List<Product> searchInAllProductsBeingSold(long neighborhoodId, String searchQuery, int page, int size);
+    // --------------------------------------------- PRODUCTS DELETE ---------------------------------------------------
+
+    boolean deleteProduct(final long productId);
 }

@@ -9,6 +9,7 @@ import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
 import ar.edu.itba.paw.models.JunctionEntities.WorkerArea;
 import ar.edu.itba.paw.models.MainEntities.Neighborhood;
 import ar.edu.itba.paw.models.MainEntities.Worker;
+import org.hibernate.jdbc.Work;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -17,6 +18,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
@@ -24,7 +26,7 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
     @PersistenceContext
     private EntityManager em;
 
-    // ----------------------------------------- NEIGHBORHOOD_WORKERS INSERT -------------------------------------------
+    // ----------------------------------------- NEIGHBORHOOD WORKERS INSERT -------------------------------------------
 
     @Override
     public WorkerArea createWorkerArea(long workerId, long neighborhoodId) {
@@ -34,7 +36,13 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
         return workerArea;
     }
 
-    // ----------------------------------------- NEIGHBORHOOD_WORKERS SELECT -------------------------------------------
+    // ----------------------------------------- NEIGHBORHOOD WORKERS SELECT -------------------------------------------
+
+    @Override
+    public Optional<WorkerArea> findWorkerArea(long workerId, long neighborhoodId) {
+        LOGGER.debug("Finding Worker area with worker id {} in Neighborhood {}", workerId, neighborhoodId);
+        return Optional.ofNullable(em.find(WorkerArea.class, new WorkerAreaKey(workerId, neighborhoodId)));
+    }
 
     @Override
     public List<Neighborhood> getNeighborhoods(long workerId) {
@@ -44,7 +52,7 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
         return query.getResultList();
     }
 
-    // ----------------------------------------- NEIGHBORHOOD_WORKERS DELETE -------------------------------------------
+    // ----------------------------------------- NEIGHBORHOOD WORKERS DELETE -------------------------------------------
 
     @Override
     public boolean deleteWorkerArea(long workerId, long neighborhoodId) {
@@ -55,15 +63,6 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
             return true;
         } else {
             return false;
-        }
-    }
-
-    @Override
-    public void setNeighborhoodRole(long workerId, WorkerRole role, long neighborhoodId) {
-        LOGGER.debug("Setting Worker {} role to {} in Neighborhood {}", workerId, role, neighborhoodId);
-        WorkerArea workerArea = em.find(WorkerArea.class, new WorkerAreaKey(workerId, neighborhoodId));
-        if (workerArea != null) {
-            workerArea.setRole(role);
         }
     }
 }

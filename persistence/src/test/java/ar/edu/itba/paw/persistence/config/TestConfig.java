@@ -30,20 +30,7 @@ public class TestConfig {
 
     @Value("classpath:hsqlSetUp.sql")
     private Resource hsqldbSql;
-
-
-    /*@Bean
-    public DataSource dataSource() {
-        final SingleConnectionDataSource ds = new SingleConnectionDataSource();
-
-        ds.setDriverClassName(JDBCDriver.class.getCanonicalName());
-        ds.setSuppressClose(true);
-        ds.setUrl("jdbc:hsqldb:mem:pawtest");
-        ds.setUsername("ha");
-        ds.setPassword("");
-
-        return ds;
-    }*/
+    
     @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();

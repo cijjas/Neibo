@@ -32,7 +32,7 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
     @PersistenceContext
     private EntityManager em;
 
-    // --------------------------------------- WORKERS_PROFESSIONS INSERT ----------------------------------------------
+    // --------------------------------------- WORKERS PROFESSIONS INSERT ----------------------------------------------
 
     @Override
     public Specialization createSpecialization(long workerId, long professionId) {
@@ -42,7 +42,7 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
         return specialization;
     }
 
-    // --------------------------------------- WORKERS_PROFESSIONS SELECT ----------------------------------------------
+    // --------------------------------------- WORKERS PROFESSIONS SELECT ----------------------------------------------
 
     @Override
     public List<Profession> getWorkerProfessions(long workerId) {

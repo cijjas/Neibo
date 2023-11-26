@@ -5,20 +5,21 @@ import ar.edu.itba.paw.models.JunctionEntities.WorkerArea;
 import ar.edu.itba.paw.models.MainEntities.Neighborhood;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface NeighborhoodWorkerDao {
 
-    // --------------------------------------- NEIGHBORHOODS_WORKERS SELECT ----------------------------------------
+    // --------------------------------------- NEIGHBORHOODS WORKERS SELECT ----------------------------------------
 
     WorkerArea createWorkerArea(long workerId, long neighborhoodId);
 
-    // --------------------------------------- NIEGHBORHOODWORKERS SELECT ------------------------------------------
+    // --------------------------------------- NEIGHBORHOODS WORKERS SELECT ------------------------------------------
+
+    Optional<WorkerArea> findWorkerArea(long workerId, long neighborhoodId);
 
     List<Neighborhood> getNeighborhoods(long workerId);
 
-    // --------------------------------------- NEIGHBORHOODS_WORKERS DELETE ----------------------------------------
+    // --------------------------------------- NEIGHBORHOODS WORKERS DELETE ----------------------------------------
 
     boolean deleteWorkerArea(long workerId, long neighborhoodId);
-
-    public void setNeighborhoodRole(long workerId, WorkerRole role, long neighborhoodId);
 }

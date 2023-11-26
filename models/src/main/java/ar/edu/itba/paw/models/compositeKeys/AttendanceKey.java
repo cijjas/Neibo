@@ -18,9 +18,9 @@ public class AttendanceKey implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof AttendanceKey)) return false;
         AttendanceKey that = (AttendanceKey) o;
-        return userId.equals(that.userId) && eventId.equals(that.eventId);
+        return Objects.equals(userId, that.userId) && Objects.equals(eventId, that.eventId);
     }
 
     @Override

@@ -72,7 +72,4 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
         return true; // Indicate success
     }
-
-
-
 }

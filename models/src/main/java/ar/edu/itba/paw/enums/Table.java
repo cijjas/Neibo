@@ -35,6 +35,6 @@ public enum Table {
     products_departments,
     products_users_inquiries,
     products_users_requests,
-    ;
+    products_users_purchases,
 
 }

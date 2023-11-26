@@ -1,6 +1,11 @@
 package ar.edu.itba.paw.enums;
 
-import java.util.*;
+import ar.edu.itba.paw.Pair;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public enum Department {
@@ -33,7 +38,7 @@ public enum Department {
             .collect(Collectors.toList());
 
     public static Department fromURLString(String urlString) {
-        if(Objects.equals(urlString, "all")){
+        if (Objects.equals(urlString, "all")) {
             return Department.NONE;
         }
         for (Department department : values()) {
@@ -44,22 +49,18 @@ public enum Department {
         return null;
     }
 
-    private String toURLString() {
-        return name().toLowerCase().replace("_", "-");
-    }
-
     public static List<Pair<String, String>> getDepartmentsWithUrls() {
         return Arrays.stream(values())
                 .map(department -> new Pair<>(department.toURLString(), department.name()))
                 .collect(Collectors.toList());
     }
+
     public static List<Pair<Integer, String>> getDepartments() {
         return Arrays.stream(values())
                 .map(department -> new Pair<>(department.getId(), department.name()))
                 .sorted(Comparator.comparing(Pair::getValue))
                 .collect(Collectors.toList());
     }
-
 
     public static Department fromId(int id) {
         return Arrays.stream(values())
@@ -68,9 +69,14 @@ public enum Department {
                 .orElse(null);
     }
 
-    public String getDepartmentUrl(){
+    private String toURLString() {
+        return name().toLowerCase().replace("_", "-");
+    }
+
+    public String getDepartmentUrl() {
         return toURLString();
     }
+
     @Override
     public String toString() {
         String name = name().toLowerCase();

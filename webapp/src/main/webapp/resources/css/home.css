@@ -364,6 +364,13 @@
     overflow: hidden;
     position: relative;
     transform: translateY(0);
+    &.marketplace{
+        &:hover {
+            transform: translateY(-5px);
+            box-shadow: -3px 5px 0 0 var(--lila);
+            border: var(--border);
+        }
+    }
     &::before{
         content: "";
         position: absolute;
@@ -2745,13 +2752,29 @@ input[type=time] {
     flex-direction: row;
     justify-content: center;
     & img{
-
         width: 100%;
-        object-fit: contain;
+        object-fit: cover;
         object-position: center bottom;
     }
 }
 
+.img-bg {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+    padding-bottom: 100%;
+    border-radius: var(--border-radius);
+}
+
+.standard-img{
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    object-position: cover;
+    border-radius: var(--border-radius);
+}
 
 .used-tag{
     border-radius: 5px;
@@ -2934,7 +2957,6 @@ input[type=time] {
     position: relative;
     padding-bottom: 100%;
     border-radius: var(--border-radius);
-
 }
 
 
