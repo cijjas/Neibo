@@ -23,62 +23,19 @@ import java.util.Objects;
 
 @Controller
 @RequestMapping("/marketplace")
-public class MarketplaceController {
+public class MarketplaceController extends GlobalControllerAdvice{
     private static final Logger LOGGER = LoggerFactory.getLogger(MarketplaceController.class);
-    private final SessionUtils sessionUtils;
-    private final PostService ps;
-    private final UserService us;
-    private final NeighborhoodService nhs;
-    private final CommentService cs;
-    private final TagService ts;
-    private final ChannelService chs;
-    private final CategorizationService cas;
-    private final ImageService is;
-    private final AmenityService as;
-    private final EventService es;
-    private final ResourceService res;
-    private final ContactService cos;
-    private final ShiftService shs;
-    private final AvailabilityService avs;
     private final ProductService prs;
     private final RequestService rqs;
     private final InquiryService inqs;
 
     @Autowired
-    public MarketplaceController(SessionUtils sessionUtils,
-                           final PostService ps,
-                           final UserService us,
-                           final NeighborhoodService nhs,
-                           final CommentService cs,
-                           final TagService ts,
-                           final ChannelService chs,
-                           final CategorizationService cas,
-                           final ImageService is,
-                           final AmenityService as,
-                           final EventService es,
-                           final ResourceService res,
-                           final ContactService cos,
-                           final ShiftService shs,
-                           final AvailabilityService avs,
+    public MarketplaceController(final UserService us,
                             final ProductService prs,
                             final RequestService rqs,
                             final InquiryService inqs
     ) {
-        this.sessionUtils = sessionUtils;
-        this.is = is;
-        this.ps = ps;
-        this.us = us;
-        this.nhs = nhs;
-        this.cs = cs;
-        this.ts = ts;
-        this.chs = chs;
-        this.cas = cas;
-        this.as = as;
-        this.es = es;
-        this.res = res;
-        this.cos = cos;
-        this.shs = shs;
-        this.avs = avs;
+        super(us);
         this.prs = prs;
         this.rqs = rqs;
         this.inqs = inqs;
@@ -97,14 +54,14 @@ public class MarketplaceController {
             department = "all";
         }
         LOGGER.info("User arriving at '/marketplace'");
-        List<Product> productList = prs.getProductsByCriteria(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.fromURLString(department) , page,size);
+        List<Product> productList = prs.getProductsByCriteria(getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.fromURLString(department) , page,size);
         ModelAndView mav = new ModelAndView("marketplace/views/marketplace");
         mav.addObject("productList", productList);
         mav.addObject("channel", "Marketplace");
         mav.addObject("departmentList", Department.getDepartmentsWithUrls());
         mav.addObject("departmentName", Objects.requireNonNull(Department.fromURLString(department)).name());
         mav.addObject("page", page);
-        mav.addObject("totalPages", prs.getProductsTotalPages(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), size, Department.fromURLString(department)));
+        mav.addObject("totalPages", prs.getProductsTotalPages(getLoggedUser().getNeighborhood().getNeighborhoodId(), size, Department.fromURLString(department)));
         mav.addObject("contextPath", "/marketplace/products/" + department);
         return mav;
     }
@@ -120,13 +77,17 @@ public class MarketplaceController {
     ) {
         LOGGER.info("User arriving at '/marketplace/my-purchases'");
 
-        List<Product> products = prs.getProductsBought(sessionUtils.getLoggedUser().getUserId(), page, size);
+        List<Product> products = prs.getProductsBought(getLoggedUser().getUserId(), page, size);
 
         ModelAndView mav = new ModelAndView("marketplace/views/myPurchases");
         mav.addObject("channel", "MyPurchases");
         mav.addObject("products", products);
+<<<<<<< HEAD
+=======
+        mav.addObject("loggedUser", getLoggedUser());
+>>>>>>> 1d87f535747d89d027fde8c54858eb1c29e1e7b1
         mav.addObject("page", page);
-        mav.addObject("totalPages", prs.getProductsBoughtTotalPages(sessionUtils.getLoggedUser().getUserId(), size));
+        mav.addObject("totalPages", prs.getProductsBoughtTotalPages(getLoggedUser().getUserId(), size));
         mav.addObject("contextPath", "/marketplace/my-purchases");
         return mav;
     }
@@ -141,9 +102,9 @@ public class MarketplaceController {
         ModelAndView mav = new ModelAndView("marketplace/views/myCurrentlyRequesting");
         mav.addObject("channel", "CurrentlyRequesting");
         mav.addObject("page", page);
-        mav.addObject("totalPages", prs.getProductsBoughtTotalPages(sessionUtils.getLoggedUser().getUserId(), size));
+        mav.addObject("totalPages", prs.getProductsBoughtTotalPages(getLoggedUser().getUserId(), size));
         mav.addObject("contextPath", "/marketplace/currently-requesting");
-        mav.addObject("requestList", sessionUtils.getLoggedUser().getRequestedProducts());
+        mav.addObject("requestList", getLoggedUser().getRequestedProducts());
         return mav;
     }
 
@@ -155,10 +116,14 @@ public class MarketplaceController {
         LOGGER.info("User arriving at '/marketplace/my-sales'");
 
         ModelAndView mav = new ModelAndView("marketplace/views/mySales");
-        mav.addObject("products", prs.getProductsSold(sessionUtils.getLoggedUser().getUserId(), page, size));
+        mav.addObject("products", prs.getProductsSold(getLoggedUser().getUserId(), page, size));
         mav.addObject("channel", "MySales");
+<<<<<<< HEAD
+=======
+        mav.addObject("loggedUser", getLoggedUser());
+>>>>>>> 1d87f535747d89d027fde8c54858eb1c29e1e7b1
         mav.addObject("page", page);
-        mav.addObject("totalPages", prs.getProductsSoldTotalPages(sessionUtils.getLoggedUser().getUserId(), size));
+        mav.addObject("totalPages", prs.getProductsSoldTotalPages(getLoggedUser().getUserId(), size));
         mav.addObject("contextPath", "/marketplace/my-sales");
         return mav;
     }
@@ -195,7 +160,7 @@ public class MarketplaceController {
         mav.addObject("channel", "MyRequested");
         mav.addObject("page", page);
 
-        mav.addObject("totalPages", prs.getProductsBoughtTotalPages(sessionUtils.getLoggedUser().getUserId(), size));
+        mav.addObject("totalPages", prs.getProductsBoughtTotalPages(getLoggedUser().getUserId(), size));
         mav.addObject("contextPath", "/marketplace/my-purchases");
         return mav;
     }
@@ -221,10 +186,14 @@ public class MarketplaceController {
 
         ModelAndView mav = new ModelAndView("marketplace/views/myListings");
 
-        mav.addObject("myProductList", prs.getProductsSelling(sessionUtils.getLoggedUser().getUserId(), page, size));
+        mav.addObject("myProductList", prs.getProductsSelling(getLoggedUser().getUserId(), page, size));
         mav.addObject("channel", "MyListings");
+<<<<<<< HEAD
+=======
+        mav.addObject("loggedUser", getLoggedUser());
+>>>>>>> 1d87f535747d89d027fde8c54858eb1c29e1e7b1
         mav.addObject("page", page);
-        mav.addObject("totalPages", prs.getProductsSellingTotalPages(sessionUtils.getLoggedUser().getUserId(), size));
+        mav.addObject("totalPages", prs.getProductsSellingTotalPages(getLoggedUser().getUserId(), size));
         mav.addObject("contextPath", "/marketplace/my-listings");
         return mav;
     }
@@ -237,6 +206,10 @@ public class MarketplaceController {
         ModelAndView mav = new ModelAndView("marketplace/views/productSell");
         mav.addObject("channel", "Sell");
         mav.addObject("departmentList", Department.getDepartments());
+<<<<<<< HEAD
+=======
+        mav.addObject("loggedUser", getLoggedUser());
+>>>>>>> 1d87f535747d89d027fde8c54858eb1c29e1e7b1
         return mav;
     }
 
@@ -250,8 +223,16 @@ public class MarketplaceController {
             LOGGER.error("Error in form 'listingForm'");
             return createListingForm(listingForm);
         }
+<<<<<<< HEAD
         User user = sessionUtils.getLoggedUser();
         prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles(), listingForm.getQuantity());
+=======
+        User user = getLoggedUser();
+/*
+        prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles());
+        ahora tienen que venir las units tambn
+*/
+>>>>>>> 1d87f535747d89d027fde8c54858eb1c29e1e7b1
         return new ModelAndView("redirect:/marketplace/my-listings");
     }
 
@@ -287,7 +268,7 @@ public class MarketplaceController {
             LOGGER.error("Error in form 'requestForm'");
             return product(productId, department, requestForm, new QuestionForm(), new ReplyForm(), true);
         }
-        rqs.createRequest(sessionUtils.getLoggedUser().getUserId(), productId, requestForm.getRequestMessage());
+        rqs.createRequest(getLoggedUser().getUserId(), productId, requestForm.getRequestMessage());
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
     }
 
@@ -305,7 +286,7 @@ public class MarketplaceController {
             LOGGER.error("Error in form 'questionForm'");
             return product(productId,department,  new RequestForm(), questionForm, new ReplyForm(),false);
         }
-        inqs.createInquiry(sessionUtils.getLoggedUser().getUserId(), productId, questionForm.getQuestionMessage());
+        inqs.createInquiry(getLoggedUser().getUserId(), productId, questionForm.getQuestionMessage());
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
     }
 
@@ -337,6 +318,10 @@ public class MarketplaceController {
         LOGGER.info("User arriving at '/marketplace/products/" + department + "/" + productId +"/edit'");
         ModelAndView mav = new ModelAndView("marketplace/views/productEdit");
         mav.addObject("departmentList", Department.getDepartments());
+<<<<<<< HEAD
+=======
+        mav.addObject("loggedUser", getLoggedUser());
+>>>>>>> 1d87f535747d89d027fde8c54858eb1c29e1e7b1
         mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
         return mav;
     }

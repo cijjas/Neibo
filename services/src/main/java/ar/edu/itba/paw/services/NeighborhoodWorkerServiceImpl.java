@@ -96,17 +96,11 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     @Override
     public void verifyWorkerInNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Verifying Worker {} in Neighborhood {}", workerId, neighborhoodId);
-        // This method has to change
         setNeighborhoodRole(workerId, WorkerRole.VERIFIED_WORKER, neighborhoodId);
-//        String neighborhood = neighborhoodService.findNeighborhoodById(user.getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
-//        Map<String, Object> vars = new HashMap<>();
-//        vars.put("name", user.getName());
-//        vars.put("neighborhood", neighborhood);
-//        vars.put("loginPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/");
-//        if (user.getLanguage() == Language.ENGLISH)
-//            emailService.sendMessageUsingThymeleafTemplate(user.getMail(), "Verification", "verification-template_en.html", vars);
-//        else
-//            emailService.sendMessageUsingThymeleafTemplate(user.getMail(), "Verificación", "verification-template_es.html", vars);
+        User worker = userDao.findUserById(workerId).orElse(null);
+        assert worker != null;
+        String neighborhoodName = neighborhoodDao.findNeighborhoodById(worker.getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
+        emailService.sendVerifiedNeighborMail(worker, neighborhoodName);
     }
 
     @Override

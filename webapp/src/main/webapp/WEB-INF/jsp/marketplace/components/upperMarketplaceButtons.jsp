@@ -18,7 +18,7 @@
                     <span class="font-size-12">
                         <i class="fa-solid fa-bag-shopping hide-icons"></i>
                         <span class="hide-text">
-                            <spring:message code="My.purchases"/>
+                            <spring:message code="Buyer.hub"/>
                         </span>
                     </span>
                     </a>
@@ -26,9 +26,9 @@
 
                     <a href="${contextPath}/marketplace/my-listings" class="cool-feed-button rounded marketplace-button ${channel == "MyListings" ? 'active' : ''}">
                         <span class="font-size-12">
-                            <i class="fa-solid fa-bars-staggered"></i>
+                            <i class="fa-solid fa-tags"></i>
                             <span class="hide-text">
-                                <spring:message code="My.listings"/>
+                                <spring:message code="Seller.hub"/>
                             </span>
                         </span>
                     </a>
@@ -64,7 +64,7 @@
 
 
         <a href="${contextPath}/marketplace/create-listing" class="cool-feed-button p-3  marketplace-button square font-size-16 font-weight-bold ${channel == "Sell" ? 'active' : ''}">
-            <i class="fa-solid fa-tags"></i>
+            <i class="fa-solid fa-tag"></i>
             <spring:message code="Sell"/>
         </a>
     </div>
