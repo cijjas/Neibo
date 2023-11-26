@@ -35,6 +35,7 @@ public class RequestDaoImpl implements RequestDao {
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
                 .message(message)
+                .requestDate(new java.sql.Date(System.currentTimeMillis()))
                 .build();
         em.persist(request);
         return request;
