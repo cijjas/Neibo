@@ -13,4 +13,8 @@ public interface InquiryService {
     Optional<Inquiry> findInquiryById(final long inquiryId);
 
     List<Inquiry> getInquiriesByProduct(final long productId);
+
+    List<Inquiry> getInquiriesByProductAndCriteria(long productId, int page, int size);
+
+    int getTotalInquiryPages(long productId, int size);
 }
