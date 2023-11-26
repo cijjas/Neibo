@@ -14,7 +14,7 @@ public interface EmailService {
 
     void sendNewUserMail(long neighborhoodId, String userName, UserRole role);
 
-    void sendEventMail(Event event, String message_en, String message_es, List<User> receivers);
+    void sendEventMail(Event event, String customMessage, List<User> receivers);
 
     void sendWeeklyEventNotifications();
 

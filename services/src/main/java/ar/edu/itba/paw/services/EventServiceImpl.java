@@ -52,7 +52,7 @@ public class EventServiceImpl implements EventService {
 
         Long[] times = stringToTime(startTime, endTime);
         Event createdEvent = eventDao.createEvent(name, description, date, times[0], times[1], neighborhoodId);
-        emailService.sendEventMail(createdEvent, "there's a new event!", "hay un nuevo evento!", userService.getNeighbors(neighborhoodId));
+        emailService.sendEventMail(createdEvent, "event.custom.message2", userService.getNeighbors(neighborhoodId));
         return createdEvent;
     }
 
@@ -65,7 +65,7 @@ public class EventServiceImpl implements EventService {
         event.setDate(date);
         event.setStartTime(em.find(ar.edu.itba.paw.models.MainEntities.Time.class, times[0]));
         event.setEndTime(em.find(ar.edu.itba.paw.models.MainEntities.Time.class, times[1]));
-        emailService.sendEventMail(event, "an event has been updated!", "se ha modificado un evento!", userService.getNeighbors(event.getNeighborhood().getNeighborhoodId()));
+        emailService.sendEventMail(event, "event.custom.message1", userService.getNeighbors(event.getNeighborhood().getNeighborhoodId()));
         return event;
     }
 
