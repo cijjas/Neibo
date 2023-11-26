@@ -5,14 +5,12 @@ import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.MainEntities.Product;
 import ar.edu.itba.paw.models.MainEntities.User;
-import ar.edu.itba.paw.webapp.form.ListingForm;
-import ar.edu.itba.paw.webapp.form.QuestionForm;
-import ar.edu.itba.paw.webapp.form.ReplyForm;
-import ar.edu.itba.paw.webapp.form.RequestForm;
+import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -126,36 +124,33 @@ public class MarketplaceController extends GlobalControllerAdvice{
     public ModelAndView listingRequests(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size,
-            @PathVariable(value = "productId") int productId
+            @PathVariable(value = "productId") int productId,
+            @ModelAttribute("markAsSoldForm") MarkAsSoldForm markAsSoldForm
     ) {
         LOGGER.info("User arriving at '/marketplace/my-requests/{}'", productId);
 
         ModelAndView mav = new ModelAndView("marketplace/views/listingRequests");
-        System.out.println("HOLA" + rqs.getRequestsByProductId(productId, 1, 10));
-
         mav.addObject("requestList", rqs.getRequestsByProductId(productId, page, size));
         mav.addObject("requests", prs.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")).getRequesters());
         mav.addObject("product", prs.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")));
         return mav;
     }
 
-
-
-
-    @RequestMapping(value = "/requested-listings" , method = RequestMethod.GET)
-    public ModelAndView requestedListings(
+    @RequestMapping(value = "/my-requests/{productId:\\d+}", method = RequestMethod.POST)
+    public ModelAndView listingRequests(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-            @RequestParam(value = "size", required = false, defaultValue = "10") int size
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+            @PathVariable(value = "productId") int productId,
+            @Valid @ModelAttribute("markAsSoldForm") MarkAsSoldForm markAsSoldForm,
+            final BindingResult bindingResult
     ) {
-        LOGGER.info("User arriving at /requested-listings");
-
-        ModelAndView mav = new ModelAndView("marketplace/views/requestedListings");
-        mav.addObject("channel", "MyRequested");
-        mav.addObject("page", page);
-
-        mav.addObject("totalPages", prs.getProductsBoughtTotalPages(getLoggedUser().getUserId(), size));
-        mav.addObject("contextPath", "/marketplace/my-purchases");
-        return mav;
+        LOGGER.info("User arriving at '/marketplace/my-requests/{}' POST", productId);
+        if(bindingResult.hasErrors()){
+            LOGGER.error("Error in form 'markAsSoldForm'");
+            return listingRequests(page, size, productId, markAsSoldForm);
+        }
+        prs.markAsBought(getLoggedUser().getUserId(), productId, markAsSoldForm.getQuantity());
+        return new ModelAndView("redirect:/marketplace/my-sales");
     }
 
 
@@ -163,7 +158,6 @@ public class MarketplaceController extends GlobalControllerAdvice{
     public ModelAndView markAsBought(
             @RequestParam(value = "buyerId") int buyerId,
             @RequestParam(value = "productId") int productId
-
     ) {
         LOGGER.info("User arriving at '/marketplace/mark-as-bought'");
         /*prs.markAsBought(buyerId, productId, units!); ahora falta units que se compraron*/

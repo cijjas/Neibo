@@ -419,7 +419,6 @@
 
 <div id="loader-container" class="loader-container ">
   <div class="cool-static-container small-size-container">
-
     <div style="font-weight: bold; font-size: 16px"><spring:message code="Sending.your.message"/>...</div>
     <div class="loader marketplace" style="margin-top: 20px"></div>
   </div>

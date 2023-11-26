@@ -14,7 +14,7 @@
                 </a>
 
                 <div class="f-r-s-c sub-filters g-05">
-                    <a href="${contextPath}/marketplace/my-purchases" class="cool-feed-button rounded marketplace-button ${channel == "MyPurchases" ? 'active' : ''}">
+                    <a href="${contextPath}/marketplace/my-purchases" class="cool-feed-button rounded marketplace-button ${(channel == "MyPurchases" || channel == "CurrentlyRequesting") ? 'active' : ''}">
                     <span class="font-size-12">
                         <i class="fa-solid fa-bag-shopping hide-icons"></i>
                         <span class="hide-text">
@@ -24,7 +24,7 @@
                     </a>
 
 
-                    <a href="${contextPath}/marketplace/my-listings" class="cool-feed-button rounded marketplace-button ${channel == "MyListings" ? 'active' : ''}">
+                    <a href="${contextPath}/marketplace/my-listings" class="cool-feed-button rounded marketplace-button ${(channel == "MyListings" || channel == "MySales") ? 'active' : ''}">
                         <span class="font-size-12">
                             <i class="fa-solid fa-tags"></i>
                             <span class="hide-text">

@@ -2437,6 +2437,16 @@ input[type=time] {
     width: 215px;
     transform: translate(-50%, -50%);
 }
+
+.boxy-poxy{
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    height: 100px;
+    width: 215px;
+    transform: translate(-50%, -50%) rotate(11deg);
+}
+
 .dialog-content {
     position: relative; /* Add position relative to create a positioning context */
     min-width: 400px;
@@ -3056,4 +3066,30 @@ input[type=time] {
 
 .custom-dropdown-alternative .dropdown-options li:hover {
     background-color: var(--primary);
+}
+
+.back-button{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--text);
+    &:hover{
+        color: var(--primary);
+    }
+    &.marketplace{
+        &:hover{
+            color: var(--lila);
+        }
+    }
+}
+
+.marketplace-back{
+    color: var(--lighttext);
+    font-size: 20px;
+
+    &:hover{
+        color: var(--lila);
+    }
 }

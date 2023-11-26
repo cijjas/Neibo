@@ -35,6 +35,11 @@
 
 
             <div class="cool-static-container w-100">
+                <div class="f-r-s-c w-100">
+                    <a href="${contextPath}/marketplace/products/appliances/${product.productId}" class="marketplace-back">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
+                </div>
                 <div class="f-c-c-c">
                     <div class="f-r-c-c">
                     <span class="font-size-24">
