@@ -48,6 +48,17 @@ public class TagsValidator implements
                         .disableDefaultConstraintViolation();
                 return false; // If any tag is invalid, return false
             }
+
+            // Check if the first letter is uppercase
+            if (!Character.isUpperCase(tag.charAt(0))) {
+                String tagError4 = messageSource.getMessage("TagError4", null, Locale.getDefault());
+
+                String errorMessage = tagError4 + tag;
+                context.buildConstraintViolationWithTemplate(errorMessage)
+                        .addConstraintViolation()
+                        .disableDefaultConstraintViolation();
+                return false;
+            }
         }
 
         return true; // All tags are valid
