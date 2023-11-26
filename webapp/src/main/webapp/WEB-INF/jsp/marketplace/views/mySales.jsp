@@ -39,25 +39,28 @@
                 </jsp:include>
             </c:if>
 
-            <div class="w-100 f-c-c-c g-1 cool-static-container">
-                <div class="f-r-c-c w-50 pt-2 pb-2">
-                    <a href="${contextPath}/marketplace/my-listings" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "MyListings" ? 'active' : ''}">
-                        <span class="font-size-12">
-                            <i class="fa-regular fa-chart-bar"></i>
-                            <span class="hide-text">
-                                <spring:message code="My.listings"/>
+            <div class="w-100 f-c-c-c g-05 cool-static-container">
+                <div class="f-c-s-s w-100 ">
+                    <div class="f-r-c-c pt-2 pb-2">
+                        <a href="${contextPath}/marketplace/my-listings" class="cool-feed-button rounded marketplace-button  font-weight-bold ${channel == "MyListings" ? 'active' : ''}">
+                            <span class="font-size-12">
+                                <i class="fa-regular fa-chart-bar"></i>
+                                <span class="hide-text">
+                                    <spring:message code="My.listings"/>
+                                </span>
                             </span>
-                        </span>
-                    </a>
-                    <a href="${contextPath}/marketplace/my-sales" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "MySales" ? 'active' : ''}">
+                        </a>
+                        <a href="${contextPath}/marketplace/my-sales" class="cool-feed-button rounded marketplace-button font-weight-bold ${channel == "MySales" ? 'active' : ''}">
                         <span class="font-size-12">
                             <i class="fa-solid fa-box-open hide-icons"></i>
                             <span class="hide-text">
                                 <spring:message code="My.sales"/>
                             </span>
                         </span>
-                    </a>
+                        </a>
+                    </div>
                 </div>
+                <div class="divider mb-3"></div>
                 <c:choose>
                     <c:when test="${empty purchases}">
                         <div class="no-posts-found">
@@ -68,14 +71,18 @@
                     <c:otherwise>
                         <div class="w-100 f-c-c-c g-1 ">
                             <c:forEach var="purchase" items="${purchases}">
+
                                 <div class="cool-static-container w-100 f-c-s-s g-0 p-0">
+                                    <div class="p-2 pl-3">
+                                        <c:out value="${purchase.purchaseDate}"/>
+                                    </div>
                                     <div class="divider m-0"></div>
                                     <div class="container">
                                         <div class="f-r-c-c w-100 g-1">
                                             <div class="pl-0">
                                                 <div class="purchased-product-image f-c-c-c placeholder-glow">
                                                     <img
-                                                            id="purchased-product-image-${purchase.product.productId}"
+                                                            id="purchased-product-image-${purchase.purchaseId}"
                                                             src=""
                                                             class="placeholder"
                                                             alt="purchased_product_image_${purchase.product.productId}"
@@ -83,7 +90,7 @@
                                                     <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
                                                     <script>
                                                         (function () {
-                                                            getImageInto("purchased-product-image-${purchase.product.productId}",${empty purchase.product.primaryPicture.imageId ? -2 : purchase.product.primaryPicture.imageId}, "${pageContext.request.contextPath}")
+                                                            getImageInto("purchased-product-image-${purchase.purchaseId}",${empty purchase.product.primaryPicture.imageId ? -2 : purchase.product.primaryPicture.imageId}, "${pageContext.request.contextPath}")
                                                         })();
                                                     </script>
                                                 </div>

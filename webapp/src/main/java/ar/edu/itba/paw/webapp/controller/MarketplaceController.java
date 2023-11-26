@@ -155,7 +155,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
             LOGGER.error("Error in form 'markAsSoldForm'");
             return listingRequests(page, size, productId, markAsSoldForm);
         }
-        prs.markAsBought(getLoggedUser().getUserId(), productId, markAsSoldForm.getQuantity());
+        prs.markAsBought(markAsSoldForm.getBuyerId(), productId, markAsSoldForm.getQuantity());
         return new ModelAndView("redirect:/marketplace/my-sales");
     }
 

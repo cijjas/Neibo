@@ -39,25 +39,30 @@
                 </jsp:include>
             </c:if>
 
-            <div class="w-100 f-c-c-c g-1 cool-static-container">
-                <div class="f-r-c-c w-50 pt-2 pb-2">
-                    <a href="${contextPath}/marketplace/my-listings" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "MyListings" ? 'active' : ''}">
-                        <span class="font-size-12">
-                            <i class="fa-regular fa-chart-bar"></i>
-                            <span class="hide-text">
-                                <spring:message code="My.listings"/>
+            <div class="w-100 f-c-c-c g-05 cool-static-container">
+
+                <div class="f-c-s-s w-100 ">
+                    <div class="f-r-c-c pt-2 pb-2">
+                        <a href="${contextPath}/marketplace/my-listings" class="cool-feed-button rounded marketplace-button  font-weight-bold ${channel == "MyListings" ? 'active' : ''}">
+                            <span class="font-size-12">
+                                <i class="fa-regular fa-chart-bar"></i>
+                                <span class="hide-text">
+                                    <spring:message code="My.listings"/>
+                                </span>
                             </span>
-                        </span>
-                    </a>
-                    <a href="${contextPath}/marketplace/my-sales" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "MySales" ? 'active' : ''}">
+                        </a>
+                        <a href="${contextPath}/marketplace/my-sales" class="cool-feed-button rounded marketplace-button font-weight-bold ${channel == "MySales" ? 'active' : ''}">
                         <span class="font-size-12">
                             <i class="fa-solid fa-box-open hide-icons"></i>
                             <span class="hide-text">
                                 <spring:message code="My.sales"/>
                             </span>
                         </span>
-                    </a>
+                        </a>
+                    </div>
                 </div>
+                <div class="divider mb-3"></div>
+
                 <c:choose>
                     <c:when test="${empty myProductList}">
                         <div class="no-posts-found">

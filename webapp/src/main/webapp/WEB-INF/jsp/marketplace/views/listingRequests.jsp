@@ -117,25 +117,31 @@
                         </c:forEach>
                     </c:otherwise>
                 </c:choose>
-
             </div>
-
-
         </div>
     </div>
 </div>
 
 <script>
-    function openMarkAsSoldDialog() {
+    function openMarkAsSoldDialog(id) {
+        const idT = document.getElementById('id-t');
+        idT.innerHTML = id;
         document.getElementById('mark-as-sold-dialog').style.display = 'flex';
     }
 
     function closeMarkAsSoldDialog() {
         document.getElementById('mark-as-sold-dialog').style.display = 'none';
     }
+
+    function submitMarkAsSold() {
+        document.getElementById('loader-container').style.display = 'flex';
+        document.getElementById('buyer-id').value = document.getElementById('id-t').innerHTML;
+        const form = document.forms['markAsSoldForm'];
+        form.submit();
+    }
 </script>
 
-<div id="mark-as-sold-dialog" class="dialog" style="display: flex">
+<div id="mark-as-sold-dialog" class="dialog" style="display: none">
     <div class="dialog-content marketplace" >
         <div class="dialog-header">
             <div class="dialog-svg">
@@ -171,11 +177,15 @@
                 <i class="fas fa-close"></i>
             </a>
         </div>
+        <span id="id-t" hidden="hidden"></span>
+
         <form:form class="f-c-c-c w-100" id="markAsSoldForm" name="markAsSoldForm" method="post" action="${contextPath}/marketplace/my-requests/${product.productId}" modelAttribute="markAsSoldForm" enctype="multipart/form-data">
-            <form:hidden path="userId" value="${loggedUser.userId}"/>
             <div class="f-c-c-c w-100  g-0">
+                <form:hidden id="buyer-id" path="buyerId" value=""/>
+
                 <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
-                    <spring:message code="Quantity"/>
+                    <span class="c-text"><spring:message code="Quantity"/></span>
+
                     <div class="">
                         <label for="condition"></label>
                         <form:select path="quantity"  class="cool-input marketplace-input quantity-input font-weight-bold font-size-14" name="condition" id="condition">
@@ -187,7 +197,7 @@
                 </div>
                 <form:errors path="quantity" cssClass="error pt-1" element="p"/>
             </div>
-            <button type="submit"  onclick="document.getElementById('loader-container').style.display = 'flex';" class=" w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
+            <button type="submit" onclick="submitMarkAsSold()" class=" w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
                 <spring:message code="Confirm"/>
             </button>
         </form:form>

@@ -38,27 +38,29 @@
                 </jsp:include>
             </c:if>
 
-            <div class="cool-static-container w-100">
-                <div class="f-c-c-c w-100 mb-3">
-                    <div class="f-r-c-c w-50 pt-2 pb-2">
-                        <a href="${contextPath}/marketplace/my-purchases" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "MyPurchases" ? 'active' : ''}">
-                        <span class="font-size-12">
-                            <i class="fa-solid fa-calendar-check"></i>
-                            <span class="hide-text">
-                                <spring:message code="My.purchases"/>
+            <div class="cool-static-container w-100 f-c-c-c g-05">
+
+                <div class="f-c-s-s w-100 ">
+                    <div class="f-r-c-c pt-2 pb-2">
+                        <a href="${contextPath}/marketplace/currently-requesting" class="cool-feed-button rounded marketplace-button font-weight-bold ${channel == "CurrentlyRequesting" ? 'active' : ''}">
+                            <span class="font-size-12">
+                                <i class="fa-solid fa-basket-shopping"></i>
+                                <span class="hide-text">
+                                    <spring:message code="My.requests"/>
+                                </span>
                             </span>
-                        </span>
                         </a>
-                        <a href="${contextPath}/marketplace/currently-requesting" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "CurrentlyRequesting" ? 'active' : ''}">
-                        <span class="font-size-12">
-                            <i class="fa-solid fa-basket-shopping"></i>
-                            <span class="hide-text">
-                                <spring:message code="My.requests"/>
+                        <a href="${contextPath}/marketplace/my-purchases" class="cool-feed-button rounded marketplace-button  font-weight-bold ${channel == "MyPurchases" ? 'active' : ''}">
+                            <span class="font-size-12">
+                                <i class="fa-solid fa-calendar-check"></i>
+                                <span class="hide-text">
+                                    <spring:message code="My.purchases"/>
+                                </span>
                             </span>
-                        </span>
                         </a>
                     </div>
                 </div>
+                <div class="divider mb-3"></div>
 
                 <c:choose>
                     <c:when test="${empty purchases}">
@@ -81,7 +83,7 @@
                                             <div class="pl-0">
                                                 <div class="purchased-product-image f-c-c-c placeholder-glow">
                                                     <img
-                                                            id="purchased-product-image-${purchase.product.productId}"
+                                                            id="purchased-product-image-${purchase.purchaseId}"
                                                             src=""
                                                             class="placeholder"
                                                             alt="purchased_product_image_${purchase.product.productId}"
@@ -89,7 +91,7 @@
                                                     <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
                                                     <script>
                                                         (function () {
-                                                            getImageInto("purchased-product-image-${purchase.product.productId}",${empty purchase.product.primaryPicture.imageId ? -2 : purchase.product.primaryPicture.imageId}, "${pageContext.request.contextPath}")
+                                                            getImageInto("purchased-product-image-${purchase.purchaseId}",${empty purchase.product.primaryPicture.imageId ? -2 : purchase.product.primaryPicture.imageId}, "${pageContext.request.contextPath}")
                                                         })();
                                                     </script>
                                                 </div>
