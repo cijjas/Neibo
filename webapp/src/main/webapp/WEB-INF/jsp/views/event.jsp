@@ -34,11 +34,19 @@
 
         <div class="column column-middle ">
             <%@ include file="/WEB-INF/jsp/components/widgets/eventCard.jsp" %>
+
+            <c:if test="${totalPages >  1}">
+                <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                    <jsp:param name="page" value="${page}"/>
+                    <jsp:param name="totalPages" value="${totalPages}"/>
+                </jsp:include>
+            </c:if>
         </div>
 
         <div class="column column-right">
             <%@ include file="/WEB-INF/jsp/components/widgets/calendar/calendarWidget.jsp" %>
         </div>
+
     </div>
 </div>
 

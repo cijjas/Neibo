@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.MainEntities.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.Objects;
 
 @Entity
@@ -26,6 +27,9 @@ public class Request implements Serializable {
     @Column(name = "message")
     private String message;
 
+    @Column(name = "requestdate")
+    private Date requestDate;
+
     public Request() {
     }
 
@@ -34,6 +38,7 @@ public class Request implements Serializable {
         this.product = builder.product;
         this.message = builder.message;
         this.user = builder.user;
+        this.requestDate = builder.requestDate;
     }
 
     public Long getRequestId() {
@@ -68,12 +73,20 @@ public class Request implements Serializable {
         this.message = message;
     }
 
+    public Date getRequestDate() {
+        return requestDate;
+    }
+
+    public void setRequestDate(Date requestDate) {
+        this.requestDate = requestDate;
+    }
+
     public static class Builder {
         private Long requestId;
         private Product product;
         private User user;
-
         private String message;
+        private Date requestDate;
 
         public Request.Builder requestId(Long requestId) {
             this.requestId = requestId;
@@ -92,6 +105,11 @@ public class Request implements Serializable {
 
         public Request.Builder message(String message) {
             this.message = message;
+            return this;
+        }
+
+        public Request.Builder requestDate(Date requestDate) {
+            this.requestDate = requestDate;
             return this;
         }
 

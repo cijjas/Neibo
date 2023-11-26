@@ -56,9 +56,7 @@ public class PostServiceImplTest {
     @Before
     public void setUp() {
         mockUser = mock(User.class);
-        when(mockUser.getUserId()).thenReturn(USER_ID);
         mockChannel = mock(Channel.class);
-        when(mockChannel.getChannelId()).thenReturn(CHANNEL_ID);
         mockTagList = mock(List.class);
         mockTag = mock(Tag.class);
 

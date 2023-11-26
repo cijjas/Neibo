@@ -1,12 +1,10 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
+import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.interfaces.persistence.RequestDao;
-import ar.edu.itba.paw.models.JunctionEntities.Inquiry;
 import ar.edu.itba.paw.models.JunctionEntities.Request;
-import ar.edu.itba.paw.models.MainEntities.Comment;
 import ar.edu.itba.paw.models.MainEntities.Product;
 import ar.edu.itba.paw.models.MainEntities.User;
-import ar.edu.itba.paw.persistence.MainEntitiesDaos.PostDaoImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -16,7 +14,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,6 +35,7 @@ public class RequestDaoImpl implements RequestDao {
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
                 .message(message)
+                .requestDate(new java.sql.Date(System.currentTimeMillis()))
                 .build();
         em.persist(request);
         return request;
@@ -44,28 +45,28 @@ public class RequestDaoImpl implements RequestDao {
     public List<Request> getRequestsByProductId(long productId, int page, int size) {
         LOGGER.debug("Selecting Requests from Product {}", productId);
 
-//        TypedQuery<Request> requests = em.createQuery("SELECT DISTINCT r FROM Request r WHERE r.product.productId = :productId", Request.class)
-//                .setParameter("productId", productId);
-//        return requests.getResultList();
+        TypedQuery<Long> idQuery = em.createQuery("SELECT r.requestId FROM Request r " +
+                "WHERE r.product.productId = :productId", Long.class);
+        idQuery.setParameter("productId", productId);
+        idQuery.setFirstResult((page - 1) * size);
+        idQuery.setMaxResults(size);
 
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Request> query = cb.createQuery(Request.class);
-        Root<Request> requestRoot = query.from(Request.class);
-        query.select(requestRoot);
-        query.where(cb.equal(requestRoot.get("request").get("requestId"), productId));
-//        query.orderBy(cb.desc(requestRoot.get("date")));
-        TypedQuery<Request> typedQuery = em.createQuery(query);
-        typedQuery.setFirstResult((page - 1) * size);
-        typedQuery.setMaxResults(size);
-        List<Request> requests = typedQuery.getResultList();
-        if (requests.isEmpty())
-            return Collections.emptyList();
-        return requests;
+        List<Long> requestIds = idQuery.getResultList();
+
+        if (!requestIds.isEmpty()) {
+            TypedQuery<Request> requestQuery = em.createQuery(
+                    "SELECT r FROM Request r WHERE r.requestId IN :requestIds", Request.class);
+            requestQuery.setParameter("requestIds", requestIds);
+            return requestQuery.getResultList();
+        }
+
+        return Collections.emptyList();
     }
 
     @Override
     public int getRequestsCountByProductId(long productId) {
         LOGGER.debug("Selecting Requests Count from Product {}", productId);
+
         Long count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
                         "WHERE r.product.productId = :productId")
                 .setParameter("productId", productId)
@@ -77,19 +78,24 @@ public class RequestDaoImpl implements RequestDao {
     public List<Request> getRequestsByProductAndUser(long productId, long userId, int page, int size) {
         LOGGER.debug("Selecting Requests from Product {} By User {}", productId, userId);
 
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Request> query = cb.createQuery(Request.class);
-        Root<Request> requestRoot = query.from(Request.class);
-        query.select(requestRoot);
-        query.where(cb.equal(requestRoot.get("request").get("requestId"), productId));
-        query.where(cb.equal(requestRoot.get("user").get("userId"), userId));
-        TypedQuery<Request> typedQuery = em.createQuery(query);
-        typedQuery.setFirstResult((page - 1) * size);
-        typedQuery.setMaxResults(size);
-        List<Request> requests = typedQuery.getResultList();
-        if (requests.isEmpty())
-            return Collections.emptyList();
-        return requests;
+        TypedQuery<Long> idQuery = em.createQuery(
+                "SELECT r.requestId FROM Request r WHERE r.product.productId = :productId AND r.user.userId = :userId", Long.class);
+        idQuery.setParameter("productId", productId);
+        idQuery.setParameter("userId", userId);
+        idQuery.setFirstResult((page - 1) * size);
+        idQuery.setMaxResults(size);
+
+        List<Long> requestIds = idQuery.getResultList();
+
+        // Second query to retrieve Product objects based on the IDs
+        if (!requestIds.isEmpty()) {
+            TypedQuery<Request> requestQuery = em.createQuery(
+                    "SELECT r FROM Request r WHERE r.requestId IN :requestIds", Request.class);
+            requestQuery.setParameter("requestIds", requestIds);
+            return requestQuery.getResultList();
+        }
+
+        return Collections.emptyList();
     }
 
     @Override
@@ -98,6 +104,39 @@ public class RequestDaoImpl implements RequestDao {
         Long count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
                         "WHERE r.product.productId = :productId AND r.user.userId = :userId")
                 .setParameter("productId", productId)
+                .getSingleResult();
+        return count != null ? count.intValue() : 0;
+    }
+
+    @Override
+    public List<Request> getRequestsByUserId(long userId, int page, int size) {
+        LOGGER.debug("Selecting Requests from User {}", userId);
+
+        TypedQuery<Long> idQuery = em.createQuery("SELECT r.requestId FROM Request r " +
+                "WHERE r.user.userId = :userId", Long.class);
+        idQuery.setParameter("userId", userId);
+        idQuery.setFirstResult((page - 1) * size);
+        idQuery.setMaxResults(size);
+
+        List<Long> requestIds = idQuery.getResultList();
+
+        if (!requestIds.isEmpty()) {
+            TypedQuery<Request> requestQuery = em.createQuery(
+                    "SELECT r FROM Request r WHERE r.requestId IN :requestIds", Request.class);
+            requestQuery.setParameter("requestIds", requestIds);
+            return requestQuery.getResultList();
+        }
+
+        return Collections.emptyList();
+    }
+
+    @Override
+    public int getRequestsCountByUserId(long userId) {
+        LOGGER.debug("Selecting Requests Count from User {}", userId);
+
+        Long count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
+                        "WHERE r.user.userId = :userId")
+                .setParameter("userId", userId)
                 .getSingleResult();
         return count != null ? count.intValue() : 0;
     }

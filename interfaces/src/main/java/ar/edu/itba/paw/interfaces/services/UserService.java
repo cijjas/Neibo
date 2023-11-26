@@ -31,6 +31,10 @@ public interface UserService {
 
     List<User> getEventUsers(long eventId);
 
+    List<User> getEventUsersByCriteria(long eventId, int page, int size);
+
+    int getTotalEventPages(long eventId, int size);
+
     List<User> getProductRequesters(long productId, int page, int size);
 
     // -----------------------------------------------------------------------------------------------------------------

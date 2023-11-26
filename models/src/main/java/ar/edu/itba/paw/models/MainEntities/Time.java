@@ -43,10 +43,7 @@ public class Time {
 
     @Override
     public String toString() {
-        return "Time{" +
-                "timeId=" + timeId +
-                ", timeInterval=" + timeInterval +
-                '}';
+        return timeInterval.toString();
     }
 
     public Time plusHours(int hours) {
