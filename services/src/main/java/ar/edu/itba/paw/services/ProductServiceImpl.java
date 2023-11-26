@@ -139,14 +139,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
+    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, Long stock) {
         LOGGER.info("Updating Product {}", productId);
         double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
         Long[] idArray = {0L, 0L, 0L};
         for(int i = 0; i < pictureFiles.length; i++){
             idArray[i] = getImageId(pictureFiles[i]);
         }
-        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2]);
+        Long updatedStock = stock;
+        if(stock == null){
+            updatedStock = productDao.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")).getRemainingUnits();
+        }
+        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2], updatedStock);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

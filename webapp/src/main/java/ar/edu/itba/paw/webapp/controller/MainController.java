@@ -543,17 +543,21 @@ public class MainController extends GlobalControllerAdvice{
     @RequestMapping(value = "/events/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView viewEvent(
             @PathVariable(value = "id") int eventId,
-            @RequestParam(value = "success", required = false) boolean success
+            @RequestParam(value = "success", required = false) boolean success,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
     ) {
         LOGGER.info("User arriving at '/events/{}'", eventId);
 
         ModelAndView mav = new ModelAndView("views/event");
 
         mav.addObject("event", es.findEventById(eventId).orElseThrow(() -> new NotFoundException("Event not found")));
-        mav.addObject("attendees", us.getEventUsers(eventId));
+        mav.addObject("attendees", us.getEventUsersByCriteria(eventId,page,size));
         mav.addObject("willAttend", us.isAttending(eventId, getLoggedUser().getUserId()));
         mav.addObject("showSuccessMessage", success);
-
+        mav.addObject("page", page);
+        mav.addObject("totalPages", us.getTotalEventPages(eventId, size));
+        mav.addObject("contextPath", "/events/" + eventId);
         return mav;
     }
 

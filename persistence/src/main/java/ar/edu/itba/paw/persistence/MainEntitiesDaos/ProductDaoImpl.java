@@ -45,7 +45,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public Product updateProduct(long productId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId) {
+    public Product updateProduct(long productId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId, Long stock) {
         LOGGER.debug("Updating Product {}", productId);
 
         Product product = em.find(Product.class, productId);
@@ -55,6 +55,7 @@ public class ProductDaoImpl implements ProductDao {
             product.setPrice(price);
             product.setUsed(used);
             product.setDepartment(em.find(ar.edu.itba.paw.models.MainEntities.Department.class, departmentId));
+            product.setRemainingUnits(stock);
             /*product.setPrimaryPicture(em.find(Image.class, primaryPictureId));
             product.setSecondaryPicture(em.find(Image.class, secondaryPictureId));
             product.setTertiaryPicture(em.find(Image.class, tertiaryPictureId));*/

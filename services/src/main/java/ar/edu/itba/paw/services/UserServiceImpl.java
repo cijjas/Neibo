@@ -140,6 +140,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<User> getEventUsersByCriteria(long eventId, int page, int size) {
+        LOGGER.info("Getting User attending Event {}", eventId);
+        return userDao.getEventUsersByCriteria(eventId, page, size);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public int getTotalEventPages(long eventId, int size) {
+        LOGGER.info("Getting Pages of Users with size {} attending Event {}", size, eventId);
+        return (int) Math.ceil((double) userDao.getEventUsers(eventId).size() / size);
+    }
+
+    @Override
     public List<User> getProductRequesters(long productId, int page, int size) {
         return userDao.getProductRequesters(productId, page, size);
     }

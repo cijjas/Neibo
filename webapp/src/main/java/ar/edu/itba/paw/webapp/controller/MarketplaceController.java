@@ -305,7 +305,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
             LOGGER.error("Error in form 'listingForm'");
             return product(productId, department, new RequestForm(), new QuestionForm(), new ReplyForm(),false);
         }
-        prs.updateProduct(productId, listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles());
+        prs.updateProduct(productId, listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles(), listingForm.getQuantity());
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
     }
 }
