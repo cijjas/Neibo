@@ -205,40 +205,6 @@ public class EmailServiceImpl implements EmailService {
 
                 sendMessageUsingThymeleafTemplate(to, "subject.upcoming.events", "events-template_en.html", variables, user.getLanguage());
 
-
-//                if(isEnglish) {
-////                    subject = "Upcoming Events on " + neighborhood.getName();
-//                    variables.put("time","next week!");
-//                    template = "events-template_en.html";
-//
-//                    for (Event event : subscribedEvents) {
-//                        message.append(event.getName())
-//                                .append("\n")
-//                                .append(emailMessageSource.getMessage("event.details", null, locale))
-//                                .append(" ")
-//                                .append(event.getDescription())
-//                                .append(" ")
-//                                .append(emailMessageSource.getMessage("event.on", null, locale))
-//                                .append(" ")
-//                                .append(event.getDate())
-//                                .append("\n\n");
-//                    }
-//                } else {
-//                    subject = "Próximos Eventos en " + neighborhood.getName();
-//                    variables.put("time", "esta semana!");
-//                    template = "events-template_es.html";
-//
-//                    for (Event event : subscribedEvents) {
-//                        message.append(event.getName())
-//                                .append("\n")
-//                                .append("Detalles del evento: ")
-//                                .append(event.getDescription())
-//                                .append(" en ")
-//                                .append(event.getDate())
-//                                .append("\n\n");
-//                    }
-//                }
-
             }
         }
     }
@@ -308,42 +274,6 @@ public class EmailServiceImpl implements EmailService {
                 variables.put("events", message.toString());
 
                 sendMessageUsingThymeleafTemplate(user.getMail(), "subject.tomorrows.events", "events-template_en.html", variables, user.getLanguage());
-
-
-//                if(isEnglish) {
-//                    subject = "Tomorrow's Events in " + neighborhood.getName();
-//                    variables.put("time", "tomorrow!");
-//                    template = "events-template_en.html";
-//
-//                    for (Event event : subscribedEvents) {
-//                        message.append(event.getName())
-//                                .append("\n")
-//                                .append("Event details: ")
-//                                .append(event.getDescription())
-//                                .append(" from ")
-//                                .append(event.getStartTime())
-//                                .append(" to ")
-//                                .append(event.getEndTime())
-//                                .append("\n\n");
-//                    }
-//                } else {
-//                    subject = "Los Eventos de Mañana en " + neighborhood.getName();
-//                    variables.put("time", "mañana!");
-//                    template = "events-template_es.html";
-//
-//                    for (Event event : subscribedEvents) {
-//                        message.append(event.getName())
-//                                .append("\n")
-//                                .append("Detalles del evento: ")
-//                                .append(event.getDescription())
-//                                .append(" desde ")
-//                                .append(event.getStartTime())
-//                                .append(" hasta ")
-//                                .append(event.getEndTime())
-//                                .append("\n\n");
-//                    }
-//                }
-
             }
         }
     }
