@@ -24,6 +24,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -74,13 +75,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         ds.setDriverClass(org.postgresql.Driver.class);
 
 
-//        ds.setUrl("jdbc:postgresql://localhost/paw-2023b-02");
-//        ds.setUsername("paw-2023b-02");
-//        ds.setPassword("Totw34tOi");
-//
-        ds.setUrl("jdbc:postgresql://localhost/paw"); // We set the address and database to connect to
+        ds.setUrl("jdbc:postgresql://localhost/paw-2023b-02");
+        ds.setUsername("paw-2023b-02");
+        ds.setPassword("Totw34tOi");
+
+       /* ds.setUrl("jdbc:postgresql://localhost/paw"); // We set the address and database to connect to
         ds.setUsername("postgres"); // We set the username and password for the database
-        ds.setPassword("postgres");
+        ds.setPassword("postgres");*/
 
         return ds;
     }
