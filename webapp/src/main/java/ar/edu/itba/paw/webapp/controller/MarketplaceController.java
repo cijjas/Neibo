@@ -29,16 +29,21 @@ public class MarketplaceController extends GlobalControllerAdvice{
     private final RequestService rqs;
     private final InquiryService inqs;
 
+    private final PurchaseService prchs;
+
+
     @Autowired
     public MarketplaceController(final UserService us,
                             final ProductService prs,
                             final RequestService rqs,
-                            final InquiryService inqs
+                            final InquiryService inqs,
+                            final PurchaseService prchs
     ) {
         super(us);
         this.prs = prs;
         this.rqs = rqs;
         this.inqs = inqs;
+        this.prchs = prchs;
     }
 
     // --------------------------------------------------- MARKET ------------------------------------------------------
@@ -78,10 +83,9 @@ public class MarketplaceController extends GlobalControllerAdvice{
         LOGGER.info("User arriving at '/marketplace/my-purchases'");
 
         List<Product> products = prs.getProductsBought(getLoggedUser().getUserId(), page, size);
-
         ModelAndView mav = new ModelAndView("marketplace/views/myPurchases");
         mav.addObject("channel", "MyPurchases");
-        mav.addObject("products", products);
+        mav.addObject("purchases", prchs.getPurchasesByBuyerId(getLoggedUser().getUserId(), page, size));
         mav.addObject("page", page);
         mav.addObject("totalPages", prs.getProductsBoughtTotalPages(getLoggedUser().getUserId(), size));
         mav.addObject("contextPath", "/marketplace/my-purchases");
@@ -112,7 +116,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         LOGGER.info("User arriving at '/marketplace/my-sales'");
 
         ModelAndView mav = new ModelAndView("marketplace/views/mySales");
-        mav.addObject("products", prs.getProductsSold(getLoggedUser().getUserId(), page, size));
+        mav.addObject("purchases", prchs.getPurchasesBySellerId(getLoggedUser().getUserId(), page, size));
         mav.addObject("channel", "MySales");
         mav.addObject("page", page);
         mav.addObject("totalPages", prs.getProductsSoldTotalPages(getLoggedUser().getUserId(), size));
@@ -205,14 +209,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
             return createListingForm(listingForm);
         }
         User user = getLoggedUser();
-<<<<<<< HEAD
         prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles(), listingForm.getQuantity());
-=======
-
-        //TODO: EDITAR ULTIMO VALOR DE ESTO !!!!
-        prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles(), 1);
-
->>>>>>> 613ad8fc3a4e1ff87da7696f501cbb934f1be9e2
         return new ModelAndView("redirect:/marketplace/my-listings");
     }
 
@@ -316,7 +313,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
             LOGGER.error("Error in form 'listingForm'");
             return product(productId, department, new RequestForm(), new QuestionForm(), new ReplyForm(),false);
         }
-        prs.updateProduct(productId, listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles(), 0L);
+        prs.updateProduct(productId, listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles(), listingForm.getQuantity());
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
     }
 }
