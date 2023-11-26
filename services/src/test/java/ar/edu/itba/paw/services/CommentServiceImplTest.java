@@ -49,10 +49,6 @@ public class CommentServiceImplTest {
         mockUser = mock(User.class);
         mockPost = mock(Post.class);
         when(postService.findPostById(POST_ID)).thenReturn(Optional.of(mockPost));
-        when(mockPost.getUser()).thenReturn(mockUser);
-        when(mockUser.getName()).thenReturn(NEIGHBOR_NAME);
-        when(mockUser.getMail()).thenReturn(NEIGHBOR_MAIL);
-        when(mockPost.getTitle()).thenReturn(POST_TITLE);
     }
 
     @Test

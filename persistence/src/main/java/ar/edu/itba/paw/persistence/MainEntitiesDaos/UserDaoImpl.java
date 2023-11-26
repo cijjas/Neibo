@@ -146,6 +146,16 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public List<User> getEventUsersByCriteria(long eventId, int page, int size) {
+        LOGGER.debug("Selecting Users that will attend Event {}", eventId);
+        TypedQuery<User> query = em.createQuery("SELECT u FROM User u JOIN u.eventsSubscribed e WHERE e.eventId = :eventId", User.class);
+        query.setParameter("eventId", eventId);
+        query.setFirstResult((page - 1) * size);
+        query.setMaxResults(size);
+        return query.getResultList();
+    }
+
+    @Override
     public boolean isAttending(long eventId, long userId) {
         LOGGER.debug("Selecting User {} that attends Event {}", userId, eventId);
 

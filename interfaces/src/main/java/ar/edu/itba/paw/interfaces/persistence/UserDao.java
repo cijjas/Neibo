@@ -28,6 +28,8 @@ public interface UserDao {
 
     List<User> getEventUsers(long eventId);
 
+    List<User> getEventUsersByCriteria(long eventId, int page, int size);
+
     boolean isAttending(long eventId, long userId);
 
     List<User> getProductRequesters(long productId, int page, int size);
