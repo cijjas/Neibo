@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.MainEntities.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.Objects;
 
 @Entity
@@ -26,6 +27,9 @@ public class Purchase implements Serializable {
     @Column(name = "units")
     private Long units;
 
+    @Column(name = "purchaseDate")
+    private Date purchaseDate;
+
     public Purchase() {
     }
 
@@ -34,6 +38,7 @@ public class Purchase implements Serializable {
         this.product = builder.product;
         this.user = builder.user;
         this.units = builder.units;
+        this.purchaseDate = builder.purchaseDate;
     }
 
     public Long getPurchaseId() {
@@ -73,6 +78,7 @@ public class Purchase implements Serializable {
         private Product product;
         private User user;
         private Long units;
+        private Date purchaseDate;
 
         public Builder purchaseId(Long purchaseId) {
             this.purchaseId = purchaseId;
@@ -94,9 +100,22 @@ public class Purchase implements Serializable {
             return this;
         }
 
+        public Builder purchaseDate(Date purchaseDate) {
+            this.purchaseDate = purchaseDate;
+            return this;
+        }
+
         public Purchase build() {
             return new Purchase(this);
         }
+    }
+
+    public Date getPurchaseDate() {
+        return purchaseDate;
+    }
+
+    public void setPurchaseDate(Date purchaseDate) {
+        this.purchaseDate = purchaseDate;
     }
 
     @Override

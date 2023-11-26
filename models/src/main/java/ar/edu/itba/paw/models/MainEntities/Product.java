@@ -61,9 +61,6 @@ public class Product {
     @JoinTable(name = "products_users_purchases", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> purchasers;
 
-    @Column(name = "purchaseDate")
-    private Date purchaseDate;
-
     @Column(name = "creationDate")
     private Date creationDate;
     @Transient
@@ -246,14 +243,6 @@ public class Product {
         this.department = department;
     }
 
-    public Date getPurchaseDate() {
-        return purchaseDate;
-    }
-
-    public void setPurchaseDate(Date purchaseDate) {
-        this.purchaseDate = purchaseDate;
-    }
-
     @Override
     public String toString() {
         return "Product{" +
@@ -264,7 +253,6 @@ public class Product {
                 ", used=" + used +
                 ", remainingUnits=" + remainingUnits +
                 ", department=" + department +
-                ", purchaseDate=" + purchaseDate +
                 ", creationDate=" + creationDate +
                 ", priceIntegerString='" + priceIntegerString + '\'' +
                 ", priceDecimalString='" + priceDecimalString + '\'' +

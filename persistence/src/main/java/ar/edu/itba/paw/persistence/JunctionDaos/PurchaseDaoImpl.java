@@ -29,6 +29,7 @@ public class PurchaseDaoImpl implements PurchaseDao {
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
                 .units(unitsBought)
+                .purchaseDate(new java.sql.Date(System.currentTimeMillis()))
                 .build();
         em.persist(purchase);
         return purchase;
