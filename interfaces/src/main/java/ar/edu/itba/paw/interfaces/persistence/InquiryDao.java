@@ -16,4 +16,6 @@ public interface InquiryDao {
     Optional<Inquiry> findInquiryById(final long inquiryId);
 
     List<Inquiry> getInquiriesByProduct(long productId);
+
+    List<Inquiry> getInquiriesByProductAndCriteria(long productId, int page, int size);
 }

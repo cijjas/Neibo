@@ -217,8 +217,6 @@
                   </form:form>
                 </c:if>
 
-
-
                 <c:choose>
                   <c:when test="${not empty questions}">
 
@@ -311,7 +309,18 @@
                         </div>
                     </c:otherwise>
                 </c:choose>
+
               </div>
+
+              <div class="f-c-c-c w-100" style="text-align: center;">
+                <c:if test="${totalPages > 1}">
+                  <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                    <jsp:param name="page" value="${page}"/>
+                    <jsp:param name="totalPages" value="${totalPages}"/>
+                  </jsp:include>
+                </c:if>
+              </div>
+
             </div>
           </div>
         </div>

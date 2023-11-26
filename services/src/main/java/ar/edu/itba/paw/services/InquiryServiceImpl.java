@@ -62,6 +62,16 @@ public class InquiryServiceImpl implements InquiryService {
         return inquiryDao.getInquiriesByProduct(productId);
     }
 
+    @Override
+    public List<Inquiry> getInquiriesByProductAndCriteria(long productId, int page, int size) {
+        return inquiryDao.getInquiriesByProductAndCriteria(productId, page, size);
+    }
+
+    @Override
+    public int getTotalInquiryPages(long productId, int size) {
+        return (int) Math.ceil((double) inquiryDao.getInquiriesByProduct(productId).size() / size);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

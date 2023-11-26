@@ -227,13 +227,19 @@ public class MarketplaceController extends GlobalControllerAdvice{
             @ModelAttribute("requestForm") RequestForm requestForm,
             @ModelAttribute("questionForm") QuestionForm questionForm,
             @ModelAttribute("replyForm") ReplyForm replyForm,
-            @RequestParam(value = "requestError", required = false, defaultValue = "false") Boolean requestError
+            @RequestParam(value = "requestError", required = false, defaultValue = "false") Boolean requestError,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size
     ) {
         LOGGER.info("User arriving at '/products/"+ productId +"' ");
         ModelAndView mav = new ModelAndView("marketplace/views/product");
         mav.addObject("requestError", requestError);
-        mav.addObject("questions", inqs.getInquiriesByProduct(productId));
+        mav.addObject("questions", inqs.getInquiriesByProductAndCriteria(productId, page, size));
         mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
+        mav.addObject("page", page);
+        mav.addObject("totalPages", inqs.getTotalInquiryPages(productId, size));
+        mav.addObject("contextPath", "/marketplace/products/" + department + "/" + productId);
+
         return mav;
     }
 
@@ -249,7 +255,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         LOGGER.info("User requesting product '/"+ productId +"' ");
         if(bindingResult.hasErrors()){
             LOGGER.error("Error in form 'requestForm'");
-            return product(productId, department, requestForm, new QuestionForm(), new ReplyForm(), true);
+            return product(productId, department, requestForm, new QuestionForm(), new ReplyForm(), true, 1, 10);
         }
         rqs.createRequest(getLoggedUser().getUserId(), productId, requestForm.getRequestMessage());
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
@@ -267,7 +273,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         LOGGER.info("User asking on product '/"+ productId +"' ");
         if(bindingResult.hasErrors()){
             LOGGER.error("Error in form 'questionForm'");
-            return product(productId,department,  new RequestForm(), questionForm, new ReplyForm(),false);
+            return product(productId,department,  new RequestForm(), questionForm, new ReplyForm(),false,1, 10);
         }
         inqs.createInquiry(getLoggedUser().getUserId(), productId, questionForm.getQuestionMessage());
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
@@ -285,7 +291,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         LOGGER.info("User replying inquiry in product '/"+ productId +"' ");
         if(bindingResult.hasErrors()){
             LOGGER.error("Error in form 'replyForm'");
-            return product(productId, department, new RequestForm(), new QuestionForm(), replyForm,false);
+            return product(productId, department, new RequestForm(), new QuestionForm(), replyForm,false, 1, 10);
         }
         inqs.replyInquiry(Long.parseLong(replyForm.getInquiryId()), replyForm.getReplyMessage());
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
@@ -316,7 +322,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         LOGGER.info("User editing product '/"+ productId +"' ");
         if(bindingResult.hasErrors()){
             LOGGER.error("Error in form 'listingForm'");
-            return product(productId, department, new RequestForm(), new QuestionForm(), new ReplyForm(),false);
+            return product(productId, department, new RequestForm(), new QuestionForm(), new ReplyForm(),false,1, 10);
         }
         prs.updateProduct(productId, listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles());
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);

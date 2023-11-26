@@ -1,5 +1,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <div class="card-container">
     <div class="post-section">
@@ -8,7 +9,11 @@
             <p style="font-size: 12px; font-weight: normal"><c:out value="${event.description}"/></p>
             <div class="divider"></div>
             <div class="postcard-description">
-                <spring:message code="Date"/>: <c:out value="${event.date}"/>
+                <spring:message code="date.format">
+                    <spring:argument value="${selectedDay}"/>
+                    <spring:argument value="${selectedMonth}"/>
+                    <spring:argument value="${fn:replace(selectedYear, '.', '')}"/>
+                </spring:message>
                 <br>
                 <c:out value="${event.getStartTimeString()}"/> - <c:out value="${event.getEndTimeString()}"/>
             </div>

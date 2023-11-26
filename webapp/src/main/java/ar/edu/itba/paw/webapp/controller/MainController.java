@@ -551,6 +551,8 @@ public class MainController extends GlobalControllerAdvice{
 
         ModelAndView mav = new ModelAndView("views/event");
 
+        Date selectedDate = new Date(es.findEventById(eventId).orElseThrow(() -> new NotFoundException("Event not found")).getDate().getTime());
+
         mav.addObject("event", es.findEventById(eventId).orElseThrow(() -> new NotFoundException("Event not found")));
         mav.addObject("attendees", us.getEventUsersByCriteria(eventId,page,size));
         mav.addObject("willAttend", us.isAttending(eventId, getLoggedUser().getUserId()));
@@ -558,6 +560,11 @@ public class MainController extends GlobalControllerAdvice{
         mav.addObject("page", page);
         mav.addObject("totalPages", us.getTotalEventPages(eventId, size));
         mav.addObject("contextPath", "/events/" + eventId);
+        mav.addObject("selectedTimestamp", selectedDate.getTime()); // Pass the selected timestamp
+        mav.addObject("selectedDay", selectedDate.getDate());
+        mav.addObject("selectedMonth", es.getSelectedMonth(selectedDate.getMonth(), getLoggedUser().getLanguage()));
+        mav.addObject("selectedYear", es.getSelectedYear(selectedDate.getYear()));
+        mav.addObject("selectedDate", selectedDate);
         return mav;
     }
 

@@ -51,4 +51,14 @@ public class InquiryDaoImpl implements InquiryDao {
                 .setParameter("productId", productId);
         return inquiries.getResultList();
     }
+
+    @Override
+    public List<Inquiry> getInquiriesByProductAndCriteria(long productId, int page, int size) {
+        LOGGER.debug("Selecting Inquiries from Product with id {}", productId);
+        TypedQuery<Inquiry> inquiries = em.createQuery("SELECT DISTINCT i FROM Inquiry i WHERE i.product.productId = :productId", Inquiry.class)
+                .setParameter("productId", productId)
+                .setFirstResult((page - 1) * size)
+                .setMaxResults(size);
+        return inquiries.getResultList();
+    }
 }
