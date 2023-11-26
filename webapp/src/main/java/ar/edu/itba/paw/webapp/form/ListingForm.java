@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 
 public class ListingForm {
     @NotBlank
-    @Size(min = 0, max = 100)
+    @Size(max = 100)
     private String title;
 
     @NotBlank
@@ -23,7 +23,7 @@ public class ListingForm {
     private MultipartFile[] imageFiles;
 
     @NotBlank
-    @Size(min = 0, max = 2000)
+    @Size(max = 2000)
     private String description;
 
     @NotNull
@@ -32,16 +32,16 @@ public class ListingForm {
 
     @NotNull
     @Range(min = 1, max = 100)
-    private Integer quantity;
+    private Long quantity;
 
     @NotNull
     private Boolean used;
 
-    public Integer getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 

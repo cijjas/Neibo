@@ -34,9 +34,9 @@ public interface ProductDao {
     List<Product> getProductsBought(long userId, int page, int size);
 
     // --------------------------------------------- PRODUCTS UPDATE ---------------------------------------------------
-
-    Product updateProduct(final long productId, final String name, final String description, final double price, final boolean used, final long departmentId,
-                          final Long primaryPictureId, final Long secondaryPictureId, final Long tertiaryPictureId, Long stock);
+//
+//    Product updateProduct(final long productId, final String name, final String description, final double price, final boolean used, final long departmentId,
+//                          final Long primaryPictureId, final Long secondaryPictureId, final Long tertiaryPictureId, Long stock);
 
     // --------------------------------------------- PRODUCTS DELETE ---------------------------------------------------
 

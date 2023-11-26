@@ -95,7 +95,7 @@
                                             <div class="f-c-s-s  w-100 p-4">
                                                 <div class="f-r-sb-c g-0 w-100">
                                                     <span class="font-weight-bold font-size-16">
-                                                            ${product.name}
+                                                            <c:out value="${product.name}" />
                                                     </span>
                                                     <c:choose>
                                                         <c:when test="${product.used}">

@@ -44,25 +44,22 @@ public class ProductDaoImpl implements ProductDao {
         return product;
     }
 
-    @Override
-    public Product updateProduct(long productId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId, Long stock) {
-        LOGGER.debug("Updating Product {}", productId);
-
-        Product product = em.find(Product.class, productId);
-        if (product != null) {
-            product.setName(name);
-            product.setDescription(description);
-            product.setPrice(price);
-            product.setUsed(used);
-            product.setDepartment(em.find(ar.edu.itba.paw.models.MainEntities.Department.class, departmentId));
-            product.setRemainingUnits(stock);
-            /*product.setPrimaryPicture(em.find(Image.class, primaryPictureId));
-            product.setSecondaryPicture(em.find(Image.class, secondaryPictureId));
-            product.setTertiaryPicture(em.find(Image.class, tertiaryPictureId));*/
-        }
-
-        return product;
-    }
+//    @Override
+//    public Product updateProduct(long productId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId, Long stock) {
+//        LOGGER.debug("Updating Product {}", productId);
+//
+//        Product product = em.find(Product.class, productId);
+//        if (product != null) {
+//            product.setName(name);
+//            product.setDescription(description);
+//            product.setPrice(price);
+//            product.setUsed(used);
+//            product.setDepartment(em.find(ar.edu.itba.paw.models.MainEntities.Department.class, departmentId));
+//            product.setRemainingUnits(stock);
+//        }
+//
+//        return product;
+//    }
 
     @Override
     public boolean deleteProduct(long productId) {
