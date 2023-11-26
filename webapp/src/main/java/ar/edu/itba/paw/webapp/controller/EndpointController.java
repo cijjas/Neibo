@@ -16,53 +16,34 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/endpoint")
-public class EndpointController {
+public class EndpointController extends GlobalControllerAdvice {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EndpointController.class);
-    private final SessionUtils sessionUtils;
     private final PostService ps;
     private final UserService us;
     private final NeighborhoodService nhs;
     private final CommentService cs;
-    private final TagService ts;
-    private final ChannelService chs;
-    private final CategorizationService cas;
     private final ImageService is;
-    private final AmenityService as;
     private final EventService es;
-    private final ResourceService res;
-    private final ContactService cos;
     private final LikeService ls;
     private final ProfessionWorkerService pws;
 
     @Autowired
-    public EndpointController(SessionUtils sessionUtils, final PostService ps,
+    public EndpointController(final PostService ps,
                               final UserService us,
                               final NeighborhoodService nhs,
                               final CommentService cs,
-                              final TagService ts,
-                              final ChannelService chs,
-                              final CategorizationService cas,
                               final ImageService is,
-                              final AmenityService as,
                               final EventService es,
-                              final ResourceService res,
-                              final ContactService cos,
                               final LikeService ls,
                               final ProfessionWorkerService pws) {
-        this.sessionUtils = sessionUtils;
+        super(us);
         this.is = is;
         this.ps = ps;
         this.us = us;
         this.nhs = nhs;
         this.cs = cs;
-        this.ts = ts;
-        this.chs = chs;
-        this.cas = cas;
-        this.as = as;
         this.es = es;
-        this.res = res;
-        this.cos = cos;
         this.ls = ls;
         this.pws = pws;
     }
@@ -83,7 +64,7 @@ public class EndpointController {
     @ResponseBody
     public String getEventTimestamps() {
         LOGGER.debug("Requesting information from '/endpoint/get-event-timestamps'");
-        return es.getEventTimestampsString(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId());
+        return es.getEventTimestampsString(getLoggedUser().getNeighborhood().getNeighborhoodId());
     }
 
     @RequestMapping(value = "/like", method = RequestMethod.POST)
@@ -92,7 +73,7 @@ public class EndpointController {
             @RequestParam(value = "postId") long postId
     ) {
         LOGGER.debug("Requesting information from '/endpoint/like'");
-        long userId = sessionUtils.getLoggedUser().getUserId();
+        long userId = getLoggedUser().getUserId();
         ls.addLikeToPost(postId, userId);
         return ResponseEntity.ok("{\"message\": \"Post liked successfully.\"}");
     }
@@ -103,7 +84,7 @@ public class EndpointController {
             @RequestParam(value = "postId") long postId
     ) {
         LOGGER.debug("Requesting information from '/endpoint/unlike'");
-        long userId = sessionUtils.getLoggedUser().getUserId();
+        long userId = getLoggedUser().getUserId();
         ls.removeLikeFromPost(postId, userId);
         return ResponseEntity.ok("{\"message\": \"Post unliked successfully.\"}");
     }
@@ -114,7 +95,7 @@ public class EndpointController {
             @RequestParam(value = "postId") long postId
     ) {
         LOGGER.debug("Requesting information from '/endpoint/is-liked'");
-        long userId = sessionUtils.getLoggedUser().getUserId();
+        long userId = getLoggedUser().getUserId();
         if (ls.isPostLiked(postId, userId)) {
             return "true";
         }
@@ -125,8 +106,7 @@ public class EndpointController {
     @ResponseBody
     public ResponseEntity<String> toggleDarkMode() {
         LOGGER.debug("Requesting information from '/endpoint/toggle-dark-mode'");
-        sessionUtils.clearLoggedUser();
-        us.toggleDarkMode(sessionUtils.getLoggedUser().getUserId());
+        us.toggleDarkMode(getLoggedUser().getUserId());
         return ResponseEntity.ok("{\"message\": \"Dark mode toggled successfully.\"}");
     }
 
@@ -179,7 +159,7 @@ public class EndpointController {
     @RequestMapping(value = "/role", method = RequestMethod.GET)
     @ResponseBody
     public String getUserRole() {
-        return sessionUtils.getLoggedUser().getRole().toString();
+        return getLoggedUser().getRole().toString();
     }
 
 }

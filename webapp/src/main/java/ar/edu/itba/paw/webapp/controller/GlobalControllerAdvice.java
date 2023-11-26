@@ -1,12 +1,16 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.exceptions.*;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.MainEntities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,17 +22,24 @@ public class GlobalControllerAdvice {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalControllerAdvice.class);
 
-    private final SessionUtils sessionUtils;
+    @Autowired
+    private final UserService us;
 
     @Autowired
-    public GlobalControllerAdvice(SessionUtils sessionUtils) {
-        this.sessionUtils = sessionUtils;
+    public GlobalControllerAdvice(UserService us) {
+        this.us = us;
     }
 
     @ModelAttribute("loggedUser")
-    @Cacheable("loggedUser")
     public User getLoggedUser() {
-        return sessionUtils.getLoggedUser();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken)
+            return null;
+
+        String email = authentication.getName();
+
+        return us.findUserByMail(email).orElseThrow(()-> new NotFoundException("User Not Found"));
     }
 
     // -------------------------------------------------- EXCEPTIONS ---------------------------------------------------

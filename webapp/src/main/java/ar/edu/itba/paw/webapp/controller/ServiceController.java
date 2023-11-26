@@ -23,79 +23,30 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/services")
-public class ServiceController {
+public class ServiceController extends GlobalControllerAdvice{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceController.class);
-    private final SessionUtils sessionUtils;
     private final PostService ps;
-    private final UserService us;
-    private final NeighborhoodService nhs;
-    private final CommentService cs;
-    private final TagService ts;
-    private final ChannelService chs;
-    private final CategorizationService cas;
-    private final ImageService is;
-    private final AmenityService as;
-    private final EventService es;
-    private final ResourceService res;
-    private final ContactService cos;
-    private final AttendanceService ats;
-    private final LikeService ls;
-    private final BookingService bs;
-    private final ShiftService shs;
     private final NeighborhoodWorkerService nhws;
     private final ProfessionWorkerService pws;
     private final ReviewService rws;
     private final WorkerService ws;
-    private final AvailabilityService avs;
 
 
     @Autowired
-    public ServiceController(SessionUtils sessionUtils,
-                             final PostService ps,
+    public ServiceController(final PostService ps,
                              final UserService us,
-                             final NeighborhoodService nhs,
-                             final CommentService cs,
-                             final TagService ts,
-                             final ChannelService chs,
-                             final CategorizationService cas,
-                             final ImageService is,
-                             final AmenityService as,
-                             final EventService es,
-                             final ResourceService res,
-                             final ContactService cos,
-                             final AttendanceService ats,
-                             final LikeService ls,
                              final NeighborhoodWorkerService nhws,
                              final ProfessionWorkerService pws,
                              final ReviewService rws,
-                             final WorkerService ws,
-                             final BookingService bs,
-                             final ShiftService shs,
-                             final AvailabilityService avs
+                             final WorkerService ws
     ) {
-        this.sessionUtils = sessionUtils;
-        this.is = is;
+        super(us);
         this.ps = ps;
-        this.us = us;
-        this.nhs = nhs;
-        this.cs = cs;
-        this.ts = ts;
-        this.chs = chs;
-        this.cas = cas;
-        this.as = as;
-        this.es = es;
-        this.res = res;
-        this.cos = cos;
-        this.ats = ats;
-        this.ls = ls;
         this.nhws = nhws;
         this.pws = pws;
         this.rws = rws;
         this.ws = ws;
-        this.bs = bs;
-        this.shs = shs;
-        this.avs = avs;
     }
 
     @RequestMapping(value = "/profile/{id:\\d+}", method = RequestMethod.GET)
@@ -121,8 +72,6 @@ public class ServiceController {
         }
 
         int postsSize = ps.getWorkerPostsCountByCriteria(BaseChannel.WORKERS.toString(), null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId);
-
-        int reviewsSize = rws.getReviewsCount(workerId);
 
         mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found")));
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
@@ -179,7 +128,7 @@ public class ServiceController {
             return mav;
         }
 
-        rws.createReview(workerId, sessionUtils.getLoggedUser().getUserId(), reviewForm.getRating(), reviewForm.getReview());
+        rws.createReview(workerId, getLoggedUser().getUserId(), reviewForm.getRating(), reviewForm.getReview());
         return new ModelAndView("redirect:/services/profile/" + workerId);
     }
 
@@ -191,7 +140,7 @@ public class ServiceController {
         LOGGER.info("User arriving at '/services/profile/edit'");
 
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
-        long workerId = sessionUtils.getLoggedUser().getUserId();
+        long workerId = getLoggedUser().getUserId();
 
         mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found")));
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
@@ -211,7 +160,7 @@ public class ServiceController {
             @RequestParam(value = "size", defaultValue = "10", required = false) int size,
             @ModelAttribute("reviewForm") final ReviewForm reviewForm
     ) {
-        long workerId = sessionUtils.getLoggedUser().getUserId();
+        long workerId = getLoggedUser().getUserId();
         if (errors.hasErrors()) {
             LOGGER.error("Error in Edit Form");
             ModelAndView mav = serviceProfile(new ReviewForm(), workerId, editWorkerProfileForm, page, size, "reviews");
@@ -236,10 +185,10 @@ public class ServiceController {
         }
 
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
-        List<Worker> workerList = ws.getWorkersByCriteria(page, size, professions, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
+        List<Worker> workerList = ws.getWorkersByCriteria(page, size, professions, getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
         mav.addObject("workersList", workerList);
         mav.addObject("channel", "Services");
-        mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(professions, new long[] {sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER, WorkerStatus.none));
+        mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(professions, new long[] {getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER, WorkerStatus.none));
         mav.addObject("contextPath", "/services");
         mav.addObject("page", page);
         mav.addObject("appliedProfessions", professions);
@@ -254,8 +203,8 @@ public class ServiceController {
         LOGGER.info("User arriving at '/services/neighborhoods'");
         ModelAndView mav = new ModelAndView("serviceProvider/views/neighborhoods");
         mav.addObject("channel", "Neighborhoods");
-        mav.addObject("associatedNeighborhoods", nhws.getNeighborhoods(sessionUtils.getLoggedUser().getUserId()));
-        mav.addObject("otherNeighborhoods", nhws.getOtherNeighborhoods(sessionUtils.getLoggedUser().getUserId()));
+        mav.addObject("associatedNeighborhoods", nhws.getNeighborhoods(getLoggedUser().getUserId()));
+        mav.addObject("otherNeighborhoods", nhws.getOtherNeighborhoods(getLoggedUser().getUserId()));
         return mav;
     }
 
@@ -268,7 +217,7 @@ public class ServiceController {
             LOGGER.error("Error in Neighborhoods Form");
             return workersNeighborhoods(neighborhoodsForm);
         }
-        long workerId = sessionUtils.getLoggedUser().getUserId();
+        long workerId = getLoggedUser().getUserId();
         nhws.addWorkerToNeighborhoods(workerId, neighborhoodsForm.getNeighborhoodIds());
         return new ModelAndView("redirect:/services/neighborhoods");
     }
@@ -279,7 +228,7 @@ public class ServiceController {
     ) {
         ModelAndView mav = new ModelAndView("redirect:/services/neighborhoods");
         mav.addObject("channel", "Neighborhood");
-        nhws.removeWorkerFromNeighborhood(sessionUtils.getLoggedUser().getUserId(), neighborhoodId);
+        nhws.removeWorkerFromNeighborhood(getLoggedUser().getUserId(), neighborhoodId);
         return mav;
     }
 
@@ -295,7 +244,7 @@ public class ServiceController {
 
         String baseUrl = scheme + "://" + serverName + ":" + serverPort + contextPath + "/services";
 
-        return new ModelAndView("redirect:" + pws.createURLForProfessionFilter(professions, baseUrl, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
+        return new ModelAndView("redirect:" + pws.createURLForProfessionFilter(professions, baseUrl, getLoggedUser().getNeighborhood().getNeighborhoodId()));
     }
 
 }

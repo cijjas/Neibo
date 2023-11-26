@@ -26,59 +26,45 @@ import java.util.List;
 import java.util.Locale;
 
 @Controller
-public class MainController {
+public class MainController extends GlobalControllerAdvice{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
-    private final SessionUtils sessionUtils;
     private final PostService ps;
     private final UserService us;
     private final NeighborhoodService nhs;
     private final CommentService cs;
     private final TagService ts;
     private final ChannelService chs;
-    private final CategorizationService cas;
     private final ImageService is;
     private final AmenityService as;
     private final EventService es;
     private final ResourceService res;
     private final ContactService cos;
     private final AttendanceService ats;
-    private final LikeService ls;
     private final BookingService bs;
     private final ShiftService shs;
-    private final NeighborhoodWorkerService nhws;
-    private final ProfessionWorkerService pws;
-    private final ReviewService rws;
     private final WorkerService ws;
-    private final AvailabilityService avs;
 
     // ------------------------------------- FEED --------------------------------------
 
     @Autowired
-    public MainController(SessionUtils sessionUtils,
-                          final PostService ps,
+    public MainController(final PostService ps,
                           final UserService us,
                           final NeighborhoodService nhs,
                           final CommentService cs,
                           final TagService ts,
                           final ChannelService chs,
-                          final CategorizationService cas,
                           final ImageService is,
                           final AmenityService as,
                           final EventService es,
                           final ResourceService res,
                           final ContactService cos,
                           final AttendanceService ats,
-                          final LikeService ls,
-                          final NeighborhoodWorkerService nhws,
-                          final ProfessionWorkerService pws,
-                          final ReviewService rws,
                           final WorkerService ws,
                           final BookingService bs,
-                          final ShiftService shs,
-                          final AvailabilityService avs
+                          final ShiftService shs
     ) {
-        this.sessionUtils = sessionUtils;
+        super(us);
         this.is = is;
         this.ps = ps;
         this.us = us;
@@ -86,20 +72,14 @@ public class MainController {
         this.cs = cs;
         this.ts = ts;
         this.chs = chs;
-        this.cas = cas;
         this.as = as;
         this.es = es;
         this.res = res;
         this.cos = cos;
         this.ats = ats;
-        this.ls = ls;
-        this.nhws = nhws;
-        this.pws = pws;
-        this.rws = rws;
         this.ws = ws;
         this.bs = bs;
         this.shs = shs;
-        this.avs = avs;
     }
 
     private ModelAndView handleChannelRequest(
@@ -111,11 +91,11 @@ public class MainController {
     ) {
 
         ModelAndView mav = new ModelAndView("views/index");
-        mav.addObject("tagList", ts.getTags(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
+        mav.addObject("tagList", ts.getTags(getLoggedUser().getNeighborhood().getNeighborhoodId()));
         mav.addObject("appliedTags", tags);
-        mav.addObject("postList", ps.getPostsByCriteria(channelName, page, size, tags, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), PostStatus.valueOf(postStatus)));
+        mav.addObject("postList", ps.getPostsByCriteria(channelName, page, size, tags, getLoggedUser().getNeighborhood().getNeighborhoodId(), PostStatus.valueOf(postStatus)));
         mav.addObject("page", page);
-        mav.addObject("totalPages", ps.getTotalPages(channelName, size, tags, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), PostStatus.valueOf(postStatus), 0));
+        mav.addObject("totalPages", ps.getTotalPages(channelName, size, tags, getLoggedUser().getNeighborhood().getNeighborhoodId(), PostStatus.valueOf(postStatus), 0));
         mav.addObject("channel", channelName);
         mav.addObject("contextPath", "/" + channelName.toLowerCase());
 
@@ -142,7 +122,7 @@ public class MainController {
     ) {
         LOGGER.info("User arriving at '/profile'");
         ModelAndView mav = new ModelAndView("views/userProfile");
-        mav.addObject("neighbor", sessionUtils.getLoggedUser());
+        mav.addObject("neighbor", getLoggedUser());
         return mav;
     }
 
@@ -151,21 +131,19 @@ public class MainController {
             @Valid @ModelAttribute("profilePictureForm") final ProfilePictureForm profilePictureForm,
             final BindingResult errors
     ) {
-        sessionUtils.clearLoggedUser();
         ModelAndView mav = new ModelAndView("redirect:/profile");
         if (errors.hasErrors()) {
             LOGGER.error("Error while updating profile picture");
             return profile(profilePictureForm);
         }
-        us.updateProfilePicture(sessionUtils.getLoggedUser().getUserId(), profilePictureForm.getImageFile());
+        us.updateProfilePicture(getLoggedUser().getUserId(), profilePictureForm.getImageFile());
         return mav;
     }
 
     @RequestMapping(value = "/toggle-dark-mode", method = RequestMethod.POST)
     public String updateDarkModePreference() {
-        sessionUtils.clearLoggedUser();
-        sessionUtils.getLoggedUser();
-        us.toggleDarkMode(sessionUtils.getLoggedUser().getUserId());
+        getLoggedUser();
+        us.toggleDarkMode(getLoggedUser().getUserId());
         return "redirect:/profile";
     }
 
@@ -174,10 +152,9 @@ public class MainController {
             @RequestParam(value = "lang", required = false) String language,
             HttpServletRequest request
     ) {
-        sessionUtils.clearLoggedUser();
-        sessionUtils.getLoggedUser();
+        getLoggedUser();
         request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, new Locale(language));
-        us.toggleLanguage(sessionUtils.getLoggedUser().getUserId());
+        us.toggleLanguage(getLoggedUser().getUserId());
         String referer = request.getHeader("Referer");
         return "redirect:" + (referer != null ? referer : "/feed");
     }
@@ -187,7 +164,7 @@ public class MainController {
             @RequestParam("tags") String tags,
             @RequestParam("currentUrl") String currentUrl
     ) {
-        return new ModelAndView("redirect:" + ts.createURLForTagFilter(tags, currentUrl, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
+        return new ModelAndView("redirect:" + ts.createURLForTagFilter(tags, currentUrl, getLoggedUser().getNeighborhood().getNeighborhoodId()));
     }
 
     // ------------------------------------------------ ANNOUNCEMENTS --------------------------------------------------
@@ -241,7 +218,7 @@ public class MainController {
             LOGGER.error("Error in Neighborhood Form'");
             return rejectedForm(neighborhoodForm);
         }
-        us.unverifyNeighbor(sessionUtils.getLoggedUser().getUserId(), neighborhoodForm.getNeighborhoodId());
+        us.unverifyNeighbor(getLoggedUser().getUserId(), neighborhoodForm.getNeighborhoodId());
         return new ModelAndView("redirect:/logout");
     }
 
@@ -254,9 +231,9 @@ public class MainController {
     ) {
         LOGGER.info("User arriving at '/publish'");
         final ModelAndView mav = new ModelAndView("views/publish");
-        mav.addObject("tagList", ts.getTags(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
+        mav.addObject("tagList", ts.getTags(getLoggedUser().getNeighborhood().getNeighborhoodId()));
         mav.addObject("channel", onChannelId);
-        mav.addObject("channelList", chs.getNeighborChannels(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), sessionUtils.getLoggedUser().getUserId()));
+        mav.addObject("channelList", chs.getNeighborChannels(getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId()));
         return mav;
     }
 
@@ -272,7 +249,7 @@ public class MainController {
             return publishForm(publishForm, onChannelId);
         }
 
-        ps.createPost(publishForm.getSubject(), publishForm.getMessage(), sessionUtils.getLoggedUser().getUserId(), publishForm.getChannel() == null ? BaseChannel.WORKERS.getId() : publishForm.getChannel(), publishForm.getTags(), publishForm.getImageFile());
+        ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedUser().getUserId(), publishForm.getChannel() == null ? BaseChannel.WORKERS.getId() : publishForm.getChannel(), publishForm.getTags(), publishForm.getImageFile());
         ModelAndView mav = new ModelAndView("views/publish");
         mav.addObject("channelId", publishForm.getChannel());
         mav.addObject("showSuccessMessage", true);
@@ -339,7 +316,7 @@ public class MainController {
             LOGGER.error("Error in Comment Form");
             return viewPost(postId, commentForm, false, postPage, postSize);
         }
-        cs.createComment(commentForm.getComment(), sessionUtils.getLoggedUser().getUserId(), postId);
+        cs.createComment(commentForm.getComment(), getLoggedUser().getUserId(), postId);
         ModelAndView mav = new ModelAndView("redirect:/posts/" + postId);
         mav.addObject("commentForm", new CommentForm());
         return mav;
@@ -454,7 +431,6 @@ public class MainController {
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public void logOut() {
         LOGGER.info("User arriving at '/logout'");
-        sessionUtils.clearLoggedUser();
     }
 
 
@@ -473,7 +449,7 @@ public class MainController {
         mav.addObject("date", date);
         mav.addObject("amenityName", as.findAmenityById(amenityId).orElseThrow(() -> new NotFoundException("Amenity not Found")).getName());
         mav.addObject("bookings", shs.getShifts(amenityId, date));
-        mav.addObject("reservationsList", bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));
+        mav.addObject("reservationsList", bs.getUserBookings(getLoggedUser().getUserId()));
         return mav;
     }
 
@@ -484,7 +460,7 @@ public class MainController {
             @RequestParam("date") Date date,
             @RequestParam("selectedShifts") List<Long> selectedShifts
     ) {
-        bs.createBooking(sessionUtils.getLoggedUser().getUserId(), amenityId, selectedShifts, date);
+        bs.createBooking(getLoggedUser().getUserId(), amenityId, selectedShifts, date);
         return new ModelAndView("redirect:/amenities");
     }
 
@@ -499,12 +475,12 @@ public class MainController {
 
         ModelAndView mav = new ModelAndView("views/amenities");
 
-        mav.addObject("totalPages", as.getTotalAmenitiesPages(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
+        mav.addObject("totalPages", as.getTotalAmenitiesPages(getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
         mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
         mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
-        mav.addObject("amenities", as.getAmenities(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size));
+        mav.addObject("amenities", as.getAmenities(getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size));
         mav.addObject("channel", BaseChannel.RESERVATIONS.toString());
-        mav.addObject("reservationsList", bs.getUserBookings(sessionUtils.getLoggedUser().getUserId()));
+        mav.addObject("reservationsList", bs.getUserBookings(getLoggedUser().getUserId()));
         return mav;
     }
 
@@ -545,13 +521,13 @@ public class MainController {
         Date selectedDate = new Date(timestamp != 0 ? timestamp : System.currentTimeMillis());
 
         ModelAndView mav = new ModelAndView("views/calendar");
-        mav.addObject("isAdmin", sessionUtils.getLoggedUser().getRole() == UserRole.ADMINISTRATOR);
+        mav.addObject("isAdmin", getLoggedUser().getRole() == UserRole.ADMINISTRATOR);
         mav.addObject("selectedTimestamp", selectedDate.getTime()); // Pass the selected timestamp
         mav.addObject("selectedDay", selectedDate.getDate());
-        mav.addObject("selectedMonth", es.getSelectedMonth(selectedDate.getMonth(), sessionUtils.getLoggedUser().getLanguage()));
+        mav.addObject("selectedMonth", es.getSelectedMonth(selectedDate.getMonth(), getLoggedUser().getLanguage()));
         mav.addObject("selectedYear", es.getSelectedYear(selectedDate.getYear()));
         mav.addObject("selectedDate", selectedDate);
-        mav.addObject("eventList", es.getEventsByDate(selectedDate, sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
+        mav.addObject("eventList", es.getEventsByDate(selectedDate, getLoggedUser().getNeighborhood().getNeighborhoodId()));
         return mav;
     }
 
@@ -575,7 +551,7 @@ public class MainController {
 
         mav.addObject("event", es.findEventById(eventId).orElseThrow(() -> new NotFoundException("Event not found")));
         mav.addObject("attendees", us.getEventUsers(eventId));
-        mav.addObject("willAttend", us.isAttending(eventId, sessionUtils.getLoggedUser().getUserId()));
+        mav.addObject("willAttend", us.isAttending(eventId, getLoggedUser().getUserId()));
         mav.addObject("showSuccessMessage", success);
 
         return mav;
@@ -586,7 +562,7 @@ public class MainController {
             @PathVariable(value = "id") int eventId
     ) {
         ModelAndView mav = new ModelAndView("redirect:/events/" + eventId);
-        ats.createAttendee(sessionUtils.getLoggedUser().getUserId(), eventId);
+        ats.createAttendee(getLoggedUser().getUserId(), eventId);
         return mav;
     }
 
@@ -595,7 +571,7 @@ public class MainController {
             @PathVariable(value = "id") int eventId
     ) {
         ModelAndView mav = new ModelAndView("redirect:/events/" + eventId);
-        ats.deleteAttendee(sessionUtils.getLoggedUser().getUserId(), eventId);
+        ats.deleteAttendee(getLoggedUser().getUserId(), eventId);
         return mav;
     }
 
@@ -606,16 +582,11 @@ public class MainController {
         LOGGER.info("User arriving at '/information'");
 
         ModelAndView mav = new ModelAndView("views/information");
-        mav.addObject("resourceList", res.getResources(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
-        mav.addObject("phoneNumbersList", cos.getContacts(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
+        mav.addObject("resourceList", res.getResources(getLoggedUser().getNeighborhood().getNeighborhoodId()));
+        mav.addObject("phoneNumbersList", cos.getContacts(getLoggedUser().getNeighborhood().getNeighborhoodId()));
         mav.addObject("channel", BaseChannel.INFORMATION.toString());
-        mav.addObject("resourceMap", res.getResources(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
-        mav.addObject("phoneNumbersMap", cos.getContacts(sessionUtils.getLoggedUser().getNeighborhood().getNeighborhoodId()));
+        mav.addObject("resourceMap", res.getResources(getLoggedUser().getNeighborhood().getNeighborhoodId()));
+        mav.addObject("phoneNumbersMap", cos.getContacts(getLoggedUser().getNeighborhood().getNeighborhoodId()));
         return mav;
-    }
-
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public void test(){
-        ps.createPost("Heñllo", "Description", 1, 1, null, null);
     }
 }
