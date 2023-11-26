@@ -125,7 +125,6 @@ public class MarketplaceController {
         ModelAndView mav = new ModelAndView("marketplace/views/myPurchases");
         mav.addObject("channel", "MyPurchases");
         mav.addObject("products", products);
-        mav.addObject("loggedUser", sessionUtils.getLoggedUser());
         mav.addObject("page", page);
         mav.addObject("totalPages", prs.getProductsBoughtTotalPages(sessionUtils.getLoggedUser().getUserId(), size));
         mav.addObject("contextPath", "/marketplace/my-purchases");
@@ -139,7 +138,7 @@ public class MarketplaceController {
     ) {
         LOGGER.info("User arriving at '/marketplace/currently-requesting'");
 
-        ModelAndView mav = new ModelAndView("marketplace/views/currentlyRequesting");
+        ModelAndView mav = new ModelAndView("marketplace/views/myCurrentlyRequesting");
         mav.addObject("channel", "CurrentlyRequesting");
         mav.addObject("page", page);
         mav.addObject("totalPages", prs.getProductsBoughtTotalPages(sessionUtils.getLoggedUser().getUserId(), size));
@@ -158,7 +157,6 @@ public class MarketplaceController {
         ModelAndView mav = new ModelAndView("marketplace/views/mySales");
         mav.addObject("products", prs.getProductsSold(sessionUtils.getLoggedUser().getUserId(), page, size));
         mav.addObject("channel", "MySales");
-        mav.addObject("loggedUser", sessionUtils.getLoggedUser());
         mav.addObject("page", page);
         mav.addObject("totalPages", prs.getProductsSoldTotalPages(sessionUtils.getLoggedUser().getUserId(), size));
         mav.addObject("contextPath", "/marketplace/my-sales");
@@ -225,7 +223,6 @@ public class MarketplaceController {
 
         mav.addObject("myProductList", prs.getProductsSelling(sessionUtils.getLoggedUser().getUserId(), page, size));
         mav.addObject("channel", "MyListings");
-        mav.addObject("loggedUser", sessionUtils.getLoggedUser());
         mav.addObject("page", page);
         mav.addObject("totalPages", prs.getProductsSellingTotalPages(sessionUtils.getLoggedUser().getUserId(), size));
         mav.addObject("contextPath", "/marketplace/my-listings");
@@ -237,10 +234,9 @@ public class MarketplaceController {
         @ModelAttribute("listingForm") ListingForm listingForm
     ) {
         LOGGER.info("User arriving at '/marketplace/create-publishing'");
-        ModelAndView mav = new ModelAndView("marketplace/views/sell");
+        ModelAndView mav = new ModelAndView("marketplace/views/productSell");
         mav.addObject("channel", "Sell");
         mav.addObject("departmentList", Department.getDepartments());
-        mav.addObject("loggedUser", sessionUtils.getLoggedUser());
         return mav;
     }
 
@@ -255,10 +251,7 @@ public class MarketplaceController {
             return createListingForm(listingForm);
         }
         User user = sessionUtils.getLoggedUser();
-/*
-        prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles());
-        ahora tienen que venir las units tambn
-*/
+        prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles(), listingForm.getQuantity());
         return new ModelAndView("redirect:/marketplace/my-listings");
     }
 
@@ -344,7 +337,6 @@ public class MarketplaceController {
         LOGGER.info("User arriving at '/marketplace/products/" + department + "/" + productId +"/edit'");
         ModelAndView mav = new ModelAndView("marketplace/views/productEdit");
         mav.addObject("departmentList", Department.getDepartments());
-        mav.addObject("loggedUser", sessionUtils.getLoggedUser());
         mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
         return mav;
     }

@@ -118,7 +118,7 @@
 
                             <form:errors path="departmentId" cssClass="error" element="p"/>
 
-                                <%--Condition--%>
+                            <%--Condition--%>
                             <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
                                 <spring:message code="This.item.is"/>
                                 <div class="w-25">
@@ -136,7 +136,22 @@
 
                                     <form:errors path="used" cssClass="error" element="p"/>
                                 </div>
+                            </div>
 
+                            <%--Quantity--%>
+                            <div class="f-c-c-c w-100  g-0">
+                                <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
+                                    <spring:message code="Quantity"/>
+                                    <div class="">
+                                        <label for="condition"></label>
+                                        <form:select path="quantity"  class="cool-input marketplace-input quantity-input font-weight-bold font-size-14" name="condition" id="condition">
+                                            <c:forEach begin="1" end="100" varStatus="loop">
+                                                <form:option value="${loop.index}">${loop.index}</form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
+                                </div>
+                                <form:errors path="quantity" cssClass="error pt-1" element="p"/>
                             </div>
 
                         </div>

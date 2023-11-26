@@ -115,6 +115,9 @@
     color: var(--on-onbackground);
 }
 
+.c-red {
+    color: var(--error);
+}
 
 /*-------------------------------NAVBAR-----------------------------*/
 
@@ -1786,7 +1789,9 @@ footer div {
     &.marketplace-input{
         border: 1px solid var(--lila);
         background-color: var(--onbackground);
-
+        &.quantity-input{
+            width: 70px;
+        }
         &:active,
         &:hover,
         &:focus-visible {

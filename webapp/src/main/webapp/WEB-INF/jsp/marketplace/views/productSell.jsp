@@ -61,7 +61,7 @@
                                             name="title-field"
                                             id="title-field"
                                             placeholder="${titlePlaceholder}"/>
-                                    <form:errors path="title" cssClass="error" element="p"/>
+                                    <form:errors path="title" cssClass="error pt-1" element="p"/>
                                 </div>
 
                                     <%--PRICE--%>
@@ -75,7 +75,7 @@
                                             pattern=""
                                             data-type="currency"
                                             placeholder="$1,000.00"/>
-                                    <form:errors path="price" cssClass="error" element="p"/>
+                                    <form:errors path="price" cssClass="error pt-1" element="p"/>
                                 </div>
                             </div>
 
@@ -112,7 +112,7 @@
                                     class="cool-input marketplace-input"
                                     rows="5"
                                     placeholder="${descriptionPlaceholder}"/>
-                            <form:errors path="description" cssClass="error" element="p"/>
+                            <form:errors path="description" cssClass="error pt-1" element="p"/>
 
                             <%--Department--%>
                             <label for="department"></label>
@@ -121,7 +121,7 @@
                                     <option value="${department.key}"><spring:message code="${department.value}"/></option>
                                 </c:forEach>
                             </form:select>
-                            <form:errors path="departmentId" cssClass="error" element="p"/>
+                            <form:errors path="departmentId" cssClass="error pt-1" element="p"/>
 
                             <%--Condition--%>
                             <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
@@ -133,10 +133,28 @@
                                         <option value="${false}"><spring:message code="New"/></option>
                                         <option value="${true}"><spring:message code="Used"/></option>
                                     </form:select>
-                                    <form:errors path="used" cssClass="error" element="p"/>
+                                    <form:errors path="used" cssClass="error pt-1" element="p"/>
                                 </div>
-
                             </div>
+
+
+                            <%--Quantity--%>
+                            <div class="f-c-c-c w-100  g-0">
+                                <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
+                                    <spring:message code="Quantity"/>
+                                    <div class="">
+                                        <label for="condition"></label>
+                                        <form:select path="quantity"  class="cool-input marketplace-input quantity-input font-weight-bold font-size-14" name="condition" id="condition">
+                                            <c:forEach begin="1" end="100" varStatus="loop">
+                                                <form:option value="${loop.index}">${loop.index}</form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
+                                </div>
+                                <form:errors path="quantity" cssClass="error pt-1" element="p"/>
+                            </div>
+
+
 
                         </div>
                     </div>

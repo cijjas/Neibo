@@ -5,8 +5,10 @@ import ar.edu.itba.paw.webapp.form.validation.constraints.ImageConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.MultipleImagesConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.TagsConstraint;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class ListingForm {
@@ -24,10 +26,24 @@ public class ListingForm {
     @Size(min = 0, max = 2000)
     private String description;
 
+    @NotNull
     @DepartmentConstraint
     private Integer departmentId;
 
+    @NotNull
+    @Range(min = 1, max = 100)
+    private Integer quantity;
+
+    @NotNull
     private Boolean used;
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 
     public Boolean getUsed() {
         return used;

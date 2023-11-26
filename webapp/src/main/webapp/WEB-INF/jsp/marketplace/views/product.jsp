@@ -155,18 +155,33 @@
                 </span>
                 </div>
               </div>
+                <div class="f-c-s-s w-100 mt-3 g-05">
+                    <c:choose>
+                      <c:when test="${product.remainingUnits == 0}">
+                        <span class="c-red"><spring:message code="Sold.out"/></span>
+                      </c:when>
+                      <c:when test="${product.remainingUnits == 1}">
+                        <span class="c-accent"><spring:message code="In.stock"/></span>
+                        <span><c:out value="${product.remainingUnits}"/> <spring:message code="Unit"/></span>
+                      </c:when>
+                      <c:otherwise>
+                        <span class="c-accent"><spring:message code="In.stock"/></span>
+                        <span><c:out value="${product.remainingUnits}"/> <spring:message code="Units"/></span>
+                      </c:otherwise>
+                    </c:choose>
+                </div>
                 <c:choose>
                   <c:when test="${loggedUser.userId != product.seller.userId}">
                       <button id="request-button" onclick="openRequestDialog()" class="mt-4 w-100 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
                         <spring:message code="Request"/>
                       </button>
                   </c:when>
-                    <c:otherwise>
-                      <a href="${pageContext.request.contextPath}/marketplace/products/${department}/${product.productId}/edit" class="mt-4 w-100 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                        <spring:message code="Edit.listing"/>
-                      </a>
-                    </c:otherwise>
+                  <c:otherwise>
+                    <a href="${pageContext.request.contextPath}/marketplace/products/${department}/${product.productId}/edit" class="mt-4 w-100 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
+                      <i class="fa-solid fa-pen-to-square"></i>
+                      <spring:message code="Edit.listing"/>
+                    </a>
+                  </c:otherwise>
                 </c:choose>
 
               <script>
