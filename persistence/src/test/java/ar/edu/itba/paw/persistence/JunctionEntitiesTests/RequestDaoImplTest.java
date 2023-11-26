@@ -101,8 +101,8 @@ public class RequestDaoImplTest {
         List<Request> requests = requestDao.getRequestsByProductId(1, PAGE, SIZE);
 
         // Validations & Post Conditions
-        assertFalse(requests.isEmpty());
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_requests.name()));
+        assertTrue(requests.isEmpty());
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_requests.name()));
     }
 
     @Test

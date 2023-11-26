@@ -13,7 +13,6 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.http.CacheControl;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
@@ -24,6 +23,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -51,6 +51,7 @@ import java.util.concurrent.TimeUnit;
 @ComponentScan({"ar.edu.itba.paw.webapp.controller", "ar.edu.itba.paw.services", "ar.edu.itba.paw.persistence"})
 @Configuration
 @EnableTransactionManagement
+@EnableAsync
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Autowired
@@ -74,13 +75,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         ds.setDriverClass(org.postgresql.Driver.class);
 
 
-//        ds.setUrl("jdbc:postgresql://localhost/paw-2023b-02");
-//        ds.setUsername("paw-2023b-02");
-//        ds.setPassword("Totw34tOi");
-//
-        ds.setUrl("jdbc:postgresql://localhost/paw"); // We set the address and database to connect to
-        ds.setUsername("postgres"); // We set the username and password for the database
-        ds.setPassword("postgres");
+        ds.setUrl("jdbc:postgresql://localhost/paw-2023b-02");
+        ds.setUsername("paw-2023b-02");
+        ds.setPassword("Totw34tOi");
+
+//        ds.setUrl("jdbc:postgresql://localhost/paw"); // We set the address and database to connect to
+//        ds.setUsername("postgres"); // We set the username and password for the database
+//        ds.setPassword("postgres");
 
         return ds;
     }
@@ -170,11 +171,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         mailSender.setPort(Integer.parseInt(env.getProperty("mail.port")));
         mailSender.setUsername(env.getProperty("mail.username"));
         mailSender.setPassword(env.getProperty("mail.password"));
-
-//        mailSender.setHost("smtp.gmail.com");
-//        mailSender.setPort(587);
-//        mailSender.setUsername("neibonotifs@gmail.com");
-//        mailSender.setPassword("syik eiaz utfl fpse");
 
         Properties props = mailSender.getJavaMailProperties();
         //remove the following TLSv line if we upgrade javaxmail version
