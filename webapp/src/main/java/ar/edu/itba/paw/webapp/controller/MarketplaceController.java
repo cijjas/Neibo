@@ -9,6 +9,8 @@ import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -207,7 +209,6 @@ public class MarketplaceController extends GlobalControllerAdvice{
         return new ModelAndView("redirect:/marketplace/my-listings");
     }
 
-
     @RequestMapping(value = "/products/{department}/{id:\\d+}", method = RequestMethod.GET)
     public ModelAndView product(
             @PathVariable(value = "id") Long productId,
@@ -261,6 +262,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
     }
 
+    @PreAuthorize("@authService.canAccessProduct(principal, #productId)")
     @RequestMapping(value = "/products/{department}/{id:\\d+}/reply", method = RequestMethod.POST)
     public ModelAndView replyInquiry(
             @PathVariable(value = "id") Long productId,
@@ -279,7 +281,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
     }
 
-
+    @PreAuthorize("@authService.canAccessProduct(principal, #productId)")
     @RequestMapping(value = "/products/{department}/{id:\\d+}/edit", method = RequestMethod.GET)
     public ModelAndView editProduct(
             @PathVariable(value = "id") Long productId,
@@ -287,12 +289,14 @@ public class MarketplaceController extends GlobalControllerAdvice{
             @ModelAttribute("listingForm") ListingForm listingForm
     ) {
         LOGGER.info("User arriving at '/marketplace/products/" + department + "/" + productId +"/edit'");
+        System.out.println("ARRIVED HERE");
         ModelAndView mav = new ModelAndView("marketplace/views/productEdit");
         mav.addObject("departmentList", Department.getDepartments());
         mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
         return mav;
     }
 
+    @PreAuthorize("@authService.canAccessProduct(principal, #productId)")
     @RequestMapping(value = "/products/{department}/{id:\\d+}/edit", method = RequestMethod.POST)
     public ModelAndView editProduct(
             @PathVariable(value = "id") Long productId,
