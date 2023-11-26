@@ -212,10 +212,10 @@ public class MarketplaceController extends GlobalControllerAdvice{
             return createListingForm(listingForm);
         }
         User user = getLoggedUser();
-/*
-        prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles());
-        ahora tienen que venir las units tambn
-*/
+
+        //TODO: EDITAR ULTIMO VALOR DE ESTO !!!!
+        prs.createProduct(user.getUserId(), listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles(), 1);
+
         return new ModelAndView("redirect:/marketplace/my-listings");
     }
 
@@ -318,7 +318,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
             LOGGER.error("Error in form 'listingForm'");
             return product(productId, department, new RequestForm(), new QuestionForm(), new ReplyForm(),false);
         }
-        prs.updateProduct(productId, listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles(), listingForm.getQuantity());
+        prs.updateProduct(productId, listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles(), 0L);
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
     }
 }
