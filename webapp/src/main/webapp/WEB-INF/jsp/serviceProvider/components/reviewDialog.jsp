@@ -45,7 +45,7 @@
 
                 <div class="form-row ">
                     <spring:message code="Review" var="reviewPlaceholder"/>
-                    <form:textarea path="review" class="cool-input" rows="5" placeholder="${reviewPlaceholder}"/>
+                    <form:textarea path="review" class="cool-input textarea-min-max" rows="5" placeholder="${reviewPlaceholder}"/>
                     <form:errors path="review" cssClass="error" element="p"/>
                 </div>
 

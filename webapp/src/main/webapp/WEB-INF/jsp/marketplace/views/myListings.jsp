@@ -43,7 +43,7 @@
                 <div class="f-r-c-c w-50 pt-2 pb-2">
                     <a href="${contextPath}/marketplace/my-listings" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "MyListings" ? 'active' : ''}">
                         <span class="font-size-12">
-                            <i class="fa-solid fa-box-open hide-icons"></i>
+                            <i class="fa-regular fa-chart-bar"></i>
                             <span class="hide-text">
                                 <spring:message code="My.listings"/>
                             </span>

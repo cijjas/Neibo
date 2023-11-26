@@ -25,6 +25,7 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertFalse;
@@ -48,6 +49,8 @@ public class PurchaseDaoImplTest {
     public static final String MAIL1 = "user1@gmail.com";
     public static final String MAIL2 = "user2@gmail.com";
     public static final String MAIL3 = "user3@gmail.com";
+    public static final int BASE_PAGE = 1;
+    public static final int BASE_SIZE = 10;
 
     @Before
     public void setUp() {
@@ -101,5 +104,69 @@ public class PurchaseDaoImplTest {
 
         // Validations & Post Conditions
         assertFalse(purchase.isPresent());
+    }
+
+    @Test
+    public void testGetPurchasesBySellerId() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+        long uKey2 = testInserter.createUser(MAIL2, nhKey);
+        long uKey3 = testInserter.createUser(MAIL3, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, null, dKey1);
+        long pcKey = testInserter.createPurchase(pKey, uKey2, UNITS_BOUGHT);
+
+        // Exercise
+        Set<Purchase> purchase = purchaseDao.getPurchasesBySellerId(uKey1, BASE_PAGE, BASE_SIZE);
+
+        // Validations & Post Conditions
+        assertFalse(purchase.isEmpty());
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_purchases.name()));
+    }
+
+    @Test
+    public void testGetNoPurchasesBySellerId() {
+        // Pre Conditions
+
+        // Exercise
+        Set<Purchase> purchase = purchaseDao.getPurchasesBySellerId(1, BASE_PAGE, BASE_SIZE);
+
+        // Validations & Post Conditions
+        assertTrue(purchase.isEmpty());
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_purchases.name()));
+    }
+
+    @Test
+    public void testGetPurchasesByBuyerId() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+        long uKey2 = testInserter.createUser(MAIL2, nhKey);
+        long uKey3 = testInserter.createUser(MAIL3, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, null, dKey1);
+        long pcKey = testInserter.createPurchase(pKey, uKey2, UNITS_BOUGHT);
+
+        // Exercise
+        Set<Purchase> purchase = purchaseDao.getPurchasesByBuyerId(uKey2, BASE_PAGE, BASE_SIZE);
+
+        // Validations & Post Conditions
+        assertFalse(purchase.isEmpty());
+        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_purchases.name()));
+    }
+
+    @Test
+    public void testGetPurchasesByBuyerInvalidId() {
+        // Pre Conditions
+
+        // Exercise
+        Set<Purchase> purchase = purchaseDao.getPurchasesByBuyerId(1, BASE_PAGE, BASE_SIZE);
+
+        // Validations & Post Conditions
+        assertTrue(purchase.isEmpty());
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_purchases.name()));
     }
 }

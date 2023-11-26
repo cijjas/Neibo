@@ -44,7 +44,7 @@
                     <div class="f-r-c-c w-50 pt-2 pb-2">
                         <a href="${contextPath}/marketplace/my-purchases" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "MyPurchases" ? 'active' : ''}">
                         <span class="font-size-12">
-                            <i class="fa-solid fa-bag-shopping"></i>
+                            <i class="fa-solid fa-calendar-check"></i>
                             <span class="hide-text">
                                 <spring:message code="My.purchases"/>
                             </span>
@@ -52,7 +52,7 @@
                         </a>
                         <a href="${contextPath}/marketplace/currently-requesting" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "CurrentlyRequesting" ? 'active' : ''}">
                         <span class="font-size-12">
-                            <i class="fa-solid fa-rectangle-list"></i>
+                            <i class="fa-solid fa-basket-shopping"></i>
                             <span class="hide-text">
                                 <spring:message code="My.requests"/>
                             </span>

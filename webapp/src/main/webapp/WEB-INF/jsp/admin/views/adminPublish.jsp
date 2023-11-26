@@ -59,7 +59,7 @@
 
                         <div class="form-group">
                             <spring:message code="Message" var="messagePlaceholder"/>
-                            <form:textarea path="message" class="cool-input" rows="5"
+                            <form:textarea path="message" class="cool-input textarea-min-max" rows="5"
                                            placeholder="${messagePlaceholder}"/>
                             <div class="form-row form-error">
                                 <form:errors path="message" cssClass="error" element="p"/>

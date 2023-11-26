@@ -19,7 +19,7 @@
 
             <%--                        <div class="w-100">--%>
             <%--                            <spring:message code="Leave.a.review" var="commentPlaceholder"/>--%>
-            <%--                            <form:textarea id="commentInput" path="comment" class="cool-input grey-input"  rows="3" placeholder="${commentPlaceholder}"/>--%>
+            <%--                            <form:textarea id="commentInput" path="comment" class="cool-input grey-input textarea-min-max"  rows="3" placeholder="${commentPlaceholder}"/>--%>
             <%--                            <div class="form-row form-error" style="font-size: 12px; margin-left:0.5rem">--%>
             <%--                                <form:errors path="comment" cssClass="error" element="p"/>--%>
             <%--                            </div>--%>

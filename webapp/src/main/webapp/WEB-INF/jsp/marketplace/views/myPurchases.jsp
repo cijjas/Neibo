@@ -43,7 +43,7 @@
                     <div class="f-r-c-c w-50 pt-2 pb-2">
                         <a href="${contextPath}/marketplace/my-purchases" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "MyPurchases" ? 'active' : ''}">
                         <span class="font-size-12">
-                            <i class="fa-solid fa-bag-shopping"></i>
+                            <i class="fa-solid fa-calendar-check"></i>
                             <span class="hide-text">
                                 <spring:message code="My.purchases"/>
                             </span>
@@ -51,7 +51,7 @@
                         </a>
                         <a href="${contextPath}/marketplace/currently-requesting" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "CurrentlyRequesting" ? 'active' : ''}">
                         <span class="font-size-12">
-                            <i class="fa-solid fa-rectangle-list"></i>
+                            <i class="fa-solid fa-basket-shopping"></i>
                             <span class="hide-text">
                                 <spring:message code="My.requests"/>
                             </span>
@@ -61,7 +61,7 @@
                 </div>
 
                 <c:choose>
-                    <c:when test="${empty products}">
+                    <c:when test="${empty purchases}">
                         <div class="no-posts-found">
                             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
                             <spring:message code="Purchases.not.found"/>
@@ -69,38 +69,40 @@
                     </c:when>
                     <c:otherwise>
                         <div class="w-100 f-c-c-c g-1 ">
-                            <c:forEach var="product" items="${products}">
+                            <c:forEach var="purchase" items="${purchases}">
                                 <div class="cool-static-container w-100 f-c-s-s g-0 p-0">
-                                    <div class="p-3 pl-4 w-100 h-100">
-                                        <c:out value="${product.purchaseDate}"/>
+                                    <div class="p-2 pl-3">
+                                        <c:out value="${purchase.purchaseDate}"/>
                                     </div>
+
                                     <div class="divider m-0"></div>
                                     <div class="container">
                                         <div class="f-r-c-c w-100 g-1">
                                             <div class="pl-0">
                                                 <div class="purchased-product-image f-c-c-c placeholder-glow">
                                                     <img
-                                                            id="purchased-product-image-${product.productId}"
+                                                            id="purchased-product-image-${purchase.product.productId}"
                                                             src=""
                                                             class="placeholder"
-                                                            alt="purchased_product_image_${product.productId}"
+                                                            alt="purchased_product_image_${purchase.product.productId}"
                                                     />
                                                     <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
                                                     <script>
                                                         (function () {
-                                                            getImageInto("purchased-product-image-${product.productId}",${empty product.primaryPicture.imageId ? -2 : product.primaryPicture.imageId}, "${pageContext.request.contextPath}")
+                                                            getImageInto("purchased-product-image-${purchase.product.productId}",${empty purchase.product.primaryPicture.imageId ? -2 : purchase.product.primaryPicture.imageId}, "${pageContext.request.contextPath}")
                                                         })();
                                                     </script>
                                                 </div>
                                             </div>
 
-                                            <div class="f-c-s-s  w-100 p-4">
+                                            <div class="f-c-s-s g-05 w-100 p-4">
                                                 <div class="f-r-sb-c g-0 w-100">
+
                                                     <span class="font-weight-bold font-size-16">
-                                                            ${product.name}
+                                                        <c:out value="${purchase.product.name}" />
                                                     </span>
                                                     <c:choose>
-                                                        <c:when test="${product.used}">
+                                                        <c:when test="${purchase.product.used}">
                                                             <div class="used-tag used font-weight-normal">
                                                                 <spring:message code="Used"/>
                                                             </div>
@@ -113,22 +115,26 @@
                                                     </c:choose>
 
                                                 </div>
+                                                <div class="f-r-c-c font-weight-normal ">
+                                                    <spring:message code="Quantity"/>:
+                                                    <c:out value="${purchase.units}"/>
+                                                </div>
                                                 <div class="f-r-c-c g-05" >
                                                    <span class="font-weight-normal">
                                                     <spring:message code="Sold.by"/>
                                                    </span>
                                                     <span style="color: var(--lila)">
-                                                       <c:out value="${product.seller.name}"/>
+                                                       <c:out value="${purchase.product.seller.name}"/>
                                                    </span>
                                                 </div>
 
-                                                <div class="f-r-c-c g-0">
+                                                <div class="f-r-c-c g-0 pt-2">
                                                    <span class="price font-size-20 font-weight-normal ">
-                                                        <c:out value="${product.priceIntegerString}"/>
+                                                        <c:out value="${purchase.product.priceIntegerString}"/>
                                                    </span>
                                                     <div class="f-c-s-c pl-1" style="height: 20px">
                                                        <span class="cents c-light-text font-size-12 font-weight-normal">
-                                                            <c:out value="${product.priceDecimalString}"/>
+                                                            <c:out value="${purchase.product.priceDecimalString}"/>
                                                        </span>
                                                     </div>
                                                 </div>

@@ -5,13 +5,15 @@ import ar.edu.itba.paw.webapp.form.validation.constraints.ImageConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.MultipleImagesConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.TagsConstraint;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class ListingForm {
     @NotBlank
-    @Size(min = 0, max = 100)
+    @Size(max = 100)
     private String title;
 
     @NotBlank
@@ -21,13 +23,27 @@ public class ListingForm {
     private MultipartFile[] imageFiles;
 
     @NotBlank
-    @Size(min = 0, max = 2000)
+    @Size(max = 2000)
     private String description;
 
+    @NotNull
     @DepartmentConstraint
     private Integer departmentId;
 
+    @NotNull
+    @Range(min = 1, max = 100)
+    private Long quantity;
+
+    @NotNull
     private Boolean used;
+
+    public Long getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
+    }
 
     public Boolean getUsed() {
         return used;

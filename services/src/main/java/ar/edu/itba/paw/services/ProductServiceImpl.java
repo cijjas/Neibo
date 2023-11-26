@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.Department;
-import ar.edu.itba.paw.enums.ProductStatus;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
+import ar.edu.itba.paw.interfaces.persistence.DepartmentDao;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.interfaces.persistence.PurchaseDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
@@ -26,12 +26,14 @@ public class ProductServiceImpl implements ProductService {
     private final ProductDao productDao;
     private final PurchaseDao purchaseDao;
     private final ImageService imageService;
+    private final DepartmentDao departmentDao;
 
     @Autowired
-    public ProductServiceImpl(final ProductDao productDao, final PurchaseDao purchaseDao, final ImageService imageService) {
+    public ProductServiceImpl(final ProductDao productDao, final PurchaseDao purchaseDao, final ImageService imageService, DepartmentDao departmentDao) {
         this.productDao = productDao;
         this.purchaseDao = purchaseDao;
         this.imageService = imageService;
+        this.departmentDao = departmentDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -139,14 +141,25 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles) {
+    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, Long stock) {
         LOGGER.info("Updating Product {}", productId);
         double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
         Long[] idArray = {0L, 0L, 0L};
         for(int i = 0; i < pictureFiles.length; i++){
             idArray[i] = getImageId(pictureFiles[i]);
         }
-        productDao.updateProduct(productId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2]);
+        Long updatedStock = stock;
+        if(stock == null){
+            updatedStock = productDao.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")).getRemainingUnits();
+        }
+
+        Product product = findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        product.setName(name);
+        product.setDescription(description);
+        product.setPrice(priceDouble);
+        product.setUsed(used);
+        product.setDepartment(departmentDao.findDepartmentById(departmentId).orElseThrow(()-> new NotFoundException("Department Not Found")));
+        product.setRemainingUnits(updatedStock);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
