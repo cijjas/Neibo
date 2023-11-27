@@ -124,9 +124,10 @@
                                                     <spring:message code="Bought.by"/>
                                                    </span>
                                                     <span style="color: var(--lila)">
-                                                       <c:out value="${purchase.user.name}"/>
+                                                       <c:out value="${purchase.user.name}"/> (<c:out value="${purchase.user.phoneNumber}"/>)
                                                    </span>
                                                 </div>
+
 
                                                 <div class="f-r-c-c g-0">
                                                    <span class="price font-size-20 font-weight-normal ">

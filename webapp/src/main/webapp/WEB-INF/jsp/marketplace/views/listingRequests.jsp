@@ -89,6 +89,12 @@
                                                 </span>
                                             </div>
                                             <div>
+                                                <spring:message code="PhoneNumber"/>:
+                                                <span style="color: var(--lila)">
+                                                    <c:out value="${request.user.phoneNumber}"/>
+                                                </span>
+                                            </div>
+                                            <div>
                                                 <spring:message code="Request.date"/>:
                                                 <span style="color: var(--lila)">
                                                     <c:out value="${request.requestDate}"/>

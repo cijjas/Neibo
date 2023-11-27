@@ -2491,9 +2491,17 @@ input[type=time] {
     align-items: center; /* Center vertically */
 }
 
+.boxy-first {
+    position: absolute;
+    top: 25%;
+    left: 43%;
+    height: 100px;
+    width: 215px;
+    transform: translate(-50%, -50%);
+}
 .boxy {
     position: absolute;
-    top: 29%;
+    top: 30%;
     left: 43%;
     height: 100px;
     width: 215px;

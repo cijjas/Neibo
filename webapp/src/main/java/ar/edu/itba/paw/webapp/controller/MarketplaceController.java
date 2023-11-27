@@ -103,7 +103,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         mav.addObject("page", page);
         mav.addObject("totalPages", prs.getProductsBoughtTotalPages(getLoggedUser().getUserId(), size));
         mav.addObject("contextPath", "/marketplace/currently-requesting");
-        mav.addObject("requestList", getLoggedUser().getRequestedProducts());
+        mav.addObject("requestList", rqs.getRequestsByUserId(getLoggedUser().getUserId(), page, size));
         return mav;
     }
 
