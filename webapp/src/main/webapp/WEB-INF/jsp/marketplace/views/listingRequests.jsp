@@ -2,6 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <html>
 <head>
@@ -17,7 +18,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title><spring:message code="My.listings"/></title>
+    <title><spring:message code="My.requests"/> - <c:out value="${product.name}"/></title>
 </head>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" scope="page" />
 <c:set var="channel" value="${channel}" scope="page" />
@@ -39,7 +40,7 @@
                 </div>
                 <div class="f-c-c-c">
 
-                    <div class="f-r-c-c w-100 pt-2 pb-2">
+                    <div class="f-r-c-c w-100 pt-1 pb-1">
                         <h1 class="font-weight-bolder font-size-24">
                             <c:out value="${product.name}"/>
                         </h1>
@@ -89,14 +90,25 @@
                                                 </span>
                                             </div>
                                             <div>
+                                                <spring:message code="PhoneNumber"/>:
+                                                <span style="color: var(--lila)">
+                                                    <c:out value="${request.user.phoneNumber}"/>
+                                                </span>
+                                            </div>
+                                            <div>
                                                 <spring:message code="Request.date"/>:
                                                 <span style="color: var(--lila)">
-                                                    <c:out value="${request.requestDate}"/>
+                                                    <fmt:formatDate value="${request.requestDate}" pattern="dd MMM yyyy" var="formattedDate" />
+                                                    <fmt:formatDate value="${request.requestDate}" pattern="HH:mm" var="formattedTime" />
+
+                                                    <c:out value="${formattedDate}" />
+                                                    -
+                                                    <c:out value="${formattedTime}" />
                                                 </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <a onclick="openMarkAsSoldDialog(${request.user.userId})" class="cool-button small-a marketplace-button  font-weight-bold ">
+                                    <a onclick="openMarkAsSoldDialog(${request.user.userId}, ${request.requestId})" class="cool-button small-a marketplace-button  font-weight-bold ">
                                         <spring:message code="Mark.as.sold"/>
                                     </a>
                                 </div>
@@ -124,25 +136,34 @@
                         </c:forEach>
                     </c:otherwise>
                 </c:choose>
-
             </div>
-
-
         </div>
     </div>
 </div>
 
 <script>
-    function openMarkAsSoldDialog() {
+    function openMarkAsSoldDialog(buyerId, requestId) {
+        const idT = document.getElementById('id-t');
+        idT.innerHTML = buyerId;
+        const reqT = document.getElementById('req-t');
+        reqT.innerHTML = requestId;
         document.getElementById('mark-as-sold-dialog').style.display = 'flex';
     }
 
     function closeMarkAsSoldDialog() {
         document.getElementById('mark-as-sold-dialog').style.display = 'none';
     }
+
+    function submitMarkAsSold() {
+        document.getElementById('loader-container').style.display = 'flex';
+        document.getElementById('buyer-id').value = document.getElementById('id-t').innerHTML;
+        document.getElementById('request-id').value = document.getElementById('req-t').innerHTML;
+        const form = document.forms['markAsSoldForm'];
+        form.submit();
+    }
 </script>
 
-<div id="mark-as-sold-dialog" class="dialog" style="display: flex">
+<div id="mark-as-sold-dialog" class="dialog" style="display: none">
     <div class="dialog-content marketplace" >
         <div class="dialog-header">
             <div class="dialog-svg">
@@ -178,11 +199,17 @@
                 <i class="fas fa-close"></i>
             </a>
         </div>
+        <span id="id-t" hidden="hidden"></span>
+        <span id="req-t" hidden="hidden"></span>
+
         <form:form class="f-c-c-c w-100" id="markAsSoldForm" name="markAsSoldForm" method="post" action="${contextPath}/marketplace/my-requests/${product.productId}" modelAttribute="markAsSoldForm" enctype="multipart/form-data">
-            <form:hidden path="userId" value="${loggedUser.userId}"/>
             <div class="f-c-c-c w-100  g-0">
+                <form:hidden id="buyer-id" path="buyerId" value=""/>
+                <form:hidden id="request-id" path="requestId" value=""/>
+
                 <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
-                    <spring:message code="Quantity"/>
+                    <span class="c-text"><spring:message code="Quantity"/></span>
+
                     <div class="">
                         <label for="condition"></label>
                         <form:select path="quantity"  class="cool-input marketplace-input quantity-input font-weight-bold font-size-14" name="condition" id="condition">
@@ -194,7 +221,7 @@
                 </div>
                 <form:errors path="quantity" cssClass="error pt-1" element="p"/>
             </div>
-            <button type="submit"  onclick="document.getElementById('loader-container').style.display = 'flex';" class=" w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
+            <button type="submit" onclick="submitMarkAsSold()" class=" w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
                 <spring:message code="Confirm"/>
             </button>
         </form:form>

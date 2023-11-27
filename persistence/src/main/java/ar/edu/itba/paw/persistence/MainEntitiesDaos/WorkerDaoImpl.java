@@ -2,33 +2,20 @@ package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.enums.WorkerStatus;
-import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.persistence.WorkerDao;
-import ar.edu.itba.paw.models.JunctionEntities.WorkerArea;
-import ar.edu.itba.paw.models.MainEntities.Event;
-import ar.edu.itba.paw.models.MainEntities.Post;
-import ar.edu.itba.paw.models.MainEntities.User;
-import ar.edu.itba.paw.models.MainEntities.Worker;
+import ar.edu.itba.paw.models.Entities.User;
+import ar.edu.itba.paw.models.Entities.Worker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
-import javax.sql.DataSource;
 import java.util.*;
 
-import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.*;
+import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.appendCommonWorkerConditions;
+import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.appendPaginationClause;
 
 @Repository
 public class WorkerDaoImpl implements WorkerDao {
@@ -79,12 +66,12 @@ public class WorkerDaoImpl implements WorkerDao {
 
 
     @Override
-    public List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus) {
+    public Set<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus) {
         LOGGER.debug("Selecting Workers from Neighborhoods {} with professions {}", neighborhoodIds, professions);
         StringBuilder query = new StringBuilder(USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
         if(neighborhoodIds.length == 0) {
-            return new ArrayList<>();
+            return new HashSet<>();
         }
 
         appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions, workerRole, workerStatus);
@@ -100,7 +87,7 @@ public class WorkerDaoImpl implements WorkerDao {
             sqlQuery.setParameter(i + 1, queryParams.get(i));
         }
 
-        return sqlQuery.getResultList();
+        return new HashSet<>(sqlQuery.getResultList());
     }
 
     @Override

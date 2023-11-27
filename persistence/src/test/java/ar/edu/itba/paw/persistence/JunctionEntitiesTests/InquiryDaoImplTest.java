@@ -2,7 +2,7 @@ package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
 import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.models.JunctionEntities.Inquiry;
+import ar.edu.itba.paw.models.Entities.Inquiry;
 import ar.edu.itba.paw.persistence.JunctionDaos.InquiryDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-
 import java.util.List;
 import java.util.Optional;
 

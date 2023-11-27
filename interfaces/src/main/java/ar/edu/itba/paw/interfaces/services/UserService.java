@@ -2,7 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
-import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.Entities.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -40,6 +40,8 @@ public interface UserService {
     // -----------------------------------------------------------------------------------------------------------------
 
     void updateProfilePicture(long userId, MultipartFile image);
+
+    void updatePhoneNumber(long userId, String phoneNumber);
 
     void toggleDarkMode(final long id);
 

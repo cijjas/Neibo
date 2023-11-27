@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.enums.Department;
-import ar.edu.itba.paw.enums.ProductStatus;
-import ar.edu.itba.paw.models.MainEntities.Product;
+import ar.edu.itba.paw.models.Entities.Product;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,11 +31,6 @@ public interface ProductDao {
     List<Product> getProductsSold(long userId, int page, int size);
 
     List<Product> getProductsBought(long userId, int page, int size);
-
-    // --------------------------------------------- PRODUCTS UPDATE ---------------------------------------------------
-//
-//    Product updateProduct(final long productId, final String name, final String description, final double price, final boolean used, final long departmentId,
-//                          final Long primaryPictureId, final Long secondaryPictureId, final Long tertiaryPictureId, Long stock);
 
     // --------------------------------------------- PRODUCTS DELETE ---------------------------------------------------
 

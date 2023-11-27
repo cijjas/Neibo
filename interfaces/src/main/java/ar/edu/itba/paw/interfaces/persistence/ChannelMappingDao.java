@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.JunctionEntities.ChannelMapping;
+import ar.edu.itba.paw.models.Entities.ChannelMapping;
 
 public interface ChannelMappingDao {
 

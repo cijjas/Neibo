@@ -1,10 +1,9 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
-import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.interfaces.persistence.RequestDao;
-import ar.edu.itba.paw.models.JunctionEntities.Request;
-import ar.edu.itba.paw.models.MainEntities.Product;
-import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.models.Entities.Request;
+import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -12,13 +11,9 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class RequestDaoImpl implements RequestDao {
@@ -36,17 +31,25 @@ public class RequestDaoImpl implements RequestDao {
                 .user(em.find(User.class, userId))
                 .message(message)
                 .requestDate(new java.sql.Date(System.currentTimeMillis()))
+                .fulfilled(false)
                 .build();
         em.persist(request);
         return request;
     }
 
     @Override
+    public Optional<Request> findRequest(long requestId) {
+        LOGGER.debug("Selecting Request {}", requestId);
+        return Optional.ofNullable(em.find(Request.class, requestId));
+    }
+
+
+    @Override
     public List<Request> getRequestsByProductId(long productId, int page, int size) {
         LOGGER.debug("Selecting Requests from Product {}", productId);
 
-        TypedQuery<Long> idQuery = em.createQuery("SELECT r.requestId FROM Request r " +
-                "WHERE r.product.productId = :productId", Long.class);
+        TypedQuery<Long> idQuery = em.createQuery(
+                "SELECT r.requestId FROM Request r WHERE r.product.productId = :productId AND r.fulfilled = false", Long.class);
         idQuery.setParameter("productId", productId);
         idQuery.setFirstResult((page - 1) * size);
         idQuery.setMaxResults(size);
@@ -55,7 +58,7 @@ public class RequestDaoImpl implements RequestDao {
 
         if (!requestIds.isEmpty()) {
             TypedQuery<Request> requestQuery = em.createQuery(
-                    "SELECT r FROM Request r WHERE r.requestId IN :requestIds", Request.class);
+                    "SELECT r FROM Request r WHERE r.requestId IN :requestIds ORDER BY r.requestDate DESC", Request.class);
             requestQuery.setParameter("requestIds", requestIds);
             return requestQuery.getResultList();
         }
@@ -63,12 +66,13 @@ public class RequestDaoImpl implements RequestDao {
         return Collections.emptyList();
     }
 
+
     @Override
     public int getRequestsCountByProductId(long productId) {
         LOGGER.debug("Selecting Requests Count from Product {}", productId);
 
         Long count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
-                        "WHERE r.product.productId = :productId")
+                        "WHERE r.product.productId = :productId AND r.fulfilled = false")
                 .setParameter("productId", productId)
                 .getSingleResult();
         return count != null ? count.intValue() : 0;
@@ -79,7 +83,7 @@ public class RequestDaoImpl implements RequestDao {
         LOGGER.debug("Selecting Requests from Product {} By User {}", productId, userId);
 
         TypedQuery<Long> idQuery = em.createQuery(
-                "SELECT r.requestId FROM Request r WHERE r.product.productId = :productId AND r.user.userId = :userId", Long.class);
+                "SELECT r.requestId FROM Request r WHERE r.product.productId = :productId AND r.user.userId = :userId AND r.fulfilled = false", Long.class);
         idQuery.setParameter("productId", productId);
         idQuery.setParameter("userId", userId);
         idQuery.setFirstResult((page - 1) * size);
@@ -90,7 +94,7 @@ public class RequestDaoImpl implements RequestDao {
         // Second query to retrieve Product objects based on the IDs
         if (!requestIds.isEmpty()) {
             TypedQuery<Request> requestQuery = em.createQuery(
-                    "SELECT r FROM Request r WHERE r.requestId IN :requestIds", Request.class);
+                    "SELECT r FROM Request r WHERE r.requestId IN :requestIds ORDER BY r.requestDate DESC", Request.class);
             requestQuery.setParameter("requestIds", requestIds);
             return requestQuery.getResultList();
         }
@@ -102,7 +106,7 @@ public class RequestDaoImpl implements RequestDao {
     public int getRequestsCountByProductAndUser(long productId, long userId) {
         LOGGER.debug("Selecting Requests Count from Product {} By User {}", productId, userId);
         Long count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
-                        "WHERE r.product.productId = :productId AND r.user.userId = :userId")
+                        "WHERE r.product.productId = :productId AND r.user.userId = :userId AND r.fulfilled = false")
                 .setParameter("productId", productId)
                 .getSingleResult();
         return count != null ? count.intValue() : 0;
@@ -113,7 +117,7 @@ public class RequestDaoImpl implements RequestDao {
         LOGGER.debug("Selecting Requests from User {}", userId);
 
         TypedQuery<Long> idQuery = em.createQuery("SELECT r.requestId FROM Request r " +
-                "WHERE r.user.userId = :userId", Long.class);
+                "WHERE r.user.userId = :userId AND r.fulfilled = false", Long.class);
         idQuery.setParameter("userId", userId);
         idQuery.setFirstResult((page - 1) * size);
         idQuery.setMaxResults(size);
@@ -122,7 +126,7 @@ public class RequestDaoImpl implements RequestDao {
 
         if (!requestIds.isEmpty()) {
             TypedQuery<Request> requestQuery = em.createQuery(
-                    "SELECT r FROM Request r WHERE r.requestId IN :requestIds", Request.class);
+                    "SELECT r FROM Request r WHERE r.requestId IN :requestIds ORDER BY r.requestDate DESC", Request.class);
             requestQuery.setParameter("requestIds", requestIds);
             return requestQuery.getResultList();
         }
@@ -135,7 +139,7 @@ public class RequestDaoImpl implements RequestDao {
         LOGGER.debug("Selecting Requests Count from User {}", userId);
 
         Long count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
-                        "WHERE r.user.userId = :userId")
+                        "WHERE r.user.userId = :userId AND r.fulfilled = false")
                 .setParameter("userId", userId)
                 .getSingleResult();
         return count != null ? count.intValue() : 0;

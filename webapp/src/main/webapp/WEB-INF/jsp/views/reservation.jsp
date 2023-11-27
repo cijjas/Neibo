@@ -31,7 +31,7 @@
         <div class="column-middle">
             <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
                 <c:choose>
-                    <c:when test="${bookings.size() == 0}">
+                    <c:when test="${empty bookings}">
                         <div>
                             <div class="f-c-c-c " style="text-align: center">
                             <span class="w-75 mb-2">

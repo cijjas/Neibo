@@ -15,7 +15,7 @@
                            href="${pageContext.request.contextPath}/services/profile/${loggedUser.userId}"
                            class="cool-left-button  ${channel == 'Profile'  ? 'active' : ''} f-r-sb-c">
                             <i class="fa-solid fa-address-card"></i>
-                            <spring:message code="Profile"/>
+                            <spring:message code="Business.card"/>
                         </a>
                         <a id="workerServicesButton" href="${pageContext.request.contextPath}/services"
                            class="cool-left-button ${channel == 'Services' ? 'active' : ''} f-r-sb-c">
@@ -23,7 +23,7 @@
                             <spring:message code="Services"/>
                         </a>
                         <a id="neighborhoodsButton" href="${pageContext.request.contextPath}/services/neighborhoods"
-                           class="cool-left-button ${channel == 'Neighborhoods' ? 'active' : ''} f-r-sb-c">
+                           class="cool-left-button ${channel == 'Neighborhoods' ? 'active' : ''} f-r-sb-c" style="text-align: end;">
                             <i class="fa-solid fa-house"></i> <spring:message code="My.Neighborhoods"/>
                         </a>
                     </div>

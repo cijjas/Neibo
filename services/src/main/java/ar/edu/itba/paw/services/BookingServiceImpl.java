@@ -4,7 +4,7 @@ import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.interfaces.services.BookingService;
-import ar.edu.itba.paw.models.JunctionEntities.Booking;
+import ar.edu.itba.paw.models.Entities.Booking;
 import ar.edu.itba.paw.models.GroupedBooking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

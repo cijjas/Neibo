@@ -42,7 +42,11 @@
     position: relative;
     color: var(--text);
     white-space: normal; /* Allow text to wrap within the container */
+    &.grey{
+        background-color: var(--lightertext);
+    }
 }
+
 
 
 .cool-comment {

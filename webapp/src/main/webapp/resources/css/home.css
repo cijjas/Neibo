@@ -180,7 +180,70 @@
     }
 }
 
-.cool-feed-button:before{
+.cool-feed-button {
+    text-align: center;
+    overflow: hidden;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.7em 1em;
+    background-color: var(--onbackground);
+    color: var(--text);
+    border: 1px solid var(--text);
+    border-radius: var(--border-radius);
+    position: relative;
+    transform: translateY(0);
+    /*transition: -webkit-transform .3s cubic-bezier(.5,2.5,.7,.7),-webkit-box-shadow .3s cubic-bezier(.5,2.5,.7,.7);*/
+    transition: all 0.3s ease-in-out;
+    &::before{
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 110%;
+        bottom: -5px;
+        left: 0;
+        -webkit-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        -o-transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+        transition: bottom .3s cubic-bezier(.5,2.5,.7,.7);
+    }
+
+    &.active {
+        transform: translateY(-4px);
+        box-shadow: 0 5px 0 0 var(--primary);
+        color: var(--primary);
+        border: var(--border);
+    }
+
+    &.rounded {
+        border-radius: var(--border-hard) !important;
+    }
+
+    &.marketplace-button{
+        padding: 0.7em 1em;
+        font-size: 12px;
+
+        color: var(--text);
+        background-color: var(--onbackground);
+        border: 1px solid var(--lighttext);
+        transition: all 0.3s ease-in-out;
+        &.active,
+        &:hover {
+            border: 1px solid var(--lila);
+            transform: translateY(-4px);
+            box-shadow: 0 4px 0 0 var(--lila);
+            color: var(--lila);
+        }
+    }
+    &:hover,
+    &:active,
+    &:focus-visible {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 0 0 var(--primary);
+        color: var(--primary);
+        border: var(--border);
+
+    }
+
+
 }
 .upper-feed-buttons-box {
     z-index: 3;
@@ -1679,7 +1742,6 @@ footer div {
         &.pure{
             color: var(--lila);
             height: 35px;
-
             border: 1px solid var(--lila);
         }
 
@@ -2429,9 +2491,17 @@ input[type=time] {
     align-items: center; /* Center vertically */
 }
 
+.boxy-first {
+    position: absolute;
+    top: 25%;
+    left: 43%;
+    height: 100px;
+    width: 215px;
+    transform: translate(-50%, -50%);
+}
 .boxy {
     position: absolute;
-    top: 29%;
+    top: 30%;
     left: 43%;
     height: 100px;
     width: 215px;
@@ -3092,4 +3162,17 @@ input[type=time] {
     &:hover{
         color: var(--lila);
     }
+}
+
+
+.sold-tag{
+    border: 1px solid var(--red);
+    border-radius: var(--border-hard);
+    color: var(--red);
+}
+
+.in-stock-tag{
+    border: 1px solid var(--accent);
+    border-radius: var(--border-hard);
+    color: var(--accent);
 }

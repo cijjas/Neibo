@@ -1,31 +1,19 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
-import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.CommentDao;
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
-import ar.edu.itba.paw.models.MainEntities.Comment;
-import ar.edu.itba.paw.models.MainEntities.Post;
-import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.Entities.Comment;
+import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import javax.sql.DataSource;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CommentDaoImpl implements CommentDao {
@@ -59,19 +47,23 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public List<Comment> getCommentsByPostId(long postId, int page, int size) {
         LOGGER.debug("Selecting Comments from Post {}", postId);
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Comment> query = cb.createQuery(Comment.class);
-        Root<Comment> commentRoot = query.from(Comment.class);
-        query.select(commentRoot);
-        query.where(cb.equal(commentRoot.get("post").get("postId"), postId));
-        query.orderBy(cb.desc(commentRoot.get("date")));
-        TypedQuery<Comment> typedQuery = em.createQuery(query);
-        typedQuery.setFirstResult((page - 1) * size);
-        typedQuery.setMaxResults(size);
-        List<Comment> comments = typedQuery.getResultList();
-        if (comments.isEmpty())
-            return Collections.emptyList();
-        return comments;
+
+        TypedQuery<Long> idQuery = em.createQuery("SELECT c.commentId FROM Comment c " +
+                "WHERE c.post.postId = :postId", Long.class);
+        idQuery.setParameter("postId", postId);
+        idQuery.setFirstResult((page - 1) * size);
+        idQuery.setMaxResults(size);
+
+        List<Long> commentIds = idQuery.getResultList();
+
+        if (!commentIds.isEmpty()) {
+            TypedQuery<Comment> commentQuery = em.createQuery(
+                    "SELECT c FROM Comment c WHERE c.commentId IN :commentIds", Comment.class);
+            commentQuery.setParameter("commentIds", commentIds);
+            return commentQuery.getResultList();
+        }
+
+        return Collections.emptyList();
     }
 
     @Override

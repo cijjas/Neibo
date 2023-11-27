@@ -1,23 +1,21 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.interfaces.persistence.RequestDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.RequestService;
-import ar.edu.itba.paw.models.JunctionEntities.Request;
-import ar.edu.itba.paw.models.MainEntities.Product;
-import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.models.Entities.Request;
+import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -57,13 +55,27 @@ public class RequestServiceImpl implements RequestService {
         return requestDao.getRequestsCountByProductId(productId);
     }
 
+
     @Override
     public List<Request> getRequestsByProductAndUser(long productId, long userId, int page, int size) {
         return requestDao.getRequestsByProductAndUser(productId, userId, page, size);
     }
 
     @Override
+    public List<Request> getRequestsByUserId(long userId, int page, int size) {
+        return requestDao.getRequestsByUserId(userId, page, size);
+    }
+
+    @Override
     public int getRequestsCountByProductAndUser(long productId, long userId) {
         return requestDao.getRequestsCountByProductAndUser(productId, userId);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void markRequestAsFulfilled(long requestId) {
+        Request request = requestDao.findRequest(requestId).orElseThrow(()-> new NotFoundException("Request Not Found"));
+        request.setFulfilled(true);
     }
 }

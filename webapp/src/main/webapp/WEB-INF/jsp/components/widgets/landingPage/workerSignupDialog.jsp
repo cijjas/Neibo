@@ -188,8 +188,10 @@
 
                         <div class="form-input">
                             <form:label path="phoneNumber">
-                                <c:set var="phoneNumber"><spring:message code="PhoneNumber"/></c:set>
-                                <form:input path="phoneNumber" placeholder="${phoneNumber}" class="input"/>
+                                <c:set  var="phoneNumberPlaceholder">
+                                    <spring:message code="PhoneNumber"/>  (<spring:message code="eg"/> +54 9 11 1234 5678)
+                                </c:set>
+                                <form:input path="phoneNumber" placeholder="${phoneNumberPlaceholder}" class="input"/>
                             </form:label>
                             <form:errors path="phoneNumber" cssClass="landing-error" element="p"/>
                         </div>

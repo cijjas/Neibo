@@ -1,15 +1,10 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
-import ar.edu.itba.paw.models.compositeKeys.ChannelMappingKey;
-import ar.edu.itba.paw.models.compositeKeys.WorkerAreaKey;
-import ar.edu.itba.paw.enums.WorkerRole;
-import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
-import ar.edu.itba.paw.models.compositeKeys.WorkerAreaKey;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
-import ar.edu.itba.paw.models.JunctionEntities.WorkerArea;
-import ar.edu.itba.paw.models.MainEntities.Neighborhood;
-import ar.edu.itba.paw.models.MainEntities.Worker;
-import org.hibernate.jdbc.Work;
+import ar.edu.itba.paw.models.Entities.Neighborhood;
+import ar.edu.itba.paw.models.Entities.Worker;
+import ar.edu.itba.paw.models.Entities.WorkerArea;
+import ar.edu.itba.paw.models.compositeKeys.WorkerAreaKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

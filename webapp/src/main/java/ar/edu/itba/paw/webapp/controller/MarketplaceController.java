@@ -3,16 +3,14 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.MainEntities.Product;
-import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -28,8 +26,8 @@ public class MarketplaceController extends GlobalControllerAdvice{
     private final ProductService prs;
     private final RequestService rqs;
     private final InquiryService inqs;
-
     private final PurchaseService prchs;
+    private final UserService us;
 
 
     @Autowired
@@ -37,13 +35,14 @@ public class MarketplaceController extends GlobalControllerAdvice{
                             final ProductService prs,
                             final RequestService rqs,
                             final InquiryService inqs,
-                            final PurchaseService prchs
-    ) {
+                            final PurchaseService prchs) {
         super(us);
+        this.us = us;
         this.prs = prs;
         this.rqs = rqs;
         this.inqs = inqs;
         this.prchs = prchs;
+
     }
 
     // --------------------------------------------------- MARKET ------------------------------------------------------
@@ -104,7 +103,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         mav.addObject("page", page);
         mav.addObject("totalPages", prs.getProductsBoughtTotalPages(getLoggedUser().getUserId(), size));
         mav.addObject("contextPath", "/marketplace/currently-requesting");
-        mav.addObject("requestList", getLoggedUser().getRequestedProducts());
+        mav.addObject("requestList", rqs.getRequestsByUserId(getLoggedUser().getUserId(), page, size));
         return mav;
     }
 
@@ -124,8 +123,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         return mav;
     }
 
-
-
+    @PreAuthorize("@authService.canAccessProduct(principal, #productId)")
     @RequestMapping(value = "/my-requests/{productId:\\d+}", method = RequestMethod.GET)
     public ModelAndView listingRequests(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -142,6 +140,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         return mav;
     }
 
+    @PreAuthorize("@authService.canAccessProduct(principal, #productId)")
     @RequestMapping(value = "/my-requests/{productId:\\d+}", method = RequestMethod.POST)
     public ModelAndView listingRequests(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -155,20 +154,11 @@ public class MarketplaceController extends GlobalControllerAdvice{
             LOGGER.error("Error in form 'markAsSoldForm'");
             return listingRequests(page, size, productId, markAsSoldForm);
         }
-        prs.markAsBought(getLoggedUser().getUserId(), productId, markAsSoldForm.getQuantity());
+        prs.markAsBought(markAsSoldForm.getBuyerId(), productId, markAsSoldForm.getQuantity());
+        rqs.markRequestAsFulfilled(markAsSoldForm.getRequestId());
         return new ModelAndView("redirect:/marketplace/my-sales");
     }
 
-
-    @RequestMapping(value = "/mark-as-bought", method = RequestMethod.POST)
-    public ModelAndView markAsBought(
-            @RequestParam(value = "buyerId") int buyerId,
-            @RequestParam(value = "productId") int productId
-    ) {
-        LOGGER.info("User arriving at '/marketplace/mark-as-bought'");
-        /*prs.markAsBought(buyerId, productId, units!); ahora falta units que se compraron*/
-        return new ModelAndView("redirect:/marketplace/my-sales");
-    }
 
     @RequestMapping(value = "/my-listings", method = RequestMethod.GET)
     public ModelAndView myListings(
@@ -220,6 +210,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
             @ModelAttribute("requestForm") RequestForm requestForm,
             @ModelAttribute("questionForm") QuestionForm questionForm,
             @ModelAttribute("replyForm") ReplyForm replyForm,
+            @ModelAttribute("phoneRequestForm") PhoneRequestForm phoneRequestForm,
             @RequestParam(value = "requestError", required = false, defaultValue = "false") Boolean requestError,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size
@@ -237,20 +228,41 @@ public class MarketplaceController extends GlobalControllerAdvice{
     }
 
     @RequestMapping(value = "/products/{department}/{id:\\d+}/request", method = RequestMethod.POST)
-    public ModelAndView buyProduct(
+    public ModelAndView requestProduct(
             @PathVariable(value = "id") Long productId,
             @PathVariable(value = "department") String department,
             @Valid @ModelAttribute("requestForm") RequestForm requestForm,
             final BindingResult bindingResult,
             @ModelAttribute("questionForm") QuestionForm questionForm,
-            @ModelAttribute("replyForm") ReplyForm replyForm
+            @ModelAttribute("replyForm") ReplyForm replyForm,
+            @ModelAttribute("phoneRequestForm") PhoneRequestForm phoneRequestForm
     ) {
         LOGGER.info("User requesting product '/"+ productId +"' ");
         if(bindingResult.hasErrors()){
             LOGGER.error("Error in form 'requestForm'");
-            return product(productId, department, requestForm, new QuestionForm(), new ReplyForm(), true, 1, 10);
+            return product(productId, department, requestForm, new QuestionForm(), new ReplyForm(), new PhoneRequestForm(), true, 1, 10);
         }
         rqs.createRequest(getLoggedUser().getUserId(), productId, requestForm.getRequestMessage());
+        return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
+    }
+
+    @RequestMapping(value = "/products/{department}/{id:\\d+}/first-request", method = RequestMethod.POST)
+    public ModelAndView firstRequestProduct(
+            @PathVariable(value = "id") Long productId,
+            @PathVariable(value = "department") String department,
+            @Valid @ModelAttribute("phoneRequestForm") PhoneRequestForm phoneRequestForm,
+            final BindingResult bindingResult,
+            @ModelAttribute("requestForm") RequestForm requestForm,
+            @ModelAttribute("questionForm") QuestionForm questionForm,
+            @ModelAttribute("replyForm") ReplyForm replyForm
+    ) {
+        LOGGER.info("User requesting product '/"+ productId +"' ");
+        if(bindingResult.hasErrors()){
+            LOGGER.error("Error in form 'phoneRequestForm'");
+            return product(productId, department, requestForm, new QuestionForm(), new ReplyForm(), phoneRequestForm, true, 1, 10);
+        }
+        us.updatePhoneNumber(getLoggedUser().getUserId(), phoneRequestForm.getPhoneNumber());
+        rqs.createRequest(getLoggedUser().getUserId(), productId, phoneRequestForm.getPhoneRequestMessage());
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
     }
 
@@ -261,12 +273,13 @@ public class MarketplaceController extends GlobalControllerAdvice{
             @Valid @ModelAttribute("questionForm") QuestionForm questionForm,
             final BindingResult bindingResult,
             @ModelAttribute("requestForm") RequestForm requestForm,
-            @ModelAttribute("replyForm") ReplyForm replyForm
+            @ModelAttribute("replyForm") ReplyForm replyForm,
+            @ModelAttribute("phoneRequestForm") PhoneRequestForm phoneRequestForm
     ) {
         LOGGER.info("User asking on product '/"+ productId +"' ");
         if(bindingResult.hasErrors()){
             LOGGER.error("Error in form 'questionForm'");
-            return product(productId,department,  new RequestForm(), questionForm, new ReplyForm(),false,1, 10);
+            return product(productId,department,  new RequestForm(), questionForm, new ReplyForm(), new PhoneRequestForm(), false,1, 10);
         }
         inqs.createInquiry(getLoggedUser().getUserId(), productId, questionForm.getQuestionMessage());
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
@@ -280,12 +293,13 @@ public class MarketplaceController extends GlobalControllerAdvice{
             @Valid @ModelAttribute("replyForm") ReplyForm replyForm,
             final BindingResult bindingResult,
             @ModelAttribute("questionForm") QuestionForm questionForm,
-            @ModelAttribute("requestForm") RequestForm requestForm
+            @ModelAttribute("requestForm") RequestForm requestForm,
+            @ModelAttribute("phoneRequestForm") PhoneRequestForm phoneRequestForm
     ) {
         LOGGER.info("User replying inquiry in product '/"+ productId +"' ");
         if(bindingResult.hasErrors()){
             LOGGER.error("Error in form 'replyForm'");
-            return product(productId, department, new RequestForm(), new QuestionForm(), replyForm,false, 1, 10);
+            return product(productId, department, new RequestForm(), new QuestionForm(), replyForm, new PhoneRequestForm(), false, 1, 10);
         }
         inqs.replyInquiry(Long.parseLong(replyForm.getInquiryId()), replyForm.getReplyMessage());
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
@@ -299,7 +313,6 @@ public class MarketplaceController extends GlobalControllerAdvice{
             @ModelAttribute("listingForm") ListingForm listingForm
     ) {
         LOGGER.info("User arriving at '/marketplace/products/" + department + "/" + productId +"/edit'");
-        System.out.println("ARRIVED HERE");
         ModelAndView mav = new ModelAndView("marketplace/views/productEdit");
         mav.addObject("departmentList", Department.getDepartments());
         mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
@@ -317,7 +330,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         LOGGER.info("User editing product '/"+ productId +"' ");
         if(bindingResult.hasErrors()){
             LOGGER.error("Error in form 'listingForm'");
-            return product(productId, department, new RequestForm(), new QuestionForm(), new ReplyForm(),false,1, 10);
+            return product(productId, department, new RequestForm(), new QuestionForm(), new ReplyForm(), new PhoneRequestForm(), false,1, 10);
         }
         prs.updateProduct(productId, listingForm.getTitle(), listingForm.getDescription(), listingForm.getPrice(), listingForm.getUsed(), listingForm.getDepartmentId() , listingForm.getImageFiles(), listingForm.getQuantity());
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);

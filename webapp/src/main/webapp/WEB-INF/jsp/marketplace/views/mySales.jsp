@@ -2,6 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <html>
 <head>
@@ -17,7 +18,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title><spring:message code="My.listings"/></title>
+    <title><spring:message code="My.sales"/></title>
 </head>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" scope="page" />
 <c:set var="channel" value="${channel}" scope="page" />
@@ -32,25 +33,28 @@
         <div id="center-grid" class="column-center pl-3 ">
             <%@ include file="/WEB-INF/jsp/marketplace/components/upperMarketplaceButtons.jsp" %>
 
-            <div class="w-100 f-c-c-c g-1 cool-static-container">
-                <div class="f-r-c-c w-50 pt-2 pb-2">
-                    <a href="${contextPath}/marketplace/my-listings" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "MyListings" ? 'active' : ''}">
-                        <span class="font-size-12">
-                            <i class="fa-regular fa-chart-bar"></i>
-                            <span class="hide-text">
-                                <spring:message code="My.listings"/>
+            <div class="w-100 f-c-c-c g-05 cool-static-container">
+                <div class="f-c-s-s w-100 ">
+                    <div class="f-r-c-c pt-2 pb-2">
+                        <a href="${contextPath}/marketplace/my-listings" class="cool-feed-button rounded marketplace-button  font-weight-bold ${channel == "MyListings" ? 'active' : ''}">
+                            <span class="font-size-12">
+                                <i class="fa-regular fa-chart-bar"></i>
+                                <span class="hide-text">
+                                    <spring:message code="My.listings"/>
+                                </span>
                             </span>
-                        </span>
-                    </a>
-                    <a href="${contextPath}/marketplace/my-sales" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "MySales" ? 'active' : ''}">
+                        </a>
+                        <a href="${contextPath}/marketplace/my-sales" class="cool-feed-button rounded marketplace-button font-weight-bold ${channel == "MySales" ? 'active' : ''}">
                         <span class="font-size-12">
                             <i class="fa-solid fa-box-open hide-icons"></i>
                             <span class="hide-text">
                                 <spring:message code="My.sales"/>
                             </span>
                         </span>
-                    </a>
+                        </a>
+                    </div>
                 </div>
+                <div class="divider mb-3"></div>
                 <c:choose>
                     <c:when test="${empty purchases}">
                         <div class="no-posts-found">
@@ -61,14 +65,22 @@
                     <c:otherwise>
                         <div class="w-100 f-c-c-c g-1 ">
                             <c:forEach var="purchase" items="${purchases}">
+
                                 <div class="cool-static-container w-100 f-c-s-s g-0 p-0">
+                                    <div class="f-r-sb-c w-100 pl-3  pr-3 pb-2 pt-2">
+                                        <fmt:formatDate value="${purchase.purchaseDate}" pattern="dd MMM yyyy" var="formattedDate" />
+                                        <fmt:formatDate value="${purchase.purchaseDate}" pattern="HH:mm" var="formattedTime" />
+
+                                        <div><c:out value="${formattedDate}" /></div>
+                                        <div><c:out value="${formattedTime}" /></div>
+                                    </div>
                                     <div class="divider m-0"></div>
                                     <div class="container">
                                         <div class="f-r-c-c w-100 g-1">
                                             <div class="pl-0">
                                                 <div class="purchased-product-image f-c-c-c placeholder-glow">
                                                     <img
-                                                            id="purchased-product-image-${purchase.product.productId}"
+                                                            id="purchased-product-image-${purchase.purchaseId}"
                                                             src=""
                                                             class="placeholder"
                                                             alt="purchased_product_image_${purchase.product.productId}"
@@ -76,7 +88,7 @@
                                                     <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
                                                     <script>
                                                         (function () {
-                                                            getImageInto("purchased-product-image-${purchase.product.productId}",${empty purchase.product.primaryPicture.imageId ? -2 : purchase.product.primaryPicture.imageId}, "${pageContext.request.contextPath}")
+                                                            getImageInto("purchased-product-image-${purchase.purchaseId}",${empty purchase.product.primaryPicture.imageId ? -2 : purchase.product.primaryPicture.imageId}, "${pageContext.request.contextPath}")
                                                         })();
                                                     </script>
                                                 </div>
@@ -87,18 +99,23 @@
                                                     <span class="font-weight-bold font-size-16">
                                                         <c:out value="${purchase.product.name}"/>
                                                     </span>
-                                                    <c:choose>
-                                                        <c:when test="${purchase.product.used}">
-                                                            <div class="used-tag used font-weight-normal">
-                                                                <spring:message code="Used"/>
-                                                            </div>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <div class="used-tag new font-weight-normal">
-                                                                <spring:message code="New"/>
-                                                            </div>
-                                                        </c:otherwise>
-                                                    </c:choose>
+                                                    <div class="f-r-c-c g-05">
+                                                        <div class="department-tag" onclick='window.location.href = "${contextPath}/marketplace/products/${purchase.product.department.department.departmentUrl}" '>
+                                                            <spring:message code="${purchase.product.department.department}"/>
+                                                        </div>
+                                                        <c:choose>
+                                                            <c:when test="${purchase.product.used}">
+                                                                <div class="used-tag used font-weight-normal">
+                                                                    <spring:message code="Used"/>
+                                                                </div>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <div class="used-tag new font-weight-normal">
+                                                                    <spring:message code="New"/>
+                                                                </div>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </div>
 
                                                 </div>
                                                 <div class="f-r-c-c font-weight-normal ">
@@ -110,9 +127,10 @@
                                                     <spring:message code="Bought.by"/>
                                                    </span>
                                                     <span style="color: var(--lila)">
-                                                       <c:out value="${purchase.user.name}"/>
+                                                       <c:out value="${purchase.user.name}"/> (<c:out value="${purchase.user.phoneNumber}"/>)
                                                    </span>
                                                 </div>
+
 
                                                 <div class="f-r-c-c g-0">
                                                    <span class="price font-size-20 font-weight-normal ">
@@ -134,14 +152,15 @@
                     </c:otherwise>
                 </c:choose>
 
+
                 <c:if test="${totalPages >  1}">
                     <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
                         <jsp:param name="page" value="${page}"/>
                         <jsp:param name="totalPages" value="${totalPages}"/>
                     </jsp:include>
                 </c:if>
-            </div>
 
+            </div>
         </div>
     </div>
 </div>

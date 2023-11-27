@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.MainEntities.Profession;
+import ar.edu.itba.paw.models.Entities.Profession;
 
 import java.util.List;
 
@@ -13,6 +13,8 @@ public interface ProfessionWorkerService {
     List<Profession> getWorkerProfessions(long workerId);
 
     String getWorkerProfessionsAsString(long workerId);
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     String createURLForProfessionFilter(String professions, String currentUrl, long neighborhoodId);
 }

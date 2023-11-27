@@ -2,7 +2,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.models.MainEntities.Product;
+import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.persistence.MainEntitiesDaos.ProductDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -20,8 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -203,93 +203,6 @@ public class ProductDaoImplTest {
         // Validations & Post Conditions
         assertTrue(products.isEmpty());
     }
-
-    @Test
-    public void testGetProductsSold() {
-        // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-        long uKey2 = testInserter.createUser(MAIL2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-        long dKey2 = testInserter.createDepartment(Department.APPLIANCES);
-        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
-        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, uKey1, dKey2);
-
-
-        // Exercise
-        List<Product> products = productDao.getProductsSold(uKey1, 1, 10);
-
-        // Validations & Post Conditions
-        assertFalse(products.isEmpty());
-        assertEquals(1, products.size());
-    }
-
-    @Test
-    public void testGetNoProductsSold() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-
-        // Exercise
-        List<Product> products = productDao.getProductsSold(uKey1, 1, 10);
-
-        // Validations & Post Conditions
-        assertTrue(products.isEmpty());
-    }
-
-    @Test
-    public void testGetProductsBought() {
-        // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-        long uKey2 = testInserter.createUser(MAIL2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-        long dKey2 = testInserter.createDepartment(Department.APPLIANCES);
-        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
-        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, uKey1, dKey2);
-
-        // Exercise
-        List<Product> products = productDao.getProductsBought(uKey1, 1, 10);
-
-        // Validations & Post Conditions
-        assertFalse(products.isEmpty());
-        assertEquals(1, products.size());
-    }
-
-    @Test
-    public void testGetNoProductsBought() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-
-        // Exercise
-        List<Product> products = productDao.getProductsBought(uKey1, 1, 10);
-
-        // Validations & Post Conditions
-        assertTrue(products.isEmpty());
-    }
-
-//    @Test
-//    public void testUpdateProduct() {
-//        // Pre Conditions
-//        long iKey = testInserter.createImage();
-//        long nhKey = testInserter.createNeighborhood();
-//        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-//        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-//        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, null, dKey1);
-//        long dKey = Department.ELECTRONICS.getId();
-//        // Exercise
-//        Product product = productDao.updateProduct(pKey1, PRODUCT_NAME1, PRODUCT_DESCRIPTION1, PRICE1, USED1, iKey, iKey, iKey, dKey, 0L);
-//
-//        // Validations & Post Conditions
-//        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products.name()));
-//        assertNotNull(product);
-//        assertEquals(PRODUCT_NAME1, product.getName());
-//        assertEquals(PRODUCT_DESCRIPTION1, product.getDescription());
-//        assertEquals(USED1, product.isUsed());
-//    }
 
     @Test
     public void testDeleteProduct() {

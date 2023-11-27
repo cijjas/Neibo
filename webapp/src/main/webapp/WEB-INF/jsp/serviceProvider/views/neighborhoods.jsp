@@ -116,16 +116,11 @@
                                                 </c:forEach>
                                             </ul>
                                         </div>
-                                        <form:button type="submit" onclick="printSubmitting()"
+                                        <form:button type="submit"
                                                 class="cool-button cool-small on-bg font-weight-bold w-25">
                                             <spring:message code="Add"/>
                                             <i class="fa-solid fa-share ml-1"></i>
                                         </form:button>
-                                        <script>
-                                            function printSubmitting() {
-                                                console.log(document.getElementById("selectedNeighborhoods").value);
-                                            }
-                                        </script>
                                     </div>
                                 </div>
                                 <form:errors path="neighborhoodIds" cssClass="error" element="p"/>

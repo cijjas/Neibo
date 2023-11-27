@@ -1,11 +1,9 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.PurchaseDao;
-import ar.edu.itba.paw.models.JunctionEntities.Purchase;
-import ar.edu.itba.paw.models.JunctionEntities.Request;
-import ar.edu.itba.paw.models.MainEntities.Product;
-import ar.edu.itba.paw.models.MainEntities.Review;
-import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.models.Entities.Purchase;
+import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -74,6 +72,7 @@ public class PurchaseDaoImpl implements PurchaseDao {
 
         purchaseQuery.select(purchaseRootFetch);
         purchaseQuery.where(purchaseRootFetch.get("purchaseId").in(purchaseIds));
+        purchaseQuery.orderBy(cb.desc(purchaseRootFetch.get("purchaseDate")));
 
         TypedQuery<Purchase> purchaseTypedQuery = em.createQuery(purchaseQuery);
         List<Purchase> purchases = purchaseTypedQuery.getResultList();
@@ -110,6 +109,7 @@ public class PurchaseDaoImpl implements PurchaseDao {
 
         purchaseQuery.select(purchaseRootFetch);
         purchaseQuery.where(purchaseRootFetch.get("purchaseId").in(purchaseIds));
+        purchaseQuery.orderBy(cb.desc(purchaseRootFetch.get("purchaseDate")));
 
         TypedQuery<Purchase> purchaseTypedQuery = em.createQuery(purchaseQuery);
         List<Purchase> purchases = purchaseTypedQuery.getResultList();

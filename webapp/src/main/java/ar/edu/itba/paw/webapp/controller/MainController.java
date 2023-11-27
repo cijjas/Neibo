@@ -1,15 +1,14 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.*;
-import ar.edu.itba.paw.interfaces.exceptions.*;
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.MainEntities.Amenity;
-import ar.edu.itba.paw.models.MainEntities.Image;
+import ar.edu.itba.paw.models.Entities.Image;
+import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +19,6 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.sql.Date;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -291,8 +288,8 @@ public class MainController extends GlobalControllerAdvice{
 
         ModelAndView mav = new ModelAndView("views/post");
 
-        mav.addObject("post", ps.findPostById(postId).orElseThrow(() -> new NotFoundException("Post Not Found")));
-
+        Post post = ps.findPostById(postId).orElseThrow(() -> new NotFoundException("Post Not Found"));
+        mav.addObject("post", post);
         mav.addObject("comments", cs.getCommentsByPostId(postId, page, size));
         mav.addObject("page", page);
         mav.addObject("totalPages", cs.getTotalCommentPages(postId, size));
@@ -300,6 +297,7 @@ public class MainController extends GlobalControllerAdvice{
         mav.addObject("commentForm", commentForm);
         mav.addObject("showSuccessMessage", success);
         mav.addObject("contextPath", "/posts/" + postId);
+        mav.addObject("channelContextPath", "/" + post.getChannel().getChannel().toLowerCase());
 
         return mav;
     }

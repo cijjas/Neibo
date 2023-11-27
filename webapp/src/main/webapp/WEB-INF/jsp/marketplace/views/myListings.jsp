@@ -32,25 +32,30 @@
         <div id="center-grid" class="column-center pl-3 ">
             <%@ include file="/WEB-INF/jsp/marketplace/components/upperMarketplaceButtons.jsp" %>
 
-            <div class="w-100 f-c-c-c g-1 cool-static-container">
-                <div class="f-r-c-c w-50 pt-2 pb-2">
-                    <a href="${contextPath}/marketplace/my-listings" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "MyListings" ? 'active' : ''}">
-                        <span class="font-size-12">
-                            <i class="fa-regular fa-chart-bar"></i>
-                            <span class="hide-text">
-                                <spring:message code="My.listings"/>
+            <div class="w-100 f-c-c-c g-05 cool-static-container">
+
+                <div class="f-c-s-s w-100 ">
+                    <div class="f-r-c-c pt-2 pb-2">
+                        <a href="${contextPath}/marketplace/my-listings" class="cool-feed-button rounded marketplace-button  font-weight-bold ${channel == "MyListings" ? 'active' : ''}">
+                            <span class="font-size-12">
+                                <i class="fa-regular fa-chart-bar"></i>
+                                <span class="hide-text">
+                                    <spring:message code="My.listings"/>
+                                </span>
                             </span>
-                        </span>
-                    </a>
-                    <a href="${contextPath}/marketplace/my-sales" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "MySales" ? 'active' : ''}">
+                        </a>
+                        <a href="${contextPath}/marketplace/my-sales" class="cool-feed-button rounded marketplace-button font-weight-bold ${channel == "MySales" ? 'active' : ''}">
                         <span class="font-size-12">
                             <i class="fa-solid fa-box-open hide-icons"></i>
                             <span class="hide-text">
                                 <spring:message code="My.sales"/>
                             </span>
                         </span>
-                    </a>
+                        </a>
+                    </div>
                 </div>
+                <div class="divider mb-3"></div>
+
                 <c:choose>
                     <c:when test="${empty myProductList}">
                         <div class="no-posts-found">
@@ -59,94 +64,139 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                            <c:forEach var="product" items="${myProductList}">
-                                <div class="cool-static-container w-100 f-c-s-s g-0 p-0">
+                        <c:forEach var="product" items="${myProductList}">
+                            <div class="cool-static-container w-100 f-c-s-s g-0 p-0 mb-3">
 
-                                    <div class="container">
-                                        <div class="f-r-c-c w-100 g-1">
-                                            <div class="pl-0">
-                                                <div class="purchased-product-image f-c-c-c placeholder-glow">
-                                                    <img
-                                                            id="purchased-product-image-${product.productId}"
-                                                            src=""
-                                                            class="placeholder"
-                                                            alt="purchased_product_image_${product.productId}"
-                                                    />
-                                                    <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
-                                                    <script>
-                                                        (function () {
-                                                            getImageInto("purchased-product-image-${product.productId}",${empty product.primaryPicture.imageId ? -2 : product.primaryPicture.imageId}, "${pageContext.request.contextPath}")
-                                                        })();
-                                                    </script>
-                                                </div>
+                                <div class="container">
+                                    <div class="f-r-c-c w-100 g-0">
+                                        <div class="pl-0">
+                                            <div class="purchased-product-image f-c-c-c placeholder-glow">
+                                                <img
+                                                        id="purchased-product-image-${product.productId}"
+                                                        src=""
+                                                        class="placeholder"
+                                                        style="max-height: 100px"
+                                                        alt="purchased_product_image_${product.productId}"
+                                                />
+                                                <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
+                                                <script>
+                                                    (function () {
+                                                        getImageInto("purchased-product-image-${product.productId}",${empty product.primaryPicture.imageId ? -2 : product.primaryPicture.imageId}, "${pageContext.request.contextPath}")
+                                                    })();
+                                                </script>
                                             </div>
+                                        </div>
 
 
-                                            <div class="f-c-s-s  w-100 p-4">
-                                                <div class="f-r-sb-c g-0 w-100">
-                                                    <span class="font-weight-bold font-size-16">
-                                                        <c:out value="${product.name}"/>
-                                                    </span>
-                                                    <div class="f-r-c-c g-05">
-                                                        <div class="department-tag" onclick='window.location.href = "${contextPath}/marketplace/products/${product.department.department.departmentUrl}" '>
-                                                            <spring:message code="${product.department.department}"/>
+                                        <div class="f-c-s-s  w-100 p-4">
+                                            <c:choose>
+                                                <c:when test="${product.remainingUnits == 0}">
+                                                    <div class="f-r-sb-c w-100 g-0">
+                                                             <span class="font-weight-bold font-size-16">
+                                                                <c:out value="${product.name}"/>
+                                                            </span>
+                                                        <div class="sold-tag p-2 font-weight-bolder">
+                                                            <spring:message code="Sold.out"/>
                                                         </div>
-                                                        <c:choose>
-                                                            <c:when test="${product.used}">
-                                                                <div class="used-tag used font-weight-normal">
-                                                                    <spring:message code="Used"/>
-                                                                </div>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <div class="used-tag new font-weight-normal">
-                                                                    <spring:message code="New"/>
-                                                                </div>
-                                                            </c:otherwise>
-                                                        </c:choose>
                                                     </div>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="f-r-sb-c w-100 g-0">
+                                                             <span class="font-weight-bold font-size-16">
+                                                                <c:out value="${product.name}"/>
+                                                            </span>
+                                                        <div class="in-stock-tag  p-2 font-weight-bolder">
+                                                            <spring:message code="In.stock"/>:
+                                                            <c:out value="${product.remainingUnits}"/>
+                                                        </div>
+                                                    </div>
+                                                </c:otherwise>
+                                            </c:choose>
 
-
-                                                </div>
-
-                                                <div class="f-r-sb-c w-100">
-                                                    <div class="f-r-c-c g-0">
+                                            <div class="f-r-sb-c g-0 w-100">
+                                                <div class="f-r-c-c g-0">
                                                        <span class="price font-size-20 font-weight-normal">
                                                             <c:out value="${product.priceIntegerString}"/>
                                                        </span>
-                                                        <div class="f-c-s-c pl-1" style="height: 20px">
+                                                    <div class="f-c-s-c pl-1" style="height: 20px">
                                                            <span class="cents c-light-text font-size-12 font-weight-normal">
                                                                 <c:out value="${product.priceDecimalString}"/>
                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="f-r-c-c g-05 w-50">
-                                                        <a href="${contextPath}/marketplace/products/${product.department.department.departmentUrl}/${product.productId}" class="cool-button small-a marketplace-button w-50 font-weight-bold">
-                                                            <spring:message code="View.listing"/>
-                                                        </a>
-                                                        <a href="${contextPath}/marketplace/my-requests/${product.productId}" class="cool-button small-a marketplace-button w-50 font-weight-bold">
-
-                                                            <spring:message code="Requests"/>
-                                                            (<c:out value="${product.requesters.size()}"/>)
-                                                        </a>
                                                     </div>
                                                 </div>
+                                                <div class="f-r-c-c g-05">
+                                                    <div class="department-tag" onclick='window.location.href = "${contextPath}/marketplace/products/${product.department.department.departmentUrl}" '>
+                                                        <spring:message code="${product.department.department}"/>
+                                                    </div>
+                                                    <c:choose>
+                                                        <c:when test="${product.used}">
+                                                            <div class="used-tag used font-weight-normal">
+                                                                <spring:message code="Used"/>
+                                                            </div>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <div class="used-tag new font-weight-normal">
+                                                                <spring:message code="New"/>
+                                                            </div>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+
 
                                             </div>
+
+                                            <div class="f-r-sb-c w-100">
+
+                                                <div class="f-r-sb-c g-05 w-50">
+                                                    <a href="${contextPath}/marketplace/products/${product.department.department.departmentUrl}/${product.productId}" class="cool-button small-a marketplace-button square-radius w-50 font-weight-bold">
+                                                        <i class="fa-solid fa-arrow-right-to-bracket pr-1"></i>
+                                                        <spring:message code="View.listing"/>
+                                                    </a>
+                                                    <a href="${contextPath}/marketplace/my-requests/${product.productId}" class="cool-button small-a marketplace-button square-radius w-50 font-weight-bold">
+                                                        <i class="fa-solid fa-bell pr-1"></i>
+                                                        <spring:message code="Requests"/>
+                                                        <span id="request-count-${product.productId}">
+                                                            </span>
+                                                        <script>
+                                                            (function () {
+                                                                fetchRequestCount("request-count-${product.productId}", ${product.productId});
+
+                                                                async function fetchRequestCount(elementId, productId) {
+                                                                    try {
+                                                                        const response = await fetch("${pageContext.request.contextPath}/endpoint/request-count/" + productId);
+                                                                        if (response.ok) {
+                                                                            const requestCount = await response.text();
+                                                                            document.getElementById(elementId).innerHTML ="(" + requestCount + ")";
+                                                                        }
+
+                                                                    } catch (error) {
+                                                                        console.error(error.message);
+                                                                    }
+                                                                }
+                                                            })();
+
+                                                        </script>
+                                                    </a>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                            </c:forEach>
+                        </c:forEach>
                     </c:otherwise>
                 </c:choose>
+
                 <c:if test="${totalPages >  1}">
                     <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
                         <jsp:param name="page" value="${page}"/>
                         <jsp:param name="totalPages" value="${totalPages}"/>
                     </jsp:include>
                 </c:if>
-            </div>
 
+            </div>
         </div>
     </div>
 </div>

@@ -2,9 +2,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
-import ar.edu.itba.paw.models.JunctionEntities.Availability;
-import ar.edu.itba.paw.models.MainEntities.Amenity;
-import ar.edu.itba.paw.models.MainEntities.Product;
+import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;

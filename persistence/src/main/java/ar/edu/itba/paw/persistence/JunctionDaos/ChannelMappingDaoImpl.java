@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
-import ar.edu.itba.paw.models.compositeKeys.ChannelMappingKey;
 import ar.edu.itba.paw.interfaces.persistence.ChannelMappingDao;
-import ar.edu.itba.paw.models.JunctionEntities.ChannelMapping;
-import ar.edu.itba.paw.models.MainEntities.Channel;
-import ar.edu.itba.paw.models.MainEntities.Neighborhood;
+import ar.edu.itba.paw.models.Entities.Channel;
+import ar.edu.itba.paw.models.Entities.ChannelMapping;
+import ar.edu.itba.paw.models.Entities.Neighborhood;
+import ar.edu.itba.paw.models.compositeKeys.ChannelMappingKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

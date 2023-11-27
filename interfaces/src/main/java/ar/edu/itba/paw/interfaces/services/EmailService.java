@@ -2,13 +2,12 @@ package ar.edu.itba.paw.interfaces.services;
 
 
 import ar.edu.itba.paw.enums.UserRole;
-import ar.edu.itba.paw.models.MainEntities.Event;
-import ar.edu.itba.paw.models.MainEntities.Post;
-import ar.edu.itba.paw.models.MainEntities.Product;
-import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.Entities.Event;
+import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.models.Entities.User;
 
 import java.util.List;
-import java.util.Map;
 
 public interface EmailService {
 

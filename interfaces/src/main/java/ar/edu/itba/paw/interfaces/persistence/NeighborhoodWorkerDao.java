@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.enums.WorkerRole;
-import ar.edu.itba.paw.models.JunctionEntities.WorkerArea;
-import ar.edu.itba.paw.models.MainEntities.Neighborhood;
+import ar.edu.itba.paw.models.Entities.Neighborhood;
+import ar.edu.itba.paw.models.Entities.WorkerArea;
 
 import java.util.List;
 import java.util.Optional;

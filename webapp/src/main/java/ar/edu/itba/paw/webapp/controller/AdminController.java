@@ -3,9 +3,9 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.MainEntities.Amenity;
-import ar.edu.itba.paw.models.MainEntities.User;
-import ar.edu.itba.paw.models.MainEntities.Worker;
+import ar.edu.itba.paw.models.Entities.Amenity;
+import ar.edu.itba.paw.models.Entities.User;
+import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")
@@ -166,7 +167,7 @@ public class AdminController extends GlobalControllerAdvice {
         final ModelAndView mav = new ModelAndView("admin/views/adminWorkerRequestHandler");
 
         int totalPages;
-        List<Worker> workers;
+        Set<Worker> workers;
 
         if(verified){
             totalPages = ws.getTotalWorkerPagesByCriteria(null, new long[] {getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER, WorkerStatus.none);

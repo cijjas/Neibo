@@ -2,7 +2,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.DayDao;
-import ar.edu.itba.paw.models.MainEntities.Day;
+import ar.edu.itba.paw.models.Entities.Day;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;

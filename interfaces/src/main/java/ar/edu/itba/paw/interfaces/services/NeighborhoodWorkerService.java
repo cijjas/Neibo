@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.MainEntities.Neighborhood;
+import ar.edu.itba.paw.models.Entities.Neighborhood;
 
 import java.util.List;
 
@@ -26,4 +26,4 @@ public interface NeighborhoodWorkerService {
 
     void unverifyWorkerFromNeighborhood(long workerId, long neighborhoodId);
 
-    }
+}

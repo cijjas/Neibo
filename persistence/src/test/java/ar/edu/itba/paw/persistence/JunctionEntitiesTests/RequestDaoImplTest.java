@@ -2,7 +2,7 @@ package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
 import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.models.JunctionEntities.Request;
+import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.persistence.JunctionDaos.RequestDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -20,8 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -72,6 +72,35 @@ public class RequestDaoImplTest {
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_requests.name()));
     }
 
+    @Test
+    public void testFindRequest() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+        long uKey2 = testInserter.createUser(MAIL2, nhKey);
+        long uKey3 = testInserter.createUser(MAIL3, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
+        long rKey = testInserter.createRequest(pKey, uKey1);
+
+        // Exercise
+        Optional<Request> purchase = requestDao.findRequest(rKey);
+
+        // Validations & Post Conditions
+        assertTrue(purchase.isPresent());
+    }
+
+    @Test
+    public void testFindRequestInvalidId() {
+        // Pre Conditions
+
+        // Exercise
+        Optional<Request> purchase = requestDao.findRequest(1);
+
+        // Validations & Post Conditions
+        assertFalse(purchase.isPresent());
+    }
 
     @Test
     public void getRequestsByProductId() {

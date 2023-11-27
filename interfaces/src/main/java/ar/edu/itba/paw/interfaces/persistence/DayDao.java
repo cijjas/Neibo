@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.MainEntities.Day;
+import ar.edu.itba.paw.models.Entities.Day;
 
 import java.util.Optional;
 

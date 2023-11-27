@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.MainEntities.Event;
+import ar.edu.itba.paw.models.Entities.Event;
 
 import java.util.Date;
 import java.util.List;
@@ -26,7 +26,7 @@ public interface EventDao {
 
     boolean isUserSubscribedToEvent(long userId, long eventId);
 
-        // ---------------------------------------------- EVENTS DELETE ----------------------------------------------------
+    // ---------------------------------------------- EVENTS DELETE ----------------------------------------------------
 
     boolean deleteEvent(long eventId);
 }

@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.DepartmentDao;
-import ar.edu.itba.paw.models.MainEntities.Department;
+import ar.edu.itba.paw.models.Entities.Department;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

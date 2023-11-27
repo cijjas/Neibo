@@ -1,13 +1,13 @@
 package ar.edu.itba.paw.persistence;
 
-import ar.edu.itba.paw.enums.*;
+import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.enums.Professions;
+import ar.edu.itba.paw.enums.UserRole;
+import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
-import ar.edu.itba.paw.models.JunctionEntities.*;
-import ar.edu.itba.paw.models.MainEntities.*;
-import ar.edu.itba.paw.models.MainEntities.Department;
+import ar.edu.itba.paw.models.Entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,11 +17,8 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Time;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class TestInserter {
@@ -65,8 +62,8 @@ public class TestInserter {
                 .name(name)
                 .description(description)
                 .date(date)
-                .startTime(em.find(ar.edu.itba.paw.models.MainEntities.Time.class, startTimeId))
-                .endTime(em.find(ar.edu.itba.paw.models.MainEntities.Time.class, endTimeId))
+                .startTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, startTimeId))
+                .endTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, endTimeId))
                 .neighborhood(em.find(Neighborhood.class, neighborhoodId))
                 .build();
         em.persist(event);
@@ -148,12 +145,6 @@ public class TestInserter {
         return tag.getTagId();
     }
 
-    public void createSubscription(long userId, long postId) {
-        Subscription subscription = new Subscription(em.find(Post.class, postId), em.find(User.class, userId));
-        em.persist(subscription);
-        em.flush();
-    }
-
     public long createResource(long neighborhoodId, String title, String description, long imageId) {
         Resource resource = new Resource.Builder()
                 .title(title)
@@ -213,7 +204,7 @@ public class TestInserter {
     }
 
     public long createTime(Time timeInterval) {
-        ar.edu.itba.paw.models.MainEntities.Time time =  new ar.edu.itba.paw.models.MainEntities.Time.Builder()
+        ar.edu.itba.paw.models.Entities.Time time =  new ar.edu.itba.paw.models.Entities.Time.Builder()
                 .timeInterval(timeInterval)
                 .build();
         em.persist(time);
@@ -274,7 +265,7 @@ public class TestInserter {
     public long createShift(long dayId, long startTimeId) {
         Shift shift = new Shift.Builder()
                 .day(em.find(Day.class, dayId))
-                .startTime(em.find(ar.edu.itba.paw.models.MainEntities.Time.class, startTimeId))
+                .startTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, startTimeId))
                 .build();
         em.persist(shift);
         em.flush();
@@ -347,14 +338,16 @@ public class TestInserter {
         return inquiry.getInquiryId();
     }
 
-    public void createRequest(long productId, long userId, String message){
+    public long createRequest(long productId, long userId, String message){
         Request request = new Request.Builder()
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
                 .message(message)
+                .fulfilled(false)
                 .build();
         em.persist(request);
         em.flush();
+        return request.getRequestId();
     }
 
     public long createPurchase(long productId, long userId, long unitsBought) {
@@ -550,8 +543,8 @@ public class TestInserter {
         return createInquiry(message, reply, productId, userId);
     }
 
-    public void createRequest(long productId, long userId){
+    public long createRequest(long productId, long userId){
         String message = "Hello";
-        createRequest(productId, userId, message);
+        return createRequest(productId, userId, message);
     }
 }

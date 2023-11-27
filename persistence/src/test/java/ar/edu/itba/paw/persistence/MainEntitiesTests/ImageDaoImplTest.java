@@ -2,8 +2,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.ImageDao;
-import ar.edu.itba.paw.models.MainEntities.Image;
-import ar.edu.itba.paw.persistence.MainEntitiesDaos.ImageDaoImpl;
+import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;

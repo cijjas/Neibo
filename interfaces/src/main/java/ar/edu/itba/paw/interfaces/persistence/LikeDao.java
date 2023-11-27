@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 
-import ar.edu.itba.paw.models.JunctionEntities.Like;
+import ar.edu.itba.paw.models.Entities.Like;
 
 public interface LikeDao {
 

@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.DepartmentConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.ImageConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.MultipleImagesConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.TagsConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.web.multipart.MultipartFile;

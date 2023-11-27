@@ -2,8 +2,10 @@ package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
-import ar.edu.itba.paw.models.JunctionEntities.Purchase;
-import ar.edu.itba.paw.models.MainEntities.*;
+import ar.edu.itba.paw.models.Entities.Image;
+import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.models.Entities.Purchase;
+import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -12,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +35,7 @@ public class ProductDaoImpl implements ProductDao {
                 .description(description)
                 .price(price)
                 .used(used)
-                .department(em.find(ar.edu.itba.paw.models.MainEntities.Department.class, departmentId))
+                .department(em.find(ar.edu.itba.paw.models.Entities.Department.class, departmentId))
                 .seller(em.find(User.class, userId))
                 .primaryPicture(em.find(Image.class, primaryPictureId))
                 .secondaryPicture(em.find(Image.class, secondaryPictureId))
@@ -43,23 +46,6 @@ public class ProductDaoImpl implements ProductDao {
         em.persist(product);
         return product;
     }
-
-//    @Override
-//    public Product updateProduct(long productId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId, Long stock) {
-//        LOGGER.debug("Updating Product {}", productId);
-//
-//        Product product = em.find(Product.class, productId);
-//        if (product != null) {
-//            product.setName(name);
-//            product.setDescription(description);
-//            product.setPrice(price);
-//            product.setUsed(used);
-//            product.setDepartment(em.find(ar.edu.itba.paw.models.MainEntities.Department.class, departmentId));
-//            product.setRemainingUnits(stock);
-//        }
-//
-//        return product;
-//    }
 
     @Override
     public boolean deleteProduct(long productId) {
@@ -86,16 +72,20 @@ public class ProductDaoImpl implements ProductDao {
         Root<Product> idRoot = idQuery.from(Product.class);
         idQuery.select(idRoot.get("productId"));
         // Add conditions for filtering
-        Predicate predicate = cb.equal(idRoot.get("seller").get("neighborhood").get("neighborhoodId"), neighborhoodId);
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(cb.equal(idRoot.get("seller").get("neighborhood").get("neighborhoodId"), neighborhoodId));
         if (department != Department.NONE) {
-            predicate = cb.and(predicate, cb.equal(idRoot.get("department").get("departmentId"), department.getId()));
+            predicates.add(cb.equal(idRoot.get("department").get("departmentId"), department.getId()));
         }
-        idQuery.where(predicate);
+        predicates.add(cb.greaterThan(idRoot.get("remainingUnits"), 0L));
+        idQuery.where(predicates.toArray(new Predicate[0]));
         // Create the query
         TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
         // Implement pagination in the first query
-        idTypedQuery.setFirstResult((page - 1) * size);
-        idTypedQuery.setMaxResults(size);
+        if(page > 0){
+            idTypedQuery.setFirstResult((page - 1) * size);
+            idTypedQuery.setMaxResults(size);
+        }
         // Results
         List<Long> productIds = idTypedQuery.getResultList();
         // Check if productIds is empty for better performance
@@ -123,11 +113,13 @@ public class ProductDaoImpl implements ProductDao {
         Root<Product> countRoot = countQuery.from(Product.class);
         countQuery.select(cb.countDistinct(countRoot));
         // Add conditions for filtering
-        Predicate predicate = cb.equal(countRoot.get("seller").get("neighborhood").get("neighborhoodId"), neighborhoodId);
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(cb.equal(countRoot.get("seller").get("neighborhood").get("neighborhoodId"), neighborhoodId));
         if (department != Department.NONE) {
-            predicate = cb.and(predicate, cb.equal(countRoot.get("department").get("departmentId"), department.getId()));
+            predicates.add(cb.equal(countRoot.get("department").get("departmentId"), department.getId()));
         }
-        countQuery.where(predicate);
+        predicates.add(cb.greaterThan(countRoot.get("remainingUnits"), 0L));
+        countQuery.where(predicates.toArray(new Predicate[0]));
         // Create the query
         TypedQuery<Long> countTypedQuery = em.createQuery(countQuery);
         // Result
@@ -160,14 +152,13 @@ public class ProductDaoImpl implements ProductDao {
         return query.getSingleResult().intValue();
     }
 
-
     @Override
     public List<Product> getProductsSelling(long userId, int page, int size) {
         LOGGER.debug("Selecting Selling Products from User {}", userId);
 
         // First query to retrieve product IDs with remainingUnits > 0
         TypedQuery<Long> idQuery = em.createQuery(
-                "SELECT p.productId FROM Product p WHERE p.remainingUnits > 0 AND p.seller.userId = :userId", Long.class);
+                "SELECT p.productId FROM Product p WHERE p.seller.userId = :userId", Long.class);
         idQuery.setParameter("userId", userId);
         idQuery.setFirstResult((page - 1) * size);
         idQuery.setMaxResults(size);
@@ -177,13 +168,14 @@ public class ProductDaoImpl implements ProductDao {
         // Second query to retrieve Product objects based on the IDs
         if (!productIds.isEmpty()) {
             TypedQuery<Product> productQuery = em.createQuery(
-                    "SELECT p FROM Product p WHERE p.productId IN :productIds", Product.class);
+                    "SELECT p FROM Product p WHERE p.productId IN :productIds ORDER BY p.creationDate DESC", Product.class);
             productQuery.setParameter("productIds", productIds);
             return productQuery.getResultList();
         }
 
         return Collections.emptyList();
     }
+
 
     @Override
     public List<Product> getProductsSold(long userId, int page, int size) {
@@ -201,13 +193,14 @@ public class ProductDaoImpl implements ProductDao {
         // Second query to retrieve Product objects based on the IDs
         if (!productIds.isEmpty()) {
             TypedQuery<Product> productQuery = em.createQuery(
-                    "SELECT p FROM Product p WHERE p.productId IN :productIds", Product.class);
+                    "SELECT p FROM Product p WHERE p.productId IN :productIds ORDER BY p.creationDate DESC", Product.class);
             productQuery.setParameter("productIds", productIds);
             return productQuery.getResultList();
         }
 
         return Collections.emptyList();
     }
+
 
     @Override
     public List<Product> getProductsBought(long userId, int page, int size) {
@@ -225,7 +218,7 @@ public class ProductDaoImpl implements ProductDao {
         // Second query to retrieve Product objects based on the IDs
         if (!productIds.isEmpty()) {
             TypedQuery<Product> productQuery = em.createQuery(
-                    "SELECT p FROM Product p WHERE p.productId IN :productIds", Product.class);
+                    "SELECT p FROM Product p WHERE p.productId IN :productIds ORDER BY p.creationDate DESC", Product.class);
             productQuery.setParameter("productIds", productIds);
             return productQuery.getResultList();
         }

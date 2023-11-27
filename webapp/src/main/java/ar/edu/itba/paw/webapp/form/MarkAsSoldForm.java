@@ -11,14 +11,26 @@ public class MarkAsSoldForm {
     private Integer quantity;
 
     @NotNull
-    private Long userId;
+    private Long buyerId;
 
-    public Long getUserId() {
-        return userId;
+    @NotNull
+    private Long requestId;
+
+
+    public Long getRequestId() {
+        return requestId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setRequestId(Long requestId) {
+        this.requestId = requestId;
+    }
+
+    public Long getBuyerId() {
+        return buyerId;
+    }
+
+    public void setBuyerId(Long buyerId) {
+        this.buyerId = buyerId;
     }
 
     public Integer getQuantity() {
@@ -33,7 +45,8 @@ public class MarkAsSoldForm {
     public String toString() {
         return "MarkAsSoldForm{" +
                 "quantity=" + quantity +
-                ", userId=" + userId +
+                ", buyerId=" + buyerId +
+                ", requestId=" + requestId +
                 '}';
     }
 

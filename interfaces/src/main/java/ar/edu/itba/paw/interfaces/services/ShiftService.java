@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.MainEntities.Shift;
+import ar.edu.itba.paw.models.Entities.Shift;
 
 import java.sql.Date;
 import java.util.List;
@@ -15,8 +15,6 @@ public interface ShiftService {
     Optional<Shift> findShift(long amenityId, long dayId);
 
     List<Shift> getShifts(long amenityId, Date date);
-
-    // -----------------------------------------------------------------------------------------------------------------
 
     List<Shift> getAmenityShifts(long amenityId);
 }

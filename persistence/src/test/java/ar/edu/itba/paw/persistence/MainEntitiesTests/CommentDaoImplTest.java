@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.models.MainEntities.Comment;
+import ar.edu.itba.paw.models.Entities.Comment;
 import ar.edu.itba.paw.persistence.MainEntitiesDaos.CommentDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;

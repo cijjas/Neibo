@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.MainEntities.Contact;
+import ar.edu.itba.paw.models.Entities.Contact;
 
 import java.util.List;
 
