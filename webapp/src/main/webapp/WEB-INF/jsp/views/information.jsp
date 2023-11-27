@@ -70,7 +70,7 @@
                     <div class="d-flex flex-column justify-content-center align-items-center w-100">
                         <h1><c:out value="${resource.title}"/></h1>
                         <h3><c:out value="${resource.description}"/></h3>
-                        <c:if test="${resource.image.imageId != 0}">
+                        <c:if test="${not empty resource.image.imageId}">
                             <div style="display: flex; justify-content: center; align-items: center;">
                                 <img src="${pageContext.request.contextPath}/images/<c:out value="${resource.image.imageId}"/>"
                                      style="max-width: 100%; max-height: 100vh; border-radius: 5px;"

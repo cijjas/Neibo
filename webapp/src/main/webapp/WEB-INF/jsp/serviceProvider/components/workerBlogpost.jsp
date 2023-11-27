@@ -44,7 +44,7 @@
             </div>
 
 
-            <c:if test="${ param.postImage != 0}">
+            <c:if test="${not empty param.postImage}">
                 <div style="display: flex; justify-content: center; align-items: center;">
                     <img class="blogpost-image"
                          src="${pageContext.request.contextPath}/images/<c:out value="${param.postImage}"/>"
