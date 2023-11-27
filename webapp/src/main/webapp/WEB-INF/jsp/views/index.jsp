@@ -122,6 +122,7 @@
                                     <jsp:param name="postImage" value="${post.postPicture.imageId}"/>
                                     <jsp:param name="postLikes" value="${post.likedByUsers.size()}"/>
                                     <jsp:param name="postUserProfilePictureId" value="${post.user.profilePicture.imageId}"/>
+                                    <jsp:param name="contextPath" value="${contextPath}"/>
 
                                 </jsp:include>
                             </c:forEach>
