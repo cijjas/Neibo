@@ -13,10 +13,10 @@
                     </c:otherwise>
                 </c:choose>
                 <ul class="dropdown-options">
-                    <li data-value="0"><a href="${pageContext.request.contextPath}/${contextPath}/"><spring:message code="All"/></a></li>
+                    <li data-value="0"><a href="${contextPath}/"><spring:message code="All"/></a></li>
                     <c:forEach items="${professionList}" var="profession">
                         <li>
-                            <a href="${pageContext.request.contextPath}/${contextPath}?profession=${profession}"><spring:message code="${profession}" /></a>
+                            <a href="${contextPath}?profession=${profession}"><spring:message code="${profession}" /></a>
                         </li>
                     </c:forEach>
                 </ul>
