@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.MainEntities.Amenity;
+import ar.edu.itba.paw.models.Entities.Amenity;
 
 import java.util.List;
 import java.util.Optional;

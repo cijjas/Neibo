@@ -71,8 +71,7 @@
                     </c:when>
                     <c:otherwise>
                         <c:forEach var="product" items="${requestList}">
-                            <div class="cool-static-container w-100 f-c-s-s g-0 p-0">
-
+                            <div class="cool-static-container w-100 f-c-s-s g-0 p-0 mb-2">
                                 <div class="container">
                                     <div class="f-r-c-c w-100 g-1">
                                         <div class="pl-0">

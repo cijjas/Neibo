@@ -1,10 +1,9 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.enums.StandardTime;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.services.AvailabilityService;
-import ar.edu.itba.paw.models.MainEntities.Shift;
+import ar.edu.itba.paw.models.Entities.Shift;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

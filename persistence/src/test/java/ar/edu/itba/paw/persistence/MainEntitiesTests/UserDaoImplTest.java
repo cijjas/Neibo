@@ -3,9 +3,8 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.enums.UserRole;
-import ar.edu.itba.paw.interfaces.persistence.*;
-import ar.edu.itba.paw.models.MainEntities.Event;
-import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -203,35 +202,6 @@ public class UserDaoImplTest {
 
         // Validations
         assertTrue(events.isEmpty());
-    }
-
-    @Test
-    public void testGetNeighborsSubscribedByPostId() {
-        // Pre Conditions
-        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
-        long chKey = testInserter.createChannel();
-        long iKey = testInserter.createImage();
-        long pKey = testInserter.createPost(uKey1, chKey, iKey);
-        testInserter.createSubscription(uKey1, pKey);
-
-        // Exercise
-        List<User> subscribers = userDao.getNeighborsSubscribedByPostId(pKey);
-
-        // Validations
-        assertFalse(subscribers.isEmpty());
-        assertEquals(1, subscribers.size());
-    }
-
-    @Test
-    public void testGetNoNeighborsSubscribedByPostId() {
-        // Pre Conditions
-
-        // Exercise
-        List<User> subscribers = userDao.getNeighborsSubscribedByPostId(1);
-
-        // Validations
-        assertTrue(subscribers.isEmpty());
     }
 
     @Test

@@ -2,8 +2,10 @@ package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
-import ar.edu.itba.paw.models.JunctionEntities.Purchase;
-import ar.edu.itba.paw.models.MainEntities.*;
+import ar.edu.itba.paw.models.Entities.Image;
+import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.models.Entities.Purchase;
+import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -33,7 +35,7 @@ public class ProductDaoImpl implements ProductDao {
                 .description(description)
                 .price(price)
                 .used(used)
-                .department(em.find(ar.edu.itba.paw.models.MainEntities.Department.class, departmentId))
+                .department(em.find(ar.edu.itba.paw.models.Entities.Department.class, departmentId))
                 .seller(em.find(User.class, userId))
                 .primaryPicture(em.find(Image.class, primaryPictureId))
                 .secondaryPicture(em.find(Image.class, secondaryPictureId))
@@ -191,7 +193,7 @@ public class ProductDaoImpl implements ProductDao {
 
         // First query to retrieve product IDs with remainingUnits > 0
         TypedQuery<Long> idQuery = em.createQuery(
-                "SELECT p.productId FROM Product p WHERE p.remainingUnits > 0 AND p.seller.userId = :userId", Long.class);
+                "SELECT p.productId FROM Product p WHERE p.seller.userId = :userId", Long.class);
         idQuery.setParameter("userId", userId);
         idQuery.setFirstResult((page - 1) * size);
         idQuery.setMaxResults(size);
@@ -258,5 +260,4 @@ public class ProductDaoImpl implements ProductDao {
 
         return Collections.emptyList();
     }
-
 }

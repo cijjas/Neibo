@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.MainEntities.Channel;
+import ar.edu.itba.paw.models.Entities.Channel;
 
 import java.util.List;
 import java.util.Map;
@@ -23,5 +23,4 @@ public interface ChannelService {
     Map<String, Channel> getNeighborChannels(long neighborhoodId, long neighborId);
 
     Map<String, Channel> getAdminChannels(long neighborhoodId);
-
 }

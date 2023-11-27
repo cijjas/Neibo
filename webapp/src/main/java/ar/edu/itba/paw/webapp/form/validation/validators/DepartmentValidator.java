@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.webapp.form.validation.validators;
 
 import ar.edu.itba.paw.enums.Department;
-import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.webapp.form.validation.constraints.DepartmentConstraint;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

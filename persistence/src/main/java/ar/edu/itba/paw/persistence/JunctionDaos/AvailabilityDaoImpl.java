@@ -1,25 +1,16 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
-import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
-import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
-import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
-import ar.edu.itba.paw.models.MainEntities.Amenity;
-import ar.edu.itba.paw.models.JunctionEntities.Availability;
-import ar.edu.itba.paw.models.MainEntities.Shift;
+import ar.edu.itba.paw.models.Entities.Amenity;
+import ar.edu.itba.paw.models.Entities.Availability;
+import ar.edu.itba.paw.models.Entities.Shift;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.sql.DataSource;
 import java.util.List;
 import java.util.OptionalLong;
 

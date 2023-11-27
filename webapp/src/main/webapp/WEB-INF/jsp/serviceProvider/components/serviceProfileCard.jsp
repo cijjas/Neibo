@@ -27,17 +27,18 @@
                 ${pageContext.request.contextPath}/images/<c:out value="${worker.user.profilePicture.imageId}"/>
             </c:otherwise>
         </c:choose>'>
-            <div class="inner">
+            <div class="inner f-c-c-c">
                 <div style="font-size: 18px;margin-bottom: 10px;" class="c-text">
                     <c:out value="${worker.businessName}"/>
                 </div>
-                <div class="c-light-text c-primary" style="font-size: 13px">
-                    <c:forEach items="${professions}" var="profession" varStatus="loopStatus">
-                        <a class="profession-option" onclick="applyProfessionAsFilter('${profession.profession}')"><spring:message code="${profession.profession}"/></a>
-                    </c:forEach>
-                </div>
-                <span class="c-light-text" style="margin-left: 10px;"> <c:out value="${worker.phoneNumber}"/></span>
-                <span class="c-light-text" style="margin-left: 10px;"> <c:out value="${worker.address}"/></span>
+                    <div class="f-r-c-c c-light-text c-primary" style="font-size: 13px">
+                        <c:forEach items="${professions}" var="profession" varStatus="loopStatus">
+                            <a class="profession-option" onclick="applyProfessionAsFilter('${profession.profession}')"><spring:message code="${profession.profession}"/></a>
+                        </c:forEach>
+                    </div>
+
+                <span class="c-light-text" > <c:out value="${worker.phoneNumber}"/></span>
+                <span class="c-light-text" > <c:out value="${worker.address}"/></span>
                 <p class="c-light-text mr-3 ml-3" style="text-align: center">
                     <c:out value="${worker.bio}"/>
                 </p>
@@ -49,7 +50,6 @@
                     </a>
                 </c:if>
             </div>
-
         </div>
         <div class="card-footer">
             <c:set var="averageRating" value="${averageRating}" />

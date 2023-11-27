@@ -3,7 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.MainEntities.Worker;
+import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.webapp.form.EditWorkerProfileForm;
 import ar.edu.itba.paw.webapp.form.NeighborhoodsForm;
 import ar.edu.itba.paw.webapp.form.ReviewForm;

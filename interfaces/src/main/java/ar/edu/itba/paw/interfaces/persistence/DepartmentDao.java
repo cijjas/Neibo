@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.MainEntities.Department;
+import ar.edu.itba.paw.models.Entities.Department;
 
 import java.util.Optional;
 
@@ -9,6 +9,8 @@ public interface DepartmentDao {
     // ------------------------------------------- DEPARTMENTS INSERT --------------------------------------------------
 
     Department createDepartment(ar.edu.itba.paw.enums.Department departments);
+
+    // ------------------------------------------- DEPARTMENTS SELECT --------------------------------------------------
 
     Optional<Department> findDepartmentById(long departmentId);
 }

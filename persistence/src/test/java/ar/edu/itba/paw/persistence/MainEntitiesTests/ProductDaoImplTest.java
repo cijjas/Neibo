@@ -2,7 +2,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.models.MainEntities.Product;
+import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.persistence.MainEntitiesDaos.ProductDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -20,8 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 

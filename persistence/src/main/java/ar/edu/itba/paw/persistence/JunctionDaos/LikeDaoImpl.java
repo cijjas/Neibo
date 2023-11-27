@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
-import ar.edu.itba.paw.models.compositeKeys.LikeKey;
 import ar.edu.itba.paw.interfaces.persistence.LikeDao;
-import ar.edu.itba.paw.models.JunctionEntities.Like;
-import ar.edu.itba.paw.models.MainEntities.Post;
-import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.Entities.Like;
+import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.models.Entities.User;
+import ar.edu.itba.paw.models.compositeKeys.LikeKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

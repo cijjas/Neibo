@@ -1,10 +1,9 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.InquiryDao;
-import ar.edu.itba.paw.models.JunctionEntities.Inquiry;
-import ar.edu.itba.paw.models.MainEntities.Product;
-import ar.edu.itba.paw.models.MainEntities.User;
-import ar.edu.itba.paw.persistence.MainEntitiesDaos.PostDaoImpl;
+import ar.edu.itba.paw.models.Entities.Inquiry;
+import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

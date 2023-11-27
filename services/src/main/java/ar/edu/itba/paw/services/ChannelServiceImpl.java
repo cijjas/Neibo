@@ -4,7 +4,7 @@ import ar.edu.itba.paw.enums.BaseChannel;
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.interfaces.services.ChannelMappingService;
 import ar.edu.itba.paw.interfaces.services.ChannelService;
-import ar.edu.itba.paw.models.MainEntities.Channel;
+import ar.edu.itba.paw.models.Entities.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

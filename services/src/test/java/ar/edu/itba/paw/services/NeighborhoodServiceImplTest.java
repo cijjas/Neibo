@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
-import ar.edu.itba.paw.models.MainEntities.Neighborhood;
+import ar.edu.itba.paw.models.Entities.Neighborhood;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

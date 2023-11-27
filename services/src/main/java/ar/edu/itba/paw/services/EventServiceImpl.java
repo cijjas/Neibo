@@ -8,7 +8,7 @@ import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.MainEntities.Event;
+import ar.edu.itba.paw.models.Entities.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,10 @@ import javax.persistence.PersistenceContext;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.OptionalLong;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,8 +66,8 @@ public class EventServiceImpl implements EventService {
         event.setName(name);
         event.setDescription(description);
         event.setDate(date);
-        event.setStartTime(em.find(ar.edu.itba.paw.models.MainEntities.Time.class, times[0]));
-        event.setEndTime(em.find(ar.edu.itba.paw.models.MainEntities.Time.class, times[1]));
+        event.setStartTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, times[0]));
+        event.setEndTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, times[1]));
         emailService.sendEventMail(event, "event.custom.message1", userService.getNeighbors(event.getNeighborhood().getNeighborhoodId()));
         return event;
     }

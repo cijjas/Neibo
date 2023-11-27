@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.MainEntities.Shift;
+import ar.edu.itba.paw.models.Entities.Shift;
 
 import java.sql.Date;
 import java.util.List;

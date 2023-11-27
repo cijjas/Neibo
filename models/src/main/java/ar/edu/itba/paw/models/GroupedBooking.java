@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.models;
 
-import ar.edu.itba.paw.models.JunctionEntities.Booking;
+import ar.edu.itba.paw.models.Entities.Booking;
 
 import java.sql.Time;
 import java.util.ArrayList;

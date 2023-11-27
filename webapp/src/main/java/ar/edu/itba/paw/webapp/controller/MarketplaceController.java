@@ -3,16 +3,14 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.MainEntities.Product;
-import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -124,8 +122,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         return mav;
     }
 
-
-
+    @PreAuthorize("@authService.canAccessProduct(principal, #productId)")
     @RequestMapping(value = "/my-requests/{productId:\\d+}", method = RequestMethod.GET)
     public ModelAndView listingRequests(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -142,6 +139,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         return mav;
     }
 
+    @PreAuthorize("@authService.canAccessProduct(principal, #productId)")
     @RequestMapping(value = "/my-requests/{productId:\\d+}", method = RequestMethod.POST)
     public ModelAndView listingRequests(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -156,19 +154,10 @@ public class MarketplaceController extends GlobalControllerAdvice{
             return listingRequests(page, size, productId, markAsSoldForm);
         }
         prs.markAsBought(markAsSoldForm.getBuyerId(), productId, markAsSoldForm.getQuantity());
+        rqs.markRequestAsFulfilled(markAsSoldForm.getRequestId());
         return new ModelAndView("redirect:/marketplace/my-sales");
     }
 
-
-    @RequestMapping(value = "/mark-as-bought", method = RequestMethod.POST)
-    public ModelAndView markAsBought(
-            @RequestParam(value = "buyerId") int buyerId,
-            @RequestParam(value = "productId") int productId
-    ) {
-        LOGGER.info("User arriving at '/marketplace/mark-as-bought'");
-        /*prs.markAsBought(buyerId, productId, units!); ahora falta units que se compraron*/
-        return new ModelAndView("redirect:/marketplace/my-sales");
-    }
 
     @RequestMapping(value = "/my-listings", method = RequestMethod.GET)
     public ModelAndView myListings(

@@ -42,7 +42,6 @@
 
                     <%@ include file="/WEB-INF/jsp/serviceProvider/components/tabbedBox.jsp" %>
 
-
                 </div>
             </div>
             <div class="column-right">

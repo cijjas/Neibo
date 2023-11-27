@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.models.MainEntities.Review;
+import ar.edu.itba.paw.models.Entities.Review;
 import ar.edu.itba.paw.persistence.JunctionDaos.ReviewDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;

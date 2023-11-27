@@ -2,8 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
-import ar.edu.itba.paw.models.JunctionEntities.Booking;
-import org.junit.Assert;
+import ar.edu.itba.paw.models.Entities.Booking;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,7 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalLong;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class) // Le decimos a JUnit que corra los tests con el runner de Mockito
 public class BookingServiceImplTest {

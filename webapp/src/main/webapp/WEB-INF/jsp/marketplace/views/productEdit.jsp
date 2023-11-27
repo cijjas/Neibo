@@ -143,21 +143,29 @@
                                 </div>
                             </div>
 
-                            <%--Quantity--%>
-                            <div class="f-c-c-c w-100  g-0">
+                                <%-- Quantity --%>
+                            <div class="f-c-c-c w-100 g-0">
                                 <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
                                     <spring:message code="Quantity"/>
                                     <div class="">
                                         <label for="condition"></label>
-                                        <form:select path="quantity"  class="cool-input marketplace-input quantity-input font-weight-bold font-size-14" name="condition" id="condition">
+                                        <form:select path="quantity" class="cool-input marketplace-input quantity-input font-weight-bold font-size-14" name="condition" id="condition">
                                             <c:forEach begin="1" end="100" varStatus="loop">
-                                                <form:option value="${loop.index}">${loop.index}</form:option>
+                                                <c:choose>
+                                                    <c:when test="${loop.index == product.remainingUnits}">
+                                                        <form:option value="${loop.index}" selected="selected">${loop.index}</form:option>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <form:option value="${loop.index}">${loop.index}</form:option>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </c:forEach>
                                         </form:select>
                                     </div>
                                 </div>
                                 <form:errors path="quantity" cssClass="error pt-1" element="p"/>
                             </div>
+
 
                         </div>
                     </div>

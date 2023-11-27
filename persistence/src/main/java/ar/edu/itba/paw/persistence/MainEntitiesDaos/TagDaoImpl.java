@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.TagDao;
-import ar.edu.itba.paw.models.MainEntities.Tag;
+import ar.edu.itba.paw.models.Entities.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
