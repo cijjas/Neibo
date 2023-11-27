@@ -15,24 +15,29 @@
                         <div class="f-c-c-c">
                             <div class="f-r-sb-c w-100">
                                 <h5><c:out value="${reservation.amenityName}"/></h5>
-
-
-                                <a id="delete-reservation" onclick="deleteReservation()" class="pointer">
+                                <a id="delete-reservation-${reservation.bookingIds}"  class="pointer">
                                     <i class="fas fa-trash" style="color: var(--error);"></i>
                                 </a>
                                 <script>
-                                    function deleteReservation() {
-                                        const form = document.createElement('form');
-                                        form.method = 'POST';
-                                        form.action = '${pageContext.request.contextPath}/delete-reservation';
-                                        const input = document.createElement('input');
-                                        input.type = 'hidden';
-                                        input.name = 'bookingIds';
-                                        input.value = ${reservation.bookingIds};
-                                        form.appendChild(input);
-                                        document.body.appendChild(form);
-                                        form.submit();
-                                    }
+                                    (function() {
+                                        const deleteButton = document.getElementById('delete-reservation-${reservation.bookingIds}');
+                                        deleteButton.addEventListener('click', function () {
+                                            deleteReservation(${reservation.bookingIds});
+                                        });
+                                        function deleteReservation(bookingIds) {
+                                            const form = document.createElement('form');
+                                            form.method = 'POST';
+                                            form.action = '${pageContext.request.contextPath}/delete-reservation';
+                                            const input = document.createElement('input');
+                                            input.type = 'hidden';
+                                            input.name = 'bookingIds';
+                                            input.value = bookingIds;
+                                            form.appendChild(input);
+                                            document.body.appendChild(form);
+                                            form.submit();
+                                        }
+                                    })();
+
 
                                 </script>
                             </div>

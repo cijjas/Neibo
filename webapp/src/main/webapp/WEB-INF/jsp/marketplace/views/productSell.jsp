@@ -99,6 +99,9 @@
                                             </div>
                                         </a>
                                     </div>
+                                    <div class="f-c-c-c w-100 c-light-text font-weight-normal special-hover" >
+                                        <spring:message code="Select.images.for.listing.suggestion"/>
+                                    </div>
                                 </div>
                             </div>
 

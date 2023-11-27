@@ -3166,13 +3166,19 @@ input[type=time] {
 
 
 .sold-tag{
-    border: 1px solid var(--red);
+    border: 1px solid var(--error);
     border-radius: var(--border-hard);
-    color: var(--red);
+    color: var(--error);
 }
 
 .in-stock-tag{
     border: 1px solid var(--accent);
     border-radius: var(--border-hard);
     color: var(--accent);
+}
+
+.special-hover{
+    &:hover{
+        color: var(--accent);
+    }
 }
