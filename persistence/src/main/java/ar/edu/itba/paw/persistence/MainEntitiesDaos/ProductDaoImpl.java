@@ -139,60 +139,25 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public int getProductsSellingCount(long userId) {
         LOGGER.debug("Selecting Selling Products Count from User {}", userId);
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
-        Root<Purchase> purchaseRoot = countQuery.from(Purchase.class);
-        Join<Purchase, Product> productJoin = purchaseRoot.join("product");
-
-        countQuery.select(cb.countDistinct(productJoin));
-
-        Predicate predicate = cb.equal(productJoin.get("seller").get("userId"), userId);
-        predicate = cb.and(predicate, cb.isNull(purchaseRoot.get("user")));
-        countQuery.where(predicate);
-
-        TypedQuery<Long> countTypedQuery = em.createQuery(countQuery);
-        Long countResult = countTypedQuery.getSingleResult();
-
-        return countResult.intValue();
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(*) FROM Product p WHERE p.seller.userId = :userId", Long.class);
+        query.setParameter("userId", userId);
+        return query.getSingleResult().intValue();
     }
 
     @Override
     public int getProductsSoldCount(long userId) {
         LOGGER.debug("Selecting Sold Products Count from User {}", userId);
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
-        Root<Purchase> purchaseRoot = countQuery.from(Purchase.class);
-        Join<Purchase, Product> productJoin = purchaseRoot.join("product");
-
-        countQuery.select(cb.countDistinct(productJoin));
-
-        Predicate predicate = cb.equal(productJoin.get("seller").get("userId"), userId);
-        predicate = cb.and(predicate, cb.isNotNull(purchaseRoot.get("user")));
-        countQuery.where(predicate);
-
-        TypedQuery<Long> countTypedQuery = em.createQuery(countQuery);
-        Long countResult = countTypedQuery.getSingleResult();
-
-        return countResult.intValue();
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(*) FROM Product p JOIN Purchase pu ON p.productId = pu.product.productId WHERE p.seller.userId = :userId", Long.class);
+        query.setParameter("userId", userId);
+        return query.getSingleResult().intValue();
     }
 
     @Override
     public int getProductsBoughtCount(long userId) {
         LOGGER.debug("Selecting Bought Products Count from User {}", userId);
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
-        Root<Purchase> purchaseRoot = countQuery.from(Purchase.class);
-        Join<Purchase, Product> productJoin = purchaseRoot.join("product");
-
-        countQuery.select(cb.countDistinct(productJoin));
-
-        Predicate predicate = cb.equal(purchaseRoot.get("user").get("userId"), userId);
-        countQuery.where(predicate);
-
-        TypedQuery<Long> countTypedQuery = em.createQuery(countQuery);
-        Long countResult = countTypedQuery.getSingleResult();
-
-        return countResult.intValue();
+        TypedQuery<Long> query = em.createQuery("SELECT COUNT(*) FROM Product p JOIN Purchase pu ON p.productId = pu.product.productId WHERE pu.user.userId = :userId", Long.class);
+        query.setParameter("userId", userId);
+        return query.getSingleResult().intValue();
     }
 
 

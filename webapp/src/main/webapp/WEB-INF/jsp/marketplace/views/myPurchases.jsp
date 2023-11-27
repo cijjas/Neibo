@@ -144,6 +144,13 @@
                                 </div>
 
                             </c:forEach>
+
+                            <c:if test="${totalPages >  1}">
+                                <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                                    <jsp:param name="page" value="${page}"/>
+                                    <jsp:param name="totalPages" value="${totalPages}"/>
+                                </jsp:include>
+                            </c:if>
                         </div>
                     </c:otherwise>
                 </c:choose>

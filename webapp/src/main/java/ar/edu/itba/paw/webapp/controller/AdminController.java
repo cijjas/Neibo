@@ -134,7 +134,7 @@ public class AdminController extends GlobalControllerAdvice {
             @RequestParam("userId") long userId
     ) {
         us.rejectNeighbor(userId);
-        return new ModelAndView("redirect:/admin/unverified");
+        return new ModelAndView("redirect:/admin/neighbors?verified=false");
     }
 
     @RequestMapping("/verify-user")
@@ -210,7 +210,7 @@ public class AdminController extends GlobalControllerAdvice {
             @RequestParam("workerId") long workerId
     ) {
         nws.rejectWorkerFromNeighborhood(workerId, getLoggedUser().getNeighborhood().getNeighborhoodId());
-        return new ModelAndView("redirect:/admin/unverified-workers");
+        return new ModelAndView("redirect:/admin/workers?verified=false");
     }
 
     @RequestMapping("/unverify-worker")
