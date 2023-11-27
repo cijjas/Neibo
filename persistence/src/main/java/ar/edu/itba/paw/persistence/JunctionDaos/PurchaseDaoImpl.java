@@ -74,6 +74,7 @@ public class PurchaseDaoImpl implements PurchaseDao {
 
         purchaseQuery.select(purchaseRootFetch);
         purchaseQuery.where(purchaseRootFetch.get("purchaseId").in(purchaseIds));
+        purchaseQuery.orderBy(cb.desc(purchaseRootFetch.get("purchaseDate")));
 
         TypedQuery<Purchase> purchaseTypedQuery = em.createQuery(purchaseQuery);
         List<Purchase> purchases = purchaseTypedQuery.getResultList();
@@ -110,6 +111,7 @@ public class PurchaseDaoImpl implements PurchaseDao {
 
         purchaseQuery.select(purchaseRootFetch);
         purchaseQuery.where(purchaseRootFetch.get("purchaseId").in(purchaseIds));
+        purchaseQuery.orderBy(cb.desc(purchaseRootFetch.get("purchaseDate")));
 
         TypedQuery<Purchase> purchaseTypedQuery = em.createQuery(purchaseQuery);
         List<Purchase> purchases = purchaseTypedQuery.getResultList();

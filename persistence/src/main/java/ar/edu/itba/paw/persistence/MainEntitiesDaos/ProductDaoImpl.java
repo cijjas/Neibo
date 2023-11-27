@@ -107,6 +107,7 @@ public class ProductDaoImpl implements ProductDao {
         Root<Product> dataRoot = dataQuery.from(Product.class);
         // Add predicate that enforces existence within the IDs recovered in the first query
         dataQuery.where(dataRoot.get("productId").in(productIds));
+        dataQuery.orderBy(cb.desc(dataRoot.get("creationDate")));
         // Create the query
         TypedQuery<Product> dataTypedQuery = em.createQuery(dataQuery);
         // Return Results
@@ -195,7 +196,6 @@ public class ProductDaoImpl implements ProductDao {
         return countResult.intValue();
     }
 
-
     @Override
     public List<Product> getProductsSelling(long userId, int page, int size) {
         LOGGER.debug("Selecting Selling Products from User {}", userId);
@@ -212,13 +212,14 @@ public class ProductDaoImpl implements ProductDao {
         // Second query to retrieve Product objects based on the IDs
         if (!productIds.isEmpty()) {
             TypedQuery<Product> productQuery = em.createQuery(
-                    "SELECT p FROM Product p WHERE p.productId IN :productIds", Product.class);
+                    "SELECT p FROM Product p WHERE p.productId IN :productIds ORDER BY p.creationDate DESC", Product.class);
             productQuery.setParameter("productIds", productIds);
             return productQuery.getResultList();
         }
 
         return Collections.emptyList();
     }
+
 
     @Override
     public List<Product> getProductsSold(long userId, int page, int size) {
@@ -236,13 +237,14 @@ public class ProductDaoImpl implements ProductDao {
         // Second query to retrieve Product objects based on the IDs
         if (!productIds.isEmpty()) {
             TypedQuery<Product> productQuery = em.createQuery(
-                    "SELECT p FROM Product p WHERE p.productId IN :productIds", Product.class);
+                    "SELECT p FROM Product p WHERE p.productId IN :productIds ORDER BY p.creationDate DESC", Product.class);
             productQuery.setParameter("productIds", productIds);
             return productQuery.getResultList();
         }
 
         return Collections.emptyList();
     }
+
 
     @Override
     public List<Product> getProductsBought(long userId, int page, int size) {
@@ -260,11 +262,12 @@ public class ProductDaoImpl implements ProductDao {
         // Second query to retrieve Product objects based on the IDs
         if (!productIds.isEmpty()) {
             TypedQuery<Product> productQuery = em.createQuery(
-                    "SELECT p FROM Product p WHERE p.productId IN :productIds", Product.class);
+                    "SELECT p FROM Product p WHERE p.productId IN :productIds ORDER BY p.creationDate DESC", Product.class);
             productQuery.setParameter("productIds", productIds);
             return productQuery.getResultList();
         }
 
         return Collections.emptyList();
     }
+
 }

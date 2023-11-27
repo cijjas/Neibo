@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 import ar.edu.itba.paw.models.JunctionEntities.Request;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RequestDao {
 
@@ -11,6 +12,8 @@ public interface RequestDao {
     Request createRequest(final long userId, final long productId, final String message);
 
     // --------------------------------------------- REQUESTS SELECT ---------------------------------------------------
+
+    Optional<Request> findRequest(long requestId);
 
     List<Request> getRequestsByProductId(long productId, int page, int size);
 

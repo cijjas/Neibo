@@ -347,14 +347,16 @@ public class TestInserter {
         return inquiry.getInquiryId();
     }
 
-    public void createRequest(long productId, long userId, String message){
+    public long createRequest(long productId, long userId, String message){
         Request request = new Request.Builder()
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
                 .message(message)
+                .fulfilled(false)
                 .build();
         em.persist(request);
         em.flush();
+        return request.getRequestId();
     }
 
     public long createPurchase(long productId, long userId, long unitsBought) {
@@ -550,8 +552,8 @@ public class TestInserter {
         return createInquiry(message, reply, productId, userId);
     }
 
-    public void createRequest(long productId, long userId){
+    public long createRequest(long productId, long userId){
         String message = "Hello";
-        createRequest(productId, userId, message);
+        return createRequest(productId, userId, message);
     }
 }

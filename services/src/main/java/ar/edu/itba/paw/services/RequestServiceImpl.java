@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.Language;
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.interfaces.persistence.RequestDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
@@ -65,5 +66,13 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public int getRequestsCountByProductAndUser(long productId, long userId) {
         return requestDao.getRequestsCountByProductAndUser(productId, userId);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void markRequestAsFulfilled(long requestId) {
+        Request request = requestDao.findRequest(requestId).orElseThrow(()-> new NotFoundException("Request Not Found"));
+        request.setFulfilled(true);
     }
 }
