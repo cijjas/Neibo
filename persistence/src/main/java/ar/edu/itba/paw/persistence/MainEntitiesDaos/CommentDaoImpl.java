@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.CommentDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.models.JunctionEntities.Request;
 import ar.edu.itba.paw.models.MainEntities.Comment;
 import ar.edu.itba.paw.models.MainEntities.Post;
 import ar.edu.itba.paw.models.MainEntities.User;
@@ -59,19 +60,23 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public List<Comment> getCommentsByPostId(long postId, int page, int size) {
         LOGGER.debug("Selecting Comments from Post {}", postId);
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Comment> query = cb.createQuery(Comment.class);
-        Root<Comment> commentRoot = query.from(Comment.class);
-        query.select(commentRoot);
-        query.where(cb.equal(commentRoot.get("post").get("postId"), postId));
-        query.orderBy(cb.desc(commentRoot.get("date")));
-        TypedQuery<Comment> typedQuery = em.createQuery(query);
-        typedQuery.setFirstResult((page - 1) * size);
-        typedQuery.setMaxResults(size);
-        List<Comment> comments = typedQuery.getResultList();
-        if (comments.isEmpty())
-            return Collections.emptyList();
-        return comments;
+
+        TypedQuery<Long> idQuery = em.createQuery("SELECT c.commentId FROM Comment c " +
+                "WHERE c.post.postId = :postId", Long.class);
+        idQuery.setParameter("postId", postId);
+        idQuery.setFirstResult((page - 1) * size);
+        idQuery.setMaxResults(size);
+
+        List<Long> commentIds = idQuery.getResultList();
+
+        if (!commentIds.isEmpty()) {
+            TypedQuery<Comment> commentQuery = em.createQuery(
+                    "SELECT c FROM Comment c WHERE c.commentId IN :commentIds", Comment.class);
+            commentQuery.setParameter("commentIds", commentIds);
+            return commentQuery.getResultList();
+        }
+
+        return Collections.emptyList();
     }
 
     @Override

@@ -63,7 +63,7 @@
                 </a>
                 <div class="mt-2 d-flex flex-row justify-content-start align-items-center flex-wrap">
                     <c:forEach var="postTag" items="${requestScope.postTags}">
-                        <a href="${pageContext.request.contextPath}/${channel.toLowerCase()}?tag=${postTag.tag}"
+                        <a href="${pageContext.request.contextPath}${contextPath}?tag=${postTag.tag}"
                            class="post-tag static m-l-3 m-r-3" data-post-tag="${postTag.tag}">
                             <c:out value="${postTag.tag}"/>
                         </a>

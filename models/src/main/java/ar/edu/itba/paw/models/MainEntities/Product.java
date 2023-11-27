@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models.MainEntities;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
@@ -62,7 +62,9 @@ public class Product {
     private Set<User> purchasers;
 
     @Column(name = "creationDate")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
+
     @Transient
     private String priceIntegerString;
 

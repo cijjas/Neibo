@@ -5,7 +5,7 @@ import ar.edu.itba.paw.models.MainEntities.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -28,6 +28,7 @@ public class Purchase implements Serializable {
     private Long units;
 
     @Column(name = "purchaseDate")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date purchaseDate;
 
     public Purchase() {

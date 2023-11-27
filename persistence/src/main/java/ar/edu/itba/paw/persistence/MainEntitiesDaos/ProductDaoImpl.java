@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -44,23 +45,6 @@ public class ProductDaoImpl implements ProductDao {
         return product;
     }
 
-//    @Override
-//    public Product updateProduct(long productId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId, Long stock) {
-//        LOGGER.debug("Updating Product {}", productId);
-//
-//        Product product = em.find(Product.class, productId);
-//        if (product != null) {
-//            product.setName(name);
-//            product.setDescription(description);
-//            product.setPrice(price);
-//            product.setUsed(used);
-//            product.setDepartment(em.find(ar.edu.itba.paw.models.MainEntities.Department.class, departmentId));
-//            product.setRemainingUnits(stock);
-//        }
-//
-//        return product;
-//    }
-
     @Override
     public boolean deleteProduct(long productId) {
         LOGGER.debug("Deleting Product with id {}", productId);
@@ -86,16 +70,20 @@ public class ProductDaoImpl implements ProductDao {
         Root<Product> idRoot = idQuery.from(Product.class);
         idQuery.select(idRoot.get("productId"));
         // Add conditions for filtering
-        Predicate predicate = cb.equal(idRoot.get("seller").get("neighborhood").get("neighborhoodId"), neighborhoodId);
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(cb.equal(idRoot.get("seller").get("neighborhood").get("neighborhoodId"), neighborhoodId));
         if (department != Department.NONE) {
-            predicate = cb.and(predicate, cb.equal(idRoot.get("department").get("departmentId"), department.getId()));
+            predicates.add(cb.equal(idRoot.get("department").get("departmentId"), department.getId()));
         }
-        idQuery.where(predicate);
+        predicates.add(cb.greaterThan(idRoot.get("remainingUnits"), 0L));
+        idQuery.where(predicates.toArray(new Predicate[0]));
         // Create the query
         TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
         // Implement pagination in the first query
-        idTypedQuery.setFirstResult((page - 1) * size);
-        idTypedQuery.setMaxResults(size);
+        if(page > 0){
+            idTypedQuery.setFirstResult((page - 1) * size);
+            idTypedQuery.setMaxResults(size);
+        }
         // Results
         List<Long> productIds = idTypedQuery.getResultList();
         // Check if productIds is empty for better performance
@@ -107,7 +95,6 @@ public class ProductDaoImpl implements ProductDao {
         Root<Product> dataRoot = dataQuery.from(Product.class);
         // Add predicate that enforces existence within the IDs recovered in the first query
         dataQuery.where(dataRoot.get("productId").in(productIds));
-        dataQuery.orderBy(cb.desc(dataRoot.get("creationDate")));
         // Create the query
         TypedQuery<Product> dataTypedQuery = em.createQuery(dataQuery);
         // Return Results
@@ -124,11 +111,13 @@ public class ProductDaoImpl implements ProductDao {
         Root<Product> countRoot = countQuery.from(Product.class);
         countQuery.select(cb.countDistinct(countRoot));
         // Add conditions for filtering
-        Predicate predicate = cb.equal(countRoot.get("seller").get("neighborhood").get("neighborhoodId"), neighborhoodId);
+        List<Predicate> predicates = new ArrayList<>();
+        predicates.add(cb.equal(countRoot.get("seller").get("neighborhood").get("neighborhoodId"), neighborhoodId));
         if (department != Department.NONE) {
-            predicate = cb.and(predicate, cb.equal(countRoot.get("department").get("departmentId"), department.getId()));
+            predicates.add(cb.equal(countRoot.get("department").get("departmentId"), department.getId()));
         }
-        countQuery.where(predicate);
+        predicates.add(cb.greaterThan(countRoot.get("remainingUnits"), 0L));
+        countQuery.where(predicates.toArray(new Predicate[0]));
         // Create the query
         TypedQuery<Long> countTypedQuery = em.createQuery(countQuery);
         // Result

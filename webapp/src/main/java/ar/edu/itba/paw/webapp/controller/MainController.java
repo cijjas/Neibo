@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.exceptions.*;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.MainEntities.Amenity;
 import ar.edu.itba.paw.models.MainEntities.Image;
+import ar.edu.itba.paw.models.MainEntities.Post;
 import ar.edu.itba.paw.webapp.form.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -291,8 +292,8 @@ public class MainController extends GlobalControllerAdvice{
 
         ModelAndView mav = new ModelAndView("views/post");
 
-        mav.addObject("post", ps.findPostById(postId).orElseThrow(() -> new NotFoundException("Post Not Found")));
-
+        Post post = ps.findPostById(postId).orElseThrow(() -> new NotFoundException("Post Not Found"));
+        mav.addObject("post", post);
         mav.addObject("comments", cs.getCommentsByPostId(postId, page, size));
         mav.addObject("page", page);
         mav.addObject("totalPages", cs.getTotalCommentPages(postId, size));
@@ -300,6 +301,7 @@ public class MainController extends GlobalControllerAdvice{
         mav.addObject("commentForm", commentForm);
         mav.addObject("showSuccessMessage", success);
         mav.addObject("contextPath", "/posts/" + postId);
+        mav.addObject("channelContextPath", "/" + post.getChannel().getChannel().toLowerCase());
 
         return mav;
     }
