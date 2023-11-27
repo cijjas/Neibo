@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.InquiryDao;
-import ar.edu.itba.paw.models.Entities.Inquiry;
-import ar.edu.itba.paw.models.Entities.Product;
-import ar.edu.itba.paw.models.Entities.User;
+import ar.edu.itba.paw.models.Entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -11,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +28,7 @@ public class InquiryDaoImpl implements InquiryDao {
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
                 .message(message)
+                .inquiryDate(new java.sql.Date(System.currentTimeMillis()))
                 .build();
         em.persist(inquiry);
 
@@ -43,21 +43,36 @@ public class InquiryDaoImpl implements InquiryDao {
         return Optional.ofNullable(em.find(Inquiry.class, inquiryId));
     }
 
-    @Override
-    public List<Inquiry> getInquiriesByProduct(long productId) {
-        LOGGER.debug("Selecting Inquiries from Product with id {}", productId);
-        TypedQuery<Inquiry> inquiries = em.createQuery("SELECT DISTINCT i FROM Inquiry i WHERE i.product.productId = :productId", Inquiry.class)
-                .setParameter("productId", productId);
-        return inquiries.getResultList();
-    }
 
     @Override
     public List<Inquiry> getInquiriesByProductAndCriteria(long productId, int page, int size) {
         LOGGER.debug("Selecting Inquiries from Product with id {}", productId);
-        TypedQuery<Inquiry> inquiries = em.createQuery("SELECT DISTINCT i FROM Inquiry i WHERE i.product.productId = :productId", Inquiry.class)
+
+        TypedQuery<Long> idQuery = em.createQuery("SELECT i.inquiryId FROM Inquiry i " +
+                "WHERE i.product.productId = :productId ORDER BY i.inquiryDate DESC", Long.class);
+        idQuery.setParameter("productId", productId);
+        idQuery.setFirstResult((page - 1) * size);
+        idQuery.setMaxResults(size);
+
+        List<Long> inquiryIds = idQuery.getResultList();
+
+        if (!inquiryIds.isEmpty()) {
+            TypedQuery<Inquiry> inquiryQuery = em.createQuery(
+                    "SELECT i FROM Inquiry i WHERE i.inquiryId IN :inquiryIds ORDER BY i.inquiryDate DESC ", Inquiry.class);
+            inquiryQuery.setParameter("inquiryIds", inquiryIds);
+            return inquiryQuery.getResultList();
+        }
+
+        return Collections.emptyList();
+    }
+
+    @Override
+    public int getInquiriesCountByProduct(long productId) {
+        LOGGER.debug("Selecting Inquiries Count from Product {}", productId);
+        Long count = (Long) em.createQuery("SELECT COUNT(i) FROM Inquiry i " +
+                        "WHERE i.product.productId = :productId")
                 .setParameter("productId", productId)
-                .setFirstResult((page - 1) * size)
-                .setMaxResults(size);
-        return inquiries.getResultList();
+                .getSingleResult();
+        return count != null ? count.intValue() : 0;
     }
 }

@@ -36,6 +36,10 @@ public class InquiryDaoImplTest {
     public static final String MAIL2 = "user2@gmail.com";
     public static final String MAIL3 = "user3@gmail.com";
     public static final String REPLY = "This is a reply";
+
+    private static final int BASE_PAGE = 1;
+    private static final int BASE_PAGE_SIZE = 10;
+
     @Autowired
     private DataSource ds;
     @Autowired
@@ -104,7 +108,7 @@ public class InquiryDaoImplTest {
         long iqKey = testInserter.createInquiry(pKey, uKey3);
 
         // Exercise
-        List<Inquiry> inquiries = inquiryDao.getInquiriesByProduct(pKey);
+        List<Inquiry> inquiries = inquiryDao.getInquiriesByProductAndCriteria(pKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertFalse(inquiries.isEmpty());

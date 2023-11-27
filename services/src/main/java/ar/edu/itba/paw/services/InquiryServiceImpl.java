@@ -54,10 +54,6 @@ public class InquiryServiceImpl implements InquiryService {
         return inquiryDao.findInquiryById(inquiryId);
     }
 
-    @Override
-    public List<Inquiry> getInquiriesByProduct(long productId) {
-        return inquiryDao.getInquiriesByProduct(productId);
-    }
 
     @Override
     public List<Inquiry> getInquiriesByProductAndCriteria(long productId, int page, int size) {
@@ -66,7 +62,7 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     public int getTotalInquiryPages(long productId, int size) {
-        return (int) Math.ceil((double) inquiryDao.getInquiriesByProduct(productId).size() / size);
+        return (int) Math.ceil((double) inquiryDao.getInquiriesCountByProduct(productId) / size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

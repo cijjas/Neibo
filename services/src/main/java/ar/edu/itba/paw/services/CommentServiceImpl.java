@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.CommentDao;
 import ar.edu.itba.paw.interfaces.services.CommentService;
 import ar.edu.itba.paw.interfaces.services.EmailService;
@@ -38,9 +39,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment createComment(String comment, long neighborId, long postId) {
         LOGGER.info("Creating Comment {} from User {} for Post {}", comment, neighborId, postId);
-
-        Post post = postService.findPostById(postId).orElse(null);
-        assert post != null;
+        Post post = postService.findPostById(postId).orElseThrow(()-> new NotFoundException("Post Not Found"));
         emailService.sendNewCommentMail(post, userService.getNeighborsSubscribedByPostId(postId));
         return commentDao.createComment(comment, neighborId, postId);
     }

@@ -9,6 +9,7 @@ import ar.edu.itba.paw.interfaces.persistence.WorkerDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.models.Entities.Worker;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +39,7 @@ public class WorkerServiceImplTest {
     private final UserRole ROLE = UserRole.NEIGHBOR;
     private final Date CREATION_DATE = new Date(2023, 9, 11);
     private final String IDENTIFICATION = "123456789";
+    @Mock
     private User mockUser;
     @Mock
     private WorkerDao workerDao;
@@ -62,28 +64,27 @@ public class WorkerServiceImplTest {
 
     @Test
     public void testCreate() {
-//        // 1. Preconditions
-//        when(userDao.createUser(anyString(), any(), anyString(), anyString(), anyLong(), any(), anyBoolean(), any(), anyInt())).thenReturn(mockUser);
-//        when(workerDao.createWorker(anyLong(), anyString(), anyString(), anyString())).thenReturn(new Worker.Builder()
-//                .user(mockUser)
-//                .phoneNumber(PHONE_NUMBER)
-//                .address(ADDRESS)
-//                .businessName(BUSINESS_NAME)
-//                .bio(BIO)
-//                .build()
-//        );
-//
-//        // 2. Exercise
-//        Worker newWorker = ws.createWorker(EMAIL, NAME, SURNAME, PASSWORD, IDENTIFICATION, PHONE_NUMBER, ADDRESS, LANGUAGE, new long[]{1}, BUSINESS_NAME);
-//
-//        // 3. Postconditions
-//        Assert.assertNotNull(newWorker);
-//        Assert.assertEquals(newWorker.getUserId().longValue(), USER_ID);
-////        Assert.assertEquals(newWorker.getUser(), mockUser);
-//        Assert.assertEquals(newWorker.getPhoneNumber(), PHONE_NUMBER);
-//        Assert.assertEquals(newWorker.getAddress(), ADDRESS);
-//        Assert.assertEquals(newWorker.getBusinessName(), BUSINESS_NAME);
-//        Assert.assertEquals(newWorker.getBio(), BIO);
+        // 1. Preconditions
+        when(userDao.createUser(anyString(), any(), anyString(), anyString(), anyLong(), any(), anyBoolean(), any(), anyInt())).thenReturn(mockUser);
+        when(workerDao.createWorker(anyLong(), anyString(), anyString(), anyString())).thenReturn(new Worker.Builder()
+                .user(mockUser)
+                .phoneNumber(PHONE_NUMBER)
+                .address(ADDRESS)
+                .businessName(BUSINESS_NAME)
+                .bio(BIO)
+                .build()
+        );
+
+        // 2. Exercise
+        Worker newWorker = ws.createWorker(EMAIL, NAME, SURNAME, PASSWORD, IDENTIFICATION, PHONE_NUMBER, ADDRESS, LANGUAGE, new Long[]{1L}, BUSINESS_NAME);
+
+        // 3. Postconditions
+        Assert.assertNotNull(newWorker);
+        Assert.assertEquals(newWorker.getUser(), mockUser);
+        Assert.assertEquals(newWorker.getPhoneNumber(), PHONE_NUMBER);
+        Assert.assertEquals(newWorker.getAddress(), ADDRESS);
+        Assert.assertEquals(newWorker.getBusinessName(), BUSINESS_NAME);
+        Assert.assertEquals(newWorker.getBio(), BIO);
 
     }
 

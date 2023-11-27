@@ -30,6 +30,7 @@ public class Resource {
     }
 
     private Resource(Builder builder) {
+        this.resourceId = builder.resourceId;
         this.title = builder.title;
         this.description = builder.description;
         this.image = builder.image;
@@ -96,6 +97,7 @@ public class Resource {
     }
 
     public static class Builder {
+        private Long resourceId;
         private String title;
         private String description;
         private Image image;
@@ -118,6 +120,11 @@ public class Resource {
 
         public Builder neighborhood(Neighborhood neighborhood) {
             this.neighborhood = neighborhood;
+            return this;
+        }
+
+        public Builder resourceId(Long resourceId) {
+            this.resourceId = resourceId;
             return this;
         }
 

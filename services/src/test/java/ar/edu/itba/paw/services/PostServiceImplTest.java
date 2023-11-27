@@ -6,10 +6,8 @@ import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Entities.Channel;
-import ar.edu.itba.paw.models.Entities.Post;
-import ar.edu.itba.paw.models.Entities.Tag;
-import ar.edu.itba.paw.models.Entities.User;
+import ar.edu.itba.paw.models.Entities.*;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class PostServiceImplTest {
     private static final long ID = 1;
     private static final String TITLE = "LOBO RONDANDO";
     private static final String DESCRIPTION = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-    private static final Date DATE = new Date(2023, 9, 11);
+    private static final Date DATE = new Timestamp(System.currentTimeMillis());
     private static final long USER_ID = 1;
     private static final long CHANNEL_ID = 1;
     private static final long POST_PICTURE_ID = 0;
@@ -36,6 +35,7 @@ public class PostServiceImplTest {
     private User mockUser;
     private Channel mockChannel;
     private List mockTagList;
+    private Image mockImage;
     private Tag mockTag;
     @Mock
     private PostDao postDao;
@@ -58,22 +58,19 @@ public class PostServiceImplTest {
         mockChannel = mock(Channel.class);
         mockTagList = mock(List.class);
         mockTag = mock(Tag.class);
-
+        mockImage = mock(Image.class);
     }
-
 
     @Test
     public void testCreate() {
-        /*// 1. Preconditions
+        // 1. Preconditions
         when(postDao.createPost(anyString(), anyString(), anyLong(), anyLong(), anyLong())).thenReturn(new Post.Builder()
                 .postId(ID)
                 .title(TITLE)
                 .description(DESCRIPTION)
-                .date(DATE)
                 .user(mockUser)
                 .channel(mockChannel)
-                .postPictureId(POST_PICTURE_ID)
-                .likes(LIKES)
+                .postPicture(mockImage)
                 .build()
         );
 
@@ -82,14 +79,11 @@ public class PostServiceImplTest {
 
         // 3. Postconditions
         Assert.assertNotNull(newPost);
-        Assert.assertEquals(newPost.getPostId().longValue(), ID);
-        Assert.assertEquals(newPost.getTitle(), TITLE);
-        Assert.assertEquals(newPost.getDescription(), DESCRIPTION);
-        Assert.assertEquals(newPost.getDate(), DATE);
-        Assert.assertEquals(newPost.getUser(), mockUser);
-        Assert.assertEquals(newPost.getChannel(), mockChannel);
-        Assert.assertEquals(newPost.getPostPictureId().longValue(), POST_PICTURE_ID);
-*/
+        Assert.assertEquals(ID, newPost.getPostId().longValue());
+        Assert.assertEquals(TITLE, newPost.getTitle());
+        Assert.assertEquals(DESCRIPTION,newPost.getDescription());
+        Assert.assertEquals(mockUser, newPost.getUser());
+        Assert.assertEquals(mockChannel, newPost.getChannel());
     }
 
     @Test(expected = RuntimeException.class)
