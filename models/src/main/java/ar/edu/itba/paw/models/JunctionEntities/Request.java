@@ -30,6 +30,9 @@ public class Request implements Serializable {
     @Column(name = "requestdate")
     private Date requestDate;
 
+    @Column(name = "fulfilled")
+    private Boolean fulfilled;
+
     public Request() {
     }
 
@@ -39,6 +42,7 @@ public class Request implements Serializable {
         this.message = builder.message;
         this.user = builder.user;
         this.requestDate = builder.requestDate;
+        this.fulfilled = builder.fulfilled;
     }
 
     public Long getRequestId() {
@@ -81,13 +85,21 @@ public class Request implements Serializable {
         this.requestDate = requestDate;
     }
 
+    public Boolean getFulfilled() {
+        return fulfilled;
+    }
+
+    public void setFulfilled(Boolean fulfilled) {
+        this.fulfilled = fulfilled;
+    }
+
     public static class Builder {
         private Long requestId;
         private Product product;
         private User user;
         private String message;
         private Date requestDate;
-
+        private Boolean fulfilled;
         public Request.Builder requestId(Long requestId) {
             this.requestId = requestId;
             return this;
@@ -110,6 +122,10 @@ public class Request implements Serializable {
 
         public Request.Builder requestDate(Date requestDate) {
             this.requestDate = requestDate;
+            return this;
+        }
+        public Request.Builder fulfilled(Boolean fulfilled) {
+            this.fulfilled = fulfilled;
             return this;
         }
 

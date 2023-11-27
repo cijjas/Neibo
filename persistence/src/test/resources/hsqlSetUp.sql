@@ -333,6 +333,8 @@ CREATE TABLE IF NOT EXISTS products_users_requests (
     productId INTEGER,
     userId INTEGER,
     message VARCHAR(512) NOT NULL,
+    fulfilled BOOLEAN,
+    requestDate DATE,
 
     FOREIGN KEY (productId) REFERENCES products(productId) ON DELETE CASCADE,
     FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
