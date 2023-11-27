@@ -24,6 +24,9 @@
                 <c:param name="tag" value="${tag}"/>
             </c:forEach>
         </c:if>
+        <c:if test="${verified == false}">
+            <c:param name="verified" value="false"/>
+        </c:if>
     </c:url>
 
     <a class="${paginationClass}-button small-a ${page <= 1 ? 'disabled' : ''}"
@@ -40,6 +43,9 @@
                     <c:param name="tag" value="${tag}"/>
                 </c:forEach>
             </c:if>
+            <c:if test="${verified == false}">
+                <c:param name="verified" value="false"/>
+            </c:if>
         </c:url>
         <a class="${paginationClass}-button ${page == pageNumber ? 'active' : ''}"
            href="${baseUrl}${contextPath}/${pageUrl}">
@@ -53,6 +59,9 @@
             <c:forEach var="tag" items="${paramValues.tag}">
                 <c:param name="tag" value="${tag}"/>
             </c:forEach>
+        </c:if>
+        <c:if test="${verified == false}">
+            <c:param name="verified" value="false"/>
         </c:if>
     </c:url>
     <a class="${paginationClass}-button small-a ${page >= totalPages ? 'disabled' : ''}"

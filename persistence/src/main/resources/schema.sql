@@ -448,7 +448,8 @@ create table if not exists products_users_inquiries
     constraint fk6ptiod8ihfdhv07m04jhcvb3e
     references users,
     message   varchar(512)                                                                 not null,
-    reply     varchar(512)
+    reply     varchar(512),
+    inquiryDate timestamp default CURRENT_TIMESTAMP
     );
 
 create table if not exists products_users_requests
