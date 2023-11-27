@@ -358,70 +358,146 @@
 
 
 <div id="request-dialog" class="dialog" style="display: none" >
-  <div class="dialog-content marketplace" >
-    <div class="dialog-header">
-      <div class="dialog-svg">
-        <svg width="282" height="148" viewBox="0 0 282 148" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <g filter="url(#filter0_d_0_1)">
-            <path d="M166 81C166 75.4771 170.477 71 176 71H266C271.523 71 276 75.4772 276 81V116.265C276 121.788 271.523 126.265 266 126.265H264.094C261.659 126.265 259.466 127.737 258.543 129.99L255.703 136.919C254.674 139.43 251.497 140.21 249.423 138.461L249.069 138.162L238.238 128.725C236.417 127.139 234.083 126.265 231.669 126.265H176C170.477 126.265 166 121.788 166 116.265V81Z" fill="#7D7AE3"></path>
-          </g>
-          <g filter="url(#filter1_d_0_1)">
-            <path d="M221 14C221 8.47715 216.523 4 211 4H16C10.4772 4 6 8.47715 6 14V97.5243C6 103.047 10.4772 107.524 16 107.524H33.178C35.58 107.524 37.7505 108.957 38.6948 111.165L45.2444 126.483C47.5005 131.759 54.1745 133.418 58.6379 129.811V129.811L82.5442 109.848C84.3425 108.347 86.6109 107.524 88.9537 107.524H211C216.523 107.524 221 103.047 221 97.5243V14Z" fill="#7D7AE3"></path>
-          </g>
-          <defs>
-            <filter id="filter0_d_0_1" x="160" y="67" width="122" height="80.4038" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-              <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
-              <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix>
-              <feOffset dy="2"></feOffset>
-              <feGaussianBlur stdDeviation="3"></feGaussianBlur>
-              <feComposite in2="hardAlpha" operator="out"></feComposite>
-              <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"></feColorMatrix>
-              <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"></feBlend>
-              <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"></feBlend>
-            </filter>
-            <filter id="filter1_d_0_1" x="0" y="0" width="227" height="139.736" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-              <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
-              <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix>
-              <feOffset dy="2"></feOffset>
-              <feGaussianBlur stdDeviation="3"></feGaussianBlur>
-              <feComposite in2="hardAlpha" operator="out"></feComposite>
-              <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"></feColorMatrix>
-              <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"></feBlend>
-              <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"></feBlend>
-            </filter>
-          </defs>
-        </svg>
 
-      </div>
+    <c:choose>
+      <c:when test="${empty loggedUser.phoneNumber}">
+        <div class="dialog-content marketplace" >
+        <div class="dialog-header">
+          <div class="dialog-svg">
+            <svg width="282" height="148" viewBox="0 0 282 148" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g filter="url(#filter0_d_0_1)">
+                <path d="M166 81C166 75.4771 170.477 71 176 71H266C271.523 71 276 75.4772 276 81V116.265C276 121.788 271.523 126.265 266 126.265H264.094C261.659 126.265 259.466 127.737 258.543 129.99L255.703 136.919C254.674 139.43 251.497 140.21 249.423 138.461L249.069 138.162L238.238 128.725C236.417 127.139 234.083 126.265 231.669 126.265H176C170.477 126.265 166 121.788 166 116.265V81Z" fill="#7D7AE3"></path>
+              </g>
+              <g filter="url(#filter1_d_0_1)">
+                <path d="M221 14C221 8.47715 216.523 4 211 4H16C10.4772 4 6 8.47715 6 14V97.5243C6 103.047 10.4772 107.524 16 107.524H33.178C35.58 107.524 37.7505 108.957 38.6948 111.165L45.2444 126.483C47.5005 131.759 54.1745 133.418 58.6379 129.811V129.811L82.5442 109.848C84.3425 108.347 86.6109 107.524 88.9537 107.524H211C216.523 107.524 221 103.047 221 97.5243V14Z" fill="#7D7AE3"></path>
+              </g>
+              <defs>
+                <filter id="filter0_d_0_1" x="160" y="67" width="122" height="80.4038" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix>
+                  <feOffset dy="2"></feOffset>
+                  <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+                  <feComposite in2="hardAlpha" operator="out"></feComposite>
+                  <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"></feColorMatrix>
+                  <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"></feBlend>
+                  <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"></feBlend>
+                </filter>
+                <filter id="filter1_d_0_1" x="0" y="0" width="227" height="139.736" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix>
+                  <feOffset dy="2"></feOffset>
+                  <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+                  <feComposite in2="hardAlpha" operator="out"></feComposite>
+                  <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"></feColorMatrix>
+                  <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"></feBlend>
+                  <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"></feBlend>
+                </filter>
+              </defs>
+            </svg>
 
-      <div class="boxy p-2" id="boxy">
-        <div style="position: relative; color:var(--always-background)" class="f-c-s-s g-05">
-          <h3 class="font-size-20 font-weight-bold" ><spring:message code="Request"/></h3>
-          <p style="text-align: start" class="font-weight-normal">
-            <spring:message code="Request.buy.message"/>
-          </p>
+          </div>
+
+          <div class="boxy-first p-2" id="boxy-first">
+            <div style="position: relative; color:var(--always-background)" class="f-c-s-s g-05">
+              <h3 class="font-size-20 font-weight-bold" ><spring:message code="Request"/></h3>
+              <p style="text-align: start" class="font-weight-normal">
+                <spring:message code="Request.buy.message"/>
+              </p>
+            </div>
+
+          </div>
+          <a class="close-button marketplace" onclick="closeRequestDialog()">
+            <i class="fas fa-close"></i>
+          </a>
         </div>
+        <spring:message code="Message" var="messagePlaceholder"/>
 
-      </div>
-      <a class="close-button marketplace" onclick="closeRequestDialog()">
-        <i class="fas fa-close"></i>
-      </a>
-    </div>
-    <form:form class="f-c-c-c w-100" id="requestForm" name="requestForm" method="post" action="${contextPath}/marketplace/products/${product.department.department.departmentUrl}/${product.productId}/request" modelAttribute="requestForm" enctype="multipart/form-data">
+        <form:form class="f-c-c-c w-100" id="phoneRequestForm" name="phoneRequestForm" method="post" action="${contextPath}/marketplace/products/${product.department.department.departmentUrl}/${product.productId}/first-request" modelAttribute="phoneRequestForm" enctype="multipart/form-data">
+
         <div class="form-group w-75" >
-          <c:set var="messagePlaceholder">
-            <spring:message code="Message"/>
-          </c:set>
-          <form:textarea  path="requestMessage" class="cool-input marketplace-input textarea-min-max" id="request-message" name="message" rows="5" placeholder="${messagePlaceholder}"/>
-          <form:errors path="requestMessage" cssClass="error" element="p" cssStyle="padding-left: 5px"/>
+            <c:set  var="phoneNumberPlaceholder">
+                <spring:message code="PhoneNumber"/>  (<spring:message code="eg"/> +54 9 11 1234 5678)
+            </c:set>
+            <form:input path="phoneNumber" type="text" class="cool-input marketplace-input background" placeholder="${phoneNumberPlaceholder}"/>
+            <form:textarea path="phoneRequestMessage" class="cool-input marketplace-input textarea-min-max" id="request-message" name="message" rows="5" placeholder="${messagePlaceholder}"/>
+            <form:errors path="phoneRequestMessage" cssClass="error" element="p" cssStyle="padding-left: 5px"/>
+          </div>
+          <button type="submit" onclick="document.getElementById('loader-container').style.display = 'flex';" class=" w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
+            <spring:message code="Send"/>
+          </button>
+      </div>
+        </form:form>
+      </c:when>
+      <c:otherwise>
+        <div class="dialog-content marketplace" >
+        <div class="dialog-header">
+          <div class="dialog-svg">
+            <svg width="282" height="148" viewBox="0 0 282 148" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g filter="url(#filter0_d_0_1)">
+                <path d="M166 81C166 75.4771 170.477 71 176 71H266C271.523 71 276 75.4772 276 81V116.265C276 121.788 271.523 126.265 266 126.265H264.094C261.659 126.265 259.466 127.737 258.543 129.99L255.703 136.919C254.674 139.43 251.497 140.21 249.423 138.461L249.069 138.162L238.238 128.725C236.417 127.139 234.083 126.265 231.669 126.265H176C170.477 126.265 166 121.788 166 116.265V81Z" fill="#7D7AE3"></path>
+              </g>
+              <g filter="url(#filter1_d_0_1)">
+                <path d="M221 14C221 8.47715 216.523 4 211 4H16C10.4772 4 6 8.47715 6 14V97.5243C6 103.047 10.4772 107.524 16 107.524H33.178C35.58 107.524 37.7505 108.957 38.6948 111.165L45.2444 126.483C47.5005 131.759 54.1745 133.418 58.6379 129.811V129.811L82.5442 109.848C84.3425 108.347 86.6109 107.524 88.9537 107.524H211C216.523 107.524 221 103.047 221 97.5243V14Z" fill="#7D7AE3"></path>
+              </g>
+              <defs>
+                <filter id="filter0_d_0_1" x="160" y="67" width="122" height="80.4038" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix>
+                  <feOffset dy="2"></feOffset>
+                  <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+                  <feComposite in2="hardAlpha" operator="out"></feComposite>
+                  <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"></feColorMatrix>
+                  <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"></feBlend>
+                  <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"></feBlend>
+                </filter>
+                <filter id="filter1_d_0_1" x="0" y="0" width="227" height="139.736" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"></feColorMatrix>
+                  <feOffset dy="2"></feOffset>
+                  <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+                  <feComposite in2="hardAlpha" operator="out"></feComposite>
+                  <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"></feColorMatrix>
+                  <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"></feBlend>
+                  <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"></feBlend>
+                </filter>
+              </defs>
+            </svg>
+
+          </div>
+
+          <div class="boxy p-2" id="boxy">
+            <div style="position: relative; color:var(--always-background)" class="f-c-s-s g-05">
+              <h3 class="font-size-20 font-weight-bold" ><spring:message code="Request"/></h3>
+              <p style="text-align: start" class="font-weight-normal">
+                <spring:message code="Request.buy.message"/>
+              </p>
+            </div>
+
+          </div>
+          <a class="close-button marketplace" onclick="closeRequestDialog()">
+            <i class="fas fa-close"></i>
+          </a>
         </div>
-        <button type="submit"  onclick="document.getElementById('loader-container').style.display = 'flex';" class=" w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
-          <spring:message code="Send"/>
-        </button>
+        <spring:message code="Message" var="messagePlaceholder"/>
 
-    </form:form>
+        <form:form class="f-c-c-c w-100" id="requestForm" name="requestForm" method="post" action="${contextPath}/marketplace/products/${product.department.department.departmentUrl}/${product.productId}/request" modelAttribute="requestForm" enctype="multipart/form-data">
+          <div class="form-group w-75" >
 
-  </div>
+            <form:textarea  path="requestMessage" class="cool-input marketplace-input textarea-min-max" id="request-message" name="message" rows="5" placeholder="${messagePlaceholder}"/>
+            <form:errors path="requestMessage" cssClass="error" element="p" cssStyle="padding-left: 5px"/>
+          </div>
+          <button type="submit"  onclick="document.getElementById('loader-container').style.display = 'flex';" class=" w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
+            <spring:message code="Send"/>
+          </button>
+</div>
+
+        </form:form>
+      </c:otherwise>
+    </c:choose>
+
+
+
+
 </div>
 
 <div id="loader-container" class="loader-container ">

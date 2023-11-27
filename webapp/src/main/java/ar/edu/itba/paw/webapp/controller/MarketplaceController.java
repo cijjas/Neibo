@@ -103,7 +103,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         mav.addObject("page", page);
         mav.addObject("totalPages", prs.getProductsBoughtTotalPages(getLoggedUser().getUserId(), size));
         mav.addObject("contextPath", "/marketplace/currently-requesting");
-        mav.addObject("requestList", getLoggedUser().getRequestedProducts());
+        mav.addObject("requestList", rqs.getRequestsByUserId(getLoggedUser().getUserId(), page, size));
         return mav;
     }
 
@@ -262,7 +262,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
             return product(productId, department, requestForm, new QuestionForm(), new ReplyForm(), phoneRequestForm, true, 1, 10);
         }
         us.updatePhoneNumber(getLoggedUser().getUserId(), phoneRequestForm.getPhoneNumber());
-        rqs.createRequest(getLoggedUser().getUserId(), productId, requestForm.getRequestMessage());
+        rqs.createRequest(getLoggedUser().getUserId(), productId, phoneRequestForm.getPhoneRequestMessage());
         return new ModelAndView("redirect:/marketplace/products/" + department + "/" + productId);
     }
 

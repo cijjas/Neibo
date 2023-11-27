@@ -55,9 +55,15 @@ public class RequestServiceImpl implements RequestService {
         return requestDao.getRequestsCountByProductId(productId);
     }
 
+
     @Override
     public List<Request> getRequestsByProductAndUser(long productId, long userId, int page, int size) {
         return requestDao.getRequestsByProductAndUser(productId, userId, page, size);
+    }
+
+    @Override
+    public List<Request> getRequestsByUserId(long userId, int page, int size) {
+        return requestDao.getRequestsByUserId(userId, page, size);
     }
 
     @Override

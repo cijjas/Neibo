@@ -2,6 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <html>
 <head>
@@ -17,7 +18,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title><spring:message code="My.listings"/></title>
+    <title><spring:message code="Currently.requesting"/></title>
 </head>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" scope="page" />
 <c:set var="channel" value="${channel}" scope="page" />
@@ -70,22 +71,30 @@
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <c:forEach var="product" items="${requestList}">
+                        <c:forEach var="request" items="${requestList}">
                             <div class="cool-static-container w-100 f-c-s-s g-0 p-0 mb-2">
+                                <div class="f-r-sb-c w-100 pl-3  pr-3 pb-0 pt-2">
+                                    <fmt:formatDate value="${request.requestDate}" pattern="dd MMM yyyy" var="formattedDate" />
+                                    <fmt:formatDate value="${request.requestDate}" pattern="HH:mm" var="formattedTime" />
+
+                                    <div><c:out value="${formattedDate}" /></div>
+                                    <div><c:out value="${formattedTime}" /></div>
+                                </div>
+                                <div class="divider"></div>
                                 <div class="container">
                                     <div class="f-r-c-c w-100 g-1">
                                         <div class="pl-0">
                                             <div class="purchased-product-image f-c-c-c placeholder-glow">
                                                 <img
-                                                        id="purchased-product-image-${product.productId}"
+                                                        id="purchased-product-image-${request.requestId}"
                                                         src=""
                                                         class="placeholder"
-                                                        alt="purchased_product_image_${product.productId}"
+                                                        alt="purchased_product_image_${request.product.productId}"
                                                 />
                                                 <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
                                                 <script>
                                                     (function () {
-                                                        getImageInto("purchased-product-image-${product.productId}",${empty product.primaryPicture.imageId ? -2 : product.primaryPicture.imageId}, "${pageContext.request.contextPath}")
+                                                        getImageInto("purchased-product-image-${request.requestId}",${empty request.product.primaryPicture.imageId ? -2 : request.product.primaryPicture.imageId}, "${pageContext.request.contextPath}")
                                                     })();
                                                 </script>
                                             </div>
@@ -95,14 +104,14 @@
                                         <div class="f-c-s-s  w-100 p-4">
                                             <div class="f-r-sb-c g-0 w-100">
                                                     <span class="font-weight-bold font-size-16">
-                                                        <c:out value="${product.name}"/>
+                                                        <c:out value="${request.product.name}"/>
                                                     </span>
                                                 <div class="f-r-c-c g-05">
                                                     <div class="department-tag" onclick='window.location.href = "${contextPath}/marketplace/products/${product.department.department.departmentUrl}" '>
-                                                        <spring:message code="${product.department.department}"/>
+                                                        <spring:message code="${request.product.department.department}"/>
                                                     </div>
                                                     <c:choose>
-                                                        <c:when test="${product.used}">
+                                                        <c:when test="${request.product.used}">
                                                             <div class="used-tag used font-weight-normal">
                                                                 <spring:message code="Used"/>
                                                             </div>
@@ -121,19 +130,18 @@
                                             <div class="f-r-sb-c w-100">
                                                 <div class="f-r-c-c g-0">
                                                        <span class="price font-size-20 font-weight-normal">
-                                                            <c:out value="${product.priceIntegerString}"/>
+                                                            <c:out value="${request.product.priceIntegerString}"/>
                                                        </span>
                                                     <div class="f-c-s-c pl-1" style="height: 20px">
                                                            <span class="cents c-light-text font-size-12 font-weight-normal">
-                                                                <c:out value="${product.priceDecimalString}"/>
+                                                                <c:out value="${request.product.priceDecimalString}"/>
                                                            </span>
                                                     </div>
                                                 </div>
-                                                <div class="f-r-e-c g-05 w-25">
-                                                    <a href="${contextPath}/marketplace/products/${product.department.department.departmentUrl}/${product.productId}" class="cool-button small-a marketplace-button w-50 font-weight-bold">
+                                                    <a href="${contextPath}/marketplace/products/${request.product.department.department.departmentUrl}/${request.product.productId}" class="cool-button small-a marketplace-button font-weight-bold" >
+                                                        <i class="fa-solid fa-arrow-right-to-bracket pr-1"></i>
                                                         <spring:message code="View.listing"/>
                                                     </a>
-                                                </div>
                                             </div>
 
                                         </div>
