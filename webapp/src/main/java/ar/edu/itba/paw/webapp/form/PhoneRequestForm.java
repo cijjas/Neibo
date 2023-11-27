@@ -20,7 +20,7 @@ public class PhoneRequestForm {
         return phoneRequestMessage;
     }
 
-    public void setPhoneRequestMessage(String requestMessage) {
+    public void setPhoneRequestMessage(String phoneRequestMessage) {
         this.phoneRequestMessage = phoneRequestMessage;
     }
 
