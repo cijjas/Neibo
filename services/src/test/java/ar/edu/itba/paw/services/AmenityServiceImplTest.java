@@ -1,7 +1,10 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
+import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
+import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.*;
 import ar.edu.itba.paw.services.email.EmailServiceImpl;
 import org.junit.Assert;
@@ -12,10 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -28,12 +28,20 @@ public class AmenityServiceImplTest {
     private static final String NAME = "Pileta";
     private static final String DESCRIPTION = "Pileta de natación";
     private static final Long NEIGHBORHOOD_ID = 1L;
+    private static final Long SHIFT_ID = 1L;
+    private static final String SHIFT_STRING = "1-1";
     private Neighborhood mockNeighborhood;
 
     @Mock
     private EmailService es;
     @Mock
+    private UserService us;
+    @Mock
     private AmenityDao amenityDao;
+    @Mock
+    private ShiftDao shiftDao;
+    @Mock
+    private AvailabilityDao availabilityDao;
     @InjectMocks
     private AmenityServiceImpl as;
 
@@ -45,7 +53,6 @@ public class AmenityServiceImplTest {
     @Test
     public void testCreate() {
         // 1. Preconditions
-        /*when(es.sendNewAmenityMail(anyLong(), anyString(), anyString(), anyList()));
         when(amenityDao.createAmenity(anyString(), anyString(), anyLong())).thenReturn(new Amenity.Builder()
                 .amenityId(ID)
                 .name(NAME)
@@ -54,14 +61,30 @@ public class AmenityServiceImplTest {
                 .build()
         );
 
+        when(shiftDao.findShiftId(anyLong(), anyLong())).thenReturn(Optional.empty());
+
+        when(shiftDao.createShift(anyLong(), anyLong())).thenReturn(new Shift.Builder()
+                .shiftId(SHIFT_ID)
+                .build()
+        );
+
+        when(availabilityDao.createAvailability(anyLong(), anyLong())).thenReturn(new Availability.Builder()
+                .amenityAvailabilityId(ID)
+                .build()
+        );
+
+        when(us.getNeighbors(anyLong())).thenReturn(new ArrayList<>());
+
+        ArrayList<String> shiftArray = new ArrayList<>(Arrays.asList(SHIFT_STRING));
+
         // 2. Exercise
-        Amenity newAmenity = as.createAmenity(NAME, DESCRIPTION, NEIGHBORHOOD_ID, new ArrayList<>());
+        Amenity newAmenity = as.createAmenity(NAME, DESCRIPTION, NEIGHBORHOOD_ID, shiftArray);
 
         // 3. Postconditions
         Assert.assertNotNull(newAmenity);
         Assert.assertEquals(newAmenity.getAmenityId(), ID);
         Assert.assertEquals(newAmenity.getName(), NAME);
-        Assert.assertEquals(newAmenity.getDescription(), DESCRIPTION);*/
+        Assert.assertEquals(newAmenity.getDescription(), DESCRIPTION);
     }
 
     @Test(expected = RuntimeException.class)

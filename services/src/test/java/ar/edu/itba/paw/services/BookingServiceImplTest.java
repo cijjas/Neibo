@@ -3,6 +3,10 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.models.Entities.Booking;
+import ar.edu.itba.paw.models.GroupedBooking;
+import ar.edu.itba.paw.models.Entities.Amenity;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,8 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalLong;
 
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class) // Le decimos a JUnit que corra los tests con el runner de Mockito
 public class BookingServiceImplTest {
@@ -46,10 +49,10 @@ public class BookingServiceImplTest {
     private static final String AMENITY_NAME_4 = "Wrestling pit";
     private static final Time START_TIME_4 = new Time(13, 0, 0);
     private static final Date BOOKING_DATE_4 = new Date(2021, 9, 12);
-    private static String DAY_NAME = "Monday";
-    private static String DAY_NAME_2 = "Monday";
-    private static String DAY_NAME_3 = "Monday";
-    private static String DAY_NAME_4 = "Tuesday";
+    private static final long BOOKING_ID = 1;
+    private static final long BOOKING_ID_2 = 2;
+    private static final long BOOKING_ID_3 = 3;
+    private static final long BOOKING_ID_4 = 4;
     private Booking mockBooking1;
     private Booking mockBooking2;
     private Booking mockBooking3;
@@ -61,16 +64,30 @@ public class BookingServiceImplTest {
     @InjectMocks
     private BookingServiceImpl bs;
 
+    @Before
+    public void setUp() {
+        mockBooking1 = mock(Booking.class);
+        mockBooking2 = mock(Booking.class);
+        mockBooking3 = mock(Booking.class);
+        mockBooking4 = mock(Booking.class);
+
+        when(mockBooking1.getBookingId()).thenReturn(BOOKING_ID);
+
+        when(mockBooking2.getBookingId()).thenReturn(BOOKING_ID_2);
+
+        when(mockBooking3.getBookingId()).thenReturn(BOOKING_ID_3);
+    }
+
     @Test
     public void testCreate() {
-        /*// 1. Preconditions
+        // 1. Preconditions
         when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
         when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_2)).thenReturn(OptionalLong.of(AVAILABILITY_ID_2));
         when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_3)).thenReturn(OptionalLong.of(AVAILABILITY_ID_3));
 
-        when(bookingDao.createBooking(eq(USER_ID), eq(AVAILABILITY_ID_1), eq(BOOKING_DATE))).thenReturn(ID);
-        when(bookingDao.createBooking(eq(USER_ID), eq(AVAILABILITY_ID_2), eq(BOOKING_DATE))).thenReturn(ID_2);
-        when(bookingDao.createBooking(eq(USER_ID), eq(AVAILABILITY_ID_3), eq(BOOKING_DATE))).thenReturn(ID_3);
+        when(bookingDao.createBooking(eq(USER_ID), eq(AVAILABILITY_ID_1), eq(BOOKING_DATE))).thenReturn(mockBooking1);
+        when(bookingDao.createBooking(eq(USER_ID), eq(AVAILABILITY_ID_2), eq(BOOKING_DATE))).thenReturn(mockBooking2);
+        when(bookingDao.createBooking(eq(USER_ID), eq(AVAILABILITY_ID_3), eq(BOOKING_DATE))).thenReturn(mockBooking3);
 
         List<Long> shiftIds = new ArrayList<>();
         shiftIds.add(SHIFT_ID_1);
@@ -85,7 +102,7 @@ public class BookingServiceImplTest {
         Assert.assertEquals(bookingIds.length, 3);
         Assert.assertEquals(bookingIds[0], ID);
         Assert.assertEquals(bookingIds[1], ID_2);
-        Assert.assertEquals(bookingIds[2], ID_3);*/
+        Assert.assertEquals(bookingIds[2], ID_3);
 
     }
 
@@ -104,65 +121,4 @@ public class BookingServiceImplTest {
         // 3. Postconditions
     }
 
-    /*@Test
-    public void testGetUserBookings() {
-        // 1. Preconditions
-        mockBooking1 = mock(Booking.class);
-        mockBooking2 = mock(Booking.class);
-        mockBooking3 = mock(Booking.class);
-        mockBooking4 = mock(Booking.class);
-
-        List<Booking> bookings = new ArrayList<>();
-        bookings.add(mockBooking1);
-        bookings.add(mockBooking2);
-        bookings.add(mockBooking3);
-        bookings.add(mockBooking4);
-
-        when(mockBooking1.getAmenityName()).thenReturn(AMENITY_NAME);
-        when(mockBooking1.getBookingDate()).thenReturn(BOOKING_DATE);
-        when(mockBooking1.getDayName()).thenReturn(DAY_NAME);
-        when(mockBooking1.getStartTime()).thenReturn(START_TIME);
-
-        when(mockBooking2.getAmenityName()).thenReturn(AMENITY_NAME_2);
-        when(mockBooking2.getBookingDate()).thenReturn(BOOKING_DATE_2);
-        when(mockBooking2.getDayName()).thenReturn(DAY_NAME_2);
-        when(mockBooking2.getStartTime()).thenReturn(START_TIME_2);
-
-        when(mockBooking3.getAmenityName()).thenReturn(AMENITY_NAME_3);
-        when(mockBooking3.getBookingDate()).thenReturn(BOOKING_DATE_3);
-        when(mockBooking3.getDayName()).thenReturn(DAY_NAME_3);
-        when(mockBooking3.getStartTime()).thenReturn(START_TIME_3);
-
-        when(mockBooking4.getAmenityName()).thenReturn(AMENITY_NAME_4);
-        when(mockBooking4.getBookingDate()).thenReturn(BOOKING_DATE_4);
-        when(mockBooking4.getDayName()).thenReturn(DAY_NAME_4);
-        when(mockBooking4.getStartTime()).thenReturn(START_TIME_4);
-
-        when(bookingDao.getUserBookings(USER_ID)).thenReturn(bookings);
-
-        // 2. Exercise
-        List<GroupedBooking> groupedBookings = bs.getUserBookings(USER_ID);
-
-        // 3. Postconditions
-        Assert.assertEquals(groupedBookings.size(), 3);
-        Assert.assertEquals(groupedBookings.get(0).getAmenityName(), AMENITY_NAME);
-        Assert.assertEquals(groupedBookings.get(0).getDate(), BOOKING_DATE);
-        Assert.assertEquals(groupedBookings.get(0).getDay(), DAY_NAME);
-        Assert.assertEquals(groupedBookings.get(0).getStartTime(), START_TIME);
-        Assert.assertEquals(groupedBookings.get(0).getEndTime(), new Time(12, 0, 0));
-
-        Assert.assertEquals(groupedBookings.get(1).getAmenityName(), AMENITY_NAME_3);
-        Assert.assertEquals(groupedBookings.get(1).getDate(), BOOKING_DATE_3);
-        Assert.assertEquals(groupedBookings.get(1).getDay(), DAY_NAME_3);
-        Assert.assertEquals(groupedBookings.get(1).getStartTime(), START_TIME_3);
-        Assert.assertEquals(groupedBookings.get(1).getEndTime(), new Time(13, 0, 0));
-
-        Assert.assertEquals(groupedBookings.get(2).getAmenityName(), AMENITY_NAME_4);
-        Assert.assertEquals(groupedBookings.get(2).getDate(), BOOKING_DATE_4);
-        Assert.assertEquals(groupedBookings.get(2).getDay(), DAY_NAME_4);
-        Assert.assertEquals(groupedBookings.get(2).getStartTime(), START_TIME_4);
-        Assert.assertEquals(groupedBookings.get(2).getEndTime(), new Time(14, 0, 0));
-
-    }
-*/
 }
