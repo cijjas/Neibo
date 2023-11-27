@@ -2,6 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <html>
 <head>
@@ -17,7 +18,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title><spring:message code="My.listings"/></title>
+    <title><spring:message code="My.requests"/> - <c:out value="${product.name}"/></title>
 </head>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" scope="page" />
 <c:set var="channel" value="${channel}" scope="page" />
@@ -97,7 +98,12 @@
                                             <div>
                                                 <spring:message code="Request.date"/>:
                                                 <span style="color: var(--lila)">
-                                                    <c:out value="${request.requestDate}"/>
+                                                    <fmt:formatDate value="${request.requestDate}" pattern="dd MMM yyyy" var="formattedDate" />
+                                                    <fmt:formatDate value="${request.requestDate}" pattern="HH:mm" var="formattedTime" />
+
+                                                    <c:out value="${formattedDate}" />
+                                                    -
+                                                    <c:out value="${formattedTime}" />
                                                 </span>
                                             </div>
                                         </div>

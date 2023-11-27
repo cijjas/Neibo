@@ -2,6 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <html>
 <head>
@@ -17,7 +18,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title><spring:message code="My.listings"/></title>
+    <title><spring:message code="Currently.requesting"/></title>
 </head>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" scope="page" />
 <c:set var="channel" value="${channel}" scope="page" />
@@ -72,8 +73,12 @@
                     <c:otherwise>
                         <c:forEach var="request" items="${requestList}">
                             <div class="cool-static-container w-100 f-c-s-s g-0 p-0 mb-2">
-                                <div class="p-2 pl-3">
-                                    <c:out value="${request.requestDate}"/>
+                                <div class="f-r-sb-c w-100 pl-3  pr-3 pb-0 pt-2">
+                                    <fmt:formatDate value="${request.requestDate}" pattern="dd MMM yyyy" var="formattedDate" />
+                                    <fmt:formatDate value="${request.requestDate}" pattern="HH:mm" var="formattedTime" />
+
+                                    <div><c:out value="${formattedDate}" /></div>
+                                    <div><c:out value="${formattedTime}" /></div>
                                 </div>
                                 <div class="divider"></div>
                                 <div class="container">
@@ -133,11 +138,10 @@
                                                            </span>
                                                     </div>
                                                 </div>
-                                                <div class="f-r-e-c g-05 w-25">
-                                                    <a href="${contextPath}/marketplace/products/${request.product.department.department.departmentUrl}/${request.product.productId}" class="cool-button small-a marketplace-button w-50 font-weight-bold">
+                                                    <a href="${contextPath}/marketplace/products/${request.product.department.department.departmentUrl}/${request.product.productId}" class="cool-button small-a marketplace-button font-weight-bold" >
+                                                        <i class="fa-solid fa-arrow-right-to-bracket pr-1"></i>
                                                         <spring:message code="View.listing"/>
                                                     </a>
-                                                </div>
                                             </div>
 
                                         </div>

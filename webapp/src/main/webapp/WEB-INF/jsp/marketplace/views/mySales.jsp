@@ -2,6 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <html>
 <head>
@@ -17,7 +18,7 @@
     <link href="${pageContext.request.contextPath}/resources/css/commons.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/calendarWidget.css" rel="stylesheet"/>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/logo.ico">
-    <title><spring:message code="My.listings"/></title>
+    <title><spring:message code="My.sales"/></title>
 </head>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" scope="page" />
 <c:set var="channel" value="${channel}" scope="page" />
@@ -73,8 +74,12 @@
                             <c:forEach var="purchase" items="${purchases}">
 
                                 <div class="cool-static-container w-100 f-c-s-s g-0 p-0">
-                                    <div class="p-2 pl-3">
-                                        <c:out value="${purchase.purchaseDate}"/>
+                                    <div class="f-r-sb-c w-100 pl-3  pr-3 pb-2 pt-2">
+                                        <fmt:formatDate value="${purchase.purchaseDate}" pattern="dd MMM yyyy" var="formattedDate" />
+                                        <fmt:formatDate value="${purchase.purchaseDate}" pattern="HH:mm" var="formattedTime" />
+
+                                        <div><c:out value="${formattedDate}" /></div>
+                                        <div><c:out value="${formattedTime}" /></div>
                                     </div>
                                     <div class="divider m-0"></div>
                                     <div class="container">
@@ -101,18 +106,23 @@
                                                     <span class="font-weight-bold font-size-16">
                                                         <c:out value="${purchase.product.name}"/>
                                                     </span>
-                                                    <c:choose>
-                                                        <c:when test="${purchase.product.used}">
-                                                            <div class="used-tag used font-weight-normal">
-                                                                <spring:message code="Used"/>
-                                                            </div>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <div class="used-tag new font-weight-normal">
-                                                                <spring:message code="New"/>
-                                                            </div>
-                                                        </c:otherwise>
-                                                    </c:choose>
+                                                    <div class="f-r-c-c g-05">
+                                                        <div class="department-tag" onclick='window.location.href = "${contextPath}/marketplace/products/${purchase.product.department.department.departmentUrl}" '>
+                                                            <spring:message code="${purchase.product.department.department}"/>
+                                                        </div>
+                                                        <c:choose>
+                                                            <c:when test="${purchase.product.used}">
+                                                                <div class="used-tag used font-weight-normal">
+                                                                    <spring:message code="Used"/>
+                                                                </div>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <div class="used-tag new font-weight-normal">
+                                                                    <spring:message code="New"/>
+                                                                </div>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </div>
 
                                                 </div>
                                                 <div class="f-r-c-c font-weight-normal ">
