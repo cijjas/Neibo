@@ -5,7 +5,7 @@ import ar.edu.itba.paw.models.MainEntities.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -28,6 +28,7 @@ public class Request implements Serializable {
     private String message;
 
     @Column(name = "requestdate")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date requestDate;
 
     @Column(name = "fulfilled")
