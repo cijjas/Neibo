@@ -8,6 +8,7 @@ import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.User;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,6 +45,7 @@ public class UserServiceImplTest {
     EmailService emailService;
     @Mock
     NeighborhoodService neighborhoodService;
+    @Mock
     private Neighborhood mockNeighborhood;
     @Mock
     private UserDao userDao;
@@ -58,18 +60,17 @@ public class UserServiceImplTest {
 
     @Test
     public void testCreate() {
-        /*// 1. Preconditions
+        // 1. Preconditions
         when(userDao.createUser(anyString(), any(), anyString(), anyString(), anyLong(), any(), anyBoolean(), any(), anyInt())).thenReturn(new User.Builder()
                 .userId(ID)
                 .mail(EMAIL)
                 .name(NAME)
                 .surname(SURNAME)
                 .password(PASSWORD)
-                .neighborhoodId(NEIGHBORHOOD_ID)
+                .neighborhood(mockNeighborhood)
                 .darkMode(DARK_MODE)
                 .language(LANGUAGE)
                 .role(ROLE)
-                .creationDate(CREATION_DATE)
                 .identification(IDENTIFICATION)
                 .build()
         );
@@ -86,8 +87,7 @@ public class UserServiceImplTest {
         Assert.assertEquals(newUser.getLanguage(), LANGUAGE);
         Assert.assertEquals(newUser.isDarkMode(), DARK_MODE);
         Assert.assertEquals(newUser.getRole(), ROLE);
-        Assert.assertEquals(newUser.getCreationDate(), CREATION_DATE);
-        Assert.assertEquals(newUser.getIdentification(), IDENTIFICATION);*/
+        Assert.assertEquals(newUser.getIdentification().longValue(), IDENTIFICATION);
 
     }
 

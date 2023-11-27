@@ -1,15 +1,26 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
-import ar.edu.itba.paw.models.Entities.Amenity;
+import ar.edu.itba.paw.interfaces.services.EmailService;
+import ar.edu.itba.paw.models.Entities.*;
+import ar.edu.itba.paw.services.email.EmailServiceImpl;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.when;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AmenityServiceImplTest {
@@ -17,20 +28,29 @@ public class AmenityServiceImplTest {
     private static final String NAME = "Pileta";
     private static final String DESCRIPTION = "Pileta de natación";
     private static final Long NEIGHBORHOOD_ID = 1L;
+    private Neighborhood mockNeighborhood;
 
+    @Mock
+    private EmailService es;
     @Mock
     private AmenityDao amenityDao;
     @InjectMocks
     private AmenityServiceImpl as;
 
+    @Before
+    public void setUp() {
+        mockNeighborhood = mock(Neighborhood.class);
+    }
+
     @Test
     public void testCreate() {
-       /* // 1. Preconditions
+        // 1. Preconditions
+        /*when(es.sendNewAmenityMail(anyLong(), anyString(), anyString(), anyList()));
         when(amenityDao.createAmenity(anyString(), anyString(), anyLong())).thenReturn(new Amenity.Builder()
                 .amenityId(ID)
                 .name(NAME)
                 .description(DESCRIPTION)
-                .neighborhoodId(NEIGHBORHOOD_ID)
+                .neighborhood(mockNeighborhood)
                 .build()
         );
 
@@ -39,11 +59,9 @@ public class AmenityServiceImplTest {
 
         // 3. Postconditions
         Assert.assertNotNull(newAmenity);
-        Assert.assertEquals(newAmenity.getNeighborhoodId(), ID);
+        Assert.assertEquals(newAmenity.getAmenityId(), ID);
         Assert.assertEquals(newAmenity.getName(), NAME);
-        Assert.assertEquals(newAmenity.getDescription(), DESCRIPTION);
-        Assert.assertEquals(newAmenity.getNeighborhoodId(), NEIGHBORHOOD_ID);
-*/
+        Assert.assertEquals(newAmenity.getDescription(), DESCRIPTION);*/
     }
 
     @Test(expected = RuntimeException.class)

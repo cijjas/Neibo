@@ -9,6 +9,7 @@ import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Shift;
+import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,9 @@ public class AmenityServiceImpl implements AmenityService {
             }
         }
 
-        emailService.sendNewAmenityMail(neighborhoodId, name, description, userService.getNeighbors(neighborhoodId));
+        List<User> userlist = userService.getNeighbors(neighborhoodId);
+
+        emailService.sendNewAmenityMail(neighborhoodId, name, description, userlist);
 
         return amenity;
     }
