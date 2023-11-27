@@ -323,6 +323,7 @@ CREATE TABLE IF NOT EXISTS products_users_inquiries (
                                                         productId INTEGER,
                                                         userId INTEGER,
                                                         message VARCHAR(512) NOT NULL,
+    inquiryDate DATE,
     reply VARCHAR(512),
     FOREIGN KEY (productId) REFERENCES products(productId) ON DELETE CASCADE,
     FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
