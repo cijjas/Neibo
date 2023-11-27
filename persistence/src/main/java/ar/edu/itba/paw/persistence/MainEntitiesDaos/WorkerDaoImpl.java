@@ -79,12 +79,12 @@ public class WorkerDaoImpl implements WorkerDao {
 
 
     @Override
-    public List<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus) {
+    public Set<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus) {
         LOGGER.debug("Selecting Workers from Neighborhoods {} with professions {}", neighborhoodIds, professions);
         StringBuilder query = new StringBuilder(USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
         if(neighborhoodIds.length == 0) {
-            return new ArrayList<>();
+            return new HashSet<>();
         }
 
         appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions, workerRole, workerStatus);
@@ -100,7 +100,7 @@ public class WorkerDaoImpl implements WorkerDao {
             sqlQuery.setParameter(i + 1, queryParams.get(i));
         }
 
-        return sqlQuery.getResultList();
+        return new HashSet<>(sqlQuery.getResultList());
     }
 
     @Override
