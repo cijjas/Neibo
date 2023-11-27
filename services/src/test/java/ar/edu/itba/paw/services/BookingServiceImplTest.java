@@ -63,8 +63,8 @@ public class BookingServiceImplTest {
 
     @Test
     public void testCreate() {
-        // 1. Preconditions
-        /*when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
+        /*// 1. Preconditions
+        when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
         when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_2)).thenReturn(OptionalLong.of(AVAILABILITY_ID_2));
         when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_3)).thenReturn(OptionalLong.of(AVAILABILITY_ID_3));
 

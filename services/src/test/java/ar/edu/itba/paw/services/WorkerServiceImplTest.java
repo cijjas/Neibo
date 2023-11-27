@@ -39,6 +39,7 @@ public class WorkerServiceImplTest {
     private final UserRole ROLE = UserRole.NEIGHBOR;
     private final Date CREATION_DATE = new Date(2023, 9, 11);
     private final String IDENTIFICATION = "123456789";
+    @Mock
     private User mockUser;
     @Mock
     private WorkerDao workerDao;
@@ -75,7 +76,7 @@ public class WorkerServiceImplTest {
         );
 
         // 2. Exercise
-        Worker newWorker = ws.createWorker(EMAIL, NAME, SURNAME, PASSWORD, IDENTIFICATION, PHONE_NUMBER, ADDRESS, LANGUAGE, new Long[]{Integer.toUnsignedLong(1)}, BUSINESS_NAME);
+        Worker newWorker = ws.createWorker(EMAIL, NAME, SURNAME, PASSWORD, IDENTIFICATION, PHONE_NUMBER, ADDRESS, LANGUAGE, new Long[]{1L}, BUSINESS_NAME);
 
         // 3. Postconditions
         Assert.assertNotNull(newWorker);

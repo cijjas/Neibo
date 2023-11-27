@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -17,14 +18,15 @@ public class Inquiry {
     @Column(name = "reply", length = 512)
     private String reply;
 
+    @Column(name = "inquirydate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date inquiryDate;
+
     @ManyToOne
-//    @MapsId("productId")
     @JoinColumn(name = "productid", referencedColumnName = "productid")
     private Product product;
 
     @ManyToOne
-//    @MapsId("userId")
-//    @JoinColumn(name = "userid")
     @JoinColumn(name = "userid", referencedColumnName = "userid")
     private User user;
 
@@ -36,6 +38,7 @@ public class Inquiry {
         this.product = builder.product;
         this.user = builder.user;
         this.message = builder.message;
+        this.inquiryDate = builder.inquiryDate;
     }
 
     public Long getInquiryId() {
@@ -78,6 +81,14 @@ public class Inquiry {
         this.reply = reply;
     }
 
+    public Date getInquiryDate() {
+        return inquiryDate;
+    }
+
+    public void setInquiryDate(Date inquiryDate) {
+        this.inquiryDate = inquiryDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -97,6 +108,8 @@ public class Inquiry {
         private User user;
         private String message;
 
+        private Date inquiryDate;
+
         public Inquiry.Builder inquiryId(Long inquiryId) {
             this.inquiryId = inquiryId;
             return this;
@@ -114,6 +127,11 @@ public class Inquiry {
 
         public Inquiry.Builder message(String message) {
             this.message = message;
+            return this;
+        }
+
+        public Inquiry.Builder inquiryDate(Date inquiryDate) {
+            this.inquiryDate = inquiryDate;
             return this;
         }
 

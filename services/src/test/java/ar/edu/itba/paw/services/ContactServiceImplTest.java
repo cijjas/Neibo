@@ -2,14 +2,21 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
 import ar.edu.itba.paw.models.Entities.Contact;
+import ar.edu.itba.paw.models.Entities.Neighborhood;
+import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.models.Entities.User;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.when;
+import java.util.Optional;
+
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class) // Le decimos a JUnit que corra los tests con el runner de Mockito
 public class ContactServiceImplTest {
@@ -20,19 +27,26 @@ public class ContactServiceImplTest {
     private static final long NEIGHBORHOOD_ID = 1;
     private static String PHONE = "1234567890";
     @Mock
+    private Neighborhood mockNeighborhood;
+    @Mock
     private ContactDao contactDao;
     @InjectMocks
     private ContactServiceImpl cs;
 
+    @Before
+    public void setUp() {
+        mockNeighborhood = mock(Neighborhood.class);
+    }
+
     @Test
     public void testCreate() {
-        /*// 1. Preconditions
+        // 1. Preconditions
         when(contactDao.createContact(anyLong(), anyString(), anyString(), anyString())).thenReturn(new Contact.Builder()
                 .contactId(ID)
                 .contactName(NAME)
                 .contactAddress(ADDRESS)
                 .contactPhone(PHONE)
-                .neighborhoodId(NEIGHBORHOOD_ID)
+                .neighborhood(mockNeighborhood)
                 .build()
         );
 
@@ -41,10 +55,9 @@ public class ContactServiceImplTest {
 
         // 3. Postconditions
         Assert.assertNotNull(newContact);
-        Assert.assertEquals(newContact.getNeighborhoodId().longValue(), NEIGHBORHOOD_ID);
         Assert.assertEquals(newContact.getContactName(), NAME);
         Assert.assertEquals(newContact.getContactAddress(), ADDRESS);
-        Assert.assertEquals(newContact.getContactPhone(), PHONE);*/
+        Assert.assertEquals(newContact.getContactPhone(), PHONE);
 
     }
 

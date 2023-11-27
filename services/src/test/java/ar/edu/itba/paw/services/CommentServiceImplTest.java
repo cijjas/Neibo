@@ -7,6 +7,7 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Comment;
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.models.Entities.User;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,13 +53,13 @@ public class CommentServiceImplTest {
 
     @Test
     public void testCreate() {
-        /*// 1. Preconditions
+        // 1. Preconditions
         when(commentDao.createComment(anyString(), anyLong(), anyLong())).thenReturn(new Comment.Builder()
                 .commentId(ID)
                 .comment(COMMENT)
                 .date(DATE)
                 .user(mockUser)
-                .postId(POST_ID)
+                .post(mockPost)
                 .build()
         );
 
@@ -69,10 +70,7 @@ public class CommentServiceImplTest {
         Assert.assertNotNull(newComment);
         Assert.assertEquals(newComment.getCommentId().longValue(), ID);
         Assert.assertEquals(newComment.getComment(), COMMENT);
-        Assert.assertEquals(newComment.getDate(), DATE);
         Assert.assertEquals(newComment.getUser(), mockUser);
-        Assert.assertEquals(newComment.getPostId().longValue(), POST_ID);*/
-
     }
 
     @Test(expected = RuntimeException.class)

@@ -187,6 +187,7 @@
               <script>
                 function openRequestDialog() {
                   const dialog = document.getElementById('request-dialog');
+                  console.log(dialog);
                   dialog.style.display = 'flex';
                 }
 
@@ -348,12 +349,15 @@
   document.addEventListener("DOMContentLoaded", function () {
     const requestError = ${requestError};
 
-
-    if(requestError){
-      document.getElementById('boxy').style.top = '27%';
+    if(requestError && ${empty loggedUser.phoneNumber}){
+        document.getElementById('boxy-first').style.top = '20%';
       openRequestDialog();
     }
+    else{
+      document.getElementById('boxy').style.top = '27%';
+    }
   });
+
 </script>
 
 
@@ -419,7 +423,9 @@
                 <spring:message code="PhoneNumber"/>  (<spring:message code="eg"/> +54 9 11 1234 5678)
             </c:set>
             <form:input path="phoneNumber" type="text" class="cool-input marketplace-input background" placeholder="${phoneNumberPlaceholder}"/>
-            <form:textarea path="phoneRequestMessage" class="cool-input marketplace-input textarea-min-max" id="request-message" name="message" rows="5" placeholder="${messagePlaceholder}"/>
+          <form:errors path="phoneNumber" cssClass="error" element="p" cssStyle="padding-left: 5px"/>
+
+          <form:textarea path="phoneRequestMessage" class="cool-input marketplace-input textarea-min-max" id="request-message" name="message" rows="5" placeholder="${messagePlaceholder}"/>
             <form:errors path="phoneRequestMessage" cssClass="error" element="p" cssStyle="padding-left: 5px"/>
           </div>
           <button type="submit" onclick="document.getElementById('loader-container').style.display = 'flex';" class=" w-75 cool-button marketplace-button pure filled-interesting square-radius font-size-14 font-weight-bold">
