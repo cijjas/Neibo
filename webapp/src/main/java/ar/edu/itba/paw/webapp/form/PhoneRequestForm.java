@@ -9,19 +9,19 @@ public class PhoneRequestForm {
 
     @NotBlank
     @Size(min = 0, max = 500)
-    private String requestMessage;
+    private String phoneRequestMessage;
 
     @NotBlank
     @Size(min = 0, max = 64)
     @Pattern(regexp = "^[0-9+\\- ]*")
     private String phoneNumber;
 
-    public String getRequestMessage() {
-        return requestMessage;
+    public String getPhoneRequestMessage() {
+        return phoneRequestMessage;
     }
 
-    public void setRequestMessage(String requestMessage) {
-        this.requestMessage = requestMessage;
+    public void setPhoneRequestMessage(String requestMessage) {
+        this.phoneRequestMessage = phoneRequestMessage;
     }
 
     public String getPhoneNumber() {
@@ -35,7 +35,7 @@ public class PhoneRequestForm {
     @Override
     public String toString() {
         return "PhoneRequestForm{" +
-                "requestMessage='" + requestMessage + '\'' +
+                "requestMessage='" + phoneRequestMessage + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
