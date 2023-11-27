@@ -132,10 +132,10 @@
                                                         </div>
                                                     </div>
                                                     <div class="f-r-c-c g-05 w-50">
-                                                        <a href="${contextPath}/marketplace/products/${product.department.department.departmentUrl}/${product.productId}" class="cool-button small-a marketplace-button w-50 font-weight-bold">
+                                                        <a href="${contextPath}/marketplace/products/${product.department.department.departmentUrl}/${product.productId}" class="cool-button small-a marketplace-button square w-50 font-weight-bold">
                                                             <spring:message code="View.listing"/>
                                                         </a>
-                                                        <a href="${contextPath}/marketplace/my-requests/${product.productId}" class="cool-button small-a marketplace-button w-50 font-weight-bold">
+                                                        <a href="${contextPath}/marketplace/my-requests/${product.productId}" class="cool-button small-a marketplace-button square w-50 font-weight-bold">
 
                                                             <spring:message code="Requests"/>
                                                             (<c:out value="${product.requesters.size()}"/>)

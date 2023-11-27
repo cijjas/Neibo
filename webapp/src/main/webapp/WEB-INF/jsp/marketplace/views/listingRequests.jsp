@@ -96,7 +96,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a onclick="openMarkAsSoldDialog(${request.user.userId})" class="cool-button small-a marketplace-button  font-weight-bold ">
+                                    <a onclick="openMarkAsSoldDialog(${request.user.userId}, ${request.requestId})" class="cool-button small-a marketplace-button  font-weight-bold ">
                                         <spring:message code="Mark.as.sold"/>
                                     </a>
                                 </div>
@@ -123,9 +123,11 @@
 </div>
 
 <script>
-    function openMarkAsSoldDialog(id) {
+    function openMarkAsSoldDialog(buyerId, requestId) {
         const idT = document.getElementById('id-t');
-        idT.innerHTML = id;
+        idT.innerHTML = buyerId;
+        const reqT = document.getElementById('req-t');
+        reqT.innerHTML = requestId;
         document.getElementById('mark-as-sold-dialog').style.display = 'flex';
     }
 
@@ -136,6 +138,7 @@
     function submitMarkAsSold() {
         document.getElementById('loader-container').style.display = 'flex';
         document.getElementById('buyer-id').value = document.getElementById('id-t').innerHTML;
+        document.getElementById('request-id').value = document.getElementById('req-t').innerHTML;
         const form = document.forms['markAsSoldForm'];
         form.submit();
     }
@@ -182,6 +185,7 @@
         <form:form class="f-c-c-c w-100" id="markAsSoldForm" name="markAsSoldForm" method="post" action="${contextPath}/marketplace/my-requests/${product.productId}" modelAttribute="markAsSoldForm" enctype="multipart/form-data">
             <div class="f-c-c-c w-100  g-0">
                 <form:hidden id="buyer-id" path="buyerId" value=""/>
+                <form:hidden id="request-id" path="requestId" value=""/>
 
                 <div class="f-r-c-c w-100 font-size-16 font-weight-normal g-05">
                     <span class="c-text"><spring:message code="Quantity"/></span>

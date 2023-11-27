@@ -156,19 +156,10 @@ public class MarketplaceController extends GlobalControllerAdvice{
             return listingRequests(page, size, productId, markAsSoldForm);
         }
         prs.markAsBought(markAsSoldForm.getBuyerId(), productId, markAsSoldForm.getQuantity());
+        rqs.markRequestAsFulfilled(markAsSoldForm.getRequestId());
         return new ModelAndView("redirect:/marketplace/my-sales");
     }
 
-
-    @RequestMapping(value = "/mark-as-bought", method = RequestMethod.POST)
-    public ModelAndView markAsBought(
-            @RequestParam(value = "buyerId") int buyerId,
-            @RequestParam(value = "productId") int productId
-    ) {
-        LOGGER.info("User arriving at '/marketplace/mark-as-bought'");
-        /*prs.markAsBought(buyerId, productId, units!); ahora falta units que se compraron*/
-        return new ModelAndView("redirect:/marketplace/my-sales");
-    }
 
     @RequestMapping(value = "/my-listings", method = RequestMethod.GET)
     public ModelAndView myListings(

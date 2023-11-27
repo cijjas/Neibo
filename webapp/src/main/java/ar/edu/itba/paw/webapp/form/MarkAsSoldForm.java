@@ -13,6 +13,18 @@ public class MarkAsSoldForm {
     @NotNull
     private Long buyerId;
 
+    @NotNull
+    private Long requestId;
+
+
+    public Long getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(Long requestId) {
+        this.requestId = requestId;
+    }
+
     public Long getBuyerId() {
         return buyerId;
     }
@@ -33,7 +45,8 @@ public class MarkAsSoldForm {
     public String toString() {
         return "MarkAsSoldForm{" +
                 "quantity=" + quantity +
-                ", userId=" + buyerId +
+                ", buyerId=" + buyerId +
+                ", requestId=" + requestId +
                 '}';
     }
 
