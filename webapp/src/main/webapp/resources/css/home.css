@@ -3155,3 +3155,16 @@ input[type=time] {
         color: var(--lila);
     }
 }
+
+
+.sold-tag{
+    border: 1px solid var(--red);
+    border-radius: var(--border-hard);
+    color: var(--red);
+}
+
+.in-stock-tag{
+    border: 1px solid var(--accent);
+    border-radius: var(--border-hard);
+    color: var(--accent);
+}

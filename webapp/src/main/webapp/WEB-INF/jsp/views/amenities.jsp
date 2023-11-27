@@ -31,7 +31,7 @@
             <div class="cool-static-container m-b-20" style="word-wrap: break-word;" aria-hidden="true">
 
                 <c:choose>
-                    <c:when test='${amenities.size() == 0}'>
+                    <c:when test='${empty amenities}'>
                         <div class="no-posts-found">
                             <i class="circle-icon fa-solid fa-magnifying-glass"></i>
                             <spring:message code="Amenities.not.found"/>

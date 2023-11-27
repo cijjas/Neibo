@@ -39,7 +39,7 @@
                 </div>
                 <div class="f-c-c-c">
 
-                    <div class="f-r-c-c w-100 pt-2 pb-2">
+                    <div class="f-r-c-c w-100 pt-1 pb-1">
                         <h1 class="font-weight-bolder font-size-24">
                             <c:out value="${product.name}"/>
                         </h1>
@@ -181,6 +181,7 @@
             </a>
         </div>
         <span id="id-t" hidden="hidden"></span>
+        <span id="req-t" hidden="hidden"></span>
 
         <form:form class="f-c-c-c w-100" id="markAsSoldForm" name="markAsSoldForm" method="post" action="${contextPath}/marketplace/my-requests/${product.productId}" modelAttribute="markAsSoldForm" enctype="multipart/form-data">
             <div class="f-c-c-c w-100  g-0">

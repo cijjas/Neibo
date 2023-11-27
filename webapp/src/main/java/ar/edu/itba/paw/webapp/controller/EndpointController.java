@@ -7,10 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,6 +25,9 @@ public class EndpointController extends GlobalControllerAdvice {
     private final LikeService ls;
     private final ProfessionWorkerService pws;
 
+    private final RequestService rqs;
+
+
     @Autowired
     public EndpointController(final PostService ps,
                               final UserService us,
@@ -36,7 +36,9 @@ public class EndpointController extends GlobalControllerAdvice {
                               final ImageService is,
                               final EventService es,
                               final LikeService ls,
-                              final ProfessionWorkerService pws) {
+                              final ProfessionWorkerService pws,
+                              final RequestService rqs
+    ) {
         super(us);
         this.is = is;
         this.ps = ps;
@@ -46,6 +48,7 @@ public class EndpointController extends GlobalControllerAdvice {
         this.es = es;
         this.ls = ls;
         this.pws = pws;
+        this.rqs = rqs;
     }
 
     @RequestMapping(value = "/commentById", method = RequestMethod.GET)
@@ -160,6 +163,16 @@ public class EndpointController extends GlobalControllerAdvice {
     @ResponseBody
     public String getUserRole() {
         return getLoggedUser().getRole().toString();
+    }
+
+    @RequestMapping(value = "/request-count/{productId:\\d+}", method = RequestMethod.GET)
+    @ResponseBody
+    public String getRequestCount(
+            @PathVariable Long productId
+    ) {
+        LOGGER.debug("Requesting information from '/endpoint/request-count'");
+        System.out.println("Requesting, productId: " + productId);
+        return String.valueOf(rqs.getRequestsCountByProductId(productId));
     }
 
 }

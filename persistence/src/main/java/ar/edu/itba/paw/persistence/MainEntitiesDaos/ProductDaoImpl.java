@@ -202,7 +202,7 @@ public class ProductDaoImpl implements ProductDao {
 
         // First query to retrieve product IDs with remainingUnits > 0
         TypedQuery<Long> idQuery = em.createQuery(
-                "SELECT p.productId FROM Product p WHERE p.remainingUnits > 0 AND p.seller.userId = :userId", Long.class);
+                "SELECT p.productId FROM Product p WHERE p.seller.userId = :userId", Long.class);
         idQuery.setParameter("userId", userId);
         idQuery.setFirstResult((page - 1) * size);
         idQuery.setMaxResults(size);
