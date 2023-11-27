@@ -530,18 +530,41 @@ INSERT INTO professions (professionid, profession) VALUES (3, 'POOL_MAINTENANCE'
 INSERT INTO professions (professionid, profession) VALUES (4, 'GARDENER') ON CONFLICT (professionid) DO NOTHING;
 INSERT INTO professions (professionid, profession) VALUES (5, 'CARPENTER') ON CONFLICT (professionid) DO NOTHING;
 
--- Populate the "times" table with 1-hour intervals from 00:00 to 23:00
-INSERT INTO times (timeid, timeInterval)
-SELECT
-    nextval('times_timeid_seq'),
-    (n || ' hours')::interval
-FROM generate_series(0, 23, 1) AS n
-    ON CONFLICT (timeid) DO NOTHING;
+-- Manually inserting 24 hours
+INSERT INTO times (timeid, timeinterval) VALUES (1, '00:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (2, '01:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (3, '02:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (4, '03:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (5, '04:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (6, '05:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (7, '06:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (8, '07:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (9, '08:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (10, '09:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (11, '10:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (12, '11:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (13, '12:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (14, '13:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (15, '14:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (16, '15:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (17, '16:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (18, '17:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (19, '18:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (20, '19:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (21, '20:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (22, '21:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (23, '22:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval) VALUES (24, '23:00:00') ON CONFLICT (timeid) DO NOTHING;
+
 
 -- Populate the "days" table with the seven days of the week
-INSERT INTO days (dayId, dayName)
-VALUES (1,'Monday'), (2, 'Tuesday'), (3, 'Wednesday'), (4, 'Thursday'), (5, 'Friday'), (6, 'Saturday'), (7, 'Sunday')
-    ON CONFLICT (dayid) DO NOTHING;
+INSERT INTO days (dayId, dayName) VALUES (1,'Monday') ON CONFLICT (dayid) DO NOTHING;
+INSERT INTO days (dayId, dayName) VALUES (2, 'Tuesday') ON CONFLICT (dayid) DO NOTHING;
+INSERT INTO days (dayId, dayName) VALUES (3, 'Wednesday') ON CONFLICT (dayid) DO NOTHING;
+INSERT INTO days (dayId, dayName) VALUES (4, 'Thursday') ON CONFLICT (dayid) DO NOTHING;
+INSERT INTO days (dayId, dayName) VALUES (5, 'Friday') ON CONFLICT (dayid) DO NOTHING;
+INSERT INTO days (dayId, dayName) VALUES (6, 'Saturday') ON CONFLICT (dayid) DO NOTHING;
+INSERT INTO days (dayId, dayName) VALUES (7, 'Sunday') ON CONFLICT (dayid) DO NOTHING;
 
 -- Populate Users
 INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode, language, role)  VALUES
