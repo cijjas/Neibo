@@ -47,7 +47,7 @@ public class BookingDaoImpl implements BookingDao {
     @Override
     public List<Booking> getUserBookings(long userId) {
         LOGGER.debug("Selecting Bookings from userId {}", userId);
-        String sql = BOOKINGS_JOIN_AVAILABILITY + " WHERE userid = :userId ORDER BY uav.date, asa.amenityid, asa.shiftid";
+        String sql = BOOKINGS_JOIN_AVAILABILITY + " WHERE userid = :userId ORDER BY uav.date, asa.amenityid, timeinterval asc";
         List<Booking> bookings = em.createNativeQuery(sql, Booking.class)
                 .setParameter("userId", userId)
                 .getResultList();
