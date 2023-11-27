@@ -2,8 +2,8 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
-import ar.edu.itba.paw.models.MainEntities.Amenity;
-import ar.edu.itba.paw.models.MainEntities.Shift;
+import ar.edu.itba.paw.models.Entities.Amenity;
+import ar.edu.itba.paw.models.Entities.Shift;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -2,8 +2,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.enums.Professions;
 import ar.edu.itba.paw.interfaces.persistence.ProfessionDao;
-import ar.edu.itba.paw.models.MainEntities.Channel;
-import ar.edu.itba.paw.models.MainEntities.Profession;
+import ar.edu.itba.paw.models.Entities.Profession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.enums.Department;
-import ar.edu.itba.paw.enums.ProductStatus;
-import ar.edu.itba.paw.models.MainEntities.Product;
+import ar.edu.itba.paw.models.Entities.Product;
 
 import java.util.List;
 import java.util.Optional;

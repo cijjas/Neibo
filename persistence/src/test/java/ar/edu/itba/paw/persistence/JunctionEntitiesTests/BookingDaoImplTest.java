@@ -2,7 +2,7 @@ package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.*;
-import ar.edu.itba.paw.models.JunctionEntities.Booking;
+import ar.edu.itba.paw.models.Entities.Booking;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;

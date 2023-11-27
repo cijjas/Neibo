@@ -1,11 +1,9 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
-import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.interfaces.persistence.RequestDao;
-import ar.edu.itba.paw.models.JunctionEntities.Purchase;
-import ar.edu.itba.paw.models.JunctionEntities.Request;
-import ar.edu.itba.paw.models.MainEntities.Product;
-import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.Entities.Request;
+import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -13,11 +11,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

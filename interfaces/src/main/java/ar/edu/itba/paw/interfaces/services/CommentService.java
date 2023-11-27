@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.MainEntities.Comment;
+import ar.edu.itba.paw.models.Entities.Comment;
 
 import java.util.List;
 import java.util.Optional;

@@ -2,7 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
-import ar.edu.itba.paw.models.MainEntities.Neighborhood;
+import ar.edu.itba.paw.models.Entities.Neighborhood;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

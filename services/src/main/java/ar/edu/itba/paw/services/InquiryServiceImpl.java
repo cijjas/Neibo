@@ -1,23 +1,20 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.interfaces.persistence.InquiryDao;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.InquiryService;
-import ar.edu.itba.paw.models.JunctionEntities.Inquiry;
-import ar.edu.itba.paw.models.MainEntities.Product;
-import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.Entities.Inquiry;
+import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service

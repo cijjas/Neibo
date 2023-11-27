@@ -1,19 +1,10 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
-import ar.edu.itba.paw.enums.Language;
-import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.enums.UserRole;
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
-import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
-import ar.edu.itba.paw.models.MainEntities.*;
+import ar.edu.itba.paw.models.Entities.Amenity;
+import ar.edu.itba.paw.models.Entities.Neighborhood;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -23,7 +14,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
-import javax.sql.DataSource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

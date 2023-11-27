@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.MainEntities.Resource;
+import ar.edu.itba.paw.models.Entities.Resource;
 
 import java.util.List;
 

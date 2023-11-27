@@ -2,7 +2,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
-import ar.edu.itba.paw.models.MainEntities.Time;
+import ar.edu.itba.paw.models.Entities.Time;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;

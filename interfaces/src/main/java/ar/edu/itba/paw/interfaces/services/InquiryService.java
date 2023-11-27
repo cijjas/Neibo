@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.JunctionEntities.Inquiry;
+import ar.edu.itba.paw.models.Entities.Inquiry;
 
 import java.util.List;
 import java.util.Optional;

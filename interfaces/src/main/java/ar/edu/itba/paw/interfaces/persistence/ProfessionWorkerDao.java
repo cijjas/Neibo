@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.JunctionEntities.Specialization;
-import ar.edu.itba.paw.models.MainEntities.Profession;
+import ar.edu.itba.paw.models.Entities.Specialization;
+import ar.edu.itba.paw.models.Entities.Profession;
 
 import java.util.List;
 

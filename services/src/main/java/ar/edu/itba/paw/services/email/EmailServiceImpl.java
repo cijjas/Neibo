@@ -7,7 +7,7 @@ import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.models.MainEntities.*;
+import ar.edu.itba.paw.models.Entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

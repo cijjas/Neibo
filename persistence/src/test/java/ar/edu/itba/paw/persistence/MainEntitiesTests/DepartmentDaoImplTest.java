@@ -2,9 +2,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.interfaces.persistence.DepartmentDao;
-import ar.edu.itba.paw.models.MainEntities.Department;
-import ar.edu.itba.paw.persistence.MainEntitiesDaos.ChannelDaoImpl;
+import ar.edu.itba.paw.models.Entities.Department;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;

@@ -1,18 +1,13 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.DayDao;
-import ar.edu.itba.paw.models.MainEntities.Day;
+import ar.edu.itba.paw.models.Entities.Day;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.sql.DataSource;
 import java.util.Optional;
 
 @Repository

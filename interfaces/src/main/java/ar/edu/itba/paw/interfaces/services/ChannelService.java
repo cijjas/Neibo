@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.models.MainEntities.Channel;
+import ar.edu.itba.paw.models.Entities.Channel;
 
 import java.util.List;
 import java.util.Map;

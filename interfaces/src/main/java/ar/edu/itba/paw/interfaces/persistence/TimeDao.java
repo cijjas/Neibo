@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.MainEntities.Time;
+import ar.edu.itba.paw.models.Entities.Time;
 
 import java.util.Optional;
 import java.util.OptionalLong;

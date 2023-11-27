@@ -1,30 +1,17 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
-        import ar.edu.itba.paw.enums.Table;
-        import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
         import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
-        import ar.edu.itba.paw.models.JunctionEntities.ChannelMapping;
-        import ar.edu.itba.paw.models.JunctionEntities.Specialization;
-        import ar.edu.itba.paw.models.MainEntities.Channel;
-        import ar.edu.itba.paw.models.MainEntities.Neighborhood;
-        import ar.edu.itba.paw.models.MainEntities.Profession;
-        import ar.edu.itba.paw.models.MainEntities.Worker;
-        import org.hibernate.jdbc.Work;
+        import ar.edu.itba.paw.models.Entities.Specialization;
+        import ar.edu.itba.paw.models.Entities.Profession;
+        import ar.edu.itba.paw.models.Entities.Worker;
         import org.slf4j.Logger;
         import org.slf4j.LoggerFactory;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.dao.DataAccessException;
-        import org.springframework.jdbc.core.JdbcTemplate;
-        import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
         import org.springframework.stereotype.Repository;
 
         import javax.persistence.EntityManager;
         import javax.persistence.PersistenceContext;
         import javax.persistence.TypedQuery;
-        import javax.sql.DataSource;
-        import java.util.HashMap;
         import java.util.List;
-        import java.util.Map;
 
 @Repository
 public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {

@@ -86,7 +86,8 @@ CREATE TABLE IF NOT EXISTS users
     language         VARCHAR(32),
     role             VARCHAR(64),
     profilepictureid INTEGER      REFERENCES images ON DELETE SET NULL,
-    identification   INTEGER
+    identification   INTEGER,
+    phonenumber     VARCHAR(64)
 );
 
 CREATE TABLE IF NOT EXISTS amenities

@@ -2,9 +2,9 @@ package ar.edu.itba.paw.persistence.JunctionDaos;
 
 import ar.edu.itba.paw.models.compositeKeys.AttendanceKey;
 import ar.edu.itba.paw.interfaces.persistence.AttendanceDao;
-import ar.edu.itba.paw.models.JunctionEntities.Attendance;
-import ar.edu.itba.paw.models.MainEntities.Event;
-import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.Entities.Attendance;
+import ar.edu.itba.paw.models.Entities.Event;
+import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

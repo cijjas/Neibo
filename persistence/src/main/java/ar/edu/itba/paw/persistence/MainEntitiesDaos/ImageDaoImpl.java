@@ -2,25 +2,15 @@ package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.ImageDao;
-import ar.edu.itba.paw.models.MainEntities.Image;
-import ar.edu.itba.paw.models.MainEntities.User;
+import ar.edu.itba.paw.models.Entities.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.sql.DataSource;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Repository

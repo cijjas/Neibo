@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.models.JunctionEntities.Availability;
+import ar.edu.itba.paw.models.Entities.Availability;
 
 import java.util.OptionalLong;
 
