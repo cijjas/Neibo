@@ -32,34 +32,36 @@
         <div id="center-grid" class="column-center pl-3 ">
             <%@ include file="/WEB-INF/jsp/marketplace/components/upperMarketplaceButtons.jsp" %>
 
-            <c:if test="${totalPages >  1}">
-                <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
-                    <jsp:param name="page" value="${page}"/>
-                    <jsp:param name="totalPages" value="${totalPages}"/>
-                </jsp:include>
-            </c:if>
 
-            <div class="w-100 f-c-c-c g-1 cool-static-container">
-                <div class="f-c-c-c w-100 mb-3">
-                    <div class="f-r-c-c w-50 pt-2 pb-2">
-                        <a href="${contextPath}/marketplace/my-purchases" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "MyPurchases" ? 'active' : ''}">
-                        <span class="font-size-12">
-                            <i class="fa-solid fa-calendar-check"></i>
-                            <span class="hide-text">
-                                <spring:message code="My.purchases"/>
+
+            <div class="w-100 f-c-c-c g-05 cool-static-container">
+                <div class="f-c-s-s w-100 ">
+                    <div class="f-r-c-c pt-2 pb-2">
+                        <a href="${contextPath}/marketplace/currently-requesting" class="cool-feed-button rounded marketplace-button font-weight-bold ${channel == "CurrentlyRequesting" ? 'active' : ''}">
+                            <span class="font-size-12">
+                                <i class="fa-solid fa-basket-shopping"></i>
+                                <span class="hide-text">
+                                    <spring:message code="My.requests"/>
+                                </span>
                             </span>
-                        </span>
                         </a>
-                        <a href="${contextPath}/marketplace/currently-requesting" class="cool-button small-a marketplace-button w-50 font-weight-bold ${channel == "CurrentlyRequesting" ? 'active' : ''}">
-                        <span class="font-size-12">
-                            <i class="fa-solid fa-basket-shopping"></i>
-                            <span class="hide-text">
-                                <spring:message code="My.requests"/>
+                        <a href="${contextPath}/marketplace/my-purchases" class="cool-feed-button rounded marketplace-button  font-weight-bold ${channel == "MyPurchases" ? 'active' : ''}">
+                            <span class="font-size-12">
+                                <i class="fa-solid fa-calendar-check"></i>
+                                <span class="hide-text">
+                                    <spring:message code="My.purchases"/>
+                                </span>
                             </span>
-                        </span>
                         </a>
                     </div>
                 </div>
+                <div class="divider mb-3"></div>
+                <c:if test="${totalPages >  1}">
+                    <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                        <jsp:param name="page" value="${page}"/>
+                        <jsp:param name="totalPages" value="${totalPages}"/>
+                    </jsp:include>
+                </c:if>
                 <c:choose>
                     <c:when test="${empty requestList}">
                         <div class="no-posts-found">
@@ -143,15 +145,15 @@
                         </c:forEach>
                     </c:otherwise>
                 </c:choose>
-
+                <c:if test="${totalPages >  1}">
+                    <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
+                        <jsp:param name="page" value="${page}"/>
+                        <jsp:param name="totalPages" value="${totalPages}"/>
+                    </jsp:include>
+                </c:if>
             </div>
 
-            <c:if test="${totalPages >  1}">
-                <jsp:include page="/WEB-INF/jsp/components/widgets/pageSelector.jsp">
-                    <jsp:param name="page" value="${page}"/>
-                    <jsp:param name="totalPages" value="${totalPages}"/>
-                </jsp:include>
-            </c:if>
+
 
         </div>
     </div>

@@ -37,6 +37,9 @@ public class User {
     @Column(name = "darkmode")
     private Boolean darkMode;
 
+    @Column(name = "phonenumber")
+    private String phoneNumber;
+
     @Column(name = "language", length = 32)
     @Enumerated(EnumType.STRING)
     private Language language;
@@ -214,6 +217,14 @@ public class User {
 
     public void setPurchasedProducts(Set<Product> purchasedProducts) {
         this.purchasedProducts = purchasedProducts;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override
