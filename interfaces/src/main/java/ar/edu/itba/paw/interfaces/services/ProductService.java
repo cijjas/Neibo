@@ -10,9 +10,15 @@ import java.util.Optional;
 public interface ProductService {
     Product createProduct(long userId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, long units);
 
-    void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, Long stock) ;
+    // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteProduct(final long productId);
+    int getProductsTotalPages(long neighborhoodId, int size, Department department);
+
+    int getProductsSellingTotalPages(long userId, int size);
+
+    int getProductsSoldTotalPages(long userId, int size);
+
+    int getProductsBoughtTotalPages(long userId, int size);
 
     Optional<Product> findProductById(final long productId);
 
@@ -32,15 +38,15 @@ public interface ProductService {
 
     List<Product> getProductsBought(long userId, int page, int size);
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     void markAsBought(long buyerId, long productId, long units);
 
-    int getProductsTotalPages(long neighborhoodId, int size, Department department);
-
-    int getProductsSellingTotalPages(long userId, int size);
-
-    int getProductsSoldTotalPages(long userId, int size);
-
-    int getProductsBoughtTotalPages(long userId, int size);
+    void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, Long stock) ;
 
     void restockProduct(long productId, long extraUnits);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    boolean deleteProduct(final long productId);
 }

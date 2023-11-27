@@ -2,8 +2,8 @@ package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
 import ar.edu.itba.paw.enums.Professions;
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.models.Entities.Specialization;
 import ar.edu.itba.paw.models.Entities.Profession;
+import ar.edu.itba.paw.models.Entities.Specialization;
 import ar.edu.itba.paw.persistence.JunctionDaos.ProfessionWorkerDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;

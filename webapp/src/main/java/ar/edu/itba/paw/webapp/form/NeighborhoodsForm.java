@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.webapp.form.validation.constraints.NeighborhoodsConstraint;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 public class NeighborhoodsForm {
 

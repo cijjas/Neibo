@@ -339,6 +339,19 @@ public class User {
         this.eventsSubscribed = events;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(userId, user.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
+    }
+
     public static class Builder {
         private Long userId;
         private String mail;
@@ -416,18 +429,5 @@ public class User {
         public User build() {
             return new User(this.userId, this.mail, this.name, this.surname, this.password, this.neighborhood, this.darkMode, this.language, this.role, this.creationDate, this.profilePicture, this.identification);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User)) return false;
-        User user = (User) o;
-        return Objects.equals(userId, user.userId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId);
     }
 }

@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalLong;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class) // Le decimos a JUnit que corra los tests con el runner de Mockito
 public class BookingServiceImplTest {

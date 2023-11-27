@@ -8,13 +8,15 @@ public interface TagService {
 
     Tag createTag(String name);
 
-    void createTagsAndCategorizePost(long postId, String tagsString);
-
-    String createURLForTagFilter(String tags, String currentUrl, long neighborhoodId);
-
     // -----------------------------------------------------------------------------------------------------------------
 
     List<Tag> findTagsByPostId(long id);
 
     List<Tag> getTags(long neighborhoodId);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    void createTagsAndCategorizePost(long postId, String tagsString);
+
+    String createURLForTagFilter(String tags, String currentUrl, long neighborhoodId);
 }

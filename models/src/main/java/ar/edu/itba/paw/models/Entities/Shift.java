@@ -87,6 +87,19 @@ public class Shift {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Shift)) return false;
+        Shift shift = (Shift) o;
+        return Objects.equals(shiftId, shift.shiftId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(shiftId);
+    }
+
     public static class Builder {
         private Long shiftId;
         private Day day;
@@ -116,18 +129,5 @@ public class Shift {
         public Shift build() {
             return new Shift(this);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Shift)) return false;
-        Shift shift = (Shift) o;
-        return Objects.equals(shiftId, shift.shiftId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(shiftId);
     }
 }

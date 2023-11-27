@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
-import ar.edu.itba.paw.models.compositeKeys.WorkerAreaKey;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
-import ar.edu.itba.paw.models.Entities.WorkerArea;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.Worker;
+import ar.edu.itba.paw.models.Entities.WorkerArea;
+import ar.edu.itba.paw.models.compositeKeys.WorkerAreaKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

@@ -122,8 +122,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         return mav;
     }
 
-
-
+    @PreAuthorize("@authService.canAccessProduct(principal, #productId)")
     @RequestMapping(value = "/my-requests/{productId:\\d+}", method = RequestMethod.GET)
     public ModelAndView listingRequests(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -140,6 +139,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         return mav;
     }
 
+    @PreAuthorize("@authService.canAccessProduct(principal, #productId)")
     @RequestMapping(value = "/my-requests/{productId:\\d+}", method = RequestMethod.POST)
     public ModelAndView listingRequests(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,

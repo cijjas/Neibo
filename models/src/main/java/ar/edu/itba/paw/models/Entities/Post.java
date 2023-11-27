@@ -170,6 +170,19 @@ public class Post {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Post)) return false;
+        Post post = (Post) o;
+        return Objects.equals(postId, post.postId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(postId);
+    }
+
     public static class Builder {
         private Long postId;
         private String title;
@@ -241,18 +254,5 @@ public class Post {
         public Post build() {
             return new Post(this);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Post)) return false;
-        Post post = (Post) o;
-        return Objects.equals(postId, post.postId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(postId);
     }
 }

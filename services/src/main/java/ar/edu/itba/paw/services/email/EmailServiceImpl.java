@@ -24,9 +24,8 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.util.*;
-
 import java.sql.Date;
+import java.util.*;
 
 @EnableScheduling
 @Component

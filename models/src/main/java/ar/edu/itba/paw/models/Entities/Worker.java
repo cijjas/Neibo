@@ -156,6 +156,19 @@ public class Worker {
         this.workerId = workerId;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Worker)) return false;
+        Worker worker = (Worker) o;
+        return Objects.equals(workerId, worker.workerId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(workerId);
+    }
+
     public static class Builder {
         private Long workerId;
         private User user;
@@ -203,18 +216,5 @@ public class Worker {
         public Worker build() {
             return new Worker(this);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Worker)) return false;
-        Worker worker = (Worker) o;
-        return Objects.equals(workerId, worker.workerId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(workerId);
     }
 }

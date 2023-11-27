@@ -52,6 +52,19 @@ public class Tag {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Tag)) return false;
+        Tag tag = (Tag) o;
+        return Objects.equals(tagId, tag.tagId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tagId);
+    }
+
     public static class Builder {
         private Long tagId;
         private String tag;
@@ -69,18 +82,5 @@ public class Tag {
         public Tag build() {
             return new Tag(this);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Tag)) return false;
-        Tag tag = (Tag) o;
-        return Objects.equals(tagId, tag.tagId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(tagId);
     }
 }

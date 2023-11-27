@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.RequestDao;
-import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

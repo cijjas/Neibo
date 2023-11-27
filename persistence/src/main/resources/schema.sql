@@ -530,6 +530,19 @@ INSERT INTO professions (professionid, profession) VALUES (3, 'POOL_MAINTENANCE'
 INSERT INTO professions (professionid, profession) VALUES (4, 'GARDENER') ON CONFLICT (professionid) DO NOTHING;
 INSERT INTO professions (professionid, profession) VALUES (5, 'CARPENTER') ON CONFLICT (professionid) DO NOTHING;
 
+-- Populate the "times" table with 30-minute intervals from 00:00 to 23:30
+INSERT INTO times (timeid, timeInterval)
+SELECT
+    nextval('times_timeid_seq'),
+    (n || ' hours')::interval
+FROM generate_series(0, 23, 0.5) AS n
+    ON CONFLICT (timeid) DO NOTHING;
+
+-- Populate the "days" table with the seven days of the week
+INSERT INTO days (dayId, dayName)
+VALUES (1,'Monday'), (2, 'Tuesday'), (3, 'Wednesday'), (4, 'Thursday'), (5, 'Friday'), (6, 'Saturday'), (7, 'Sunday')
+    ON CONFLICT (dayid) DO NOTHING;
+
 INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode, language, role)  VALUES
     (1, 'admin@test.com', 'Administrator', 'Tester', CURRENT_TIMESTAMP, 1, 1, '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'ADMINISTRATOR') ON CONFLICT DO NOTHING;
 
@@ -556,3 +569,9 @@ SELECT setval('professions_professionid_seq', (SELECT MAX(professionid) FROM pro
 
 -- Adjusting sequences for users
 SELECT setval('users_userid_seq', (SELECT MAX(userid) FROM users));
+
+-- Update the sequence for times
+SELECT setval('times_timeid_seq', (SELECT MAX(timeid) FROM times));
+
+-- Update the sequence for days
+SELECT setval('days_dayid_seq', (SELECT MAX(dayid) FROM days));

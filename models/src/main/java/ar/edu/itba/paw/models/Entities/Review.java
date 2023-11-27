@@ -77,6 +77,19 @@ public class Review {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Review)) return false;
+        Review review = (Review) o;
+        return Objects.equals(reviewId, review.reviewId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(reviewId);
+    }
+
     public static class Builder {
         private Long reviewId;
         private Worker worker;
@@ -118,18 +131,5 @@ public class Review {
         public Review build() {
             return new Review(this);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Review)) return false;
-        Review review = (Review) o;
-        return Objects.equals(reviewId, review.reviewId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(reviewId);
     }
 }

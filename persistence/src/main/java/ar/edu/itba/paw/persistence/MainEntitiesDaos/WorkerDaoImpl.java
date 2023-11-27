@@ -12,9 +12,12 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.*;
+import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.appendCommonWorkerConditions;
+import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.appendPaginationClause;
 
 @Repository
 public class WorkerDaoImpl implements WorkerDao {

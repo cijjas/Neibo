@@ -23,5 +23,4 @@ public interface ChannelService {
     Map<String, Channel> getNeighborChannels(long neighborhoodId, long neighborId);
 
     Map<String, Channel> getAdminChannels(long neighborhoodId);
-
 }

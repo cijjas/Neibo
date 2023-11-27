@@ -140,6 +140,19 @@ public class Event {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Event)) return false;
+        Event event = (Event) o;
+        return Objects.equals(eventId, event.eventId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(eventId);
+    }
+
     // Builder Class
     public static class Builder {
         private Long eventId;
@@ -196,18 +209,5 @@ public class Event {
             event.neighborhood = this.neighborhood;
             return event;
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Event)) return false;
-        Event event = (Event) o;
-        return Objects.equals(eventId, event.eventId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(eventId);
     }
 }

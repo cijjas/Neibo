@@ -261,6 +261,19 @@ public class Product {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product)) return false;
+        Product product = (Product) o;
+        return Objects.equals(productId, product.productId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(productId);
+    }
+
     public static class Builder {
         private Long productId;
         private String name;
@@ -358,18 +371,5 @@ public class Product {
             }
             return product;
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Product)) return false;
-        Product product = (Product) o;
-        return Objects.equals(productId, product.productId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(productId);
     }
 }

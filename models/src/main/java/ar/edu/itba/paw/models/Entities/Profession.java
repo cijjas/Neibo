@@ -54,6 +54,19 @@ public class Profession {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Profession)) return false;
+        Profession that = (Profession) o;
+        return Objects.equals(professionId, that.professionId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(professionId);
+    }
+
     public static class Builder {
         private Long professionId;
         private Professions profession;
@@ -71,18 +84,5 @@ public class Profession {
         public Profession build() {
             return new Profession(this);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Profession)) return false;
-        Profession that = (Profession) o;
-        return Objects.equals(professionId, that.professionId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(professionId);
     }
 }

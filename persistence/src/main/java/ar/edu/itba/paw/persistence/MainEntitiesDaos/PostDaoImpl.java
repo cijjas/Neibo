@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.enums.PostStatus;
-import ar.edu.itba.paw.interfaces.persistence.*;
+import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.models.Entities.Channel;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Post;
@@ -13,7 +13,9 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.*;
 

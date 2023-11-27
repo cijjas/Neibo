@@ -7,7 +7,11 @@ import java.util.Set;
 
 public interface PurchaseDao {
 
+    // -------------------------------------------- PURCHASES INSERT ---------------------------------------------------
+
     Purchase createPurchase(long productId, long userId, long unitsBought);
+
+    // -------------------------------------------- PURCHASES SELECT ---------------------------------------------------
 
     Optional<Purchase> findPurchase(long purchaseId);
 

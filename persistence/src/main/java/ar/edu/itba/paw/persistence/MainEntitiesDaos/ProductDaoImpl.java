@@ -260,5 +260,4 @@ public class ProductDaoImpl implements ProductDao {
 
         return Collections.emptyList();
     }
-
 }

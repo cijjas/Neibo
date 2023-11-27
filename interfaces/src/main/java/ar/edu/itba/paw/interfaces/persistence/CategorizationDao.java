@@ -4,7 +4,7 @@ import ar.edu.itba.paw.models.Entities.Categorization;
 
 public interface CategorizationDao {
 
-    // -------------------------------------------- POSTS_TAGS INSERT --------------------------------------------------
+    // -------------------------------------------- POSTS TAGS INSERT --------------------------------------------------
 
     Categorization createCategorization(long tagId, long postId);
 }

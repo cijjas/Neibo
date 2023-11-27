@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.models.Entities.WorkerArea;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
+import ar.edu.itba.paw.models.Entities.WorkerArea;
 import ar.edu.itba.paw.persistence.JunctionDaos.NeighborhoodWorkerDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-
 import java.util.List;
 import java.util.Optional;
 

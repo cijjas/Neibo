@@ -7,6 +7,8 @@ import java.util.List;
 public interface RequestService {
     Request createRequest(final long userId, final long productId, final String message);
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     List<Request> getRequestsByProductId(long productId, int page, int size);
 
     int getRequestsCountByProductId(long productId);
@@ -14,6 +16,8 @@ public interface RequestService {
     List<Request> getRequestsByProductAndUser(long productId, long userId, int page, int size);
 
     int getRequestsCountByProductAndUser(long productId, long userId);
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     void markRequestAsFulfilled(long requestId);
 }

@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.*;
-import ar.edu.itba.paw.interfaces.exceptions.*;
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Post;

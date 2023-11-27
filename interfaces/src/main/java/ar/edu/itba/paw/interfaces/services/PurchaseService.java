@@ -9,6 +9,8 @@ public interface PurchaseService {
 
     Purchase createPurchase(long productId, long userId, long unitsBought);
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     Optional<Purchase> findPurchase(long purchaseId);
 
     Set<Purchase> getPurchasesBySellerId(long userId, int page, int size);

@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
-import ar.edu.itba.paw.interfaces.persistence.*;
+import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.models.Entities.Availability;
 import ar.edu.itba.paw.models.Entities.Booking;
 import ar.edu.itba.paw.models.Entities.User;

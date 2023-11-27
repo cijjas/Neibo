@@ -91,6 +91,19 @@ public class Request implements Serializable {
         this.fulfilled = fulfilled;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Request)) return false;
+        Request request = (Request) o;
+        return Objects.equals(requestId, request.requestId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(requestId);
+    }
+
     public static class Builder {
         private Long requestId;
         private Product product;
@@ -98,6 +111,7 @@ public class Request implements Serializable {
         private String message;
         private Date requestDate;
         private Boolean fulfilled;
+
         public Request.Builder requestId(Long requestId) {
             this.requestId = requestId;
             return this;
@@ -122,6 +136,7 @@ public class Request implements Serializable {
             this.requestDate = requestDate;
             return this;
         }
+
         public Request.Builder fulfilled(Boolean fulfilled) {
             this.fulfilled = fulfilled;
             return this;
@@ -130,18 +145,5 @@ public class Request implements Serializable {
         public Request build() {
             return new Request(this);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Request)) return false;
-        Request request = (Request) o;
-        return Objects.equals(requestId, request.requestId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(requestId);
     }
 }

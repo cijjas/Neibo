@@ -67,6 +67,19 @@ public class Contact {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Contact)) return false;
+        Contact contact = (Contact) o;
+        return Objects.equals(contactId, contact.contactId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(contactId);
+    }
+
     public static class Builder {
         private Long contactId;
         private String contactName;
@@ -102,19 +115,6 @@ public class Contact {
         public Contact build() {
             return new Contact(this);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Contact)) return false;
-        Contact contact = (Contact) o;
-        return Objects.equals(contactId, contact.contactId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(contactId);
     }
 }
 

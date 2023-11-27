@@ -10,5 +10,7 @@ public interface DepartmentDao {
 
     Department createDepartment(ar.edu.itba.paw.enums.Department departments);
 
+    // ------------------------------------------- DEPARTMENTS SELECT --------------------------------------------------
+
     Optional<Department> findDepartmentById(long departmentId);
 }

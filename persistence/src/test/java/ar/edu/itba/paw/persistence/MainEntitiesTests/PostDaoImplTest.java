@@ -2,7 +2,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.interfaces.persistence.*;
+import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;

@@ -60,6 +60,19 @@ public class Booking {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Booking)) return false;
+        Booking booking = (Booking) o;
+        return Objects.equals(bookingId, booking.bookingId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bookingId);
+    }
+
     public static class Builder {
         private Long bookingId;
         private User user;
@@ -89,18 +102,5 @@ public class Booking {
         public Booking build() {
             return new Booking(this);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Booking)) return false;
-        Booking booking = (Booking) o;
-        return Objects.equals(bookingId, booking.bookingId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(bookingId);
     }
 }

@@ -98,11 +98,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         properties.setProperty("hibernate.hbm2ddl.auto", "update");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL92Dialect");
 
-        // Si ponen esto en prod, hay tabla!!!
-        // NUNCA DEPLOYAR ESTO; PRINTEA A STDOUTTTTT
-        properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("format_sql", "true");
-
         factoryBean.setJpaProperties(properties);
         return factoryBean;
     }
@@ -204,7 +199,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Qualifier("emailMessageSource")
     public ResourceBundleMessageSource emailMessageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-//        messageSource.setBasename("mailMessages");
         messageSource.setBasename("mailMessages/messages");
         return messageSource;
     }

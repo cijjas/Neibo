@@ -26,7 +26,7 @@ public interface EventDao {
 
     boolean isUserSubscribedToEvent(long userId, long eventId);
 
-        // ---------------------------------------------- EVENTS DELETE ----------------------------------------------------
+    // ---------------------------------------------- EVENTS DELETE ----------------------------------------------------
 
     boolean deleteEvent(long eventId);
 }

@@ -8,21 +8,18 @@ import java.util.Set;
 @Entity
 @Table(name = "times")
 public class Time {
+    @OneToMany(mappedBy = "startTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private final Set<Shift> shifts = new HashSet<>();
+    @OneToMany(mappedBy = "startTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private final Set<Event> eventsStartingAtThisTime = new HashSet<>();
+    @OneToMany(mappedBy = "endTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private final Set<Event> eventsEndingAtThisTime = new HashSet<>();
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "times_timeid_seq")
     @SequenceGenerator(sequenceName = "times_timeid_seq", name = "times_timeid_seq", allocationSize = 1)
     private Long timeId;
     @Column(name = "timeinterval", unique = true, nullable = false)
     private java.sql.Time timeInterval;
-
-    @OneToMany(mappedBy = "startTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private final Set<Shift> shifts = new HashSet<>();
-
-    @OneToMany(mappedBy = "startTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private final Set<Event> eventsStartingAtThisTime = new HashSet<>();
-
-    @OneToMany(mappedBy = "endTime", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private final Set<Event> eventsEndingAtThisTime = new HashSet<>();
 
 
     Time() {
@@ -65,6 +62,19 @@ public class Time {
         return eventsEndingAtThisTime;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Time)) return false;
+        Time time = (Time) o;
+        return Objects.equals(timeId, time.timeId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(timeId);
+    }
+
     public static class Builder {
         private Long timeId;
         private java.sql.Time timeInterval;
@@ -82,18 +92,5 @@ public class Time {
         public Time build() {
             return new Time(this);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Time)) return false;
-        Time time = (Time) o;
-        return Objects.equals(timeId, time.timeId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(timeId);
     }
 }

@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.form.validation.constraints;
 
 import ar.edu.itba.paw.webapp.form.validation.validators.LanguageValidator;
-import ar.edu.itba.paw.webapp.form.validation.validators.NeighborhoodSelectionValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

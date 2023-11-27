@@ -3,7 +3,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.enums.UserRole;
-import ar.edu.itba.paw.interfaces.persistence.*;
+import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;

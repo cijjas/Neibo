@@ -55,6 +55,19 @@ public class Channel {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Channel)) return false;
+        Channel channel = (Channel) o;
+        return Objects.equals(channelId, channel.channelId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(channelId);
+    }
+
     public static class Builder {
         private Long channelId;
         private String channel;
@@ -72,18 +85,5 @@ public class Channel {
         public Channel build() {
             return new Channel(this);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Channel)) return false;
-        Channel channel = (Channel) o;
-        return Objects.equals(channelId, channel.channelId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(channelId);
     }
 }

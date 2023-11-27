@@ -26,4 +26,4 @@ public interface NeighborhoodWorkerService {
 
     void unverifyWorkerFromNeighborhood(long workerId, long neighborhoodId);
 
-    }
+}

@@ -14,5 +14,7 @@ public interface ProfessionWorkerService {
 
     String getWorkerProfessionsAsString(long workerId);
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     String createURLForProfessionFilter(String professions, String currentUrl, long neighborhoodId);
 }

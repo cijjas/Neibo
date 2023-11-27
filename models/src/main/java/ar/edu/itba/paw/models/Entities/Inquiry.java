@@ -78,6 +78,19 @@ public class Inquiry {
         this.reply = reply;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Inquiry)) return false;
+        Inquiry inquiry = (Inquiry) o;
+        return Objects.equals(inquiryId, inquiry.inquiryId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(inquiryId);
+    }
+
     public static class Builder {
         private Long inquiryId;
         private Product product;
@@ -107,18 +120,5 @@ public class Inquiry {
         public Inquiry build() {
             return new Inquiry(this);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Inquiry)) return false;
-        Inquiry inquiry = (Inquiry) o;
-        return Objects.equals(inquiryId, inquiry.inquiryId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(inquiryId);
     }
 }

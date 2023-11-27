@@ -59,6 +59,19 @@ public class Department {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Department)) return false;
+        Department that = (Department) o;
+        return Objects.equals(departmentId, that.departmentId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(departmentId);
+    }
+
     public static class Builder {
         private Long departmentId;
         private ar.edu.itba.paw.enums.Department department;
@@ -76,18 +89,5 @@ public class Department {
         public Department build() {
             return new Department(this);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Department)) return false;
-        Department that = (Department) o;
-        return Objects.equals(departmentId, that.departmentId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(departmentId);
     }
 }

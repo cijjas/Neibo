@@ -87,6 +87,19 @@ public class Comment {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Comment)) return false;
+        Comment comment = (Comment) o;
+        return Objects.equals(commentId, comment.commentId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(commentId);
+    }
+
     public static class Builder {
         private Long commentId;
         private String comment;
@@ -122,18 +135,5 @@ public class Comment {
         public Comment build() {
             return new Comment(this);
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Comment)) return false;
-        Comment comment = (Comment) o;
-        return Objects.equals(commentId, comment.commentId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(commentId);
     }
 }
