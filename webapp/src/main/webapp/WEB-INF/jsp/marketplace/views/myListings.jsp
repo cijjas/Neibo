@@ -75,7 +75,7 @@
                                 <div class="cool-static-container w-100 f-c-s-s g-0 p-0 mb-3">
 
                                     <div class="container">
-                                        <div class="f-r-c-c w-100 g-1">
+                                        <div class="f-r-c-c w-100 g-0">
                                             <div class="pl-0">
                                                 <div class="purchased-product-image f-c-c-c placeholder-glow">
                                                     <img
@@ -155,10 +155,12 @@
                                                 <div class="f-r-sb-c w-100">
 
                                                     <div class="f-r-sb-c g-05 w-50">
-                                                        <a href="${contextPath}/marketplace/products/${product.department.department.departmentUrl}/${product.productId}" class="cool-button small-a marketplace-button square w-50 font-weight-bold">
+                                                        <a href="${contextPath}/marketplace/products/${product.department.department.departmentUrl}/${product.productId}" class="cool-button small-a marketplace-button square-radius w-50 font-weight-bold">
+                                                            <i class="fa-solid fa-arrow-right-to-bracket pr-1"></i>
                                                             <spring:message code="View.listing"/>
                                                         </a>
-                                                        <a href="${contextPath}/marketplace/my-requests/${product.productId}" class="cool-button small-a marketplace-button square w-50 font-weight-bold">
+                                                        <a href="${contextPath}/marketplace/my-requests/${product.productId}" class="cool-button small-a marketplace-button square-radius w-50 font-weight-bold">
+                                                            <i class="fa-solid fa-bell pr-1"></i>
                                                             <spring:message code="Requests"/>
                                                             <span id="request-count-${product.productId}">
                                                             </span>
