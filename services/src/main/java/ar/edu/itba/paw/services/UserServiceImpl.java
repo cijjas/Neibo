@@ -166,6 +166,13 @@ public class UserServiceImpl implements UserService {
         user.setProfilePicture(i);
     }
 
+    @Override
+    public void updatePhoneNumber(long userId, String phoneNumber) {
+        LOGGER.info("Updating User {} phone number", userId);
+        User user = getUser(userId);
+        user.setPhoneNumber(phoneNumber);
+    }
+
 
     @Override
     public void toggleDarkMode(long id) {

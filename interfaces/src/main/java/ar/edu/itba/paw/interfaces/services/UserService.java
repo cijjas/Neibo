@@ -41,6 +41,8 @@ public interface UserService {
 
     void updateProfilePicture(long userId, MultipartFile image);
 
+    void updatePhoneNumber(long userId, String phoneNumber);
+
     void toggleDarkMode(final long id);
 
     void verifyNeighbor(final long id);
