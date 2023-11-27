@@ -174,7 +174,6 @@
                                                                             if (response.ok) {
                                                                                 const requestCount = await response.text();
                                                                                 document.getElementById(elementId).innerHTML ="(" + requestCount + ")";
-                                                                                console.log(requestCount);
                                                                             }
 
                                                                         } catch (error) {

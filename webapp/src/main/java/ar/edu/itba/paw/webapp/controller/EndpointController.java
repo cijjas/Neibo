@@ -171,7 +171,6 @@ public class EndpointController extends GlobalControllerAdvice {
             @PathVariable Long productId
     ) {
         LOGGER.debug("Requesting information from '/endpoint/request-count'");
-        System.out.println("Requesting, productId: " + productId);
         return String.valueOf(rqs.getRequestsCountByProductId(productId));
     }
 

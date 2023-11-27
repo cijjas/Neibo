@@ -288,7 +288,6 @@ public class MarketplaceController extends GlobalControllerAdvice{
             @ModelAttribute("listingForm") ListingForm listingForm
     ) {
         LOGGER.info("User arriving at '/marketplace/products/" + department + "/" + productId +"/edit'");
-        System.out.println("ARRIVED HERE");
         ModelAndView mav = new ModelAndView("marketplace/views/productEdit");
         mav.addObject("departmentList", Department.getDepartments());
         mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));

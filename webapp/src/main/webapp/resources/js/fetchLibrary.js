@@ -25,7 +25,6 @@ async function getImageInto(imageElementId, imageSrcId, contextPath) {
         setTimeout(() => {
             image.classList.remove('placeholder');
             image.src = URL.createObjectURL(blob);
-            console.log("Image loaded" + image.src +":"+ blob);
         }, 500);
 
     } catch (e) {
