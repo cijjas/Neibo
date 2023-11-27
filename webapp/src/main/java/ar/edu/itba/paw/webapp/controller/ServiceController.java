@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/services")
@@ -185,7 +186,7 @@ public class ServiceController extends GlobalControllerAdvice{
         }
 
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
-        List<Worker> workerList = ws.getWorkersByCriteria(page, size, professions, getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
+        Set<Worker> workerList = ws.getWorkersByCriteria(page, size, professions, getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
         mav.addObject("workersList", workerList);
         mav.addObject("channel", "Services");
         mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(professions, new long[] {getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER, WorkerStatus.none));

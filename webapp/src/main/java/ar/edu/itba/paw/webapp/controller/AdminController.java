@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")
@@ -166,7 +167,7 @@ public class AdminController extends GlobalControllerAdvice {
         final ModelAndView mav = new ModelAndView("admin/views/adminWorkerRequestHandler");
 
         int totalPages;
-        List<Worker> workers;
+        Set<Worker> workers;
 
         if(verified){
             totalPages = ws.getTotalWorkerPagesByCriteria(null, new long[] {getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
