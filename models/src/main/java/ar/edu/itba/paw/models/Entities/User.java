@@ -94,7 +94,7 @@ public class User {
 
     @ManyToMany
     @JoinTable(name = "products_users_purchases", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "productid"))
-    private Set<Product> purchasedProducts;
+    private Set<Product> purchasedProducts; 
 
     @ManyToMany
     @JoinTable(name = "events_users", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "eventid"))

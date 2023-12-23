@@ -34,5 +34,4 @@ public class AttendanceServiceImpl implements AttendanceService {
         LOGGER.info("Removing User {} as Attendee for Event {}", userId, eventId);
         attendanceDao.deleteAttendee(userId, eventId);
     }
-
 }
