@@ -4,7 +4,6 @@ import ar.edu.itba.paw.models.Entities.Amenity;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.util.List;
 
 public class AmenityDto {
 
