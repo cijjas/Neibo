@@ -25,7 +25,7 @@ public class AmenityDto {
                 .path(String.valueOf(amenity.getAmenityId()))
                 .build();
         dto.neighborhood = uriInfo.getBaseUriBuilder()
-                .path("neighborhood")
+                .path("neighborhoods")
                 .path(String.valueOf(amenity.getAmenityId()))
                 .build();
         dto.availability = uriInfo.getBaseUriBuilder()
