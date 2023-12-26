@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+
 @Path("neighborhood/{neighborhoodId}/amenities")
 @Component
 public class AmenityController {
@@ -36,44 +38,13 @@ public class AmenityController {
                 .map(a -> AmenityDto.fromAmenity(a, uriInfo)).collect(Collectors.toList());
 
         // Add pagination links to the response header
-        String baseUri = uriInfo.getBaseUri().toString();
+        String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/amenities";
         int totalAmenityPages = as.getTotalAmenitiesPages(Long.parseLong(neighborhoodId), size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalAmenityPages);
 
         return Response.ok(new GenericEntity<List<AmenityDto>>(amenitiesDto){})
                 .links(links)
                 .build();
-    }
-
-    // ESTA FUNCION HAY QUE MODULARIZARLA YA QUE VA A SER UTILIZADA EN TODO LO QUE ESTE PAGINADO
-    private Link[] createPaginationLinks(String baseUri, int page, int size, int totalPages) {
-        List<Link> links = new ArrayList<>();
-
-        // Self link
-        links.add(Link.fromUri(baseUri + "neighborhood/" + neighborhoodId + "/amenities?page=" + page + "&size=" + size)
-                .rel("self").build());
-
-        // First page link
-        links.add(Link.fromUri(baseUri + "neighborhood/" + neighborhoodId + "/amenities?page=1&size=" + size)
-                .rel("first").build());
-
-        // Last page link
-        links.add(Link.fromUri(baseUri + "neighborhood/" + neighborhoodId + "/amenities?page=" + totalPages + "&size=" + size)
-                .rel("last").build());
-
-        // Previous page link
-        if (page > 1) {
-            links.add(Link.fromUri(baseUri + "neighborhood/" + neighborhoodId + "/amenities?page=" + (page - 1) + "&size=" + size)
-                    .rel("prev").build());
-        }
-
-        // Next page link
-        if (page < totalPages) {
-            links.add(Link.fromUri(baseUri + "neighborhood/" + neighborhoodId + "/amenities?page=" + (page + 1) + "&size=" + size)
-                    .rel("next").build());
-        }
-
-        return links.toArray(new Link[0]);
     }
 
 
