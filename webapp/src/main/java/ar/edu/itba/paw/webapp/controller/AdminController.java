@@ -93,11 +93,11 @@ public class AdminController extends GlobalControllerAdvice {
 
         if(verified){
             totalPages = us.getTotalPages(UserRole.NEIGHBOR, getLoggedUser().getNeighborhood().getNeighborhoodId(), size);
-            users = us.getUsersPage(UserRole.NEIGHBOR, getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size);
+            users = us.getUsersByCriteria(UserRole.NEIGHBOR, getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size);
         }
         else {
             totalPages = us.getTotalPages(UserRole.REJECTED, getLoggedUser().getNeighborhood().getNeighborhoodId(), size);
-            users = us.getUsersPage(UserRole.REJECTED, getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size);
+            users = us.getUsersByCriteria(UserRole.REJECTED, getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size);
         }
 
         mav.addObject("panelOption", "Neighbors");
@@ -125,7 +125,7 @@ public class AdminController extends GlobalControllerAdvice {
         mav.addObject("neighbors", false);
         mav.addObject("page", page);
         mav.addObject("totalPages", us.getTotalPages(UserRole.UNVERIFIED_NEIGHBOR, getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
-        mav.addObject("users", us.getUsersPage(UserRole.UNVERIFIED_NEIGHBOR, getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size));
+        mav.addObject("users", us.getUsersByCriteria(UserRole.UNVERIFIED_NEIGHBOR, getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size));
         mav.addObject("contextPath", "/admin/unverified");
         return mav;
     }

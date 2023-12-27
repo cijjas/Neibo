@@ -20,4 +20,8 @@ public interface PurchaseService {
     Set<Purchase> getPurchasesByBuyerId(long userId, int page, int size);
 
     int getPurchasesCountByBuyerId(long userId);
+
+    Set<Purchase> getPurchasesByCriteria(long sellerId, long buyerId, int page, int size);
+
+    int getTotalPurchasesPages(long sellerId, long buyerId, int size);
 }

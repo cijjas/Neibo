@@ -17,4 +17,6 @@ public interface ShiftService {
     List<Shift> getShifts(long amenityId, Date date);
 
     List<Shift> getAmenityShifts(long amenityId);
+
+    List<Shift> getShiftsByCriteria(long amenityId, long dayId, Date date);
 }

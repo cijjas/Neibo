@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.Entities.Shift;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.sql.Time;
 
 public class ShiftDto {
     private java.sql.Time endTime;
@@ -27,5 +28,51 @@ public class ShiftDto {
         return dto;
     }
 
+    public Time getEndTime() {
+        return endTime;
+    }
 
+    public void setEndTime(Time endTime) {
+        this.endTime = endTime;
+    }
+
+    public boolean isTaken() {
+        return taken;
+    }
+
+    public void setTaken(boolean taken) {
+        this.taken = taken;
+    }
+
+    public URI getSelf() {
+        return self;
+    }
+
+    public void setSelf(URI self) {
+        this.self = self;
+    }
+
+    public URI getAmenities() {
+        return amenities;
+    }
+
+    public void setAmenities(URI amenities) {
+        this.amenities = amenities;
+    }
+
+    public URI getDay() {
+        return day;
+    }
+
+    public void setDay(URI day) {
+        this.day = day;
+    }
+
+    public URI getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(URI startTime) {
+        this.startTime = startTime;
+    }
 }

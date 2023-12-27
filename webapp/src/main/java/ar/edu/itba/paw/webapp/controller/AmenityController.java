@@ -59,20 +59,7 @@ public class AmenityController {
         return Response.ok(AmenityDto.fromAmenity(amenity.get(), uriInfo)).build();
     }
 
-    @GET
-    @Path("/{id}/availability")
-    @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response getAmenityAvailability(@PathParam("id") final long id) {
-        Optional<Amenity> amenity = as.findAmenityById(id);
-        if (!amenity.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
 
-        System.out.println(amenity.get().getAvailableShifts());
-        // NO FUNCIONA DEBERIA SER UNA LISTA DE SHIFT DTO
-
-        return Response.ok(new GenericEntity<List<Shift>>(amenity.get().getAvailableShifts()){}).build();
-    }
 
 
 

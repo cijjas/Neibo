@@ -37,14 +37,14 @@ public class ProductController {
     public Response listProducts(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("department") @DefaultValue("NONE") final String department
+            @QueryParam("department") @DefaultValue("NONE") final Department department
             ) {
-        final List<Product> products = ps.getProductsByCriteria(neighborhoodId, Department.valueOf(department), page, size); // este value of es peligroso
+        final List<Product> products = ps.getProductsByCriteria(neighborhoodId, department, page, size); // este value of es peligroso
         final List<ProductDto> productsDto = products.stream()
                 .map(p -> ProductDto.fromProduct(p, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/products";
-        int totalProductPages = ps.getProductsTotalPages(neighborhoodId, size, Department.valueOf(department));
+        int totalProductPages = ps.getProductsTotalPages(neighborhoodId, size, department);
         Link[] links = createPaginationLinks(baseUri, page, size, totalProductPages);
 
         return Response.ok(new GenericEntity<List<ProductDto>>(productsDto){})

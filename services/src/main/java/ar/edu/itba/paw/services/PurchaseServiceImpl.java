@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -49,5 +50,35 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     public int getPurchasesCountByBuyerId(long userId) {
         return purchaseDao.getPurchasesCountByBuyerId(userId);
+    }
+
+    // In PurchaseService
+
+    @Override
+    public Set<Purchase> getPurchasesByCriteria(long sellerId, long buyerId, int page, int size) {
+        if (sellerId != 0) {
+            return getPurchasesBySellerId(sellerId, page, size);
+        } else if (buyerId != 0) {
+            return getPurchasesByBuyerId(buyerId, page, size);
+        } else {
+            // throw something
+            return Collections.emptySet();
+        }
+    }
+
+    @Override
+    public int getTotalPurchasesPages(long sellerId, long buyerId, int size) {
+        if (sellerId != 0) {
+            return calculatePages(getPurchasesCountBySellerId(sellerId), size);
+        } else if (buyerId != 0) {
+            return calculatePages(getPurchasesCountByBuyerId(buyerId), size);
+        } else {
+            //throw something
+            return 0;
+        }
+    }
+
+    private int calculatePages(int totalItems, int size) {
+        return (int) Math.ceil((double) totalItems / size);
     }
 }

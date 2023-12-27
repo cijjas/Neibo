@@ -39,4 +39,6 @@ public class BookingController {
         }
         return Response.ok(BookingDto.fromBooking(booking.get(), uriInfo)).build();
     }
+
+    // query params para filtrar segun userid o amenityid
 }

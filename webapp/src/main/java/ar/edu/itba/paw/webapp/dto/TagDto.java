@@ -32,4 +32,19 @@ public class TagDto {
     public String getTag() { return tag; }
     public void setTag(String tag) { this.tag = tag; }
 
+    public URI getSelf() {
+        return self;
+    }
+
+    public void setSelf(URI self) {
+        this.self = self;
+    }
+
+    public URI getPosts() {
+        return posts;
+    }
+
+    public void setPosts(URI posts) {
+        this.posts = posts;
+    }
 }

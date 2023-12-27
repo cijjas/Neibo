@@ -25,7 +25,7 @@ public interface UserService {
 
     List<User> getNeighborsSubscribedByPostId(long id);
 
-    List<User> getUsersPage(UserRole role, long neighborhoodId, int page, int size);
+    List<User> getUsersByCriteria(UserRole role, long neighborhoodId, int page, int size);
 
     int getTotalPages(UserRole role, long neighborhoodId, int size);
 

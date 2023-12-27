@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> getUsersPage(UserRole role, long neighborhoodId, int page, int size) {
+    public List<User> getUsersByCriteria(UserRole role, long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Users from Neighborhood {} with Role {}", neighborhoodId, role);
         return userDao.getUsersByCriteria(role, neighborhoodId, page, size);
     }

@@ -58,4 +58,18 @@ public class ShiftServiceImpl implements ShiftService {
     public List<Shift> getAmenityShifts(long amenityId) {
         return shiftDao.getAmenityShifts(amenityId);
     }
+
+    public List<Shift> getShiftsByCriteria(long amenityId, long dayId, Date date) {
+        if (dayId > 0 && date != null) {
+            // Both dayId and date are provided
+            return shiftDao.getShifts(amenityId, dayId, date);
+        } else if (dayId > 0) {
+            // Only dayId is provided
+            return shiftDao.getShifts(amenityId, dayId, null);
+        } else {
+            // No specific criteria provided, fetch all shifts
+            return shiftDao.getAmenityShifts(amenityId);
+        }
+    }
+
 }
