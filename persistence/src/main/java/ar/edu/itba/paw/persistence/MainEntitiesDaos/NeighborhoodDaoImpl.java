@@ -53,4 +53,23 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
         TypedQuery<Neighborhood> query = em.createQuery(jpql, Neighborhood.class);
         return query.getResultList();
     }
+
+    @Override
+    public List<Neighborhood> getNeighborhoodsByCriteria(int page, int size) {
+        LOGGER.debug("Selecting All Neighborhoods");
+        String jpql = "SELECT n FROM Neighborhood n";
+        TypedQuery<Neighborhood> query = em.createQuery(jpql, Neighborhood.class);
+        query.setFirstResult((page - 1) * size);
+        query.setMaxResults(size);
+        return query.getResultList();
+    }
+
+    @Override
+    public int getNeighborhoodsCount() {
+        LOGGER.debug("Counting All Neighborhoods");
+        String jpql = "SELECT COUNT(n) FROM Neighborhood n";
+        TypedQuery<Long> query = em.createQuery(jpql, Long.class);
+        return query.getSingleResult().intValue();
+    }
+
 }

@@ -56,4 +56,22 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
         neighborhoods.removeIf(neighborhood -> neighborhood.getName().equals("Rejected"));
         return neighborhoods;
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Neighborhood> getNeighborhoodsByCriteria(int page, int size) {
+        LOGGER.info("Getting All Neighborhoods");
+        List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoodsByCriteria(page, size);
+        neighborhoods.removeIf(neighborhood -> neighborhood.getName().equals("Worker Neighborhood"));
+        neighborhoods.removeIf(neighborhood -> neighborhood.getName().equals("Rejected"));
+        return neighborhoods;
+
+    }
+
+    @Override
+    public int getTotalNeighborhoodPages(int size) {
+        LOGGER.info("Getting Total Neighborhood Pages");
+        return (int) Math.ceil((double) neighborhoodDao.getNeighborhoodsCount() / size);
+    }
+
 }

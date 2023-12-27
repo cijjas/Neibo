@@ -16,4 +16,9 @@ public interface NeighborhoodService {
     Optional<Neighborhood> findNeighborhoodByName(String name);
 
     List<Neighborhood> getNeighborhoods();
+
+    List<Neighborhood> getNeighborhoodsByCriteria(int page, int size);
+
+    int getTotalNeighborhoodPages(int size);
+
 }

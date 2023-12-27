@@ -18,4 +18,9 @@ public interface NeighborhoodDao {
     Optional<Neighborhood> findNeighborhoodByName(String name);
 
     List<Neighborhood> getNeighborhoods();
+
+    List<Neighborhood> getNeighborhoodsByCriteria(int page, int size);
+
+    int getNeighborhoodsCount();
+
 }
