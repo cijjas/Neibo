@@ -23,14 +23,20 @@ public class RequestDto {
         dto.fulfilled = request.getFulfilled();
 
         dto.self = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(request.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("requests")
                 .path(String.valueOf(request.getRequestId()))
                 .build();
         dto.product = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(request.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("products")
                 .path(String.valueOf(request.getProduct().getProductId()))
                 .build();
         dto.user = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(request.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(request.getUser().getUserId()))
                 .build();

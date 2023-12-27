@@ -20,6 +20,8 @@ public class ResourceDto {
         dto.description = resource.getDescription();
 
         dto.self = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(resource.getNeighborhood().getNeighborhoodId()))
                 .path("resources")
                 .path(String.valueOf(resource.getResourceId()))
                 .build();

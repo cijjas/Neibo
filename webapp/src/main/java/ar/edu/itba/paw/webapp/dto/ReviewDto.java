@@ -23,6 +23,8 @@ public class ReviewDto {
         dto.date = review.getDate();
 
         dto.self = uriInfo.getBaseUriBuilder()
+                .path("workers")
+                .path(String.valueOf(review.getWorker().getWorkerId()))
                 .path("reviews")
                 .path(String.valueOf(review.getReviewId()))
                 .build();
@@ -31,6 +33,8 @@ public class ReviewDto {
                 .path(String.valueOf(review.getWorker().getWorkerId()))
                 .build();
         dto.user = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(review.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(review.getUser().getUserId()))
                 .build();

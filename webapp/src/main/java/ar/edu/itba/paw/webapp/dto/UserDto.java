@@ -35,12 +35,14 @@ public class UserDto {
         dto.phoneNumber = user.getPhoneNumber();
 
         dto.self = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(user.getUserId()))
                 .build();
 
         dto.neighborhood = uriInfo.getBaseUriBuilder()
-                .path("neighborhood")
+                .path("neighborhoods")
                 .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                 .build();
         dto.profilePicture = uriInfo.getBaseUriBuilder()
@@ -48,32 +50,47 @@ public class UserDto {
                 .path(String.valueOf(user.getProfilePicture().getImageId()))
                 .build();
         dto.posts = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                 .path("posts")
                 .queryParam("postedBy", String.valueOf(user.getUserId()))
                 .build();
         dto.bookings = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
+                .path("users")
+                .path(String.valueOf(user.getUserId()))
                 .path("bookings")
-                .queryParam("user", String.valueOf(user.getUserId()))
                 .build();
         dto.subscribedPosts = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                 .path("posts")
                 .queryParam("subscribedBy", String.valueOf(user.getUserId()))
                 .build();
         dto.likedPosts = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                 .path("posts")
                 .queryParam("likedBy", String.valueOf(user.getUserId()))
                 .build();
         dto.purchases = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(user.getUserId()))
                 .path("purchases")
                 .build();
         dto.sales = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(user.getUserId()))
                 .path("sales")
                 .build();
         dto.eventsSubscribed = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                 .path("events")
                 .queryParam("subscribedBy", String.valueOf(user.getUserId()))
                 .build();

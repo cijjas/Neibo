@@ -11,8 +11,6 @@ public class ImageDto {
 
     private byte[] image;
     private URI self;
-    private URI users; // localhost:8080/neighborhood/{id}
-    private URI posts; // localhost:8080/amenities/{id}/availability
 
 
     public static ImageDto fromImage(Image image, UriInfo uriInfo){
@@ -23,14 +21,6 @@ public class ImageDto {
         dto.self = uriInfo.getBaseUriBuilder()
                 .path("images")
                 .path(String.valueOf(image.getImageId()))
-                .build();
-        dto.users = uriInfo.getBaseUriBuilder()
-                .path("users")
-                .queryParam("hasProfilePicture", String.valueOf(image.getImageId()))
-                .build();
-        dto.posts = uriInfo.getBaseUriBuilder()
-                .path("posts")
-                .queryParam("hasImage", String.valueOf(image.getImageId()))
                 .build();
 
         return dto;
@@ -52,19 +42,4 @@ public class ImageDto {
         this.image = image;
     }
 
-    public URI getUsers() {
-        return users;
-    }
-
-    public void setUsers(URI users) {
-        this.users = users;
-    }
-
-    public URI getPosts() {
-        return posts;
-    }
-
-    public void setPosts(URI posts) {
-        this.posts = posts;
-    }
 }

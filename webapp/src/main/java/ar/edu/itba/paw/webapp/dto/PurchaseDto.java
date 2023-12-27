@@ -21,14 +21,22 @@ public class PurchaseDto {
         dto.purchaseDate = purchase.getPurchaseDate();
 
         dto.self = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(purchase.getUser().getNeighborhood().getNeighborhoodId()))
+                .path("users")
+                .path(String.valueOf(purchase.getUser().getUserId()))
                 .path("purchases")
                 .path(String.valueOf(purchase.getPurchaseId()))
                 .build();
         dto.product = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(purchase.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("products")
                 .path(String.valueOf(purchase.getProduct().getProductId()))
                 .build();
         dto.user = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(purchase.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(purchase.getUser().getUserId()))
                 .build();

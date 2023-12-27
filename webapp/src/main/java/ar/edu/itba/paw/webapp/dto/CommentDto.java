@@ -21,16 +21,22 @@ public class CommentDto {
         dto.date = comment.getDate();
 
         dto.self = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(comment.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("posts")
                 .path(String.valueOf(comment.getPost().getPostId()))
                 .path("comments")
                 .path(String.valueOf(comment.getCommentId()))
                 .build();
         dto.user = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(comment.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(comment.getUser().getUserId()))
                 .build();
         dto.post = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(comment.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("posts")
                 .path(String.valueOf(comment.getPost().getPostId()))
                 .build();

@@ -21,32 +21,35 @@ public class NeighborhoodDto {
         dto.name = neighborhood.getName();
 
         dto.self = uriInfo.getBaseUriBuilder()
-                .path("neighborhood")
+                .path("neighborhoods")
                 .path(String.valueOf(neighborhood.getNeighborhoodId()))
                 .build();
         dto.users = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(neighborhood.getNeighborhoodId()))
                 .path("users")
-                .queryParam("neighborhood", String.valueOf(neighborhood.getNeighborhoodId()))
                 .build();
         dto.workers = uriInfo.getBaseUriBuilder()
                 .path("workers")
                 .queryParam("neighborhood", String.valueOf(neighborhood.getNeighborhoodId()))
                 .build();
         dto.contacts = uriInfo.getBaseUriBuilder()
-                .path("neighborhood")
+                .path("neighborhoods")
                 .path(String.valueOf(neighborhood.getNeighborhoodId()))
                 .path("contacts")
                 .build();
         dto.channels = uriInfo.getBaseUriBuilder()
-                .path("channel")
+                .path("neighborhoods")
+                .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                .path("channels")
                 .build();
         dto.events = uriInfo.getBaseUriBuilder()
-                .path("neighborhood")
+                .path("neighborhoods")
                 .path(String.valueOf(neighborhood.getNeighborhoodId()))
                 .path("events")
                 .build();
         dto.resources = uriInfo.getBaseUriBuilder()
-                .path("neighborhood")
+                .path("neighborhoods")
                 .path(String.valueOf(neighborhood.getNeighborhoodId()))
                 .path("resources")
                 .build();

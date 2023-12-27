@@ -25,16 +25,22 @@ public class InquiryDto {
         dto.inquiryDate = inquiry.getInquiryDate();
 
         dto.self = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(inquiry.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("products")
                 .path(String.valueOf(inquiry.getProduct().getProductId()))
                 .path("inquiries")
                 .path(String.valueOf(inquiry.getInquiryId()))
                 .build();
         dto.product = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(inquiry.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("products")
                 .path(String.valueOf(inquiry.getProduct().getProductId()))
                 .build();
         dto.user = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(inquiry.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(inquiry.getUser().getUserId()))
                 .build();

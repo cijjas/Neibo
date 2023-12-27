@@ -31,6 +31,8 @@ public class ProductDto {
         dto.remainingUnits = product.getRemainingUnits();
 
         dto.self = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(product.getSeller().getNeighborhood().getNeighborhoodId()))
                 .path("products")
                 .path(String.valueOf(product.getProductId()))
                 .build();
@@ -47,6 +49,8 @@ public class ProductDto {
                 .path(String.valueOf(product.getTertiaryPicture().getImageId()))
                 .build();
         dto.seller = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(product.getSeller().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(product.getSeller().getUserId()))
                 .build();
@@ -55,11 +59,15 @@ public class ProductDto {
                 .path(String.valueOf(product.getDepartment().getDepartmentId()))
                 .build();
         dto.inquiries = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(product.getSeller().getNeighborhood().getNeighborhoodId()))
                 .path("products")
                 .path(String.valueOf(product.getProductId()))
                 .path("inquiries")
                 .build();
         dto.requests = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(product.getSeller().getNeighborhood().getNeighborhoodId()))
                 .path("products")
                 .path(String.valueOf(product.getProductId()))
                 .path("requests")
@@ -79,4 +87,67 @@ public class ProductDto {
     public Long getRemainingUnits() { return remainingUnits; }
     public void setRemainingUnits(Long remainingUnits) { this.remainingUnits = remainingUnits; }
 
+    public URI getSelf() {
+        return self;
+    }
+
+    public void setSelf(URI self) {
+        this.self = self;
+    }
+
+    public URI getPrimaryPicture() {
+        return primaryPicture;
+    }
+
+    public void setPrimaryPicture(URI primaryPicture) {
+        this.primaryPicture = primaryPicture;
+    }
+
+    public URI getSecondaryPicture() {
+        return secondaryPicture;
+    }
+
+    public void setSecondaryPicture(URI secondaryPicture) {
+        this.secondaryPicture = secondaryPicture;
+    }
+
+    public URI getTertiaryPicture() {
+        return tertiaryPicture;
+    }
+
+    public void setTertiaryPicture(URI tertiaryPicture) {
+        this.tertiaryPicture = tertiaryPicture;
+    }
+
+    public URI getSeller() {
+        return seller;
+    }
+
+    public void setSeller(URI seller) {
+        this.seller = seller;
+    }
+
+    public URI getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(URI department) {
+        this.department = department;
+    }
+
+    public URI getInquiries() {
+        return inquiries;
+    }
+
+    public void setInquiries(URI inquiries) {
+        this.inquiries = inquiries;
+    }
+
+    public URI getRequests() {
+        return requests;
+    }
+
+    public void setRequests(URI requests) {
+        this.requests = requests;
+    }
 }

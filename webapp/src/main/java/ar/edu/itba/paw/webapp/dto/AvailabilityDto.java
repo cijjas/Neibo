@@ -13,12 +13,16 @@ public class AvailabilityDto {
         final AvailabilityDto dto = new AvailabilityDto();
 
         dto.self = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(availability.getAmenity().getNeighborhood().getNeighborhoodId()))
                 .path("amenities")
                 .path(String.valueOf(availability.getAmenity().getAmenityId()))
                 .path("availability")
                 .path(String.valueOf(availability.getAmenityAvailabilityId()))
                 .build();
         dto.amenity = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(availability.getAmenity().getNeighborhood().getNeighborhoodId()))
                 .path("amenities")
                 .path(String.valueOf(availability.getAmenity().getAmenityId()))
                 .build();

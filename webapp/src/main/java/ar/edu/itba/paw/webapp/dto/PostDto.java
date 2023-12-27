@@ -28,10 +28,14 @@ public class PostDto {
         dto.date = post.getDate();
 
         dto.self = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("posts")
                 .path(String.valueOf(post.getPostId()))
                 .build();
         dto.user = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(post.getUser().getUserId()))
                 .build();
@@ -44,11 +48,15 @@ public class PostDto {
                 .path(String.valueOf(post.getPostPicture().getImageId()))
                 .build();
         dto.comments = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("posts")
                 .path(String.valueOf(post.getPostId()))
                 .path("comments")
                 .build();
         dto.tags = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("posts")
                 .path(String.valueOf(post.getPostId()))
                 .path("tags")
@@ -58,6 +66,8 @@ public class PostDto {
                 .queryParam("post", String.valueOf(post.getPostId()))
                 .build();
         dto.subscribers = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .queryParam("subscribedTo", String.valueOf(post.getPostId()))
                 .build();

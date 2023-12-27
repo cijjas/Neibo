@@ -21,6 +21,8 @@ public class AttendanceDto {
                 .path(String.valueOf(attendance.getId()))
                 .build();
         dto.user = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(attendance.getEvent().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(attendance.getUser().getUserId()))
                 .build();

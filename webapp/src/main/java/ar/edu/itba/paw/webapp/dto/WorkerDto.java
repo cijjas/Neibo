@@ -32,6 +32,8 @@ public class WorkerDto {
                 .build();
 
         dto.user = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(worker.getUser().getUserId()))
                 .build();

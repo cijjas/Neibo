@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.swing.text.html.Option;
+import java.util.Optional;
 
 @Repository
 public class LikeDaoImpl implements LikeDao {
@@ -47,6 +49,12 @@ public class LikeDaoImpl implements LikeDao {
                 .setParameter("userId", userId)
                 .getSingleResult();
         return count != null && count > 0;
+    }
+
+    @Override
+    public Optional<Like> findLikeById(long likeId) {
+        LOGGER.debug("Selecting Like with Id {}", likeId);
+        return Optional.ofNullable(em.find(Like.class, likeId));
     }
 
     // -------------------------------------------------- LIKES DELETE -------------------------------------------------

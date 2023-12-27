@@ -2,11 +2,14 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.LikeDao;
 import ar.edu.itba.paw.interfaces.services.LikeService;
+import ar.edu.itba.paw.models.Entities.Like;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -34,6 +37,12 @@ public class LikeServiceImpl implements LikeService {
     public boolean isPostLiked(long postId, long userId) {
         LOGGER.info("Checking if User {} has liked Post {}", userId, postId);
         return likeDao.isPostLiked(postId, userId);
+    }
+
+    @Override
+    public Optional<Like> findLikeById(long likeId) {
+        LOGGER.info("Finding Like with Id {}", likeId);
+        return likeDao.findLikeById(likeId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

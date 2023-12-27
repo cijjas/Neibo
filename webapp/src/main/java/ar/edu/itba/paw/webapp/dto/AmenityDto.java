@@ -20,14 +20,18 @@ public class AmenityDto {
         dto.description = amenity.getDescription();
 
         dto.self = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(amenity.getNeighborhood().getNeighborhoodId()))
                 .path("amenities")
                 .path(String.valueOf(amenity.getAmenityId()))
                 .build();
         dto.neighborhood = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
-                .path(String.valueOf(amenity.getAmenityId()))
+                .path(String.valueOf(amenity.getNeighborhood().getNeighborhoodId()))
                 .build();
         dto.availability = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(amenity.getNeighborhood().getNeighborhoodId()))
                 .path("amenities")
                 .path(String.valueOf(amenity.getAmenityId()))
                 .path("availability")

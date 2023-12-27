@@ -16,10 +16,12 @@ public class ChannelDto {
 
         dto.channel = channel.getChannel();
 
-        dto.self = uriInfo.getBaseUriBuilder()
-                .path("channels")
-                .path(String.valueOf(channel.getChannelId()))
-                .build();
+//        dto.self = uriInfo.getBaseUriBuilder()
+//                .path("neighborhoods")
+//                .path(String.valueOf())
+//                .path("channels")
+//                .path(String.valueOf(channel.getChannelId()))
+//                .build();
         dto.posts = uriInfo.getBaseUriBuilder()
                 .path("posts")
                 .queryParam("postedIn", String.valueOf(channel.getChannelId()))
