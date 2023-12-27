@@ -10,14 +10,14 @@ public class DepartmentDto {
     private ar.edu.itba.paw.enums.Department department;
     private URI self;
 
-    public static DepartmentDto fromDepartment(Department department, UriInfo uriInfo){
+    public static DepartmentDto fromDepartment(ar.edu.itba.paw.enums.Department department, UriInfo uriInfo){
         final DepartmentDto dto = new DepartmentDto();
 
-        dto.department = department.getDepartment();
+        dto.department = department;
 
         dto.self = uriInfo.getBaseUriBuilder()
                 .path("departments")
-                .path(String.valueOf(department.getDepartmentId()))
+                .path(String.valueOf(department.getId()))
                 .build();
 
         return dto;

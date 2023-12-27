@@ -16,6 +16,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -52,6 +53,12 @@ public class BookingServiceImpl implements BookingService {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Booking> findBooking(long bookingId){
+        return bookingDao.findBookingById(bookingId);
+    }
 
     @Override
     @Transactional(readOnly = true)

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence.JunctionDaos;
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.models.Entities.Availability;
 import ar.edu.itba.paw.models.Entities.Booking;
+import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class BookingDaoImpl implements BookingDao {
@@ -43,6 +45,12 @@ public class BookingDaoImpl implements BookingDao {
                     "INNER JOIN shifts s ON s.shiftid = asa.shiftid\n" +
                     "INNER JOIN days d ON s.dayid = d.dayid\n" +
                     "INNER JOIN times t ON s.starttime = t.timeid";
+
+    @Override
+    public Optional<Booking> findBookingById(long bookingId){
+        LOGGER.debug("Selecting Booking with id {}", bookingId);
+        return Optional.ofNullable(em.find(Booking.class, bookingId));
+    }
 
     @Override
     public List<Booking> getUserBookings(long userId) {

@@ -46,6 +46,32 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public List<Request> getRequestsByCriteria(long productId, long userId, int page, int size){
+        if (userId > 0 && productId > 0) {
+            return requestDao.getRequestsByProductAndUser(productId, userId, page, size);
+        } else if (userId > 0) {
+            return requestDao.getRequestsByUserId(userId, page, size);
+        } else if (productId > 0) {
+            return requestDao.getRequestsByProductId(productId, page, size);
+        } else {
+            throw new NotFoundException("Invalid combination of parameters.");
+        }
+    }
+
+    @Override
+    public int getRequestsCountByCriteria(long productId, long userId) {
+        if (userId > 0 && productId > 0) {
+            return requestDao.getRequestsCountByProductAndUser(productId, userId);
+        } else if (userId > 0) {
+            return requestDao.getRequestsCountByUserId(userId);
+        } else if (productId > 0) {
+            return requestDao.getRequestsCountByProductId(productId);
+        } else {
+            throw new NotFoundException("Invalid combination of parameters.");
+        }
+    }
+
+    @Override
     public List<Request> getRequestsByProductId(long productId, int page, int size) {
         return requestDao.getRequestsByProductId(productId, page, size);
     }
@@ -69,6 +95,11 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public int getRequestsCountByProductAndUser(long productId, long userId) {
         return requestDao.getRequestsCountByProductAndUser(productId, userId);
+    }
+
+    @Override
+    public int getRequestsCountUser(long userId) {
+        return requestDao.getRequestsCountByUserId(userId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.models.Entities.Amenity;
+import ar.edu.itba.paw.models.Entities.Shift;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
@@ -26,26 +28,52 @@ public class AmenityController {
     private UriInfo uriInfo;
 
     @PathParam("neighborhoodId")
-    private String neighborhoodId;
+    private Long neighborhoodId;
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listAmenities(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size) {
-        final List<Amenity> amenities = as.getAmenities(Long.parseLong(neighborhoodId), page, size);
+        final List<Amenity> amenities = as.getAmenities(neighborhoodId, page, size);
         final List<AmenityDto> amenitiesDto = amenities.stream()
                 .map(a -> AmenityDto.fromAmenity(a, uriInfo)).collect(Collectors.toList());
 
-        // Add pagination links to the response header
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/amenities";
-        int totalAmenityPages = as.getTotalAmenitiesPages(Long.parseLong(neighborhoodId), size);
+        int totalAmenityPages = as.getTotalAmenitiesPages(neighborhoodId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalAmenityPages);
 
         return Response.ok(new GenericEntity<List<AmenityDto>>(amenitiesDto){})
                 .links(links)
                 .build();
     }
+
+    @GET
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response findAmenity(@PathParam("id") final long id) {
+        Optional<Amenity> amenity = as.findAmenityById(id);
+        if (!amenity.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(AmenityDto.fromAmenity(amenity.get(), uriInfo)).build();
+    }
+
+    @GET
+    @Path("/{id}/availability")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response getAmenityAvailability(@PathParam("id") final long id) {
+        Optional<Amenity> amenity = as.findAmenityById(id);
+        if (!amenity.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        System.out.println(amenity.get().getAvailableShifts());
+        // NO FUNCIONA DEBERIA SER UNA LISTA DE SHIFT DTO
+
+        return Response.ok(new GenericEntity<List<Shift>>(amenity.get().getAvailableShifts()){}).build();
+    }
+
 
 
     /*@POST
@@ -56,17 +84,5 @@ public class AmenityController {
                 .path(String.valueOf(user.getId())).build();
         return Response.created(uri).build();
     }*/
-    /*
-    * Hagan los DTOs en general, despues los revisamos
-    * Para los POST hay que hacer un DTO __aparte__ para la creacion que seria practicamenteel formulario y tiene que ser validado,
-    * para la validacion se puede usar spring validation aka copiar y pegar las anotaciones (chequear clase de sotuyo)
-    *
-    * Aparte de esto
-    * El GET de id deberia ser facil
-    * El DELETE tambn deberia ser facil
-    * */
-
-
-
 }
 

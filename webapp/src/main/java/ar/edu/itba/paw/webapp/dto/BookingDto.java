@@ -17,7 +17,7 @@ public class BookingDto {
 
     // booking tiene un user y un availability (amenity y shift)
 
-    public static BookingDto fromAmenity(Booking booking, UriInfo uriInfo){
+    public static BookingDto fromBooking(Booking booking, UriInfo uriInfo){
         final BookingDto dto = new BookingDto();
 
         dto.bookingDate = booking.getBookingDate();
