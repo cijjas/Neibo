@@ -44,8 +44,9 @@ public class LikeController {
 
 
     @GET
+    @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findById(@QueryParam("id") final long id) {
+    public Response findById(@PathParam("id") final long id) {
         Optional<Like> like = ls.findLikeById(id);
         if (!like.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();

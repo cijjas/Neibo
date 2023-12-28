@@ -38,7 +38,7 @@ public class EventController {
         final List<EventDto> eventsDto = events.stream()
                 .map(e -> EventDto.fromEvent(e, uriInfo)).collect(Collectors.toList());
 
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/events";
+        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/events";
 
         return Response.ok(new GenericEntity<List<EventDto>>(eventsDto){})
                 .build();

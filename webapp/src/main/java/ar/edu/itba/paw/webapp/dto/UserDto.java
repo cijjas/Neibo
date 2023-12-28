@@ -13,6 +13,7 @@ public class UserDto {
     private String password;
     private Boolean darkMode;
     private String phoneNumber;
+    private Integer identification;
     private URI self;
     private URI neighborhood;
     private URI profilePicture;
@@ -33,6 +34,7 @@ public class UserDto {
         dto.password = user.getPassword();
         dto.darkMode = user.getDarkMode();
         dto.phoneNumber = user.getPhoneNumber();
+        dto.identification = user.getIdentification();
 
         dto.self = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
@@ -121,4 +123,95 @@ public class UserDto {
     public String getPhoneNumber() { return phoneNumber; }
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
+    public Boolean getDarkMode() {
+        return darkMode;
+    }
+
+    public Integer getIdentification() {
+        return identification;
+    }
+
+    public void setIdentification(Integer identification) {
+        this.identification = identification;
+    }
+
+    public URI getSelf() {
+        return self;
+    }
+
+    public void setSelf(URI self) {
+        this.self = self;
+    }
+
+    public URI getNeighborhood() {
+        return neighborhood;
+    }
+
+    public void setNeighborhood(URI neighborhood) {
+        this.neighborhood = neighborhood;
+    }
+
+    public URI getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(URI profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public URI getPosts() {
+        return posts;
+    }
+
+    public void setPosts(URI posts) {
+        this.posts = posts;
+    }
+
+    public URI getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(URI bookings) {
+        this.bookings = bookings;
+    }
+
+    public URI getSubscribedPosts() {
+        return subscribedPosts;
+    }
+
+    public void setSubscribedPosts(URI subscribedPosts) {
+        this.subscribedPosts = subscribedPosts;
+    }
+
+    public URI getLikedPosts() {
+        return likedPosts;
+    }
+
+    public void setLikedPosts(URI likedPosts) {
+        this.likedPosts = likedPosts;
+    }
+
+    public URI getPurchases() {
+        return purchases;
+    }
+
+    public void setPurchases(URI purchases) {
+        this.purchases = purchases;
+    }
+
+    public URI getSales() {
+        return sales;
+    }
+
+    public void setSales(URI sales) {
+        this.sales = sales;
+    }
+
+    public URI getEventsSubscribed() {
+        return eventsSubscribed;
+    }
+
+    public void setEventsSubscribed(URI eventsSubscribed) {
+        this.eventsSubscribed = eventsSubscribed;
+    }
 }

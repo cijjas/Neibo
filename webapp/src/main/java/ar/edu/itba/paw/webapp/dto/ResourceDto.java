@@ -43,4 +43,27 @@ public class ResourceDto {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
+    public URI getSelf() {
+        return self;
+    }
+
+    public void setSelf(URI self) {
+        this.self = self;
+    }
+
+    public URI getImage() {
+        return image;
+    }
+
+    public void setImage(URI image) {
+        this.image = image;
+    }
+
+    public URI getNeighborhood() {
+        return neighborhood;
+    }
+
+    public void setNeighborhood(URI neighborhood) {
+        this.neighborhood = neighborhood;
+    }
 }

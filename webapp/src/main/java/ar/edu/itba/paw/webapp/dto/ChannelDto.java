@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.models.Entities.Availability;
 import ar.edu.itba.paw.models.Entities.Channel;
 
 import javax.ws.rs.core.UriInfo;
@@ -11,17 +10,17 @@ public class ChannelDto {
     private URI self; // localhost:8080/neighborhoods/{id}/channels/{id}
     private URI posts; // localhost:8080/posts/{id}
 
-    public static ChannelDto fromChannel(Channel channel, UriInfo uriInfo){
+    public static ChannelDto fromChannel(Channel channel, UriInfo uriInfo, Long neighborhoodId){
         final ChannelDto dto = new ChannelDto();
 
         dto.channel = channel.getChannel();
 
-//        dto.self = uriInfo.getBaseUriBuilder()
-//                .path("neighborhoods")
-//                .path(String.valueOf())
-//                .path("channels")
-//                .path(String.valueOf(channel.getChannelId()))
-//                .build();
+        dto.self = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(neighborhoodId))
+                .path("channels")
+                .path(String.valueOf(channel.getChannelId()))
+                .build();
         dto.posts = uriInfo.getBaseUriBuilder()
                 .path("posts")
                 .queryParam("postedIn", String.valueOf(channel.getChannelId()))

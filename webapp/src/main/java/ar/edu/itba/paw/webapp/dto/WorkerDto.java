@@ -71,4 +71,51 @@ public class WorkerDto {
     public String getBio() { return bio; }
     public void setBio(String bio) { this.bio = bio; }
 
+    public URI getSelf() {
+        return self;
+    }
+
+    public void setSelf(URI self) {
+        this.self = self;
+    }
+
+    public URI getUser() {
+        return user;
+    }
+
+    public void setUser(URI user) {
+        this.user = user;
+    }
+
+    public URI getBackgroundPicture() {
+        return backgroundPicture;
+    }
+
+    public void setBackgroundPicture(URI backgroundPicture) {
+        this.backgroundPicture = backgroundPicture;
+    }
+
+    public URI getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(URI reviews) {
+        this.reviews = reviews;
+    }
+
+    public URI getProfessions() {
+        return professions;
+    }
+
+    public void setProfessions(URI professions) {
+        this.professions = professions;
+    }
+
+    public URI getWorkerNeighborhoods() {
+        return workerNeighborhoods;
+    }
+
+    public void setWorkerNeighborhoods(URI workerNeighborhoods) {
+        this.workerNeighborhoods = workerNeighborhoods;
+    }
 }

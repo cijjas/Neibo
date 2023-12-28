@@ -26,37 +26,28 @@ public class ChannelController {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response listChannels(
-            @QueryParam("id") Long channelId,
-            @QueryParam("name") String channelName) {
+    public Response listChannels() {
+        List<Channel> channels = cs.getChannels(Long.parseLong(neighborhoodId));
 
-        if (channelId != null) {
-            // Retrieve channel by ID
-            Optional<Channel> channel = cs.findChannelById(channelId);
-            if (channel.isPresent()) {
-                return Response.ok(ChannelDto.fromChannel(channel.get(), uriInfo)).build();
-            } else {
-                return Response.status(Response.Status.NOT_FOUND).build();
-            }
+        List<ChannelDto> channelDto = channels.stream()
+                .map(c -> ChannelDto.fromChannel(c, uriInfo, Long.parseLong(neighborhoodId))).collect(Collectors.toList());
 
-        } else if (channelName != null) {
-            // Retrieve channel by name
-            Optional<Channel> channel = cs.findChannelByName(channelName);
-            if (channel.isPresent()) {
-                return Response.ok(ChannelDto.fromChannel(channel.get(), uriInfo)).build();
-            } else {
-                return Response.status(Response.Status.NOT_FOUND).build();
-            }
-
-        } else {
-            // Retrieve channels by neighborhoodId
-            List<Channel> channels = cs.getChannels(Long.parseLong(neighborhoodId));
-            List<ChannelDto> channelsDto = channels.stream()
-                    .map(c -> ChannelDto.fromChannel(c, uriInfo))
-                    .collect(Collectors.toList());
-
-            return Response.ok(new GenericEntity<List<ChannelDto>>(channelsDto) {}).build();
-        }
+        return Response.ok(new GenericEntity<List<ChannelDto>>(channelDto){})
+                .build();
     }
+
+    @GET
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response findChannel(
+            @QueryParam("id") final int channelId) {
+        Optional<Channel> channel = cs.findChannelById(channelId);
+        if (!channel.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(ChannelDto.fromChannel(channel.get(), uriInfo, Long.parseLong(neighborhoodId))).build();
+    }
+
+
 }
 

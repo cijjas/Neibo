@@ -60,4 +60,59 @@ public class NeighborhoodDto {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
+    public URI getSelf() {
+        return self;
+    }
+
+    public void setSelf(URI self) {
+        this.self = self;
+    }
+
+    public URI getUsers() {
+        return users;
+    }
+
+    public void setUsers(URI users) {
+        this.users = users;
+    }
+
+    public URI getWorkers() {
+        return workers;
+    }
+
+    public void setWorkers(URI workers) {
+        this.workers = workers;
+    }
+
+    public URI getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(URI contacts) {
+        this.contacts = contacts;
+    }
+
+    public URI getChannels() {
+        return channels;
+    }
+
+    public void setChannels(URI channels) {
+        this.channels = channels;
+    }
+
+    public URI getEvents() {
+        return events;
+    }
+
+    public void setEvents(URI events) {
+        this.events = events;
+    }
+
+    public URI getResources() {
+        return resources;
+    }
+
+    public void setResources(URI resources) {
+        this.resources = resources;
+    }
 }

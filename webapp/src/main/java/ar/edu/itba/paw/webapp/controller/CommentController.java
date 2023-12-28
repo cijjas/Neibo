@@ -43,7 +43,7 @@ public class CommentController {
         final List<CommentDto> commentsDto = comments.stream()
                 .map(c -> CommentDto.fromComment(c, uriInfo)).collect(Collectors.toList());
 
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/products" + productId + "/comment";
+        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/products" + productId + "/comment";
         int totalProductPages = cs.getTotalCommentPages(productId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalProductPages);
 

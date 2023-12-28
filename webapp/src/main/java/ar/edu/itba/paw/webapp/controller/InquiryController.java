@@ -43,7 +43,7 @@ public class InquiryController {
         final List<InquiryDto> inquiriesDto = inquiries.stream()
                 .map(i -> InquiryDto.fromInquiry(i, uriInfo)).collect(Collectors.toList());
 
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/products" + productId + "inquiries";
+        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/products" + productId + "inquiries";
         int totalInquiryPages = is.getTotalInquiryPages(productId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalInquiryPages);
 

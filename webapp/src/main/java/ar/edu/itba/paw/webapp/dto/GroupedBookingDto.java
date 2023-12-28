@@ -49,4 +49,60 @@ public class GroupedBookingDto {
 
         return dto;
     }
+
+    public List<Long> getBookingIds() {
+        return bookingIds;
+    }
+
+    public void setBookingIds(List<Long> bookingIds) {
+        this.bookingIds = bookingIds;
+    }
+
+    public String getAmenityName() {
+        return amenityName;
+    }
+
+    public void setAmenityName(String amenityName) {
+        this.amenityName = amenityName;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public URI getSelf() {
+        return self;
+    }
+
+    public void setSelf(URI self) {
+        this.self = self;
+    }
+
+    public URI getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(URI startTime) {
+        this.startTime = startTime;
+    }
+
+    public URI getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(URI endTime) {
+        this.endTime = endTime;
+    }
 }

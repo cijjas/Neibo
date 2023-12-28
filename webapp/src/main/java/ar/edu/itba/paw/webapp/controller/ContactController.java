@@ -31,7 +31,7 @@ public class ContactController {
         final List<ContactDto> contactsDto = contacts.stream()
                 .map(c -> ContactDto.fromContact(c, uriInfo)).collect(Collectors.toList());
 
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/contacts";
+        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/contacts";
 
         return Response.ok(new GenericEntity<List<ContactDto>>(contactsDto){})
                 .build();
