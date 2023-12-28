@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 
+import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.User;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -61,14 +63,16 @@ public class UserController {
         return Response.ok(UserDto.fromUser(user.get(), uriInfo)).build();
     }
 
-    /*@POST
+    @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createUser(final UserDto userDto) {
-        final User user = us.register(userDto.getUsername(), userDto.getPassword());
+        final User user = us.createNeighbor(userDto.getMail(), userDto.getPassword(), userDto.getName(), userDto.getSurname(), neighborhoodId, Language.ENGLISH, "12345678");
         final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(user.getId())).build();
+                .path(String.valueOf(user.getUserId())).build();
         return Response.created(uri).build();
     }
+
+    /*
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })

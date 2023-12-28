@@ -31,7 +31,7 @@ public class TagDaoImpl implements TagDao {
     // ---------------------------------------------- TAGS SELECT ------------------------------------------------------
 
     @Override
-    public List<Tag> findTagsByPostId(long postId) {
+    public List<Tag> getTagsByPostId(long postId) {
         LOGGER.debug("Selecting Tags for Post with postId {}", postId);
         return em.createQuery("SELECT t FROM Tag t JOIN t.posts p WHERE p.postId = :postId", Tag.class)
                 .setParameter("postId", postId)

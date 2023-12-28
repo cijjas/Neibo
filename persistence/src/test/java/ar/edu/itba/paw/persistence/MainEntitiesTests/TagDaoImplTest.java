@@ -69,7 +69,7 @@ public class TagDaoImplTest {
         testInserter.createCategorization(tKey, pKey);
 
         // Exercise
-        List<Tag> tags = tagDao.findTagsByPostId(pKey);
+        List<Tag> tags = tagDao.getTagsByPostId(pKey);
 
         // Validations & Post Conditions
         assertFalse(tags.isEmpty());
@@ -81,7 +81,7 @@ public class TagDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Tag> tags = tagDao.findTagsByPostId(1);
+        List<Tag> tags = tagDao.getTagsByPostId(1);
 
         // Validations & Post Conditions
         assertTrue(tags.isEmpty());
