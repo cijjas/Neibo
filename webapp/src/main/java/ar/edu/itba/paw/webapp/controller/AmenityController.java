@@ -57,17 +57,12 @@ public class AmenityController {
         return Response.ok(AmenityDto.fromAmenity(amenity.get(), uriInfo)).build();
     }
 
-
-
-
-
-    /*@POST
+    @DELETE
+    @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createAmenity(final AmenityDto amenityDto) {
-        final Amenity amenity = as.createAmenity(amenityDto.getName(), amenityDto.getDescription(), neighborhoodId, LISTA DE SHIFTS);
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(user.getId())).build();
-        return Response.created(uri).build();
-    }*/
+    public Response deleteById(@PathParam("id") final long id) {
+        as.deleteAmenity(id);
+        return Response.noContent().build();
+    }
 }
 

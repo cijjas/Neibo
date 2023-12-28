@@ -62,4 +62,12 @@ public class ProductController {
         }
         return Response.ok(ProductDto.fromProduct(product.get(), uriInfo)).build();
     }
+
+    @DELETE
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response deleteById(@PathParam("id") final long id) {
+        ps.deleteProduct(id);
+        return Response.noContent().build();
+    }
 }

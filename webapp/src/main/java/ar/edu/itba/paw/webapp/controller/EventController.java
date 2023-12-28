@@ -55,4 +55,11 @@ public class EventController {
         return Response.ok(EventDto.fromEvent(event.get(), uriInfo)).build();
     }
 
+    @DELETE
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response deleteById(@PathParam("id") final long id) {
+        es.deleteEvent(id);
+        return Response.noContent().build();
+    }
 }
