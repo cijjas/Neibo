@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 
-@Path("neighborhoods/{neighborhoodId}/products/{productId}/comments")
+@Path("neighborhoods/{neighborhoodId}/posts/{postId}/comments")
 @Component
 public class CommentController {
 
@@ -29,23 +29,22 @@ public class CommentController {
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
-    @PathParam("productId")
-    private Long productId;
+    @PathParam("postId")
+    private Long postId;
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listProducts(
             @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("productId") final int productId
+            @QueryParam("size") @DefaultValue("10") final int size
     ) {
-        final List<Comment> comments = cs.getCommentsByPostId(productId, page, size);
+        final List<Comment> comments = cs.getCommentsByPostId(postId, page, size);
         final List<CommentDto> commentsDto = comments.stream()
                 .map(c -> CommentDto.fromComment(c, uriInfo)).collect(Collectors.toList());
 
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/products" + productId + "/comment";
-        int totalProductPages = cs.getTotalCommentPages(productId, size);
-        Link[] links = createPaginationLinks(baseUri, page, size, totalProductPages);
+        String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/posts" + postId + "/comment";
+        int totalCommentsPages = cs.getTotalCommentPages(postId, size);
+        Link[] links = createPaginationLinks(baseUri, page, size, totalCommentsPages);
 
         return Response.ok(new GenericEntity<List<CommentDto>>(commentsDto){})
                 .links(links)
