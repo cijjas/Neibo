@@ -45,10 +45,12 @@ public class UserDto {
                 .path("neighborhoods")
                 .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                 .build();
-        dto.profilePicture = uriInfo.getBaseUriBuilder()
-                .path("images")
-                .path(String.valueOf(user.getProfilePicture().getImageId()))
-                .build();
+        if ( user.getProfilePicture() != null ){
+            dto.profilePicture = uriInfo.getBaseUriBuilder()
+                    .path("images")
+                    .path(String.valueOf(user.getProfilePicture().getImageId()))
+                    .build();
+        }
         dto.posts = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
