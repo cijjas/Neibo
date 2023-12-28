@@ -33,4 +33,19 @@ public class ProfessionDto {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
+    public URI getSelf() {
+        return self;
+    }
+
+    public void setSelf(URI self) {
+        this.self = self;
+    }
+
+    public URI getWorkers() {
+        return workers;
+    }
+
+    public void setWorkers(URI workers) {
+        this.workers = workers;
+    }
 }

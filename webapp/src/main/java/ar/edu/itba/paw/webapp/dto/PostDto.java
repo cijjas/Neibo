@@ -43,10 +43,12 @@ public class PostDto {
                 .path("channels")
                 .path(String.valueOf(post.getChannel().getChannelId()))
                 .build();
-        dto.postPicture = uriInfo.getBaseUriBuilder()
-                .path("images")
-                .path(String.valueOf(post.getPostPicture().getImageId()))
-                .build();
+        if ( post.getPostPicture() != null ){
+            dto.postPicture = uriInfo.getBaseUriBuilder()
+                    .path("images")
+                    .path(String.valueOf(post.getPostPicture().getImageId()))
+                    .build();
+        }
         dto.comments = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
@@ -82,4 +84,67 @@ public class PostDto {
     public Date getDate() { return date; }
     public void setDate(Date date) { this.date = date; }
 
+    public URI getSelf() {
+        return self;
+    }
+
+    public void setSelf(URI self) {
+        this.self = self;
+    }
+
+    public URI getUser() {
+        return user;
+    }
+
+    public void setUser(URI user) {
+        this.user = user;
+    }
+
+    public URI getChannel() {
+        return channel;
+    }
+
+    public void setChannel(URI channel) {
+        this.channel = channel;
+    }
+
+    public URI getPostPicture() {
+        return postPicture;
+    }
+
+    public void setPostPicture(URI postPicture) {
+        this.postPicture = postPicture;
+    }
+
+    public URI getComments() {
+        return comments;
+    }
+
+    public void setComments(URI comments) {
+        this.comments = comments;
+    }
+
+    public URI getTags() {
+        return tags;
+    }
+
+    public void setTags(URI tags) {
+        this.tags = tags;
+    }
+
+    public URI getLikes() {
+        return likes;
+    }
+
+    public void setLikes(URI likes) {
+        this.likes = likes;
+    }
+
+    public URI getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(URI subscribers) {
+        this.subscribers = subscribers;
+    }
 }

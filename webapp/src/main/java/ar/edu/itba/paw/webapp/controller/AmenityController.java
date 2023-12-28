@@ -37,7 +37,7 @@ public class AmenityController {
         final List<AmenityDto> amenitiesDto = amenities.stream()
                 .map(a -> AmenityDto.fromAmenity(a, uriInfo)).collect(Collectors.toList());
 
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/amenities";
+        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/amenities";
         int totalAmenityPages = as.getTotalAmenitiesPages(neighborhoodId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalAmenityPages);
 

@@ -39,6 +39,16 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
+    public List<Tag> getTagsByPostId(long postId, int page, int size) {
+        LOGGER.debug("Selecting Tags for Post with postId {}", postId);
+        return em.createQuery("SELECT t FROM Tag t JOIN t.posts p WHERE p.postId = :postId", Tag.class)
+                .setParameter("postId", postId)
+                .setFirstResult((page - 1) * size)
+                .setMaxResults(size)
+                .getResultList();
+    }
+
+    @Override
     public List<Tag> getTags(long neighborhoodId) {
         LOGGER.debug("Selecting Tag List from Neighborhood {}", neighborhoodId);
         return em.createQuery("SELECT DISTINCT t FROM Tag t " +
@@ -48,6 +58,42 @@ public class TagDaoImpl implements TagDao {
                         "WHERE nh.neighborhoodId = :neighborhoodId", Tag.class)
                 .setParameter("neighborhoodId", neighborhoodId)
                 .getResultList();
+    }
+
+    @Override
+    public List<Tag> getTags(long neighborhoodId, int page, int size) {
+        LOGGER.debug("Selecting Tag List from Neighborhood {}", neighborhoodId);
+        return em.createQuery("SELECT DISTINCT t FROM Tag t " +
+                        "JOIN t.posts p " +
+                        "JOIN p.user u " +
+                        "JOIN u.neighborhood nh " +
+                        "WHERE nh.neighborhoodId = :neighborhoodId", Tag.class)
+                .setParameter("neighborhoodId", neighborhoodId)
+                .setFirstResult((page - 1) * size)
+                .setMaxResults(size)
+                .getResultList();
+    }
+
+    @Override
+    public int getTagsCount(long neighborhoodId) {
+        LOGGER.debug("Selecting Tag List from Neighborhood {}", neighborhoodId);
+        return em.createQuery("SELECT DISTINCT t FROM Tag t " +
+                        "JOIN t.posts p " +
+                        "JOIN p.user u " +
+                        "JOIN u.neighborhood nh " +
+                        "WHERE nh.neighborhoodId = :neighborhoodId", Tag.class)
+                .setParameter("neighborhoodId", neighborhoodId)
+                .getResultList().size();
+    }
+
+    @Override
+    public int getTagsCountByPostId(long postId) {
+        LOGGER.debug("Selecting Tag List from Neighborhood {}", postId);
+        return em.createQuery("SELECT DISTINCT t FROM Tag t " +
+                        "JOIN t.posts p " +
+                        "WHERE p.postId = :postId", Tag.class)
+                .setParameter("postId", postId)
+                .getResultList().size();
     }
 
     @Override

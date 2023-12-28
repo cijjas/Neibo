@@ -49,4 +49,27 @@ public class ReviewDto {
     public Date getDate() { return date; }
     public void setDate(Date date) { this.date = date; }
 
+    public URI getSelf() {
+        return self;
+    }
+
+    public void setSelf(URI self) {
+        this.self = self;
+    }
+
+    public URI getWorker() {
+        return worker;
+    }
+
+    public void setWorker(URI worker) {
+        this.worker = worker;
+    }
+
+    public URI getUser() {
+        return user;
+    }
+
+    public void setUser(URI user) {
+        this.user = user;
+    }
 }

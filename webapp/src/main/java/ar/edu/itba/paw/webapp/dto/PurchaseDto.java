@@ -49,4 +49,27 @@ public class PurchaseDto {
     public Date getPurchaseDate() { return purchaseDate; }
     public void setPurchaseDate(Date purchaseDate) { this.purchaseDate = purchaseDate; }
 
+    public URI getSelf() {
+        return self;
+    }
+
+    public void setSelf(URI self) {
+        this.self = self;
+    }
+
+    public URI getProduct() {
+        return product;
+    }
+
+    public void setProduct(URI product) {
+        this.product = product;
+    }
+
+    public URI getUser() {
+        return user;
+    }
+
+    public void setUser(URI user) {
+        this.user = user;
+    }
 }
