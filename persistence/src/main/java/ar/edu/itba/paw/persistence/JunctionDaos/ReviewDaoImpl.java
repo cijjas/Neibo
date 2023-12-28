@@ -52,6 +52,16 @@ public class ReviewDaoImpl implements ReviewDao {
     }
 
     @Override
+    public List<Review> getReviews(long workerId, int page, int size) {
+        LOGGER.debug("Selecting Reviews from Worker {}", workerId);
+        TypedQuery<Review> query = em.createQuery("SELECT r FROM Review r WHERE r.worker.user.userId = :workerId ORDER BY r.date DESC", Review.class);
+        query.setParameter("workerId", workerId);
+        query.setFirstResult((page - 1) * size);
+        query.setMaxResults(size);
+        return query.getResultList();
+    }
+
+    @Override
     public Optional<Float> getAvgRating(long workerId) {
         LOGGER.debug("Selecting Average Rating for Worker {}", workerId);
         TypedQuery<Double> query = em.createQuery("SELECT AVG(rating) FROM Review r WHERE r.worker.user.userId = :workerId", Double.class);

@@ -2,7 +2,10 @@ package ar.edu.itba.paw.interfaces.persistence;
 
 
 import ar.edu.itba.paw.models.Entities.Like;
+import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.models.Entities.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface LikeDao {
@@ -14,6 +17,14 @@ public interface LikeDao {
     // -------------------------------------------------- LIKES SELECT -------------------------------------------------
 
     int getLikes(long postId);
+
+    List<Like> getLikesByPost(long postId, int page, int size);
+
+    List<Like> getLikesByUser(long userId, int page, int size);
+
+    int getLikesByPostCount(long postId);
+
+    int getLikesByUserCount(long userId);
 
     boolean isPostLiked(long postId, long userId);
 

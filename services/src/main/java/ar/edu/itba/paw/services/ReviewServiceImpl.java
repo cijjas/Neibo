@@ -49,6 +49,13 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<Review> getReviews(long workerId, int page, int size) {
+        LOGGER.info("Getting reviews for Worker {}", workerId);
+        return reviewDao.getReviews(workerId, page, size);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Optional<Float> getAvgRating(long workerId) {
         LOGGER.info("Getting Average Rating for Worker {}", workerId);
         return reviewDao.getAvgRating(workerId);
