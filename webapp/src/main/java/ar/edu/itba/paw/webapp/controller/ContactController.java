@@ -11,7 +11,7 @@ import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("neighborhood/{neighborhoodId}/contacts")
+@Path("neighborhoods/{neighborhoodId}/contacts")
 @Component
 public class ContactController {
 

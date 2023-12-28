@@ -106,9 +106,9 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Tag> findTagsByPostId(long id) {
+    public List<Tag> getTagsByPostId(long id) {
         LOGGER.info("Finding Tags for Post {}", id);
-        return tagDao.findTagsByPostId(id);
+        return tagDao.getTagsByPostId(id);
     }
 
     @Override
@@ -117,4 +117,14 @@ public class TagServiceImpl implements TagService {
         LOGGER.info("Getting All Tags from Neighborhood", neighborhoodId);
         return tagDao.getTags(neighborhoodId);
     }
+
+    @Override
+    public List<Tag> getTagsByCriteria(Long postId, Long neighborhoodId) {
+        if (postId != null) {
+            return tagDao.getTagsByPostId(postId);
+        } else {
+            return tagDao.getTags(neighborhoodId);
+        }
+    }
+
 }

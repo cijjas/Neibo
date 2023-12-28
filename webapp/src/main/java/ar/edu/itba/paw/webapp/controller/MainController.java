@@ -293,7 +293,7 @@ public class MainController extends GlobalControllerAdvice{
         mav.addObject("comments", cs.getCommentsByPostId(postId, page, size));
         mav.addObject("page", page);
         mav.addObject("totalPages", cs.getTotalCommentPages(postId, size));
-        mav.addObject("tags", ts.findTagsByPostId(postId));
+        mav.addObject("tags", ts.getTagsByPostId(postId));
         mav.addObject("commentForm", commentForm);
         mav.addObject("showSuccessMessage", success);
         mav.addObject("contextPath", "/posts/" + postId);

@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 
-@Path("neighborhood/{neighborhoodId}/events")
+@Path("neighborhoods/{neighborhoodId}/events")
 @Component
 public class EventController {
 
