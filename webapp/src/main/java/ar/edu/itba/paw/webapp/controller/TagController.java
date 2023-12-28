@@ -27,14 +27,21 @@ public class TagController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response listTags(
-            @QueryParam("postId") final Long postId
+            @QueryParam("postId") @DefaultValue("0") final Long postId,
+            @QueryParam("page") @DefaultValue("1") final int page,
+            @QueryParam("size") @DefaultValue("10") final int size
     ) {
-        List<Tag> tags = ts.getTagsByCriteria(postId, neighborhoodId);
-
+        List<Tag> tags = ts.getTagsByCriteria(postId, neighborhoodId, page, size);
         List<TagDto> tagsDto = tags.stream()
                 .map(t -> TagDto.fromTag(t.toString(), uriInfo)).collect(Collectors.toList());
 
+        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/tags";
+        int totalTagPages = ts.getTotalTagPagesByCriteria(postId, neighborhoodId, size);
+        Link[] links = ControllerUtils.createPaginationLinks(baseUri, page, size, totalTagPages);
+
         return Response.ok(new GenericEntity<List<TagDto>>(tagsDto){})
+                .links(links)
                 .build();
     }
+
 }

@@ -119,11 +119,42 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Tag> getTags(long neighborhoodId, int page, int size) {
+        LOGGER.info("Getting All Tags from Neighborhood", neighborhoodId);
+        return tagDao.getTags(neighborhoodId, page, size);
+    }
+
+    @Override
     public List<Tag> getTagsByCriteria(Long postId, Long neighborhoodId) {
         if (postId != null) {
             return tagDao.getTagsByPostId(postId);
         } else {
             return tagDao.getTags(neighborhoodId);
+        }
+    }
+
+    @Override
+    public List<Tag> getTagsByCriteria(Long postId, Long neighborhoodId, int page, int size) {
+        if (postId != 0) {
+            return tagDao.getTagsByPostId(postId, page, size);
+        } else {
+            return tagDao.getTags(neighborhoodId, page, size);
+        }
+    }
+
+    @Override
+    public int getTotalTagPages(long neighborhoodId, int size) {
+        LOGGER.info("Getting Total Tag Pages from Neighborhood", neighborhoodId);
+        return (int) Math.ceil(tagDao.getTagsCount(neighborhoodId) / (double) size);
+    }
+
+    @Override
+    public int getTotalTagPagesByCriteria(Long postId, Long neighborhoodId, int size) {
+        if (postId != 0) {
+            return (int) Math.ceil(tagDao.getTagsCountByPostId(postId) / (double) size);
+        } else {
+            return (int) Math.ceil(tagDao.getTagsCount(neighborhoodId) / (double) size);
         }
     }
 

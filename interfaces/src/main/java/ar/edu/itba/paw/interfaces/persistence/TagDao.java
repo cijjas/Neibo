@@ -14,7 +14,15 @@ public interface TagDao {
 
     List<Tag> getTagsByPostId(long id);
 
+    List<Tag> getTagsByPostId(long id, int page, int size);
+
     List<Tag> getTags(long neighborhoodId);
+
+    List<Tag> getTags(long neighborhoodId, int page, int size);
+
+    int getTagsCount(long neighborhoodId);
+
+    int getTagsCountByPostId(long postId);
 
     List<Tag> getAllTags();
 }

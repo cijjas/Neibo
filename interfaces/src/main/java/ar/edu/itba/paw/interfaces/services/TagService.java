@@ -14,11 +14,18 @@ public interface TagService {
 
     List<Tag> getTags(long neighborhoodId);
 
+    List<Tag> getTags(long neighborhoodId, int page, int size);
+
     List<Tag> getTagsByCriteria(Long postId, Long neighborhoodId);
+
+    List<Tag> getTagsByCriteria(Long postId, Long neighborhoodId, int page, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
     void createTagsAndCategorizePost(long postId, String tagsString);
 
     String createURLForTagFilter(String tags, String currentUrl, long neighborhoodId);
+
+    int getTotalTagPages(long neighborhoodId, int size);
+    int getTotalTagPagesByCriteria(Long postId, Long neighborhoodId, int size);
 }
