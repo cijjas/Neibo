@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.Pair;
 import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
+import ar.edu.itba.paw.webapp.dto.ChannelDto;
 import ar.edu.itba.paw.webapp.dto.DepartmentDto;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 @Path("departments")
 @Component
 public class DepartmentController {
+
     @Context
     private UriInfo uriInfo;
 
@@ -25,6 +27,6 @@ public class DepartmentController {
                 .map(d -> DepartmentDto.fromDepartment(d, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(departmentDto).build();
+        return Response.ok(new GenericEntity<List<DepartmentDto>>(departmentDto){}).build();
     }
 }
