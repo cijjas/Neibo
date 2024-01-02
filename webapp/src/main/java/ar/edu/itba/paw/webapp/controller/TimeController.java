@@ -27,8 +27,6 @@ public class TimeController {
                 .map(t -> TimeDto.fromTime(t, uriInfo))
                 .collect(Collectors.toList());
 
-//        return Response.ok(timeDto).build();
-
         return Response.ok(new GenericEntity<List<TimeDto>>(timeDto){})
                 .build();
     }
