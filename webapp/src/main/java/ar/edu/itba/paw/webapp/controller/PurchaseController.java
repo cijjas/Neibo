@@ -1,23 +1,19 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.CommentService;
 import ar.edu.itba.paw.interfaces.services.PurchaseService;
-import ar.edu.itba.paw.models.Entities.Comment;
 import ar.edu.itba.paw.models.Entities.Purchase;
-import ar.edu.itba.paw.webapp.dto.CommentDto;
 import ar.edu.itba.paw.webapp.dto.PurchaseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 
-@Path("neighborhoods/{neighborhoodId}/users/{userId}")
+@Path("neighborhoods/{neighborhoodId}/users/{userId}/purchases")
 @Component
 public class PurchaseController {
 

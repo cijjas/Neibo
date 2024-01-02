@@ -1,18 +1,24 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.enums.WorkerStatus;
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Amenity;
+import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
+import ar.edu.itba.paw.webapp.form.PublishForm;
+import ar.edu.itba.paw.webapp.form.WorkerSignupForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -65,11 +71,20 @@ public class WorkerController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findAmenity(@PathParam("id") final long id) {
+    public Response findWorker(@PathParam("id") final long id) {
         Optional<Worker> worker = ws.findWorkerById(id);
         if (!worker.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(WorkerDto.fromWorker(worker.get(), uriInfo)).build();
+    }
+
+    @POST
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response createWorker(@Valid final WorkerSignupForm form) {
+        final Worker worker = ws.createWorker(form.getW_mail(), form.getW_name(), form.getW_surname(), form.getW_password(), form.getW_identification(), form.getPhoneNumber(), form.getAddress(), Language.ENGLISH, form.getProfessionIds(), form.getBusinessName());
+        final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(worker.getWorkerId())).build(); //esto esta bien o es el userId que necesita??
+        return Response.created(uri).build();
     }
 }

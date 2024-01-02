@@ -6,13 +6,17 @@ import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.interfaces.services.RequestService;
 import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.models.Entities.Resource;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.ProductDto;
+import ar.edu.itba.paw.webapp.form.ListingForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -61,5 +65,15 @@ public class ProductController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(ProductDto.fromProduct(product.get(), uriInfo)).build();
+    }
+
+    @POST
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response createProduct(@Valid final ListingForm form) {
+//        final Product product = ps.createProduct(getLoggedUser, form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentId(), form.getImageFiles(), form.getQuantity());
+        final Product product = ps.createProduct(1, form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentId(), form.getImageFiles(), form.getQuantity());
+        final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(product.getProductId())).build();
+        return Response.created(uri).build();
     }
 }

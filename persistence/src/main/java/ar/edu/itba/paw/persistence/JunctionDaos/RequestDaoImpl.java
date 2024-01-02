@@ -108,6 +108,7 @@ public class RequestDaoImpl implements RequestDao {
         Long count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
                         "WHERE r.product.productId = :productId AND r.user.userId = :userId AND r.fulfilled = false")
                 .setParameter("productId", productId)
+                .setParameter("userId", userId)
                 .getSingleResult();
         return count != null ? count.intValue() : 0;
     }

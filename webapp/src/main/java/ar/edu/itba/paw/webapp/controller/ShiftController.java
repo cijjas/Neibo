@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.interfaces.services.ShiftService;
-import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Shift;
 import ar.edu.itba.paw.webapp.dto.ShiftDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +10,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.sql.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("shifts")
@@ -24,10 +21,6 @@ public class ShiftController {
 
     @Context
     private UriInfo uriInfo;
-
-    // create shift
-
-    // find shift
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)

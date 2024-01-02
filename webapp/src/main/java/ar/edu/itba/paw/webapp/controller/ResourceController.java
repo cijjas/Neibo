@@ -3,11 +3,14 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ResourceService;
 import ar.edu.itba.paw.models.Entities.Resource;
 import ar.edu.itba.paw.webapp.dto.ResourceDto;
+import ar.edu.itba.paw.webapp.form.ResourceForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +38,15 @@ public class ResourceController {
 
         return Response.ok(new GenericEntity<List<ResourceDto>>(resourcesDto){}).build();
 
+    }
+
+    @POST
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response createResource(@Valid final ResourceForm form) {
+        final Resource resource = rs.createResource(neighborhoodId, form.getTitle(), form.getDescription(), form.getImageFile());
+        final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(resource.getResourceId())).build();
+        return Response.created(uri).build();
     }
 
 }

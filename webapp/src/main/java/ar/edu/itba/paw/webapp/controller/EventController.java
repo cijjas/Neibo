@@ -2,13 +2,20 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Entities.Event;
+import ar.edu.itba.paw.models.Entities.Resource;
 import ar.edu.itba.paw.webapp.dto.AttendanceDto;
 import ar.edu.itba.paw.webapp.dto.EventDto;
+import ar.edu.itba.paw.webapp.form.EventForm;
+import ar.edu.itba.paw.webapp.form.ResourceForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +39,7 @@ public class EventController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listEventsByDate(
-            @QueryParam("date") final Date date
+            @QueryParam("date") final String date
             ) {
         final List<Event> events = es.getEventsByDate(date, neighborhoodId);
         final List<EventDto> eventsDto = events.stream()
@@ -53,6 +60,15 @@ public class EventController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(EventDto.fromEvent(event.get(), uriInfo)).build();
+    }
+
+    @POST
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response createEvent(@Valid final EventForm form) {
+        final Event event = es.createEvent(form.getName(), form.getDescription(), form.getDate(), form.getStartTime(), form.getEndTime() , neighborhoodId);
+        final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(event.getEventId())).build();
+        return Response.created(uri).build();
     }
 
 }

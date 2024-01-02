@@ -6,8 +6,10 @@ import ar.edu.itba.paw.webapp.dto.TagDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +35,7 @@ public class TagController {
     ) {
         List<Tag> tags = ts.getTagsByCriteria(postId, neighborhoodId, page, size);
         List<TagDto> tagsDto = tags.stream()
-                .map(t -> TagDto.fromTag(t.toString(), uriInfo)).collect(Collectors.toList());
+                .map(t -> TagDto.fromTag(t, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/tags";
         int totalTagPages = ts.getTotalTagPagesByCriteria(postId, neighborhoodId, size);
@@ -42,6 +44,15 @@ public class TagController {
         return Response.ok(new GenericEntity<List<TagDto>>(tagsDto){})
                 .links(links)
                 .build();
+    }
+
+    @POST
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response createTag(@Valid final TagForm form) {
+        final Tag tag = ts.createTag(form.getTag());
+        final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(tag.getTagId())).build();
+        return Response.created(uri).build();
     }
 
 }

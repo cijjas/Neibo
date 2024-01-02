@@ -525,7 +525,7 @@ public class MainController extends GlobalControllerAdvice{
         mav.addObject("selectedMonth", es.getSelectedMonth(selectedDate.getMonth(), getLoggedUser().getLanguage()));
         mav.addObject("selectedYear", es.getSelectedYear(selectedDate.getYear()));
         mav.addObject("selectedDate", selectedDate);
-        mav.addObject("eventList", es.getEventsByDate(selectedDate, getLoggedUser().getNeighborhood().getNeighborhoodId()));
+//        mav.addObject("eventList", es.getEventsByDate(selectedDate, getLoggedUser().getNeighborhood().getNeighborhoodId()));
         return mav;
     }
 

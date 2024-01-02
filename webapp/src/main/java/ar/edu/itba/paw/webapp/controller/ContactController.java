@@ -2,12 +2,17 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.Entities.Contact;
+import ar.edu.itba.paw.models.Entities.Resource;
 import ar.edu.itba.paw.webapp.dto.ContactDto;
+import ar.edu.itba.paw.webapp.form.ContactForm;
+import ar.edu.itba.paw.webapp.form.ResourceForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +40,15 @@ public class ContactController {
 
         return Response.ok(new GenericEntity<List<ContactDto>>(contactsDto){})
                 .build();
+    }
+
+    @POST
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response createContact(@Valid final ContactForm form) {
+        final Contact contact = cs.createContact(neighborhoodId, form.getContactName(), form.getContactAddress(), form.getContactPhone());
+        final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(contact.getContactId())).build();
+        return Response.created(uri).build();
     }
 
 }

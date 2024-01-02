@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.models.Entities.Tag;
 import ar.edu.itba.paw.models.Entities.Worker;
 
 import javax.ws.rs.core.UriInfo;
@@ -11,19 +12,19 @@ public class TagDto {
     private URI self;
     private URI posts;
 
-    public static TagDto fromTag(final String tag, final UriInfo uriInfo){
+    public static TagDto fromTag(final Tag tag, final UriInfo uriInfo){
         final TagDto dto = new TagDto();
 
-        dto.tag = tag;
+        dto.tag = tag.getTag();
 
         dto.self = uriInfo.getBaseUriBuilder()
                 .path("tags")
-                .path(String.valueOf(tag))
+                .path(String.valueOf(tag.getTagId()))
                 .build();
 
         dto.posts = uriInfo.getBaseUriBuilder()
                 .path("posts")
-                .queryParam("tag", String.valueOf(tag))
+                .queryParam("tag", tag.getTag())
                 .build();
 
         return dto;
