@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 
-@Path("neighborhoods/{neighborhoodId}/products/{productId}/requests")
+@Path("neighborhoods/{neighborhoodId}/requests")
 @Component
 public class RequestController {
     @Autowired
@@ -28,15 +28,14 @@ public class RequestController {
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
-    @PathParam("productId")
-    private Long productId;
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listRequests(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("userId") @DefaultValue("0") final int userId) {
+            @QueryParam("userId") @DefaultValue("0") final int userId,
+            @QueryParam("productId") @DefaultValue("0") final int productId
+            ) {
         List<Request> requests = rs.getRequestsByCriteria(userId, productId, page, size);
 
         List<RequestDto> requestDto = requests.stream()
@@ -53,7 +52,10 @@ public class RequestController {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createRequest(@Valid final RequestForm form) {
+    public Response createRequest(
+            @Valid final RequestForm form,
+            @QueryParam("productId") @DefaultValue("0") final int productId
+    ) {
 //        final Request request = rs.createRequest(LoggedUser, productId, form.getRequestMessage());
         final Request request = rs.createRequest(1, productId, form.getRequestMessage());
         final URI uri = uriInfo.getAbsolutePathBuilder()
