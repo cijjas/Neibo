@@ -45,12 +45,7 @@ public class WorkerController {
     ) {
         Set<Worker> workers = ws.getWorkersByCriteria(page, size, professions, neighborhoodId, loggedUserId, workerRole, workerStatus);
 
-        String baseUri;
-        if (neighborhoodId != 0) {
-            baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/workers";
-        } else {
-            baseUri = uriInfo.getBaseUri().toString() + "workers";
-        }
+        String baseUri = uriInfo.getBaseUri().toString() + "workers";
 
         int totalWorkerPages = ws.getTotalWorkerPagesByCriteria(professions, new long[]{neighborhoodId}, size, workerRole, workerStatus);
         Link[] links = createPaginationLinks(baseUri, page, size, totalWorkerPages);
