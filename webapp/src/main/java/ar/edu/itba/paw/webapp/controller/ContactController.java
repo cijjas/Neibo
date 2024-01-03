@@ -2,10 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.Entities.Contact;
-import ar.edu.itba.paw.models.Entities.Resource;
 import ar.edu.itba.paw.webapp.dto.ContactDto;
 import ar.edu.itba.paw.webapp.form.ContactForm;
-import ar.edu.itba.paw.webapp.form.ResourceForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -49,6 +47,17 @@ public class ContactController {
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(contact.getContactId())).build();
         return Response.created(uri).build();
+    }
+
+    @PATCH
+    @Path("/{id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response updateContactPartially(
+            @PathParam("id") final long id,
+            @Valid final ContactForm partialUpdate) {
+        final Contact contact = cs.updateContact(id, partialUpdate.getContactName(), partialUpdate.getContactAddress(), partialUpdate.getContactPhone());
+        return Response.ok(ContactDto.fromContact(contact, uriInfo)).build();
     }
 
     @DELETE

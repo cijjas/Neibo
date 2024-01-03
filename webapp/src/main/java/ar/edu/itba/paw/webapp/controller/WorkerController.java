@@ -3,14 +3,10 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.enums.WorkerStatus;
-import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
-import ar.edu.itba.paw.models.Entities.Amenity;
-import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.models.Entities.Worker;
-import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
-import ar.edu.itba.paw.webapp.form.PublishForm;
+import ar.edu.itba.paw.webapp.form.WorkerUpdateForm;
 import ar.edu.itba.paw.webapp.form.WorkerSignupForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -86,5 +82,16 @@ public class WorkerController {
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(worker.getWorkerId())).build(); //esto esta bien o es el userId que necesita??
         return Response.created(uri).build();
+    }
+
+    @PATCH
+    @Path("/{id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response updateWorkerPartially(
+            @PathParam("id") final long id,
+            @Valid final WorkerUpdateForm partialUpdate) {
+        final Worker worker = ws.updateWorkerPartially(id, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio());
+        return Response.ok(WorkerDto.fromWorker(worker, uriInfo)).build();
     }
 }

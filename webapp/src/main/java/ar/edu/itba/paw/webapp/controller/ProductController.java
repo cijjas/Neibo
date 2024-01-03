@@ -77,6 +77,17 @@ public class ProductController {
         return Response.created(uri).build();
     }
 
+    @PATCH
+    @Path("/{id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response updateProductPartially(
+            @PathParam("id") final long id,
+            @Valid final ListingForm partialUpdate) {
+        final Product product = ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartmentId(), partialUpdate.getImageFiles(), partialUpdate.getQuantity());
+        return Response.ok(ProductDto.fromProduct(product, uriInfo)).build();
+    }
+
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })

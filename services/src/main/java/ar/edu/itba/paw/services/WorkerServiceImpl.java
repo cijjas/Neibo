@@ -138,4 +138,28 @@ public class WorkerServiceImpl implements WorkerService {
             worker.setBackgroundPictureId(i.getImageId());
         }
     }
+
+    private Worker getWorker(long workerId) {
+        LOGGER.info("Getting Worker {}", workerId);
+        return workerDao.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found"));
+    }
+
+    @Override
+    public Worker updateWorkerPartially(long userId, String phoneNumber, String address, String businessName, MultipartFile backgroundPicture, String bio){
+        LOGGER.info("Updating Worker {}", userId);
+        Worker worker = getWorker(userId);
+        if(phoneNumber != null && !phoneNumber.isEmpty())
+            worker.setPhoneNumber(phoneNumber);
+        if(address != null && !address.isEmpty())
+            worker.setAddress(address);
+        if(businessName != null && !businessName.isEmpty())
+            worker.setBusinessName(businessName);
+        if(bio != null && !bio.isEmpty())
+            worker.setBio(bio);
+        if(backgroundPicture != null && !backgroundPicture.isEmpty()) {
+            Image i = imageService.storeImage(backgroundPicture);
+            worker.setBackgroundPictureId(i.getImageId());
+        }
+        return worker;
+    }
 }

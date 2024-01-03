@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
 import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.Entities.Contact;
@@ -44,5 +45,26 @@ public class ContactServiceImpl implements ContactService {
     public boolean deleteContact(long contactId) {
         LOGGER.info("Deleting Contact {}", contactId);
         return contactDao.deleteContact(contactId);
+    }
+
+    private Contact getContact(long contactId) {
+        LOGGER.info("Getting Contact {}", contactId);
+        return contactDao.findContactById(contactId).orElseThrow(() -> new NotFoundException("Contact not found"));
+    }
+
+    @Override
+    public Contact updateContact(long contactId, String contactName, String contactAddress, String contactPhone) {
+        LOGGER.info("Updating Contact {}", contactId);
+
+        Contact contact = getContact(contactId);
+
+        if (contactName != null && !contactName.isEmpty())
+            contact.setContactName(contactName);
+        if (contactAddress != null && !contactAddress.isEmpty())
+            contact.setContactAddress(contactAddress);
+        if (contactPhone != null && !contactPhone.isEmpty())
+            contact.setContactPhone(contactPhone);
+
+        return contact;
     }
 }

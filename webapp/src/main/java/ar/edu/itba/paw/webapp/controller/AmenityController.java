@@ -71,6 +71,17 @@ public class AmenityController {
         return Response.created(uri).build();
     }
 
+    @PATCH
+    @Path("/{id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response updateAmenityPartially(
+            @PathParam("id") final long id,
+            @Valid final AmenityForm partialUpdate) {
+        final Amenity amenity = as.updateAmenityPartially(id, partialUpdate.getName(), partialUpdate.getDescription());
+        return Response.ok(AmenityDto.fromAmenity(amenity, uriInfo)).build();
+    }
+
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })

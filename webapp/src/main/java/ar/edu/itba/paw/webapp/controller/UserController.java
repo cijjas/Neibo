@@ -7,6 +7,7 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
+import ar.edu.itba.paw.webapp.form.UserUpdateForm;
 import ar.edu.itba.paw.webapp.form.SignupForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -72,6 +73,17 @@ public class UserController {
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(user.getUserId())).build();
         return Response.created(uri).build();
+    }
+
+    @PATCH
+    @Path("/{id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response updateUserPartially(
+            @PathParam("id") final long id,
+            @Valid final UserUpdateForm partialUpdate) {
+        final User user = us.updateUser(id, partialUpdate.getEmail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), partialUpdate.getProfilePicture(), partialUpdate.getIdentification());
+        return Response.ok(UserDto.fromUser(user, uriInfo)).build();
     }
 
     /*

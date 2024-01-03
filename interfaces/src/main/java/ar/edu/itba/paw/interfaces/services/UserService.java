@@ -54,4 +54,7 @@ public interface UserService {
     void toggleLanguage(long id);
 
     void changeNeighborhood(long userId, long neighborhoodId);
+
+    User updateUser(long id, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification);
+
 }

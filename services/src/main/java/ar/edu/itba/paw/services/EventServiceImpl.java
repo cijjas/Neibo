@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.Month;
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.exceptions.UnexpectedException;
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
@@ -66,6 +67,26 @@ public class EventServiceImpl implements EventService {
         event.setStartTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, times[0]));
         event.setEndTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, times[1]));
         emailService.sendEventMail(event, "event.custom.message1", userService.getNeighbors(event.getNeighborhood().getNeighborhoodId()));
+        return event;
+    }
+
+    private Event getEvent(long eventId){
+        return eventDao.findEventById(eventId).orElseThrow(() -> new NotFoundException("Event not found"));
+    }
+    @Override
+    public Event updateEventPartially(long eventId, String name, String description, Date date, String startTime, String endTime){
+        Event event = getEvent(eventId);
+        if(name != null && !name.isEmpty())
+            event.setName(name);
+        if(description != null && !description.isEmpty())
+            event.setDescription(description);
+        if(date != null)
+            event.setDate(date);
+        if(startTime != null && endTime != null){
+            Long[] times = stringToTime(startTime, endTime);
+            event.setStartTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, times[0]));
+            event.setEndTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, times[1]));
+        }
         return event;
     }
 

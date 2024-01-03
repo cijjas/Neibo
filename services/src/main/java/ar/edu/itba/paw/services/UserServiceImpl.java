@@ -225,4 +225,32 @@ public class UserServiceImpl implements UserService {
     private User getUser(long userId){
         return userDao.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found"));
     }
+
+    @Override
+    public User updateUser(long id, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification) {
+        LOGGER.info("Updating User {}", id);
+
+        User user = getUser(id);
+
+        if (mail != null && !mail.isEmpty())
+            user.setMail(mail);
+        if (name != null && !name.isEmpty())
+            user.setName(name);
+        if (surname != null && !surname.isEmpty())
+            user.setSurname(surname);
+        if (password != null && !password.isEmpty())
+            user.setPassword(passwordEncoder.encode(password));
+        if (darkMode != null)
+            user.setDarkMode(darkMode);
+        if (phoneNumber != null && !phoneNumber.isEmpty())
+            user.setPhoneNumber(phoneNumber);
+        if (profilePicture != null && !profilePicture.isEmpty()) {
+            Image i = imageService.storeImage(profilePicture);
+            user.setProfilePicture(i);
+        }
+        if (identification != null)
+            user.setIdentification(identification);
+
+        return user;
+    }
 }
