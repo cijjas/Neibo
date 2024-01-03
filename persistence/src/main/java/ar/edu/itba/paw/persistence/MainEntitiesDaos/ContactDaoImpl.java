@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ContactDaoImpl implements ContactDao {
@@ -55,5 +56,11 @@ public class ContactDaoImpl implements ContactDao {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Optional<Contact> findContactById(final long contactId) {
+        LOGGER.debug("Selecting Contact with id {}", contactId);
+        return Optional.ofNullable(em.find(Contact.class, contactId));
     }
 }

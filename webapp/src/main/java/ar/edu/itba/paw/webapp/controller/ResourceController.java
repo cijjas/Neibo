@@ -3,9 +3,11 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ResourceService;
 import ar.edu.itba.paw.models.Entities.Resource;
 import ar.edu.itba.paw.webapp.dto.ResourceDto;
+import ar.edu.itba.paw.webapp.form.ResourceForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
@@ -35,6 +37,17 @@ public class ResourceController {
 
         return Response.ok(new GenericEntity<List<ResourceDto>>(resourcesDto){}).build();
 
+    }
+
+    @PATCH
+    @Path("/{id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response updateResourcePartially(
+            @PathParam("id") final long id,
+            @Valid final ResourceForm partialUpdate) {
+        final Resource resource = rs.updateResource(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getImageFile());
+        return Response.ok(ResourceDto.fromResource(resource, uriInfo)).build();
     }
 
     @DELETE

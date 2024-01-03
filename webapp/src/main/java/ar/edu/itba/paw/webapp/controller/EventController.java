@@ -4,9 +4,11 @@ import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Entities.Event;
 import ar.edu.itba.paw.webapp.dto.AttendanceDto;
 import ar.edu.itba.paw.webapp.dto.EventDto;
+import ar.edu.itba.paw.webapp.form.EventForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Date;
@@ -32,9 +34,9 @@ public class EventController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listEventsByDate(
-            @QueryParam("date") final Date date
+            @QueryParam("date") final String dateString
             ) {
-        final List<Event> events = es.getEventsByDate(date, neighborhoodId);
+        final List<Event> events = es.getEventsByDate(dateString, neighborhoodId);
         final List<EventDto> eventsDto = events.stream()
                 .map(e -> EventDto.fromEvent(e, uriInfo)).collect(Collectors.toList());
 
@@ -53,6 +55,17 @@ public class EventController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(EventDto.fromEvent(event.get(), uriInfo)).build();
+    }
+
+    @PATCH
+    @Path("/{id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response updateEventPartially(
+            @PathParam("id") final long id,
+            @Valid final EventForm partialUpdate) {
+        final Event event = es.updateEventPartially(id, partialUpdate.getName(), partialUpdate.getDescription(), partialUpdate.getDate(), partialUpdate.getStartTime(), partialUpdate.getEndTime());
+        return Response.ok(EventDto.fromEvent(event, uriInfo)).build();
     }
 
     @DELETE

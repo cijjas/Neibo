@@ -162,6 +162,48 @@ public class ProductServiceImpl implements ProductService {
         product.setRemainingUnits(updatedStock);
     }
 
+    @Override
+    public Product updateProductPartially(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, Long stock){
+        LOGGER.info("Updating Product {}", productId);
+        Product product = findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        if(name != null && !name.isEmpty())
+            product.setName(name);
+        if(description != null && !description.isEmpty())
+            product.setDescription(description);
+        if(price != null && !price.isEmpty()) {
+            double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
+            product.setPrice(priceDouble);
+        }
+        if(used != product.isUsed())
+            product.setUsed(used);
+        if(departmentId != 0)
+            product.setDepartment(departmentDao.findDepartmentById(departmentId).orElseThrow(()-> new NotFoundException("Department Not Found")));
+        if(stock != null)
+            product.setRemainingUnits(stock);
+
+        if(pictureFiles != null && pictureFiles.length > 0 && !pictureFiles[0].isEmpty()) {
+            int pictureFilesLength = pictureFiles.length;
+
+            if(pictureFilesLength >= 1) {
+                Image i = imageService.storeImage(pictureFiles[0]);
+                product.setPrimaryPicture(i);
+            }
+
+            if(pictureFilesLength >= 2) {
+                Image i = imageService.storeImage(pictureFiles[1]);
+                product.setSecondaryPicture(i);
+            }
+
+            if(pictureFilesLength == 3) {
+                Image i = imageService.storeImage(pictureFiles[2]);
+                product.setTertiaryPicture(i);
+            }
+
+        }
+
+        return product;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

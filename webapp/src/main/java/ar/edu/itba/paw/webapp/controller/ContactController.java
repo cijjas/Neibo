@@ -3,9 +3,11 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.Entities.Contact;
 import ar.edu.itba.paw.webapp.dto.ContactDto;
+import ar.edu.itba.paw.webapp.form.ContactForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
@@ -35,6 +37,17 @@ public class ContactController {
 
         return Response.ok(new GenericEntity<List<ContactDto>>(contactsDto){})
                 .build();
+    }
+
+    @PATCH
+    @Path("/{id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response updateContactPartially(
+            @PathParam("id") final long id,
+            @Valid final ContactForm partialUpdate) {
+        final Contact contact = cs.updateContact(id, partialUpdate.getContactName(), partialUpdate.getContactAddress(), partialUpdate.getContactPhone());
+        return Response.ok(ContactDto.fromContact(contact, uriInfo)).build();
     }
 
     @DELETE

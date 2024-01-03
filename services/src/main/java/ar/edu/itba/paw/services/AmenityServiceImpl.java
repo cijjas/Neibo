@@ -105,6 +105,16 @@ public class AmenityServiceImpl implements AmenityService {
         amenity.setDescription(description);
     }
 
+    @Override
+    public Amenity updateAmenityPartially(long id, String name, String description){
+        Amenity amenity = amenityDao.findAmenityById(id).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
+        if(name != null && !name.isEmpty())
+            amenity.setName(name);
+        if(description != null && !description.isEmpty())
+            amenity.setDescription(description);
+        return amenity;
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

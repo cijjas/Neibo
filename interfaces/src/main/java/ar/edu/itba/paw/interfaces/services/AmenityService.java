@@ -23,6 +23,8 @@ public interface AmenityService {
 
     void updateAmenity(long id, String name, String description);
 
+    Amenity updateAmenityPartially(long id, String name, String description);
+
     // -----------------------------------------------------------------------------------------------------------------
 
     boolean deleteAmenity(long amenityId);

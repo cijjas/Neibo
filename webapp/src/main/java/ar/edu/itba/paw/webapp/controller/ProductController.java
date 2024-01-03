@@ -8,9 +8,11 @@ import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.ProductDto;
+import ar.edu.itba.paw.webapp.form.ListingForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
@@ -61,6 +63,17 @@ public class ProductController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(ProductDto.fromProduct(product.get(), uriInfo)).build();
+    }
+
+    @PATCH
+    @Path("/{id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response updateProductPartially(
+            @PathParam("id") final long id,
+            @Valid final ListingForm partialUpdate) {
+        final Product product = ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartmentId(), partialUpdate.getImageFiles(), partialUpdate.getQuantity());
+        return Response.ok(ProductDto.fromProduct(product, uriInfo)).build();
     }
 
     @DELETE

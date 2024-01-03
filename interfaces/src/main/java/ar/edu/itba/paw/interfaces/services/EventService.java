@@ -13,6 +13,8 @@ public interface EventService {
 
     Event updateEvent(long eventId, String name, String description, Date date, String startTime, String endTime);
 
+    Event updateEventPartially(long eventId, String name, String description, Date date, String startTime, String endTime);
+
     // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Event> findEventById(long eventId);
@@ -20,6 +22,8 @@ public interface EventService {
     boolean hasEvents(Date date, long neighborhoodId);
 
     List<Event> getEventsByDate(Date date, long neighborhoodId);
+
+    List<Event> getEventsByDate(String dateString, long neighborhoodId);
 
     List<Event> getEventsByNeighborhoodId(long neighborhoodId);
 

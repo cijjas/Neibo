@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 import ar.edu.itba.paw.models.Entities.Resource;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ResourceDao {
 
@@ -17,4 +18,6 @@ public interface ResourceDao {
     // --------------------------------------------- RESOURCE DELETE ----------------------------------------------------
 
     boolean deleteResource(final long resourceId);
+
+    Optional<Resource> findResourceById(final long resourceId);
 }
