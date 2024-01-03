@@ -21,10 +21,7 @@ import javax.persistence.PersistenceContext;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalLong;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -151,9 +148,14 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Event> getEventsByDate(Date date, long neighborhoodId) {
+    public List<Event> getEventsByDate(String date, long neighborhoodId) {
         LOGGER.info("Getting Events for Neighborhood {} on Date {}", neighborhoodId, date);
-        return eventDao.getEventsByDate(date, neighborhoodId);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return eventDao.getEventsByDate(dateFormat.parse(date), neighborhoodId);
+        } catch (ParseException e) {
+            return Collections.emptyList();
+        }
     }
 
     @Override

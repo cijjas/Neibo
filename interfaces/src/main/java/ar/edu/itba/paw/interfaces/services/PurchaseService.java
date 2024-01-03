@@ -21,7 +21,7 @@ public interface PurchaseService {
 
     int getPurchasesCountByBuyerId(long userId);
 
-    Set<Purchase> getPurchasesByCriteria(long sellerId, long buyerId, int page, int size);
+    Set<Purchase> getPurchasesByType(long userId, String type, int page, int size);
 
     int getTotalPurchasesPages(long sellerId, long buyerId, int size);
 }

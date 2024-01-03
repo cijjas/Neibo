@@ -21,9 +21,7 @@ public interface EventService {
 
     boolean hasEvents(Date date, long neighborhoodId);
 
-    List<Event> getEventsByDate(Date date, long neighborhoodId);
-
-    List<Event> getEventsByDate(String dateString, long neighborhoodId);
+    List<Event> getEventsByDate(String date, long neighborhoodId);
 
     List<Event> getEventsByNeighborhoodId(long neighborhoodId);
 

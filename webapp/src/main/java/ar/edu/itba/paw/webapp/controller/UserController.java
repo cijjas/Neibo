@@ -8,6 +8,7 @@ import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.form.UserUpdateForm;
+import ar.edu.itba.paw.webapp.form.SignupForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -67,8 +68,8 @@ public class UserController {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createUser(final UserDto userDto) {
-        final User user = us.createNeighbor(userDto.getMail(), userDto.getPassword(), userDto.getName(), userDto.getSurname(), neighborhoodId, Language.ENGLISH, "12345678");
+    public Response createUser(@Valid final SignupForm form) {
+        final User user = us.createNeighbor(form.getMail(), form.getPassword(), form.getName(), form.getSurname(), neighborhoodId, Language.ENGLISH, form.getIdentification());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(user.getUserId())).build();
         return Response.created(uri).build();

@@ -2,15 +2,18 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.models.Entities.Amenity;
+import ar.edu.itba.paw.models.Entities.Resource;
 import ar.edu.itba.paw.models.Entities.Shift;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.form.AmenityForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -70,6 +73,17 @@ public class AmenityController {
         return Response.ok(AmenityDto.fromAmenity(amenity, uriInfo)).build();
     }
 
+
+//    @POST
+//    @Produces(value = { MediaType.APPLICATION_JSON, })
+//    public Response createAmenity(
+//            @Valid final AmenityForm form,
+//            @RequestParam(value = "selectedShifts", required = false) List<String> selectedShifts) {
+//        final Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, selectedShifts);
+//        final URI uri = uriInfo.getAbsolutePathBuilder()
+//                .path(String.valueOf(amenity.getAmenityId())).build();
+//        return Response.created(uri).build();
+//    }
 
     @DELETE
     @Path("/{id}")

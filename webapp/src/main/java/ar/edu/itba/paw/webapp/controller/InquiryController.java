@@ -9,11 +9,15 @@ import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.InquiryDto;
 import ar.edu.itba.paw.webapp.dto.ProductDto;
+import ar.edu.itba.paw.webapp.form.ListingForm;
+import ar.edu.itba.paw.webapp.form.QuestionForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,5 +54,15 @@ public class InquiryController {
         return Response.ok(new GenericEntity<List<InquiryDto>>(inquiriesDto){})
                 .links(links)
                 .build();
+    }
+
+    @POST
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response createInquiry(@Valid final QuestionForm form) {
+//        final Inquiry inquiry = is.createInquiry(getLoggedUser, productId, form.getQuestionMessage());
+        final Inquiry inquiry = is.createInquiry(1, productId, form.getQuestionMessage());
+        final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(inquiry.getInquiryId())).build();
+        return Response.created(uri).build();
     }
 }

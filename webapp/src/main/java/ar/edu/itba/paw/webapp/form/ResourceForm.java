@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 
 public class ResourceForm {
 
+    @NotBlank
     @Size(max = 1000)
     private String description;
 

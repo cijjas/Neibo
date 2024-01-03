@@ -1,15 +1,17 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.enums.BaseChannel;
 import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.webapp.dto.PostDto;
+import ar.edu.itba.paw.webapp.form.PublishForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,6 +62,16 @@ public class PostController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(PostDto.fromPost(post.get(), uriInfo)).build();
+    }
+
+    @POST
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response createPost(@Valid final PublishForm form) {
+        final Post post = ps.createPost(form.getSubject(), form.getMessage(), 1, form.getChannel(), form.getTags(), form.getImageFile());
+//        final Post post = ps.createPost(form.getSubject(), form.getMessage(), getLoggedUser, form.getChannel(), form.getTags(), form.getImageFile());
+        final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(post.getPostId())).build();
+        return Response.created(uri).build();
     }
 
 }

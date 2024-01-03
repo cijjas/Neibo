@@ -29,9 +29,9 @@ public class LikeServiceImpl implements LikeService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void addLikeToPost(long postId, long userId) {
+    public Like addLikeToPost(long postId, long userId) {
         LOGGER.info("Liking Post {} due to User {}", postId, userId);
-        likeDao.createLike(postId, userId);
+        return likeDao.createLike(postId, userId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

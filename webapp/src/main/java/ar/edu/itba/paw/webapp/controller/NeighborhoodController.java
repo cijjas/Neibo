@@ -2,12 +2,17 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
+import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
+import ar.edu.itba.paw.webapp.form.NewNeighborhoodForm;
+import ar.edu.itba.paw.webapp.form.PublishForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,6 +57,15 @@ public class NeighborhoodController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(NeighborhoodDto.fromNeighborhood(neighborhood.get(), uriInfo)).build();
+    }
+
+    @POST
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response createNeighborhood(@Valid final NewNeighborhoodForm form) {
+        final Neighborhood neighborhood = ns.createNeighborhood(form.getName());
+        final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(neighborhood.getNeighborhoodId())).build();
+        return Response.created(uri).build();
     }
 
 }

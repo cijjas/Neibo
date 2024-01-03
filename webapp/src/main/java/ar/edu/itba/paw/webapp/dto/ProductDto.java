@@ -36,24 +36,31 @@ public class ProductDto {
                 .path("products")
                 .path(String.valueOf(product.getProductId()))
                 .build();
-        dto.primaryPicture = uriInfo.getBaseUriBuilder()
-                .path("images")
-                .path(String.valueOf(product.getPrimaryPicture().getImageId()))
-                .build();
-        dto.secondaryPicture = uriInfo.getBaseUriBuilder()
-                .path("images")
-                .path(String.valueOf(product.getSecondaryPicture().getImageId()))
-                .build();
-        dto.tertiaryPicture = uriInfo.getBaseUriBuilder()
-                .path("images")
-                .path(String.valueOf(product.getTertiaryPicture().getImageId()))
-                .build();
+        if ( product.getPrimaryPicture() != null ){
+            dto.primaryPicture = uriInfo.getBaseUriBuilder()
+                    .path("images")
+                    .path(String.valueOf(product.getPrimaryPicture().getImageId()))
+                    .build();
+        }
+        if ( product.getSecondaryPicture() != null ) {
+            dto.secondaryPicture = uriInfo.getBaseUriBuilder()
+                    .path("images")
+                    .path(String.valueOf(product.getSecondaryPicture().getImageId()))
+                    .build();
+        }
+        if (product.getTertiaryPicture() != null) {
+            dto.tertiaryPicture = uriInfo.getBaseUriBuilder()
+                    .path("images")
+                    .path(String.valueOf(product.getTertiaryPicture().getImageId()))
+                    .build();
+        }
         dto.seller = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(product.getSeller().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(product.getSeller().getUserId()))
                 .build();
+
         dto.department = uriInfo.getBaseUriBuilder()
                 .path("departments")
                 .path(String.valueOf(product.getDepartment().getDepartmentId()))

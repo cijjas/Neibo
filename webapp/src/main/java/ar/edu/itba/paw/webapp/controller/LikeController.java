@@ -2,12 +2,17 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.LikeService;
 import ar.edu.itba.paw.models.Entities.Like;
+import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.webapp.dto.LikeDto;
+import ar.edu.itba.paw.webapp.form.LikeForm;
+import ar.edu.itba.paw.webapp.form.PublishForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,6 +57,15 @@ public class LikeController {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         return Response.ok(LikeDto.fromLike(like.get(), uriInfo)).build();
+    }
+
+    @POST
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response createLike(@Valid LikeForm form) {
+        final Like like = ls.addLikeToPost(form.getPostId(), 5); //getLoggedUser
+        final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(like.getId())).build();
+        return Response.created(uri).build();
     }
 
 }

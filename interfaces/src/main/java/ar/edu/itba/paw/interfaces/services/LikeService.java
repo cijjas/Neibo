@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface LikeService {
 
-    void addLikeToPost(long postId, long userId);
+    Like addLikeToPost(long postId, long userId);
 
     // -----------------------------------------------------------------------------------------------------------------
 
