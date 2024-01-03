@@ -45,8 +45,6 @@ public class EventController {
         final List<EventDto> eventsDto = events.stream()
                 .map(e -> EventDto.fromEvent(e, uriInfo)).collect(Collectors.toList());
 
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/events";
-
         return Response.ok(new GenericEntity<List<EventDto>>(eventsDto){})
                 .build();
     }
@@ -71,4 +69,11 @@ public class EventController {
         return Response.created(uri).build();
     }
 
+    @DELETE
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response deleteById(@PathParam("id") final long id) {
+        es.deleteEvent(id);
+        return Response.noContent().build();
+    }
 }

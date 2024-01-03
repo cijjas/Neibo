@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 
-@Path("neighborhoods/{neighborhoodId}/users/{userId}/purchases")
+@Path("neighborhoods/{neighborhoodId}/users/{userId}/transactions")
 @Component
 public class PurchaseController {
 
@@ -29,28 +29,26 @@ public class PurchaseController {
     @PathParam("userId")
     private Long userId;
 
-    // In PurchaseController
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPurchasesByCriteria(
-            @QueryParam("sellerId") long sellerId,
-            @QueryParam("buyerId") long buyerId,
+    public Response getTransactions(
+            @QueryParam("type") String type,
             @QueryParam("page") @DefaultValue("1") int page,
             @QueryParam("size") @DefaultValue("10") int size
     ) {
-        Set<Purchase> purchases = ps.getPurchasesByCriteria(sellerId, buyerId, page, size);
+        Set<Purchase> transactions;
 
-        // Convert purchases to DTOs if needed
-        // Assuming there's a method to convert Purchase to PurchaseDto
-        Set<PurchaseDto> purchaseDto = purchases.stream()
+        transactions = ps.getPurchasesByType(userId, type, page, size);
+
+        // Convert transactions to DTOs if needed
+        Set<PurchaseDto> transactionDto = transactions.stream()
                 .map(p -> PurchaseDto.fromPurchase(p, uriInfo))
                 .collect(Collectors.toSet());
 
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods" + neighborhoodId + "/requests";
-        Link[] links = createPaginationLinks(baseUri, page, size, ps.getTotalPurchasesPages(sellerId, buyerId, size));
+        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/users/" + userId + "/transactions";
+        Link[] links = createPaginationLinks(baseUri, page, size, ps.getTotalPurchasesPages(userId, userId, size));
 
-        return Response.ok(new GenericEntity<Set<PurchaseDto>>(purchaseDto){})
+        return Response.ok(new GenericEntity<Set<PurchaseDto>>(transactionDto){})
                 .links(links)
                 .build();
     }

@@ -51,4 +51,12 @@ public class ContactController {
         return Response.created(uri).build();
     }
 
+    @DELETE
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response deleteById(@PathParam("id") final long id) {
+        cs.deleteContact(id);
+        return Response.noContent().build();
+    }
+
 }

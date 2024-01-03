@@ -55,14 +55,14 @@ public class PurchaseServiceImpl implements PurchaseService {
     // In PurchaseService
 
     @Override
-    public Set<Purchase> getPurchasesByCriteria(long sellerId, long buyerId, int page, int size) {
-        if (sellerId != 0) {
-            return getPurchasesBySellerId(sellerId, page, size);
-        } else if (buyerId != 0) {
-            return getPurchasesByBuyerId(buyerId, page, size);
+    public Set<Purchase> getPurchasesByType(long userId, String type, int page, int size) {
+        if ("purchase".equalsIgnoreCase(type)) {
+            return getPurchasesByBuyerId(userId, page, size);
+        } else if ("sale".equalsIgnoreCase(type)) {
+            return getPurchasesBySellerId(userId, page, size);
         } else {
-            // throw something
-            return Collections.emptySet();
+            // You might throw an exception or return an empty set, depending on your requirements
+            throw new IllegalArgumentException("Invalid 'type' parameter");
         }
     }
 

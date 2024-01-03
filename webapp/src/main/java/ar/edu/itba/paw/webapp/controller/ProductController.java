@@ -43,7 +43,7 @@ public class ProductController {
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("department") @DefaultValue("NONE") final Department department
             ) {
-        final List<Product> products = ps.getProductsByCriteria(neighborhoodId, department, page, size); // este value of es peligroso
+        final List<Product> products = ps.getProductsByCriteria(neighborhoodId, department, page, size);
         final List<ProductDto> productsDto = products.stream()
                 .map(p -> ProductDto.fromProduct(p, uriInfo)).collect(Collectors.toList());
 
@@ -75,5 +75,13 @@ public class ProductController {
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(product.getProductId())).build();
         return Response.created(uri).build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response deleteById(@PathParam("id") final long id) {
+        ps.deleteProduct(id);
+        return Response.noContent().build();
     }
 }
