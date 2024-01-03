@@ -34,6 +34,12 @@ public class LikeDaoImpl implements LikeDao {
     // -------------------------------------------------- LIKES SELECT -------------------------------------------------
 
     @Override
+    public List<Like> getAllLikes() {
+        LOGGER.debug("Selecting all Likes");
+        return em.createQuery("SELECT l FROM Like l", Like.class).getResultList();
+    }
+
+    @Override
     public int getLikes(long postId) {
         LOGGER.debug("Selecting Likes from Post {}", postId);
         Long count = (Long) em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.post.postId = :postId")
@@ -60,6 +66,14 @@ public class LikeDaoImpl implements LikeDao {
                 .setFirstResult((page - 1) * size)
                 .setMaxResults(size)
                 .getResultList();
+    }
+
+    @Override
+    public int getAllLikesCount() {
+        LOGGER.debug("Selecting all Likes count");
+        Long count = (Long) em.createQuery("SELECT COUNT(l) FROM Like l")
+                .getSingleResult();
+        return count != null ? count.intValue() : 0;
     }
 
     @Override

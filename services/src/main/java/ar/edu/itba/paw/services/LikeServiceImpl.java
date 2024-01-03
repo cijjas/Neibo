@@ -61,7 +61,10 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public List<Like> getLikesByCriteria(long postId, long userId, int page, int size){
-        if (userId > 0) {
+        if (userId == 0 && postId == 0) {
+            return likeDao.getAllLikes();
+        }
+        else if (userId > 0) {
             return likeDao.getLikesByUser(userId, page, size);
         } else if (postId > 0) {
             return likeDao.getLikesByPost(postId, page, size);
@@ -72,7 +75,10 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public int getTotalLikePagesByCriteria(long postId, long userId, int size) {
-        if (userId > 0) {
+        if (userId == 0 && postId == 0) {
+            return (int) Math.ceil((double) likeDao.getAllLikesCount() / size);
+        }
+        else if (userId > 0) {
             return (int) Math.ceil((double) likeDao.getLikesByUserCount(userId) / size);
         } else if (postId > 0) {
             return (int) Math.ceil((double) likeDao.getLikesByPostCount(postId) / size);

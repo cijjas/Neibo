@@ -47,18 +47,6 @@ public class LikeController {
                 .build();
     }
 
-
-    @GET
-    @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findById(@PathParam("id") final long id) {
-        Optional<Like> like = ls.findLikeById(id);
-        if (!like.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(LikeDto.fromLike(like.get(), uriInfo)).build();
-    }
-
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createLike(@Valid LikeForm form) {
