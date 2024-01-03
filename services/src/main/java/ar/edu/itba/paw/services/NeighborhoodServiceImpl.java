@@ -62,8 +62,8 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     public List<Neighborhood> getNeighborhoodsByCriteria(int page, int size) {
         LOGGER.info("Getting All Neighborhoods");
         List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoodsByCriteria(page, size);
-        neighborhoods.removeIf(neighborhood -> neighborhood.getName().equals("Worker Neighborhood"));
-        neighborhoods.removeIf(neighborhood -> neighborhood.getName().equals("Rejected"));
+        neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == 0);
+        neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == -1);
         return neighborhoods;
 
     }
