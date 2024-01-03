@@ -62,16 +62,14 @@ public class AmenityController {
         return Response.ok(AmenityDto.fromAmenity(amenity.get(), uriInfo)).build();
     }
 
-//    @POST
-//    @Produces(value = { MediaType.APPLICATION_JSON, })
-//    public Response createAmenity(
-//            @Valid final AmenityForm form,
-//            @RequestParam(value = "selectedShifts", required = false) List<String> selectedShifts) {
-//        final Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, selectedShifts);
-//        final URI uri = uriInfo.getAbsolutePathBuilder()
-//                .path(String.valueOf(amenity.getAmenityId())).build();
-//        return Response.created(uri).build();
-//    }
+    @POST
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response createAmenity(@Valid final AmenityForm form) {
+        final Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, form.getSelectedShifts());
+        final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(amenity.getAmenityId())).build();
+        return Response.created(uri).build();
+    }
 
     @DELETE
     @Path("/{id}")

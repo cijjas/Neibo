@@ -2,8 +2,10 @@ package ar.edu.itba.paw.webapp.form;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 public class AmenityForm {
     @NotBlank
@@ -16,6 +18,8 @@ public class AmenityForm {
     @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*")
     private String description;
 
+    @NotNull
+    private List<String> selectedShifts;
 
     public String getName() {
         return name;
@@ -33,6 +37,13 @@ public class AmenityForm {
         this.description = description;
     }
 
+    public List<String> getSelectedShifts() {
+        return selectedShifts;
+    }
+
+    public void setSelectedShifts(List<String> selectedShifts) {
+        this.selectedShifts = selectedShifts;
+    }
 
     @Override
     public String toString() {
