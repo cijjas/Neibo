@@ -44,13 +44,19 @@ public class Contact {
         return contactName;
     }
 
+    public void setContactName(String contactName) { this.contactName = contactName; }
+
     public String getContactAddress() {
         return contactAddress;
     }
 
+    public void setContactAddress(String contactAddress) { this.contactAddress = contactAddress; }
+
     public String getContactPhone() {
         return contactPhone;
     }
+
+    public void setContactPhone(String contactPhone) { this.contactPhone = contactPhone; }
 
     public Neighborhood getNeighborhood() {
         return neighborhood;

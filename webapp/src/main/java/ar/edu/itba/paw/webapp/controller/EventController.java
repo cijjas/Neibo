@@ -2,11 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Entities.Event;
-import ar.edu.itba.paw.models.Entities.Resource;
-import ar.edu.itba.paw.webapp.dto.AttendanceDto;
 import ar.edu.itba.paw.webapp.dto.EventDto;
 import ar.edu.itba.paw.webapp.form.EventForm;
-import ar.edu.itba.paw.webapp.form.ResourceForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,14 +11,10 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 
 @Path("neighborhoods/{neighborhoodId}/events")
 @Component
@@ -67,6 +60,17 @@ public class EventController {
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(event.getEventId())).build();
         return Response.created(uri).build();
+    }
+
+    @PATCH
+    @Path("/{id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response updateEventPartially(
+            @PathParam("id") final long id,
+            @Valid final EventForm partialUpdate) {
+        final Event event = es.updateEventPartially(id, partialUpdate.getName(), partialUpdate.getDescription(), partialUpdate.getDate(), partialUpdate.getStartTime(), partialUpdate.getEndTime());
+        return Response.ok(EventDto.fromEvent(event, uriInfo)).build();
     }
 
     @DELETE

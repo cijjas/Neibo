@@ -14,4 +14,6 @@ public interface ContactService {
     // -----------------------------------------------------------------------------------------------------------------
 
     boolean deleteContact(long contactId);
+
+    Contact updateContact(long contactId, String contactName, String contactAddress, String contactPhone);
 }

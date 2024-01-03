@@ -46,13 +46,4 @@ public class TagController {
                 .build();
     }
 
-    @POST
-    @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createTag(@Valid final TagForm form) {
-        final Tag tag = ts.createTag(form.getTag());
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(tag.getTagId())).build();
-        return Response.created(uri).build();
-    }
-
 }

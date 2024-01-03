@@ -48,6 +48,17 @@ public class ResourceController {
                 .path(String.valueOf(resource.getResourceId())).build();
         return Response.created(uri).build();
     }
+    @PATCH
+    @Path("/{id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response updateResourcePartially(
+            @PathParam("id") final long id,
+            @Valid final ResourceForm partialUpdate) {
+        final Resource resource = rs.updateResource(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getImageFile());
+        return Response.ok(ResourceDto.fromResource(resource, uriInfo)).build();
+    }
+
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })

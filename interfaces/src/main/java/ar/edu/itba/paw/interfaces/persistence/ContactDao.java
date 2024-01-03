@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 import ar.edu.itba.paw.models.Entities.Contact;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ContactDao {
 
@@ -17,4 +18,6 @@ public interface ContactDao {
     // --------------------------------------------- CONTACT DELETE ----------------------------------------------------
 
     boolean deleteContact(long contactId);
+
+    Optional<Contact> findContactById(final long contactId);
 }

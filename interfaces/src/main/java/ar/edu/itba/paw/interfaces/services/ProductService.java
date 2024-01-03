@@ -44,6 +44,8 @@ public interface ProductService {
 
     void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, Long stock) ;
 
+    Product updateProductPartially(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, Long stock);
+
     void restockProduct(long productId, long extraUnits);
 
     // -----------------------------------------------------------------------------------------------------------------

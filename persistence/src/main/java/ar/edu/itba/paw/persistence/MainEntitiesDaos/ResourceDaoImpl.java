@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ResourceDaoImpl implements ResourceDao {
@@ -53,5 +54,11 @@ public class ResourceDaoImpl implements ResourceDao {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Optional<Resource> findResourceById(final long resourceId) {
+        LOGGER.debug("Selecting Resource with resourceId {}", resourceId);
+        return Optional.ofNullable(em.find(Resource.class, resourceId));
     }
 }
