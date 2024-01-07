@@ -8,6 +8,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -28,6 +30,8 @@ import java.io.IOException;
  */
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationTokenFilter.class);
+
     private final AuthenticationManager authenticationManager;
     private final AuthenticationEntryPoint authenticationEntryPoint;
 
@@ -40,6 +44,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+
+        LOGGER.info("JWT Authentication Token Filter activated");
 
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
@@ -54,6 +60,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 context.setAuthentication(authenticationResult);
                 SecurityContextHolder.setContext(context);
 
+                LOGGER.info("Security Context Filled");
+
+
             } catch (AuthenticationException e) {
                 SecurityContextHolder.clearContext();
                 authenticationEntryPoint.commence(request, response, e);
@@ -61,6 +70,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             }
         }
 
+        LOGGER.info("Filter Chaining");
         filterChain.doFilter(request, response);
     }
 }
