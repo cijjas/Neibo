@@ -28,6 +28,7 @@
         <hibernate-orm.version>5.1.0.Final</hibernate-orm.version>
         <org.hibernate.jpa.version>1.0.0.Final</org.hibernate.jpa.version>
         <jersey.version>3.0-SNAPSHOT</jersey.version>
+        <jjwt.version>0.7.0</jjwt.version>
     </properties>
 
     <repositories>
@@ -267,6 +268,12 @@
                 <groupId>javax.ws.rs</groupId>
                 <artifactId>javax.ws.rs-api</artifactId>
                 <version>2.1</version>
+            </dependency>
+            <!-- JJWT -->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
             </dependency>
             <!--ADD DEPENDENCIES HERE-->
         </dependencies>
