@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.UserDetailsService;
+import ar.edu.itba.paw.webapp.security.api.filter.HttpMethodFilter;
+import ar.edu.itba.paw.webapp.security.api.filter.NeighborhoodAccessControlFilter;
 import ar.edu.itba.paw.webapp.security.api.jwt.JwtAuthenticationEntryPoint;
 import ar.edu.itba.paw.webapp.security.api.jwt.JwtAuthenticationProvider;
 import ar.edu.itba.paw.webapp.security.api.jwt.JwtAuthenticationTokenFilter;
@@ -21,6 +23,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.StreamUtils;
@@ -52,6 +55,17 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationTokenFilter(authenticationManagerBean(), authenticationEntryPoint);
     }
 
+    @Bean
+    public NeighborhoodAccessControlFilter neighborhoodAccessControlFilter() {
+        return new NeighborhoodAccessControlFilter();
+    }
+
+    @Bean
+    public HttpMethodFilter httpMethodFilter() {
+        return new HttpMethodFilter();
+    }
+
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -59,23 +73,55 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(jwtAuthenticationProvider);
     }
 
-    @Override
+    /*@Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http
-                .csrf()
-                .disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint)
+                .csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
                 .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(neighborhoodAccessControlFilter(), UsernamePasswordAuthenticationFilter.class)
+                *//*.addFilterBefore(httpMethodFilter(), FilterSecurityInterceptor.class)*//*
                 .authorizeRequests()
                 .antMatchers("/auth").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+                .antMatchers("/","/images/*", "/departments", "/professions", "/shifts", "/times", "/neighborhoods", "/neighborhoods/*").permitAll()
+                .anyRequest().authenticated();
+    }*/
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.sessionManagement()
+                .invalidSessionUrl("/login")
+                .and().authorizeRequests()
+                .antMatchers("/signup", "/login", "/signup-worker").anonymous()
+                .antMatchers("/admin/**").hasRole("ADMINISTRATOR")
+                .antMatchers("/unverified").hasRole("UNVERIFIED_NEIGHBOR")
+                .antMatchers("/services").hasAnyRole("WORKER", "ADMINISTRATOR", "NEIGHBOR")
+                .antMatchers("/services/neighborhoods").hasRole("WORKER")
+                .antMatchers("/rejected").hasRole("REJECTED")
+                .antMatchers("/profile").hasAnyRole("ADMINISTRATOR", "NEIGHBOR", "WORKER")
+                .antMatchers("/").hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
+                .antMatchers("/complaints", "/announcements", "/amenities", "/information", "/reservation", "/posts/**").hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
+                .antMatchers("/**").hasAnyRole("NEIGHBOR", "ADMINISTRATOR", "WORKER")
+                .and().formLogin()
+                .failureHandler(new CustomAuthenticationFailureHandler())
+                .usernameParameter("mail")
+                .passwordParameter("password")
+                .loginPage("/login")
+                .successHandler(customAuthenticationSuccessHandler())
+                .and().rememberMe()
+                .rememberMeParameter("rememberMe")
+                .userDetailsService(userDetails)
+                .key(StreamUtils.copyToString(rememberMeKey.getInputStream(), StandardCharsets.UTF_8))
+                .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(30))
+                .and().logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/landingPage")
+                .and().exceptionHandling()
+                .accessDeniedPage("/errors/errorPage")
+                .and().csrf().disable();
     }
 
 

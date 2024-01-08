@@ -37,7 +37,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         AuthenticationTokenDetails authenticationTokenDetails = authenticationTokenService.parseToken(authenticationToken);
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(authenticationTokenDetails.getUsername());
 
-        // This could be a place to add additional logic for filtering over more authorities
+        LOGGER.info("User Authorities : {}", userDetails.getAuthorities());
 
         // I create an almost identical JWT Authentication Token but this time it has true in the authenticated field
         return new JwtAuthenticationToken(userDetails, authenticationTokenDetails, userDetails.getAuthorities());
