@@ -9,6 +9,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
+import javax.ws.rs.PathParam;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +20,8 @@ public class TimeController {
 
     @Context
     private UriInfo uriInfo;
+
+    // Find time by id
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -31,4 +34,17 @@ public class TimeController {
                 .build();
     }
 
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findTime(@PathParam("id") final long id) {
+        StandardTime time = StandardTime.fromId((int) id);
+
+        if (time != null) {
+            TimeDto timeDto = TimeDto.fromTime(time, uriInfo);
+            return Response.ok(timeDto).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).entity("Time not found").build();
+        }
+    }
 }

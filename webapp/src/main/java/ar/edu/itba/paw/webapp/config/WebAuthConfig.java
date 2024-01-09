@@ -73,7 +73,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(jwtAuthenticationProvider);
     }
 
-    /*@Override
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
@@ -83,14 +83,25 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(neighborhoodAccessControlFilter(), UsernamePasswordAuthenticationFilter.class)
-                *//*.addFilterBefore(httpMethodFilter(), FilterSecurityInterceptor.class)*//*
+                .addFilterBefore(httpMethodFilter(), FilterSecurityInterceptor.class)
                 .authorizeRequests()
                 .antMatchers("/auth").permitAll()
-                .antMatchers("/","/images/*", "/departments", "/professions", "/shifts", "/times", "/neighborhoods", "/neighborhoods/*").permitAll()
+                .antMatchers(
+                        "/",
+                        "/languages",       "/languages/{id:[1-9][0-9]*}",
+                        "/roles",           "/roles/{id:[1-9][0-9]*}",
+                        "/departments",     "/departments/{id:[1-9][0-9]*}",
+                        "/professions",     "/professions/{id:[1-9][0-9]*}",
+                        "/times",           "/times/{id:[1-9][0-9]*}",
+                        "/days",            "/days/{id:[1-9][0-9]*}",
+                        "/images/*",
+                        "/shifts",          "/shifts/{id:[1-9][0-9]*}",
+                        "/neighborhoods",   "/neighborhoods/{id:[1-9][0-9]*}"
+                ).permitAll()
                 .anyRequest().authenticated();
-    }*/
+    }
 
-    @Override
+    /*@Override
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement()
                 .invalidSessionUrl("/login")
@@ -122,7 +133,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and().exceptionHandling()
                 .accessDeniedPage("/errors/errorPage")
                 .and().csrf().disable();
-    }
+    }*/
 
 
     @Bean

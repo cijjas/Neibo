@@ -32,4 +32,12 @@ public enum DayOfTheWeek {
     public int getId() {
         return ordinal() + 1;
     }
+
+    public static DayOfTheWeek fromId(int id) {
+        return Arrays.stream(values())
+                .filter(day -> day.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
 }

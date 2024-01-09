@@ -22,6 +22,9 @@ public class ShiftController {
     @Context
     private UriInfo uriInfo;
 
+    // List Shifts
+    // Find ShiftById
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getShifts(

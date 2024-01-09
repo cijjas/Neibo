@@ -35,4 +35,19 @@ public class ProfessionController {
 
         return Response.ok(new GenericEntity<List<ProfessionDto>>(professionDto){}).build();
     }
+
+    @GET
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON })
+    public Response findProfession(@PathParam("id") final long id) {
+        Professions profession = Professions.fromId((int) id);
+
+        if (profession != null) {
+            ProfessionDto professionDto = ProfessionDto.fromProfession(profession, uriInfo);
+            return Response.ok(professionDto).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).entity("Profession not found").build();
+        }
+    }
+
 }

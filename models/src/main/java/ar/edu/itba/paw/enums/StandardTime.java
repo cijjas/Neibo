@@ -59,6 +59,13 @@ public enum StandardTime {
         return ordinal() + 1;
     }
 
+    public static StandardTime fromId(int id) {
+        return Arrays.stream(values())
+                .filter(time -> time.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
     @Override
     public String toString() {
         String[] parts = value.split(":");

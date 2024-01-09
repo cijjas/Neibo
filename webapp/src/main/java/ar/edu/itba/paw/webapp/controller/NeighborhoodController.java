@@ -3,10 +3,13 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.webapp.auth.UserAuth;
 import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
 import ar.edu.itba.paw.webapp.form.NewNeighborhoodForm;
 import ar.edu.itba.paw.webapp.form.PublishForm;
+import ar.edu.itba.paw.webapp.security.api.AuthenticatedUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -37,6 +40,9 @@ public class NeighborhoodController {
         final List<Neighborhood> neighborhoods = ns.getNeighborhoodsByCriteria(page, size);
         final List<NeighborhoodDto> neighborhoodsDto = neighborhoods.stream()
                 .map(n -> NeighborhoodDto.fromNeighborhood(n, uriInfo)).collect(Collectors.toList());
+
+        // felix
+        System.out.println((((UserAuth)SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUsername());
 
         // Add pagination links to the response header
         String baseUri = uriInfo.getBaseUri().toString();

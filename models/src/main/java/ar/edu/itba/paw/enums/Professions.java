@@ -23,6 +23,13 @@ public enum Professions {
                 .collect(Collectors.toList());
     }
 
+    public static Professions fromId(int id) {
+        return Arrays.stream(values())
+                .filter(profession -> profession.getId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
     @Override
     public String toString() {
         return name().toUpperCase();

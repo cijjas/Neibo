@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
 import java.util.Arrays;
@@ -23,11 +24,25 @@ public class LanguageController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listRoles() {
+    public Response listLanguages() {
         List<LanguageDto> languagesDto = Arrays.stream(Language.values())
                 .map(l -> LanguageDto.fromLanguage(l, uriInfo))
                 .collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<LanguageDto>>(languagesDto){}).build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findLanguage(@PathParam("id") final long id) {
+        Language language = Language.fromId((int) id);
+
+        if (language != null) {
+            LanguageDto languageDto = LanguageDto.fromLanguage(language, uriInfo);
+            return Response.ok(languageDto).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).entity("Language not found").build();
+        }
     }
 }

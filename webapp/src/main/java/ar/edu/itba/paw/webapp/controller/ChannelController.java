@@ -39,9 +39,8 @@ public class ChannelController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findChannel(
-            @QueryParam("id") final int channelId) {
-        Optional<Channel> channel = cs.findChannelById(channelId);
+    public Response findChannel(@PathParam("id") long id) {
+        Optional<Channel> channel = cs.findChannelById(id);
         if (!channel.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }

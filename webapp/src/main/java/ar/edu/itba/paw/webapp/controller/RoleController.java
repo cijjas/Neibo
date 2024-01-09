@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.*;
 import java.util.Arrays;
@@ -29,5 +30,19 @@ public class RoleController {
                 .collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<RoleDto>>(rolesDto){}).build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response findRole(@PathParam("id") final long id) {
+        UserRole role = UserRole.fromId((int) id);
+
+        if (role != null) {
+            RoleDto roleDto = RoleDto.fromRole(role, uriInfo);
+            return Response.ok(roleDto).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND).entity("Role not found").build();
+        }
     }
 }
