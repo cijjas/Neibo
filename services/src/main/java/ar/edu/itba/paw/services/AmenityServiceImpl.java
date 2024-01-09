@@ -76,6 +76,8 @@ public class AmenityServiceImpl implements AmenityService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Amenity> findAmenityById(long amenityId) {
+        if (amenityId <= 0)
+            throw new IllegalArgumentException("Amenity ID must be a positive integer");
         return amenityDao.findAmenityById(amenityId);
     }
 

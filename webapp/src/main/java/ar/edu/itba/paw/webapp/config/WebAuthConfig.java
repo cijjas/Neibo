@@ -96,7 +96,10 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/days",            "/days/{id:[1-9][0-9]*}",
                         "/images/*",
                         "/shifts",          "/shifts/{id:[1-9][0-9]*}",
-                        "/neighborhoods",   "/neighborhoods/{id:[1-9][0-9]*}"
+                        "/neighborhoods",   "/neighborhoods/{id:[1-9][0-9]*}",
+
+
+                        "/test/**"
                 ).permitAll()
                 .anyRequest().authenticated();
     }

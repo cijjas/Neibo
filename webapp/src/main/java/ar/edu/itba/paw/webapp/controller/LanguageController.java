@@ -42,7 +42,7 @@ public class LanguageController {
             LanguageDto languageDto = LanguageDto.fromLanguage(language, uriInfo);
             return Response.ok(languageDto).build();
         } else {
-            return Response.status(Response.Status.NOT_FOUND).entity("Language not found").build();
+            throw new IllegalArgumentException("Language ID must be a positive integer.");
         }
     }
 }

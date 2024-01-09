@@ -55,11 +55,8 @@ public class AmenityController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findAmenity(@PathParam("id") final long id) {
-        Optional<Amenity> amenity = as.findAmenityById(id);
-        if (!amenity.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(AmenityDto.fromAmenity(amenity.get(), uriInfo)).build();
+        return Response.ok(AmenityDto.fromAmenity(as.findAmenityById(id)
+                .orElseThrow(() -> new NotFoundException("Amenity Not Found")), uriInfo)).build();
     }
 
     @POST
