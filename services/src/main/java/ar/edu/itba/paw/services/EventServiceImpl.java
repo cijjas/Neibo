@@ -136,6 +136,8 @@ public class EventServiceImpl implements EventService {
     @Transactional(readOnly = true)
     public Optional<Event> findEventById(long eventId) {
         LOGGER.info("Finding Event {}", eventId);
+        if (eventId <= 0)
+            throw new IllegalArgumentException("Event ID must be a positive integer");
         return eventDao.findEventById(eventId);
     }
 

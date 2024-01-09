@@ -43,7 +43,9 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Neighborhood> findNeighborhoodById(long id) {
-        LOGGER.info("Finding Neighborhood with id {}", id);
+        LOGGER.info("Selecting Neighborhood with id {}", id);
+        if (id <= 0)
+            throw new IllegalArgumentException("Neighborhood ID must be a positive integer");
         return neighborhoodDao.findNeighborhoodById(id);
     }
 

@@ -74,6 +74,8 @@ public class WorkerServiceImpl implements WorkerService {
     @Transactional(readOnly = true)
     public Optional<Worker> findWorkerById(long userId) {
         LOGGER.info("Finding Worker with id {}", userId);
+        if (userId <= 0)
+            throw new IllegalArgumentException("Worker ID must be a positive integer");
         Optional<User> optionalUser = userDao.findUserById(userId);
         return optionalUser.isPresent() ? workerDao.findWorkerById(userId) : Optional.empty();
     }

@@ -108,6 +108,9 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Post> findPostById(final long id) {
+        LOGGER.info("Finding Post with ID {}", id);
+        if (id <= 0)
+            throw new IllegalArgumentException("Post ID must be a positive integer");
         return postDao.findPostById(id);
     }
 }

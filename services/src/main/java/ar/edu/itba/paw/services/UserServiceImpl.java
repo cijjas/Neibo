@@ -84,6 +84,8 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public Optional<User> findUserById(long neighborId) {
         LOGGER.info("Finding User with id {}", neighborId);
+        if (neighborId <= 0)
+            throw new IllegalArgumentException("User ID must be a positive integer");
         return userDao.findUserById(neighborId);
     }
 

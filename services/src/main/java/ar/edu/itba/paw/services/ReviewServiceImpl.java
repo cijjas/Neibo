@@ -35,8 +35,10 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Review> getReview(long reviewId) {
+    public Optional<Review> findReviewById(long reviewId) {
         LOGGER.info("Finding Review with id {}", reviewId);
+        if (reviewId <= 0)
+            throw new IllegalArgumentException("Review ID must be a positive integer");
         return reviewDao.findReviewById(reviewId);
     }
 

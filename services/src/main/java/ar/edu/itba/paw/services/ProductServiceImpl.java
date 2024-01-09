@@ -53,6 +53,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Optional<Product> findProductById(long productId) {
         LOGGER.info("Selecting Product with id {}", productId);
+        if (productId <= 0)
+            throw new IllegalArgumentException("Product ID must be a positive integer");
         return productDao.findProductById(productId);
     }
 

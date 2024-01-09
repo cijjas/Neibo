@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Entities.Event;
+import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.EventDto;
 import ar.edu.itba.paw.webapp.form.EventForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,11 +47,8 @@ public class EventController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findEvent(@PathParam("id") final long id) {
-        Optional<Event> event = es.findEventById(id);
-        if (!event.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(EventDto.fromEvent(event.get(), uriInfo)).build();
+        return Response.ok(EventDto.fromEvent(es.findEventById(id)
+                .orElseThrow(() -> new NotFoundException("Event Not Found")), uriInfo)).build();
     }
 
     @POST

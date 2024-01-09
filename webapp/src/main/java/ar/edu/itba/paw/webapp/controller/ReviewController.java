@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.models.Entities.Review;
+import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -48,11 +49,8 @@ public class ReviewController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findReview(@PathParam("id") final long id) {
-        Optional<Review> review = rs.getReview(id);
-        if (!review.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(ReviewDto.fromReview(review.get(), uriInfo)).build();
+        return Response.ok(ReviewDto.fromReview(rs.findReviewById(id)
+                .orElseThrow(() -> new NotFoundException("Review Not Found")), uriInfo)).build();
     }
 
 }

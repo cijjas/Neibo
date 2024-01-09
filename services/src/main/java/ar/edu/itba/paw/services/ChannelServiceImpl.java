@@ -52,6 +52,8 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Channel> findChannelById(long id) {
+        if (id <= 0)
+            throw new IllegalArgumentException("Channel ID must be a positive integer");
         return channelDao.findChannelById(id);
     }
 

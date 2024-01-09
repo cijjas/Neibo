@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.ImageDto;
 import ar.edu.itba.paw.webapp.form.PublishForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class ImageController {
     public Response findById(@QueryParam("id") final long id) {
         Optional<Image> image = is.getImage(id);
         if (!image.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new NotFoundException("Image not found");
         }
         return Response.ok(ImageDto.fromImage(image.get(), uriInfo)).build();
     }

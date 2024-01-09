@@ -59,11 +59,8 @@ public class UserController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findUser(@PathParam("id") final long id) {
-        Optional<User> user = us.findUserById(id);
-        if (!user.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(UserDto.fromUser(user.get(), uriInfo)).build();
+        return Response.ok(UserDto.fromUser(us.findUserById(id)
+                .orElseThrow(() -> new NotFoundException("User Not Found")), uriInfo)).build();
     }
 
     @POST

@@ -7,6 +7,7 @@ import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.ChannelDto;
 import ar.edu.itba.paw.webapp.dto.DepartmentDto;
 import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -43,7 +44,7 @@ public class DepartmentController {
             DepartmentDto departmentDto = DepartmentDto.fromDepartment(department, uriInfo);
             return Response.ok(departmentDto).build();
         } else {
-            return Response.status(Response.Status.NOT_FOUND).entity("Department not found").build();
+            throw new NotFoundException("Department not found");
         }
     }
 

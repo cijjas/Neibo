@@ -57,6 +57,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Booking> findBooking(long bookingId){
+        if (bookingId <= 0)
+            throw new IllegalArgumentException("Booking ID must be a positive integer");
         return bookingDao.findBookingById(bookingId);
     }
 

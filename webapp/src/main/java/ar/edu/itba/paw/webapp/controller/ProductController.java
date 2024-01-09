@@ -59,12 +59,9 @@ public class ProductController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response getById(@PathParam("id") final long id) {
-        Optional<Product> product = ps.findProductById(id);
-        if (!product.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(ProductDto.fromProduct(product.get(), uriInfo)).build();
+    public Response findProduct(@PathParam("id") final long id) {
+        return Response.ok(ProductDto.fromProduct(ps.findProductById(id)
+                .orElseThrow(() -> new NotFoundException("Product Not Found")), uriInfo)).build();
     }
 
     @POST

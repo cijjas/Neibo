@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.webapp.auth.UserAuth;
+import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
 import ar.edu.itba.paw.webapp.form.NewNeighborhoodForm;
 import ar.edu.itba.paw.webapp.form.PublishForm;
@@ -58,11 +59,8 @@ public class NeighborhoodController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findNeighborhood(@PathParam("id") final long id) {
-        Optional<Neighborhood> neighborhood = ns.findNeighborhoodById(id);
-        if (!neighborhood.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(NeighborhoodDto.fromNeighborhood(neighborhood.get(), uriInfo)).build();
+        return Response.ok(NeighborhoodDto.fromNeighborhood(ns.findNeighborhoodById(id)
+                .orElseThrow(() -> new NotFoundException("Neighborhood Not Found")), uriInfo)).build();
     }
 
     @POST

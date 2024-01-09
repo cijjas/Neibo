@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.models.Entities.Channel;
+import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.ChannelDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,11 +41,8 @@ public class ChannelController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findChannel(@PathParam("id") long id) {
-        Optional<Channel> channel = cs.findChannelById(id);
-        if (!channel.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(ChannelDto.fromChannel(channel.get(), uriInfo, Long.parseLong(neighborhoodId))).build();
+        return Response.ok(ChannelDto.fromChannel(cs.findChannelById(id)
+                .orElseThrow(() -> new NotFoundException("Channel Not Found")), uriInfo, Long.parseLong(neighborhoodId))).build();
     }
 
 

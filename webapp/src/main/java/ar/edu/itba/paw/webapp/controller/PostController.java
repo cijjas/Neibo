@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.PostDto;
 import ar.edu.itba.paw.webapp.form.PublishForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,11 +58,8 @@ public class PostController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findPostById(@PathParam("id") final long id) {
-        Optional<Post> post = ps.findPostById(id);
-        if (!post.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-        return Response.ok(PostDto.fromPost(post.get(), uriInfo)).build();
+        return Response.ok(PostDto.fromPost(ps.findPostById(id)
+                .orElseThrow(() -> new NotFoundException("Post Not Found")), uriInfo)).build();
     }
 
     @POST

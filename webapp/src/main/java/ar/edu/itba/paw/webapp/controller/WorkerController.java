@@ -5,6 +5,7 @@ import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.enums.WorkerStatus;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Worker;
+import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
 import ar.edu.itba.paw.webapp.form.WorkerUpdateForm;
 import ar.edu.itba.paw.webapp.form.WorkerSignupForm;
@@ -65,7 +66,7 @@ public class WorkerController {
     public Response findWorker(@PathParam("id") final long id) {
         Optional<Worker> worker = ws.findWorkerById(id);
         if (!worker.isPresent()) {
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new NotFoundException("Worker Not Found");
         }
         return Response.ok(WorkerDto.fromWorker(worker.get(), uriInfo)).build();
     }
