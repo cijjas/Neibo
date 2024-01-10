@@ -17,6 +17,8 @@ public interface RequestService {
 
     int getRequestsCountByProductId(long productId);
 
+    int getRequestsPagesByCriteria(long productId, long userId, int pageSize);
+
     List<Request> getRequestsByProductAndUser(long productId, long userId, int page, int size);
 
     List<Request> getRequestsByUserId(long userId, int page, int size);

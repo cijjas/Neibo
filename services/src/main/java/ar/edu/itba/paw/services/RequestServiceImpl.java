@@ -72,6 +72,12 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public int getRequestsPagesByCriteria(long productId, long userId, int pageSize) {
+        return (int) Math.ceil((double) getRequestsCountByCriteria(productId, userId) / pageSize);
+    }
+
+
+    @Override
     public List<Request> getRequestsByProductId(long productId, int page, int size) {
         return requestDao.getRequestsByProductId(productId, page, size);
     }

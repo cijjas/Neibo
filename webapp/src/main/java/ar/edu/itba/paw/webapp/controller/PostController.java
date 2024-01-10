@@ -45,8 +45,8 @@ public class PostController {
                 .map(p -> PostDto.fromPost(p, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts";
-        PostStatus pstat = PostStatus.valueOf(postStatus);
-        int totalPostsPages = ps.getTotalPages(channel, size, tags, neighborhoodId, pstat, userId);
+        PostStatus pStat = PostStatus.valueOf(postStatus);
+        int totalPostsPages = ps.getTotalPages(channel, size, tags, neighborhoodId, pStat, userId);
         Link[] links = createPaginationLinks(baseUri, page, size, totalPostsPages);
 
         return Response.ok(new GenericEntity<List<PostDto>>(postsDto){})
@@ -57,7 +57,7 @@ public class PostController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findPostById(@PathParam("id") final long id) {
+    public Response findPost(@PathParam("id") final long id) {
         return Response.ok(PostDto.fromPost(ps.findPostById(id)
                 .orElseThrow(() -> new NotFoundException("Post Not Found")), uriInfo)).build();
     }

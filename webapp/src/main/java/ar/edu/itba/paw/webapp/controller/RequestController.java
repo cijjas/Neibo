@@ -42,7 +42,7 @@ public class RequestController {
                 .map(r -> RequestDto.fromRequest(r, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/requests";
-        int totalRequestPages = rs.getRequestsCountByCriteria(userId, productId);
+        int totalRequestPages = rs.getRequestsPagesByCriteria(userId, productId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalRequestPages);
 
         return Response.ok(new GenericEntity<List<RequestDto>>(requestDto){})

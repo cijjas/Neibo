@@ -28,7 +28,7 @@ public class ImageController {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findById(@QueryParam("id") final long id) {
+    public Response findImage(@QueryParam("id") final long id) {
         Optional<Image> image = is.getImage(id);
         if (!image.isPresent()) {
             throw new NotFoundException("Image not found");
