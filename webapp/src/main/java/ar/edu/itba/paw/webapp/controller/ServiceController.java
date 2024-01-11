@@ -186,8 +186,8 @@ public class ServiceController extends GlobalControllerAdvice{
         }
 
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
-        Set<Worker> workerList = ws.getWorkersByCriteria(page, size, professions, getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
-        mav.addObject("workersList", workerList);
+//        Set<Worker> workerList = ws.getWorkersByCriteria(page, size, professions, getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
+//        mav.addObject("workersList", workerList);
         mav.addObject("channel", "Services");
         mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(professions, new long[] {getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER, WorkerStatus.none));
         mav.addObject("contextPath", "/services");

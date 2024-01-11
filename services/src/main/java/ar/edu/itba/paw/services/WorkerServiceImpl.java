@@ -90,18 +90,21 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @Transactional(readOnly = true)
-    public Set<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long neighborhoodId, long loggedUserId, WorkerRole workerRole, WorkerStatus workerStatus) {
-        LOGGER.info("Getting Workers from Neighborhoods {} with professions {}", neighborhoodId, professions);
-        if (neighborhoodId != 0)
-            return workerDao.getWorkersByCriteria(page, size, professions, new long[]{neighborhoodId}, workerRole, workerStatus);
+    public Set<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long loggedUserId, WorkerRole workerRole, WorkerStatus workerStatus) {
+        LOGGER.info("Getting Workers with professions {}", professions);
+        //If inquirer is a worker, show return workers from any of the neighborhoods they are in
+        User user = userDao.findUserById(loggedUserId).orElseThrow(() -> new NotFoundException("User Not Found"));
+        if(user.getNeighborhood().getNeighborhoodId() == 0) { //inquirer is a worker
+            Set<Neighborhood> neighborhoods = neighborhoodWorkerDao.getNeighborhoods(loggedUserId);
+            long[] neighborhoodIds = neighborhoods.stream()
+                    .mapToLong(Neighborhood::getNeighborhoodId)
+                    .toArray();
 
-        List<Neighborhood> neighborhoods = neighborhoodWorkerDao.getNeighborhoods(loggedUserId);
-
-        long[] neighborhoodIds = neighborhoods.stream()
-                .mapToLong(Neighborhood::getNeighborhoodId)
-                .toArray();
-
-        return workerDao.getWorkersByCriteria(page, size, professions, neighborhoodIds, workerRole, workerStatus);
+            return workerDao.getWorkersByCriteria(page, size, professions, neighborhoodIds, workerRole, workerStatus);
+        } else {
+            //user isn't a worker, must only return workers from their neighborhood
+            return workerDao.getWorkersByCriteria(page, size, professions, new long[]{user.getNeighborhood().getNeighborhoodId()}, workerRole, workerStatus);
+        }
     }
 
     @Override

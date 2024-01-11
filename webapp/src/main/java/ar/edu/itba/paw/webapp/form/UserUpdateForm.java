@@ -21,6 +21,10 @@ public class UserUpdateForm {
     @Size(min = 8, max = 128)
     private String password;
 
+    private Integer languageId;
+
+    private Integer userRoleId;
+
     private Boolean darkMode;
 
     private String phoneNumber;
@@ -70,6 +74,22 @@ public class UserUpdateForm {
 
     public void setIdentification(Integer identification) { this.identification = identification; }
 
+    public Integer getLanguageId() {
+        return languageId;
+    }
+
+    public void setLanguageId(Integer languageId) {
+        this.languageId = languageId;
+    }
+
+    public Integer getUserRoleId() {
+        return userRoleId;
+    }
+
+    public void setUserRoleId(Integer userRoleId) {
+        this.userRoleId = userRoleId;
+    }
+
     @Override
     public String toString() {
         return "UserUpdateForm{" +
@@ -77,11 +97,12 @@ public class UserUpdateForm {
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", password='" + password + '\'' +
+                ", languageId=" + languageId +
+                ", userRoleId=" + userRoleId +
                 ", darkMode=" + darkMode +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", profilePicture=" + profilePicture +
                 ", identification=" + identification +
                 '}';
     }
-
 }

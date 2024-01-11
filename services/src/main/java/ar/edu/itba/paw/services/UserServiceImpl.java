@@ -230,7 +230,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(long id, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification) {
+    public User updateUser(long id, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification, Integer languageId, Integer userRoleId) {
         LOGGER.info("Updating User {}", id);
 
         User user = getUser(id);
@@ -253,6 +253,10 @@ public class UserServiceImpl implements UserService {
         }
         if (identification != null)
             user.setIdentification(identification);
+        if(languageId != null)
+            user.setLanguage(Language.fromId(languageId));
+        if(userRoleId != null)
+            user.setRole(UserRole.fromId(userRoleId));
 
         return user;
     }

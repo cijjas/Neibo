@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.enums.WorkerStatus;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
@@ -27,14 +28,19 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("/workers")
 @Component
-public class WorkerController {
+public class WorkerController extends GlobalControllerAdvice {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerController.class);
 
-    @Autowired
     private WorkerService ws;
 
     @Context
     private UriInfo uriInfo;
+
+    @Autowired
+    public WorkerController(final UserService us, final WorkerService ws) {
+        super(us);
+        this.ws = ws;
+    }
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
@@ -48,7 +54,7 @@ public class WorkerController {
             @QueryParam("workerStatus") final WorkerStatus workerStatus
     ) {
         LOGGER.info("Listing Workers");
-        Set<Worker> workers = ws.getWorkersByCriteria(page, size, professions, neighborhoodId, loggedUserId, workerRole, workerStatus);
+        Set<Worker> workers = ws.getWorkersByCriteria(page, size, professions, getLoggedUser().getUserId(), workerRole, workerStatus);
 
         String baseUri = uriInfo.getBaseUri().toString() + "workers";
 
