@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Path("likes")
+@Path("neighborhoods/{neighborhoodId}/likes")
 @Component
 public class LikeController extends GlobalControllerAdvice{
     private static final Logger LOGGER = LoggerFactory.getLogger(LikeController.class);
@@ -36,6 +36,9 @@ public class LikeController extends GlobalControllerAdvice{
         this.ls = ls;
     }
 
+    @PathParam("neighborhoodId")
+    private Long neighborhoodId;
+
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listLikes(
@@ -44,12 +47,12 @@ public class LikeController extends GlobalControllerAdvice{
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size){
         LOGGER.info("Listing Likes for Post {}", postId);
-        final List<Like> likes = ls.getLikesByCriteria(postId, userId, page, size);
+        final List<Like> likes = ls.getLikesByCriteria(neighborhoodId, postId, userId, page, size);
         final List<LikeDto> likesDto = likes.stream()
                 .map(l -> LikeDto.fromLike(l, uriInfo)).collect(Collectors.toList());
 
-        String baseUri = uriInfo.getBaseUri().toString() + "likes";
-        int totalLikePages = ls.getTotalLikePagesByCriteria(postId, userId, size);
+        String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "likes";
+        int totalLikePages = ls.getTotalLikePagesByCriteria(neighborhoodId, postId, userId, size);
         Link[] links = ControllerUtils.createPaginationLinks(baseUri, page, size, totalLikePages);
 
         return Response.ok(new GenericEntity<List<LikeDto>>(likesDto){})

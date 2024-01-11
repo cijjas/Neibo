@@ -60,9 +60,9 @@ public class LikeServiceImpl implements LikeService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Like> getLikesByCriteria(long postId, long userId, int page, int size){
+    public List<Like> getLikesByCriteria(long neighborhoodId, long postId, long userId, int page, int size){
         if (userId == 0 && postId == 0) {
-            return likeDao.getAllLikes();
+            return likeDao.getLikesByNeighborhood(neighborhoodId, page, size);
         }
         else if (userId > 0) {
             return likeDao.getLikesByUser(userId, page, size);
@@ -74,9 +74,9 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public int getTotalLikePagesByCriteria(long postId, long userId, int size) {
+    public int getTotalLikePagesByCriteria(long neighborhoodId, long postId, long userId, int size) {
         if (userId == 0 && postId == 0) {
-            return (int) Math.ceil((double) likeDao.getAllLikesCount() / size);
+            return (int) Math.ceil((double) likeDao.getLikesByNeighborhoodCount(neighborhoodId) / size);
         }
         else if (userId > 0) {
             return (int) Math.ceil((double) likeDao.getLikesByUserCount(userId) / size);

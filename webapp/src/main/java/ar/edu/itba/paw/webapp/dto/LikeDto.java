@@ -14,6 +14,8 @@ public class LikeDto {
         final LikeDto dto = new LikeDto();
 
         dto.self = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("likes")
                 .path(String.valueOf(like.getId()))
                 .build();

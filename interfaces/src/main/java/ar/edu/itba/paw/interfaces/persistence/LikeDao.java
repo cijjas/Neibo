@@ -17,6 +17,8 @@ public interface LikeDao {
     // -------------------------------------------------- LIKES SELECT -------------------------------------------------
     List<Like> getAllLikes();
 
+    List<Like> getLikesByNeighborhood(long neighborhoodId, int page, int size);
+
     int getLikes(long postId);
 
     List<Like> getLikesByPost(long postId, int page, int size);
@@ -24,6 +26,8 @@ public interface LikeDao {
     List<Like> getLikesByUser(long userId, int page, int size);
 
     int getAllLikesCount();
+
+    int getLikesByNeighborhoodCount(long neighborhoodId);
 
     int getLikesByPostCount(long postId);
 

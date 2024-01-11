@@ -23,8 +23,8 @@ public interface LikeService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    List<Like> getLikesByCriteria(long postId, long userId, int page, int size);
+    List<Like> getLikesByCriteria(long neighborhoodId, long postId, long userId, int page, int size);
 
-    int getTotalLikePagesByCriteria(long postId, long userId, int size);
+    int getTotalLikePagesByCriteria(long neighborhoodId, long postId, long userId, int size);
 
 }

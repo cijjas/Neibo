@@ -10,7 +10,7 @@ public interface InquiryService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    void replyInquiry(final long inquiryId, final String reply);
+    Inquiry replyInquiry(final long inquiryId, final String reply);
 
     Optional<Inquiry> findInquiryById(final long inquiryId);
 

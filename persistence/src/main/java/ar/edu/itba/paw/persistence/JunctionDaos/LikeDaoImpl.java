@@ -40,6 +40,16 @@ public class LikeDaoImpl implements LikeDao {
     }
 
     @Override
+    public List<Like> getLikesByNeighborhood(long neighborhoodId, int page, int size) {
+        LOGGER.debug("Selecting Likes from Neighborhood {}", neighborhoodId);
+        return em.createQuery("SELECT l FROM Like l WHERE l.user.neighborhood.neighborhoodId = :neighborhoodId", Like.class)
+                .setParameter("neighborhoodId", neighborhoodId)
+                .setFirstResult((page - 1) * size)
+                .setMaxResults(size)
+                .getResultList();
+    }
+
+    @Override
     public int getLikes(long postId) {
         LOGGER.debug("Selecting Likes from Post {}", postId);
         Long count = (Long) em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.post.postId = :postId")
@@ -72,6 +82,15 @@ public class LikeDaoImpl implements LikeDao {
     public int getAllLikesCount() {
         LOGGER.debug("Selecting all Likes count");
         Long count = (Long) em.createQuery("SELECT COUNT(l) FROM Like l")
+                .getSingleResult();
+        return count != null ? count.intValue() : 0;
+    }
+
+    @Override
+    public int getLikesByNeighborhoodCount(long neighborhoodId) {
+        LOGGER.debug("Selecting Likes from Neighborhood {}", neighborhoodId);
+        Long count = (Long) em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.user.neighborhood.neighborhoodId = :neighborhoodId")
+                .setParameter("neighborhoodId", neighborhoodId)
                 .getSingleResult();
         return count != null ? count.intValue() : 0;
     }

@@ -76,4 +76,17 @@ public class InquiryController extends GlobalControllerAdvice{
                 .path(String.valueOf(inquiry.getInquiryId())).build();
         return Response.created(uri).build();
     }
+
+    @PATCH
+    @Path("/{id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response answerInquiry(@PathParam("id") final long id, @Valid final QuestionForm form) {
+        LOGGER.info("Updating Inquiry with id {}", id);
+        final Inquiry inquiry = is.replyInquiry(id, form.getQuestionMessage());
+        final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(inquiry.getInquiryId())).build();
+        return Response.created(uri).build();
+    }
+
 }
