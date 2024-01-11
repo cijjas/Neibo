@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ShiftService;
 import ar.edu.itba.paw.models.Entities.Shift;
 import ar.edu.itba.paw.webapp.dto.ShiftDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 @Path("shifts")
 @Component
 public class ShiftController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShiftController.class);
 
     @Autowired
     private ShiftService ss;
@@ -31,6 +34,7 @@ public class ShiftController {
             @QueryParam("amenityId") long amenityId,
             @QueryParam("dayId") long dayId,
             @QueryParam("date") Date date) {
+        LOGGER.info("Listing Shifts for Amenity {}", amenityId);
 
         List<Shift> shifts = ss.getShiftsByCriteria(amenityId, dayId, date);
 

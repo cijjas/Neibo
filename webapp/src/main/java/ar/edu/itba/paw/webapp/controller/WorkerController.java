@@ -9,6 +9,8 @@ import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
 import ar.edu.itba.paw.webapp.form.WorkerUpdateForm;
 import ar.edu.itba.paw.webapp.form.WorkerSignupForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +28,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 @Path("/workers")
 @Component
 public class WorkerController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WorkerController.class);
 
     @Autowired
     private WorkerService ws;
@@ -44,6 +47,7 @@ public class WorkerController {
             @QueryParam("workerRole") final WorkerRole workerRole,
             @QueryParam("workerStatus") final WorkerStatus workerStatus
     ) {
+        LOGGER.info("Listing Workers");
         Set<Worker> workers = ws.getWorkersByCriteria(page, size, professions, neighborhoodId, loggedUserId, workerRole, workerStatus);
 
         String baseUri = uriInfo.getBaseUri().toString() + "workers";
@@ -64,6 +68,7 @@ public class WorkerController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findWorker(@PathParam("id") final long id) {
+        LOGGER.info("Finding Worker with id {}", id);
         Optional<Worker> worker = ws.findWorkerById(id);
         if (!worker.isPresent()) {
             throw new NotFoundException("Worker Not Found");
@@ -74,6 +79,7 @@ public class WorkerController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createWorker(@Valid final WorkerSignupForm form) {
+        LOGGER.info("Creating Worker");
         final Worker worker = ws.createWorker(form.getW_mail(), form.getW_name(), form.getW_surname(), form.getW_password(), form.getW_identification(), form.getPhoneNumber(), form.getAddress(), Language.ENGLISH, form.getProfessionIds(), form.getBusinessName());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(worker.getWorkerId())).build(); //esto esta bien o es el userId que necesita??
@@ -87,6 +93,7 @@ public class WorkerController {
     public Response updateWorkerPartially(
             @PathParam("id") final long id,
             @Valid final WorkerUpdateForm partialUpdate) {
+        LOGGER.info("Updating Worker with id {}", id);
         final Worker worker = ws.updateWorkerPartially(id, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio());
         return Response.ok(WorkerDto.fromWorker(worker, uriInfo)).build();
     }

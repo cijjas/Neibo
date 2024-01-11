@@ -4,6 +4,8 @@ import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.webapp.dto.DepartmentDto;
 import ar.edu.itba.paw.webapp.dto.RoleDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 @Path("roles")
 @Component
 public class RoleController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RoleController.class);
 
     @Context
     private UriInfo uriInfo;
@@ -25,6 +28,7 @@ public class RoleController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listRoles() {
+        LOGGER.info("Listing Roles");
         List<RoleDto> rolesDto = Arrays.stream(UserRole.values())
                 .map(ur -> RoleDto.fromRole(ur, uriInfo))
                 .collect(Collectors.toList());
@@ -36,6 +40,7 @@ public class RoleController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findRole(@PathParam("id") final long id) {
+        LOGGER.info("Finding Role with id {}", id);
         UserRole role = UserRole.fromId((int) id);
 
         if (role != null) {

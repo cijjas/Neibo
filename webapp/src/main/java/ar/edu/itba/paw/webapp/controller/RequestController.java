@@ -1,9 +1,12 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.RequestService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.dto.RequestDto;
 import ar.edu.itba.paw.webapp.form.RequestForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,15 +21,22 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("neighborhoods/{neighborhoodId}/requests")
 @Component
-public class RequestController {
-    @Autowired
-    private RequestService rs;
+public class RequestController extends GlobalControllerAdvice {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RequestController.class);
+
+    private final RequestService rs;
 
     @Context
     private UriInfo uriInfo;
 
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
+
+    @Autowired
+    public RequestController(final UserService us, final RequestService rs) {
+        super(us);
+        this.rs = rs;
+    }
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
@@ -36,6 +46,7 @@ public class RequestController {
             @QueryParam("userId") @DefaultValue("0") final int userId,
             @QueryParam("productId") @DefaultValue("0") final int productId
             ) {
+        LOGGER.info("Listing Requests");
         List<Request> requests = rs.getRequestsByCriteria(userId, productId, page, size);
 
         List<RequestDto> requestDto = requests.stream()
@@ -56,8 +67,8 @@ public class RequestController {
             @Valid final RequestForm form,
             @QueryParam("productId") @DefaultValue("0") final int productId
     ) {
-//        final Request request = rs.createRequest(LoggedUser, productId, form.getRequestMessage());
-        final Request request = rs.createRequest(1, productId, form.getRequestMessage());
+        LOGGER.info("Creating Request for Product {}", productId);
+        final Request request = rs.createRequest(getLoggedUser().getUserId(), productId, form.getRequestMessage());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(request.getRequestId())).build();
         return Response.created(uri).build();

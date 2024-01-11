@@ -2,6 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.DayOfTheWeek;
 import ar.edu.itba.paw.webapp.dto.DayDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -13,6 +15,7 @@ import java.util.stream.Collectors;
 @Path("days")
 @Component
 public class DayController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DayController.class);
 
     @Context
     private UriInfo uriInfo;
@@ -21,6 +24,7 @@ public class DayController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findDay(@PathParam("id") final long id) {
+        LOGGER.info("Finding Day with id {}", id);
         DayOfTheWeek day = DayOfTheWeek.fromId((int) id);
 
         if (day != null) {
@@ -34,6 +38,7 @@ public class DayController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listDays() {
+        LOGGER.info("Listing Days");
         List<DayDto> dayDto = Arrays.stream(DayOfTheWeek.values())
                 .map(d -> DayDto.fromDay(d, uriInfo))
                 .collect(Collectors.toList());

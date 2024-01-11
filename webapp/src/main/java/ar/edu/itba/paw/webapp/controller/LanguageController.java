@@ -4,6 +4,8 @@ import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.webapp.dto.LanguageDto;
 import ar.edu.itba.paw.webapp.dto.RoleDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 @Path("languages")
 @Component
 public class LanguageController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LanguageController.class);
 
     @Context
     private UriInfo uriInfo;
@@ -25,6 +28,7 @@ public class LanguageController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listLanguages() {
+        LOGGER.info("Listing Languages");
         List<LanguageDto> languagesDto = Arrays.stream(Language.values())
                 .map(l -> LanguageDto.fromLanguage(l, uriInfo))
                 .collect(Collectors.toList());
@@ -36,6 +40,7 @@ public class LanguageController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findLanguage(@PathParam("id") final long id) {
+        LOGGER.info("Finding Language with id {}", id);
         Language language = Language.fromId((int) id);
 
         if (language != null) {

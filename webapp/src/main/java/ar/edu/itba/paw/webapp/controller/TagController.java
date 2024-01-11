@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.models.Entities.Tag;
 import ar.edu.itba.paw.webapp.dto.TagDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 @Path("neighborhoods/{neighborhoodId}/tags")
 @Component
 public class TagController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TagController.class);
 
     @Autowired
     private TagService ts;
@@ -33,6 +36,7 @@ public class TagController {
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
+        LOGGER.info("Listing Tags");
         List<Tag> tags = ts.getTagsByCriteria(postId, neighborhoodId, page, size);
         List<TagDto> tagsDto = tags.stream()
                 .map(t -> TagDto.fromTag(t, uriInfo)).collect(Collectors.toList());

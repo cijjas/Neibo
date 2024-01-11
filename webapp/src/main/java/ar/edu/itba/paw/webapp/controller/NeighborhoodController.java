@@ -9,6 +9,8 @@ import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
 import ar.edu.itba.paw.webapp.form.NewNeighborhoodForm;
 import ar.edu.itba.paw.webapp.form.PublishForm;
 import ar.edu.itba.paw.webapp.security.api.AuthenticatedUserDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -26,6 +28,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 @Path("neighborhoods")
 @Component
 public class NeighborhoodController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodController.class);
 
     @Autowired
     private NeighborhoodService ns;
@@ -38,12 +41,10 @@ public class NeighborhoodController {
     public Response listNeighborhoods(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size) {
+        LOGGER.info("Listing Neighborhoods");
         final List<Neighborhood> neighborhoods = ns.getNeighborhoodsByCriteria(page, size);
         final List<NeighborhoodDto> neighborhoodsDto = neighborhoods.stream()
                 .map(n -> NeighborhoodDto.fromNeighborhood(n, uriInfo)).collect(Collectors.toList());
-
-        // felix
-        System.out.println((((UserAuth)SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUsername());
 
         // Add pagination links to the response header
         String baseUri = uriInfo.getBaseUri().toString();
@@ -59,6 +60,7 @@ public class NeighborhoodController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findNeighborhood(@PathParam("id") final long id) {
+        LOGGER.info("Finding Neighborhood with id {}", id);
         return Response.ok(NeighborhoodDto.fromNeighborhood(ns.findNeighborhoodById(id)
                 .orElseThrow(() -> new NotFoundException("Neighborhood Not Found")), uriInfo)).build();
     }
@@ -66,6 +68,7 @@ public class NeighborhoodController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createNeighborhood(@Valid final NewNeighborhoodForm form) {
+        LOGGER.info("Creating Neighborhood");
         final Neighborhood neighborhood = ns.createNeighborhood(form.getName());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(neighborhood.getNeighborhoodId())).build();

@@ -8,6 +8,8 @@ import ar.edu.itba.paw.webapp.dto.ChannelDto;
 import ar.edu.itba.paw.webapp.dto.DepartmentDto;
 import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 @Path("departments")
 @Component
 public class DepartmentController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DepartmentController.class);
 
     @Context
     private UriInfo uriInfo;
@@ -27,6 +30,7 @@ public class DepartmentController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listDepartments() {
+        LOGGER.info("Listing Departments");
         List<DepartmentDto> departmentDto = Arrays.stream(Department.values())
                 .map(d -> DepartmentDto.fromDepartment(d, uriInfo))
                 .collect(Collectors.toList());
@@ -38,6 +42,7 @@ public class DepartmentController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findDepartment(@PathParam("id") final int id) {
+        LOGGER.info("Finding Department with id {}", id);
         Department department = Department.fromId(id);
 
         if (department != null) {

@@ -3,6 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.enums.StandardTime;
 import ar.edu.itba.paw.webapp.dto.ProductDto;
 import ar.edu.itba.paw.webapp.dto.TimeDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 @Path("times")
 @Component
 public class TimeController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TimeController.class);
 
     @Context
     private UriInfo uriInfo;
@@ -26,6 +29,7 @@ public class TimeController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listTimes() {
+        LOGGER.info("Listing Times");
         List<TimeDto> timeDto = Arrays.stream(StandardTime.values())
                 .map(t -> TimeDto.fromTime(t, uriInfo))
                 .collect(Collectors.toList());
@@ -38,6 +42,7 @@ public class TimeController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findTime(@PathParam("id") final long id) {
+        LOGGER.info("Finding Time with id {}", id);
         StandardTime time = StandardTime.fromId((int) id);
 
         if (time != null) {

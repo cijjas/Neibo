@@ -4,13 +4,18 @@ import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.interfaces.services.InquiryService;
 import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.interfaces.services.RequestService;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.models.Entities.Resource;
+import ar.edu.itba.paw.webapp.auth.UserAuth;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.ProductDto;
 import ar.edu.itba.paw.webapp.form.ListingForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -25,16 +30,22 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("neighborhoods/{neighborhoodId}/products")
 @Component
-public class ProductController {
+public class ProductController extends GlobalControllerAdvice {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
-    @Autowired
-    private ProductService ps;
+    private final ProductService ps;
 
     @Context
     private UriInfo uriInfo;
 
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
+
+    @Autowired
+    public ProductController(final UserService us, final ProductService ps) {
+        super(us);
+        this.ps = ps;
+    }
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
@@ -43,6 +54,7 @@ public class ProductController {
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("department") @DefaultValue("NONE") final Department department
             ) {
+        LOGGER.info("Listing Departments");
         final List<Product> products = ps.getProductsByCriteria(neighborhoodId, department, page, size);
         final List<ProductDto> productsDto = products.stream()
                 .map(p -> ProductDto.fromProduct(p, uriInfo)).collect(Collectors.toList());
@@ -60,6 +72,7 @@ public class ProductController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findProduct(@PathParam("id") final long id) {
+        LOGGER.info("Finding Product with id {}", id);
         return Response.ok(ProductDto.fromProduct(ps.findProductById(id)
                 .orElseThrow(() -> new NotFoundException("Product Not Found")), uriInfo)).build();
     }
@@ -67,8 +80,8 @@ public class ProductController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createProduct(@Valid final ListingForm form) {
-//        final Product product = ps.createProduct(getLoggedUser, form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentId(), form.getImageFiles(), form.getQuantity());
-        final Product product = ps.createProduct(1, form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentId(), form.getImageFiles(), form.getQuantity());
+        LOGGER.info("Creating Product");
+        final Product product = ps.createProduct(getLoggedUser().getUserId(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentId(), form.getImageFiles(), form.getQuantity());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(product.getProductId())).build();
         return Response.created(uri).build();
@@ -81,6 +94,7 @@ public class ProductController {
     public Response updateProductPartially(
             @PathParam("id") final long id,
             @Valid final ListingForm partialUpdate) {
+        LOGGER.info("Updating Product with id {}", id);
         final Product product = ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartmentId(), partialUpdate.getImageFiles(), partialUpdate.getQuantity());
         return Response.ok(ProductDto.fromProduct(product, uriInfo)).build();
     }
@@ -89,6 +103,7 @@ public class ProductController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(@PathParam("id") final long id) {
+        LOGGER.info("Updating Product with id {}", id);
         ps.deleteProduct(id);
         return Response.noContent().build();
     }

@@ -9,6 +9,8 @@ import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.form.UserUpdateForm;
 import ar.edu.itba.paw.webapp.form.SignupForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +27,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 @Path("neighborhoods/{neighborhoodId}/users")
 @Component
 public class UserController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserService us;
@@ -42,6 +45,7 @@ public class UserController {
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("userRole") final UserRole userRole
     ) {
+        LOGGER.info("Listing Users in Neighborhood {}", neighborhoodId);
         final List<User> users = us.getUsersByCriteria(userRole, neighborhoodId, page, size);
         final List<UserDto> usersDto = users.stream()
                 .map(u -> UserDto.fromUser(u, uriInfo)).collect(Collectors.toList());
@@ -59,6 +63,7 @@ public class UserController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findUser(@PathParam("id") final long id) {
+        LOGGER.info("Finding User with id {}", id);
         return Response.ok(UserDto.fromUser(us.findUserById(id)
                 .orElseThrow(() -> new NotFoundException("User Not Found")), uriInfo)).build();
     }
@@ -66,6 +71,7 @@ public class UserController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createUser(@Valid final SignupForm form) {
+        LOGGER.info("Creating User in Neighborhood {}", neighborhoodId);
         final User user = us.createNeighbor(form.getMail(), form.getPassword(), form.getName(), form.getSurname(), neighborhoodId, Language.ENGLISH, form.getIdentification());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(user.getUserId())).build();
@@ -79,6 +85,7 @@ public class UserController {
     public Response updateUserPartially(
             @PathParam("id") final long id,
             @Valid final UserUpdateForm partialUpdate) {
+        LOGGER.info("Updating User with id {}", id);
         final User user = us.updateUser(id, partialUpdate.getEmail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), partialUpdate.getProfilePicture(), partialUpdate.getIdentification());
         return Response.ok(UserDto.fromUser(user, uriInfo)).build();
     }
@@ -88,6 +95,7 @@ public class UserController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(@PathParam("id") final long id) {
+        LOGGER.info("Deleting User with id {}", id);
         us.deleteById(id);
         return Response.noContent().build();
     }*/
