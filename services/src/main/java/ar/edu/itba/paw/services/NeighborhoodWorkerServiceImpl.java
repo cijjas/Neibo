@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -69,7 +70,7 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
 
     @Override
     @Transactional(readOnly = true)
-    public List<Neighborhood> getNeighborhoods(long workerId) {
+    public Set<Neighborhood> getNeighborhoods(long workerId) {
         LOGGER.info("Getting Neighborhoods for Worker {}", workerId);
         return neighborhoodWorkerDao.getNeighborhoods(workerId);
     }
@@ -79,7 +80,7 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     public List<Neighborhood> getOtherNeighborhoods(long workerId) {
         LOGGER.info("Getting Other Neighborhoods for Worker {}", workerId);
         List<Neighborhood> allNeighborhoods = neighborhoodDao.getNeighborhoods();
-        List<Neighborhood> workerNeighborhoods = neighborhoodWorkerDao.getNeighborhoods(workerId);
+        Set<Neighborhood> workerNeighborhoods = neighborhoodWorkerDao.getNeighborhoods(workerId);
 
         for (Neighborhood neighborhood : workerNeighborhoods) {
             allNeighborhoods.removeIf(neighborhoodName -> neighborhoodName.getName().equals(neighborhood.getName()));

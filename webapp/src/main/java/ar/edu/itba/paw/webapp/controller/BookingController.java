@@ -2,7 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.BookingService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Entities.Booking;
+import ar.edu.itba.paw.models.Entities.Comment;
 import ar.edu.itba.paw.webapp.dto.BookingDto;
+import ar.edu.itba.paw.webapp.dto.CommentDto;
 import ar.edu.itba.paw.webapp.form.BookingForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +18,9 @@ import javax.ws.rs.core.*;
 import java.net.URI;
 import java.sql.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 
 @Path("neighborhoods/{neighborhoodId}/bookings")
 @Component
@@ -34,6 +40,23 @@ public class BookingController extends GlobalControllerAdvice{
         super(us);
         this.bs = bs;
     }
+
+//    @GET
+//    @Produces(value = { MediaType.APPLICATION_JSON, })
+//    public Response listBookings(@QueryParam("userId") final long userId) {
+//        LOGGER.info("Finding Bookings for User {}", userId);
+//        final List<Booking> bookings = bs.getUserBookings(userId);
+//        final List<BookingDto> bookingsDto = bookings.stream()
+//                .map(b -> BookingDto.fromBooking(b, uriInfo)).collect(Collectors.toList());
+//
+//        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/bookings";
+//        int totalProductPages = bs.getTotalCommentPages(postId, size);
+//        Link[] links = createPaginationLinks(baseUri, page, size, totalProductPages);
+//
+//        return Response.ok(new GenericEntity<List<CommentDto>>(commentsDto){})
+//                .links(links)
+//                .build();
+//    }
 
     @GET
     @Path("/{id}")

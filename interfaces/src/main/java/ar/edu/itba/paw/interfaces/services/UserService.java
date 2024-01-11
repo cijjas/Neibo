@@ -55,6 +55,6 @@ public interface UserService {
 
     void changeNeighborhood(long userId, long neighborhoodId);
 
-    User updateUser(long id, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification);
+    User updateUser(long id, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification, Integer languageId, Integer userRoleId);
 
 }

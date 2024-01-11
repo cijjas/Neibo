@@ -86,7 +86,7 @@ public class UserController {
             @PathParam("id") final long id,
             @Valid final UserUpdateForm partialUpdate) {
         LOGGER.info("Updating User with id {}", id);
-        final User user = us.updateUser(id, partialUpdate.getEmail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), partialUpdate.getProfilePicture(), partialUpdate.getIdentification());
+        final User user = us.updateUser(id, partialUpdate.getEmail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), partialUpdate.getProfilePicture(), partialUpdate.getIdentification(), partialUpdate.getLanguageId(), partialUpdate.getUserRoleId());
         return Response.ok(UserDto.fromUser(user, uriInfo)).build();
     }
 

@@ -171,18 +171,18 @@ public class AdminController extends GlobalControllerAdvice {
 
         if(verified){
             totalPages = ws.getTotalWorkerPagesByCriteria(null, new long[] {getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
-            workers = ws.getWorkersByCriteria(page, size, null, getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
+//            workers = ws.getWorkersByCriteria(page, size, null, getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
         }
         else {
             totalPages = ws.getTotalWorkerPagesByCriteria(null, new long[] {getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.REJECTED, WorkerStatus.none);
-            workers = ws.getWorkersByCriteria(page, size, null, getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId(), WorkerRole.REJECTED, WorkerStatus.none);
+//            workers = ws.getWorkersByCriteria(page, size, null, getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId(), WorkerRole.REJECTED, WorkerStatus.none);
         }
 
         mav.addObject("panelOption", "Workers");
         mav.addObject("inWorkers", true);
         mav.addObject("page", page);
         mav.addObject("totalPages", totalPages);
-        mav.addObject("workers", workers);
+//        mav.addObject("workers", workers);
         mav.addObject("contextPath", "/admin/workers");
         mav.addObject("verified", verified);
         return mav;
@@ -201,7 +201,7 @@ public class AdminController extends GlobalControllerAdvice {
         mav.addObject("inWorkers", false);
         mav.addObject("page", page);
         mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(null, new long[] {getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.UNVERIFIED_WORKER, WorkerStatus.none));
-        mav.addObject("workers", ws.getWorkersByCriteria(page, size, null, getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId(), WorkerRole.UNVERIFIED_WORKER, WorkerStatus.none));
+//        mav.addObject("workers", ws.getWorkersByCriteria(page, size, null, getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId(), WorkerRole.UNVERIFIED_WORKER, WorkerStatus.none));
         mav.addObject("contextPath", "/admin/unverified-workers");
         return mav;
     }

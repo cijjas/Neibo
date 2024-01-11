@@ -20,7 +20,7 @@ public interface WorkerService {
 
     Optional<Worker> findWorkerByMail(String mail);
 
-    Set<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long neighborhoodId, long loggedUserId, WorkerRole workerRole, WorkerStatus workerStatus);
+    Set<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long loggedUserId, WorkerRole workerRole, WorkerStatus workerStatus);
 
     int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus);
 
