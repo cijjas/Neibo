@@ -131,10 +131,11 @@ public class UserServiceImpl implements UserService {
         return (int) Math.ceil((double) userDao.getTotalUsers(role, neighborhoodId) / size);
     }
 
+    //funcion deprecada?? ahora existe attendanceController
     @Override
     @Transactional(readOnly = true)
     public List<User> getEventUsers(long eventId) {
-        LOGGER.info("Getting User attending Event {}", eventId);
+        LOGGER.info("Getting Users attending Event {}", eventId);
         return userDao.getEventUsers(eventId);
     }
 
