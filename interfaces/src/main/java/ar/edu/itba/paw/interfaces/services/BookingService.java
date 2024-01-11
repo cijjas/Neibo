@@ -15,7 +15,7 @@ public interface BookingService {
 
     Optional<Booking> findBooking(long bookingId);
 
-    List<GroupedBooking> getUserBookings(long userId);
+    List<Booking> getUserBookings(long userId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

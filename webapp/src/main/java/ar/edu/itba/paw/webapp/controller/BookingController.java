@@ -41,22 +41,16 @@ public class BookingController extends GlobalControllerAdvice{
         this.bs = bs;
     }
 
-//    @GET
-//    @Produces(value = { MediaType.APPLICATION_JSON, })
-//    public Response listBookings(@QueryParam("userId") final long userId) {
-//        LOGGER.info("Finding Bookings for User {}", userId);
-//        final List<Booking> bookings = bs.getUserBookings(userId);
-//        final List<BookingDto> bookingsDto = bookings.stream()
-//                .map(b -> BookingDto.fromBooking(b, uriInfo)).collect(Collectors.toList());
-//
-//        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/bookings";
-//        int totalProductPages = bs.getTotalCommentPages(postId, size);
-//        Link[] links = createPaginationLinks(baseUri, page, size, totalProductPages);
-//
-//        return Response.ok(new GenericEntity<List<CommentDto>>(commentsDto){})
-//                .links(links)
-//                .build();
-//    }
+    @GET
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response listBookings(@QueryParam("userId") final long userId) {
+        LOGGER.info("Finding Bookings for User {}", userId);
+        final List<Booking> bookings = bs.getUserBookings(userId);
+        final List<BookingDto> bookingsDto = bookings.stream()
+                .map(b -> BookingDto.fromBooking(b, uriInfo)).collect(Collectors.toList());
+        return Response.ok(new GenericEntity<List<BookingDto>>(bookingsDto){})
+                .build();
+    }
 
     @GET
     @Path("/{id}")

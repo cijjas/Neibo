@@ -64,34 +64,35 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<GroupedBooking> getUserBookings(long userId) {
+    public List<Booking> getUserBookings(long userId) {
         LOGGER.info("Getting Bookings for User {}", userId);
         List<Booking> userBookings = bookingDao.getUserBookings(userId);
-        List<GroupedBooking> groupedBookings = new ArrayList<>();
-        GroupedBooking currentGroupedBooking = null;
-
-        for (Booking booking : userBookings) {
-            if (currentGroupedBooking == null || !currentGroupedBooking.canCombine(booking)) {
-                // Create a new GroupedBooking when the current one cannot be continued
-                Time endTime = calculateEndTime(booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval());
-                currentGroupedBooking = new GroupedBooking(
-                        booking.getAmenityAvailability().getAmenity().getName(),
-                        booking.getBookingDate(),
-                        booking.getAmenityAvailability().getShift().getDay().getDayName(),
-                        booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval(),
-                        endTime
-                );
-                currentGroupedBooking.addBookingId(booking.getBookingId());
-                groupedBookings.add(currentGroupedBooking);
-            } else {
-                // Use the combine method to update the current GroupedBooking
-                Time endTime = calculateEndTime(booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval());
-                currentGroupedBooking.combine(booking);
-                currentGroupedBooking.addBookingId(booking.getBookingId());
-            }
-        }
-
-        return groupedBookings;
+        return userBookings;
+//        List<GroupedBooking> groupedBookings = new ArrayList<>();
+//        GroupedBooking currentGroupedBooking = null;
+//
+//        for (Booking booking : userBookings) {
+//            if (currentGroupedBooking == null || !currentGroupedBooking.canCombine(booking)) {
+//                // Create a new GroupedBooking when the current one cannot be continued
+//                Time endTime = calculateEndTime(booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval());
+//                currentGroupedBooking = new GroupedBooking(
+//                        booking.getAmenityAvailability().getAmenity().getName(),
+//                        booking.getBookingDate(),
+//                        booking.getAmenityAvailability().getShift().getDay().getDayName(),
+//                        booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval(),
+//                        endTime
+//                );
+//                currentGroupedBooking.addBookingId(booking.getBookingId());
+//                groupedBookings.add(currentGroupedBooking);
+//            } else {
+//                // Use the combine method to update the current GroupedBooking
+//                Time endTime = calculateEndTime(booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval());
+//                currentGroupedBooking.combine(booking);
+//                currentGroupedBooking.addBookingId(booking.getBookingId());
+//            }
+//        }
+//
+//        return groupedBookings;
     }
 
 
