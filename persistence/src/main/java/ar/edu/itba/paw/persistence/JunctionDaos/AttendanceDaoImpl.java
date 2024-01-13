@@ -56,6 +56,8 @@ public class AttendanceDaoImpl implements AttendanceDao {
         return new HashSet<>(dataTypedQuery.getResultList());
     }
 
+    // ---------------------------------------------------
+
     @Override
     public int getAttendanceCount(long eventId) {
         CriteriaBuilder cb = em.getCriteriaBuilder();

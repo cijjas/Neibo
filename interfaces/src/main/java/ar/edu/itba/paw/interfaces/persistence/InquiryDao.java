@@ -17,5 +17,7 @@ public interface InquiryDao {
 
     List<Inquiry> getInquiriesByProductAndCriteria(long productId, int page, int size);
 
+    // ---------------------------------------------------
+
     int getInquiriesCountByProduct(long productId);
 }

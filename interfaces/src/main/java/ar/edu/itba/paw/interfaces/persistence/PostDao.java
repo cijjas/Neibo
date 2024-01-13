@@ -18,5 +18,7 @@ public interface PostDao {
 
     List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus hot, long userId);
 
+    // ---------------------------------------------------
+
     int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus hot, long userId);
 }

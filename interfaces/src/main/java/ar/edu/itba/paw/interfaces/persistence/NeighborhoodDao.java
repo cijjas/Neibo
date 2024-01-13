@@ -21,6 +21,8 @@ public interface NeighborhoodDao {
 
     List<Neighborhood> getNeighborhoodsByCriteria(int page, int size);
 
+    // ---------------------------------------------------
+
     int getNeighborhoodsCount();
 
 }

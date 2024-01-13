@@ -64,13 +64,13 @@ public class ServiceController extends GlobalControllerAdvice{
         int totalPages;
 
         if(tab == "posts") {
-            totalPages = ps.calculateWorkerPostsPages(BaseChannel.WORKERS.toString(), size, null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId);
+            totalPages = ps.calculatePostPages(BaseChannel.WORKERS.toString(), size, null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId);
         }
         else{
             totalPages = rws.calculateReviewPages(workerId, size);
         }
 
-        int postsSize = ps.countWorkerPostsByCriteria(BaseChannel.WORKERS.toString(), null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId);
+        int postsSize = ps.countPostsByCriteria(BaseChannel.WORKERS.toString(), null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId);
 
         mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found")));
         mav.addObject("professions", pws.getWorkerProfessions(workerId));

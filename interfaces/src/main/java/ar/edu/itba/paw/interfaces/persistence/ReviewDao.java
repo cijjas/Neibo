@@ -18,6 +18,8 @@ public interface ReviewDao {
 
     Optional<Float> getAvgRating(long workerId);
 
+    // ---------------------------------------------------
+
     int getReviewsCount(long workerId);
 
     // -------------------------------------------- REVIEWS DELETE -----------------------------------------------------

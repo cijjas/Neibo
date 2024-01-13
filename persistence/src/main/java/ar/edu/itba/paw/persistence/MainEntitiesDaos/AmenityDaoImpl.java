@@ -79,6 +79,8 @@ public class AmenityDaoImpl implements AmenityDao {
         return dataTypedQuery.getResultList();
     }
 
+    // ---------------------------------------------------
+
     @Override
     public int getAmenitiesCount(long neighborhoodId) {
         CriteriaBuilder cb = em.getCriteriaBuilder();

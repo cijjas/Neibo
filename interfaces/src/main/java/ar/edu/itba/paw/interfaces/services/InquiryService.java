@@ -10,13 +10,17 @@ public interface InquiryService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Inquiry replyInquiry(final long inquiryId, final String reply);
-
     Optional<Inquiry> findInquiryById(final long inquiryId);
 
     List<Inquiry> getInquiriesByProductAndCriteria(long productId, int page, int size);
 
+    // ---------------------------------------------------
+
     int countInquiries(long productId);
 
     int calculateInquiryPages(long productId, int size);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    Inquiry replyInquiry(final long inquiryId, final String reply);
 }

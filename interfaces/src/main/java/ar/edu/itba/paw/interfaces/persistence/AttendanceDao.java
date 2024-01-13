@@ -9,14 +9,17 @@ public interface AttendanceDao {
 
     // ---------------------------------------------- ATTENDANCE INSERT ------------------------------------------------
 
-    // ---------------------------------------------- ATTENDANCE SELECT ------------------------------------------------
-    Set<Attendance> getAttendance(long eventId, int page, int size);
+    Attendance createAttendee(long userId, long eventId);
 
-    int getAttendanceCount(long eventId);
+    // ---------------------------------------------- ATTENDANCE SELECT ------------------------------------------------
+
+    Set<Attendance> getAttendance(long eventId, int page, int size);
 
     Optional<Attendance> findAttendanceById(long attendanceId);
 
-    Attendance createAttendee(long userId, long eventId);
+    // ---------------------------------------------------
+
+    int getAttendanceCount(long eventId);
 
     // ---------------------------------------------- ATTENDANCE DELETE ------------------------------------------------
 

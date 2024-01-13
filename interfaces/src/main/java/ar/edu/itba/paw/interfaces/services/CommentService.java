@@ -15,6 +15,8 @@ public interface CommentService {
 
     List<Comment> getCommentsByPostId(long id, int page, int size);
 
+    // ---------------------------------------------------
+
     int countComments(long id);
 
     int calculateCommentPages(long id, int size);

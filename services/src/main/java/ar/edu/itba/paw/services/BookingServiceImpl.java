@@ -114,9 +114,13 @@ public class BookingServiceImpl implements BookingService {
     public boolean deleteBookings(List<Long> bookingIds) {
         LOGGER.info("Deleting Bookings {}", bookingIds);
 
-        for (long booking : bookingIds)
-            bookingDao.deleteBooking(booking);
-        return true;
+        boolean result = true;
+        for (long bookingId : bookingIds) {
+            ValidationUtils.checkBookingId(bookingId);
+            if (!bookingDao.deleteBooking(bookingId))
+                result = false;
+        }
+        return result;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

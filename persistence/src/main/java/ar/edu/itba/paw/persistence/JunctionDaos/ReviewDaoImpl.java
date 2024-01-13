@@ -71,6 +71,8 @@ public class ReviewDaoImpl implements ReviewDao {
         return Optional.of(query.getSingleResult().floatValue());
     }
 
+    // ---------------------------------------------------
+
     @Override
     public int getReviewsCount(long workerId) {
         LOGGER.debug("Selecting Review Count for Worker {}", workerId);

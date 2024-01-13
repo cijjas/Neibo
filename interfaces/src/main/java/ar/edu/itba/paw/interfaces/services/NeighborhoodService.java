@@ -19,6 +19,8 @@ public interface NeighborhoodService {
 
     List<Neighborhood> getNeighborhoodsByCriteria(int page, int size);
 
+    // ---------------------------------------------------
+
     int countNeighborhoods();
 
     int calculateNeighborhoodPages(int size);

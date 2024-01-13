@@ -66,6 +66,8 @@ public class InquiryDaoImpl implements InquiryDao {
         return Collections.emptyList();
     }
 
+    // ---------------------------------------------------
+
     @Override
     public int getInquiriesCountByProduct(long productId) {
         LOGGER.debug("Selecting Inquiries Count from Product {}", productId);

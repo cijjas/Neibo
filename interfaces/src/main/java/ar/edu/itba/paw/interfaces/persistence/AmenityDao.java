@@ -17,6 +17,8 @@ public interface AmenityDao {
 
     List<Amenity> getAmenities(long neighborhoodId, int page, int size);
 
+    // ---------------------------------------------------
+
     int getAmenitiesCount(long neighborhoodId);
 
     // --------------------------------------------- AMENITIES DELETE --------------------------------------------------

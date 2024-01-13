@@ -85,6 +85,8 @@ public class PostDaoImpl implements PostDao {
         return sqlQuery.getResultList();
     }
 
+    // ---------------------------------------------------
+
     @Override
     public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         LOGGER.debug("Selecting Post Count from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channel, userId, tags, postStatus);

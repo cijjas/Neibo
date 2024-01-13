@@ -64,6 +64,8 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
         return query.getResultList();
     }
 
+    // ---------------------------------------------------
+
     @Override
     public int getNeighborhoodsCount() {
         LOGGER.debug("Counting All Neighborhoods");

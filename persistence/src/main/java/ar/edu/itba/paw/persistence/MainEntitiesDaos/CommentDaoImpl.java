@@ -66,6 +66,8 @@ public class CommentDaoImpl implements CommentDao {
         return Collections.emptyList();
     }
 
+    // ---------------------------------------------------
+
     @Override
     public int getCommentsCountByPostId(long id) {
         LOGGER.debug("Selecting Comments Count from Post {}", id);

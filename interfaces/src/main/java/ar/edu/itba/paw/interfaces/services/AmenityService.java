@@ -15,7 +15,7 @@ public interface AmenityService {
 
     List<Amenity> getAmenities(long neighborhoodId, int page, int size);
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------
 
     int countAmenities(long neighborhoodId);
 

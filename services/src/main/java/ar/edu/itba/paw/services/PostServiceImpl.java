@@ -98,26 +98,6 @@ public class PostServiceImpl implements PostService {
     // ---------------------------------------------------
 
     @Override
-    public int countWorkerPostsByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
-        LOGGER.info("Getting Workers' Posts Count from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
-
-        ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId);
-    }
-
-    @Override
-    public int calculateWorkerPostsPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
-        LOGGER.info("Getting Workers' Total Post Pages with size {} for Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", size, neighborhoodId, channel, tags, postStatus);
-
-        ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        return PaginationUtils.calculatePages(postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId), size);
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public int countPostsByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
