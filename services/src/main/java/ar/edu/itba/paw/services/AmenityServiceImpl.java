@@ -78,7 +78,9 @@ public class AmenityServiceImpl implements AmenityService {
     @Transactional(readOnly = true)
     public Optional<Amenity> findAmenityById(long amenityId) {
         LOGGER.info("Finding Amenity with id {}", amenityId);
+
         ValidationUtils.checkId(amenityId, "Amenity");
+
         return amenityDao.findAmenityById(amenityId);
     }
 
@@ -86,35 +88,39 @@ public class AmenityServiceImpl implements AmenityService {
     @Transactional(readOnly = true)
     public List<Amenity> getAmenities(long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Amenities from Neighborhood {}", neighborhoodId);
+
         ValidationUtils.checkId(neighborhoodId, "Neighborhood");
         ValidationUtils.checkPageAndSize(page, size);
+
         return amenityDao.getAmenities(neighborhoodId, page, size);
     }
 
     @Override
-    public int getAmenitiesCount(long neighborhoodId) {
-        return amenityDao.getAmenitiesCount(neighborhoodId);
-    }
-
-    @Override
     public int getTotalAmenitiesPages(long neighborhoodId, int size) {
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
         return (int) Math.ceil((double) amenityDao.getAmenitiesCount(neighborhoodId) / size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void updateAmenity(long id, String name, String description){
-        ValidationUtils.checkId(id, "Amenity");
-        Amenity amenity = amenityDao.findAmenityById(id).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
+    public void updateAmenity(long amenityId, String name, String description){
+
+        ValidationUtils.checkId(amenityId, "Amenity");
+
+        Amenity amenity = amenityDao.findAmenityById(amenityId).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
         amenity.setName(name);
         amenity.setDescription(description);
     }
 
     @Override
-    public Amenity updateAmenityPartially(long id, String name, String description){
-        ValidationUtils.checkId(id, "Amenity");
-        Amenity amenity = amenityDao.findAmenityById(id).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
+    public Amenity updateAmenityPartially(long amenityId, String name, String description){
+
+        ValidationUtils.checkId(amenityId, "Amenity");
+
+        Amenity amenity = amenityDao.findAmenityById(amenityId).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
         if(name != null && !name.isEmpty())
             amenity.setName(name);
         if(description != null && !description.isEmpty())
@@ -127,7 +133,9 @@ public class AmenityServiceImpl implements AmenityService {
     @Override
     public boolean deleteAmenity(long amenityId) {
         LOGGER.info("Deleting Amenity {}", amenityId);
+
         ValidationUtils.checkId(amenityId, "Amenity");
+
         return amenityDao.deleteAmenity(amenityId);
     }
 }

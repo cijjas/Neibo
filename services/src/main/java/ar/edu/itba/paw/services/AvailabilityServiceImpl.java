@@ -39,14 +39,18 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
     @Override
     public Optional<Availability> findAvailability(long id) {
+
         ValidationUtils.checkId(id, "Availability");
+
         return availabilityDao.findAvailability(id);
     }
 
 
     @Override
     public List<Availability> getAvailability(long amenityId) {
+
         ValidationUtils.checkId(amenityId, "Availability");
+
         return availabilityDao.getAvailability(amenityId);
     }
 
@@ -55,6 +59,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     @Override
     public boolean updateAvailability(long amenityId, List<String> newShiftDescriptions) {
         LOGGER.info("Updating the Availability for Amenity");
+
         ValidationUtils.checkId(amenityId, "Availability");
 
         // Convert the List of Shift descriptions to a List of shift IDs

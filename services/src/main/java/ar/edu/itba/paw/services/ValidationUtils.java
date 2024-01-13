@@ -5,8 +5,7 @@ public class ValidationUtils {
     public static void checkPageAndSize(int page, int size) {
         if (page <= 0)
             throw new IllegalArgumentException("Invalid value (" + page + ") for the 'page' parameter. Please use a positive integer greater than 0.");
-        if (size <= 0)
-            throw new IllegalArgumentException("Invalid value (" + size + ") for the 'size' parameter. Please use a positive integer greater than 0.");
+        checkSize(size);
     }
 
     public static void checkId(long id, String entity) {
@@ -94,5 +93,26 @@ public class ValidationUtils {
 
     public static void checkChannelId(long channelId) {
         ValidationUtils.checkId(channelId, "Channel");
+    }
+
+    public static void checkCommentId(long commentId) {
+        ValidationUtils.checkId(commentId, "Comment");
+    }
+
+    public static void checkContactId(long contactId) {
+        ValidationUtils.checkId(contactId, "Contact");
+    }
+
+    public static void checkBuyerId(long buyerId) {
+        ValidationUtils.checkId(buyerId, "Buyer");
+    }
+
+    public static void checkSellerId(long sellerId) {
+        ValidationUtils.checkId(sellerId, "Seller");
+    }
+
+    public static void checkSize(int size) {
+        if (size <= 0)
+            throw new IllegalArgumentException("Invalid value (" + size + ") for the 'size' parameter. Please use a positive integer greater than 0.");
     }
 }

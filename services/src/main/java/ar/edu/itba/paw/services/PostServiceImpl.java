@@ -42,6 +42,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post createPost(String title, String description, long neighborId, long channelId, String tags, MultipartFile imageFile) {
         LOGGER.info("Creating Post with Title {} by User {}", title, neighborId);
+
         Image i = null;
         if (imageFile != null && !imageFile.isEmpty()) {
             i = imageService.storeImage(imageFile);

@@ -36,7 +36,9 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public List<Contact> getContacts(final long neighborhoodId) {
         LOGGER.info("Getting Contacts for Neighborhood {}", neighborhoodId);
+
         ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+
         return contactDao.getContacts(neighborhoodId);
     }
 
@@ -65,7 +67,9 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public boolean deleteContact(long contactId) {
         LOGGER.info("Deleting Contact {}", contactId);
+
         ValidationUtils.checkId(contactId, "Contact");
+
         return contactDao.deleteContact(contactId);
     }
 
@@ -73,6 +77,9 @@ public class ContactServiceImpl implements ContactService {
 
     private Contact getContact(long contactId) {
         LOGGER.info("Getting Contact {}", contactId);
+
+        ValidationUtils.checkContactId(contactId);
+
         return contactDao.findContactById(contactId).orElseThrow(() -> new NotFoundException("Contact not found"));
     }
 }

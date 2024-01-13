@@ -184,7 +184,7 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    
+
     private Worker getWorker(long workerId) {
         LOGGER.info("Getting Worker {}", workerId);
 

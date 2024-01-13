@@ -58,7 +58,9 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Booking> findBooking(long bookingId){
+
         ValidationUtils.checkId(bookingId, "Booking");
+
         return bookingDao.findBookingById(bookingId);
     }
 
@@ -66,7 +68,9 @@ public class BookingServiceImpl implements BookingService {
     @Transactional(readOnly = true)
     public List<Booking> getUserBookings(long userId) {
         LOGGER.info("Getting Bookings for User {}", userId);
+
         ValidationUtils.checkId(userId, "User");
+
         return bookingDao.getUserBookings(userId);
 //        List<GroupedBooking> groupedBookings = new ArrayList<>();
 //        GroupedBooking currentGroupedBooking = null;
@@ -100,13 +104,16 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public boolean deleteBooking(long bookingId) {
         LOGGER.info("Deleting Booking {}", bookingId);
+
         ValidationUtils.checkId(bookingId, "Booking");
+
         return bookingDao.deleteBooking(bookingId);
     }
 
     @Override
     public boolean deleteBookings(List<Long> bookingIds) {
         LOGGER.info("Deleting Bookings {}", bookingIds);
+
         for (long booking : bookingIds)
             bookingDao.deleteBooking(booking);
         return true;

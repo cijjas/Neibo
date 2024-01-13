@@ -165,6 +165,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void restockProduct(long productId, long extraUnits) {
         LOGGER.info("Restocking Product {}", productId);
+
+        ValidationUtils.checkProductId(productId);
+
         Product product = productDao.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
         product.setRemainingUnits(product.getRemainingUnits()+extraUnits);
     }
@@ -184,6 +187,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, Long stock) {
         LOGGER.info("Updating Product {}", productId);
+
         double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
         Long[] idArray = {0L, 0L, 0L};
         for(int i = 0; i < pictureFiles.length; i++){
@@ -252,7 +256,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean deleteProduct(long productId) {
         LOGGER.info("Deleting Product {}", productId);
+
         ValidationUtils.checkProductId(productId);
+
         return productDao.deleteProduct(productId);
     }
 

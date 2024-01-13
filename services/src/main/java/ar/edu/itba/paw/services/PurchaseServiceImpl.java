@@ -42,21 +42,35 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public Set<Purchase> getPurchasesBySellerId(long userId, int page, int size) {
+
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkPageAndSize(page, size);
+
         return  purchaseDao.getPurchasesBySellerId(userId, page, size);
     }
 
     @Override
     public int getPurchasesCountBySellerId(long userId) {
-        return  purchaseDao.getPurchasesCountBySellerId(userId);
+
+        ValidationUtils.checkUserId(userId);
+
+        return purchaseDao.getPurchasesCountBySellerId(userId);
     }
 
     @Override
     public Set<Purchase> getPurchasesByBuyerId(long userId, int page, int size) {
+
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkPageAndSize(page, size);
+
         return purchaseDao.getPurchasesByBuyerId(userId, page, size);
     }
 
     @Override
     public int getPurchasesCountByBuyerId(long userId) {
+
+        ValidationUtils.checkUserId(userId);
+
         return purchaseDao.getPurchasesCountByBuyerId(userId);
     }
 
@@ -64,6 +78,10 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public Set<Purchase> getPurchasesByType(long userId, String type, int page, int size) {
+
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkPageAndSize(page, size);
+
         if ("purchase".equalsIgnoreCase(type)) {
             return getPurchasesByBuyerId(userId, page, size);
         } else if ("sale".equalsIgnoreCase(type)) {
@@ -76,6 +94,11 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public int getTotalPurchasesPages(long sellerId, long buyerId, int size) {
+
+        ValidationUtils.checkBuyerId(buyerId);
+        ValidationUtils.checkSellerId(sellerId);
+        ValidationUtils.checkSize(size);
+
         if (sellerId != 0) {
             return calculatePages(getPurchasesCountBySellerId(sellerId), size);
         } else if (buyerId != 0) {

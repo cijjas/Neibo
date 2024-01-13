@@ -60,8 +60,10 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public List<Comment> getCommentsByPostId(long id, int page, int size) {
         LOGGER.info("Finding Comments for Post {}", id);
+
         ValidationUtils.checkId(id, "Comment");
         ValidationUtils.checkPageAndSize(page, size);
+
         return commentDao.getCommentsByPostId(id, page, size);
     }
 
@@ -69,12 +71,17 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public int getCommentsCountByPostId(long id) {
         LOGGER.info("Getting Quantity of Comments for Post {}", id);
+
         return commentDao.getCommentsCountByPostId(id);
     }
 
     @Transactional(readOnly = true)
-    public int getTotalCommentPages(long id, int size) {
+    public int getTotalCommentPages(long commentId, int size) {
         LOGGER.info("Getting Total Comment Pages for size {}", size);
-        return (int) Math.ceil((double) commentDao.getCommentsCountByPostId(id) / size);
+
+        ValidationUtils.checkCommentId(commentId);
+        ValidationUtils.checkSize(size);
+
+        return (int) Math.ceil((double) commentDao.getCommentsCountByPostId(commentId) / size);
     }
 }
