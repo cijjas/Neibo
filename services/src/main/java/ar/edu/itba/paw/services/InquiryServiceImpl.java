@@ -69,6 +69,8 @@ public class InquiryServiceImpl implements InquiryService {
         return inquiryDao.getInquiriesByProductAndCriteria(productId, page, size);
     }
 
+    // ---------------------------------------------------
+
     @Override
     public int countInquiries(long productId) {
         return inquiryDao.getInquiriesCountByProduct(productId);

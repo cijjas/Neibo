@@ -12,7 +12,9 @@ public interface AttendanceService {
 
     Optional<Attendance> findAttendanceById(long attendanceId);
 
-    int getTotalAttendancePages(long eventId, int size);
+    int calculateAttendancePages(long eventId, int size);
+
+    int countAttendees(long eventId);
 
     Attendance createAttendee(long userId, long eventId);
 

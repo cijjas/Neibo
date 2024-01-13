@@ -4,13 +4,11 @@ import ar.edu.itba.paw.interfaces.services.AttendanceService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Attendance;
 import ar.edu.itba.paw.webapp.dto.AttendanceDto;
-import ar.edu.itba.paw.webapp.form.AmenityForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -52,7 +50,7 @@ public class AttendanceController extends GlobalControllerAdvice {
                 .map(a -> AttendanceDto.fromAttendance(a, uriInfo)).collect(Collectors.toSet());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/events/" + eventId + "/attendance";
-        int totalAttendancePages = as.getTotalAttendancePages(neighborhoodId, size);
+        int totalAttendancePages = as.calculateAttendancePages(neighborhoodId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalAttendancePages);
 
         return Response.ok(new GenericEntity<Set<AttendanceDto>>(attendanceDto){})

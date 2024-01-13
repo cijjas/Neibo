@@ -75,11 +75,12 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
         return neighborhoods;
     }
 
+    // ---------------------------------------------------
+
     @Override
     public int countNeighborhoods() {
         return neighborhoodDao.getNeighborhoodsCount();
     }
-
 
     @Override
     public int calculateNeighborhoodPages(int size) {

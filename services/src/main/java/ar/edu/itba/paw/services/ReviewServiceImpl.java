@@ -75,6 +75,8 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewDao.getAvgRating(workerId);
     }
 
+    // ---------------------------------------------------
+
     @Override
     @Transactional(readOnly = true)
     public int countReviews(long workerId) {

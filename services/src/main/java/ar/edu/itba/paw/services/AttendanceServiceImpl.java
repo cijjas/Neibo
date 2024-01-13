@@ -55,13 +55,20 @@ public class AttendanceServiceImpl implements AttendanceService {
         return attendanceDao.getAttendance(eventId, page, size);
     }
 
+    // ---------------------------------------------------
+
     @Override
-    public int getTotalAttendancePages(long eventId, int size) {
+    public int countAttendees(long eventId) {
+        return attendanceDao.getAttendanceCount(eventId);
+    }
+
+    @Override
+    public int calculateAttendancePages(long eventId, int size) {
 
         ValidationUtils.checkEventId(eventId);
         ValidationUtils.checkSize(size);
 
-        return (int) Math.ceil((double) attendanceDao.getAttendanceCount(eventId) / size);
+        return PaginationUtils.calculatePages(attendanceDao.getAttendanceCount(eventId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

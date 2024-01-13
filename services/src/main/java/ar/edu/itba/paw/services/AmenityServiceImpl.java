@@ -95,7 +95,7 @@ public class AmenityServiceImpl implements AmenityService {
         return amenityDao.getAmenities(neighborhoodId, page, size);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------
 
     @Override
     public int countAmenities(long neighborhoodId) {

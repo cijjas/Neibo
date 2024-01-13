@@ -68,7 +68,7 @@ public class CommentServiceImpl implements CommentService {
         return commentDao.getCommentsByPostId(postId, page, size);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------
 
     @Override
     @Transactional(readOnly = true)
