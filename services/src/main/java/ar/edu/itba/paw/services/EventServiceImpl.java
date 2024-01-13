@@ -197,8 +197,6 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event updateEvent(long eventId, String name, String description, Date date, String startTime, String endTime) {
 
-        ValidationUtils.checkEventId(eventId);
-
         Long[] times = stringToTime(startTime, endTime);
         Event event = em.find(Event.class, eventId);
         event.setName(name);

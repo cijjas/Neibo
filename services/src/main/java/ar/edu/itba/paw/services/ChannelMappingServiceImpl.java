@@ -26,9 +26,6 @@ public class ChannelMappingServiceImpl implements ChannelMappingService {
     public void createChannelMapping(long channelId, long neighborhoodId) {
         LOGGER.info("Associating Channel {} with Neighborhood {}", channelId, neighborhoodId);
 
-        ValidationUtils.checkChannelId(channelId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
         channelMappingDao.createChannelMapping(channelId, neighborhoodId);
     }
 }

@@ -123,7 +123,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional(readOnly = true)
     public List<Tag> getTags(long neighborhoodId) {
-        LOGGER.info("Getting All Tags from Neighborhood", neighborhoodId);
+        LOGGER.info("Getting All Tags from Neighborhood {}", neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
@@ -133,7 +133,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional(readOnly = true)
     public List<Tag> getTags(long neighborhoodId, int page, int size) {
-        LOGGER.info("Getting All Tags from Neighborhood", neighborhoodId);
+        LOGGER.info("Getting All Tags from Neighborhood {}", neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
@@ -170,7 +170,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public int getTotalTagPages(long neighborhoodId, int size) {
-        LOGGER.info("Getting Total Tag Pages from Neighborhood", neighborhoodId);
+        LOGGER.info("Getting Total Tag Pages from Neighborhood {}", neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 

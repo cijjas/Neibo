@@ -54,6 +54,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post createAdminPost(final long neighborhoodId, final String title, final String description, final long neighborId, final int channelId, final String tags, final MultipartFile imageFile) {
+
         Post post = createPost(title, description, neighborId, channelId, tags, imageFile);
         assert post != null;
         emailService.sendAnnouncementMail(post, userService.getNeighbors(neighborhoodId));

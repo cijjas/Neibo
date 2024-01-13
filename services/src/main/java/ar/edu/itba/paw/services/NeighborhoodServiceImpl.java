@@ -28,6 +28,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     @Override
     public Neighborhood createNeighborhood(String name) {
         LOGGER.info("Creating Neighborhood {}", name);
+
         return neighborhoodDao.createNeighborhood(name);
     }
 

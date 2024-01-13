@@ -31,6 +31,7 @@ public class ShiftServiceImpl implements ShiftService {
     @Override
     public Shift createShift(long dayId, long timeId) {
         LOGGER.info("Creating Shift for Day {} on Time {}", dayId, timeId);
+
         return shiftDao.createShift(dayId, timeId);
     }
 

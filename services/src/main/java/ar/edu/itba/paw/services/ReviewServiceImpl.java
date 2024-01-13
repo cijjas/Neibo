@@ -29,6 +29,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Review createReview(long workerId, long userId, float rating, String review) {
         LOGGER.info("Creating Review for Worker {} from User {}", workerId, userId);
+
         return reviewDao.createReview(workerId, userId, rating, review);
     }
 

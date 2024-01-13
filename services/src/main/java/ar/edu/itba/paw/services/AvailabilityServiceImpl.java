@@ -60,8 +60,6 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     public boolean updateAvailability(long amenityId, List<String> newShiftDescriptions) {
         LOGGER.info("Updating the Availability for Amenity");
 
-        ValidationUtils.checkAmenityId(amenityId);
-
         // Convert the List of Shift descriptions to a List of shift IDs
         List<Long> newShiftIds = newShiftDescriptions.stream()
                 .map(shiftDescription -> {

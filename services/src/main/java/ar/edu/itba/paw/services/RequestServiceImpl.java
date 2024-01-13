@@ -40,6 +40,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public Request createRequest(long userId, long productId, String message) {
         LOGGER.info("User {} Requesting Product {}", userId, productId);
+
         Product product = productDao.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
         User sender = userDao.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found"));
         emailService.sendNewRequestMail(product, sender, message);

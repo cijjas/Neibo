@@ -211,9 +211,6 @@ public class ProductServiceImpl implements ProductService {
     public Product updateProductPartially(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, Long stock){
         LOGGER.info("Updating Product {}", productId);
 
-        ValidationUtils.checkProductId(productId);
-        ValidationUtils.checkDepartmentId(departmentId);
-
         Product product = findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
         if(name != null && !name.isEmpty())
             product.setName(name);

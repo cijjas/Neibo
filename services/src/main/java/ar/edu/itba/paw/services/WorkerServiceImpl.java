@@ -165,8 +165,6 @@ public class WorkerServiceImpl implements WorkerService {
     public Worker updateWorkerPartially(long workerId, String phoneNumber, String address, String businessName, MultipartFile backgroundPicture, String bio){
         LOGGER.info("Updating Worker {}", workerId);
 
-        ValidationUtils.checkWorkerId(workerId);
-
         Worker worker = getWorker(workerId);
         if(phoneNumber != null && !phoneNumber.isEmpty())
             worker.setPhoneNumber(phoneNumber);

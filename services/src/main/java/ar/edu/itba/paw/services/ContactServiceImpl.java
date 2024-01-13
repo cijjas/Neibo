@@ -28,6 +28,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public Contact createContact(long neighborhoodId, String contactName, String contactAddress, String contactPhone) {
         LOGGER.info("Creating Contact {} for Neighborhood {}", contactName, neighborhoodId);
+
         return contactDao.createContact(neighborhoodId, contactName, contactAddress, contactPhone);
     }
 
@@ -47,8 +48,6 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public Contact updateContact(long contactId, String contactName, String contactAddress, String contactPhone) {
         LOGGER.info("Updating Contact {}", contactId);
-
-        ValidationUtils.checkContactId(contactId);
 
         Contact contact = getContact(contactId);
 

@@ -44,7 +44,6 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
         LOGGER.info("Adding Worker {} to Neighborhood {}", workerId, neighborhoodId);
 
         neighborhoodWorkerDao.createWorkerArea(workerId, neighborhoodId);
-
         //send admin email notifying new worker
         User worker = userDao.findUserById(workerId).orElse(null);
         assert worker != null;

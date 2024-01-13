@@ -67,8 +67,6 @@ public class ResourceServiceImpl implements ResourceService {
     public Resource updateResource(long resourceId, String title, String description, MultipartFile image) {
         LOGGER.info("Updating Resource {}", resourceId);
 
-        ValidationUtils.checkResourceId(resourceId);
-
         Resource resource = findResource(resourceId).orElseThrow(()-> new NotFoundException("Resource Not Found"));
 
         if(title != null && !title.isEmpty())

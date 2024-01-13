@@ -49,8 +49,6 @@ public class UserServiceImpl implements UserService {
                                final long neighborhoodId, Language language, final String identification) {
         LOGGER.info("Creating Neighbor with mail {}", mail);
 
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
         int id = 0;
         try {
             id = Integer.parseInt(identification);
@@ -294,8 +292,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(long userId, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification, Integer languageId, Integer userRoleId) {
         LOGGER.info("Updating User {}", userId);
-
-        ValidationUtils.checkUserId(userId);
 
         User user = getUser(userId);
 

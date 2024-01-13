@@ -27,9 +27,6 @@ public class CategorizationServiceImpl implements CategorizationService {
     public void createCategory(long tagId, long postId) {
         LOGGER.info("Creating Tag {} for Post {}", tagId, postId);
 
-        ValidationUtils.checkTagId(tagId);
-        ValidationUtils.checkPostId(postId);
-
         categorizationDao.createCategorization(tagId, postId);
     }
 }

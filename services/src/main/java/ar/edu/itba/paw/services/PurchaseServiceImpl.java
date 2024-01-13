@@ -27,6 +27,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public Purchase createPurchase(long productId, long userId, long unitsBought) {
+
         return purchaseDao.createPurchase(productId, userId, unitsBought);
     }
 

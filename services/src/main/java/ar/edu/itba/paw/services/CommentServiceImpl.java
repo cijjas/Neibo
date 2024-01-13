@@ -39,6 +39,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment createComment(String comment, long userId, long postId) {
         LOGGER.info("Creating Comment {} from User {} for Post {}", comment, userId, postId);
+
         Post post = postService.findPostById(postId).orElseThrow(()-> new NotFoundException("Post Not Found"));
         emailService.sendNewCommentMail(post, userService.getNeighborsSubscribedByPostId(postId));
         return commentDao.createComment(comment, userId, postId);

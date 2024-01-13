@@ -30,6 +30,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public Attendance createAttendee(long userId, long eventId) {
         LOGGER.info("Adding User {} as Attendee for Event {}", userId, eventId);
+
         return attendanceDao.createAttendee(userId, eventId);
     }
 

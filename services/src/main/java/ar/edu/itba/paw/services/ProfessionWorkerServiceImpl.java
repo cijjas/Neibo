@@ -27,6 +27,7 @@ public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
     @Override
     public void addWorkerProfession(long workerId, long professionId) {
         LOGGER.info("Adding Profession {} to Worker {}", professionId, workerId);
+
         professionWorkerDao.createSpecialization(workerId, professionId);
     }
 
