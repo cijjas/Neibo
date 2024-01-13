@@ -41,22 +41,6 @@ public interface UserService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    void updateProfilePicture(long userId, MultipartFile image);
-
-    void updatePhoneNumber(long userId, String phoneNumber);
-
-    void toggleDarkMode(final long id);
-
-    void verifyNeighbor(final long id);
-
-    void unverifyNeighbor(final long id, final long neighborhoodId);
-
-    void rejectNeighbor(final long id);
-
-    void toggleLanguage(long id);
-
-    void changeNeighborhood(long userId, long neighborhoodId);
-
     User updateUser(long id, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification, Integer languageId, Integer userRoleId);
 
 }

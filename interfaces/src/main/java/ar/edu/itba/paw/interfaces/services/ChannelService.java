@@ -14,11 +14,5 @@ public interface ChannelService {
 
     Optional<Channel> findChannelById(long id);
 
-    Optional<Channel> findChannelByName(String name);
-
     List<Channel> getChannels(long neighborhoodId);
-
-    Map<String, Channel> getNeighborChannels(long neighborhoodId, long neighborId);
-
-    Map<String, Channel> getAdminChannels(long neighborhoodId);
 }

@@ -122,17 +122,6 @@ public class WorkerServiceImpl implements WorkerService {
         return workerDao.getWorkersCountByCriteria(professions, neighborhoodIds, workerRole, workerStatus);
     }
 
-    // kill?
-    @Override
-    public int getTotalWorkerPages(long neighborhoodId, int size) {
-        LOGGER.info("Getting Pages of Workers with size {} from Neighborhood {}", size, neighborhoodId);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        long[] neighborhoodIds = {neighborhoodId};
-        return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(null, neighborhoodIds, WorkerRole.VERIFIED_WORKER, WorkerStatus.none) / size);
-    }
-
     @Override
     public int calculateWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole, WorkerStatus workerStatus) {
         LOGGER.info("Getting Pages of Workers with size {} from Neighborhoods {} with professions {}", size, neighborhoodIds, professions);
@@ -143,24 +132,6 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void updateWorker(long workerId, String phoneNumber, String address, String businessName,
-                             MultipartFile backgroundPicture, String bio) {
-        LOGGER.info("Updating Worker {}", workerId);
-
-        ValidationUtils.checkWorkerId(workerId);
-
-        Worker worker = workerDao.findWorkerById(workerId).orElseThrow(()-> new NotFoundException("Worker Not Found"));
-        worker.setPhoneNumber(phoneNumber);
-        worker.setAddress(address);
-        worker.setBusinessName(businessName);
-        worker.setBio(bio);
-        if(!backgroundPicture.isEmpty()) {
-            Image i = imageService.storeImage(backgroundPicture);
-            worker.setBackgroundPictureId(i.getImageId());
-        }
-    }
 
     @Override
     public Worker updateWorkerPartially(long workerId, String phoneNumber, String address, String businessName, MultipartFile backgroundPicture, String bio){

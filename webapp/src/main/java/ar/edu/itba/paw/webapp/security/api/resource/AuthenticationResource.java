@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.webapp.security.api.resource;
 
 import ar.edu.itba.paw.enums.Authority;
-import ar.edu.itba.paw.webapp.controller.MainController;
 import ar.edu.itba.paw.webapp.form.LoginForm;
-import ar.edu.itba.paw.webapp.form.SignupForm;
 import ar.edu.itba.paw.webapp.security.api.AuthenticationTokenDetails;
 import ar.edu.itba.paw.webapp.security.api.model.AuthenticationToken;
 import ar.edu.itba.paw.webapp.security.service.AuthenticationTokenService;

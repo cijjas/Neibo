@@ -24,14 +24,9 @@ public interface WorkerService {
 
     int countWorkersByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus);
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    void updateWorker(long userId, String phoneNumber, String address, String businessName,
-                      MultipartFile backgroundPicture, String bio);
-
-    int getTotalWorkerPages(long neighborhoodId, int size);
-
     int calculateWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole, WorkerStatus workerStatus);
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     Worker updateWorkerPartially(long userId, String phoneNumber, String address, String businessName, MultipartFile backgroundPicture, String bio);
 }

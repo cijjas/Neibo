@@ -198,107 +198,10 @@ public class UserServiceImpl implements UserService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void updateProfilePicture(long userId, MultipartFile image) {
-        LOGGER.info("Updating User {} profile picture", userId);
-
-        ValidationUtils.checkUserId(userId);
-
-        Image i = imageService.storeImage(image);
-        User user = getUser(userId);
-        user.setProfilePicture(i);
-    }
-
-    @Override
-    public void updatePhoneNumber(long userId, String phoneNumber) {
-        LOGGER.info("Updating User {} phone number", userId);
-
-        ValidationUtils.checkUserId(userId);
-
-        User user = getUser(userId);
-        user.setPhoneNumber(phoneNumber);
-    }
-
-
-    @Override
-    public void toggleDarkMode(long userId) {
-        LOGGER.info("Toggling Dark Mode for User {}", userId);
-
-        ValidationUtils.checkUserId(userId);
-
-        User user = getUser(userId);
-        user.setDarkMode(!user.isDarkMode());
-    }
-
-    @Override
-    public void verifyNeighbor(long userId) {
-        LOGGER.info("Verifying User {}", userId);
-
-        ValidationUtils.checkUserId(userId);
-
-        User user = getUser(userId);
-        // This method has to change
-        user.setRole(UserRole.NEIGHBOR);
-        String neighborhoodName = neighborhoodService.findNeighborhoodById(user.getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
-        emailService.sendVerifiedNeighborMail(user, neighborhoodName);
-    }
-
-    //for users that were rejected/removed from a neighborhood and have selected a new one to become a part of
-    @Override
-    public void unverifyNeighbor(long userId, long neighborhoodId) {
-        LOGGER.info("Un-verifying User {}", userId);
-
-        ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        User user = getUser(userId);
-        user.setRole(UserRole.UNVERIFIED_NEIGHBOR);
-    }
-
-    @Override
-    public void rejectNeighbor(long userId) {
-        LOGGER.info("Rejecting User {}", userId);
-
-        ValidationUtils.checkUserId(userId);
-
-        User user = getUser(userId);
-        user.setRole(UserRole.REJECTED);
-    }
-
-    // Will be deprecated if more languages are included
-    @Override
-    public void toggleLanguage(long userId) {
-        LOGGER.info("Toggling Language for User {}", userId);
-
-        ValidationUtils.checkUserId(userId);
-
-        User user = getUser(userId);
-        Language newLanguage = (user.getLanguage() == Language.ENGLISH) ? Language.SPANISH : Language.ENGLISH;
-        user.setLanguage(newLanguage);
-    }
-
-    @Override
-    public void changeNeighborhood(long userId, long neighborhoodId) {
-        LOGGER.info("Setting new neighborhood for User {}", userId);
-
-        ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        User user = getUser(userId);
-        user.setNeighborhood(neighborhoodService.findNeighborhoodById(neighborhoodId).orElseThrow(()-> new NotFoundException("Neighborhood Not Found")));
-    }
-
-    private User getUser(long userId){
-
-        ValidationUtils.checkUserId(userId);
-
-        return userDao.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-    }
-
-    @Override
     public User updateUser(long userId, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification, Integer languageId, Integer userRoleId) {
         LOGGER.info("Updating User {}", userId);
 
-        User user = getUser(userId);
+        User user = userDao.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found"));
 
         if (mail != null && !mail.isEmpty())
             user.setMail(mail);

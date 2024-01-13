@@ -27,5 +27,6 @@ public interface TagService {
     String createURLForTagFilter(String tags, String currentUrl, long neighborhoodId);
 
     int getTotalTagPages(long neighborhoodId, int size);
+
     int getTotalTagPagesByCriteria(Long postId, Long neighborhoodId, int size);
 }

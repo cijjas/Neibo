@@ -116,14 +116,6 @@ public class AmenityServiceImpl implements AmenityService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void updateAmenity(long amenityId, String name, String description){
-
-        Amenity amenity = amenityDao.findAmenityById(amenityId).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
-        amenity.setName(name);
-        amenity.setDescription(description);
-    }
-
-    @Override
     public Amenity updateAmenityPartially(long amenityId, String name, String description){
 
         Amenity amenity = amenityDao.findAmenityById(amenityId).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
