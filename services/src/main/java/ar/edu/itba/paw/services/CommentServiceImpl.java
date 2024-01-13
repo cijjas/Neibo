@@ -58,13 +58,13 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Comment> getCommentsByPostId(long id, int page, int size) {
-        LOGGER.info("Finding Comments for Post {}", id);
+    public List<Comment> getCommentsByPostId(long postId, int page, int size) {
+        LOGGER.info("Finding Comments for Post {}", postId);
 
-        ValidationUtils.checkCommentId(id);
+        ValidationUtils.checkCommentId(postId);
         ValidationUtils.checkPageAndSize(page, size);
 
-        return commentDao.getCommentsByPostId(id, page, size);
+        return commentDao.getCommentsByPostId(postId, page, size);
     }
 
     @Override
