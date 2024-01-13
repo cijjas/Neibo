@@ -95,12 +95,22 @@ public class AmenityServiceImpl implements AmenityService {
         return amenityDao.getAmenities(neighborhoodId, page, size);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
-    public int getTotalAmenitiesPages(long neighborhoodId, int size) {
+    public int countAmenities(long neighborhoodId) {
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        return (int) Math.ceil((double) amenityDao.getAmenitiesCount(neighborhoodId) / size);
+        return amenityDao.getAmenitiesCount(neighborhoodId);
+    }
+
+    @Override
+    public int calculateAmenityPages(long neighborhoodId, int size) {
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return PaginationUtils.calculatePages(amenityDao.getAmenitiesCount(neighborhoodId), size) ;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

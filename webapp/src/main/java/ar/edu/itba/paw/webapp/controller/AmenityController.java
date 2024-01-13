@@ -2,23 +2,18 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.models.Entities.Amenity;
-import ar.edu.itba.paw.models.Entities.Resource;
-import ar.edu.itba.paw.models.Entities.Shift;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.form.AmenityForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
@@ -48,7 +43,7 @@ public class AmenityController {
                 .map(a -> AmenityDto.fromAmenity(a, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/amenities";
-        int totalAmenityPages = as.getTotalAmenitiesPages(neighborhoodId, size);
+        int totalAmenityPages = as.calculateAmenityPages(neighborhoodId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalAmenityPages);
 
         return Response.ok(new GenericEntity<List<AmenityDto>>(amenitiesDto){})

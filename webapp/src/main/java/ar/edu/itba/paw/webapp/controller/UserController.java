@@ -5,7 +5,6 @@ import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.User;
-import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.form.UserUpdateForm;
 import ar.edu.itba.paw.webapp.form.SignupForm;
@@ -19,7 +18,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
@@ -51,7 +49,7 @@ public class UserController {
                 .map(u -> UserDto.fromUser(u, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/users";
-        int totalAmenityPages = us.getTotalPages(userRole, neighborhoodId, size);
+        int totalAmenityPages = us.calculateUserPagesByCriteria(userRole, neighborhoodId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalAmenityPages);
 
         return Response.ok(new GenericEntity<List<UserDto>>(usersDto){})

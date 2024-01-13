@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Entities.Like;
-import ar.edu.itba.paw.models.Entities.Post;
-import ar.edu.itba.paw.models.Entities.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +23,6 @@ public interface LikeService {
 
     List<Like> getLikesByCriteria(long neighborhoodId, long postId, long userId, int page, int size);
 
-    int getTotalLikePagesByCriteria(long neighborhoodId, long postId, long userId, int size);
+    int getLikePagesByCriteria(long neighborhoodId, long postId, long userId, int size);
 
 }

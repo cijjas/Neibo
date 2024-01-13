@@ -25,15 +25,17 @@ public interface UserService {
 
     List<User> getNeighborsSubscribedByPostId(long id);
 
+    int countUsers(UserRole role, long neighborhoodId, int page);
+
     List<User> getUsersByCriteria(UserRole role, long neighborhoodId, int page, int size);
 
-    int getTotalPages(UserRole role, long neighborhoodId, int size);
+    int calculateUserPagesByCriteria(UserRole role, long neighborhoodId, int size);
 
     List<User> getEventUsers(long eventId);
 
     List<User> getEventUsersByCriteria(long eventId, int page, int size);
 
-    int getTotalEventPages(long eventId, int size);
+    int calculateEventPagesByCriteria(long eventId, int size);
 
     List<User> getProductRequesters(long productId, int page, int size);
 

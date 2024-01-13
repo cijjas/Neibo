@@ -43,12 +43,12 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Neighborhood> findNeighborhoodById(long id) {
-        LOGGER.info("Selecting Neighborhood with id {}", id);
+    public Optional<Neighborhood> findNeighborhoodById(long neighborhoodId) {
+        LOGGER.info("Selecting Neighborhood with id {}", neighborhoodId);
 
-        ValidationUtils.checkNeighborhoodId(id);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        return neighborhoodDao.findNeighborhoodById(id);
+        return neighborhoodDao.findNeighborhoodById(neighborhoodId);
     }
 
     @Override
@@ -73,15 +73,20 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
         neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == 0);
         neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == -1);
         return neighborhoods;
-
     }
 
     @Override
-    public int getTotalNeighborhoodPages(int size) {
+    public int countNeighborhoods() {
+        return neighborhoodDao.getNeighborhoodsCount();
+    }
+
+
+    @Override
+    public int calculateNeighborhoodPages(int size) {
         LOGGER.info("Getting Total Neighborhood Pages");
 
         ValidationUtils.checkSize(size);
 
-        return (int) Math.ceil((double) neighborhoodDao.getNeighborhoodsCount() / size);
+        return PaginationUtils.calculatePages(neighborhoodDao.getNeighborhoodsCount(), size);
     }
 }

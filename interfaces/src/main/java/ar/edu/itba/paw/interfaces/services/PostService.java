@@ -19,13 +19,13 @@ public interface PostService {
 
     List<Post> getWorkerPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
 
-    int getWorkerPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
+    int countWorkerPostsByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
 
-    int getWorkerTotalPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
+    int calculateWorkerPostsPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
 
     List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus);
 
-    int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
+    int countPostsByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
 
-    int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
+    int calculatePostPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
 }

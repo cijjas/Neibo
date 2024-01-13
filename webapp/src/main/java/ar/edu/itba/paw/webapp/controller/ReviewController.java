@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Review;
-import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
 import org.slf4j.Logger;
@@ -16,7 +15,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
@@ -50,7 +48,7 @@ public class ReviewController extends GlobalControllerAdvice {
                 .map(r -> ReviewDto.fromReview(r, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "workers/" + workerId + "/reviews";
-        int totalReviewPages = rs.getReviewsTotalPages(workerId, size);
+        int totalReviewPages = rs.calculateReviewPages(workerId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalReviewPages);
 
         return Response.ok(new GenericEntity<List<ReviewDto>>(reviewsDto){})

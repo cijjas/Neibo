@@ -3,10 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.LikeService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Like;
-import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.webapp.dto.LikeDto;
 import ar.edu.itba.paw.webapp.form.LikeForm;
-import ar.edu.itba.paw.webapp.form.PublishForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Path("neighborhoods/{neighborhoodId}/likes")
@@ -52,7 +49,7 @@ public class LikeController extends GlobalControllerAdvice{
                 .map(l -> LikeDto.fromLike(l, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "likes";
-        int totalLikePages = ls.getTotalLikePagesByCriteria(neighborhoodId, postId, userId, size);
+        int totalLikePages = ls.getLikePagesByCriteria(neighborhoodId, postId, userId, size);
         Link[] links = ControllerUtils.createPaginationLinks(baseUri, page, size, totalLikePages);
 
         return Response.ok(new GenericEntity<List<LikeDto>>(likesDto){})

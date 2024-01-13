@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
-import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.webapp.form.EditWorkerProfileForm;
 import ar.edu.itba.paw.webapp.form.NeighborhoodsForm;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
@@ -20,7 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/services")
@@ -66,17 +64,17 @@ public class ServiceController extends GlobalControllerAdvice{
         int totalPages;
 
         if(tab == "posts") {
-            totalPages = ps.getWorkerTotalPages(BaseChannel.WORKERS.toString(), size, null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId);
+            totalPages = ps.calculateWorkerPostsPages(BaseChannel.WORKERS.toString(), size, null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId);
         }
         else{
-            totalPages = rws.getReviewsTotalPages(workerId, size);
+            totalPages = rws.calculateReviewPages(workerId, size);
         }
 
-        int postsSize = ps.getWorkerPostsCountByCriteria(BaseChannel.WORKERS.toString(), null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId);
+        int postsSize = ps.countWorkerPostsByCriteria(BaseChannel.WORKERS.toString(), null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId);
 
         mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found")));
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
-        mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
+        mav.addObject("reviewsCount", rws.countReviews(workerId));
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("channel", "Profile");
         mav.addObject("averageRating", rws.getAvgRating(workerId).orElseThrow(() -> new NotFoundException("Average Rating not found")));
@@ -108,7 +106,7 @@ public class ServiceController extends GlobalControllerAdvice{
         mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found")));
         mav.addObject("channel", "Profile");
         mav.addObject("reviews", rws.getReviews(workerId));
-        mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
+        mav.addObject("reviewsCount", rws.countReviews(workerId));
         mav.addObject("averageRating", rws.getAvgRating(workerId).orElseThrow(() -> new NotFoundException("Average Rating not found")));
         return mav;
     }
@@ -147,7 +145,7 @@ public class ServiceController extends GlobalControllerAdvice{
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
         mav.addObject("channel", "Profile" + workerId);
         mav.addObject("reviews", rws.getReviews(workerId));
-        mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
+        mav.addObject("reviewsCount", rws.countReviews(workerId));
         mav.addObject("averageRating", rws.getAvgRating(workerId).orElseThrow(() -> new NotFoundException("Average Rating not found")));
         return mav;
 
@@ -189,7 +187,7 @@ public class ServiceController extends GlobalControllerAdvice{
 //        Set<Worker> workerList = ws.getWorkersByCriteria(page, size, professions, getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
 //        mav.addObject("workersList", workerList);
         mav.addObject("channel", "Services");
-        mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(professions, new long[] {getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER, WorkerStatus.none));
+        mav.addObject("totalPages", ws.calculateWorkerPagesByCriteria(professions, new long[] {getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER, WorkerStatus.none));
         mav.addObject("contextPath", "/services");
         mav.addObject("page", page);
         mav.addObject("appliedProfessions", professions);

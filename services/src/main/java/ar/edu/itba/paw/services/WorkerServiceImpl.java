@@ -114,7 +114,7 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @Transactional(readOnly = true)
-    public int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus) {
+    public int countWorkersByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus) {
         LOGGER.info("Getting Workers Count for Neighborhood {} with professions {}", neighborhoodIds, professions);
 
         ValidationUtils.checkNeighborhoodsIds(neighborhoodIds);
@@ -122,6 +122,7 @@ public class WorkerServiceImpl implements WorkerService {
         return workerDao.getWorkersCountByCriteria(professions, neighborhoodIds, workerRole, workerStatus);
     }
 
+    // kill?
     @Override
     public int getTotalWorkerPages(long neighborhoodId, int size) {
         LOGGER.info("Getting Pages of Workers with size {} from Neighborhood {}", size, neighborhoodId);
@@ -133,12 +134,12 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
-    public int getTotalWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole, WorkerStatus workerStatus) {
+    public int calculateWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole, WorkerStatus workerStatus) {
         LOGGER.info("Getting Pages of Workers with size {} from Neighborhoods {} with professions {}", size, neighborhoodIds, professions);
 
         ValidationUtils.checkNeighborhoodsIds(neighborhoodIds);
 
-        return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(professions, neighborhoodIds, workerRole, workerStatus) / size);
+        return PaginationUtils.calculatePages(workerDao.getWorkersCountByCriteria(professions, neighborhoodIds, workerRole, workerStatus), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

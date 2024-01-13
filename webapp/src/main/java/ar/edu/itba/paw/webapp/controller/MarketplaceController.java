@@ -221,7 +221,7 @@ public class MarketplaceController extends GlobalControllerAdvice{
         mav.addObject("questions", inqs.getInquiriesByProductAndCriteria(productId, page, size));
         mav.addObject("product", prs.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found")));
         mav.addObject("page", page);
-        mav.addObject("totalPages", inqs.getTotalInquiryPages(productId, size));
+        mav.addObject("totalPages", inqs.calculateInquiryPages(productId, size));
         mav.addObject("contextPath", "/marketplace/products/" + department + "/" + productId);
 
         return mav;

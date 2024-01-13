@@ -70,12 +70,17 @@ public class InquiryServiceImpl implements InquiryService {
     }
 
     @Override
-    public int getTotalInquiryPages(long productId, int size) {
+    public int countInquiries(long productId) {
+        return inquiryDao.getInquiriesCountByProduct(productId);
+    }
+
+    @Override
+    public int calculateInquiryPages(long productId, int size) {
 
         ValidationUtils.checkProductId(productId);
         ValidationUtils.checkSize(size);
 
-        return (int) Math.ceil((double) inquiryDao.getInquiriesCountByProduct(productId) / size);
+        return PaginationUtils.calculatePages(inquiryDao.getInquiriesCountByProduct(productId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

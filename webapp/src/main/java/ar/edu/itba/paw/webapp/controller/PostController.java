@@ -4,7 +4,6 @@ import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Post;
-import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.PostDto;
 import ar.edu.itba.paw.webapp.form.PublishForm;
 import org.slf4j.Logger;
@@ -17,7 +16,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
@@ -57,7 +55,7 @@ public class PostController extends GlobalControllerAdvice{
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts";
         PostStatus pstat = PostStatus.valueOf(postStatus);
-        int totalPostsPages = ps.getTotalPages(channel, size, tags, neighborhoodId, pstat, userId);
+        int totalPostsPages = ps.calculatePostPages(channel, size, tags, neighborhoodId, pstat, userId);
         Link[] links = createPaginationLinks(baseUri, page, size, totalPostsPages);
 
         return Response.ok(new GenericEntity<List<PostDto>>(postsDto){})

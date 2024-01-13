@@ -6,7 +6,6 @@ import ar.edu.itba.paw.enums.WorkerStatus;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Worker;
-import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
 import ar.edu.itba.paw.webapp.form.WorkerUpdateForm;
 import ar.edu.itba.paw.webapp.form.WorkerSignupForm;
@@ -58,7 +57,7 @@ public class WorkerController extends GlobalControllerAdvice {
 
         String baseUri = uriInfo.getBaseUri().toString() + "workers";
 
-        int totalWorkerPages = ws.getTotalWorkerPagesByCriteria(professions, new long[]{neighborhoodId}, size, workerRole, workerStatus);
+        int totalWorkerPages = ws.calculateWorkerPagesByCriteria(professions, new long[]{neighborhoodId}, size, workerRole, workerStatus);
         Link[] links = createPaginationLinks(baseUri, page, size, totalWorkerPages);
 
         List<WorkerDto> workerDto = workers.stream()

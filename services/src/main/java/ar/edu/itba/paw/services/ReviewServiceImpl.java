@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,7 +77,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public int getReviewsCount(long workerId) {
+    public int countReviews(long workerId) {
 
         ValidationUtils.checkWorkerId(workerId);
 
@@ -86,11 +85,11 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public int getReviewsTotalPages(long workerId, int size) {
+    public int calculateReviewPages(long workerId, int size) {
 
         ValidationUtils.checkWorkerId(workerId);
 
-        return (int) Math.ceil((double) getReviewsCount(workerId) / size);
+        return PaginationUtils.calculatePages(reviewDao.getReviewsCount(workerId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

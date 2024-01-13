@@ -130,13 +130,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public int countUsers(UserRole role, long neighborhoodId, int page) {
+        return userDao.getTotalUsers(role, neighborhoodId);
+    }
+
+    @Override
     @Transactional(readOnly = true)
-    public int getTotalPages(UserRole role, long neighborhoodId, int size) {
+    public int calculateUserPagesByCriteria(UserRole role, long neighborhoodId, int size) {
         LOGGER.info("Getting Pages of Users with size {} from Neighborhood {} with Role {}", size, neighborhoodId, role);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        return (int) Math.ceil((double) userDao.getTotalUsers(role, neighborhoodId) / size);
+        return PaginationUtils.calculatePages(userDao.getTotalUsers(role, neighborhoodId), size);
     }
 
     //funcion deprecada?? ahora existe attendanceController
@@ -163,12 +168,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public int getTotalEventPages(long eventId, int size) {
+    public int calculateEventPagesByCriteria(long eventId, int size) {
         LOGGER.info("Getting Pages of Users with size {} attending Event {}", size, eventId);
 
         ValidationUtils.checkEventId(eventId);
 
-        return (int) Math.ceil((double) userDao.getEventUsers(eventId).size() / size);
+        return PaginationUtils.calculatePages(userDao.getEventUsers(eventId).size(), size);
     }
 
     @Override

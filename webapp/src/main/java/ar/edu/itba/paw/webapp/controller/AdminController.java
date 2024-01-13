@@ -92,11 +92,11 @@ public class AdminController extends GlobalControllerAdvice {
         List<User> users;
 
         if(verified){
-            totalPages = us.getTotalPages(UserRole.NEIGHBOR, getLoggedUser().getNeighborhood().getNeighborhoodId(), size);
+            totalPages = us.calculateUserPagesByCriteria(UserRole.NEIGHBOR, getLoggedUser().getNeighborhood().getNeighborhoodId(), size);
             users = us.getUsersByCriteria(UserRole.NEIGHBOR, getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size);
         }
         else {
-            totalPages = us.getTotalPages(UserRole.REJECTED, getLoggedUser().getNeighborhood().getNeighborhoodId(), size);
+            totalPages = us.calculateUserPagesByCriteria(UserRole.REJECTED, getLoggedUser().getNeighborhood().getNeighborhoodId(), size);
             users = us.getUsersByCriteria(UserRole.REJECTED, getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size);
         }
 
@@ -124,7 +124,7 @@ public class AdminController extends GlobalControllerAdvice {
         mav.addObject("panelOption", "Requests");
         mav.addObject("neighbors", false);
         mav.addObject("page", page);
-        mav.addObject("totalPages", us.getTotalPages(UserRole.UNVERIFIED_NEIGHBOR, getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
+        mav.addObject("totalPages", us.calculateUserPagesByCriteria(UserRole.UNVERIFIED_NEIGHBOR, getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
         mav.addObject("users", us.getUsersByCriteria(UserRole.UNVERIFIED_NEIGHBOR, getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size));
         mav.addObject("contextPath", "/admin/unverified");
         return mav;
@@ -170,11 +170,11 @@ public class AdminController extends GlobalControllerAdvice {
         Set<Worker> workers;
 
         if(verified){
-            totalPages = ws.getTotalWorkerPagesByCriteria(null, new long[] {getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
+            totalPages = ws.calculateWorkerPagesByCriteria(null, new long[] {getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
 //            workers = ws.getWorkersByCriteria(page, size, null, getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
         }
         else {
-            totalPages = ws.getTotalWorkerPagesByCriteria(null, new long[] {getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.REJECTED, WorkerStatus.none);
+            totalPages = ws.calculateWorkerPagesByCriteria(null, new long[] {getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.REJECTED, WorkerStatus.none);
 //            workers = ws.getWorkersByCriteria(page, size, null, getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId(), WorkerRole.REJECTED, WorkerStatus.none);
         }
 
@@ -200,7 +200,7 @@ public class AdminController extends GlobalControllerAdvice {
         mav.addObject("panelOption", "WorkerRequests");
         mav.addObject("inWorkers", false);
         mav.addObject("page", page);
-        mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(null, new long[] {getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.UNVERIFIED_WORKER, WorkerStatus.none));
+        mav.addObject("totalPages", ws.calculateWorkerPagesByCriteria(null, new long[] {getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.UNVERIFIED_WORKER, WorkerStatus.none));
 //        mav.addObject("workers", ws.getWorkersByCriteria(page, size, null, getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId(), WorkerRole.UNVERIFIED_WORKER, WorkerStatus.none));
         mav.addObject("contextPath", "/admin/unverified-workers");
         return mav;
@@ -288,7 +288,7 @@ public class AdminController extends GlobalControllerAdvice {
 
         List<Amenity> amenities = as.getAmenities(getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size);
 
-        mav.addObject("totalPages", as.getTotalAmenitiesPages(getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
+        mav.addObject("totalPages", as.calculateAmenityPages(getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
         mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
         mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
         mav.addObject("amenities", amenities);

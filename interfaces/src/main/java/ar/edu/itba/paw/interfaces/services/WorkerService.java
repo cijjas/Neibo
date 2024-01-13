@@ -22,7 +22,7 @@ public interface WorkerService {
 
     Set<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long loggedUserId, WorkerRole workerRole, WorkerStatus workerStatus);
 
-    int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus);
+    int countWorkersByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus);
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -31,7 +31,7 @@ public interface WorkerService {
 
     int getTotalWorkerPages(long neighborhoodId, int size);
 
-    int getTotalWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole, WorkerStatus workerStatus);
+    int calculateWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole, WorkerStatus workerStatus);
 
     Worker updateWorkerPartially(long userId, String phoneNumber, String address, String businessName, MultipartFile backgroundPicture, String bio);
 }

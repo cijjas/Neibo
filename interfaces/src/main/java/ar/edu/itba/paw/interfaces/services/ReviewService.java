@@ -19,9 +19,9 @@ public interface ReviewService {
 
     Optional<Float> getAvgRating(long workerId);
 
-    int getReviewsCount(long workerId);
+    int countReviews(long workerId);
 
-    int getReviewsTotalPages(long workerId, int size);
+    int calculateReviewPages(long workerId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

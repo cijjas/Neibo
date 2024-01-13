@@ -1,16 +1,9 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.interfaces.services.InquiryService;
-import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Inquiry;
-import ar.edu.itba.paw.models.Entities.Product;
-import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.InquiryDto;
-import ar.edu.itba.paw.webapp.dto.ProductDto;
-import ar.edu.itba.paw.webapp.form.ListingForm;
 import ar.edu.itba.paw.webapp.form.QuestionForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +52,7 @@ public class InquiryController extends GlobalControllerAdvice{
                 .map(i -> InquiryDto.fromInquiry(i, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/products" + productId + "inquiries";
-        int totalInquiryPages = is.getTotalInquiryPages(productId, size);
+        int totalInquiryPages = is.calculateInquiryPages(productId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalInquiryPages);
 
         return Response.ok(new GenericEntity<List<InquiryDto>>(inquiriesDto){})

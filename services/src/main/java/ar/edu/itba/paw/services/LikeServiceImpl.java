@@ -66,7 +66,19 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public int getTotalLikePagesByCriteria(long neighborhoodId, long postId, long userId, int size) {
+    @Transactional(readOnly = true)
+    public boolean isPostLiked(long postId, long userId) {
+        LOGGER.info("Checking if User {} has liked Post {}", userId, postId);
+
+        ValidationUtils.checkLikeIds(postId, userId);
+
+        return likeDao.isPostLiked(postId, userId);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public int getLikePagesByCriteria(long neighborhoodId, long postId, long userId, int size) {
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkLikeIds(postId, userId);
@@ -84,15 +96,6 @@ public class LikeServiceImpl implements LikeService {
         }
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public boolean isPostLiked(long postId, long userId) {
-        LOGGER.info("Checking if User {} has liked Post {}", userId, postId);
-
-        ValidationUtils.checkLikeIds(postId, userId);
-
-        return likeDao.isPostLiked(postId, userId);
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
 

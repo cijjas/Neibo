@@ -92,7 +92,7 @@ public class MainController extends GlobalControllerAdvice{
         mav.addObject("appliedTags", tags);
         mav.addObject("postList", ps.getPostsByCriteria(channelName, page, size, tags, getLoggedUser().getNeighborhood().getNeighborhoodId(), PostStatus.valueOf(postStatus)));
         mav.addObject("page", page);
-        mav.addObject("totalPages", ps.getTotalPages(channelName, size, tags, getLoggedUser().getNeighborhood().getNeighborhoodId(), PostStatus.valueOf(postStatus), 0));
+        mav.addObject("totalPages", ps.calculatePostPages(channelName, size, tags, getLoggedUser().getNeighborhood().getNeighborhoodId(), PostStatus.valueOf(postStatus), 0));
         mav.addObject("channel", channelName);
         mav.addObject("contextPath", "/" + channelName.toLowerCase());
 
@@ -292,7 +292,7 @@ public class MainController extends GlobalControllerAdvice{
         mav.addObject("post", post);
         mav.addObject("comments", cs.getCommentsByPostId(postId, page, size));
         mav.addObject("page", page);
-        mav.addObject("totalPages", cs.getTotalCommentPages(postId, size));
+        mav.addObject("totalPages", cs.calculateCommentPages(postId, size));
         mav.addObject("tags", ts.getTagsByPostId(postId));
         mav.addObject("commentForm", commentForm);
         mav.addObject("showSuccessMessage", success);
@@ -473,7 +473,7 @@ public class MainController extends GlobalControllerAdvice{
 
         ModelAndView mav = new ModelAndView("views/amenities");
 
-        mav.addObject("totalPages", as.getTotalAmenitiesPages(getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
+        mav.addObject("totalPages", as.calculateAmenityPages(getLoggedUser().getNeighborhood().getNeighborhoodId(), size));
         mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
         mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
         mav.addObject("amenities", as.getAmenities(getLoggedUser().getNeighborhood().getNeighborhoodId(), page, size));
@@ -556,7 +556,7 @@ public class MainController extends GlobalControllerAdvice{
         mav.addObject("willAttend", us.isAttending(eventId, getLoggedUser().getUserId()));
         mav.addObject("showSuccessMessage", success);
         mav.addObject("page", page);
-        mav.addObject("totalPages", us.getTotalEventPages(eventId, size));
+        mav.addObject("totalPages", us.calculateEventPagesByCriteria(eventId, size));
         mav.addObject("contextPath", "/events/" + eventId);
         mav.addObject("selectedTimestamp", selectedDate.getTime()); // Pass the selected timestamp
         mav.addObject("selectedDay", selectedDate.getDate());

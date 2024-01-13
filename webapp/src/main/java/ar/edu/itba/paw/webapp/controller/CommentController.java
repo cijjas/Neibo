@@ -1,19 +1,13 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.interfaces.services.CommentService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Comment;
-import ar.edu.itba.paw.models.Entities.Post;
-import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.webapp.dto.CommentDto;
-import ar.edu.itba.paw.webapp.dto.ProductDto;
 import ar.edu.itba.paw.webapp.form.CommentForm;
-import ar.edu.itba.paw.webapp.form.PublishForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -59,7 +53,7 @@ public class CommentController extends GlobalControllerAdvice{
                 .map(c -> CommentDto.fromComment(c, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts" + postId + "/comment";
-        int totalProductPages = cs.getTotalCommentPages(postId, size);
+        int totalProductPages = cs.calculateCommentPages(postId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalProductPages);
 
         return Response.ok(new GenericEntity<List<CommentDto>>(commentsDto){})

@@ -2,17 +2,11 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
-import ar.edu.itba.paw.models.Entities.Post;
-import ar.edu.itba.paw.webapp.auth.UserAuth;
-import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
 import ar.edu.itba.paw.webapp.form.NewNeighborhoodForm;
-import ar.edu.itba.paw.webapp.form.PublishForm;
-import ar.edu.itba.paw.webapp.security.api.AuthenticatedUserDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -20,7 +14,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
@@ -48,7 +41,7 @@ public class NeighborhoodController {
 
         // Add pagination links to the response header
         String baseUri = uriInfo.getBaseUri().toString();
-        int totalNeighborhoodPages = ns.getTotalNeighborhoodPages(size);
+        int totalNeighborhoodPages = ns.calculateNeighborhoodPages(size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalNeighborhoodPages);
 
         return Response.ok(new GenericEntity<List<NeighborhoodDto>>(neighborhoodsDto){})

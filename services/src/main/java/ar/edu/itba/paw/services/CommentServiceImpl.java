@@ -49,12 +49,12 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Comment> findCommentById(long id) {
-        LOGGER.info("Finding Comment {}", id);
+    public Optional<Comment> findCommentById(long commentId) {
+        LOGGER.info("Finding Comment {}", commentId);
 
-        ValidationUtils.checkCommentId(id);
+        ValidationUtils.checkCommentId(commentId);
 
-        return commentDao.findCommentById(id);
+        return commentDao.findCommentById(commentId);
     }
 
     @Override
@@ -68,21 +68,23 @@ public class CommentServiceImpl implements CommentService {
         return commentDao.getCommentsByPostId(postId, page, size);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     @Transactional(readOnly = true)
-    public int getCommentsCountByPostId(long id) {
-        LOGGER.info("Getting Quantity of Comments for Post {}", id);
+    public int countComments(long postId) {
+        LOGGER.info("Getting Quantity of Comments for Post {}", postId);
 
-        return commentDao.getCommentsCountByPostId(id);
+        return commentDao.getCommentsCountByPostId(postId);
     }
 
     @Transactional(readOnly = true)
-    public int getTotalCommentPages(long commentId, int size) {
+    public int calculateCommentPages(long commentId, int size) {
         LOGGER.info("Getting Total Comment Pages for size {}", size);
 
         ValidationUtils.checkCommentId(commentId);
         ValidationUtils.checkSize(size);
 
-        return (int) Math.ceil((double) commentDao.getCommentsCountByPostId(commentId) / size);
+        return PaginationUtils.calculatePages(commentDao.getCommentsCountByPostId(commentId), size);
     }
 }

@@ -16,5 +16,7 @@ public interface InquiryService {
 
     List<Inquiry> getInquiriesByProductAndCriteria(long productId, int page, int size);
 
-    int getTotalInquiryPages(long productId, int size);
+    int countInquiries(long productId);
+
+    int calculateInquiryPages(long productId, int size);
 }

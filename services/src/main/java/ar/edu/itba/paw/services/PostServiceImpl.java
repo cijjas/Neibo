@@ -66,12 +66,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Post> findPostById(final long id) {
-        LOGGER.info("Finding Post with ID {}", id);
+    public Optional<Post> findPostById(final long postId) {
+        LOGGER.info("Finding Post with ID {}", postId);
 
-        ValidationUtils.checkPostId(id);
+        ValidationUtils.checkPostId(postId);
 
-        return postDao.findPostById(id);
+        return postDao.findPostById(postId);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public int getWorkerPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
+    public int countWorkerPostsByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         LOGGER.info("Getting Workers' Posts Count from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
 
         ValidationUtils.checkUserId(userId);
@@ -96,13 +96,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public int getWorkerTotalPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
+    public int calculateWorkerPostsPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         LOGGER.info("Getting Workers' Total Post Pages with size {} for Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", size, neighborhoodId, channel, tags, postStatus);
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        return (int) Math.ceil((double) getWorkerPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId) / size);
+        return PaginationUtils.calculatePages(postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId), size);
     }
 
     @Override
@@ -117,7 +117,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
+    public int countPostsByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -128,12 +128,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
+    public int calculatePostPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         LOGGER.info("Getting Total Post Pages with size {} for Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", size, neighborhoodId, channel, tags, postStatus);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkUserId(userId);
 
-        return (int) Math.ceil((double) getPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId) / size);
+        return PaginationUtils.calculatePages(postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId), size);
     }
 }
