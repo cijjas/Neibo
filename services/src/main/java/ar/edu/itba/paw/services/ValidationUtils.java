@@ -1,30 +1,44 @@
 package ar.edu.itba.paw.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ValidationUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AmenityServiceImpl.class);
 
     public static void checkPageAndSize(int page, int size) {
-        if (page <= 0)
+        if (page <= 0) {
+            LOGGER.info("Invalid page");
             throw new IllegalArgumentException("Invalid value (" + page + ") for the 'page' parameter. Please use a positive integer greater than 0.");
+        }
         checkSize(size);
     }
 
     public static void checkId(long id, String entity) {
-        if (id <= 0)
+        if (id <= 0) {
+            LOGGER.info("Invalid {} ID", entity);
             throw new IllegalArgumentException("Invalid value (" + id + ") for the " + entity + " id. Please use a positive integer greater than 0.");
+        }
     }
 
     public static void checkIds(long id1, long id2, String entity) {
-        if (id1 <= 0)
+        if (id1 <= 0) {
+            LOGGER.info("Invalid {} ID", entity);
             throw new IllegalArgumentException("Invalid identifier value(s) for " + entity + ". IDs must be positive integers greater than 0.");
-        if (id2 <= 0)
+        }
+        if (id2 <= 0) {
+            LOGGER.info("Invalid {} ID", entity);
             throw new IllegalArgumentException("Invalid identifier value(s) for " + entity + ". IDs must be positive integers greater than 0.");
+        }
     }
 
     // ---------------------------------------------------------------------------------------------------------
 
     public static void checkSize(int size) {
-        if (size <= 0)
+        if (size <= 0) {
+            LOGGER.info("Invalid Size");
             throw new IllegalArgumentException("Invalid value (" + size + ") for the 'size' parameter. Please use a positive integer greater than 0.");
+        }
     }
 
     public static void checkAmenityId(long amenityId) {
