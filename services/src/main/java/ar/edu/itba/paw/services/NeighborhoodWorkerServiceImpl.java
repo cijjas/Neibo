@@ -74,7 +74,7 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     public Set<Neighborhood> getNeighborhoods(long workerId) {
         LOGGER.info("Getting Neighborhoods for Worker {}", workerId);
 
-        ValidationUtils.checkId(workerId, "Worker");
+        ValidationUtils.checkWorkerId(workerId);
 
         return neighborhoodWorkerDao.getNeighborhoods(workerId);
     }
@@ -84,7 +84,7 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     public List<Neighborhood> getOtherNeighborhoods(long workerId) {
         LOGGER.info("Getting Other Neighborhoods for Worker {}", workerId);
 
-        ValidationUtils.checkId(workerId, "Worker");
+        ValidationUtils.checkWorkerId(workerId);
 
         List<Neighborhood> allNeighborhoods = neighborhoodDao.getNeighborhoods();
         Set<Neighborhood> workerNeighborhoods = neighborhoodWorkerDao.getNeighborhoods(workerId);
@@ -103,8 +103,8 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     public void verifyWorkerInNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Verifying Worker {} in Neighborhood {}", workerId, neighborhoodId);
 
-        ValidationUtils.checkId(workerId, "Worker");
-        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         setNeighborhoodRole(workerId, WorkerRole.VERIFIED_WORKER, neighborhoodId);
         User worker = userDao.findUserById(workerId).orElseThrow(()->  new NotFoundException("User Not Found"));
@@ -116,8 +116,8 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     public void rejectWorkerFromNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Rejecting Worker {} from Neighborhood {}", workerId, neighborhoodId);
 
-        ValidationUtils.checkId(workerId, "Worker");
-        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         setNeighborhoodRole(workerId, WorkerRole.REJECTED, neighborhoodId);
     }
@@ -126,8 +126,8 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     public void unverifyWorkerFromNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Un-verifying Worker {} from Neighborhood {}", workerId, neighborhoodId);
 
-        ValidationUtils.checkId(workerId, "Worker");
-        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         setNeighborhoodRole(workerId, WorkerRole.UNVERIFIED_WORKER, neighborhoodId);
     }
@@ -135,8 +135,8 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     private void setNeighborhoodRole(long workerId, WorkerRole role, long neighborhoodId) {
         LOGGER.debug("Setting Worker {} role to {} in Neighborhood {}", workerId, role, neighborhoodId);
 
-        ValidationUtils.checkId(workerId, "Worker");
-        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         WorkerArea workerArea = neighborhoodWorkerDao.findWorkerArea(workerId, neighborhoodId).orElseThrow(()-> new NotFoundException("Worker Area Not Found"));
         workerArea.setRole(role);
@@ -148,7 +148,7 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     public void removeWorkerFromNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Removing Worker {} from Neighborhood {}", workerId, neighborhoodId);
 
-        ValidationUtils.checkIds(workerId, neighborhoodId, "Worker Area");
+        ValidationUtils.checkWorkerAreaIds(workerId, neighborhoodId);
 
         neighborhoodWorkerDao.deleteWorkerArea(workerId, neighborhoodId);
     }

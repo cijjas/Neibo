@@ -37,7 +37,7 @@ public class ContactServiceImpl implements ContactService {
     public List<Contact> getContacts(final long neighborhoodId) {
         LOGGER.info("Getting Contacts for Neighborhood {}", neighborhoodId);
 
-        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return contactDao.getContacts(neighborhoodId);
     }
@@ -48,7 +48,7 @@ public class ContactServiceImpl implements ContactService {
     public Contact updateContact(long contactId, String contactName, String contactAddress, String contactPhone) {
         LOGGER.info("Updating Contact {}", contactId);
 
-        ValidationUtils.checkId(contactId, "Contact");
+        ValidationUtils.checkContactId(contactId);
 
         Contact contact = getContact(contactId);
 
@@ -68,7 +68,7 @@ public class ContactServiceImpl implements ContactService {
     public boolean deleteContact(long contactId) {
         LOGGER.info("Deleting Contact {}", contactId);
 
-        ValidationUtils.checkId(contactId, "Contact");
+        ValidationUtils.checkContactId(contactId);
 
         return contactDao.deleteContact(contactId);
     }

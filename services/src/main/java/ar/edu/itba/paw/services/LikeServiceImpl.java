@@ -40,7 +40,7 @@ public class LikeServiceImpl implements LikeService {
     public Optional<Like> findLikeById(long likeId) {
         LOGGER.info("Finding Like with Id {}", likeId);
 
-        ValidationUtils.checkId(likeId, "Like");
+        ValidationUtils.checkLikeId(likeId);
 
         return likeDao.findLikeById(likeId);
     }
@@ -48,8 +48,8 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public List<Like> getLikesByCriteria(long neighborhoodId, long postId, long userId, int page, int size){
 
-        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
-        ValidationUtils.checkIds(postId, userId, "Like");
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkLikeIds(postId, userId);
         ValidationUtils.checkPageAndSize(page, size);
 
         if (userId == 0 && postId == 0) {
@@ -66,6 +66,11 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public int getTotalLikePagesByCriteria(long neighborhoodId, long postId, long userId, int size) {
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkLikeIds(postId, userId);
+        ValidationUtils.checkSize(size);
+
         if (userId == 0 && postId == 0) {
             return (int) Math.ceil((double) likeDao.getLikesByNeighborhoodCount(neighborhoodId) / size);
         }
@@ -83,7 +88,7 @@ public class LikeServiceImpl implements LikeService {
     public boolean isPostLiked(long postId, long userId) {
         LOGGER.info("Checking if User {} has liked Post {}", userId, postId);
 
-        ValidationUtils.checkIds(postId, userId, "Like");
+        ValidationUtils.checkLikeIds(postId, userId);
 
         return likeDao.isPostLiked(postId, userId);
     }
@@ -94,7 +99,7 @@ public class LikeServiceImpl implements LikeService {
     public void removeLikeFromPost(long postId, long userId) {
         LOGGER.info("Removing Like from Post {} given by User {}", postId, userId);
 
-        ValidationUtils.checkIds(postId, userId, "Like");
+        ValidationUtils.checkLikeIds(postId, userId);
 
         likeDao.deleteLike(postId, userId);
     }

@@ -51,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
     public Optional<Comment> findCommentById(long id) {
         LOGGER.info("Finding Comment {}", id);
 
-        ValidationUtils.checkId(id, "Comment");
+        ValidationUtils.checkCommentId(id);
 
         return commentDao.findCommentById(id);
     }
@@ -61,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> getCommentsByPostId(long id, int page, int size) {
         LOGGER.info("Finding Comments for Post {}", id);
 
-        ValidationUtils.checkId(id, "Comment");
+        ValidationUtils.checkCommentId(id);
         ValidationUtils.checkPageAndSize(page, size);
 
         return commentDao.getCommentsByPostId(id, page, size);

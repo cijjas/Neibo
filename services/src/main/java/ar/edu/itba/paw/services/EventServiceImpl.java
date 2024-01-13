@@ -61,14 +61,14 @@ public class EventServiceImpl implements EventService {
 
     private Event getEvent(long eventId){
 
-        ValidationUtils.checkId(eventId, "Event");
+        ValidationUtils.checkEventId(eventId);
 
         return eventDao.findEventById(eventId).orElseThrow(() -> new NotFoundException("Event not found"));
     }
     @Override
     public Event updateEventPartially(long eventId, String name, String description, Date date, String startTime, String endTime){
 
-        ValidationUtils.checkId(eventId, "Event");
+        ValidationUtils.checkEventId(eventId);
 
         Event event = getEvent(eventId);
         if(name != null && !name.isEmpty())
@@ -97,7 +97,7 @@ public class EventServiceImpl implements EventService {
     public Optional<Event> findEventById(long eventId) {
         LOGGER.info("Finding Event {}", eventId);
 
-        ValidationUtils.checkId(eventId, "Event");
+        ValidationUtils.checkEventId(eventId);
 
         return eventDao.findEventById(eventId);
     }
@@ -107,7 +107,7 @@ public class EventServiceImpl implements EventService {
     public List<Event> getEventsByDate(String date, long neighborhoodId) {
         LOGGER.info("Getting Events for Neighborhood {} on Date {}", neighborhoodId, date);
 
-        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -122,7 +122,7 @@ public class EventServiceImpl implements EventService {
     public List<Event> getEventsByNeighborhoodId(long neighborhoodId) {
         LOGGER.info("Getting Events for Neighborhood {}", neighborhoodId);
 
-        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return eventDao.getEventsByNeighborhoodId(neighborhoodId);
     }
@@ -132,7 +132,7 @@ public class EventServiceImpl implements EventService {
     public List<Date> getEventDates(long neighborhoodId) {
         LOGGER.info("Getting Event Dates for Neighborhood {}", neighborhoodId);
 
-        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return eventDao.getEventDates(neighborhoodId);
     }
@@ -142,7 +142,7 @@ public class EventServiceImpl implements EventService {
     public List<Long> getEventTimestamps(long neighborhoodId) {
         LOGGER.info("Getting Event Timestamps for Neighborhood {}", neighborhoodId);
 
-        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         List<Date> eventDates = getEventDates(neighborhoodId);
 
@@ -156,7 +156,7 @@ public class EventServiceImpl implements EventService {
     public String getEventTimestampsString(long neighborhoodId) {
         LOGGER.info("Getting Event Timestamps as String for Neighborhood {}", neighborhoodId);
 
-        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return getEventTimestamps(neighborhoodId).stream()
                 .map(String::valueOf)
@@ -187,7 +187,7 @@ public class EventServiceImpl implements EventService {
     public boolean hasEvents(Date date, long neighborhoodId) {
         LOGGER.info("Checking if Neighborhood {} has Events on {}", neighborhoodId, date);
 
-        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return !eventDao.getEventsByDate(date, neighborhoodId).isEmpty();
     }
@@ -197,7 +197,7 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event updateEvent(long eventId, String name, String description, Date date, String startTime, String endTime) {
 
-        ValidationUtils.checkId(eventId, "Event");
+        ValidationUtils.checkEventId(eventId);
 
         Long[] times = stringToTime(startTime, endTime);
         Event event = em.find(Event.class, eventId);
@@ -216,7 +216,7 @@ public class EventServiceImpl implements EventService {
     public boolean deleteEvent(long eventId) {
         LOGGER.info("Delete Event {}", eventId);
 
-        ValidationUtils.checkId(eventId, "Event");
+        ValidationUtils.checkEventId(eventId);
 
         return eventDao.deleteEvent(eventId);
     }

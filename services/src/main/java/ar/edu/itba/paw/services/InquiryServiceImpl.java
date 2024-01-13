@@ -54,7 +54,7 @@ public class InquiryServiceImpl implements InquiryService {
     @Override
     public Optional<Inquiry> findInquiryById(long inquiryId) {
 
-        ValidationUtils.checkId(inquiryId, "Inquiry");
+        ValidationUtils.checkInquiryId(inquiryId);
 
         return inquiryDao.findInquiryById(inquiryId);
     }
@@ -63,7 +63,7 @@ public class InquiryServiceImpl implements InquiryService {
     @Override
     public List<Inquiry> getInquiriesByProductAndCriteria(long productId, int page, int size) {
 
-        ValidationUtils.checkId(productId, "Product");
+        ValidationUtils.checkProductId(productId);
         ValidationUtils.checkPageAndSize(page, size);
 
         return inquiryDao.getInquiriesByProductAndCriteria(productId, page, size);
@@ -84,7 +84,7 @@ public class InquiryServiceImpl implements InquiryService {
     public Inquiry replyInquiry(long inquiryId, String reply) {
         LOGGER.info("Replying to Inquiry with id {}", inquiryId);
 
-        ValidationUtils.checkId(inquiryId, "Inquiry");
+        ValidationUtils.checkInquiryId(inquiryId);
 
         //Send email to inquirer
         Inquiry inquiry = inquiryDao.findInquiryById(inquiryId).orElseThrow(() -> new NotFoundException("Inquiry not found"));

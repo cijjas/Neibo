@@ -79,7 +79,7 @@ public class AmenityServiceImpl implements AmenityService {
     public Optional<Amenity> findAmenityById(long amenityId) {
         LOGGER.info("Finding Amenity with id {}", amenityId);
 
-        ValidationUtils.checkId(amenityId, "Amenity");
+        ValidationUtils.checkAmenityId(amenityId);
 
         return amenityDao.findAmenityById(amenityId);
     }
@@ -89,7 +89,7 @@ public class AmenityServiceImpl implements AmenityService {
     public List<Amenity> getAmenities(long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Amenities from Neighborhood {}", neighborhoodId);
 
-        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
 
         return amenityDao.getAmenities(neighborhoodId, page, size);
@@ -108,7 +108,7 @@ public class AmenityServiceImpl implements AmenityService {
     @Override
     public void updateAmenity(long amenityId, String name, String description){
 
-        ValidationUtils.checkId(amenityId, "Amenity");
+        ValidationUtils.checkAmenityId(amenityId);
 
         Amenity amenity = amenityDao.findAmenityById(amenityId).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
         amenity.setName(name);
@@ -118,7 +118,7 @@ public class AmenityServiceImpl implements AmenityService {
     @Override
     public Amenity updateAmenityPartially(long amenityId, String name, String description){
 
-        ValidationUtils.checkId(amenityId, "Amenity");
+        ValidationUtils.checkAmenityId(amenityId);
 
         Amenity amenity = amenityDao.findAmenityById(amenityId).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
         if(name != null && !name.isEmpty())
@@ -134,7 +134,7 @@ public class AmenityServiceImpl implements AmenityService {
     public boolean deleteAmenity(long amenityId) {
         LOGGER.info("Deleting Amenity {}", amenityId);
 
-        ValidationUtils.checkId(amenityId, "Amenity");
+        ValidationUtils.checkAmenityId(amenityId);
 
         return amenityDao.deleteAmenity(amenityId);
     }

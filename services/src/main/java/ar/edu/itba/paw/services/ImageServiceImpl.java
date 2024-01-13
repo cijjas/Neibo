@@ -39,7 +39,7 @@ public class ImageServiceImpl implements ImageService {
     public Optional<Image> getImage(long imageId) {
         LOGGER.info("Retrieving Image {}", imageId);
 
-        ValidationUtils.checkId(imageId, "Image");
+        ValidationUtils.checkImageId(imageId);
 
         if (imageId <= 0)
             throw new IllegalArgumentException("Image ID must be a positive integer");

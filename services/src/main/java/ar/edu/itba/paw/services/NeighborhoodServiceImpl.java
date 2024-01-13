@@ -45,7 +45,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     public Optional<Neighborhood> findNeighborhoodById(long id) {
         LOGGER.info("Selecting Neighborhood with id {}", id);
 
-        ValidationUtils.checkId(id, "Neighborhood");
+        ValidationUtils.checkNeighborhoodId(id);
 
         return neighborhoodDao.findNeighborhoodById(id);
     }

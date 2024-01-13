@@ -47,7 +47,7 @@ public class ChannelServiceImpl implements ChannelService {
     @Transactional(readOnly = true)
     public Optional<Channel> findChannelById(long channelId) {
 
-        ValidationUtils.checkId(channelId, "Channel");
+        ValidationUtils.checkChannelId(channelId);
 
         return channelDao.findChannelById(channelId);
     }
@@ -63,7 +63,7 @@ public class ChannelServiceImpl implements ChannelService {
     public List<Channel> getChannels(long neighborhoodId) {
         LOGGER.info("Getting Channels from Neighborhood {}", neighborhoodId);
 
-        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return channelDao.getChannels(neighborhoodId);
     }
@@ -72,8 +72,8 @@ public class ChannelServiceImpl implements ChannelService {
     @Transactional(readOnly = true)
     public Map<String, Channel> getNeighborChannels(long neighborhoodId, long userId) {
 
-        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
-        ValidationUtils.checkId(userId, "User");
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkUserId(userId);
 
         Map<String, Channel> channelMap = channelDao.getChannels(neighborhoodId).stream()
                 .collect(Collectors.toMap(Channel::getChannel, Function.identity()));
@@ -84,7 +84,8 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     @Transactional(readOnly = true)
     public Map<String, Channel> getAdminChannels(long neighborhoodId) {
-        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         List<Channel> allChannels = channelDao.getChannels(neighborhoodId);
 

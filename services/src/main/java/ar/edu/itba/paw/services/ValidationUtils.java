@@ -22,6 +22,11 @@ public class ValidationUtils {
 
     // ---------------------------------------------------------------------------------------------------------
 
+    public static void checkSize(int size) {
+        if (size <= 0)
+            throw new IllegalArgumentException("Invalid value (" + size + ") for the 'size' parameter. Please use a positive integer greater than 0.");
+    }
+
     public static void checkAmenityId(long amenityId) {
         ValidationUtils.checkId(amenityId, "Amenity");
     }
@@ -83,6 +88,10 @@ public class ValidationUtils {
         ValidationUtils.checkIds(eventId, userId, "Attendance");
     }
 
+    public static void checkAttendanceId(long attendanceId) {
+        ValidationUtils.checkId(attendanceId, "Attendance");
+    }
+
     public static void checkEventId(long eventId) {
         ValidationUtils.checkId(eventId, "Event");
     }
@@ -111,8 +120,31 @@ public class ValidationUtils {
         ValidationUtils.checkId(sellerId, "Seller");
     }
 
-    public static void checkSize(int size) {
-        if (size <= 0)
-            throw new IllegalArgumentException("Invalid value (" + size + ") for the 'size' parameter. Please use a positive integer greater than 0.");
+    public static void checkAvailabilityId(long availabilityId) {
+        ValidationUtils.checkId(availabilityId, "Availability");
+    }
+
+    public static void checkBookingId(long bookingId) {
+        ValidationUtils.checkId(bookingId, "Booking");
+    }
+
+    public static void checkImageId(long imageId) {
+        ValidationUtils.checkId(imageId, "Image");
+    }
+
+    public static void checkInquiryId(long inquiryId) {
+        ValidationUtils.checkId(inquiryId, "Inquiry");
+    }
+
+    public static void checkLikeId(long likeId) {
+        ValidationUtils.checkId(likeId, "Like");
+    }
+
+    public static void checkLikeIds(long postId, long userId) {
+        ValidationUtils.checkIds(postId, userId, "Like");
+    }
+
+    public static void checkWorkerAreaIds(long workerId, long neighborhoodId) {
+        ValidationUtils.checkIds(workerId, neighborhoodId, "WorkerArea");
     }
 }
