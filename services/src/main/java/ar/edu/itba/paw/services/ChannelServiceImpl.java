@@ -41,20 +41,13 @@ public class ChannelServiceImpl implements ChannelService {
         return channel;
     }
 
-    @Override
-    public Channel createChannel(String name) {
-        LOGGER.info("Creating Channel {}", name);
-        return channelDao.createChannel(name);
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Channel> findChannelById(long id) {
-        if (id <= 0)
-            throw new IllegalArgumentException("Channel ID must be a positive integer");
-        return channelDao.findChannelById(id);
+    public Optional<Channel> findChannelById(long channelId) {
+        ValidationUtils.checkId(channelId, "Channel");
+        return channelDao.findChannelById(channelId);
     }
 
     @Override
@@ -66,13 +59,16 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     @Transactional(readOnly = true)
     public List<Channel> getChannels(long neighborhoodId) {
+        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
         LOGGER.info("Getting Channels from Neighborhood {}", neighborhoodId);
         return channelDao.getChannels(neighborhoodId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Map<String, Channel> getNeighborChannels(long neighborhoodId, long neighborId) {
+    public Map<String, Channel> getNeighborChannels(long neighborhoodId, long userId) {
+        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+        ValidationUtils.checkId(userId, "User");
         Map<String, Channel> channelMap = channelDao.getChannels(neighborhoodId).stream()
                 .collect(Collectors.toMap(Channel::getChannel, Function.identity()));
         channelMap.remove(BaseChannel.ANNOUNCEMENTS.toString());
@@ -82,24 +78,21 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     @Transactional(readOnly = true)
     public Map<String, Channel> getAdminChannels(long neighborhoodId) {
-        try {
-            List<Channel> allChannels = channelDao.getChannels(neighborhoodId);
+        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
 
-            // Filter the channels to find the "Announcements" channel
-            Optional<Channel> announcementsChannelOptional = allChannels.stream()
-                    .filter(channel -> BaseChannel.ANNOUNCEMENTS.toString().equalsIgnoreCase(channel.getChannel()))
-                    .findFirst();
+        List<Channel> allChannels = channelDao.getChannels(neighborhoodId);
 
-            // Create a new map with the "Announcements" channel, if found
-            Map<String, Channel> adminChannelMap = new HashMap<>();
-            announcementsChannelOptional.ifPresent(announcementsChannel ->
-                    adminChannelMap.put(announcementsChannel.getChannel(), announcementsChannel)
-            );
+        // Filter the channels to find the "Announcements" channel
+        Optional<Channel> announcementsChannelOptional = allChannels.stream()
+                .filter(channel -> BaseChannel.ANNOUNCEMENTS.toString().equalsIgnoreCase(channel.getChannel()))
+                .findFirst();
 
-            return adminChannelMap;
-        } catch (Exception e) {
-            LOGGER.error("Error getting admin channels", e);
-        }
-        return null;
+        // Create a new map with the "Announcements" channel, if found
+        Map<String, Channel> adminChannelMap = new HashMap<>();
+        announcementsChannelOptional.ifPresent(announcementsChannel ->
+                adminChannelMap.put(announcementsChannel.getChannel(), announcementsChannel)
+        );
+
+        return adminChannelMap;
     }
 }

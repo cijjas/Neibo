@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 
 @Path("neighborhoods/{neighborhoodId}/amenities")
-@CrossOrigin(origins = "http://localhost:4200/")
 @Component
 public class AmenityController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AmenityController.class);

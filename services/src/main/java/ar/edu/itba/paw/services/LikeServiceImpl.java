@@ -31,36 +31,25 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public Like addLikeToPost(long postId, long userId) {
         LOGGER.info("Liking Post {} due to User {}", postId, userId);
+        ValidationUtils.checkIds(postId, userId, "Like");
         return likeDao.createLike(postId, userId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    @Transactional(readOnly = true)
-    public boolean isPostLiked(long postId, long userId) {
-        LOGGER.info("Checking if User {} has liked Post {}", userId, postId);
-        return likeDao.isPostLiked(postId, userId);
-    }
-
-    @Override
     public Optional<Like> findLikeById(long likeId) {
         LOGGER.info("Finding Like with Id {}", likeId);
+        ValidationUtils.checkId(likeId, "Like");
         return likeDao.findLikeById(likeId);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void removeLikeFromPost(long postId, long userId) {
-        LOGGER.info("Removing Like from Post {} given by User {}", postId, userId);
-        likeDao.deleteLike(postId, userId);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
     @Override
     public List<Like> getLikesByCriteria(long neighborhoodId, long postId, long userId, int page, int size){
+        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+        ValidationUtils.checkIds(postId, userId, "Like");
+        ValidationUtils.checkPageAndSize(page, size);
+
         if (userId == 0 && postId == 0) {
             return likeDao.getLikesByNeighborhood(neighborhoodId, page, size);
         }
@@ -87,4 +76,20 @@ public class LikeServiceImpl implements LikeService {
         }
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isPostLiked(long postId, long userId) {
+        LOGGER.info("Checking if User {} has liked Post {}", userId, postId);
+        ValidationUtils.checkIds(postId, userId, "Like");
+        return likeDao.isPostLiked(postId, userId);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void removeLikeFromPost(long postId, long userId) {
+        LOGGER.info("Removing Like from Post {} given by User {}", postId, userId);
+        ValidationUtils.checkIds(postId, userId, "Like");
+        likeDao.deleteLike(postId, userId);
+    }
 }

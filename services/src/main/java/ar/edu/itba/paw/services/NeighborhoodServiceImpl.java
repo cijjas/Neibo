@@ -44,8 +44,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     @Transactional(readOnly = true)
     public Optional<Neighborhood> findNeighborhoodById(long id) {
         LOGGER.info("Selecting Neighborhood with id {}", id);
-        if (id <= 0)
-            throw new IllegalArgumentException("Neighborhood ID must be a positive integer");
+        ValidationUtils.checkId(id, "Neighborhood");
         return neighborhoodDao.findNeighborhoodById(id);
     }
 
@@ -63,6 +62,8 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     @Transactional(readOnly = true)
     public List<Neighborhood> getNeighborhoodsByCriteria(int page, int size) {
         LOGGER.info("Getting All Neighborhoods");
+        ValidationUtils.checkPageAndSize(page, size);
+
         List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoodsByCriteria(page, size);
         neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == 0);
         neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == -1);
@@ -75,5 +76,4 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
         LOGGER.info("Getting Total Neighborhood Pages");
         return (int) Math.ceil((double) neighborhoodDao.getNeighborhoodsCount() / size);
     }
-
 }

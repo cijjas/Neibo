@@ -37,11 +37,11 @@ public class CommentServiceImpl implements CommentService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Comment createComment(String comment, long neighborId, long postId) {
-        LOGGER.info("Creating Comment {} from User {} for Post {}", comment, neighborId, postId);
+    public Comment createComment(String comment, long userId, long postId) {
+        LOGGER.info("Creating Comment {} from User {} for Post {}", comment, userId, postId);
         Post post = postService.findPostById(postId).orElseThrow(()-> new NotFoundException("Post Not Found"));
         emailService.sendNewCommentMail(post, userService.getNeighborsSubscribedByPostId(postId));
-        return commentDao.createComment(comment, neighborId, postId);
+        return commentDao.createComment(comment, userId, postId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -50,6 +50,9 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public Optional<Comment> findCommentById(long id) {
         LOGGER.info("Finding Comment {}", id);
+
+        ValidationUtils.checkId(id, "Comment");
+
         return commentDao.findCommentById(id);
     }
 
@@ -57,6 +60,8 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public List<Comment> getCommentsByPostId(long id, int page, int size) {
         LOGGER.info("Finding Comments for Post {}", id);
+        ValidationUtils.checkId(id, "Comment");
+        ValidationUtils.checkPageAndSize(page, size);
         return commentDao.getCommentsByPostId(id, page, size);
     }
 

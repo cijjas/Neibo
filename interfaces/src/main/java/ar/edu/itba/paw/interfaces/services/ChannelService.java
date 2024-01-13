@@ -10,8 +10,6 @@ public interface ChannelService {
 
     Channel createChannel(long neighborhoodId, final String name);
 
-    Channel createChannel(String name);
-
     // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Channel> findChannelById(long id);

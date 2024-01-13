@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.InquiryDao;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
@@ -40,7 +41,7 @@ public class InquiryServiceImpl implements InquiryService {
     public Inquiry createInquiry(long userId, long productId, String message) {
         LOGGER.info("User {} Inquiring on Product {}", userId, productId);
         //Send email to seller
-        Product product = productDao.findProductById(productId).orElseThrow(() -> new IllegalStateException("Product not found"));
+        Product product = productDao.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
         User receiver = product.getSeller();
         emailService.sendInquiryMail(receiver, product, message, false);
 
@@ -51,12 +52,15 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     public Optional<Inquiry> findInquiryById(long inquiryId) {
+        ValidationUtils.checkId(inquiryId, "Inquiry");
         return inquiryDao.findInquiryById(inquiryId);
     }
 
 
     @Override
     public List<Inquiry> getInquiriesByProductAndCriteria(long productId, int page, int size) {
+        ValidationUtils.checkId(productId, "Product");
+        ValidationUtils.checkPageAndSize(page, size);
         return inquiryDao.getInquiriesByProductAndCriteria(productId, page, size);
     }
 
@@ -70,8 +74,9 @@ public class InquiryServiceImpl implements InquiryService {
     @Override
     public Inquiry replyInquiry(long inquiryId, String reply) {
         LOGGER.info("Replying to Inquiry with id {}", inquiryId);
+        ValidationUtils.checkId(inquiryId, "Inquiry");
         //Send email to inquirer
-        Inquiry inquiry = inquiryDao.findInquiryById(inquiryId).orElseThrow(() -> new IllegalStateException("Inquiry not found"));
+        Inquiry inquiry = inquiryDao.findInquiryById(inquiryId).orElseThrow(() -> new NotFoundException("Inquiry not found"));
         inquiry.setReply(reply);
 
         Product product = inquiry.getProduct();

@@ -61,24 +61,45 @@ public class PostServiceImpl implements PostService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Post> findPostById(final long id) {
+        LOGGER.info("Finding Post with ID {}", id);
+
+        ValidationUtils.checkPostId(id);
+
+        return postDao.findPostById(id);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public List<Post> getWorkerPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         LOGGER.info("Getting Workers' Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
+
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
         return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, postStatus, userId);
     }
 
     @Override
     public int getWorkerPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         LOGGER.info("Getting Workers' Posts Count from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
-        // parse de statusString into the postStatusEnum
+
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
         return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId);
     }
 
     @Override
     public int getWorkerTotalPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         LOGGER.info("Getting Workers' Total Post Pages with size {} for Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", size, neighborhoodId, channel, tags, postStatus);
-        // parse de statusString into the postStatusEnum
+
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
         return (int) Math.ceil((double) getWorkerPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId) / size);
     }
 
@@ -86,6 +107,9 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus) {
         LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
         return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, postStatus, 0);
     }
 
@@ -93,7 +117,10 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
-        // parse de statusString into the postStatusEnum
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkUserId(userId);
+
         return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId);
     }
 
@@ -101,16 +128,10 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly = true)
     public int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
         LOGGER.info("Getting Total Post Pages with size {} for Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", size, neighborhoodId, channel, tags, postStatus);
-        // parse de statusString into the postStatusEnum
-        return (int) Math.ceil((double) getPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId) / size);
-    }
 
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Post> findPostById(final long id) {
-        LOGGER.info("Finding Post with ID {}", id);
-        if (id <= 0)
-            throw new IllegalArgumentException("Post ID must be a positive integer");
-        return postDao.findPostById(id);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkUserId(userId);
+
+        return (int) Math.ceil((double) getPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId) / size);
     }
 }

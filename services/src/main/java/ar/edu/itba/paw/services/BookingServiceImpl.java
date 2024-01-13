@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -57,8 +58,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Booking> findBooking(long bookingId){
-        if (bookingId <= 0)
-            throw new IllegalArgumentException("Booking ID must be a positive integer");
+        ValidationUtils.checkId(bookingId, "Booking");
         return bookingDao.findBookingById(bookingId);
     }
 
@@ -66,8 +66,8 @@ public class BookingServiceImpl implements BookingService {
     @Transactional(readOnly = true)
     public List<Booking> getUserBookings(long userId) {
         LOGGER.info("Getting Bookings for User {}", userId);
-        List<Booking> userBookings = bookingDao.getUserBookings(userId);
-        return userBookings;
+        ValidationUtils.checkId(userId, "User");
+        return bookingDao.getUserBookings(userId);
 //        List<GroupedBooking> groupedBookings = new ArrayList<>();
 //        GroupedBooking currentGroupedBooking = null;
 //
@@ -95,19 +95,12 @@ public class BookingServiceImpl implements BookingService {
 //        return groupedBookings;
     }
 
-
-    private Time calculateEndTime(Time startTime) {
-        // Calculate end time by adding an hour to the start time
-        long startTimeMillis = startTime.getTime();
-        long endTimeMillis = startTimeMillis + 60 * 60 * 1000; // 60 minutes * 60 seconds * 1000 milliseconds
-        return new Time(endTimeMillis);
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public boolean deleteBooking(long bookingId) {
         LOGGER.info("Deleting Booking {}", bookingId);
+        ValidationUtils.checkId(bookingId, "Booking");
         return bookingDao.deleteBooking(bookingId);
     }
 
@@ -117,5 +110,14 @@ public class BookingServiceImpl implements BookingService {
         for (long booking : bookingIds)
             bookingDao.deleteBooking(booking);
         return true;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    private Time calculateEndTime(Time startTime) {
+        // Calculate end time by adding an hour to the start time
+        long startTimeMillis = startTime.getTime();
+        long endTimeMillis = startTimeMillis + 60 * 60 * 1000; // 60 minutes * 60 seconds * 1000 milliseconds
+        return new Time(endTimeMillis);
     }
 }

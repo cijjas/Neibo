@@ -36,25 +36,17 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public List<Contact> getContacts(final long neighborhoodId) {
         LOGGER.info("Getting Contacts for Neighborhood {}", neighborhoodId);
+        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
         return contactDao.getContacts(neighborhoodId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteContact(long contactId) {
-        LOGGER.info("Deleting Contact {}", contactId);
-        return contactDao.deleteContact(contactId);
-    }
-
-    private Contact getContact(long contactId) {
-        LOGGER.info("Getting Contact {}", contactId);
-        return contactDao.findContactById(contactId).orElseThrow(() -> new NotFoundException("Contact not found"));
-    }
-
-    @Override
     public Contact updateContact(long contactId, String contactName, String contactAddress, String contactPhone) {
         LOGGER.info("Updating Contact {}", contactId);
+
+        ValidationUtils.checkId(contactId, "Contact");
 
         Contact contact = getContact(contactId);
 
@@ -66,5 +58,21 @@ public class ContactServiceImpl implements ContactService {
             contact.setContactPhone(contactPhone);
 
         return contact;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean deleteContact(long contactId) {
+        LOGGER.info("Deleting Contact {}", contactId);
+        ValidationUtils.checkId(contactId, "Contact");
+        return contactDao.deleteContact(contactId);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    private Contact getContact(long contactId) {
+        LOGGER.info("Getting Contact {}", contactId);
+        return contactDao.findContactById(contactId).orElseThrow(() -> new NotFoundException("Contact not found"));
     }
 }

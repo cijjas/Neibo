@@ -42,6 +42,9 @@ public class TagServiceImpl implements TagService {
     @Override
     public void createTagsAndCategorizePost(long postId, String tagsString) {
         LOGGER.info("Creating Tags in {} and Associating it with the Post {}", tagsString, postId);
+
+        ValidationUtils.checkPostId(postId);
+
         if (tagsString == null || tagsString.isEmpty()) {
             return;
         }
@@ -69,6 +72,9 @@ public class TagServiceImpl implements TagService {
 
     public String createURLForTagFilter(String tags, String currentUrl, long neighborhoodId) {
         LOGGER.info("Creating URL for Tag Filter");
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
         // Extract the base URL (path) without query parameters
         String baseUrl;
         int queryIndex = currentUrl.indexOf('?');
@@ -106,15 +112,21 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Tag> getTagsByPostId(long id) {
-        LOGGER.info("Finding Tags for Post {}", id);
-        return tagDao.getTagsByPostId(id);
+    public List<Tag> getTagsByPostId(long postId) {
+        LOGGER.info("Finding Tags for Post {}", postId);
+
+        ValidationUtils.checkPostId(postId);
+
+        return tagDao.getTagsByPostId(postId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Tag> getTags(long neighborhoodId) {
         LOGGER.info("Getting All Tags from Neighborhood", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
         return tagDao.getTags(neighborhoodId);
     }
 
@@ -122,11 +134,19 @@ public class TagServiceImpl implements TagService {
     @Transactional(readOnly = true)
     public List<Tag> getTags(long neighborhoodId, int page, int size) {
         LOGGER.info("Getting All Tags from Neighborhood", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkPageAndSize(page, size);
+
         return tagDao.getTags(neighborhoodId, page, size);
     }
 
     @Override
     public List<Tag> getTagsByCriteria(Long postId, Long neighborhoodId) {
+
+        ValidationUtils.checkPostId(postId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
         if (postId != null) {
             return tagDao.getTagsByPostId(postId);
         } else {
@@ -136,6 +156,11 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> getTagsByCriteria(Long postId, Long neighborhoodId, int page, int size) {
+
+        ValidationUtils.checkPostId(postId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkPageAndSize(page, size);
+
         if (postId != 0) {
             return tagDao.getTagsByPostId(postId, page, size);
         } else {
@@ -146,16 +171,23 @@ public class TagServiceImpl implements TagService {
     @Override
     public int getTotalTagPages(long neighborhoodId, int size) {
         LOGGER.info("Getting Total Tag Pages from Neighborhood", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+
         return (int) Math.ceil(tagDao.getTagsCount(neighborhoodId) / (double) size);
     }
 
     @Override
     public int getTotalTagPagesByCriteria(Long postId, Long neighborhoodId, int size) {
+
+        ValidationUtils.checkPostId(postId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
         if (postId != 0) {
             return (int) Math.ceil(tagDao.getTagsCountByPostId(postId) / (double) size);
         } else {
             return (int) Math.ceil(tagDao.getTagsCount(neighborhoodId) / (double) size);
         }
     }
-
 }

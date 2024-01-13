@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ResourceDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.ResourceService;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -41,31 +43,33 @@ public class ResourceServiceImpl implements ResourceService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    public Optional<Resource> findResource(long resourceId) {
+        LOGGER.info("Getting Resource {}", resourceId);
+
+        ValidationUtils.checkResourceId(resourceId);
+
+        return resourceDao.findResourceById(resourceId);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public List<Resource> getResources(final long neighborhoodId) {
         LOGGER.info("Getting Resources from Neighborhood {}", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
         return resourceDao.getResources(neighborhoodId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteResource(final long resourceId) {
-        LOGGER.info("Deleting Resource {}", resourceId);
-        return resourceDao.deleteResource(resourceId);
-    }
+    public Resource updateResource(long resourceId, String title, String description, MultipartFile image) {
+        LOGGER.info("Updating Resource {}", resourceId);
 
-    public Resource getResource(long id) {
-        LOGGER.info("Getting Resource {}", id);
-        return resourceDao.findResourceById(id).orElseThrow(() -> new IllegalStateException("Resource not found"));
-    }
+        ValidationUtils.checkResourceId(resourceId);
 
-    @Override
-    public Resource updateResource(long id, String title, String description, MultipartFile image) {
-        LOGGER.info("Updating Resource {}", id);
-
-        Resource resource = getResource(id);
+        Resource resource = findResource(resourceId).orElseThrow(()-> new NotFoundException("Resource Not Found"));
 
         if(title != null && !title.isEmpty())
             resource.setTitle(title);
@@ -78,6 +82,17 @@ public class ResourceServiceImpl implements ResourceService {
         }
 
         return resource;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean deleteResource(final long resourceId) {
+        LOGGER.info("Deleting Resource {}", resourceId);
+
+        ValidationUtils.checkResourceId(resourceId);
+
+        return resourceDao.deleteResource(resourceId);
     }
 }
 

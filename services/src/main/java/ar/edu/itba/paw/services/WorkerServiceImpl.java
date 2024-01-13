@@ -74,8 +74,9 @@ public class WorkerServiceImpl implements WorkerService {
     @Transactional(readOnly = true)
     public Optional<Worker> findWorkerById(long userId) {
         LOGGER.info("Finding Worker with id {}", userId);
-        if (userId <= 0)
-            throw new IllegalArgumentException("Worker ID must be a positive integer");
+
+        ValidationUtils.checkUserId(userId);
+
         Optional<User> optionalUser = userDao.findUserById(userId);
         return optionalUser.isPresent() ? workerDao.findWorkerById(userId) : Optional.empty();
     }
@@ -90,12 +91,16 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @Transactional(readOnly = true)
-    public Set<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long loggedUserId, WorkerRole workerRole, WorkerStatus workerStatus) {
+    public Set<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long userId, WorkerRole workerRole, WorkerStatus workerStatus) {
         LOGGER.info("Getting Workers with professions {}", professions);
+
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkPageAndSize(page, size);
+
         //If inquirer is a worker, show return workers from any of the neighborhoods they are in
-        User user = userDao.findUserById(loggedUserId).orElseThrow(() -> new NotFoundException("User Not Found"));
+        User user = userDao.findUserById(userId).orElseThrow(() -> new NotFoundException("User Not Found"));
         if(user.getNeighborhood().getNeighborhoodId() == 0) { //inquirer is a worker
-            Set<Neighborhood> neighborhoods = neighborhoodWorkerDao.getNeighborhoods(loggedUserId);
+            Set<Neighborhood> neighborhoods = neighborhoodWorkerDao.getNeighborhoods(userId);
             long[] neighborhoodIds = neighborhoods.stream()
                     .mapToLong(Neighborhood::getNeighborhoodId)
                     .toArray();
@@ -111,12 +116,18 @@ public class WorkerServiceImpl implements WorkerService {
     @Transactional(readOnly = true)
     public int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus) {
         LOGGER.info("Getting Workers Count for Neighborhood {} with professions {}", neighborhoodIds, professions);
+
+        ValidationUtils.checkNeighborhoodsIds(neighborhoodIds);
+
         return workerDao.getWorkersCountByCriteria(professions, neighborhoodIds, workerRole, workerStatus);
     }
 
     @Override
     public int getTotalWorkerPages(long neighborhoodId, int size) {
         LOGGER.info("Getting Pages of Workers with size {} from Neighborhood {}", size, neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
         long[] neighborhoodIds = {neighborhoodId};
         return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(null, neighborhoodIds, WorkerRole.VERIFIED_WORKER, WorkerStatus.none) / size);
     }
@@ -124,16 +135,22 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     public int getTotalWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole, WorkerStatus workerStatus) {
         LOGGER.info("Getting Pages of Workers with size {} from Neighborhoods {} with professions {}", size, neighborhoodIds, professions);
+
+        ValidationUtils.checkNeighborhoodsIds(neighborhoodIds);
+
         return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(professions, neighborhoodIds, workerRole, workerStatus) / size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void updateWorker(long userId, String phoneNumber, String address, String businessName,
+    public void updateWorker(long workerId, String phoneNumber, String address, String businessName,
                              MultipartFile backgroundPicture, String bio) {
-        LOGGER.info("Updating Worker {}", userId);
-        Worker worker = workerDao.findWorkerById(userId).orElseThrow(()-> new NotFoundException("Worker Not Found"));
+        LOGGER.info("Updating Worker {}", workerId);
+
+        ValidationUtils.checkWorkerId(workerId);
+
+        Worker worker = workerDao.findWorkerById(workerId).orElseThrow(()-> new NotFoundException("Worker Not Found"));
         worker.setPhoneNumber(phoneNumber);
         worker.setAddress(address);
         worker.setBusinessName(businessName);
@@ -144,15 +161,13 @@ public class WorkerServiceImpl implements WorkerService {
         }
     }
 
-    private Worker getWorker(long workerId) {
-        LOGGER.info("Getting Worker {}", workerId);
-        return workerDao.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found"));
-    }
-
     @Override
-    public Worker updateWorkerPartially(long userId, String phoneNumber, String address, String businessName, MultipartFile backgroundPicture, String bio){
-        LOGGER.info("Updating Worker {}", userId);
-        Worker worker = getWorker(userId);
+    public Worker updateWorkerPartially(long workerId, String phoneNumber, String address, String businessName, MultipartFile backgroundPicture, String bio){
+        LOGGER.info("Updating Worker {}", workerId);
+
+        ValidationUtils.checkWorkerId(workerId);
+
+        Worker worker = getWorker(workerId);
         if(phoneNumber != null && !phoneNumber.isEmpty())
             worker.setPhoneNumber(phoneNumber);
         if(address != null && !address.isEmpty())
@@ -166,5 +181,15 @@ public class WorkerServiceImpl implements WorkerService {
             worker.setBackgroundPictureId(i.getImageId());
         }
         return worker;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    
+    private Worker getWorker(long workerId) {
+        LOGGER.info("Getting Worker {}", workerId);
+
+        ValidationUtils.checkWorkerId(workerId);
+
+        return workerDao.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found"));
     }
 }

@@ -37,6 +37,7 @@ public class ImageServiceImpl implements ImageService {
     @Transactional(readOnly = true)
     public Optional<Image> getImage(long imageId) {
         LOGGER.info("Retrieving Image {}", imageId);
+        ValidationUtils.checkId(imageId, "Image");
         if (imageId <= 0)
             throw new IllegalArgumentException("Image ID must be a positive integer");
         return imageDao.getImage(imageId);

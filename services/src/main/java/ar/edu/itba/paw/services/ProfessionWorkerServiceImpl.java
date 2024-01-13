@@ -36,12 +36,19 @@ public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
     @Transactional(readOnly = true)
     public List<Profession> getWorkerProfessions(long workerId) {
         LOGGER.info("Adding Professions for Worker {}", workerId);
+
+        ValidationUtils.checkWorkerId(workerId);
+
         return professionWorkerDao.getWorkerProfessions(workerId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public String getWorkerProfessionsAsString(long workerId) {
+        LOGGER.info("Getting Worker {} Professions as String", workerId);
+
+        ValidationUtils.checkWorkerId(workerId);
+
         List<Profession> professions = getWorkerProfessions(workerId);
         StringBuilder professionsString = new StringBuilder();
         for (Profession profession : professions) {
@@ -58,6 +65,9 @@ public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
     @Override
     public String createURLForProfessionFilter(String professions, String currentUrl, long neighborhoodId) {
         LOGGER.info("Creating URL for Profession Filter");
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
         // Extract the base URL (path) without query parameters
         String baseUrl;
         int queryIndex = currentUrl.indexOf('?');

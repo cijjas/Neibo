@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence.JunctionDaos;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Availability;
+import ar.edu.itba.paw.models.Entities.Resource;
 import ar.edu.itba.paw.models.Entities.Shift;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalLong;
 
 @Repository
@@ -35,6 +37,21 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
 
     // -------------------------------------------- AVAILABILITY SELECT ------------------------------------------------
 
+    @Override
+    public Optional<Availability> findAvailability(long availabilityId) {
+        LOGGER.debug("Selecting Availability with id {}", availabilityId);
+        return Optional.ofNullable(em.find(Availability.class, availabilityId));
+    }
+
+    @Override
+    public List<Availability> getAvailability(long id) {
+        LOGGER.debug("Selecting Availability for Amenity {}", id);
+        TypedQuery<Availability> query = em.createQuery("SELECT a FROM Availability a WHERE a.amenityAvailabilityId = :amenityAvailabilityId", Availability.class);
+        query.setParameter("amenityAvailabilityId", id);
+        return query.getResultList();
+    }
+
+    @Override
     public OptionalLong findAvailabilityId(long amenityId, long shiftId) {
         LOGGER.debug("Selecting Availability with amenityId {} and shiftId {}", amenityId, shiftId);
         TypedQuery<Long> query = em.createQuery("SELECT a.amenityAvailabilityId FROM Availability a WHERE a.shift.shiftId = :shiftId AND a.amenity.amenityId = :amenityId", Long.class);

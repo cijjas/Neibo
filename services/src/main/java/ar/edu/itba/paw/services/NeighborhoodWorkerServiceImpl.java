@@ -42,6 +42,8 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     @Override
     public void addWorkerToNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Adding Worker {} to Neighborhood {}", workerId, neighborhoodId);
+        ValidationUtils.checkIds(workerId, neighborhoodId, "Worker Area");
+
         neighborhoodWorkerDao.createWorkerArea(workerId, neighborhoodId);
 
         //send admin email notifying new worker
@@ -72,6 +74,8 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     @Transactional(readOnly = true)
     public Set<Neighborhood> getNeighborhoods(long workerId) {
         LOGGER.info("Getting Neighborhoods for Worker {}", workerId);
+        ValidationUtils.checkId(workerId, "Worker");
+
         return neighborhoodWorkerDao.getNeighborhoods(workerId);
     }
 
@@ -79,6 +83,8 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     @Transactional(readOnly = true)
     public List<Neighborhood> getOtherNeighborhoods(long workerId) {
         LOGGER.info("Getting Other Neighborhoods for Worker {}", workerId);
+        ValidationUtils.checkId(workerId, "Worker");
+
         List<Neighborhood> allNeighborhoods = neighborhoodDao.getNeighborhoods();
         Set<Neighborhood> workerNeighborhoods = neighborhoodWorkerDao.getNeighborhoods(workerId);
 
@@ -95,9 +101,11 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     @Override
     public void verifyWorkerInNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Verifying Worker {} in Neighborhood {}", workerId, neighborhoodId);
+        ValidationUtils.checkId(workerId, "Worker");
+        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+
         setNeighborhoodRole(workerId, WorkerRole.VERIFIED_WORKER, neighborhoodId);
-        User worker = userDao.findUserById(workerId).orElse(null);
-        assert worker != null;
+        User worker = userDao.findUserById(workerId).orElseThrow(()->  new NotFoundException("User Not Found"));
         String neighborhoodName = neighborhoodDao.findNeighborhoodById(worker.getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
         emailService.sendVerifiedNeighborMail(worker, neighborhoodName);
     }
@@ -105,17 +113,26 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     @Override
     public void rejectWorkerFromNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Rejecting Worker {} from Neighborhood {}", workerId, neighborhoodId);
+        ValidationUtils.checkId(workerId, "Worker");
+        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+
         setNeighborhoodRole(workerId, WorkerRole.REJECTED, neighborhoodId);
     }
 
     @Override
     public void unverifyWorkerFromNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Un-verifying Worker {} from Neighborhood {}", workerId, neighborhoodId);
+        ValidationUtils.checkId(workerId, "Worker");
+        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+
         setNeighborhoodRole(workerId, WorkerRole.UNVERIFIED_WORKER, neighborhoodId);
     }
 
     private void setNeighborhoodRole(long workerId, WorkerRole role, long neighborhoodId) {
         LOGGER.debug("Setting Worker {} role to {} in Neighborhood {}", workerId, role, neighborhoodId);
+        ValidationUtils.checkId(workerId, "Worker");
+        ValidationUtils.checkId(neighborhoodId, "Neighborhood");
+
         WorkerArea workerArea = neighborhoodWorkerDao.findWorkerArea(workerId, neighborhoodId).orElseThrow(()-> new NotFoundException("Worker Area Not Found"));
         workerArea.setRole(role);
     }
@@ -125,6 +142,8 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     @Override
     public void removeWorkerFromNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Removing Worker {} from Neighborhood {}", workerId, neighborhoodId);
+        ValidationUtils.checkIds(workerId, neighborhoodId, "Worker Area");
+
         neighborhoodWorkerDao.deleteWorkerArea(workerId, neighborhoodId);
     }
 }

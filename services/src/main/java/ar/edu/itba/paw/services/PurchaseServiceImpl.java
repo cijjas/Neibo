@@ -22,13 +22,21 @@ public class PurchaseServiceImpl implements PurchaseService {
     public PurchaseServiceImpl(PurchaseDao purchaseDao) {
         this.purchaseDao = purchaseDao;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public Purchase createPurchase(long productId, long userId, long unitsBought) {
         return purchaseDao.createPurchase(productId, userId, unitsBought);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public Optional<Purchase> findPurchase(long purchaseId) {
+
+        ValidationUtils.checkPurchaseId(purchaseId);
+
         return  purchaseDao.findPurchase(purchaseId);
     }
 
@@ -77,6 +85,8 @@ public class PurchaseServiceImpl implements PurchaseService {
             return 0;
         }
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     private int calculatePages(int totalItems, int size) {
         return (int) Math.ceil((double) totalItems / size);

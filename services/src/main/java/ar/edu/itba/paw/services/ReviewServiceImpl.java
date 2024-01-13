@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,8 +38,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public Optional<Review> findReviewById(long reviewId) {
         LOGGER.info("Finding Review with id {}", reviewId);
-        if (reviewId <= 0)
-            throw new IllegalArgumentException("Review ID must be a positive integer");
+
+        ValidationUtils.checkReviewId(reviewId);
+
         return reviewDao.findReviewById(reviewId);
     }
 
@@ -46,6 +48,9 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public List<Review> getReviews(long workerId) {
         LOGGER.info("Getting reviews for Worker {}", workerId);
+
+        ValidationUtils.checkWorkerId(workerId);
+
         return reviewDao.getReviews(workerId);
     }
 
@@ -53,6 +58,10 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public List<Review> getReviews(long workerId, int page, int size) {
         LOGGER.info("Getting reviews for Worker {}", workerId);
+
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkPageAndSize(page, size);
+
         return reviewDao.getReviews(workerId, page, size);
     }
 
@@ -60,17 +69,26 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public Optional<Float> getAvgRating(long workerId) {
         LOGGER.info("Getting Average Rating for Worker {}", workerId);
+
+        ValidationUtils.checkWorkerId(workerId);
+
         return reviewDao.getAvgRating(workerId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public int getReviewsCount(long workerId) {
+
+        ValidationUtils.checkWorkerId(workerId);
+
         return reviewDao.getReviewsCount(workerId);
     }
 
     @Override
     public int getReviewsTotalPages(long workerId, int size) {
+
+        ValidationUtils.checkWorkerId(workerId);
+
         return (int) Math.ceil((double) getReviewsCount(workerId) / size);
     }
 
@@ -78,6 +96,9 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void deleteReview(long reviewId) {
+
+        ValidationUtils.checkReviewId(reviewId);
+
         reviewDao.deleteReview(reviewId);
     }
 }

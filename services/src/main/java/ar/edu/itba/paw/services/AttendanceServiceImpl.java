@@ -24,25 +24,6 @@ public class AttendanceServiceImpl implements AttendanceService {
         this.attendanceDao = attendanceDao;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-    @Override
-    public Set<Attendance> getAttendance(long eventId, int page, int size) {
-        LOGGER.info("Getting Attendance for Event {}", eventId);
-        return attendanceDao.getAttendance(eventId, page, size);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Attendance> findAttendanceById(long attendanceId) {
-        if (attendanceId <= 0)
-            throw new IllegalArgumentException("Attendance ID must be a positive integer");
-        return attendanceDao.findAttendanceById(attendanceId);
-    }
-
-    @Override
-    public int getTotalAttendancePages(long eventId, int size) {
-        return (int) Math.ceil((double) attendanceDao.getAttendanceCount(eventId) / size);
-    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -55,8 +36,31 @@ public class AttendanceServiceImpl implements AttendanceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
+    @Transactional(readOnly = true)
+    public Optional<Attendance> findAttendanceById(long attendanceId) {
+        ValidationUtils.checkId(attendanceId, "Attendance");
+        return attendanceDao.findAttendanceById(attendanceId);
+    }
+
+    @Override
+    public Set<Attendance> getAttendance(long eventId, int page, int size) {
+        LOGGER.info("Getting Attendance for Event {}", eventId);
+        ValidationUtils.checkId(eventId, "Event");
+        ValidationUtils.checkPageAndSize(page, size);
+        return attendanceDao.getAttendance(eventId, page, size);
+    }
+
+    @Override
+    public int getTotalAttendancePages(long eventId, int size) {
+        return (int) Math.ceil((double) attendanceDao.getAttendanceCount(eventId) / size);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
     public void deleteAttendee(long userId, long eventId) {
         LOGGER.info("Removing User {} as Attendee for Event {}", userId, eventId);
+        ValidationUtils.checkIds(userId, eventId, "Attendance");
         attendanceDao.deleteAttendee(userId, eventId);
     }
 }

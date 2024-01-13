@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -39,14 +40,20 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public Request createRequest(long userId, long productId, String message) {
         LOGGER.info("User {} Requesting Product {}", userId, productId);
-        Product product = productDao.findProductById(productId).orElseThrow(() -> new IllegalStateException("Product not found"));
-        User sender = userDao.findUserById(userId).orElseThrow(() -> new IllegalStateException("User not found"));
+        Product product = productDao.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
+        User sender = userDao.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found"));
         emailService.sendNewRequestMail(product, sender, message);
         return requestDao.createRequest(userId, productId, message);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public List<Request> getRequestsByCriteria(long productId, long userId, int page, int size){
+
+        ValidationUtils.checkRequestId(productId, userId);
+        ValidationUtils.checkPageAndSize(page, size);
+
         if (userId > 0 && productId > 0) {
             return requestDao.getRequestsByProductAndUser(productId, userId, page, size);
         } else if (userId > 0) {
@@ -60,6 +67,9 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public int getRequestsCountByCriteria(long productId, long userId) {
+
+        ValidationUtils.checkRequestId(productId, userId);
+
         if (userId > 0 && productId > 0) {
             return requestDao.getRequestsCountByProductAndUser(productId, userId);
         } else if (userId > 0) {
@@ -106,6 +116,9 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public void markRequestAsFulfilled(long requestId) {
+
+        ValidationUtils.checkRequestId(requestId);
+
         Request request = requestDao.findRequest(requestId).orElseThrow(()-> new NotFoundException("Request Not Found"));
         request.setFulfilled(true);
     }
