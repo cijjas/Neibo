@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
-import {Amenity} from './amenity'
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Amenity } from './amenity'
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
@@ -10,19 +10,24 @@ export class AmenityService {
 
     constructor(private http: HttpClient) { }
 
-    public getAmenities(): Observable<Amenity[]> {
-        return this.http.get<Amenity[]>(`${this.apiServerUrl}/neighborhoods/1/amenities`)
+    public getAmenity(amenityId : number, neighborhoodId : number): Observable<Amenity> {
+        return this.http.get<Amenity>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities/${amenityId}`)
     }
 
-    public addAmenity(amenity: Amenity): Observable<Amenity> {
-        return this.http.post<Amenity>(`${this.apiServerUrl}/neighborhoods/1/amenities`, amenity)
+    public getAmenities(neighborhoodId : number, page : number, size : number): Observable<Amenity[]> {
+        const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+        return this.http.get<Amenity[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities`)
     }
 
-    public updateAmenity(amenity: Amenity): Observable<Amenity> {
-        return this.http.put<Amenity>(`${this.apiServerUrl}/neighborhoods/1/amenities/${amenity.amenityId}`, amenity)
+    public addAmenity(amenity: Amenity, neighborhoodId : number): Observable<Amenity> {
+        return this.http.post<Amenity>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities`, amenity)
     }
 
-    public deleteAmenity(amenityId: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiServerUrl}/neighborhoods/1/amenities/${amenityId}`)
+    public updateAmenity(amenity: Amenity, neighborhoodId : number): Observable<Amenity> {
+        return this.http.patch<Amenity>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities/${amenity.amenityId}`, amenity)
+    }
+
+    public deleteAmenity(amenityId: number, neighborhoodId : number): Observable<void> {
+        return this.http.delete<void>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities/${amenityId}`)
     }
 }

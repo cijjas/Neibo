@@ -31,7 +31,7 @@ public class ImageController {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findById(@QueryParam("id") final long id) {
+    public Response findById(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at images/{}", id);
         Optional<Image> image = is.getImage(id);
         if (!image.isPresent()) {
