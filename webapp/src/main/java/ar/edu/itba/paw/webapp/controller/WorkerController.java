@@ -52,7 +52,7 @@ public class WorkerController extends GlobalControllerAdvice {
             @QueryParam("workerRole") final WorkerRole workerRole,
             @QueryParam("workerStatus") final WorkerStatus workerStatus
     ) {
-        LOGGER.info("Listing Workers");
+        LOGGER.info("GET request arrived at workers");
         Set<Worker> workers = ws.getWorkersByCriteria(page, size, professions, getLoggedUser().getUserId(), workerRole, workerStatus);
 
         String baseUri = uriInfo.getBaseUri().toString() + "workers";
@@ -73,7 +73,7 @@ public class WorkerController extends GlobalControllerAdvice {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findWorker(@PathParam("id") final long id) {
-        LOGGER.info("Finding Worker with id {}", id);
+        LOGGER.info("GET request arrived at workers/{}", id);
         Optional<Worker> worker = ws.findWorkerById(id);
         if (!worker.isPresent()) {
             throw new NotFoundException("Worker Not Found");
@@ -84,7 +84,7 @@ public class WorkerController extends GlobalControllerAdvice {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createWorker(@Valid final WorkerSignupForm form) {
-        LOGGER.info("Creating Worker");
+        LOGGER.info("POST request arrived at workers");
         final Worker worker = ws.createWorker(form.getW_mail(), form.getW_name(), form.getW_surname(), form.getW_password(), form.getW_identification(), form.getPhoneNumber(), form.getAddress(), Language.ENGLISH, form.getProfessionIds(), form.getBusinessName());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(worker.getWorkerId())).build(); //esto esta bien o es el userId que necesita??
@@ -98,7 +98,7 @@ public class WorkerController extends GlobalControllerAdvice {
     public Response updateWorkerPartially(
             @PathParam("id") final long id,
             @Valid final WorkerUpdateForm partialUpdate) {
-        LOGGER.info("Updating Worker with id {}", id);
+        LOGGER.info("PATCH request arrived at workers/{}", id);
         final Worker worker = ws.updateWorkerPartially(id, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio());
         return Response.ok(WorkerDto.fromWorker(worker, uriInfo)).build();
     }

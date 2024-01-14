@@ -32,7 +32,7 @@ public class ProfessionController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listProfessions() {
-        LOGGER.info("Listing Professions");
+        LOGGER.info("GET request arrived at professions");
         List<ProfessionDto> professionDto = Arrays.stream(Professions.values())
                 .map(p -> ProfessionDto.fromProfession(p, uriInfo))
                 .collect(Collectors.toList());
@@ -44,7 +44,7 @@ public class ProfessionController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findProfession(@PathParam("id") final long id) {
-        LOGGER.info("Finding Profession with id {}", id);
+        LOGGER.info("GET request arrived at professions/{}", id);
         Professions profession = Professions.fromId((int) id);
 
         if (profession != null) {

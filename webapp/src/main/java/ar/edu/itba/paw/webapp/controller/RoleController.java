@@ -28,7 +28,7 @@ public class RoleController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listRoles() {
-        LOGGER.info("Listing Roles");
+        LOGGER.info("GET request arrived at roles");
         List<RoleDto> rolesDto = Arrays.stream(UserRole.values())
                 .map(ur -> RoleDto.fromRole(ur, uriInfo))
                 .collect(Collectors.toList());
@@ -40,7 +40,7 @@ public class RoleController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findRole(@PathParam("id") final long id) {
-        LOGGER.info("Finding Role with id {}", id);
+        LOGGER.info("GET request arrived at roles/{}", id);
         UserRole role = UserRole.fromId((int) id);
 
         if (role != null) {

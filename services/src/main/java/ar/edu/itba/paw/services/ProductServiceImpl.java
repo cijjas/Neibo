@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.DepartmentDao;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
@@ -42,7 +41,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product createProduct(long userId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, long units) {
         LOGGER.info("User {} Creating Product {}", userId, name);
-
         double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
         Long[] idArray = {0L, 0L, 0L};
         int pictureFilesLength = pictureFiles == null? 0 : pictureFiles.length;
@@ -66,98 +64,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductsByCriteria(long neighborhoodId, Department department, int page, int size) {
+    public List<Product> getProductsByCriteria(long neighborhoodId, String department, long userId, String productStatus, int page, int size) {
         LOGGER.info("Selecting Products by neighborhood {} and departments {}", neighborhoodId, department);
-
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        return productDao.getProductsByCriteria(neighborhoodId, department, page, size);
+        return productDao.getProductsByCriteria(neighborhoodId, department, userId, productStatus, page, size);
     }
 
     @Override
-    public int getProductsCountByCriteria(long neighborhoodId, Department department) {
+    public int getProductsCountByCriteria(long neighborhoodId, String department, long userId, String productStatus) {
         LOGGER.info("Counting Products by neighborhood {} and departments {}", neighborhoodId, department);
-
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        return productDao.getProductsCountByCriteria(neighborhoodId, department);
+        return productDao.getProductsCountByCriteria(neighborhoodId, department, userId, productStatus);
     }
 
     @Override
-    public int getProductsSellingCount(long userId) {
-        LOGGER.info("Counting Products Selling by user {}", userId);
-
-        ValidationUtils.checkUserId(userId);
-
-        return productDao.getProductsSellingCount(userId);
-    }
-
-    @Override
-    public int getProductsSoldCount(long userId) {
-        LOGGER.info("Counting Products Sold by user {}", userId);
-
-        ValidationUtils.checkUserId(userId);
-
-        return productDao.getProductsSoldCount(userId);
-    }
-
-    @Override
-    public int getProductsBoughtCount(long userId) {
-        LOGGER.info("Counting Products Bought by user {}", userId);
-
-        ValidationUtils.checkUserId(userId);
-
-        return productDao.getProductsBoughtCount(userId);
-    }
-
-    @Override
-    public List<Product> getProductsSelling(long userId, int page, int size) {
-        LOGGER.info("Selecting Products Selling by user {}", userId);
-
-        ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkPageAndSize(page, size);
-
-        return productDao.getProductsSelling(userId, page, size);
-    }
-
-    @Override
-    public List<Product> getProductsSold(long userId, int page, int size) {
-        LOGGER.info("Selecting Products Sold by user {}", userId);
-
-        ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkPageAndSize(page, size);
-
-        return productDao.getProductsSold(userId, page, size);
-    }
-
-    @Override
-    public List<Product> getProductsBought(long userId, int page, int size) {
-        LOGGER.info("Selecting Products Bought by user {}", userId);
-
-        ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkPageAndSize(page, size);
-
-        return productDao.getProductsBought(userId, page, size);
-    }
-
-    @Override
-    public int getProductsTotalPages(long neighborhoodId, int size, Department department){
-        return (int) Math.ceil((double) getProductsCountByCriteria(neighborhoodId, department) / size);
-    }
-
-    @Override
-    public int getProductsSellingTotalPages(long userId, int size){
-        return (int) Math.ceil((double) getProductsSellingCount(userId) / size);
-    }
-
-    @Override
-    public int getProductsSoldTotalPages(long userId, int size){
-        return (int) Math.ceil((double) getProductsSoldCount(userId) / size);
-    }
-
-    @Override
-    public int getProductsBoughtTotalPages(long userId, int size){
-        return (int) Math.ceil((double) getProductsBoughtCount(userId) / size);
+    public int getProductsTotalPages(long neighborhoodId, int size, String department, long userId, String productStatus){
+        return (int) Math.ceil((double) getProductsCountByCriteria(neighborhoodId, department, userId, productStatus) / size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -165,9 +87,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void restockProduct(long productId, long extraUnits) {
         LOGGER.info("Restocking Product {}", productId);
-
         ValidationUtils.checkProductId(productId);
-
         Product product = productDao.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
         product.setRemainingUnits(product.getRemainingUnits()+extraUnits);
     }
@@ -253,9 +173,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean deleteProduct(long productId) {
         LOGGER.info("Deleting Product {}", productId);
-
         ValidationUtils.checkProductId(productId);
-
         return productDao.deleteProduct(productId);
     }
 

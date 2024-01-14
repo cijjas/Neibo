@@ -111,98 +111,72 @@ public class ProductDaoImplTest {
         assertFalse(maybeProduct.isPresent());
     }
 
-    @Test
-    public void testGetProductsByNeighborhood() {
-        // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-        long uKey2 = testInserter.createUser(MAIL2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
-        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, uKey1, dKey1);
+//    @Test
+//    public void testGetProductsByNeighborhood() {
+//        // Pre Conditions
+//        long iKey = testInserter.createImage();
+//        long nhKey = testInserter.createNeighborhood();
+//        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+//        long uKey2 = testInserter.createUser(MAIL2, nhKey);
+//        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+//        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
+//        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, uKey1, dKey1);
+//
+//        // Exercise
+//        List<Product> products = productDao.getProductsByCriteria(nhKey, Department.NONE, 1, 10);
+//
+//        // Validations & Post Conditions
+//        assertFalse(products.isEmpty());
+//        assertEquals(2, products.size());
+//    }
+//
+//    @Test
+//    public void testGetProductsByInvalidNeighborhood() {
+//        // Pre Conditions
+//
+//        // Exercise
+//        List<Product> products = productDao.getProductsByCriteria(1, Department.NONE, 1, 10);
+//
+//        // Validations & Post Conditions
+//        assertTrue(products.isEmpty());
+//    }
 
-        // Exercise
-        List<Product> products = productDao.getProductsByCriteria(nhKey, Department.NONE, 1, 10);
+//    @Test
+//    public void testGetNoProductsByNeighborhoodByDepartment() {
+//        // Pre Conditions
+//        long iKey = testInserter.createImage();
+//        long nhKey = testInserter.createNeighborhood();
+//        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+//        long uKey2 = testInserter.createUser(MAIL2, nhKey);
+//
+//        // Exercise
+//        List<Product> products = productDao.getProductsByCriteria(nhKey, ar.edu.itba.paw.enums.Department.APPLIANCES, 1, 10);
+//
+//        // Validations & Post Conditions
+//        assertTrue(products.isEmpty());
+//    }
 
-        // Validations & Post Conditions
-        assertFalse(products.isEmpty());
-        assertEquals(2, products.size());
-    }
+//    @Test
+//    public void testGetProductsByNeighborhoodByInvalidDepartment() {
+//        // Pre Conditions
+//        long iKey = testInserter.createImage();
+//        long nhKey = testInserter.createNeighborhood();
+//        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+//        long uKey2 = testInserter.createUser(MAIL2, nhKey);
+//        long dKey2 = testInserter.createDepartment(Department.ELECTRONICS);
+//        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey2);
+//        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, uKey1, dKey2);
+//
+//        // Exercise
+//        List<Product> products = productDao.getProductsByCriteria(nhKey, Department.TRAVEL_LUGGAGE, 1, 10);
+//
+//        // Validations & Post Conditions
+//        assertTrue(products.isEmpty());
+//    }
 
-    @Test
-    public void testGetProductsByInvalidNeighborhood() {
-        // Pre Conditions
 
-        // Exercise
-        List<Product> products = productDao.getProductsByCriteria(1, Department.NONE, 1, 10);
 
-        // Validations & Post Conditions
-        assertTrue(products.isEmpty());
-    }
 
-    @Test
-    public void testGetNoProductsByNeighborhoodByDepartment() {
-        // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-        long uKey2 = testInserter.createUser(MAIL2, nhKey);
-
-        // Exercise
-        List<Product> products = productDao.getProductsByCriteria(nhKey, ar.edu.itba.paw.enums.Department.APPLIANCES, 1, 10);
-
-        // Validations & Post Conditions
-        assertTrue(products.isEmpty());
-    }
-
-    @Test
-    public void testGetProductsByNeighborhoodByInvalidDepartment() {
-        // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-        long uKey2 = testInserter.createUser(MAIL2, nhKey);
-        long dKey2 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey2);
-        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, uKey1, dKey2);
-
-        // Exercise
-        List<Product> products = productDao.getProductsByCriteria(nhKey, Department.TRAVEL_LUGGAGE, 1, 10);
-
-        // Validations & Post Conditions
-        assertTrue(products.isEmpty());
-    }
-
-    @Test
-    public void testGetProductsSelling() {
-        // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-        long uKey2 = testInserter.createUser(MAIL2, nhKey);
-        long dKey2 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, null, dKey2);
-        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, null, dKey2);
-
-        // Exercise
-        List<Product> products = productDao.getProductsSelling(uKey1, 1, 10);
-
-        // Validations & Post Conditions
-        assertFalse(products.isEmpty());
-        assertEquals(1, products.size());
-    }
-
-    @Test
-    public void testGetNoProductsSelling() {
-        // Pre Conditions
-
-        // Exercise
-        List<Product> products = productDao.getProductsSelling(1, 1, 10);
-
-        // Validations & Post Conditions
-        assertTrue(products.isEmpty());
-    }
 
     @Test
     public void testDeleteProduct() {

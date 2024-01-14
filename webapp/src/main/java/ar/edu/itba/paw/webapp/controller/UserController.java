@@ -43,7 +43,7 @@ public class UserController {
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("userRole") final UserRole userRole
     ) {
-        LOGGER.info("Listing Users in Neighborhood {}", neighborhoodId);
+        LOGGER.info("GET request arrived at neighborhoods/{}/users", neighborhoodId);
         final List<User> users = us.getUsersByCriteria(userRole, neighborhoodId, page, size);
         final List<UserDto> usersDto = users.stream()
                 .map(u -> UserDto.fromUser(u, uriInfo)).collect(Collectors.toList());
@@ -61,7 +61,7 @@ public class UserController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findUser(@PathParam("id") final long id) {
-        LOGGER.info("Finding User with id {}", id);
+        LOGGER.info("GET request arrived at neighborhoods/{}/users/{}", neighborhoodId, id);
         return Response.ok(UserDto.fromUser(us.findUserById(id)
                 .orElseThrow(() -> new NotFoundException("User Not Found")), uriInfo)).build();
     }
@@ -69,7 +69,7 @@ public class UserController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createUser(@Valid final SignupForm form) {
-        LOGGER.info("Creating User in Neighborhood {}", neighborhoodId);
+        LOGGER.info("POST request arrived at neighborhoods/{}/users", neighborhoodId);
         final User user = us.createNeighbor(form.getMail(), form.getPassword(), form.getName(), form.getSurname(), neighborhoodId, Language.ENGLISH, form.getIdentification());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(user.getUserId())).build();
@@ -83,7 +83,7 @@ public class UserController {
     public Response updateUserPartially(
             @PathParam("id") final long id,
             @Valid final UserUpdateForm partialUpdate) {
-        LOGGER.info("Updating User with id {}", id);
+        LOGGER.info("PATCH request arrived at neighborhoods/{}/users/{}", neighborhoodId, id);
         final User user = us.updateUser(id, partialUpdate.getEmail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), partialUpdate.getProfilePicture(), partialUpdate.getIdentification(), partialUpdate.getLanguageId(), partialUpdate.getUserRoleId());
         return Response.ok(UserDto.fromUser(user, uriInfo)).build();
     }

@@ -34,7 +34,7 @@ public class NeighborhoodController {
     public Response listNeighborhoods(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size) {
-        LOGGER.info("Listing Neighborhoods");
+        LOGGER.info("GET request arrived at neighborhoods/");
         final List<Neighborhood> neighborhoods = ns.getNeighborhoodsByCriteria(page, size);
         final List<NeighborhoodDto> neighborhoodsDto = neighborhoods.stream()
                 .map(n -> NeighborhoodDto.fromNeighborhood(n, uriInfo)).collect(Collectors.toList());
@@ -53,7 +53,7 @@ public class NeighborhoodController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findNeighborhood(@PathParam("id") final long id) {
-        LOGGER.info("Finding Neighborhood with id {}", id);
+        LOGGER.info("GET request arrived at neighborhoods/{}", id);
         return Response.ok(NeighborhoodDto.fromNeighborhood(ns.findNeighborhoodById(id)
                 .orElseThrow(() -> new NotFoundException("Neighborhood Not Found")), uriInfo)).build();
     }
@@ -61,7 +61,7 @@ public class NeighborhoodController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createNeighborhood(@Valid final NewNeighborhoodForm form) {
-        LOGGER.info("Creating Neighborhood");
+        LOGGER.info("POST request arrived at neighborhoods/");
         final Neighborhood neighborhood = ns.createNeighborhood(form.getName());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(neighborhood.getNeighborhoodId())).build();

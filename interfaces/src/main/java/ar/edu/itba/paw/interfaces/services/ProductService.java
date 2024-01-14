@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.enums.Department;
+import ar.edu.itba.paw.enums.ProductStatus;
 import ar.edu.itba.paw.models.Entities.Product;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,31 +13,14 @@ public interface ProductService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    int getProductsTotalPages(long neighborhoodId, int size, Department department);
-
-    int getProductsSellingTotalPages(long userId, int size);
-
-    int getProductsSoldTotalPages(long userId, int size);
-
-    int getProductsBoughtTotalPages(long userId, int size);
+    int getProductsTotalPages(long neighborhoodId, int size, String department, long userId, String productStatus);
 
     Optional<Product> findProductById(final long productId);
 
-    List<Product> getProductsByCriteria(long neighborhoodId, Department department, int page, int size);
 
-    int getProductsCountByCriteria(long neighborhoodId, Department department);
+    List<Product> getProductsByCriteria(long neighborhoodId, String department, long userId, String productStatus, int page, int size);
 
-    int getProductsSellingCount(long userId);
-
-    int getProductsSoldCount(long userId);
-
-    int getProductsBoughtCount(long userId);
-
-    List<Product> getProductsSelling(long userId, int page, int size);
-
-    List<Product> getProductsSold(long userId, int page, int size);
-
-    List<Product> getProductsBought(long userId, int page, int size);
+    int getProductsCountByCriteria(long neighborhoodId, String department, long userId, String productStatus);
 
     // -----------------------------------------------------------------------------------------------------------------
 

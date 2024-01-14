@@ -15,11 +15,7 @@ public interface PurchaseDao {
 
     Optional<Purchase> findPurchase(long purchaseId);
 
-    Set<Purchase> getPurchasesBySellerId(long userId, int page, int size);
+    Set<Purchase> getPurchasesByCriteria(long userId, String type, int page, int size);
 
-    int getPurchasesCountBySellerId(long userId);
-
-    Set<Purchase> getPurchasesByBuyerId(long userId, int page, int size);
-
-    int getPurchasesCountByBuyerId(long userId);
+    int getPurchasesByCriteriaCount(long userId, String type);
 }

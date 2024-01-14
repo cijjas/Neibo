@@ -114,7 +114,7 @@ public class PurchaseDaoImplTest {
         long pcKey = testInserter.createPurchase(pKey, uKey2, UNITS_BOUGHT);
 
         // Exercise
-        Set<Purchase> purchase = purchaseDao.getPurchasesBySellerId(uKey1, BASE_PAGE, BASE_SIZE);
+        Set<Purchase> purchase = purchaseDao.getPurchasesByCriteria(uKey1, "seller", BASE_PAGE, BASE_SIZE);
 
         // Validations & Post Conditions
         assertFalse(purchase.isEmpty());
@@ -126,7 +126,7 @@ public class PurchaseDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Set<Purchase> purchase = purchaseDao.getPurchasesBySellerId(1, BASE_PAGE, BASE_SIZE);
+        Set<Purchase> purchase = purchaseDao.getPurchasesByCriteria(1, "seller", BASE_PAGE, BASE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(purchase.isEmpty());
@@ -146,7 +146,7 @@ public class PurchaseDaoImplTest {
         long pcKey = testInserter.createPurchase(pKey, uKey2, UNITS_BOUGHT);
 
         // Exercise
-        Set<Purchase> purchase = purchaseDao.getPurchasesByBuyerId(uKey2, BASE_PAGE, BASE_SIZE);
+        Set<Purchase> purchase = purchaseDao.getPurchasesByCriteria(uKey2, "buyer", BASE_PAGE, BASE_SIZE);
 
         // Validations & Post Conditions
         assertFalse(purchase.isEmpty());
@@ -158,7 +158,7 @@ public class PurchaseDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Set<Purchase> purchase = purchaseDao.getPurchasesByBuyerId(1, BASE_PAGE, BASE_SIZE);
+        Set<Purchase> purchase = purchaseDao.getPurchasesByCriteria(1, "buyer", BASE_PAGE, BASE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(purchase.isEmpty());

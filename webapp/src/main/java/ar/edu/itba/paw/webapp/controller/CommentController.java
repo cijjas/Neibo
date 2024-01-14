@@ -47,7 +47,7 @@ public class CommentController extends GlobalControllerAdvice{
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
-        LOGGER.info("Listing Comments for Post {}", postId);
+        LOGGER.info("GET request arrived at neighborhoods/{}/posts/{}/comments", neighborhoodId, postId);
         final List<Comment> comments = cs.getCommentsByPostId(postId, page, size);
         final List<CommentDto> commentsDto = comments.stream()
                 .map(c -> CommentDto.fromComment(c, uriInfo)).collect(Collectors.toList());
@@ -64,7 +64,7 @@ public class CommentController extends GlobalControllerAdvice{
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createComment(@Valid final CommentForm form) {
-        LOGGER.info("Creating Comment on Post {}", postId);
+        LOGGER.info("POST request arrived at neighborhoods/{}/posts/{}/comments", neighborhoodId, postId);
         final Comment comment = cs.createComment(form.getComment(), getLoggedUser().getUserId(), postId);
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(comment.getCommentId())).build();
