@@ -38,13 +38,13 @@ public class ShiftDaoImpl implements ShiftDao {
     // ----------------------------------------------- SHIFTS SELECT ---------------------------------------------------
 
     @Override
-    public Optional<Shift> findShiftById(long shiftId) {
+    public Optional<Shift> findShift(long shiftId) {
         LOGGER.debug("Selecting Shift with shiftId {}", shiftId);
         return Optional.ofNullable(em.find(Shift.class, shiftId));
     }
 
     @Override
-    public Optional<Shift> findShiftId(long startTime, long dayId) {
+    public Optional<Shift> findShift(long startTime, long dayId) {
         LOGGER.debug("Selecting Shift with startTime {} and dayId {}", startTime, dayId);
         String jpql = "SELECT s FROM Shift s " +
                 "JOIN s.day d " +
@@ -94,7 +94,7 @@ public class ShiftDaoImpl implements ShiftDao {
     }
 
     @Override
-    public List<Shift> getAmenityShifts(long amenityId) {
+    public List<Shift> getShifts(long amenityId) {
         LOGGER.debug("Selecting Weekly Available Shifts for Amenity {}", amenityId);
 
         String hql = "SELECT s FROM Shift s " +

@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -41,8 +40,8 @@ public class RequestServiceImpl implements RequestService {
     public Request createRequest(long userId, long productId, String message) {
         LOGGER.info("User {} Requesting Product {}", userId, productId);
 
-        Product product = productDao.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
-        User sender = userDao.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        Product product = productDao.findProduct(productId).orElseThrow(() -> new NotFoundException("Product not found"));
+        User sender = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User not found"));
         emailService.sendNewRequestMail(product, sender, message);
         return requestDao.createRequest(userId, productId, message);
     }
@@ -50,23 +49,28 @@ public class RequestServiceImpl implements RequestService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Request> getRequestsByCriteria(long productId, long userId, int page, int size){
+    public List<Request> getRequests(long productId, long userId, int page, int size){
 
         ValidationUtils.checkRequestId(productId, userId);
         ValidationUtils.checkPageAndSize(page, size);
 
-        return requestDao.getRequestsByCriteria(productId, userId, page, size);
+        return requestDao.getRequests(productId, userId, page, size);
     }
 
     @Override
-    public int getRequestsCountByCriteria(long productId, long userId) {
+    public int countRequests(long productId, long userId) {
 
 //        ValidationUtils.checkRequestId(productId, userId);
 
         if(userId <= 0 && productId <= 0) {
             throw new NotFoundException("Invalid combination of parameters.");
         }
-        return requestDao.getRequestsCountByCriteria(productId, userId);
+        return requestDao.countRequests(productId, userId);
+    }
+
+    @Override
+    public int calculateRequestPages(long productId, long userId, int size) {
+        return PaginationUtils.calculatePages(requestDao.countRequests(productId, userId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

@@ -10,9 +10,7 @@ public interface TagService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    List<Tag> getTags(long neighborhoodId);
-
-    List<Tag> getTagsByCriteria(Long postId, Long neighborhoodId, int page, int size);
+    List<Tag> getTags(Long postId, Long neighborhoodId, int page, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -20,7 +18,7 @@ public interface TagService {
 
     String createURLForTagFilter(String tags, String currentUrl, long neighborhoodId);
 
-    int getTotalTagPages(long neighborhoodId, int size);
+    int calculateTagPages(Long postId, Long neighborhoodId, int size);
 
-    int getTotalTagPagesByCriteria(Long postId, Long neighborhoodId, int size);
+    int countTags(Long postId, Long neighborhoodId);
 }

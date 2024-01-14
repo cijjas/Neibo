@@ -66,7 +66,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
                     String[] shiftParts = shiftDescription.split("-");
                     long dayId = Long.parseLong(shiftParts[0]);
                     long timeId = Long.parseLong(shiftParts[1]);
-                    Optional<Shift> existingShift = shiftDao.findShiftId(timeId, dayId);
+                    Optional<Shift> existingShift = shiftDao.findShift(timeId, dayId);
                     if (existingShift.isPresent()) {
                         return existingShift.get().getShiftId();
                     } else {
@@ -77,7 +77,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
                 .collect(Collectors.toList());
 
         // Get the old shift IDs
-        List<Long> oldShiftIds = shiftDao.getAmenityShifts(amenityId).stream()
+        List<Long> oldShiftIds = shiftDao.getShifts(amenityId).stream()
                 .map(Shift::getShiftId)
                 .collect(Collectors.toList());
 

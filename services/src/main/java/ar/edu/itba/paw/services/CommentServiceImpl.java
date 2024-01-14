@@ -40,8 +40,8 @@ public class CommentServiceImpl implements CommentService {
     public Comment createComment(String comment, long userId, long postId) {
         LOGGER.info("Creating Comment {} from User {} for Post {}", comment, userId, postId);
 
-        Post post = postService.findPostById(postId).orElseThrow(()-> new NotFoundException("Post Not Found"));
-        emailService.sendNewCommentMail(post, userService.getNeighborsSubscribedByPostId(postId));
+        Post post = postService.findPost(postId).orElseThrow(()-> new NotFoundException("Post Not Found"));
+        emailService.sendNewCommentMail(post, userService.getNeighborsSubscribed(postId));
         return commentDao.createComment(comment, userId, postId);
     }
 
@@ -49,23 +49,23 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Comment> findCommentById(long commentId) {
+    public Optional<Comment> findComment(long commentId) {
         LOGGER.info("Finding Comment {}", commentId);
 
         ValidationUtils.checkCommentId(commentId);
 
-        return commentDao.findCommentById(commentId);
+        return commentDao.findComment(commentId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Comment> getCommentsByPostId(long postId, int page, int size) {
+    public List<Comment> getComments(long postId, int page, int size) {
         LOGGER.info("Finding Comments for Post {}", postId);
 
         ValidationUtils.checkCommentId(postId);
         ValidationUtils.checkPageAndSize(page, size);
 
-        return commentDao.getCommentsByPostId(postId, page, size);
+        return commentDao.getComments(postId, page, size);
     }
 
     // ---------------------------------------------------
@@ -75,7 +75,7 @@ public class CommentServiceImpl implements CommentService {
     public int countComments(long postId) {
         LOGGER.info("Getting Quantity of Comments for Post {}", postId);
 
-        return commentDao.getCommentsCountByPostId(postId);
+        return commentDao.countComments(postId);
     }
 
     @Transactional(readOnly = true)
@@ -85,6 +85,6 @@ public class CommentServiceImpl implements CommentService {
         ValidationUtils.checkCommentId(commentId);
         ValidationUtils.checkSize(size);
 
-        return PaginationUtils.calculatePages(commentDao.getCommentsCountByPostId(commentId), size);
+        return PaginationUtils.calculatePages(commentDao.countComments(commentId), size);
     }
 }

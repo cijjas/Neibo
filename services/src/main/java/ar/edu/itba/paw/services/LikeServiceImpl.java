@@ -1,11 +1,8 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.LikeDao;
 import ar.edu.itba.paw.interfaces.services.LikeService;
 import ar.edu.itba.paw.models.Entities.Like;
-import ar.edu.itba.paw.models.Entities.Post;
-import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +26,7 @@ public class LikeServiceImpl implements LikeService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Like addLikeToPost(long postId, long userId) {
+    public Like createLike(long postId, long userId) {
         LOGGER.info("Liking Post {} due to User {}", postId, userId);
 
         return likeDao.createLike(postId, userId);
@@ -38,20 +35,20 @@ public class LikeServiceImpl implements LikeService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Optional<Like> findLikeById(long likeId) {
+    public Optional<Like> findLike(long likeId) {
         LOGGER.info("Finding Like with Id {}", likeId);
 
         ValidationUtils.checkLikeId(likeId);
 
-        return likeDao.findLikeById(likeId);
+        return likeDao.findLike(likeId);
     }
 
     @Override
-    public List<Like> getLikesByCriteria(long neighborhoodId, long postId, long userId, int page, int size){
+    public List<Like> getLikes(long neighborhoodId, long postId, long userId, int page, int size){
         ValidationUtils.checkNegativeLikeIds(postId, userId);
         ValidationUtils.checkPageAndSize(page, size);
 
-        return likeDao.getLikesByCriteria(postId, userId, neighborhoodId, page, size);
+        return likeDao.getLikes(postId, userId, neighborhoodId, page, size);
     }
 
     @Override
@@ -66,20 +63,26 @@ public class LikeServiceImpl implements LikeService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
+
     @Override
-    public int getLikePagesByCriteria(long neighborhoodId, long postId, long userId, int size) {
+    public int countLikes(long neighborhoodId, long postId, long userId) {
+        return likeDao.countLikes(postId, userId, neighborhoodId);
+    }
+
+    @Override
+    public int calculateLikePages(long neighborhoodId, long postId, long userId, int size) {
 
         ValidationUtils.checkNegativeLikeIds(postId, userId);
         ValidationUtils.checkSize(size);
 
-        return (int) Math.ceil((double) likeDao.getLikesCountByCriteria(postId, userId, neighborhoodId) / size);
+        return PaginationUtils.calculatePages(likeDao.countLikes(postId, userId, neighborhoodId), size);
     }
 
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void removeLikeFromPost(long postId, long userId) {
+    public void deleteLike(long postId, long userId) {
         LOGGER.info("Removing Like from Post {} given by User {}", postId, userId);
 
         ValidationUtils.checkLikeIds(postId, userId);

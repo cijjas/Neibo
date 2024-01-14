@@ -33,13 +33,13 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     // ----------------------------------------- NEIGHBORHOODS SELECT --------------------------------------------------
 
     @Override
-    public Optional<Neighborhood> findNeighborhoodById(long id) {
+    public Optional<Neighborhood> findNeighborhood(long id) {
         LOGGER.debug("Selecting Neighborhood with id {}", id);
         return Optional.ofNullable(em.find(Neighborhood.class,  id));
     }
 
     @Override
-    public Optional<Neighborhood> findNeighborhoodByName(String name) {
+    public Optional<Neighborhood> findNeighborhood(String name) {
         LOGGER.debug("Selecting Neighborhood with name {}", name);
         TypedQuery<Neighborhood> query = em.createQuery("FROM Neighborhood WHERE neighborhoodname = :neighborhoodName", Neighborhood.class);
         query.setParameter("neighborhoodName", name);
@@ -55,7 +55,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     }
 
     @Override
-    public List<Neighborhood> getNeighborhoodsByCriteria(int page, int size) {
+    public List<Neighborhood> getNeighborhoods(int page, int size) {
         LOGGER.debug("Selecting All Neighborhoods");
         String jpql = "SELECT n FROM Neighborhood n";
         TypedQuery<Neighborhood> query = em.createQuery(jpql, Neighborhood.class);

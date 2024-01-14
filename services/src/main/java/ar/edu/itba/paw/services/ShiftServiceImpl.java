@@ -44,7 +44,7 @@ public class ShiftServiceImpl implements ShiftService {
 
         ValidationUtils.checkShiftId(startTime, dayId);
 
-        return shiftDao.findShiftId(startTime, dayId);
+        return shiftDao.findShift(startTime, dayId);
     }
 
     @Override
@@ -62,14 +62,14 @@ public class ShiftServiceImpl implements ShiftService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Shift> getAmenityShifts(long amenityId) {
+    public List<Shift> getShifts(long amenityId) {
 
         ValidationUtils.checkAmenityId(amenityId);
 
-        return shiftDao.getAmenityShifts(amenityId);
+        return shiftDao.getShifts(amenityId);
     }
 
-    public List<Shift> getShiftsByCriteria(long amenityId, long dayId, Date date) {
+    public List<Shift> getShifts(long amenityId, long dayId, Date date) {
 
         ValidationUtils.checkAmenityId(amenityId);
 
@@ -81,7 +81,7 @@ public class ShiftServiceImpl implements ShiftService {
             return shiftDao.getShifts(amenityId, dayId, null);
         } else {
             // No specific criteria provided, fetch all shifts
-            return shiftDao.getAmenityShifts(amenityId);
+            return shiftDao.getShifts(amenityId);
         }
     }
 }

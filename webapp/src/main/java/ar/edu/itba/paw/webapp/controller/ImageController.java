@@ -2,17 +2,13 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Entities.Image;
-import ar.edu.itba.paw.models.Entities.Post;
-import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.ImageDto;
-import ar.edu.itba.paw.webapp.form.PublishForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -33,7 +29,7 @@ public class ImageController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findById(@QueryParam("id") final long id) {
         LOGGER.info("GET request arrived at images/{}", id);
-        Optional<Image> image = is.getImage(id);
+        Optional<Image> image = is.findImage(id);
         if (!image.isPresent()) {
             throw new NotFoundException("Image not found");
         }

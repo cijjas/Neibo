@@ -112,7 +112,7 @@ public class PostDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
-        Optional<Post> maybePost = postDao.findPostById(pKey);
+        Optional<Post> maybePost = postDao.findPost(pKey);
 
         // Validations
         assertTrue(maybePost.isPresent());
@@ -123,7 +123,7 @@ public class PostDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<Post> maybePost = postDao.findPostById(1);
+        Optional<Post> maybePost = postDao.findPost(1);
 
         // Validations
         assertFalse(maybePost.isPresent());
@@ -135,7 +135,7 @@ public class PostDaoImplTest {
         populatePosts();
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(null, BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1, PostStatus.none, 0);
+        List<Post> retrievedPosts = postDao.getPosts(null, BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1, PostStatus.none, 0);
 
         // Validations
         assertEquals(2, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts
@@ -147,7 +147,7 @@ public class PostDaoImplTest {
         populatePosts();
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_1, BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1, PostStatus.none, 0);
+        List<Post> retrievedPosts = postDao.getPosts(CHANNEL_NAME_1, BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1, PostStatus.none, 0);
 
 
         // Validations
@@ -162,7 +162,7 @@ public class PostDaoImplTest {
         TAG_LIST.add(TAG_NAME_1);
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_1, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey1, PostStatus.none, 0);
+        List<Post> retrievedPosts = postDao.getPosts(CHANNEL_NAME_1, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey1, PostStatus.none, 0);
 
         // Validations
         assertEquals(1, retrievedPosts.size());
@@ -176,7 +176,7 @@ public class PostDaoImplTest {
         TAG_LIST.add(TAG_NAME_2);
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey2, PostStatus.none, 0);
+        List<Post> retrievedPosts = postDao.getPosts(CHANNEL_NAME_2, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey2, PostStatus.none, 0);
 
         // Validations
         assertEquals(2, retrievedPosts.size());
@@ -190,7 +190,7 @@ public class PostDaoImplTest {
         TAG_LIST.add(TAG_NAME_2);
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, BASE_PAGE, 1, TAG_LIST, nhKey2, PostStatus.none, 0);
+        List<Post> retrievedPosts = postDao.getPosts(CHANNEL_NAME_2, BASE_PAGE, 1, TAG_LIST, nhKey2, PostStatus.none, 0);
 
         // Validations
         assertEquals(1, retrievedPosts.size());
@@ -204,7 +204,7 @@ public class PostDaoImplTest {
         TAG_LIST.add(TAG_NAME_2);
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPostsByCriteria(CHANNEL_NAME_2, 2, 1, TAG_LIST, nhKey2, PostStatus.none, 0);
+        List<Post> retrievedPosts = postDao.getPosts(CHANNEL_NAME_2, 2, 1, TAG_LIST, nhKey2, PostStatus.none, 0);
 
         // Validations
         assertEquals(1, retrievedPosts.size());

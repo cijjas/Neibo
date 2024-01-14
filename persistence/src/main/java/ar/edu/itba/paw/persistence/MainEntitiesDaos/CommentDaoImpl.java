@@ -38,14 +38,14 @@ public class CommentDaoImpl implements CommentDao {
     // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
 
     @Override
-    public Optional<Comment> findCommentById(long commentId) {
+    public Optional<Comment> findComment(long commentId) {
         LOGGER.debug("Selecting Comments with commentId {}", commentId);
         Comment comment = em.find(Comment.class, commentId);
         return Optional.ofNullable(comment);
     }
 
     @Override
-    public List<Comment> getCommentsByPostId(long postId, int page, int size) {
+    public List<Comment> getComments(long postId, int page, int size) {
         LOGGER.debug("Selecting Comments from Post {}", postId);
 
         TypedQuery<Long> idQuery = em.createQuery("SELECT c.commentId FROM Comment c " +
@@ -69,7 +69,7 @@ public class CommentDaoImpl implements CommentDao {
     // ---------------------------------------------------
 
     @Override
-    public int getCommentsCountByPostId(long id) {
+    public int countComments(long id) {
         LOGGER.debug("Selecting Comments Count from Post {}", id);
         Long count = (Long) em.createQuery("SELECT COUNT(c) FROM Comment c " +
                         "WHERE c.post.postId = :postId")

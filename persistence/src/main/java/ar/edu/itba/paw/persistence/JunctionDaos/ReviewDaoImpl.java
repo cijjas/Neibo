@@ -38,7 +38,7 @@ public class ReviewDaoImpl implements ReviewDao {
     // ---------------------------------------------- REVIEWS SELECT ---------------------------------------------------
 
     @Override
-    public Optional<Review> findReviewById(long reviewId) {
+    public Optional<Review> findReview(long reviewId) {
         LOGGER.debug("Selecting Review with reviewId {}", reviewId);
         return Optional.ofNullable(em.find(Review.class, reviewId));
     }
@@ -74,7 +74,7 @@ public class ReviewDaoImpl implements ReviewDao {
     // ---------------------------------------------------
 
     @Override
-    public int getReviewsCount(long workerId) {
+    public int countReviews(long workerId) {
         LOGGER.debug("Selecting Review Count for Worker {}", workerId);
         TypedQuery<Long> query = em.createQuery("SELECT COUNT(*) FROM Review r WHERE r.worker.user.userId = :workerId", Long.class);
         query.setParameter("workerId", workerId);

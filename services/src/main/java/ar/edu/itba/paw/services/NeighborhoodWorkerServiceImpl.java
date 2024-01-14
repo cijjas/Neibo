@@ -45,7 +45,7 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
 
         neighborhoodWorkerDao.createWorkerArea(workerId, neighborhoodId);
         //send admin email notifying new worker
-        User worker = userDao.findUserById(workerId).orElse(null);
+        User worker = userDao.findUser(workerId).orElse(null);
         assert worker != null;
         emailService.sendNewUserMail(neighborhoodId, worker.getName(), UserRole.WORKER);
     }
@@ -106,8 +106,8 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         setNeighborhoodRole(workerId, WorkerRole.VERIFIED_WORKER, neighborhoodId);
-        User worker = userDao.findUserById(workerId).orElseThrow(()->  new NotFoundException("User Not Found"));
-        String neighborhoodName = neighborhoodDao.findNeighborhoodById(worker.getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
+        User worker = userDao.findUser(workerId).orElseThrow(()->  new NotFoundException("User Not Found"));
+        String neighborhoodName = neighborhoodDao.findNeighborhood(worker.getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
         emailService.sendVerifiedNeighborMail(worker, neighborhoodName);
     }
 

@@ -15,11 +15,11 @@ public interface AttendanceDao {
 
     Set<Attendance> getAttendance(long eventId, int page, int size);
 
-    Optional<Attendance> findAttendanceById(long attendanceId);
+    Optional<Attendance> findAttendance(long attendanceId);
 
     // ---------------------------------------------------
 
-    int getAttendanceCount(long eventId);
+    int countAttendance(long eventId);
 
     // ---------------------------------------------- ATTENDANCE DELETE ------------------------------------------------
 

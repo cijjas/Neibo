@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.InquiryService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Inquiry;
+import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.InquiryDto;
 import ar.edu.itba.paw.webapp.form.QuestionForm;
 import org.slf4j.Logger;
@@ -47,7 +48,7 @@ public class InquiryController extends GlobalControllerAdvice{
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size) {
         LOGGER.info("GET request arrived at neighborhoods/{}/products/{}/inquiries", neighborhoodId, productId);
-        final List<Inquiry> inquiries = is.getInquiriesByProductAndCriteria(productId, page, size);
+        final List<Inquiry> inquiries = is.getInquiries(productId, page, size);
         final List<InquiryDto> inquiriesDto = inquiries.stream()
                 .map(i -> InquiryDto.fromInquiry(i, uriInfo)).collect(Collectors.toList());
 
@@ -58,6 +59,15 @@ public class InquiryController extends GlobalControllerAdvice{
         return Response.ok(new GenericEntity<List<InquiryDto>>(inquiriesDto){})
                 .links(links)
                 .build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response findInquiry(@PathParam("id") final long id) {
+        LOGGER.info("GET request arrived at neighborhoods/{}/products/{}/inquiries/{}", neighborhoodId, productId,id);
+        return Response.ok(InquiryDto.fromInquiry(is.findInquiry(id)
+                .orElseThrow(() -> new NotFoundException("Inquiry Not Found")), uriInfo)).build();
     }
 
     @POST

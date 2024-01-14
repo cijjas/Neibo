@@ -13,11 +13,11 @@ public interface InquiryDao {
 
     // ---------------------------------------------- INQUIRY INSERT ---------------------------------------------------
 
-    Optional<Inquiry> findInquiryById(final long inquiryId);
+    Optional<Inquiry> findInquiry(final long inquiryId);
 
-    List<Inquiry> getInquiriesByProductAndCriteria(long productId, int page, int size);
+    List<Inquiry> getInquiries(long productId, int page, int size);
 
     // ---------------------------------------------------
 
-    int getInquiriesCountByProduct(long productId);
+    int countInquiries(long productId);
 }

@@ -70,7 +70,7 @@ public class ImageDaoImplTest {
         long iKey = testInserter.createImage();
 
         // Exercise
-        Optional<Image> maybeImage = imageDao.getImage(iKey);
+        Optional<Image> maybeImage = imageDao.findImage(iKey);
 
         // Validations & Post Conditions
         assertTrue(maybeImage.isPresent());
@@ -81,7 +81,7 @@ public class ImageDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<Image> maybeImage = imageDao.getImage(1);
+        Optional<Image> maybeImage = imageDao.findImage(1);
 
         // Validations & Post Conditions
         assertFalse(maybeImage.isPresent());

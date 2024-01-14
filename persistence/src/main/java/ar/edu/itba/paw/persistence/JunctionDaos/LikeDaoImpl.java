@@ -34,7 +34,7 @@ public class LikeDaoImpl implements LikeDao {
     // -------------------------------------------------- LIKES SELECT -------------------------------------------------
 
     @Override
-    public List<Like> getLikesByCriteria(long postId, long userId, long neighborhoodId, int page, int size) {
+    public List<Like> getLikes(long postId, long userId, long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Likes by Criteria");
         TypedQuery<Like> query = null;
 
@@ -57,7 +57,7 @@ public class LikeDaoImpl implements LikeDao {
     }
 
     @Override
-    public int getLikesCountByCriteria(long postId, long userId, long neighborhoodId) {
+    public int countLikes(long postId, long userId, long neighborhoodId) {
         LOGGER.debug("Selecting Likes Count by Criteria");
         TypedQuery<Long> query = null;
         if(userId > 0) {
@@ -87,7 +87,7 @@ public class LikeDaoImpl implements LikeDao {
     }
 
     @Override
-    public Optional<Like> findLikeById(long likeId) {
+    public Optional<Like> findLike(long likeId) {
         LOGGER.debug("Selecting Like with Id {}", likeId);
         return Optional.ofNullable(em.find(Like.class, likeId));
     }

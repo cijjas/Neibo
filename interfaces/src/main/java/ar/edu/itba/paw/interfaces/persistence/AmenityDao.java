@@ -13,13 +13,13 @@ public interface AmenityDao {
 
     // --------------------------------------------- AMENITIES SELECT --------------------------------------------------
 
-    Optional<Amenity> findAmenityById(long amenityId);
+    Optional<Amenity> findAmenity(long amenityId);
 
     List<Amenity> getAmenities(long neighborhoodId, int page, int size);
 
     // ---------------------------------------------------
 
-    int getAmenitiesCount(long neighborhoodId);
+    int countAmenities(long neighborhoodId);
 
     // --------------------------------------------- AMENITIES DELETE --------------------------------------------------
 

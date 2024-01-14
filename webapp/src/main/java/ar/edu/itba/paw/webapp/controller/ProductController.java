@@ -48,12 +48,12 @@ public class ProductController extends GlobalControllerAdvice {
             @QueryParam("productStatus") final String productStatus // BOUGHT/SOLD/SELLING
             ) {
         LOGGER.info("GET request arrived at neighborhoods/{}/products", neighborhoodId);
-        final List<Product> products = ps.getProductsByCriteria(neighborhoodId, department, userId, productStatus, page, size);
+        final List<Product> products = ps.getProducts(neighborhoodId, department, userId, productStatus, page, size);
         final List<ProductDto> productsDto = products.stream()
                 .map(p -> ProductDto.fromProduct(p, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/products";
-        int totalProductPages = ps.getProductsTotalPages(neighborhoodId, size, department, userId, productStatus);
+        int totalProductPages = ps.calculateProductPages(neighborhoodId, size, department, userId, productStatus);
         Link[] links = createPaginationLinks(baseUri, page, size, totalProductPages);
 
         return Response.ok(new GenericEntity<List<ProductDto>>(productsDto){})
@@ -66,7 +66,7 @@ public class ProductController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findProduct(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived neighborhoods/{}/products/{}", neighborhoodId, id);
-        return Response.ok(ProductDto.fromProduct(ps.findProductById(id)
+        return Response.ok(ProductDto.fromProduct(ps.findProduct(id)
                 .orElseThrow(() -> new NotFoundException("Product Not Found")), uriInfo)).build();
     }
 

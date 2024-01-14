@@ -42,7 +42,7 @@ public class InquiryServiceImpl implements InquiryService {
         LOGGER.info("User {} Inquiring on Product {}", userId, productId);
 
         //Send email to seller
-        Product product = productDao.findProductById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
+        Product product = productDao.findProduct(productId).orElseThrow(() -> new NotFoundException("Product not found"));
         User receiver = product.getSeller();
         emailService.sendInquiryMail(receiver, product, message, false);
 
@@ -52,28 +52,28 @@ public class InquiryServiceImpl implements InquiryService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Optional<Inquiry> findInquiryById(long inquiryId) {
+    public Optional<Inquiry> findInquiry(long inquiryId) {
 
         ValidationUtils.checkInquiryId(inquiryId);
 
-        return inquiryDao.findInquiryById(inquiryId);
+        return inquiryDao.findInquiry(inquiryId);
     }
 
 
     @Override
-    public List<Inquiry> getInquiriesByProductAndCriteria(long productId, int page, int size) {
+    public List<Inquiry> getInquiries(long productId, int page, int size) {
 
         ValidationUtils.checkProductId(productId);
         ValidationUtils.checkPageAndSize(page, size);
 
-        return inquiryDao.getInquiriesByProductAndCriteria(productId, page, size);
+        return inquiryDao.getInquiries(productId, page, size);
     }
 
     // ---------------------------------------------------
 
     @Override
     public int countInquiries(long productId) {
-        return inquiryDao.getInquiriesCountByProduct(productId);
+        return inquiryDao.countInquiries(productId);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class InquiryServiceImpl implements InquiryService {
         ValidationUtils.checkProductId(productId);
         ValidationUtils.checkSize(size);
 
-        return PaginationUtils.calculatePages(inquiryDao.getInquiriesCountByProduct(productId), size);
+        return PaginationUtils.calculatePages(inquiryDao.countInquiries(productId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -94,7 +94,7 @@ public class InquiryServiceImpl implements InquiryService {
         ValidationUtils.checkInquiryId(inquiryId);
 
         //Send email to inquirer
-        Inquiry inquiry = inquiryDao.findInquiryById(inquiryId).orElseThrow(() -> new NotFoundException("Inquiry not found"));
+        Inquiry inquiry = inquiryDao.findInquiry(inquiryId).orElseThrow(() -> new NotFoundException("Inquiry not found"));
         inquiry.setReply(reply);
 
         Product product = inquiry.getProduct();

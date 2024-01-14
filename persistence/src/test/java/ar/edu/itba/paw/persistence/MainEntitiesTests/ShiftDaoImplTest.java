@@ -74,7 +74,7 @@ public class ShiftDaoImplTest {
         long shiftKey = testInserter.createShift(dKey, tKey);
 
         // Exercise
-        Optional<Shift> foundShift = shiftDao.findShiftById(shiftKey);
+        Optional<Shift> foundShift = shiftDao.findShift(shiftKey);
 
         // Validations & Post Conditions
         assertTrue(foundShift.isPresent());
@@ -85,7 +85,7 @@ public class ShiftDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<Shift> foundShift = shiftDao.findShiftById(1);
+        Optional<Shift> foundShift = shiftDao.findShift(1);
 
         // Validations & Post Conditions
         assertFalse(foundShift.isPresent());
@@ -99,7 +99,7 @@ public class ShiftDaoImplTest {
         testInserter.createShift(dKey, tKey);
 
         // Exercise
-        Optional<Shift> foundShift = shiftDao.findShiftId(tKey, dKey);
+        Optional<Shift> foundShift = shiftDao.findShift(tKey, dKey);
 
         // Validations & Post Conditions
         assertTrue(foundShift.isPresent());
@@ -110,7 +110,7 @@ public class ShiftDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<Shift> foundShift = shiftDao.findShiftId(1, 1);
+        Optional<Shift> foundShift = shiftDao.findShift(1, 1);
 
         // Validations & Post Conditions
         assertFalse(foundShift.isPresent());
@@ -155,7 +155,7 @@ public class ShiftDaoImplTest {
         testInserter.createAvailability(aKey1, sKey);
 
         // Exercise
-        List<Shift> shifts = shiftDao.getAmenityShifts(aKey1);
+        List<Shift> shifts = shiftDao.getShifts(aKey1);
 
         // Validations & Post Conditions
         assertEquals(1, shifts.size());
@@ -171,7 +171,7 @@ public class ShiftDaoImplTest {
         long sKey = testInserter.createShift(dKey,tKey);
 
         // Exercise
-        List<Shift> shifts = shiftDao.getAmenityShifts(aKey1);
+        List<Shift> shifts = shiftDao.getShifts(aKey1);
 
         // Validations & Post Conditions
         assertEquals(0, shifts.size());

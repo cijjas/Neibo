@@ -13,9 +13,9 @@ public interface PurchaseService {
 
     Optional<Purchase> findPurchase(long purchaseId);
 
-    Set<Purchase> getPurchasesByCriteria(long userId, String type, int page, int size);
+    Set<Purchase> getPurchases(long userId, String type, int page, int size);
 
-    int getPurchasesByCriteriaCount(long userId, String type);
+    int countPurchases(long userId, String type);
 
-    int getTotalPurchasesPages(long userId, String type, int size);
+    int calculatePurchasePages(long userId, String type, int size);
 }

@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +56,7 @@ public class UserServiceImpl implements UserService {
             throw new UnexpectedException("Unexpected Error while creating Neighbor");
         }
 
-        User n = findUserByMail(mail).orElse(null);
+        User n = findUser(mail).orElse(null);
         if (n == null) {
             User createdUser = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, false, UserRole.UNVERIFIED_NEIGHBOR, id);
 
@@ -83,29 +82,29 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<User> findUserById(long userId) {
+    public Optional<User> findUser(long userId) {
         LOGGER.info("Finding User with id {}", userId);
 
         ValidationUtils.checkUserId(userId);
 
-        return userDao.findUserById(userId);
+        return userDao.findUser(userId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<User> findUserByMail(String mail) {
+    public Optional<User> findUser(String mail) {
         LOGGER.info("Finding User with mail {}", mail);
-        return userDao.findUserByMail(mail);
+        return userDao.findUser(mail);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> getNeighborsSubscribedByPostId(long postId) {
+    public List<User> getNeighborsSubscribed(long postId) {
         LOGGER.info("Getting Neighbors Subscribed to Post {}", postId);
 
         ValidationUtils.checkPostId(postId);
 
-        return userDao.getNeighborsSubscribedByPostId(postId);
+        return userDao.getNeighborsSubscribed(postId);
     }
 
     @Override
@@ -115,33 +114,33 @@ public class UserServiceImpl implements UserService {
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        return userDao.getUsersByCriteria(UserRole.NEIGHBOR, neighborhoodId, 0, 0);
+        return userDao.getUsers(UserRole.NEIGHBOR, neighborhoodId, 0, 0);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> getUsersByCriteria(UserRole role, long neighborhoodId, int page, int size) {
+    public List<User> getUsers(UserRole role, long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Users from Neighborhood {} with Role {}", neighborhoodId, role);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
 
-        return userDao.getUsersByCriteria(role, neighborhoodId, page, size);
+        return userDao.getUsers(role, neighborhoodId, page, size);
     }
 
     @Override
     public int countUsers(UserRole role, long neighborhoodId, int page) {
-        return userDao.getTotalUsers(role, neighborhoodId);
+        return userDao.countTotalUsers(role, neighborhoodId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateUserPagesByCriteria(UserRole role, long neighborhoodId, int size) {
+    public int calculateUserPages(UserRole role, long neighborhoodId, int size) {
         LOGGER.info("Getting Pages of Users with size {} from Neighborhood {} with Role {}", size, neighborhoodId, role);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        return PaginationUtils.calculatePages(userDao.getTotalUsers(role, neighborhoodId), size);
+        return PaginationUtils.calculatePages(userDao.countTotalUsers(role, neighborhoodId), size);
     }
 
     //funcion deprecada?? ahora existe attendanceController
@@ -157,18 +156,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> getEventUsersByCriteria(long eventId, int page, int size) {
+    public List<User> getEventUsers(long eventId, int page, int size) {
         LOGGER.info("Getting User attending Event {}", eventId);
 
         ValidationUtils.checkEventId(eventId);
         ValidationUtils.checkPageAndSize(page, size);
 
-        return userDao.getEventUsersByCriteria(eventId, page, size);
+        return userDao.getEventUsers(eventId, page, size);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateEventPagesByCriteria(long eventId, int size) {
+    public int calculateEventPages(long eventId, int size) {
         LOGGER.info("Getting Pages of Users with size {} attending Event {}", size, eventId);
 
         ValidationUtils.checkEventId(eventId);
@@ -201,7 +200,7 @@ public class UserServiceImpl implements UserService {
     public User updateUser(long userId, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification, Integer languageId, Integer userRoleId) {
         LOGGER.info("Updating User {}", userId);
 
-        User user = userDao.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User not found"));
 
         if (mail != null && !mail.isEmpty())
             user.setMail(mail);

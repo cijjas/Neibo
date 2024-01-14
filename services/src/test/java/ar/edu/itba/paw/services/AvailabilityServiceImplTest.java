@@ -40,7 +40,7 @@ public class AvailabilityServiceImplTest {
     @Test
     public void testUpdate() {
         // 1. Preconditions
-        when(shiftDao.getAmenityShifts(anyLong())).thenReturn(SCHEDULE);
+        when(shiftDao.getShifts(anyLong())).thenReturn(SCHEDULE);
 
         // 2. Exercise
         boolean result = as.updateAvailability(AMENITY_ID, new ArrayList<>());

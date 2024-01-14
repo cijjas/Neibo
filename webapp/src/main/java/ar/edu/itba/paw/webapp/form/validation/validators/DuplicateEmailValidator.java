@@ -17,7 +17,7 @@ public class DuplicateEmailValidator implements ConstraintValidator<EmailConstra
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
-        if(userService.findUserByMail(email).isPresent()) {
+        if(userService.findUser(email).isPresent()) {
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext.buildConstraintViolationWithTemplate("Email already in use")
                     .addConstraintViolation();

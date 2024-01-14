@@ -36,19 +36,19 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Neighborhood> findNeighborhoodByName(String name) {
+    public Optional<Neighborhood> findNeighborhood(String name) {
         LOGGER.info("Finding Neighborhood with name {}", name);
-        return neighborhoodDao.findNeighborhoodByName(name);
+        return neighborhoodDao.findNeighborhood(name);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Neighborhood> findNeighborhoodById(long neighborhoodId) {
+    public Optional<Neighborhood> findNeighborhood(long neighborhoodId) {
         LOGGER.info("Selecting Neighborhood with id {}", neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        return neighborhoodDao.findNeighborhoodById(neighborhoodId);
+        return neighborhoodDao.findNeighborhood(neighborhoodId);
     }
 
     @Override
@@ -64,12 +64,12 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Neighborhood> getNeighborhoodsByCriteria(int page, int size) {
+    public List<Neighborhood> getNeighborhoods(int page, int size) {
         LOGGER.info("Getting All Neighborhoods");
 
         ValidationUtils.checkPageAndSize(page, size);
 
-        List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoodsByCriteria(page, size);
+        List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoods(page, size);
         neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == 0);
         neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == -1);
         return neighborhoods;

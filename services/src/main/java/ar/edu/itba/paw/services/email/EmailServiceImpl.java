@@ -96,8 +96,8 @@ public class EmailServiceImpl implements EmailService {
         LOGGER.info("Sending New User message to {}", userName);
 
         Map<String, Object> variables = new HashMap<>();
-        List<User> admins = userDao.getUsersByCriteria(UserRole.ADMINISTRATOR, neighborhoodId, 1, 10);
-        Neighborhood neighborhood = neighborhoodDao.findNeighborhoodById(neighborhoodId).orElse(null);
+        List<User> admins = userDao.getUsers(UserRole.ADMINISTRATOR, neighborhoodId, 1, 10);
+        Neighborhood neighborhood = neighborhoodDao.findNeighborhood(neighborhoodId).orElse(null);
         assert neighborhood != null;
 
         for (User admin : admins) {
@@ -154,7 +154,7 @@ public class EmailServiceImpl implements EmailService {
             long oneWeekInMillis = 7L * 24L * 60L * 60L * 1000L; // One week in milliseconds
             Date endDate = new Date(startDate.getTime() + oneWeekInMillis);
 
-            List<Event> events = eventDao.getEventsByNeighborhoodIdAndDateRange(neighborhoodId, startDate, endDate);
+            List<Event> events = eventDao.getEvents(neighborhoodId, startDate, endDate);
 
             // Create a map to accumulate events for each subscribed user
             Map<User, Set<Event>> userEventsMap = new HashMap<>();
@@ -224,7 +224,7 @@ public class EmailServiceImpl implements EmailService {
             Date nextDay = new Date(today.getTime() + oneDayInMillis);
 
             // Fetch events for the specified neighborhood happening in the next day
-            List<Event> events = eventDao.getEventsByNeighborhoodIdAndDateRange(neighborhoodId, nextDay, nextDay);
+            List<Event> events = eventDao.getEvents(neighborhoodId, nextDay, nextDay);
 
             // Create a map to accumulate events for each subscribed user
             Map<User, Set<Event>> userEventsMap = new HashMap<>();

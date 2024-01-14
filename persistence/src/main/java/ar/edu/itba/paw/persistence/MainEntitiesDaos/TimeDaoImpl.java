@@ -34,13 +34,13 @@ public class TimeDaoImpl implements TimeDao {
     // ----------------------------------------------- TIMES SELECT ----------------------------------------------------
 
     @Override
-    public Optional<Time> findTimeById(long timeId) {
+    public Optional<Time> findTime(long timeId) {
         LOGGER.debug("Selecting Time with timeId {}", timeId);
         return Optional.ofNullable(em.find(Time.class, timeId));
     }
 
     @Override
-    public OptionalLong findIdByTime(java.sql.Time time) {
+    public OptionalLong findId(java.sql.Time time) {
         LOGGER.debug("Selecting Id with time {}", time);
         TypedQuery<Long> query = em.createQuery("SELECT t.id FROM Time t WHERE t.timeInterval = :timeInterval", Long.class);
         query.setParameter("timeInterval", time);

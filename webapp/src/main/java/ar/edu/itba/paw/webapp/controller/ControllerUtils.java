@@ -49,7 +49,7 @@ public class ControllerUtils {
 
     public long getLoggedUser() {
         String email = (((UserAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUsername();
-        User user = us.findUserByMail(email).orElseThrow(() -> new NotFoundException("User not found"));
+        User user = us.findUser(email).orElseThrow(() -> new NotFoundException("User not found"));
         return user.getUserId();
     }
 }

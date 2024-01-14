@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,7 +54,7 @@ public class AmenityServiceImpl implements AmenityService {
             long dayId = Long.parseLong(shiftParts[0]);
             long timeId = Long.parseLong(shiftParts[1]);
 
-            Optional<Shift> existingShift = shiftDao.findShiftId(timeId, dayId);
+            Optional<Shift> existingShift = shiftDao.findShift(timeId, dayId);
 
             if (existingShift.isPresent()) {
                 availabilityDao.createAvailability(amenity.getAmenityId(), existingShift.get().getShiftId());
@@ -76,12 +75,12 @@ public class AmenityServiceImpl implements AmenityService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Amenity> findAmenityById(long amenityId) {
+    public Optional<Amenity> findAmenity(long amenityId) {
         LOGGER.info("Finding Amenity with id {}", amenityId);
 
         ValidationUtils.checkAmenityId(amenityId);
 
-        return amenityDao.findAmenityById(amenityId);
+        return amenityDao.findAmenity(amenityId);
     }
 
     @Override
@@ -102,7 +101,7 @@ public class AmenityServiceImpl implements AmenityService {
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        return amenityDao.getAmenitiesCount(neighborhoodId);
+        return amenityDao.countAmenities(neighborhoodId);
     }
 
     @Override
@@ -110,7 +109,7 @@ public class AmenityServiceImpl implements AmenityService {
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        return PaginationUtils.calculatePages(amenityDao.getAmenitiesCount(neighborhoodId), size) ;
+        return PaginationUtils.calculatePages(amenityDao.countAmenities(neighborhoodId), size) ;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -118,7 +117,7 @@ public class AmenityServiceImpl implements AmenityService {
     @Override
     public Amenity updateAmenityPartially(long amenityId, String name, String description){
 
-        Amenity amenity = amenityDao.findAmenityById(amenityId).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
+        Amenity amenity = amenityDao.findAmenity(amenityId).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
         if(name != null && !name.isEmpty())
             amenity.setName(name);
         if(description != null && !description.isEmpty())

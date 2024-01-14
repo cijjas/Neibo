@@ -11,7 +11,7 @@ public interface ReviewService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Review> findReviewById(long reviewId);
+    Optional<Review> findReview(long reviewId);
 
     List<Review> getReviews(long workerId);
 

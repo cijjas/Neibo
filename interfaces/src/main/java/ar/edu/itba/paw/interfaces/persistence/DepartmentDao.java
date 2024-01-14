@@ -12,5 +12,5 @@ public interface DepartmentDao {
 
     // ------------------------------------------- DEPARTMENTS SELECT --------------------------------------------------
 
-    Optional<Department> findDepartmentById(long departmentId);
+    Optional<Department> findDepartment(long departmentId);
 }

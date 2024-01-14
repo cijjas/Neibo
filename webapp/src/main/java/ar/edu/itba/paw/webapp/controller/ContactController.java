@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.Entities.Contact;
+import ar.edu.itba.paw.webapp.dto.CommentDto;
 import ar.edu.itba.paw.webapp.dto.ContactDto;
 import ar.edu.itba.paw.webapp.form.ContactForm;
 import org.slf4j.Logger;
@@ -40,6 +41,15 @@ public class ContactController {
 
         return Response.ok(new GenericEntity<List<ContactDto>>(contactsDto){})
                 .build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response findContact(@PathParam("id") long id) {
+        LOGGER.info("GET request arrived at neighborhoods/{}/contacts/{}", neighborhoodId, id);
+        return Response.ok(ContactDto.fromContact(cs.findContact(id)
+                .orElseThrow(() -> new NotFoundException("Contact Not Found")), uriInfo)).build();
     }
 
     @POST

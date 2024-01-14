@@ -55,7 +55,7 @@ public class NeighborhoodWorkerController {
     public Response addWorkerToNeighborhood(@QueryParam("neighborhoodId") final long neighborhoodId) {
         LOGGER.info("PATCH request arrived at  workers/{}/neighborhoods", neighborhoodId);
         nws.addWorkerToNeighborhood(workerId, neighborhoodId);
-        Worker worker = ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker Not Found"));
+        Worker worker = ws.findWorker(workerId).orElseThrow(() -> new NotFoundException("Worker Not Found"));
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(worker.getWorkerId())).build();
         return Response.created(uri).build();
@@ -66,7 +66,7 @@ public class NeighborhoodWorkerController {
     public Response removeWorkerFromNeighborhood(@QueryParam("neighborhoodId") final long neighborhoodId) {
         LOGGER.info("DELETE request arrived at  workers/{}/neighborhoods", neighborhoodId);
         nws.removeWorkerFromNeighborhood(workerId, neighborhoodId);
-        Worker worker = ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker Not Found"));
+        Worker worker = ws.findWorker(workerId).orElseThrow(() -> new NotFoundException("Worker Not Found"));
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(worker.getWorkerId())).build();
         return Response.created(uri).build();

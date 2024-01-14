@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.enums.BaseChannel;
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.interfaces.persistence.ChannelMappingDao;
-import ar.edu.itba.paw.interfaces.services.ChannelMappingService;
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.models.Entities.Channel;
 import org.slf4j.Logger;
@@ -12,12 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -47,11 +41,11 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Channel> findChannelById(long channelId) {
+    public Optional<Channel> findChannel(long channelId) {
 
         ValidationUtils.checkChannelId(channelId);
 
-        return channelDao.findChannelById(channelId);
+        return channelDao.findChannel(channelId);
     }
 
     @Override

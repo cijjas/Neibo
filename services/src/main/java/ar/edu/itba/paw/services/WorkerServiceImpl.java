@@ -72,63 +72,63 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Worker> findWorkerById(long userId) {
+    public Optional<Worker> findWorker(long userId) {
         LOGGER.info("Finding Worker with id {}", userId);
 
         ValidationUtils.checkUserId(userId);
 
-        Optional<User> optionalUser = userDao.findUserById(userId);
-        return optionalUser.isPresent() ? workerDao.findWorkerById(userId) : Optional.empty();
+        Optional<User> optionalUser = userDao.findUser(userId);
+        return optionalUser.isPresent() ? workerDao.findWorker(userId) : Optional.empty();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Worker> findWorkerByMail(String mail) {
+    public Optional<Worker> findWorker(String mail) {
         LOGGER.info("Finding Worker with mail {}", mail);
-        Optional<User> optionalUser = userDao.findUserByMail(mail);
-        return optionalUser.isPresent() ? workerDao.findWorkerById(optionalUser.get().getUserId()) : Optional.empty();
+        Optional<User> optionalUser = userDao.findUser(mail);
+        return optionalUser.isPresent() ? workerDao.findWorker(optionalUser.get().getUserId()) : Optional.empty();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Set<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long userId, WorkerRole workerRole, WorkerStatus workerStatus) {
+    public Set<Worker> getWorkers(int page, int size, List<String> professions, long userId, WorkerRole workerRole, WorkerStatus workerStatus) {
         LOGGER.info("Getting Workers with professions {}", professions);
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPageAndSize(page, size);
 
         //If inquirer is a worker, show return workers from any of the neighborhoods they are in
-        User user = userDao.findUserById(userId).orElseThrow(() -> new NotFoundException("User Not Found"));
+        User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User Not Found"));
         if(user.getNeighborhood().getNeighborhoodId() == 0) { //inquirer is a worker
             Set<Neighborhood> neighborhoods = neighborhoodWorkerDao.getNeighborhoods(userId);
             long[] neighborhoodIds = neighborhoods.stream()
                     .mapToLong(Neighborhood::getNeighborhoodId)
                     .toArray();
 
-            return workerDao.getWorkersByCriteria(page, size, professions, neighborhoodIds, workerRole, workerStatus);
+            return workerDao.getWorkers(page, size, professions, neighborhoodIds, workerRole, workerStatus);
         } else {
             //user isn't a worker, must only return workers from their neighborhood
-            return workerDao.getWorkersByCriteria(page, size, professions, new long[]{user.getNeighborhood().getNeighborhoodId()}, workerRole, workerStatus);
+            return workerDao.getWorkers(page, size, professions, new long[]{user.getNeighborhood().getNeighborhoodId()}, workerRole, workerStatus);
         }
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int countWorkersByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus) {
+    public int countWorkers(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus) {
         LOGGER.info("Getting Workers Count for Neighborhood {} with professions {}", neighborhoodIds, professions);
 
         ValidationUtils.checkNeighborhoodsIds(neighborhoodIds);
 
-        return workerDao.getWorkersCountByCriteria(professions, neighborhoodIds, workerRole, workerStatus);
+        return workerDao.countWorkers(professions, neighborhoodIds, workerRole, workerStatus);
     }
 
     @Override
-    public int calculateWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole, WorkerStatus workerStatus) {
+    public int calculateWorkerPages(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole, WorkerStatus workerStatus) {
         LOGGER.info("Getting Pages of Workers with size {} from Neighborhoods {} with professions {}", size, neighborhoodIds, professions);
 
         ValidationUtils.checkNeighborhoodsIds(neighborhoodIds);
 
-        return PaginationUtils.calculatePages(workerDao.getWorkersCountByCriteria(professions, neighborhoodIds, workerRole, workerStatus), size);
+        return PaginationUtils.calculatePages(workerDao.countWorkers(professions, neighborhoodIds, workerRole, workerStatus), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -160,6 +160,6 @@ public class WorkerServiceImpl implements WorkerService {
 
         ValidationUtils.checkWorkerId(workerId);
 
-        return workerDao.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found"));
+        return workerDao.findWorker(workerId).orElseThrow(() -> new NotFoundException("Worker not found"));
     }
 }

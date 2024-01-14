@@ -111,41 +111,31 @@ public class TagServiceImpl implements TagService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Tag> getTags(long neighborhoodId) {
-        LOGGER.info("Getting All Tags from Neighborhood {}", neighborhoodId);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        return tagDao.getTags(neighborhoodId);
-    }
-
-    @Override
-    public List<Tag> getTagsByCriteria(Long postId, Long neighborhoodId, int page, int size) {
+    public List<Tag> getTags(Long postId, Long neighborhoodId, int page, int size) {
 
         ValidationUtils.checkNegativeTagId(postId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
 
-        return tagDao.getTagsByCriteria(postId, neighborhoodId, page, size);
+        return tagDao.getTags(postId, neighborhoodId, page, size);
     }
 
     @Override
-    public int getTotalTagPages(long neighborhoodId, int size) {
+    public int calculateTagPages(Long postId, Long neighborhoodId, int size) {
         LOGGER.info("Getting Total Tag Pages from Neighborhood {}", neighborhoodId);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-
-        return (int) Math.ceil(tagDao.getTagsCountByCriteria(0, neighborhoodId) / (double) size);
-    }
-
-    @Override
-    public int getTotalTagPagesByCriteria(Long postId, Long neighborhoodId, int size) {
 
         ValidationUtils.checkNegativeTagId(postId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        return (int) Math.ceil(tagDao.getTagsCountByCriteria(postId, neighborhoodId) / (double) size);
+        return PaginationUtils.calculatePages(tagDao.countTags(postId, neighborhoodId), size);
+    }
+
+    @Override
+    public int countTags(Long postId, Long neighborhoodId) {
+
+        ValidationUtils.checkNegativeTagId(postId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return tagDao.countTags(postId, neighborhoodId);
     }
 }

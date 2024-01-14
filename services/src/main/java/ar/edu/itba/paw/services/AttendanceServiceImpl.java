@@ -2,7 +2,6 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.AttendanceDao;
 import ar.edu.itba.paw.interfaces.services.AttendanceService;
-import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Attendance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +27,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Attendance createAttendee(long userId, long eventId) {
+    public Attendance createAttendance(long userId, long eventId) {
         LOGGER.info("Adding User {} as Attendee for Event {}", userId, eventId);
 
         return attendanceDao.createAttendee(userId, eventId);
@@ -38,11 +37,11 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Attendance> findAttendanceById(long attendanceId) {
+    public Optional<Attendance> findAttendance(long attendanceId) {
 
         ValidationUtils.checkAttendanceId(attendanceId);
 
-        return attendanceDao.findAttendanceById(attendanceId);
+        return attendanceDao.findAttendance(attendanceId);
     }
 
     @Override
@@ -58,8 +57,8 @@ public class AttendanceServiceImpl implements AttendanceService {
     // ---------------------------------------------------
 
     @Override
-    public int countAttendees(long eventId) {
-        return attendanceDao.getAttendanceCount(eventId);
+    public int countAttendance(long eventId) {
+        return attendanceDao.countAttendance(eventId);
     }
 
     @Override
@@ -68,13 +67,13 @@ public class AttendanceServiceImpl implements AttendanceService {
         ValidationUtils.checkEventId(eventId);
         ValidationUtils.checkSize(size);
 
-        return PaginationUtils.calculatePages(attendanceDao.getAttendanceCount(eventId), size);
+        return PaginationUtils.calculatePages(attendanceDao.countAttendance(eventId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void deleteAttendee(long userId, long eventId) {
+    public void deleteAttendance(long userId, long eventId) {
         LOGGER.info("Removing User {} as Attendee for Event {}", userId, eventId);
 
         ValidationUtils.checkAttendanceId(userId, eventId);

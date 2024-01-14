@@ -13,11 +13,11 @@ public interface CommentDao {
 
     // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
 
-    Optional<Comment> findCommentById(long id);
+    Optional<Comment> findComment(long commentId);
 
-    List<Comment> getCommentsByPostId(long id, int offset, int size);
+    List<Comment> getComments(long postId, int offset, int size);
 
     // ---------------------------------------------------
 
-    int getCommentsCountByPostId(long id);
+    int countComments(long postId);
 }

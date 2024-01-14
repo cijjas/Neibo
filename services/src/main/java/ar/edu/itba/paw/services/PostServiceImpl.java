@@ -66,33 +66,22 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Post> findPostById(final long postId) {
+    public Optional<Post> findPost(final long postId) {
         LOGGER.info("Finding Post with ID {}", postId);
 
         ValidationUtils.checkPostId(postId);
 
-        return postDao.findPostById(postId);
+        return postDao.findPost(postId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Post> getWorkerPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
-        LOGGER.info("Getting Workers' Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
-
-        ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, postStatus, userId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus) {
-        LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
+    public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
+        LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {}, by User {} and Post Status {} ", neighborhoodId, channel, tags, userId, postStatus);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        return postDao.getPostsByCriteria(channel, page, size, tags, neighborhoodId, postStatus, 0);
+        return postDao.getPosts(channel, page, size, tags, neighborhoodId, postStatus, userId);
     }
 
     // ---------------------------------------------------
@@ -105,7 +94,7 @@ public class PostServiceImpl implements PostService {
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkUserId(userId);
 
-        return postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId);
+        return postDao.countPosts(channel, tags, neighborhoodId, postStatus, userId);
     }
 
     @Override
@@ -116,6 +105,6 @@ public class PostServiceImpl implements PostService {
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkUserId(userId);
 
-        return PaginationUtils.calculatePages(postDao.getPostsCountByCriteria(channel, tags, neighborhoodId, postStatus, userId), size);
+        return PaginationUtils.calculatePages(postDao.countPosts(channel, tags, neighborhoodId, postStatus, userId), size);
     }
 }

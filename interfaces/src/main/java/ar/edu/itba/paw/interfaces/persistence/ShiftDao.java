@@ -14,11 +14,11 @@ public interface ShiftDao {
 
     // ----------------------------------------------- SHIFTS SELECT ---------------------------------------------------
 
-    Optional<Shift> findShiftById(long shiftId);
+    Optional<Shift> findShift(long shiftId);
 
-    Optional<Shift> findShiftId(long startTime, long dayId);
+    Optional<Shift> findShift(long startTime, long dayId);
 
     List<Shift> getShifts(long amenityId, long dayId, Date date);
 
-    List<Shift> getAmenityShifts(long amenityId);
+    List<Shift> getShifts(long amenityId);
 }

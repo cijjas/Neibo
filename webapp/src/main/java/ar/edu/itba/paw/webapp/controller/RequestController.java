@@ -47,13 +47,13 @@ public class RequestController extends GlobalControllerAdvice {
             @QueryParam("productId") @DefaultValue("0") final int productId
             ) {
         LOGGER.info("GET request arrived at neighborhoods/{}/requests", neighborhoodId);
-        List<Request> requests = rs.getRequestsByCriteria(userId, productId, page, size);
+        List<Request> requests = rs.getRequests(userId, productId, page, size);
 
         List<RequestDto> requestDto = requests.stream()
                 .map(r -> RequestDto.fromRequest(r, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/requests";
-        int totalRequestPages = rs.getRequestsCountByCriteria(userId, productId);
+        int totalRequestPages = rs.calculateRequestPages(userId, productId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalRequestPages);
 
         return Response.ok(new GenericEntity<List<RequestDto>>(requestDto){})

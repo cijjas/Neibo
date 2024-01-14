@@ -69,7 +69,7 @@ public class ChannelDaoImplTest {
         long chKey = testInserter.createChannel();
 
         // Exercise
-        Optional<Channel> ch = channelDao.findChannelById(chKey);
+        Optional<Channel> ch = channelDao.findChannel(chKey);
 
         // Validations & Post Conditions
         assertTrue(ch.isPresent());
@@ -81,7 +81,7 @@ public class ChannelDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<Channel> ch = channelDao.findChannelById(1);
+        Optional<Channel> ch = channelDao.findChannel(1);
 
         // Validations & Post Conditions
         assertFalse(ch.isPresent());
@@ -93,7 +93,7 @@ public class ChannelDaoImplTest {
         testInserter.createChannel(CHANNEL_NAME_1);
 
         // Exercise
-        Optional<Channel> ch = channelDao.findChannelByName(CHANNEL_NAME_1);
+        Optional<Channel> ch = channelDao.findChannel(CHANNEL_NAME_1);
 
         // Validations & Post Conditions
         assertTrue(ch.isPresent());
@@ -105,7 +105,7 @@ public class ChannelDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<Channel> ch = channelDao.findChannelByName(CHANNEL_NAME_1);
+        Optional<Channel> ch = channelDao.findChannel(CHANNEL_NAME_1);
 
         // Validations & Post Conditions
         assertFalse(ch.isPresent());

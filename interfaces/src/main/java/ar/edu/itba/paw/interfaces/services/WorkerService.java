@@ -16,15 +16,15 @@ public interface WorkerService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Worker> findWorkerById(long workerId);
+    Optional<Worker> findWorker(long workerId);
 
-    Optional<Worker> findWorkerByMail(String mail);
+    Optional<Worker> findWorker(String mail);
 
-    Set<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long loggedUserId, WorkerRole workerRole, WorkerStatus workerStatus);
+    Set<Worker> getWorkers(int page, int size, List<String> professions, long loggedUserId, WorkerRole workerRole, WorkerStatus workerStatus);
 
-    int countWorkersByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus);
+    int countWorkers(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus);
 
-    int calculateWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole, WorkerStatus workerStatus);
+    int calculateWorkerPages(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole, WorkerStatus workerStatus);
 
     // -----------------------------------------------------------------------------------------------------------------
 

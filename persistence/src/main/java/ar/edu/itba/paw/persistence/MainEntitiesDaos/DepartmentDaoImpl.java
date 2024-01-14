@@ -29,7 +29,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
     }
 
     @Override
-    public Optional<Department> findDepartmentById(long departmentId) {
+    public Optional<Department> findDepartment(long departmentId) {
         LOGGER.debug("Selecting Department with id {}", departmentId);
         return Optional.ofNullable(em.find(Department.class, departmentId));
     }

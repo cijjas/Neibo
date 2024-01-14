@@ -7,22 +7,23 @@ import java.util.Optional;
 
 public interface LikeService {
 
-    Like addLikeToPost(long postId, long userId);
+    Like createLike(long postId, long userId);
 
     // -----------------------------------------------------------------------------------------------------------------
 
     boolean isPostLiked(long postId, long userId);
 
+    Optional<Like> findLike(long likeId);
+
+    List<Like> getLikes(long neighborhoodId, long postId, long userId, int page, int size);
+
+    // ---------------------------------------------------
+
+    int countLikes(long neighborhoodId, long postId, long userId);
+
+    int calculateLikePages(long neighborhoodId, long postId, long userId, int size);
+
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Like> findLikeById(long likeId);
-
-    void removeLikeFromPost(long postId, long userId);
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    List<Like> getLikesByCriteria(long neighborhoodId, long postId, long userId, int page, int size);
-
-    int getLikePagesByCriteria(long neighborhoodId, long postId, long userId, int size);
-
+    void deleteLike(long postId, long userId);
 }

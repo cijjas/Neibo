@@ -3,9 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.BookingService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Booking;
-import ar.edu.itba.paw.models.Entities.Comment;
 import ar.edu.itba.paw.webapp.dto.BookingDto;
-import ar.edu.itba.paw.webapp.dto.CommentDto;
 import ar.edu.itba.paw.webapp.form.BookingForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +14,8 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
-import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 
 @Path("neighborhoods/{neighborhoodId}/bookings")
 @Component
@@ -45,7 +40,7 @@ public class BookingController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listBookings(@QueryParam("userId") final long userId) {
         LOGGER.info("GET request arrived at neighborhoods/{}/bookings", neighborhoodId);
-        final List<Booking> bookings = bs.getUserBookings(userId);
+        final List<Booking> bookings = bs.getBookings(userId);
         final List<BookingDto> bookingsDto = bookings.stream()
                 .map(b -> BookingDto.fromBooking(b, uriInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<BookingDto>>(bookingsDto){})

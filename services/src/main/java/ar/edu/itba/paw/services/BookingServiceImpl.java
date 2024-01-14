@@ -5,14 +5,12 @@ import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.interfaces.services.BookingService;
 import ar.edu.itba.paw.models.Entities.Booking;
-import ar.edu.itba.paw.models.GroupedBooking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Valid;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -41,7 +39,7 @@ public class BookingServiceImpl implements BookingService {
         List<Long> bookingIds = new ArrayList<>();
 
         for (Long shiftId : shiftIds) {
-            long availabilityId = availabilityDao.findAvailabilityId(amenityId, shiftId)
+            long availabilityId = availabilityDao.findId(amenityId, shiftId)
                     .orElseThrow(() -> new NotFoundException("Availability not found.")); // DB guarantees the combination is unique
 
             Long bookingId = bookingDao.createBooking(userId, availabilityId, reservationDate).getBookingId();
@@ -61,17 +59,17 @@ public class BookingServiceImpl implements BookingService {
 
         ValidationUtils.checkBookingId(bookingId);
 
-        return bookingDao.findBookingById(bookingId);
+        return bookingDao.findBooking(bookingId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Booking> getUserBookings(long userId) {
+    public List<Booking> getBookings(long userId) {
         LOGGER.info("Getting Bookings for User {}", userId);
 
         ValidationUtils.checkUserId(userId);
 
-        return bookingDao.getUserBookings(userId);
+        return bookingDao.getBookings(userId);
 //        List<GroupedBooking> groupedBookings = new ArrayList<>();
 //        GroupedBooking currentGroupedBooking = null;
 //

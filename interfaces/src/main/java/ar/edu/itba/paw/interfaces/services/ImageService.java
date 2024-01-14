@@ -13,5 +13,5 @@ public interface ImageService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Image> getImage(long imageId);
+    Optional<Image> findImage(long imageId);
 }

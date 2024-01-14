@@ -16,9 +16,9 @@ public interface AvailabilityDao {
 
     List<Availability> getAvailability(long amenityId);
 
-    Optional<Availability> findAvailability(long id);
+    Optional<Availability> findAvailability(long availabilityId);
 
-    OptionalLong findAvailabilityId(long amenityId, long shiftId);
+    OptionalLong findId(long amenityId, long shiftId);
 
     // -------------------------------------------- AVAILABILITY DELETE ------------------------------------------------
 

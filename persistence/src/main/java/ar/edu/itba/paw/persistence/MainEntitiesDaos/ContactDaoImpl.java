@@ -59,7 +59,7 @@ public class ContactDaoImpl implements ContactDao {
     }
 
     @Override
-    public Optional<Contact> findContactById(final long contactId) {
+    public Optional<Contact> findContact(final long contactId) {
         LOGGER.debug("Selecting Contact with id {}", contactId);
         return Optional.ofNullable(em.find(Contact.class, contactId));
     }

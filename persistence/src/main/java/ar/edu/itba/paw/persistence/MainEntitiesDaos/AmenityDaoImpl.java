@@ -42,7 +42,7 @@ public class AmenityDaoImpl implements AmenityDao {
     // ---------------------------------------------- AMENITIES SELECT ---------------------------------------------------
 
     @Override
-    public Optional<Amenity> findAmenityById(long amenityId) {
+    public Optional<Amenity> findAmenity(long amenityId) {
         LOGGER.debug("Selecting Amenity with id {}", amenityId);
         return Optional.ofNullable(em.find(Amenity.class, amenityId));
     }
@@ -82,7 +82,7 @@ public class AmenityDaoImpl implements AmenityDao {
     // ---------------------------------------------------
 
     @Override
-    public int getAmenitiesCount(long neighborhoodId) {
+    public int countAmenities(long neighborhoodId) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
         Root<Amenity> root = criteriaQuery.from(Amenity.class);

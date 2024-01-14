@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -41,6 +42,11 @@ public class ContactServiceImpl implements ContactService {
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return contactDao.getContacts(neighborhoodId);
+    }
+
+    @Override
+    public Optional<Contact> findContact(long contactId) {
+        return contactDao.findContact(contactId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -79,6 +85,6 @@ public class ContactServiceImpl implements ContactService {
 
         ValidationUtils.checkContactId(contactId);
 
-        return contactDao.findContactById(contactId).orElseThrow(() -> new NotFoundException("Contact not found"));
+        return contactDao.findContact(contactId).orElseThrow(() -> new NotFoundException("Contact not found"));
     }
 }

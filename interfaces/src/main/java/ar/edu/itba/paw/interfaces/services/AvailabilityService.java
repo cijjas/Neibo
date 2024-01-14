@@ -13,7 +13,9 @@ public interface AvailabilityService {
 
     List<Availability> getAvailability(long amenityId);
 
-    Optional<Availability> findAvailability(long id);
+    Optional<Availability> findAvailability(long availabilityId);
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     boolean updateAvailability(long amenityId, List<String> newShifts);
 }

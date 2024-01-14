@@ -44,7 +44,7 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
-    public List<Request> getRequestsByCriteria(long userId, long productId, int page, int size) {
+    public List<Request> getRequests(long userId, long productId, int page, int size) {
         LOGGER.debug("Selecting Requests By Criteria");
         TypedQuery<Long> idQuery = null;
         if(userId > 0 && productId > 0) {
@@ -76,7 +76,7 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
-    public int getRequestsCountByCriteria(long userId, long productId) {
+    public int countRequests(long userId, long productId) {
         LOGGER.debug("Selecting Requests Count by Criteria");
         Long count = null;
         if(userId > 0 && productId > 0) {

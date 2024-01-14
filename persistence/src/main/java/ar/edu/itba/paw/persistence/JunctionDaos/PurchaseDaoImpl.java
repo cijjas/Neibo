@@ -45,7 +45,7 @@ public class PurchaseDaoImpl implements PurchaseDao {
     }
 
     @Override
-    public Set<Purchase> getPurchasesByCriteria(long userId, String type, int page, int size) {
+    public Set<Purchase> getPurchases(long userId, String type, int page, int size) {
         LOGGER.debug("Selecting Purchases By Criteria For User {}", userId);
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -88,7 +88,7 @@ public class PurchaseDaoImpl implements PurchaseDao {
     }
 
     @Override
-    public int getPurchasesByCriteriaCount(long userId, String type) {
+    public int countPurchases(long userId, String type) {
         LOGGER.debug("Counting Purchases By Seller {}", userId);
 
         CriteriaBuilder cb = em.getCriteriaBuilder();

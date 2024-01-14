@@ -32,13 +32,13 @@ public class ChannelDaoImpl implements ChannelDao {
 
     // -------------------------------------------- CHANNELS SELECT ----------------------------------------------------
 
-    public Optional<Channel> findChannelById(long channelId) {
+    public Optional<Channel> findChannel(long channelId) {
         LOGGER.debug("Selecting Channel with channelId {}", channelId);
         return Optional.ofNullable(em.find(Channel.class, channelId));
     }
 
     @Override
-    public Optional<Channel> findChannelByName(String channelName) {
+    public Optional<Channel> findChannel(String channelName) {
         LOGGER.debug("Selecting Channel with name {}", channelName);
         TypedQuery<Channel> query = em.createQuery("FROM Channel WHERE channel = :channel", Channel.class);
         query.setParameter("channel", channelName);

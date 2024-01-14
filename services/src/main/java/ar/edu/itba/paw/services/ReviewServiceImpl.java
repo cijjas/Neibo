@@ -36,12 +36,12 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Review> findReviewById(long reviewId) {
+    public Optional<Review> findReview(long reviewId) {
         LOGGER.info("Finding Review with id {}", reviewId);
 
         ValidationUtils.checkReviewId(reviewId);
 
-        return reviewDao.findReviewById(reviewId);
+        return reviewDao.findReview(reviewId);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         ValidationUtils.checkWorkerId(workerId);
 
-        return reviewDao.getReviewsCount(workerId);
+        return reviewDao.countReviews(workerId);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         ValidationUtils.checkWorkerId(workerId);
 
-        return PaginationUtils.calculatePages(reviewDao.getReviewsCount(workerId), size);
+        return PaginationUtils.calculatePages(reviewDao.countReviews(workerId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

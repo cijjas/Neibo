@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.LikeService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Like;
+import ar.edu.itba.paw.webapp.dto.InquiryDto;
 import ar.edu.itba.paw.webapp.dto.LikeDto;
 import ar.edu.itba.paw.webapp.form.LikeForm;
 import org.slf4j.Logger;
@@ -44,12 +45,12 @@ public class LikeController extends GlobalControllerAdvice{
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size){
         LOGGER.info("GET request arrived at neighborhoods/{}/likes", neighborhoodId);
-        final List<Like> likes = ls.getLikesByCriteria(neighborhoodId, postId, userId, page, size);
+        final List<Like> likes = ls.getLikes(neighborhoodId, postId, userId, page, size);
         final List<LikeDto> likesDto = likes.stream()
                 .map(l -> LikeDto.fromLike(l, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "likes";
-        int totalLikePages = ls.getLikePagesByCriteria(neighborhoodId, postId, userId, size);
+        int totalLikePages = ls.calculateLikePages(neighborhoodId, postId, userId, size);
         Link[] links = ControllerUtils.createPaginationLinks(baseUri, page, size, totalLikePages);
 
         return Response.ok(new GenericEntity<List<LikeDto>>(likesDto){})
@@ -57,11 +58,20 @@ public class LikeController extends GlobalControllerAdvice{
                 .build();
     }
 
+    @GET
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response findLike(@PathParam("id") final long id) {
+        LOGGER.info("GET request arrived at neighborhoods/{}/likes/{}", neighborhoodId, id);
+        return Response.ok(LikeDto.fromLike(ls.findLike(id)
+                .orElseThrow(() -> new NotFoundException("Like Not Found")), uriInfo)).build();
+    }
+
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createLike(@Valid LikeForm form) {
-        LOGGER.info("POST request arrived at neighborhoods/{}/likes", neighborhoodId);
-        final Like like = ls.addLikeToPost(form.getPostId(), getLoggedUser().getUserId());
+        LOGGER.info("POST request arrived at 'neighborhoods/{}/likes'", neighborhoodId);
+        final Like like = ls.createLike(form.getPostId(), getLoggedUser().getUserId());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(like.getId())).build();
         return Response.created(uri).build();

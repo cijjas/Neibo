@@ -10,9 +10,9 @@ public interface InquiryService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Inquiry> findInquiryById(final long inquiryId);
+    Optional<Inquiry> findInquiry(final long inquiryId);
 
-    List<Inquiry> getInquiriesByProductAndCriteria(long productId, int page, int size);
+    List<Inquiry> getInquiries(long productId, int page, int size);
 
     // ---------------------------------------------------
 

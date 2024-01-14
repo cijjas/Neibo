@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.enums.Department;
-import ar.edu.itba.paw.enums.ProductStatus;
 import ar.edu.itba.paw.models.Entities.Product;
 
 import java.util.List;
@@ -15,11 +13,11 @@ public interface ProductDao {
 
     // --------------------------------------------- PRODUCTS SELECT ---------------------------------------------------
 
-    Optional<Product> findProductById(final long productId);
+    Optional<Product> findProduct(final long productId);
 
-    List<Product> getProductsByCriteria(long neighborhoodId, String department, long userId, String productStatus, int page, int size);
+    List<Product> getProducts(long neighborhoodId, String department, long userId, String productStatus, int page, int size);
 
-    int getProductsCountByCriteria(long neighborhoodId, String department, long userId, String productStatus);
+    int countProducts(long neighborhoodId, String department, long userId, String productStatus);
 
     // --------------------------------------------- PRODUCTS DELETE ---------------------------------------------------
 

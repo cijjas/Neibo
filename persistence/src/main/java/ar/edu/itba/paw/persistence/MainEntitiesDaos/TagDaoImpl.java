@@ -32,7 +32,7 @@ public class TagDaoImpl implements TagDao {
     // ---------------------------------------------- TAGS SELECT ------------------------------------------------------
 
     @Override
-    public List<Tag> getTagsByCriteria(long postId, long neighborhoodId, int page, int size) {
+    public List<Tag> getTags(long postId, long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Tags By Criteria");
         TypedQuery<Tag> query = null;
         if(postId > 0) {
@@ -52,7 +52,7 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public int getTagsCountByCriteria(long postId, long neighborhoodId) {
+    public int countTags(long postId, long neighborhoodId) {
         LOGGER.debug("Selecting Tags By Criteria");
         TypedQuery<Long> query = null;
         if(postId > 0) {
@@ -71,7 +71,7 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public List<Tag> getTagsByPostId(long postId) {
+    public List<Tag> getTags(long postId) {
         LOGGER.debug("Selecting Tags for Post with postId {}", postId);
         return em.createQuery("SELECT t FROM Tag t JOIN t.posts p WHERE p.postId = :postId", Tag.class)
                 .setParameter("postId", postId)
@@ -79,7 +79,7 @@ public class TagDaoImpl implements TagDao {
     }
 
     @Override
-    public List<Tag> getTags(long neighborhoodId) {
+    public List<Tag> getNeighborhoodTags(long neighborhoodId) {
         LOGGER.debug("Selecting Tag List from Neighborhood {}", neighborhoodId);
         return em.createQuery("SELECT DISTINCT t FROM Tag t " +
                         "JOIN t.posts p " +

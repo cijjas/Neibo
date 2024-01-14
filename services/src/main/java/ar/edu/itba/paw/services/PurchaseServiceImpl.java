@@ -41,33 +41,30 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public Set<Purchase> getPurchasesByCriteria(long userId, String type, int page, int size) {
+    public Set<Purchase> getPurchases(long userId, String type, int page, int size) {
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPageAndSize(page, size);
 
-        return purchaseDao.getPurchasesByCriteria(userId, type, page, size);
+        return purchaseDao.getPurchases(userId, type, page, size);
     }
 
     @Override
-    public int getPurchasesByCriteriaCount(long userId, String type) {
+    public int countPurchases(long userId, String type) {
         ValidationUtils.checkUserId(userId);
 
-        return purchaseDao.getPurchasesByCriteriaCount(userId, type);
+        return purchaseDao.countPurchases(userId, type);
     }
 
     @Override
-    public int getTotalPurchasesPages(long userId, String type, int size) {
+    public int calculatePurchasePages(long userId, String type, int size) {
 
         ValidationUtils.checkId(userId, "User");
         ValidationUtils.checkSize(size);
 
-        return calculatePages(getPurchasesByCriteriaCount(userId, type), size);
+        return PaginationUtils.calculatePages(countPurchases(userId, type), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    private int calculatePages(int totalItems, int size) {
-        return (int) Math.ceil((double) totalItems / size);
-    }
 }

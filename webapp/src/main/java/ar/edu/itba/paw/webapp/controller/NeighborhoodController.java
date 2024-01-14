@@ -35,7 +35,7 @@ public class NeighborhoodController {
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size) {
         LOGGER.info("GET request arrived at neighborhoods/");
-        final List<Neighborhood> neighborhoods = ns.getNeighborhoodsByCriteria(page, size);
+        final List<Neighborhood> neighborhoods = ns.getNeighborhoods(page, size);
         final List<NeighborhoodDto> neighborhoodsDto = neighborhoods.stream()
                 .map(n -> NeighborhoodDto.fromNeighborhood(n, uriInfo)).collect(Collectors.toList());
 
@@ -54,7 +54,7 @@ public class NeighborhoodController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findNeighborhood(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at neighborhoods/{}", id);
-        return Response.ok(NeighborhoodDto.fromNeighborhood(ns.findNeighborhoodById(id)
+        return Response.ok(NeighborhoodDto.fromNeighborhood(ns.findNeighborhood(id)
                 .orElseThrow(() -> new NotFoundException("Neighborhood Not Found")), uriInfo)).build();
     }
 

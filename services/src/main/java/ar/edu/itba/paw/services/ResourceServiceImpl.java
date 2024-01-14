@@ -48,7 +48,7 @@ public class ResourceServiceImpl implements ResourceService {
 
         ValidationUtils.checkResourceId(resourceId);
 
-        return resourceDao.findResourceById(resourceId);
+        return resourceDao.findResource(resourceId);
     }
 
     @Override

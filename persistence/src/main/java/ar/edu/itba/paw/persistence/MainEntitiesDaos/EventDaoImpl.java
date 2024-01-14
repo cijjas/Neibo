@@ -41,13 +41,13 @@ public class EventDaoImpl implements EventDao {
     // ---------------------------------------------- EVENT SELECT -----------------------------------------------------
 
     @Override
-    public Optional<Event> findEventById(long eventId) {
+    public Optional<Event> findEvent(long eventId) {
         LOGGER.debug("Selecting Event with id {}", eventId);
         return Optional.ofNullable(em.find(Event.class, eventId));
     }
 
     @Override
-    public List<Event> getEventsByDate(Date date, long neighborhoodId) {
+    public List<Event> getEvents(Date date, long neighborhoodId) {
         LOGGER.debug("Selecting Events from Date {}", date);
         String jpql = "SELECT e FROM Event e WHERE e.date = :date AND e.neighborhood.neighborhoodId = :neighborhoodId";
         TypedQuery<Event> query = em.createQuery(jpql, Event.class);
@@ -57,7 +57,7 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public List<Event> getEventsByNeighborhoodId(long neighborhoodId) {
+    public List<Event> getEvents(long neighborhoodId) {
         LOGGER.debug("Selecting Events from Neighborhood {}", neighborhoodId);
         String jpql = "SELECT e FROM Event e WHERE e.neighborhood.neighborhoodId = :neighborhoodId";
         TypedQuery<Event> query = em.createQuery(jpql, Event.class);
@@ -67,7 +67,7 @@ public class EventDaoImpl implements EventDao {
 
 
     @Override
-    public List<Event> getEventsByNeighborhoodIdAndDateRange(long neighborhoodId, Date startDate, Date endDate) {
+    public List<Event> getEvents(long neighborhoodId, Date startDate, Date endDate) {
         LOGGER.debug("Selecting Events from Neighborhood {} between {} and {}", neighborhoodId, startDate, endDate);
         String jpql = "SELECT e FROM Event e WHERE e.neighborhood.neighborhoodId = :neighborhoodId AND e.date BETWEEN :startDate AND :endDate";
         TypedQuery<Event> query = em.createQuery(jpql, Event.class);

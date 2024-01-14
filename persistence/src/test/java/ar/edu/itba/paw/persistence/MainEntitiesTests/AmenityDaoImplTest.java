@@ -77,7 +77,7 @@ public class AmenityDaoImplTest {
         long aKey = testInserter.createAmenity(nhKey);
 
         // Exercise
-        Optional<Amenity> foundAmenity = amenityDao.findAmenityById(aKey);
+        Optional<Amenity> foundAmenity = amenityDao.findAmenity(aKey);
 
         // Validations & Post Conditions
         assertTrue(foundAmenity.isPresent());
@@ -86,7 +86,7 @@ public class AmenityDaoImplTest {
     @Test
     public void testFindAmenityByInvalidId() {
         // Exercise
-        Optional<Amenity> foundAmenity = amenityDao.findAmenityById(1L);
+        Optional<Amenity> foundAmenity = amenityDao.findAmenity(1L);
 
         // Validations & Post Conditions
         assertFalse(foundAmenity.isPresent());

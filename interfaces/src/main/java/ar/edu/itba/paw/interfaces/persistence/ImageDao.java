@@ -13,5 +13,5 @@ public interface ImageDao {
 
     // --------------------------------------------- IMAGES SELECT -----------------------------------------------------
 
-    Optional<Image> getImage(long imageId);
+    Optional<Image> findImage(long imageId);
 }

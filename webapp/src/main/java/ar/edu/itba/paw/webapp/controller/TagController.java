@@ -8,10 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,12 +35,12 @@ public class TagController {
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at neighborhoods/{}/tags", neighborhoodId);
-        List<Tag> tags = ts.getTagsByCriteria(postId, neighborhoodId, page, size);
+        List<Tag> tags = ts.getTags(postId, neighborhoodId, page, size);
         List<TagDto> tagsDto = tags.stream()
                 .map(t -> TagDto.fromTag(t, neighborhoodId, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/tags";
-        int totalTagPages = ts.getTotalTagPagesByCriteria(postId, neighborhoodId, size);
+        int totalTagPages = ts.calculateTagPages(postId, neighborhoodId, size);
         Link[] links = ControllerUtils.createPaginationLinks(baseUri, page, size, totalTagPages);
 
         return Response.ok(new GenericEntity<List<TagDto>>(tagsDto){})

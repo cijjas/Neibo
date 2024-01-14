@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.CommentService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Comment;
+import ar.edu.itba.paw.webapp.dto.ChannelDto;
 import ar.edu.itba.paw.webapp.dto.CommentDto;
 import ar.edu.itba.paw.webapp.form.CommentForm;
 import org.slf4j.Logger;
@@ -48,7 +49,7 @@ public class CommentController extends GlobalControllerAdvice{
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at neighborhoods/{}/posts/{}/comments", neighborhoodId, postId);
-        final List<Comment> comments = cs.getCommentsByPostId(postId, page, size);
+        final List<Comment> comments = cs.getComments(postId, page, size);
         final List<CommentDto> commentsDto = comments.stream()
                 .map(c -> CommentDto.fromComment(c, uriInfo)).collect(Collectors.toList());
 
@@ -59,6 +60,15 @@ public class CommentController extends GlobalControllerAdvice{
         return Response.ok(new GenericEntity<List<CommentDto>>(commentsDto){})
                 .links(links)
                 .build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response findComment(@PathParam("id") long id) {
+        LOGGER.info("GET request arrived at neighborhoods/{}/posts/{}/comments/{}", neighborhoodId, postId, id);
+        return Response.ok(CommentDto.fromComment(cs.findComment(id)
+                .orElseThrow(() -> new NotFoundException("Comment Not Found")), uriInfo)).build();
     }
 
     @POST

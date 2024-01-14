@@ -47,13 +47,13 @@ public class BookingDaoImpl implements BookingDao {
                     "INNER JOIN times t ON s.starttime = t.timeid";
 
     @Override
-    public Optional<Booking> findBookingById(long bookingId){
+    public Optional<Booking> findBooking(long bookingId){
         LOGGER.debug("Selecting Booking with id {}", bookingId);
         return Optional.ofNullable(em.find(Booking.class, bookingId));
     }
 
     @Override
-    public List<Booking> getUserBookings(long userId) {
+    public List<Booking> getBookings(long userId) {
         LOGGER.debug("Selecting Bookings from userId {}", userId);
         String sql = BOOKINGS_JOIN_AVAILABILITY + " WHERE userid = :userId ORDER BY uav.date, asa.amenityid, timeinterval asc";
         List<Booking> bookings = em.createNativeQuery(sql, Booking.class)

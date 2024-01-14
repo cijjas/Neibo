@@ -42,7 +42,7 @@ public class PurchaseController {
         LOGGER.info("GET request arrived at neighborhoods/{}/users/{}/transactions", neighborhoodId, userId);
         Set<Purchase> transactions;
 
-        transactions = ps.getPurchasesByCriteria(userId, type, page, size);
+        transactions = ps.getPurchases(userId, type, page, size);
 
         // Convert transactions to DTOs if needed
         Set<PurchaseDto> transactionDto = transactions.stream()
@@ -50,7 +50,7 @@ public class PurchaseController {
                 .collect(Collectors.toSet());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/users/" + userId + "/transactions";
-        Link[] links = createPaginationLinks(baseUri, page, size, ps.getTotalPurchasesPages(userId, type, size));
+        Link[] links = createPaginationLinks(baseUri, page, size, ps.calculatePurchasePages(userId, type, size));
 
         return Response.ok(new GenericEntity<Set<PurchaseDto>>(transactionDto){})
                 .links(links)

@@ -11,13 +11,13 @@ public interface CommentService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Comment> findCommentById(long id);
+    Optional<Comment> findComment(long commentId);
 
-    List<Comment> getCommentsByPostId(long id, int page, int size);
+    List<Comment> getComments(long postId, int page, int size);
 
     // ---------------------------------------------------
 
-    int countComments(long id);
+    int countComments(long postId);
 
-    int calculateCommentPages(long id, int size);
+    int calculateCommentPages(long postId, int size);
 }

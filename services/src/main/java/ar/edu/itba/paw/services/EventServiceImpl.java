@@ -63,7 +63,7 @@ public class EventServiceImpl implements EventService {
 
         ValidationUtils.checkEventId(eventId);
 
-        return eventDao.findEventById(eventId).orElseThrow(() -> new NotFoundException("Event not found"));
+        return eventDao.findEvent(eventId).orElseThrow(() -> new NotFoundException("Event not found"));
     }
     @Override
     public Event updateEventPartially(long eventId, String name, String description, Date date, String startTime, String endTime){
@@ -86,7 +86,7 @@ public class EventServiceImpl implements EventService {
     }
 
     private OptionalLong getTimeId(Time time) {
-        return timeDao.findIdByTime(time);
+        return timeDao.findId(time);
     }
 
 
@@ -94,24 +94,24 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Event> findEventById(long eventId) {
+    public Optional<Event> findEvent(long eventId) {
         LOGGER.info("Finding Event {}", eventId);
 
         ValidationUtils.checkEventId(eventId);
 
-        return eventDao.findEventById(eventId);
+        return eventDao.findEvent(eventId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Event> getEventsByDate(String date, long neighborhoodId) {
+    public List<Event> getEvents(String date, long neighborhoodId) {
         LOGGER.info("Getting Events for Neighborhood {} on Date {}", neighborhoodId, date);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
-            return eventDao.getEventsByDate(dateFormat.parse(date), neighborhoodId);
+            return eventDao.getEvents(dateFormat.parse(date), neighborhoodId);
         } catch (ParseException e) {
             return Collections.emptyList();
         }
@@ -119,12 +119,12 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Event> getEventsByNeighborhoodId(long neighborhoodId) {
+    public List<Event> getEvents(long neighborhoodId) {
         LOGGER.info("Getting Events for Neighborhood {}", neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        return eventDao.getEventsByNeighborhoodId(neighborhoodId);
+        return eventDao.getEvents(neighborhoodId);
     }
 
     @Override
@@ -189,7 +189,7 @@ public class EventServiceImpl implements EventService {
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        return !eventDao.getEventsByDate(date, neighborhoodId).isEmpty();
+        return !eventDao.getEvents(date, neighborhoodId).isEmpty();
     }
 
     // -----------------------------------------------------------------------------------------------------------------

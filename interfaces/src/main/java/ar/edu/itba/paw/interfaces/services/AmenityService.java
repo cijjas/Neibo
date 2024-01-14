@@ -11,7 +11,7 @@ public interface AmenityService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Amenity> findAmenityById(long amenityId);
+    Optional<Amenity> findAmenity(long amenityId);
 
     List<Amenity> getAmenities(long neighborhoodId, int page, int size);
 
@@ -23,7 +23,7 @@ public interface AmenityService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Amenity updateAmenityPartially(long id, String name, String description);
+    Amenity updateAmenityPartially(long amenityId, String name, String description);
 
     // -----------------------------------------------------------------------------------------------------------------
 

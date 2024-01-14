@@ -52,7 +52,7 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
     }
 
     @Override
-    public OptionalLong findAvailabilityId(long amenityId, long shiftId) {
+    public OptionalLong findId(long amenityId, long shiftId) {
         LOGGER.debug("Selecting Availability with amenityId {} and shiftId {}", amenityId, shiftId);
         TypedQuery<Long> query = em.createQuery("SELECT a.amenityAvailabilityId FROM Availability a WHERE a.shift.shiftId = :shiftId AND a.amenity.amenityId = :amenityId", Long.class);
         query.setParameter("shiftId", shiftId);

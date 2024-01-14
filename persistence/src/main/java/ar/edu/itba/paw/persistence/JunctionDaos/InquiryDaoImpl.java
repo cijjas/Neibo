@@ -38,14 +38,14 @@ public class InquiryDaoImpl implements InquiryDao {
     // ------------------------------------------ INQUIRIES INSERT -----------------------------------------------------
 
     @Override
-    public Optional<Inquiry> findInquiryById(long inquiryId) {
+    public Optional<Inquiry> findInquiry(long inquiryId) {
         LOGGER.debug("Selecting Inquiry with id {}", inquiryId);
         return Optional.ofNullable(em.find(Inquiry.class, inquiryId));
     }
 
 
     @Override
-    public List<Inquiry> getInquiriesByProductAndCriteria(long productId, int page, int size) {
+    public List<Inquiry> getInquiries(long productId, int page, int size) {
         LOGGER.debug("Selecting Inquiries from Product with id {}", productId);
 
         TypedQuery<Long> idQuery = em.createQuery("SELECT i.inquiryId FROM Inquiry i " +
@@ -69,7 +69,7 @@ public class InquiryDaoImpl implements InquiryDao {
     // ---------------------------------------------------
 
     @Override
-    public int getInquiriesCountByProduct(long productId) {
+    public int countInquiries(long productId) {
         LOGGER.debug("Selecting Inquiries Count from Product {}", productId);
         Long count = (Long) em.createQuery("SELECT COUNT(i) FROM Inquiry i " +
                         "WHERE i.product.productId = :productId")

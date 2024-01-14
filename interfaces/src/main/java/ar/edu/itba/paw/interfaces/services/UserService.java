@@ -15,32 +15,32 @@ public interface UserService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<User> findUserById(final long neighborId);
+    Optional<User> findUser(final long neighborId);
 
-    Optional<User> findUserByMail(final String mail);
+    Optional<User> findUser(final String mail);
 
     boolean isAttending(long eventId, long userId);
 
     List<User> getNeighbors(long neighborhoodId);
 
-    List<User> getNeighborsSubscribedByPostId(long id);
+    List<User> getNeighborsSubscribed(long postId);
 
     int countUsers(UserRole role, long neighborhoodId, int page);
 
-    List<User> getUsersByCriteria(UserRole role, long neighborhoodId, int page, int size);
+    List<User> getUsers(UserRole role, long neighborhoodId, int page, int size);
 
-    int calculateUserPagesByCriteria(UserRole role, long neighborhoodId, int size);
+    int calculateUserPages(UserRole role, long neighborhoodId, int size);
 
     List<User> getEventUsers(long eventId);
 
-    List<User> getEventUsersByCriteria(long eventId, int page, int size);
+    List<User> getEventUsers(long eventId, int page, int size);
 
-    int calculateEventPagesByCriteria(long eventId, int size);
+    int calculateEventPages(long eventId, int size);
 
     List<User> getProductRequesters(long productId, int page, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    User updateUser(long id, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification, Integer languageId, Integer userRoleId);
+    User updateUser(long userId, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification, Integer languageId, Integer userRoleId);
 
 }

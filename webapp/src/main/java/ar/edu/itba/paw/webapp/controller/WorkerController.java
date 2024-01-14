@@ -53,11 +53,11 @@ public class WorkerController extends GlobalControllerAdvice {
             @QueryParam("workerStatus") final WorkerStatus workerStatus
     ) {
         LOGGER.info("GET request arrived at workers");
-        Set<Worker> workers = ws.getWorkersByCriteria(page, size, professions, getLoggedUser().getUserId(), workerRole, workerStatus);
+        Set<Worker> workers = ws.getWorkers(page, size, professions, getLoggedUser().getUserId(), workerRole, workerStatus);
 
         String baseUri = uriInfo.getBaseUri().toString() + "workers";
 
-        int totalWorkerPages = ws.calculateWorkerPagesByCriteria(professions, new long[]{neighborhoodId}, size, workerRole, workerStatus);
+        int totalWorkerPages = ws.calculateWorkerPages(professions, new long[]{neighborhoodId}, size, workerRole, workerStatus);
         Link[] links = createPaginationLinks(baseUri, page, size, totalWorkerPages);
 
         List<WorkerDto> workerDto = workers.stream()
@@ -74,7 +74,7 @@ public class WorkerController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findWorker(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at workers/{}", id);
-        Optional<Worker> worker = ws.findWorkerById(id);
+        Optional<Worker> worker = ws.findWorker(id);
         if (!worker.isPresent()) {
             throw new NotFoundException("Worker Not Found");
         }

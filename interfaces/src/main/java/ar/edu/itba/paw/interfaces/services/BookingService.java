@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Entities.Booking;
-import ar.edu.itba.paw.models.GroupedBooking;
 
 import java.sql.Date;
 import java.util.List;
@@ -15,7 +14,7 @@ public interface BookingService {
 
     Optional<Booking> findBooking(long bookingId);
 
-    List<Booking> getUserBookings(long userId);
+    List<Booking> getBookings(long userId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

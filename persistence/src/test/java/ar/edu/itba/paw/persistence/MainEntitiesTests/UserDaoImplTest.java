@@ -97,7 +97,7 @@ public class UserDaoImplTest {
         uKey1 = testInserter.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, ROLE, ID);
 
         // Exercise
-        Optional<User> maybeUser = userDao.findUserById(uKey1);
+        Optional<User> maybeUser = userDao.findUser(uKey1);
 
         // Validations
         assertTrue(maybeUser.isPresent());
@@ -108,7 +108,7 @@ public class UserDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<User> maybeUser = userDao.findUserById(1);
+        Optional<User> maybeUser = userDao.findUser(1);
 
         // Validations
         assertFalse(maybeUser.isPresent());
@@ -121,7 +121,7 @@ public class UserDaoImplTest {
         uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
 
         // Exercise
-        Optional<User> maybeUser = userDao.findUserByMail(USER_MAIL_1);
+        Optional<User> maybeUser = userDao.findUser(USER_MAIL_1);
 
         // Validations
         assertTrue(maybeUser.isPresent());
@@ -132,7 +132,7 @@ public class UserDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<User> maybeUser = userDao.findUserByMail(USER_MAIL_1);
+        Optional<User> maybeUser = userDao.findUser(USER_MAIL_1);
 
         // Validations
         assertFalse(maybeUser.isPresent());
@@ -210,7 +210,7 @@ public class UserDaoImplTest {
         populateUsers();
 
         // Exercise
-        List<User> retrievedUsers = userDao.getUsersByCriteria(null, nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<User> retrievedUsers = userDao.getUsers(null, nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(2, retrievedUsers.size()); // Adjust based on the expected number of retrieved posts
@@ -222,7 +222,7 @@ public class UserDaoImplTest {
         populateUsers();
 
         // Exercise
-        List<User> retrievedUsers = userDao.getUsersByCriteria(UserRole.NEIGHBOR, nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<User> retrievedUsers = userDao.getUsers(UserRole.NEIGHBOR, nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(2, retrievedUsers.size()); // Adjust based on the expected number of retrieved posts
@@ -234,7 +234,7 @@ public class UserDaoImplTest {
         populateUsers();
 
         // Exercise
-        List<User> retrievedUsers = userDao.getUsersByCriteria(UserRole.NEIGHBOR, nhKey1, BASE_PAGE, 1);
+        List<User> retrievedUsers = userDao.getUsers(UserRole.NEIGHBOR, nhKey1, BASE_PAGE, 1);
 
         // Validations
         assertEquals(1, retrievedUsers.size()); // Adjust based on the expected number of retrieved posts
@@ -246,7 +246,7 @@ public class UserDaoImplTest {
         populateUsers();
 
         // Exercise
-        List<User> retrievedUsers = userDao.getUsersByCriteria(UserRole.NEIGHBOR, nhKey1, 2, 1);
+        List<User> retrievedUsers = userDao.getUsers(UserRole.NEIGHBOR, nhKey1, 2, 1);
 
         // Validations
         assertEquals(1, retrievedUsers.size()); // Adjust based on the expected number of retrieved posts

@@ -58,13 +58,13 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public Optional<Product> findProductById(long productId) {
+    public Optional<Product> findProduct(long productId) {
         LOGGER.debug("Selecting Product with id {}", productId);
         return Optional.ofNullable(em.find(Product.class, productId));
     }
 
     @Override
-    public List<Product> getProductsByCriteria(long neighborhoodId, String department, long userId, String productStatus, int page, int size) {
+    public List<Product> getProducts(long neighborhoodId, String department, long userId, String productStatus, int page, int size) {
         LOGGER.debug("Selecting Products from neighborhood {}, in departments {}", neighborhoodId, department);
 
         List<Predicate> predicates = new ArrayList<>();
@@ -137,7 +137,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public int getProductsCountByCriteria(long neighborhoodId, String department, long userId, String productStatus) {
+    public int countProducts(long neighborhoodId, String department, long userId, String productStatus) {
         LOGGER.debug("Selecting Products Count from neighborhood {}, in departments {}", neighborhoodId, department);
 
         if(userId != 0 || productStatus != null){

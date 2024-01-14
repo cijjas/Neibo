@@ -63,7 +63,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findAttendance(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at neighborhoods/{}/events/{}/attendance/{}", neighborhoodId, eventId, id);
-        return Response.ok(AttendanceDto.fromAttendance(as.findAttendanceById(id)
+        return Response.ok(AttendanceDto.fromAttendance(as.findAttendance(id)
                 .orElseThrow(() -> new NotFoundException("Attendance Not Found")), uriInfo)).build();
     }
 
@@ -71,7 +71,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createAttendance() {
         LOGGER.info("POST request arrived at neighborhoods/{}/events/{}/attendance", neighborhoodId, eventId);
-        final Attendance attendance = as.createAttendee(getLoggedUser().getUserId(), eventId);
+        final Attendance attendance = as.createAttendance(getLoggedUser().getUserId(), eventId);
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(attendance.getId())).build();
         return Response.created(uri).build();
@@ -81,7 +81,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteByUser() {
         LOGGER.info("DELETE request arrived at neighborhoods/{}/events/{}/attendance", neighborhoodId, eventId);
-        as.deleteAttendee(getLoggedUser().getUserId(), eventId);
+        as.deleteAttendance(getLoggedUser().getUserId(), eventId);
         return Response.noContent().build();
     }
 }

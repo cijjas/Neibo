@@ -49,7 +49,7 @@ public class PostController extends GlobalControllerAdvice{
             @QueryParam("poststatus") @DefaultValue("none") final String postStatus,
             @QueryParam("user") @DefaultValue("0") final Long userId) {
         LOGGER.info("GET request arrived at neighborhoods/{}/posts", neighborhoodId);
-        final List<Post> posts = ps.getPostsByCriteria(channel, page, size, tags, neighborhoodId, PostStatus.valueOf(postStatus));
+        final List<Post> posts = ps.getPostsByCriteria(channel, page, size, tags, neighborhoodId, PostStatus.valueOf(postStatus), userId);
         final List<PostDto> postsDto = posts.stream()
                 .map(p -> PostDto.fromPost(p, uriInfo)).collect(Collectors.toList());
 
@@ -68,7 +68,7 @@ public class PostController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findPostById(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at neighborhoods/{}/posts/{}", neighborhoodId, id);
-        return Response.ok(PostDto.fromPost(ps.findPostById(id)
+        return Response.ok(PostDto.fromPost(ps.findPost(id)
                 .orElseThrow(() -> new NotFoundException("Post Not Found")), uriInfo)).build();
     }
 

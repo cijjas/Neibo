@@ -65,7 +65,7 @@ public class NeighborhoodDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhoodById(nhKey);
+        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhood(nhKey);
 
         // Validations & Post Conditions
         assertTrue(nh.isPresent());
@@ -77,7 +77,7 @@ public class NeighborhoodDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhoodById(1);
+        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhood(1);
 
         // Validations & Post Conditions
         assertFalse(nh.isPresent());
@@ -89,7 +89,7 @@ public class NeighborhoodDaoImplTest {
         long nhKey = testInserter.createNeighborhood(NEIGHBORHOOD_NAME);
 
         // Exercise
-        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhoodByName(NEIGHBORHOOD_NAME);
+        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhood(NEIGHBORHOOD_NAME);
 
         // Validations & Post Conditions
         assertTrue(nh.isPresent());
@@ -101,7 +101,7 @@ public class NeighborhoodDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhoodByName(NEIGHBORHOOD_NAME);
+        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhood(NEIGHBORHOOD_NAME);
 
         // Validations & Post Conditions
         assertFalse(nh.isPresent());

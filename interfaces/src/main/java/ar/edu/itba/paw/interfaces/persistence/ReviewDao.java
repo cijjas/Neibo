@@ -10,7 +10,7 @@ public interface ReviewDao {
     Review createReview(long workerId, long userId, float rating, String review);
 
     // -------------------------------------------- REVIEWS SELECT -----------------------------------------------------
-    Optional<Review> findReviewById(long reviewId);
+    Optional<Review> findReview(long reviewId);
 
     List<Review> getReviews(long workerId);
 
@@ -20,7 +20,7 @@ public interface ReviewDao {
 
     // ---------------------------------------------------
 
-    int getReviewsCount(long workerId);
+    int countReviews(long workerId);
 
     // -------------------------------------------- REVIEWS DELETE -----------------------------------------------------
     boolean deleteReview(long reviewId);

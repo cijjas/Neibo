@@ -13,13 +13,13 @@ public interface EventService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Event> findEventById(long eventId);
+    Optional<Event> findEvent(long eventId);
 
     boolean hasEvents(Date date, long neighborhoodId);
 
-    List<Event> getEventsByDate(String date, long neighborhoodId);
+    List<Event> getEvents(String date, long neighborhoodId);
 
-    List<Event> getEventsByNeighborhoodId(long neighborhoodId);
+    List<Event> getEvents(long neighborhoodId);
 
     List<Date> getEventDates(long neighborhoodId);
 

@@ -44,12 +44,12 @@ public class UserController {
             @QueryParam("userRole") final UserRole userRole
     ) {
         LOGGER.info("GET request arrived at neighborhoods/{}/users", neighborhoodId);
-        final List<User> users = us.getUsersByCriteria(userRole, neighborhoodId, page, size);
+        final List<User> users = us.getUsers(userRole, neighborhoodId, page, size);
         final List<UserDto> usersDto = users.stream()
                 .map(u -> UserDto.fromUser(u, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/users";
-        int totalAmenityPages = us.calculateUserPagesByCriteria(userRole, neighborhoodId, size);
+        int totalAmenityPages = us.calculateUserPages(userRole, neighborhoodId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalAmenityPages);
 
         return Response.ok(new GenericEntity<List<UserDto>>(usersDto){})
@@ -62,7 +62,7 @@ public class UserController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findUser(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at neighborhoods/{}/users/{}", neighborhoodId, id);
-        return Response.ok(UserDto.fromUser(us.findUserById(id)
+        return Response.ok(UserDto.fromUser(us.findUser(id)
                 .orElseThrow(() -> new NotFoundException("User Not Found")), uriInfo)).build();
     }
 

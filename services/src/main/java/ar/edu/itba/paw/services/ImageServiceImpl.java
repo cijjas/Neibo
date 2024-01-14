@@ -36,13 +36,13 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Image> getImage(long imageId) {
+    public Optional<Image> findImage(long imageId) {
         LOGGER.info("Retrieving Image {}", imageId);
 
         ValidationUtils.checkImageId(imageId);
 
         if (imageId <= 0)
             throw new IllegalArgumentException("Image ID must be a positive integer");
-        return imageDao.getImage(imageId);
+        return imageDao.findImage(imageId);
     }
 }

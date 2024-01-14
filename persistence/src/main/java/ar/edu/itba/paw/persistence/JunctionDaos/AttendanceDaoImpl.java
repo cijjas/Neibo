@@ -59,7 +59,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
     // ---------------------------------------------------
 
     @Override
-    public int getAttendanceCount(long eventId) {
+    public int countAttendance(long eventId) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
         Root<Attendance> root = criteriaQuery.from(Attendance.class);
@@ -71,7 +71,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
     }
 
     @Override
-    public Optional<Attendance> findAttendanceById(long attendanceId) {
+    public Optional<Attendance> findAttendance(long attendanceId) {
         LOGGER.debug("Selecting Attendance with id {}", attendanceId);
         return Optional.ofNullable(em.find(Attendance.class, attendanceId));
     }

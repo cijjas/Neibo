@@ -48,13 +48,13 @@ public class UserDaoImpl implements UserDao {
     // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
     @Override
-    public Optional<User> findUserById(final long userId) {
+    public Optional<User> findUser(final long userId) {
         LOGGER.debug("Selecting User with userId {}", userId);
         return Optional.ofNullable(em.find(User.class, userId));
     }
 
     @Override
-    public Optional<User> findUserByMail(final String mail) {
+    public Optional<User> findUser(final String mail) {
         LOGGER.debug("Selecting User with mail {}", mail);
         TypedQuery<User> query = em.createQuery("FROM User WHERE mail = :mail", User.class);
         query.setParameter("mail", mail);
@@ -62,7 +62,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> getNeighborsSubscribedByPostId(long postId) {
+    public List<User> getNeighborsSubscribed(long postId) {
         LOGGER.debug("Selecting Neighbors that are subscribed to Post {}", postId);
 
         String hql = "SELECT u FROM User u " +
@@ -76,7 +76,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> getUsersByCriteria(UserRole role, long neighborhoodId, int page, int size) {
+    public List<User> getUsers(UserRole role, long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Users with Role {} and from Neighborhood {}", role, neighborhoodId);
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -111,7 +111,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public int getTotalUsers(UserRole role, long neighborhoodId) {
+    public int countTotalUsers(UserRole role, long neighborhoodId) {
         LOGGER.debug("Selecting Users Count that have Role {} and from Neighborhood {}", role, neighborhoodId);
         StringBuilder jpqlConditions = new StringBuilder("SELECT COUNT(u) FROM User u WHERE 1 = 1");
         if (role != null)
@@ -138,7 +138,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> getEventUsersByCriteria(long eventId, int page, int size) {
+    public List<User> getEventUsers(long eventId, int page, int size) {
         LOGGER.debug("Selecting Users that will attend Event {}", eventId);
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u JOIN u.eventsSubscribed e WHERE e.eventId = :eventId", User.class);
         query.setParameter("eventId", eventId);

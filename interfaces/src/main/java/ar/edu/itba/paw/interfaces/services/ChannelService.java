@@ -3,7 +3,6 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.Entities.Channel;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public interface ChannelService {
@@ -12,7 +11,7 @@ public interface ChannelService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Channel> findChannelById(long id);
+    Optional<Channel> findChannel(long channelId);
 
     List<Channel> getChannels(long neighborhoodId);
 }

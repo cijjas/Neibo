@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,85 +52,42 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Optional<Product> findProductById(long productId) {
+    public Optional<Product> findProduct(long productId) {
         LOGGER.info("Selecting Product with id {}", productId);
 
         ValidationUtils.checkProductId(productId);
 
         if (productId <= 0)
             throw new IllegalArgumentException("Product ID must be a positive integer");
-        return productDao.findProductById(productId);
+        return productDao.findProduct(productId);
     }
 
     @Override
-    public List<Product> getProductsByCriteria(long neighborhoodId, String department, long userId, String productStatus, int page, int size) {
+    public List<Product> getProducts(long neighborhoodId, String department, long userId, String productStatus, int page, int size) {
         LOGGER.info("Selecting Products by neighborhood {} and departments {}", neighborhoodId, department);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        return productDao.getProductsByCriteria(neighborhoodId, department, userId, productStatus, page, size);
+        return productDao.getProducts(neighborhoodId, department, userId, productStatus, page, size);
     }
 
     @Override
-    public int getProductsCountByCriteria(long neighborhoodId, String department, long userId, String productStatus) {
+    public int countProducts(long neighborhoodId, String department, long userId, String productStatus) {
         LOGGER.info("Counting Products by neighborhood {} and departments {}", neighborhoodId, department);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        return productDao.getProductsCountByCriteria(neighborhoodId, department, userId, productStatus);
+        return productDao.countProducts(neighborhoodId, department, userId, productStatus);
     }
 
     @Override
-    public int getProductsTotalPages(long neighborhoodId, int size, String department, long userId, String productStatus){
-        return (int) Math.ceil((double) getProductsCountByCriteria(neighborhoodId, department, userId, productStatus) / size);
+    public int calculateProductPages(long neighborhoodId, int size, String department, long userId, String productStatus){
+        return PaginationUtils.calculatePages(countProducts(neighborhoodId, department, userId, productStatus), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void restockProduct(long productId, long extraUnits) {
-        LOGGER.info("Restocking Product {}", productId);
-        ValidationUtils.checkProductId(productId);
-        Product product = productDao.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
-        product.setRemainingUnits(product.getRemainingUnits()+extraUnits);
-    }
-
-    @Override
-    public void markAsBought(long buyerId, long productId, long units) {
-        LOGGER.info("Marking Product {} as bought by user {} for {} units", productId, buyerId, units);
-
-        ValidationUtils.checkUserId(buyerId);
-        ValidationUtils.checkProductId(productId);
-
-        purchaseDao.createPurchase(productId, buyerId, units);
-        Product product = productDao.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
-        product.setRemainingUnits(product.getRemainingUnits()-units);
-    }
-
-    @Override
-    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, Long stock) {
-        LOGGER.info("Updating Product {}", productId);
-
-        double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
-        Long[] idArray = {0L, 0L, 0L};
-        for(int i = 0; i < pictureFiles.length; i++){
-            idArray[i] = getImageId(pictureFiles[i]);
-        }
-        Long updatedStock = stock;
-        if(stock == null){
-            updatedStock = productDao.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")).getRemainingUnits();
-        }
-
-        Product product = findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
-        product.setName(name);
-        product.setDescription(description);
-        product.setPrice(priceDouble);
-        product.setUsed(used);
-        product.setDepartment(departmentDao.findDepartmentById(departmentId).orElseThrow(()-> new NotFoundException("Department Not Found")));
-        product.setRemainingUnits(updatedStock);
-    }
-
-    @Override
     public Product updateProductPartially(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, Long stock){
         LOGGER.info("Updating Product {}", productId);
 
-        Product product = findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        Product product = findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
         if(name != null && !name.isEmpty())
             product.setName(name);
         if(description != null && !description.isEmpty())
@@ -143,7 +99,7 @@ public class ProductServiceImpl implements ProductService {
         if(used != product.isUsed())
             product.setUsed(used);
         if(departmentId != 0)
-            product.setDepartment(departmentDao.findDepartmentById(departmentId).orElseThrow(()-> new NotFoundException("Department Not Found")));
+            product.setDepartment(departmentDao.findDepartment(departmentId).orElseThrow(()-> new NotFoundException("Department Not Found")));
         if(stock != null)
             product.setRemainingUnits(stock);
 
