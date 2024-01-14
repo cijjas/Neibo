@@ -46,7 +46,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     public Response listAttendance(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size) {
-        LOGGER.info("Listing Attendance for Event {}", eventId);
+        LOGGER.info("GET request arrived at neighborhoods/{}/events/{}/attendance", neighborhoodId, eventId);
         final Set<Attendance> attendance = as.getAttendance(eventId, page, size);
         final Set<AttendanceDto> attendanceDto = attendance.stream()
                 .map(a -> AttendanceDto.fromAttendance(a, uriInfo)).collect(Collectors.toSet());
@@ -64,7 +64,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findAttendance(@PathParam("id") final long id) {
-        LOGGER.info("Finding Attendance with id {}", id);
+        LOGGER.info("GET request arrived at neighborhoods/{}/events/{}/attendance/{}", neighborhoodId, eventId, id);
         return Response.ok(AttendanceDto.fromAttendance(as.findAttendanceById(id)
                 .orElseThrow(() -> new NotFoundException("Attendance Not Found")), uriInfo)).build();
     }
@@ -72,7 +72,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createAttendance() {
-        LOGGER.info("Creating Attendance for Event {}", eventId);
+        LOGGER.info("POST request arrived at neighborhoods/{}/events/{}/attendance", neighborhoodId, eventId);
         final Attendance attendance = as.createAttendee(getLoggedUser().getUserId(), eventId);
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(attendance.getId())).build();
@@ -82,7 +82,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     @DELETE
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteByUser() {
-        LOGGER.info("Deleting Attendance for User {}", getLoggedUser().getUserId());
+        LOGGER.info("DELETE request arrived at neighborhoods/{}/events/{}/attendance", neighborhoodId, eventId);
         as.deleteAttendee(getLoggedUser().getUserId(), eventId);
         return Response.noContent().build();
     }

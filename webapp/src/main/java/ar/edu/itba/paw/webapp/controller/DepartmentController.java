@@ -30,7 +30,7 @@ public class DepartmentController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listDepartments() {
-        LOGGER.info("Listing Departments");
+        LOGGER.info("GET request arrived at departments");
         List<DepartmentDto> departmentDto = Arrays.stream(Department.values())
                 .map(d -> DepartmentDto.fromDepartment(d, uriInfo))
                 .collect(Collectors.toList());
@@ -42,7 +42,7 @@ public class DepartmentController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findDepartment(@PathParam("id") final int id) {
-        LOGGER.info("Finding Department with id {}", id);
+        LOGGER.info("GET request arrived at departments/{}", id);
         Department department = Department.fromId(id);
 
         if (department != null) {

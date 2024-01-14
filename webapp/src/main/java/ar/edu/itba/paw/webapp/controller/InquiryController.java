@@ -53,7 +53,7 @@ public class InquiryController extends GlobalControllerAdvice{
     public Response listInquiries(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size) {
-        LOGGER.info("Listing Inquiries for Product {}", productId);
+        LOGGER.info("GET request arrived at neighborhoods/{}/products/{}/inquiries", neighborhoodId, productId);
         final List<Inquiry> inquiries = is.getInquiriesByProductAndCriteria(productId, page, size);
         final List<InquiryDto> inquiriesDto = inquiries.stream()
                 .map(i -> InquiryDto.fromInquiry(i, uriInfo)).collect(Collectors.toList());
@@ -70,7 +70,7 @@ public class InquiryController extends GlobalControllerAdvice{
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createInquiry(@Valid final QuestionForm form) {
-        LOGGER.info("Creating Inquiry on Product {}", productId);
+        LOGGER.info("POST request arrived at neighborhoods/{}/products/{}/inquiries", neighborhoodId, productId);
         final Inquiry inquiry = is.createInquiry(getLoggedUser().getUserId(), productId, form.getQuestionMessage());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(inquiry.getInquiryId())).build();
@@ -82,7 +82,7 @@ public class InquiryController extends GlobalControllerAdvice{
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response answerInquiry(@PathParam("id") final long id, @Valid final QuestionForm form) {
-        LOGGER.info("Updating Inquiry with id {}", id);
+        LOGGER.info("PATCH request arrived at neighborhoods/{}/products/{}/inquiries/{}", neighborhoodId, productId, id);
         final Inquiry inquiry = is.replyInquiry(id, form.getQuestionMessage());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(inquiry.getInquiryId())).build();

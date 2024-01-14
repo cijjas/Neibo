@@ -44,7 +44,7 @@ public class ReviewController extends GlobalControllerAdvice {
     public Response listReviews(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size) {
-        LOGGER.info("Listing Reviews for Worker {}", workerId);
+        LOGGER.info("GET request arrived at workers/{}/reviews", workerId);
         final List<Review> reviews = rs.getReviews(workerId, page, size);
         final List<ReviewDto> reviewsDto = reviews.stream()
                 .map(r -> ReviewDto.fromReview(r, uriInfo)).collect(Collectors.toList());
@@ -62,7 +62,7 @@ public class ReviewController extends GlobalControllerAdvice {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findReview(@PathParam("id") final long id) {
-        LOGGER.info("Finding Review with id {}", id);
+        LOGGER.info("GET request arrived at workers/{}/reviews/{}", workerId, id);
         return Response.ok(ReviewDto.fromReview(rs.findReviewById(id)
                 .orElseThrow(() -> new NotFoundException("Review Not Found")), uriInfo)).build();
     }
@@ -70,7 +70,7 @@ public class ReviewController extends GlobalControllerAdvice {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createReview(@Valid final ReviewForm form) {
-        LOGGER.info("Creating Review for Worker {}", workerId);
+        LOGGER.info("POST request arrived at workers/{}/reviews", workerId);
         final Review review = rs.createReview(workerId, getLoggedUser().getUserId(), form.getRating(), form.getReview());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(review.getReviewId())).build();

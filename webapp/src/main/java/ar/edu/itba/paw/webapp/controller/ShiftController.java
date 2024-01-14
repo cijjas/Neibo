@@ -34,8 +34,7 @@ public class ShiftController {
             @QueryParam("amenityId") long amenityId,
             @QueryParam("dayId") long dayId,
             @QueryParam("date") Date date) {
-        LOGGER.info("Listing Shifts for Amenity {}", amenityId);
-
+        LOGGER.info("GET request arrived at shifts");
         List<Shift> shifts = ss.getShiftsByCriteria(amenityId, dayId, date);
 
         // Convert shifts to DTOs if needed

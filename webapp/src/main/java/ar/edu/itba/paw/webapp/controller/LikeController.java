@@ -46,7 +46,7 @@ public class LikeController extends GlobalControllerAdvice{
             @QueryParam("userId") @DefaultValue("0") final int userId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size){
-        LOGGER.info("Listing Likes for Post {}", postId);
+        LOGGER.info("GET request arrived at neighborhoods/{}/likes", neighborhoodId);
         final List<Like> likes = ls.getLikesByCriteria(neighborhoodId, postId, userId, page, size);
         final List<LikeDto> likesDto = likes.stream()
                 .map(l -> LikeDto.fromLike(l, uriInfo)).collect(Collectors.toList());
@@ -63,7 +63,7 @@ public class LikeController extends GlobalControllerAdvice{
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createLike(@Valid LikeForm form) {
-        LOGGER.info("Creating Like on Post {}", form.getPostId());
+        LOGGER.info("POST request arrived at neighborhoods/{}/likes", neighborhoodId);
         final Like like = ls.addLikeToPost(form.getPostId(), getLoggedUser().getUserId());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(like.getId())).build();
