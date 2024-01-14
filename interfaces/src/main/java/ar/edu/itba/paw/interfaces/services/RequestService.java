@@ -13,18 +13,6 @@ public interface RequestService {
 
     int getRequestsCountByCriteria(long productId, long userId);
 
-    List<Request> getRequestsByProductId(long productId, int page, int size);
-
-    int getRequestsCountByProductId(long productId);
-
-    List<Request> getRequestsByProductAndUser(long productId, long userId, int page, int size);
-
-    List<Request> getRequestsByUserId(long userId, int page, int size);
-
-    int getRequestsCountByProductAndUser(long productId, long userId);
-
-    int getRequestsCountUser(long userId);
-
     // -----------------------------------------------------------------------------------------------------------------
 
     void markRequestAsFulfilled(long requestId);

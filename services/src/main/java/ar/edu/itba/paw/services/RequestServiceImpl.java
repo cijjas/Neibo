@@ -55,70 +55,18 @@ public class RequestServiceImpl implements RequestService {
         ValidationUtils.checkRequestId(productId, userId);
         ValidationUtils.checkPageAndSize(page, size);
 
-        if (userId > 0 && productId > 0) {
-            return requestDao.getRequestsByProductAndUser(productId, userId, page, size);
-        } else if (userId > 0) {
-            return requestDao.getRequestsByUserId(userId, page, size);
-        } else if (productId > 0) {
-            return requestDao.getRequestsByProductId(productId, page, size);
-        } else {
-            throw new NotFoundException("Invalid combination of parameters.");
-        }
+        return requestDao.getRequestsByCriteria(productId, userId, page, size);
     }
 
     @Override
     public int getRequestsCountByCriteria(long productId, long userId) {
 
-        ValidationUtils.checkRequestId(productId, userId);
+//        ValidationUtils.checkRequestId(productId, userId);
 
-        if (userId > 0 && productId > 0) {
-            return requestDao.getRequestsCountByProductAndUser(productId, userId);
-        } else if (userId > 0) {
-            return requestDao.getRequestsCountByUserId(userId);
-        } else if (productId > 0) {
-            return requestDao.getRequestsCountByProductId(productId);
-        } else {
+        if(userId <= 0 && productId <= 0) {
             throw new NotFoundException("Invalid combination of parameters.");
         }
-    }
-
-    @Override
-    public List<Request> getRequestsByProductId(long productId, int page, int size) {
-
-        ValidationUtils.checkProductId(productId);
-        ValidationUtils.checkPageAndSize(page, size);
-
-        return requestDao.getRequestsByProductId(productId, page, size);
-    }
-
-    @Override
-    public int getRequestsCountByProductId(long productId) {
-
-        ValidationUtils.checkProductId(productId);
-
-        return requestDao.getRequestsCountByProductId(productId);
-    }
-
-
-    @Override
-    public List<Request> getRequestsByProductAndUser(long productId, long userId, int page, int size) {
-
-        return requestDao.getRequestsByProductAndUser(productId, userId, page, size);
-    }
-
-    @Override
-    public List<Request> getRequestsByUserId(long userId, int page, int size) {
-        return requestDao.getRequestsByUserId(userId, page, size);
-    }
-
-    @Override
-    public int getRequestsCountByProductAndUser(long productId, long userId) {
-        return requestDao.getRequestsCountByProductAndUser(productId, userId);
-    }
-
-    @Override
-    public int getRequestsCountUser(long userId) {
-        return requestDao.getRequestsCountByUserId(userId);
+        return requestDao.getRequestsCountByCriteria(productId, userId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

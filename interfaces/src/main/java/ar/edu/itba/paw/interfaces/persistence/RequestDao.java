@@ -15,15 +15,7 @@ public interface RequestDao {
 
     Optional<Request> findRequest(long requestId);
 
-    List<Request> getRequestsByProductId(long productId, int page, int size);
+    List<Request> getRequestsByCriteria(long userId, long productId, int page, int size);
 
-    int getRequestsCountByProductId(long productId);
-
-    List<Request> getRequestsByProductAndUser(long productId, long userId, int page, int size);
-
-    int getRequestsCountByProductAndUser(long productId, long userId);
-
-    List<Request> getRequestsByUserId(long userId, int page, int size);
-
-    int getRequestsCountByUserId(long userId);
+    int getRequestsCountByCriteria(long userId, long productId);
 }

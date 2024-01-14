@@ -43,17 +43,27 @@ public class RequestDaoImpl implements RequestDao {
         return Optional.ofNullable(em.find(Request.class, requestId));
     }
 
-
     @Override
-    public List<Request> getRequestsByProductId(long productId, int page, int size) {
-        LOGGER.debug("Selecting Requests from Product {}", productId);
+    public List<Request> getRequestsByCriteria(long userId, long productId, int page, int size) {
+        LOGGER.debug("Selecting Requests By Criteria");
+        TypedQuery<Long> idQuery = null;
+        if(userId > 0 && productId > 0) {
+            idQuery = em.createQuery(
+                    "SELECT r.requestId FROM Request r WHERE r.product.productId = :productId AND r.user.userId = :userId AND r.fulfilled = false", Long.class);
+            idQuery.setParameter("productId", productId);
+            idQuery.setParameter("userId", userId);
+        } else if(userId > 0) {
+            idQuery = em.createQuery("SELECT r.requestId FROM Request r " +
+                    "WHERE r.user.userId = :userId AND r.fulfilled = false", Long.class);
+            idQuery.setParameter("userId", userId);
+        } else {
+            idQuery = em.createQuery(
+                    "SELECT r.requestId FROM Request r WHERE r.product.productId = :productId AND r.fulfilled = false", Long.class);
+            idQuery.setParameter("productId", productId);
+        }
 
-        TypedQuery<Long> idQuery = em.createQuery(
-                "SELECT r.requestId FROM Request r WHERE r.product.productId = :productId AND r.fulfilled = false", Long.class);
-        idQuery.setParameter("productId", productId);
         idQuery.setFirstResult((page - 1) * size);
         idQuery.setMaxResults(size);
-
         List<Long> requestIds = idQuery.getResultList();
 
         if (!requestIds.isEmpty()) {
@@ -62,88 +72,30 @@ public class RequestDaoImpl implements RequestDao {
             requestQuery.setParameter("requestIds", requestIds);
             return requestQuery.getResultList();
         }
-
         return Collections.emptyList();
     }
 
-
     @Override
-    public int getRequestsCountByProductId(long productId) {
-        LOGGER.debug("Selecting Requests Count from Product {}", productId);
-
-        Long count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
-                        "WHERE r.product.productId = :productId AND r.fulfilled = false")
-                .setParameter("productId", productId)
-                .getSingleResult();
-        return count != null ? count.intValue() : 0;
-    }
-
-    @Override
-    public List<Request> getRequestsByProductAndUser(long productId, long userId, int page, int size) {
-        LOGGER.debug("Selecting Requests from Product {} By User {}", productId, userId);
-
-        TypedQuery<Long> idQuery = em.createQuery(
-                "SELECT r.requestId FROM Request r WHERE r.product.productId = :productId AND r.user.userId = :userId AND r.fulfilled = false", Long.class);
-        idQuery.setParameter("productId", productId);
-        idQuery.setParameter("userId", userId);
-        idQuery.setFirstResult((page - 1) * size);
-        idQuery.setMaxResults(size);
-
-        List<Long> requestIds = idQuery.getResultList();
-
-        // Second query to retrieve Product objects based on the IDs
-        if (!requestIds.isEmpty()) {
-            TypedQuery<Request> requestQuery = em.createQuery(
-                    "SELECT r FROM Request r WHERE r.requestId IN :requestIds ORDER BY r.requestDate DESC", Request.class);
-            requestQuery.setParameter("requestIds", requestIds);
-            return requestQuery.getResultList();
+    public int getRequestsCountByCriteria(long userId, long productId) {
+        LOGGER.debug("Selecting Requests Count by Criteria");
+        Long count = null;
+        if(userId > 0 && productId > 0) {
+            count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
+                            "WHERE r.product.productId = :productId AND r.user.userId = :userId AND r.fulfilled = false")
+                    .setParameter("productId", productId)
+                    .setParameter("userId", userId)
+                    .getSingleResult();
+        } else if(userId > 0) {
+            count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
+                            "WHERE r.user.userId = :userId AND r.fulfilled = false")
+                    .setParameter("userId", userId)
+                    .getSingleResult();
+        } else {
+            count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
+                            "WHERE r.product.productId = :productId AND r.fulfilled = false")
+                    .setParameter("productId", productId)
+                    .getSingleResult();
         }
-
-        return Collections.emptyList();
-    }
-
-    @Override
-    public int getRequestsCountByProductAndUser(long productId, long userId) {
-        LOGGER.debug("Selecting Requests Count from Product {} By User {}", productId, userId);
-        Long count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
-                        "WHERE r.product.productId = :productId AND r.user.userId = :userId AND r.fulfilled = false")
-                .setParameter("productId", productId)
-                .setParameter("userId", userId)
-                .getSingleResult();
         return count != null ? count.intValue() : 0;
     }
-
-    @Override
-    public List<Request> getRequestsByUserId(long userId, int page, int size) {
-        LOGGER.debug("Selecting Requests from User {}", userId);
-
-        TypedQuery<Long> idQuery = em.createQuery("SELECT r.requestId FROM Request r " +
-                "WHERE r.user.userId = :userId AND r.fulfilled = false", Long.class);
-        idQuery.setParameter("userId", userId);
-        idQuery.setFirstResult((page - 1) * size);
-        idQuery.setMaxResults(size);
-
-        List<Long> requestIds = idQuery.getResultList();
-
-        if (!requestIds.isEmpty()) {
-            TypedQuery<Request> requestQuery = em.createQuery(
-                    "SELECT r FROM Request r WHERE r.requestId IN :requestIds ORDER BY r.requestDate DESC", Request.class);
-            requestQuery.setParameter("requestIds", requestIds);
-            return requestQuery.getResultList();
-        }
-
-        return Collections.emptyList();
-    }
-
-    @Override
-    public int getRequestsCountByUserId(long userId) {
-        LOGGER.debug("Selecting Requests Count from User {}", userId);
-
-        Long count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
-                        "WHERE r.user.userId = :userId AND r.fulfilled = false")
-                .setParameter("userId", userId)
-                .getSingleResult();
-        return count != null ? count.intValue() : 0;
-    }
-
 }

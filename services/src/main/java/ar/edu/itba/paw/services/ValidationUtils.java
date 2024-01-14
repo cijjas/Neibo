@@ -32,6 +32,14 @@ public class ValidationUtils {
         }
     }
 
+    //only if both are <=0 throw exception
+    public static void checkConditionalIds(long id1, long id2, String entity) {
+        if (id1 <= 0 && id2 <= 0) {
+            LOGGER.info("Invalid {} ID", entity);
+            throw new IllegalArgumentException("Invalid identifier value(s) for " + entity + ". IDs must be positive integers greater than 0.");
+        }
+    }
+
     // ---------------------------------------------------------------------------------------------------------
 
     public static void checkSize(int size) {
@@ -79,7 +87,7 @@ public class ValidationUtils {
     }
 
     public static void checkRequestId(long productId, long userId) {
-        ValidationUtils.checkIds(userId, productId, "Request");
+        ValidationUtils.checkConditionalIds(userId, productId, "Request");
     }
 
     public static void checkRequestId(long requestId) {
