@@ -7,8 +7,8 @@ import java.net.URI;
 
 public class LikeDto {
     private URI self;
-    private URI post; // localhost:8080/posts/{id}QUERYPARAM
-    private URI user; // localhost:8080/users/{id}QUERYPARAM
+    private URI post; // localhost:8080/posts/{id}
+    private URI user; // localhost:8080/users/{id}
 
     public static LikeDto fromLike(Like like, UriInfo uriInfo){
         final LikeDto dto = new LikeDto();
@@ -23,13 +23,13 @@ public class LikeDto {
                 .path("neighborhoods")
                 .path(String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("posts")
-                .queryParam("likedBy", String.valueOf(like.getUser().getUserId()))
+                .path(String.valueOf(like.getPost().getPostId()))
                 .build();
         dto.user = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
-                .queryParam("likedPost", String.valueOf(like.getPost().getPostId()))
+                .path(String.valueOf(like.getUser().getUserId()))
                 .build();
 
         return dto;

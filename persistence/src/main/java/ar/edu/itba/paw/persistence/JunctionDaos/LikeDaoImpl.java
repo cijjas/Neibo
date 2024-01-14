@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.swing.text.html.Option;
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,82 +34,45 @@ public class LikeDaoImpl implements LikeDao {
     // -------------------------------------------------- LIKES SELECT -------------------------------------------------
 
     @Override
-    public List<Like> getAllLikes() {
-        LOGGER.debug("Selecting all Likes");
-        return em.createQuery("SELECT l FROM Like l", Like.class).getResultList();
-    }
+    public List<Like> getLikesByCriteria(long postId, long userId, long neighborhoodId, int page, int size) {
+        LOGGER.debug("Selecting Likes by Criteria");
+        TypedQuery<Like> query = null;
 
-    @Override
-    public List<Like> getLikesByNeighborhood(long neighborhoodId, int page, int size) {
-        LOGGER.debug("Selecting Likes from Neighborhood {}", neighborhoodId);
-        return em.createQuery("SELECT l FROM Like l WHERE l.user.neighborhood.neighborhoodId = :neighborhoodId", Like.class)
-                .setParameter("neighborhoodId", neighborhoodId)
-                .setFirstResult((page - 1) * size)
+        if(userId > 0) {
+            query = em.createQuery("SELECT l FROM Like l WHERE l.user.userId = :userId", Like.class)
+                    .setParameter("userId", userId);
+        }
+        else if(postId > 0) {
+            query = em.createQuery("SELECT l FROM Like l WHERE l.post.postId = :postId", Like.class)
+                    .setParameter("postId", postId);
+        }
+        else {
+            //get all likes (within a neighborhood)
+            query = em.createQuery("SELECT l FROM Like l WHERE l.user.neighborhood.neighborhoodId = :neighborhoodId", Like.class)
+                    .setParameter("neighborhoodId", neighborhoodId);
+        }
+        return query.setFirstResult((page - 1) * size)
                 .setMaxResults(size)
                 .getResultList();
     }
 
     @Override
-    public int getLikes(long postId) {
-        LOGGER.debug("Selecting Likes from Post {}", postId);
-        Long count = (Long) em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.post.postId = :postId")
-                .setParameter("postId", postId)
-                .getSingleResult();
-        return count != null ? count.intValue() : 0;
-    }
-
-    @Override
-    public List<Like> getLikesByPost(long postId, int page, int size) {
-        LOGGER.debug("Selecting Likes from Post {}", postId);
-        return em.createQuery("SELECT l FROM Like l WHERE l.post.postId = :postId", Like.class)
-                .setParameter("postId", postId)
-                .setFirstResult((page - 1) * size)
-                .setMaxResults(size)
-                .getResultList();
-    }
-
-    @Override
-    public List<Like> getLikesByUser(long userId, int page, int size) {
-        LOGGER.debug("Selecting Likes from User {}", userId);
-        return em.createQuery("SELECT l FROM Like l WHERE l.user.userId = :userId", Like.class)
-                .setParameter("userId", userId)
-                .setFirstResult((page - 1) * size)
-                .setMaxResults(size)
-                .getResultList();
-    }
-
-    @Override
-    public int getAllLikesCount() {
-        LOGGER.debug("Selecting all Likes count");
-        Long count = (Long) em.createQuery("SELECT COUNT(l) FROM Like l")
-                .getSingleResult();
-        return count != null ? count.intValue() : 0;
-    }
-
-    @Override
-    public int getLikesByNeighborhoodCount(long neighborhoodId) {
-        LOGGER.debug("Selecting Likes from Neighborhood {}", neighborhoodId);
-        Long count = (Long) em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.user.neighborhood.neighborhoodId = :neighborhoodId")
-                .setParameter("neighborhoodId", neighborhoodId)
-                .getSingleResult();
-        return count != null ? count.intValue() : 0;
-    }
-
-    @Override
-    public int getLikesByUserCount(long userId) {
-        LOGGER.debug("Selecting Likes from User {}", userId);
-        Long count = (Long) em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.user.userId = :userId")
-                .setParameter("userId", userId)
-                .getSingleResult();
-        return count != null ? count.intValue() : 0;
-    }
-
-    @Override
-    public int getLikesByPostCount(long postId) {
-        LOGGER.debug("Selecting Likes from Post {}", postId);
-        Long count = (Long) em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.post.postId = :postId")
-                .setParameter("postId", postId)
-                .getSingleResult();
+    public int getLikesCountByCriteria(long postId, long userId, long neighborhoodId) {
+        LOGGER.debug("Selecting Likes Count by Criteria");
+        TypedQuery<Long> query = null;
+        if(userId > 0) {
+            query = em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.user.userId = :userId", Long.class)
+                    .setParameter("userId", userId);
+        }
+        else if(postId > 0) {
+            query = em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.post.postId = :postId", Long.class)
+                    .setParameter("postId", postId);
+        }
+        else {
+            query = em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.user.neighborhood.neighborhoodId = :neighborhoodId", Long.class)
+                    .setParameter("neighborhoodId", neighborhoodId);
+        }
+        Long count = query.getSingleResult();
         return count != null ? count.intValue() : 0;
     }
 

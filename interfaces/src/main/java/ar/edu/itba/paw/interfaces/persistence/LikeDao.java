@@ -15,23 +15,10 @@ public interface LikeDao {
     Like createLike(long postId, long userId);
 
     // -------------------------------------------------- LIKES SELECT -------------------------------------------------
-    List<Like> getAllLikes();
 
-    List<Like> getLikesByNeighborhood(long neighborhoodId, int page, int size);
+    List<Like> getLikesByCriteria(long postId, long userId, long neighborhoodId, int page, int size);
 
-    int getLikes(long postId);
-
-    List<Like> getLikesByPost(long postId, int page, int size);
-
-    List<Like> getLikesByUser(long userId, int page, int size);
-
-    int getAllLikesCount();
-
-    int getLikesByNeighborhoodCount(long neighborhoodId);
-
-    int getLikesByPostCount(long postId);
-
-    int getLikesByUserCount(long userId);
+    int getLikesCountByCriteria(long postId, long userId, long neighborhoodId);
 
     boolean isPostLiked(long postId, long userId);
 

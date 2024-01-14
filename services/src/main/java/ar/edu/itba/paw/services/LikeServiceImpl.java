@@ -48,21 +48,10 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public List<Like> getLikesByCriteria(long neighborhoodId, long postId, long userId, int page, int size){
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkLikeIds(postId, userId);
+        ValidationUtils.checkNegativeLikeIds(postId, userId);
         ValidationUtils.checkPageAndSize(page, size);
 
-        if (userId == 0 && postId == 0) {
-            return likeDao.getLikesByNeighborhood(neighborhoodId, page, size);
-        }
-        else if (userId > 0) {
-            return likeDao.getLikesByUser(userId, page, size);
-        } else if (postId > 0) {
-            return likeDao.getLikesByPost(postId, page, size);
-        } else {
-            throw new NotFoundException("Invalid combination of parameters.");
-        }
+        return likeDao.getLikesByCriteria(postId, userId, neighborhoodId, page, size);
     }
 
     @Override
@@ -80,20 +69,10 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public int getLikePagesByCriteria(long neighborhoodId, long postId, long userId, int size) {
 
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkLikeIds(postId, userId);
+        ValidationUtils.checkNegativeLikeIds(postId, userId);
         ValidationUtils.checkSize(size);
 
-        if (userId == 0 && postId == 0) {
-            return (int) Math.ceil((double) likeDao.getLikesByNeighborhoodCount(neighborhoodId) / size);
-        }
-        else if (userId > 0) {
-            return (int) Math.ceil((double) likeDao.getLikesByUserCount(userId) / size);
-        } else if (postId > 0) {
-            return (int) Math.ceil((double) likeDao.getLikesByPostCount(postId) / size);
-        } else {
-            throw new NotFoundException("Invalid combination of parameters.");
-        }
+        return (int) Math.ceil((double) likeDao.getLikesCountByCriteria(postId, userId, neighborhoodId) / size);
     }
 
 

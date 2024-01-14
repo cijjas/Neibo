@@ -71,7 +71,7 @@ public class LikeDaoImplTest {
         testInserter.createLike(pKey, uKey);
 
         // Exercise
-        int likes = likeDao.getLikes(pKey);
+        int likes = likeDao.getLikesCountByCriteria(pKey, 0, 0);
 
         // Validations & Post Conditions
         assertEquals(1, likes);
@@ -82,7 +82,7 @@ public class LikeDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        int likes = likeDao.getLikes(1);
+        int likes = likeDao.getLikesCountByCriteria(1, 0, 0);
 
         // Validations & Post Conditions
         assertEquals(0, likes);
