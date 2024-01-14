@@ -77,5 +77,13 @@ public class LikeController extends GlobalControllerAdvice{
         return Response.created(uri).build();
     }
 
+    @DELETE
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response deleteById(@QueryParam("userId") final long userId,
+                               @QueryParam("postId") final long postId) {
+        LOGGER.info("DELETE request arrived at 'neighborhoods/{}/likes/'", neighborhoodId);
+        ls.deleteLike(postId, userId);
+        return Response.noContent().build();
+    }
 }
 
