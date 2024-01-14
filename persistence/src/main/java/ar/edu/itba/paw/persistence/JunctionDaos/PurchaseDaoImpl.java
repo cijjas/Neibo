@@ -45,44 +45,8 @@ public class PurchaseDaoImpl implements PurchaseDao {
     }
 
     @Override
-    public Set<Purchase> getPurchasesByBuyerId(long userId, int page, int size) {
-        LOGGER.debug("Selecting Purchases By Seller {}", userId);
-
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
-        Root<Purchase> purchaseRoot = idQuery.from(Purchase.class);
-
-        Join<Purchase, User> userJoin = purchaseRoot.join("user");
-
-        idQuery.select(purchaseRoot.get("purchaseId"));
-        idQuery.where(cb.equal(userJoin.get("userId"), userId));
-
-        TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
-        idTypedQuery.setFirstResult((page - 1) * size);
-        idTypedQuery.setMaxResults(size);
-
-        List<Long> purchaseIds = idTypedQuery.getResultList();
-
-        if (purchaseIds.isEmpty()) {
-            return Collections.emptySet();
-        }
-
-        CriteriaQuery<Purchase> purchaseQuery = cb.createQuery(Purchase.class);
-        Root<Purchase> purchaseRootFetch = purchaseQuery.from(Purchase.class);
-
-        purchaseQuery.select(purchaseRootFetch);
-        purchaseQuery.where(purchaseRootFetch.get("purchaseId").in(purchaseIds));
-        purchaseQuery.orderBy(cb.desc(purchaseRootFetch.get("purchaseDate")));
-
-        TypedQuery<Purchase> purchaseTypedQuery = em.createQuery(purchaseQuery);
-        List<Purchase> purchases = purchaseTypedQuery.getResultList();
-
-        return new HashSet<>(purchases);
-    }
-
-    @Override
-    public Set<Purchase> getPurchasesBySellerId(long userId, int page, int size) {
-        LOGGER.debug("Selecting Purchases By Buyer {}", userId);
+    public Set<Purchase> getPurchasesByCriteria(long userId, String type, int page, int size) {
+        LOGGER.debug("Selecting Purchases By Criteria For User {}", userId);
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
@@ -90,9 +54,15 @@ public class PurchaseDaoImpl implements PurchaseDao {
 
         Join<Purchase, Product> productJoin = purchaseRoot.join("product");
         Join<Purchase, User> userJoin = purchaseRoot.join("user");
-
         idQuery.select(purchaseRoot.get("purchaseId"));
-        idQuery.where(cb.equal(productJoin.get("seller").get("userId"), userId));
+
+        if("purchase".equalsIgnoreCase(type)) {
+            idQuery.where(cb.equal(userJoin.get("userId"), userId));
+        } else if("sale".equalsIgnoreCase(type)) {
+            idQuery.where(cb.equal(productJoin.get("seller").get("userId"), userId));
+        } else {
+            throw new IllegalArgumentException("Invalid type");
+        }
 
         TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
         idTypedQuery.setFirstResult((page - 1) * size);
@@ -117,39 +87,28 @@ public class PurchaseDaoImpl implements PurchaseDao {
         return new HashSet<>(purchases);
     }
 
-
     @Override
-    public int getPurchasesCountByBuyerId(long userId) {
+    public int getPurchasesByCriteriaCount(long userId, String type) {
         LOGGER.debug("Counting Purchases By Seller {}", userId);
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<Purchase> purchaseRoot = query.from(Purchase.class);
 
-        Join<Purchase, User> userJoin = purchaseRoot.join("user");
-
-        query.select(cb.count(purchaseRoot));
-        query.where(cb.equal(userJoin.get("userId"), userId));
-
-        TypedQuery<Long> typedQuery = em.createQuery(query);
-        return typedQuery.getSingleResult().intValue();
-    }
-
-    @Override
-    public int getPurchasesCountBySellerId(long userId) {
-        LOGGER.debug("Counting Purchases By Buyer {}", userId);
-
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Long> query = cb.createQuery(Long.class);
-        Root<Purchase> purchaseRoot = query.from(Purchase.class);
-
         Join<Purchase, Product> productJoin = purchaseRoot.join("product");
         Join<Purchase, User> userJoin = purchaseRoot.join("user");
 
         query.select(cb.count(purchaseRoot));
-        query.where(cb.equal(productJoin.get("seller").get("userId"), userId));
+        if("purchase".equalsIgnoreCase(type)) {
+            query.where(cb.equal(userJoin.get("userId"), userId));
+        } else if("sale".equalsIgnoreCase(type)) {
+            query.where(cb.equal(productJoin.get("seller").get("userId"), userId));
+        } else {
+            throw new IllegalArgumentException("Invalid type");
+        }
 
         TypedQuery<Long> typedQuery = em.createQuery(query);
         return typedQuery.getSingleResult().intValue();
     }
+
 }

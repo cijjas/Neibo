@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -42,72 +41,28 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public Set<Purchase> getPurchasesBySellerId(long userId, int page, int size) {
+    public Set<Purchase> getPurchasesByCriteria(long userId, String type, int page, int size) {
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPageAndSize(page, size);
 
-        return  purchaseDao.getPurchasesBySellerId(userId, page, size);
+        return purchaseDao.getPurchasesByCriteria(userId, type, page, size);
     }
 
     @Override
-    public int getPurchasesCountBySellerId(long userId) {
-
+    public int getPurchasesByCriteriaCount(long userId, String type) {
         ValidationUtils.checkUserId(userId);
 
-        return purchaseDao.getPurchasesCountBySellerId(userId);
+        return purchaseDao.getPurchasesByCriteriaCount(userId, type);
     }
 
     @Override
-    public Set<Purchase> getPurchasesByBuyerId(long userId, int page, int size) {
+    public int getTotalPurchasesPages(long userId, String type, int size) {
 
-        ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkPageAndSize(page, size);
-
-        return purchaseDao.getPurchasesByBuyerId(userId, page, size);
-    }
-
-    @Override
-    public int getPurchasesCountByBuyerId(long userId) {
-
-        ValidationUtils.checkUserId(userId);
-
-        return purchaseDao.getPurchasesCountByBuyerId(userId);
-    }
-
-    // In PurchaseService
-
-    @Override
-    public Set<Purchase> getPurchasesByType(long userId, String type, int page, int size) {
-
-        ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkPageAndSize(page, size);
-
-        if ("purchase".equalsIgnoreCase(type)) {
-            return getPurchasesByBuyerId(userId, page, size);
-        } else if ("sale".equalsIgnoreCase(type)) {
-            return getPurchasesBySellerId(userId, page, size);
-        } else {
-            // You might throw an exception or return an empty set, depending on your requirements
-            throw new IllegalArgumentException("Invalid 'type' parameter");
-        }
-    }
-
-    @Override
-    public int getTotalPurchasesPages(long sellerId, long buyerId, int size) {
-
-        ValidationUtils.checkBuyerId(buyerId);
-        ValidationUtils.checkSellerId(sellerId);
+        ValidationUtils.checkId(userId, "User");
         ValidationUtils.checkSize(size);
 
-        if (sellerId != 0) {
-            return calculatePages(getPurchasesCountBySellerId(sellerId), size);
-        } else if (buyerId != 0) {
-            return calculatePages(getPurchasesCountByBuyerId(buyerId), size);
-        } else {
-            //throw something
-            return 0;
-        }
+        return calculatePages(getPurchasesByCriteriaCount(userId, type), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
