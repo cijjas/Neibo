@@ -32,7 +32,7 @@ public class ImageController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findById(@QueryParam("id") final long id) {
-        LOGGER.info("Finding Image with id {}", id);
+        LOGGER.info("GET request arrived at images/{}", id);
         Optional<Image> image = is.getImage(id);
         if (!image.isPresent()) {
             throw new NotFoundException("Image not found");
@@ -43,7 +43,7 @@ public class ImageController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response storeImage(MultipartFile imageFile) {
-        LOGGER.info("Storing Image");
+        LOGGER.info("POST request arrived at images/");
         final Image image = is.storeImage(imageFile);
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(image.getImageId())).build();

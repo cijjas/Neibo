@@ -40,7 +40,7 @@ public class NeighborhoodWorkerController {
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
-        LOGGER.info("Listing Neighborhoods for Worker {}", workerId);
+        LOGGER.info("GET request arrived at workers/{}/neighborhoods", workerId);
         Set<Neighborhood> neighborhoods = nws.getNeighborhoods(workerId);
 
         List<NeighborhoodDto> neighborhoodsDto = neighborhoods.stream()
@@ -53,7 +53,7 @@ public class NeighborhoodWorkerController {
     @PATCH
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response addWorkerToNeighborhood(@QueryParam("neighborhoodId") final long neighborhoodId) {
-        LOGGER.info("Adding Worker {} to Neighborhood {}", workerId, neighborhoodId);
+        LOGGER.info("PATCH request arrived at  workers/{}/neighborhoods", neighborhoodId);
         nws.addWorkerToNeighborhood(workerId, neighborhoodId);
         Worker worker = ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker Not Found"));
         final URI uri = uriInfo.getAbsolutePathBuilder()
@@ -64,12 +64,11 @@ public class NeighborhoodWorkerController {
     @DELETE
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response removeWorkerFromNeighborhood(@QueryParam("neighborhoodId") final long neighborhoodId) {
-        LOGGER.info("Removing Worker {} from Neighborhood {}", workerId, neighborhoodId);
+        LOGGER.info("DELETE request arrived at  workers/{}/neighborhoods", neighborhoodId);
         nws.removeWorkerFromNeighborhood(workerId, neighborhoodId);
         Worker worker = ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker Not Found"));
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(worker.getWorkerId())).build();
         return Response.created(uri).build();
-//        return Response.noContent().build();
     }
 }

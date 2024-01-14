@@ -39,7 +39,7 @@ public class PurchaseController {
             @QueryParam("page") @DefaultValue("1") int page,
             @QueryParam("size") @DefaultValue("10") int size
     ) {
-        LOGGER.info("Listing Purchases for User {}", userId);
+        LOGGER.info("GET request arrived at neighborhoods/{}/users/{}/transactions", neighborhoodId, userId);
         Set<Purchase> transactions;
 
         transactions = ps.getPurchasesByType(userId, type, page, size);

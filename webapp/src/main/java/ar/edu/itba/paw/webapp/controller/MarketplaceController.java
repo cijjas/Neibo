@@ -58,14 +58,14 @@ public class MarketplaceController extends GlobalControllerAdvice{
             department = "all";
         }
         LOGGER.info("User arriving at '/marketplace'");
-        List<Product> productList = prs.getProductsByCriteria(getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.fromURLString(department) , page,size);
+//        List<Product> productList = prs.getProductsByCriteria(getLoggedUser().getNeighborhood().getNeighborhoodId(), Department.fromURLString(department) , page,size);
         ModelAndView mav = new ModelAndView("marketplace/views/marketplace");
-        mav.addObject("productList", productList);
+//        mav.addObject("productList", productList);
         mav.addObject("channel", "Marketplace");
         mav.addObject("departmentList", Department.getDepartmentsWithUrls());
         mav.addObject("departmentName", Objects.requireNonNull(Department.fromURLString(department)).name());
         mav.addObject("page", page);
-        mav.addObject("totalPages", prs.getProductsTotalPages(getLoggedUser().getNeighborhood().getNeighborhoodId(), size, Department.fromURLString(department)));
+//        mav.addObject("totalPages", prs.getProductsTotalPages(getLoggedUser().getNeighborhood().getNeighborhoodId(), size, Department.fromURLString(department)));
         mav.addObject("contextPath", "/marketplace/products/" + department);
         return mav;
     }
@@ -81,13 +81,13 @@ public class MarketplaceController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("User arriving at '/marketplace/my-purchases'");
 
-        List<Product> products = prs.getProductsBought(getLoggedUser().getUserId(), page, size);
+//        List<Product> products = prs.getProductsBought(getLoggedUser().getUserId(), page, size);
         ModelAndView mav = new ModelAndView("marketplace/views/myPurchases");
-        mav.addObject("channel", "MyPurchases");
-        mav.addObject("purchases", prchs.getPurchasesByBuyerId(getLoggedUser().getUserId(), page, size));
-        mav.addObject("page", page);
-        mav.addObject("totalPages", prs.getProductsBoughtTotalPages(getLoggedUser().getUserId(), size));
-        mav.addObject("contextPath", "/marketplace/my-purchases");
+//        mav.addObject("channel", "MyPurchases");
+//        mav.addObject("purchases", prchs.getPurchasesByBuyerId(getLoggedUser().getUserId(), page, size));
+//        mav.addObject("page", page);
+//        mav.addObject("totalPages", prs.getProductsBoughtTotalPages(getLoggedUser().getUserId(), size));
+//        mav.addObject("contextPath", "/marketplace/my-purchases");
         return mav;
     }
 
@@ -99,11 +99,11 @@ public class MarketplaceController extends GlobalControllerAdvice{
         LOGGER.info("User arriving at '/marketplace/currently-requesting'");
 
         ModelAndView mav = new ModelAndView("marketplace/views/myCurrentlyRequesting");
-        mav.addObject("channel", "CurrentlyRequesting");
-        mav.addObject("page", page);
-        mav.addObject("totalPages", prs.getProductsBoughtTotalPages(getLoggedUser().getUserId(), size));
-        mav.addObject("contextPath", "/marketplace/currently-requesting");
-        mav.addObject("requestList", rqs.getRequestsByUserId(getLoggedUser().getUserId(), page, size));
+//        mav.addObject("channel", "CurrentlyRequesting");
+//        mav.addObject("page", page);
+//        mav.addObject("totalPages", prs.getProductsBoughtTotalPages(getLoggedUser().getUserId(), size));
+//        mav.addObject("contextPath", "/marketplace/currently-requesting");
+//        mav.addObject("requestList", rqs.getRequestsByUserId(getLoggedUser().getUserId(), page, size));
         return mav;
     }
 
@@ -115,11 +115,11 @@ public class MarketplaceController extends GlobalControllerAdvice{
         LOGGER.info("User arriving at '/marketplace/my-sales'");
 
         ModelAndView mav = new ModelAndView("marketplace/views/mySales");
-        mav.addObject("purchases", prchs.getPurchasesBySellerId(getLoggedUser().getUserId(), page, size));
-        mav.addObject("channel", "MySales");
-        mav.addObject("page", page);
-        mav.addObject("totalPages", prs.getProductsSoldTotalPages(getLoggedUser().getUserId(), size));
-        mav.addObject("contextPath", "/marketplace/my-sales");
+//        mav.addObject("purchases", prchs.getPurchasesBySellerId(getLoggedUser().getUserId(), page, size));
+//        mav.addObject("channel", "MySales");
+//        mav.addObject("page", page);
+//        mav.addObject("totalPages", prs.getProductsSoldTotalPages(getLoggedUser().getUserId(), size));
+//        mav.addObject("contextPath", "/marketplace/my-sales");
         return mav;
     }
 
@@ -169,11 +169,11 @@ public class MarketplaceController extends GlobalControllerAdvice{
 
         ModelAndView mav = new ModelAndView("marketplace/views/myListings");
 
-        mav.addObject("myProductList", prs.getProductsSelling(getLoggedUser().getUserId(), page, size));
-        mav.addObject("channel", "MyListings");
-        mav.addObject("page", page);
-        mav.addObject("totalPages", prs.getProductsSellingTotalPages(getLoggedUser().getUserId(), size));
-        mav.addObject("contextPath", "/marketplace/my-listings");
+//        mav.addObject("myProductList", prs.getProductsSelling(getLoggedUser().getUserId(), page, size));
+//        mav.addObject("channel", "MyListings");
+//        mav.addObject("page", page);
+//        mav.addObject("totalPages", prs.getProductsSellingTotalPages(getLoggedUser().getUserId(), size));
+//        mav.addObject("contextPath", "/marketplace/my-listings");
         return mav;
     }
 

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.enums.Department;
+import ar.edu.itba.paw.enums.ProductStatus;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Product;
@@ -63,50 +64,98 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> getProductsByCriteria(long neighborhoodId, Department department, int page, int size) {
+    public List<Product> getProductsByCriteria(long neighborhoodId, String department, long userId, String productStatus, int page, int size) {
         LOGGER.debug("Selecting Products from neighborhood {}, in departments {}", neighborhoodId, department);
-        // Initialize CriteriaBuilder
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        // First Query to retrieve product ids
-        CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
-        Root<Product> idRoot = idQuery.from(Product.class);
-        idQuery.select(idRoot.get("productId"));
-        // Add conditions for filtering
+
         List<Predicate> predicates = new ArrayList<>();
-        predicates.add(cb.equal(idRoot.get("seller").get("neighborhood").get("neighborhoodId"), neighborhoodId));
-        if (department != Department.NONE) {
-            predicates.add(cb.equal(idRoot.get("department").get("departmentId"), department.getId()));
+        if(userId != 0 || productStatus != null){
+            ProductStatus productStatusEnum = ProductStatus.valueOf(productStatus);
+            TypedQuery<Long> idQuery = null;
+            if(productStatusEnum == ProductStatus.BOUGHT){
+                idQuery = em.createQuery(
+                        "SELECT DISTINCT p.product.id FROM Purchase p WHERE p.user.userId = :userId", Long.class);
+                idQuery.setParameter("userId", userId);
+            }
+            else if(productStatusEnum == ProductStatus.SOLD){
+                idQuery = em.createQuery(
+                        "SELECT DISTINCT p.product.id FROM Purchase p WHERE p.user IS NOT NULL AND p.product.seller.userId = :userId", Long.class);
+                idQuery.setParameter("userId", userId);
+            }
+            else if(productStatusEnum == ProductStatus.SELLING){
+                idQuery = em.createQuery(
+                        "SELECT p.productId FROM Product p WHERE p.seller.userId = :userId", Long.class);
+                idQuery.setParameter("userId", userId);
+            }
+            idQuery.setFirstResult((page - 1) * size);
+            idQuery.setMaxResults(size);
+            List<Long> productIds = idQuery.getResultList();
+            if (!productIds.isEmpty()) {
+                TypedQuery<Product> productQuery = em.createQuery(
+                        "SELECT p FROM Product p WHERE p.productId IN :productIds ORDER BY p.creationDate DESC", Product.class);
+                productQuery.setParameter("productIds", productIds);
+                return productQuery.getResultList();
+            }
         }
-        predicates.add(cb.greaterThan(idRoot.get("remainingUnits"), 0L));
-        idQuery.where(predicates.toArray(new Predicate[0]));
-        // Create the query
-        TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
-        // Implement pagination in the first query
-        if(page > 0){
-            idTypedQuery.setFirstResult((page - 1) * size);
-            idTypedQuery.setMaxResults(size);
+        else if(department != null) {
+            // Initialize CriteriaBuilder
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            // First Query to retrieve product ids
+            CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
+            Root<Product> idRoot = idQuery.from(Product.class);
+            idQuery.select(idRoot.get("productId"));
+            Department departmentEnum = Department.valueOf(department);
+            predicates.add(cb.equal(idRoot.get("seller").get("neighborhood").get("neighborhoodId"), neighborhoodId));
+            if (departmentEnum != Department.NONE) {
+                predicates.add(cb.equal(idRoot.get("department").get("departmentId"), departmentEnum.getId()));
+            }
+            predicates.add(cb.greaterThan(idRoot.get("remainingUnits"), 0L));
+            idQuery.where(predicates.toArray(new Predicate[0]));
+            // Create the query
+            TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
+            // Implement pagination in the first query
+            if(page > 0){
+                idTypedQuery.setFirstResult((page - 1) * size);
+                idTypedQuery.setMaxResults(size);
+            }
+            // Results
+            List<Long> productIds = idTypedQuery.getResultList();
+            // Check if productIds is empty for better performance
+            if (productIds.isEmpty()) {
+                return Collections.emptyList();
+            }
+            // Second Query to retrieve actual products
+            CriteriaQuery<Product> dataQuery = cb.createQuery(Product.class);
+            Root<Product> dataRoot = dataQuery.from(Product.class);
+            // Add predicate that enforces existence within the IDs recovered in the first query
+            dataQuery.where(dataRoot.get("productId").in(productIds));
+            // Create the query
+            TypedQuery<Product> dataTypedQuery = em.createQuery(dataQuery);
+            // Return Results
+            return dataTypedQuery.getResultList();
         }
-        // Results
-        List<Long> productIds = idTypedQuery.getResultList();
-        // Check if productIds is empty for better performance
-        if (productIds.isEmpty()) {
-            return Collections.emptyList();
-        }
-        // Second Query to retrieve actual products
-        CriteriaQuery<Product> dataQuery = cb.createQuery(Product.class);
-        Root<Product> dataRoot = dataQuery.from(Product.class);
-        // Add predicate that enforces existence within the IDs recovered in the first query
-        dataQuery.where(dataRoot.get("productId").in(productIds));
-        // Create the query
-        TypedQuery<Product> dataTypedQuery = em.createQuery(dataQuery);
-        // Return Results
-        return dataTypedQuery.getResultList();
+        return Collections.emptyList();
     }
 
     @Override
-    public int getProductsCountByCriteria(long neighborhoodId, Department department) {
+    public int getProductsCountByCriteria(long neighborhoodId, String department, long userId, String productStatus) {
         LOGGER.debug("Selecting Products Count from neighborhood {}, in departments {}", neighborhoodId, department);
-        // Initialize CriteriaBuilder
+
+        if(userId != 0 || productStatus != null){
+            ProductStatus productStatusEnum = ProductStatus.valueOf(productStatus);
+            TypedQuery<Long> query = null;
+            if(productStatusEnum == ProductStatus.BOUGHT){
+                query = em.createQuery("SELECT COUNT(*) FROM Product p JOIN Purchase pu ON p.productId = pu.product.productId WHERE pu.user.userId = :userId", Long.class);
+            }
+            else if(productStatusEnum == ProductStatus.SOLD){
+                query = em.createQuery("SELECT COUNT(*) FROM Product p JOIN Purchase pu ON p.productId = pu.product.productId WHERE p.seller.userId = :userId", Long.class);
+            }
+            else if(productStatusEnum == ProductStatus.SELLING){
+                query = em.createQuery("SELECT COUNT(*) FROM Product p WHERE p.seller.userId = :userId", Long.class);
+            }
+            query.setParameter("userId", userId);
+            return query.getSingleResult().intValue();
+        }
+
         CriteriaBuilder cb = em.getCriteriaBuilder();
         // First Query to retrieve product count
         CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
@@ -115,8 +164,8 @@ public class ProductDaoImpl implements ProductDao {
         // Add conditions for filtering
         List<Predicate> predicates = new ArrayList<>();
         predicates.add(cb.equal(countRoot.get("seller").get("neighborhood").get("neighborhoodId"), neighborhoodId));
-        if (department != Department.NONE) {
-            predicates.add(cb.equal(countRoot.get("department").get("departmentId"), department.getId()));
+        if (department != null && Department.valueOf(department) != Department.NONE) {
+            predicates.add(cb.equal(countRoot.get("department").get("departmentId"), Department.valueOf(department).getId()));
         }
         predicates.add(cb.greaterThan(countRoot.get("remainingUnits"), 0L));
         countQuery.where(predicates.toArray(new Predicate[0]));
@@ -128,101 +177,4 @@ public class ProductDaoImpl implements ProductDao {
         return countResult.intValue();
     }
 
-    @Override
-    public int getProductsSellingCount(long userId) {
-        LOGGER.debug("Selecting Selling Products Count from User {}", userId);
-        TypedQuery<Long> query = em.createQuery("SELECT COUNT(*) FROM Product p WHERE p.seller.userId = :userId", Long.class);
-        query.setParameter("userId", userId);
-        return query.getSingleResult().intValue();
-    }
-
-    @Override
-    public int getProductsSoldCount(long userId) {
-        LOGGER.debug("Selecting Sold Products Count from User {}", userId);
-        TypedQuery<Long> query = em.createQuery("SELECT COUNT(*) FROM Product p JOIN Purchase pu ON p.productId = pu.product.productId WHERE p.seller.userId = :userId", Long.class);
-        query.setParameter("userId", userId);
-        return query.getSingleResult().intValue();
-    }
-
-    @Override
-    public int getProductsBoughtCount(long userId) {
-        LOGGER.debug("Selecting Bought Products Count from User {}", userId);
-        TypedQuery<Long> query = em.createQuery("SELECT COUNT(*) FROM Product p JOIN Purchase pu ON p.productId = pu.product.productId WHERE pu.user.userId = :userId", Long.class);
-        query.setParameter("userId", userId);
-        return query.getSingleResult().intValue();
-    }
-
-    @Override
-    public List<Product> getProductsSelling(long userId, int page, int size) {
-        LOGGER.debug("Selecting Selling Products from User {}", userId);
-
-        // First query to retrieve product IDs with remainingUnits > 0
-        TypedQuery<Long> idQuery = em.createQuery(
-                "SELECT p.productId FROM Product p WHERE p.seller.userId = :userId", Long.class);
-        idQuery.setParameter("userId", userId);
-        idQuery.setFirstResult((page - 1) * size);
-        idQuery.setMaxResults(size);
-
-        List<Long> productIds = idQuery.getResultList();
-
-        // Second query to retrieve Product objects based on the IDs
-        if (!productIds.isEmpty()) {
-            TypedQuery<Product> productQuery = em.createQuery(
-                    "SELECT p FROM Product p WHERE p.productId IN :productIds ORDER BY p.creationDate DESC", Product.class);
-            productQuery.setParameter("productIds", productIds);
-            return productQuery.getResultList();
-        }
-
-        return Collections.emptyList();
-    }
-
-
-    @Override
-    public List<Product> getProductsSold(long userId, int page, int size) {
-        LOGGER.debug("Selecting Sold Products from User {}", userId);
-
-        // First query to retrieve product IDs
-        TypedQuery<Long> idQuery = em.createQuery(
-                "SELECT DISTINCT p.product.id FROM Purchase p WHERE p.user IS NOT NULL AND p.product.seller.userId = :userId", Long.class);
-        idQuery.setParameter("userId", userId);
-        idQuery.setFirstResult((page - 1) * size);
-        idQuery.setMaxResults(size);
-
-        List<Long> productIds = idQuery.getResultList();
-
-        // Second query to retrieve Product objects based on the IDs
-        if (!productIds.isEmpty()) {
-            TypedQuery<Product> productQuery = em.createQuery(
-                    "SELECT p FROM Product p WHERE p.productId IN :productIds ORDER BY p.creationDate DESC", Product.class);
-            productQuery.setParameter("productIds", productIds);
-            return productQuery.getResultList();
-        }
-
-        return Collections.emptyList();
-    }
-
-
-    @Override
-    public List<Product> getProductsBought(long userId, int page, int size) {
-        LOGGER.debug("Selecting Bought Products from User {}", userId);
-
-        // First query to retrieve product IDs
-        TypedQuery<Long> idQuery = em.createQuery(
-                "SELECT DISTINCT p.product.id FROM Purchase p WHERE p.user.userId = :userId", Long.class);
-        idQuery.setParameter("userId", userId);
-        idQuery.setFirstResult((page - 1) * size);
-        idQuery.setMaxResults(size);
-
-        List<Long> productIds = idQuery.getResultList();
-
-        // Second query to retrieve Product objects based on the IDs
-        if (!productIds.isEmpty()) {
-            TypedQuery<Product> productQuery = em.createQuery(
-                    "SELECT p FROM Product p WHERE p.productId IN :productIds ORDER BY p.creationDate DESC", Product.class);
-            productQuery.setParameter("productIds", productIds);
-            return productQuery.getResultList();
-        }
-
-        return Collections.emptyList();
-    }
 }

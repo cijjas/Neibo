@@ -46,7 +46,7 @@ public class RequestController extends GlobalControllerAdvice {
             @QueryParam("userId") @DefaultValue("0") final int userId,
             @QueryParam("productId") @DefaultValue("0") final int productId
             ) {
-        LOGGER.info("Listing Requests");
+        LOGGER.info("GET request arrived at neighborhoods/{}/requests", neighborhoodId);
         List<Request> requests = rs.getRequestsByCriteria(userId, productId, page, size);
 
         List<RequestDto> requestDto = requests.stream()
@@ -67,7 +67,7 @@ public class RequestController extends GlobalControllerAdvice {
             @Valid final RequestForm form,
             @QueryParam("productId") @DefaultValue("0") final int productId
     ) {
-        LOGGER.info("Creating Request for Product {}", productId);
+        LOGGER.info("POST request arrived at neighborhoods/{}/requests", neighborhoodId);
         final Request request = rs.createRequest(getLoggedUser().getUserId(), productId, form.getRequestMessage());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(request.getRequestId())).build();

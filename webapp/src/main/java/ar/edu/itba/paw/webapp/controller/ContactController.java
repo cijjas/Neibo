@@ -33,7 +33,7 @@ public class ContactController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listContacts() {
-        LOGGER.info("Listing Contacts for Neighborhood {}", neighborhoodId);
+        LOGGER.info("GET request arrived at neighborhoods/{}/contacts", neighborhoodId);
         final List<Contact> contacts = cs.getContacts(neighborhoodId);
         final List<ContactDto> contactsDto = contacts.stream()
                 .map(c -> ContactDto.fromContact(c, uriInfo)).collect(Collectors.toList());
@@ -45,7 +45,7 @@ public class ContactController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createContact(@Valid final ContactForm form) {
-        LOGGER.info("Creating Contact in Neighborhood {}", neighborhoodId);
+        LOGGER.info("POST request arrived at neighborhoods/{}/contacts", neighborhoodId);
         final Contact contact = cs.createContact(neighborhoodId, form.getContactName(), form.getContactAddress(), form.getContactPhone());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(contact.getContactId())).build();
@@ -59,7 +59,7 @@ public class ContactController {
     public Response updateContactPartially(
             @PathParam("id") final long id,
             @Valid final ContactForm partialUpdate) {
-        LOGGER.info("Updating Contact with id {}", id);
+        LOGGER.info("PATCH request arrived at neighborhoods/{}/contacts/{}", neighborhoodId, id);
         final Contact contact = cs.updateContact(id, partialUpdate.getContactName(), partialUpdate.getContactAddress(), partialUpdate.getContactPhone());
         return Response.ok(ContactDto.fromContact(contact, uriInfo)).build();
     }
@@ -68,7 +68,7 @@ public class ContactController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(@PathParam("id") final long id) {
-        LOGGER.info("Deleting Contact with id {}", id);
+        LOGGER.info("DELETE request arrived at neighborhoods/{}/contacts/{}", neighborhoodId, id);
         cs.deleteContact(id);
         return Response.noContent().build();
     }
