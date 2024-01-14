@@ -52,6 +52,13 @@ public class ValidationUtils {
         }
     }
 
+    public static void checkNegativeId(long id1, String entity) {
+        if (id1 < 0) {
+            LOGGER.info("Invalid {} ID", entity);
+            throw new IllegalArgumentException("Invalid identifier value(s) for " + entity + ". ID must be positive integer greater than 0.");
+        }
+    }
+
     // ---------------------------------------------------------------------------------------------------------
 
     public static void checkSize(int size) {
@@ -120,6 +127,10 @@ public class ValidationUtils {
 
     public static void checkAttendanceId(long eventId, long userId) {
         ValidationUtils.checkIds(eventId, userId, "Attendance");
+    }
+
+    public static void checkNegativeTagId(long postId) {
+        ValidationUtils.checkNegativeId(postId, "Tag");
     }
 
     public static void checkAttendanceId(long attendanceId) {

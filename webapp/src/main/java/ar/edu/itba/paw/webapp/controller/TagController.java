@@ -39,7 +39,7 @@ public class TagController {
         LOGGER.info("GET request arrived at neighborhoods/{}/tags", neighborhoodId);
         List<Tag> tags = ts.getTagsByCriteria(postId, neighborhoodId, page, size);
         List<TagDto> tagsDto = tags.stream()
-                .map(t -> TagDto.fromTag(t, uriInfo)).collect(Collectors.toList());
+                .map(t -> TagDto.fromTag(t, neighborhoodId, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/tags";
         int totalTagPages = ts.getTotalTagPagesByCriteria(postId, neighborhoodId, size);

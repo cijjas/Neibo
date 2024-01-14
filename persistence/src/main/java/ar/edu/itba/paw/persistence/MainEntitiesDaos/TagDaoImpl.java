@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
@@ -31,20 +32,49 @@ public class TagDaoImpl implements TagDao {
     // ---------------------------------------------- TAGS SELECT ------------------------------------------------------
 
     @Override
-    public List<Tag> getTagsByPostId(long postId) {
-        LOGGER.debug("Selecting Tags for Post with postId {}", postId);
-        return em.createQuery("SELECT t FROM Tag t JOIN t.posts p WHERE p.postId = :postId", Tag.class)
-                .setParameter("postId", postId)
+    public List<Tag> getTagsByCriteria(long postId, long neighborhoodId, int page, int size) {
+        LOGGER.debug("Selecting Tags By Criteria");
+        TypedQuery<Tag> query = null;
+        if(postId > 0) {
+            query = em.createQuery("SELECT t FROM Tag t JOIN t.posts p WHERE p.postId = :postId", Tag.class)
+                    .setParameter("postId", postId);
+        } else {
+            query = em.createQuery("SELECT DISTINCT t FROM Tag t " +
+                            "JOIN t.posts p " +
+                            "JOIN p.user u " +
+                            "JOIN u.neighborhood nh " +
+                            "WHERE nh.neighborhoodId = :neighborhoodId", Tag.class)
+                    .setParameter("neighborhoodId", neighborhoodId);
+        }
+        return query.setFirstResult((page - 1) * size)
+                .setMaxResults(size)
                 .getResultList();
     }
 
     @Override
-    public List<Tag> getTagsByPostId(long postId, int page, int size) {
+    public int getTagsCountByCriteria(long postId, long neighborhoodId) {
+        LOGGER.debug("Selecting Tags By Criteria");
+        TypedQuery<Long> query = null;
+        if(postId > 0) {
+            query = em.createQuery("SELECT COUNT(t) FROM Tag t JOIN t.posts p WHERE p.postId = :postId", Long.class)
+                    .setParameter("postId", postId);
+        } else {
+            query = em.createQuery("SELECT DISTINCT COUNT(t) FROM Tag t " +
+                            "JOIN t.posts p " +
+                            "JOIN p.user u " +
+                            "JOIN u.neighborhood nh " +
+                            "WHERE nh.neighborhoodId = :neighborhoodId", Long.class)
+                    .setParameter("neighborhoodId", neighborhoodId);
+        }
+        Long count = query.getSingleResult();
+        return count != null ? count.intValue() : 0;
+    }
+
+    @Override
+    public List<Tag> getTagsByPostId(long postId) {
         LOGGER.debug("Selecting Tags for Post with postId {}", postId);
         return em.createQuery("SELECT t FROM Tag t JOIN t.posts p WHERE p.postId = :postId", Tag.class)
                 .setParameter("postId", postId)
-                .setFirstResult((page - 1) * size)
-                .setMaxResults(size)
                 .getResultList();
     }
 
@@ -60,41 +90,27 @@ public class TagDaoImpl implements TagDao {
                 .getResultList();
     }
 
-    @Override
-    public List<Tag> getTags(long neighborhoodId, int page, int size) {
-        LOGGER.debug("Selecting Tag List from Neighborhood {}", neighborhoodId);
-        return em.createQuery("SELECT DISTINCT t FROM Tag t " +
-                        "JOIN t.posts p " +
-                        "JOIN p.user u " +
-                        "JOIN u.neighborhood nh " +
-                        "WHERE nh.neighborhoodId = :neighborhoodId", Tag.class)
-                .setParameter("neighborhoodId", neighborhoodId)
-                .setFirstResult((page - 1) * size)
-                .setMaxResults(size)
-                .getResultList();
-    }
-
-    @Override
-    public int getTagsCount(long neighborhoodId) {
-        LOGGER.debug("Selecting Tag List from Neighborhood {}", neighborhoodId);
-        return em.createQuery("SELECT DISTINCT t FROM Tag t " +
-                        "JOIN t.posts p " +
-                        "JOIN p.user u " +
-                        "JOIN u.neighborhood nh " +
-                        "WHERE nh.neighborhoodId = :neighborhoodId", Tag.class)
-                .setParameter("neighborhoodId", neighborhoodId)
-                .getResultList().size();
-    }
-
-    @Override
-    public int getTagsCountByPostId(long postId) {
-        LOGGER.debug("Selecting Tag List from Neighborhood {}", postId);
-        return em.createQuery("SELECT DISTINCT t FROM Tag t " +
-                        "JOIN t.posts p " +
-                        "WHERE p.postId = :postId", Tag.class)
-                .setParameter("postId", postId)
-                .getResultList().size();
-    }
+//    @Override
+//    public int getTagsCount(long neighborhoodId) {
+//        LOGGER.debug("Selecting Tag List from Neighborhood {}", neighborhoodId);
+//        return em.createQuery("SELECT DISTINCT t FROM Tag t " +
+//                        "JOIN t.posts p " +
+//                        "JOIN p.user u " +
+//                        "JOIN u.neighborhood nh " +
+//                        "WHERE nh.neighborhoodId = :neighborhoodId", Tag.class)
+//                .setParameter("neighborhoodId", neighborhoodId)
+//                .getResultList().size();
+//    }
+//
+//    @Override
+//    public int getTagsCountByPostId(long postId) {
+//        LOGGER.debug("Selecting Tag List from Neighborhood {}", postId);
+//        return em.createQuery("SELECT DISTINCT t FROM Tag t " +
+//                        "JOIN t.posts p " +
+//                        "WHERE p.postId = :postId", Tag.class)
+//                .setParameter("postId", postId)
+//                .getResultList().size();
+//    }
 
     @Override
     public List<Tag> getAllTags() {

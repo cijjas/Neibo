@@ -112,16 +112,6 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Tag> getTagsByPostId(long postId) {
-        LOGGER.info("Finding Tags for Post {}", postId);
-
-        ValidationUtils.checkPostId(postId);
-
-        return tagDao.getTagsByPostId(postId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<Tag> getTags(long neighborhoodId) {
         LOGGER.info("Getting All Tags from Neighborhood {}", neighborhoodId);
 
@@ -131,41 +121,13 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Tag> getTags(long neighborhoodId, int page, int size) {
-        LOGGER.info("Getting All Tags from Neighborhood {}", neighborhoodId);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkPageAndSize(page, size);
-
-        return tagDao.getTags(neighborhoodId, page, size);
-    }
-
-    @Override
-    public List<Tag> getTagsByCriteria(Long postId, Long neighborhoodId) {
-
-        ValidationUtils.checkPostId(postId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        if (postId != null) {
-            return tagDao.getTagsByPostId(postId);
-        } else {
-            return tagDao.getTags(neighborhoodId);
-        }
-    }
-
-    @Override
     public List<Tag> getTagsByCriteria(Long postId, Long neighborhoodId, int page, int size) {
 
-        ValidationUtils.checkPostId(postId);
+        ValidationUtils.checkNegativeTagId(postId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
 
-        if (postId != 0) {
-            return tagDao.getTagsByPostId(postId, page, size);
-        } else {
-            return tagDao.getTags(neighborhoodId, page, size);
-        }
+        return tagDao.getTagsByCriteria(postId, neighborhoodId, page, size);
     }
 
     @Override
@@ -175,19 +137,15 @@ public class TagServiceImpl implements TagService {
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
 
-        return (int) Math.ceil(tagDao.getTagsCount(neighborhoodId) / (double) size);
+        return (int) Math.ceil(tagDao.getTagsCountByCriteria(0, neighborhoodId) / (double) size);
     }
 
     @Override
     public int getTotalTagPagesByCriteria(Long postId, Long neighborhoodId, int size) {
 
-        ValidationUtils.checkPostId(postId);
+        ValidationUtils.checkNegativeTagId(postId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        if (postId != 0) {
-            return (int) Math.ceil(tagDao.getTagsCountByPostId(postId) / (double) size);
-        } else {
-            return (int) Math.ceil(tagDao.getTagsCount(neighborhoodId) / (double) size);
-        }
+        return (int) Math.ceil(tagDao.getTagsCountByCriteria(postId, neighborhoodId) / (double) size);
     }
 }

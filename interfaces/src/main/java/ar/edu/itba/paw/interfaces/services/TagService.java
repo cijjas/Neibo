@@ -10,13 +10,7 @@ public interface TagService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    List<Tag> getTagsByPostId(long id);
-
     List<Tag> getTags(long neighborhoodId);
-
-    List<Tag> getTags(long neighborhoodId, int page, int size);
-
-    List<Tag> getTagsByCriteria(Long postId, Long neighborhoodId);
 
     List<Tag> getTagsByCriteria(Long postId, Long neighborhoodId, int page, int size);
 
