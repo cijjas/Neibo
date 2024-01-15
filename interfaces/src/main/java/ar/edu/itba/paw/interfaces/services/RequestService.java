@@ -9,11 +9,11 @@ public interface RequestService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    List<Request> getRequests(long productId, long userId, int page, int size);
+    List<Request> getRequests(Long productId, Long userId, int page, int size);
 
-    int countRequests(long productId, long userId);
+    int countRequests(Long productId, Long userId);
 
-    int calculateRequestPages(long productId, long userId, int size);
+    int calculateRequestPages(Long productId, Long userId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

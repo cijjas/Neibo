@@ -44,15 +44,15 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
-    public List<Request> getRequests(long userId, long productId, int page, int size) {
+    public List<Request> getRequests(Long userId, Long productId, int page, int size) {
         LOGGER.debug("Selecting Requests By Criteria");
         TypedQuery<Long> idQuery = null;
-        if(userId > 0 && productId > 0) {
+        if(userId != null && productId != null) {
             idQuery = em.createQuery(
                     "SELECT r.requestId FROM Request r WHERE r.product.productId = :productId AND r.user.userId = :userId AND r.fulfilled = false", Long.class);
             idQuery.setParameter("productId", productId);
             idQuery.setParameter("userId", userId);
-        } else if(userId > 0) {
+        } else if(userId != null) {
             idQuery = em.createQuery("SELECT r.requestId FROM Request r " +
                     "WHERE r.user.userId = :userId AND r.fulfilled = false", Long.class);
             idQuery.setParameter("userId", userId);
@@ -76,16 +76,16 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
-    public int countRequests(long userId, long productId) {
+    public int countRequests(Long userId, Long productId) {
         LOGGER.debug("Selecting Requests Count by Criteria");
         Long count = null;
-        if(userId > 0 && productId > 0) {
+        if(userId != null && productId != null ) {
             count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
                             "WHERE r.product.productId = :productId AND r.user.userId = :userId AND r.fulfilled = false")
                     .setParameter("productId", productId)
                     .setParameter("userId", userId)
                     .getSingleResult();
-        } else if(userId > 0) {
+        } else if(userId != null ) {
             count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
                             "WHERE r.user.userId = :userId AND r.fulfilled = false")
                     .setParameter("userId", userId)

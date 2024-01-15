@@ -115,7 +115,7 @@ public class RequestDaoImplTest {
         testInserter.createRequest(pKey, uKey1);
 
         // Exercise
-        List<Request> requests = requestDao.getRequests(0, pKey, PAGE, SIZE);
+        List<Request> requests = requestDao.getRequests(0L, pKey, PAGE, SIZE);
 
         // Validations & Post Conditions
         assertFalse(requests.isEmpty());
@@ -127,7 +127,7 @@ public class RequestDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Request> requests = requestDao.getRequests(0, 1, PAGE, SIZE);
+        List<Request> requests = requestDao.getRequests(0L, 1L, PAGE, SIZE);
 
         // Validations & Post Conditions
         assertTrue(requests.isEmpty());
