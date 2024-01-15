@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ShiftService;
 import ar.edu.itba.paw.models.Entities.Shift;
+import ar.edu.itba.paw.webapp.dto.BookingDto;
 import ar.edu.itba.paw.webapp.dto.ShiftDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,6 @@ public class ShiftController {
     @Context
     private UriInfo uriInfo;
 
-    // List Shifts
     // Find ShiftById
 
     @GET
@@ -44,5 +44,14 @@ public class ShiftController {
 
         return Response.ok(new GenericEntity<List<ShiftDto>>(shiftDto) {})
                 .build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response findBooking(@PathParam("id") final long id) {
+        LOGGER.info("GET request arrived at shifts/{}", id);
+        return Response.ok(ShiftDto.fromShift(ss.findShift(id)
+                .orElseThrow(() -> new NotFoundException("Shift Not Found")), uriInfo)).build();
     }
 }

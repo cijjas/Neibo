@@ -45,6 +45,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPageAndSize(page, size);
+        // checkValidType
 
         return purchaseDao.getPurchases(userId, type, page, size);
     }

@@ -185,6 +185,10 @@ public class ValidationUtils {
         ValidationUtils.checkId(likeId, "Like");
     }
 
+    public static void checkShiftId(Long likeId) {
+        ValidationUtils.checkId(likeId, "Shift");
+    }
+
     public static void checkLikeIds(Long postId, Long userId) {
         ValidationUtils.checkIds(postId, userId, "Like");
     }
