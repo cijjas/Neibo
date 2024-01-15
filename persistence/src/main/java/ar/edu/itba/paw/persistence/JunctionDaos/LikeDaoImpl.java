@@ -26,7 +26,7 @@ public class LikeDaoImpl implements LikeDao {
     @Override
     public Like createLike(long postId, long userId) {
         LOGGER.debug("Inserting Like");
-        Like like = new Like(em.find(Post.class, postId), em.find(User.class, userId));
+        Like like = new Like(em.find(Post.class, postId), em.find(User.class, userId), new java.sql.Date(System.currentTimeMillis()));
         em.persist(like);
         return like;
     }

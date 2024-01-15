@@ -9,14 +9,14 @@ import java.util.List;
 
 class DaoUtils {
 
-    static void appendCommonConditions(StringBuilder query, List<Object> queryParams, String channel, long userId, long neighborhoodId, List<String> tags, PostStatus postStatus) {
+    static void appendCommonConditions(StringBuilder query, List<Object> queryParams, String channel, Long userId, long neighborhoodId, List<String> tags, PostStatus postStatus) {
         appendInitialWhereClause(query);
         appendNeighborhoodIdCondition(query, queryParams, neighborhoodId);
 
         if (channel != null && !channel.isEmpty())
             appendChannelCondition(query, queryParams, channel);
 
-        if (userId != 0)
+        if (userId != null)
             appendUserIdCondition(query, queryParams, userId);
 
         if (tags != null && !tags.isEmpty())

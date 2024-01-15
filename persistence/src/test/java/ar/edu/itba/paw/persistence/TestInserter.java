@@ -52,7 +52,7 @@ public class TestInserter {
     }
 
     public void createLike(long postId, long userId) {
-        Like like = new Like(em.find(Post.class, postId), em.find(User.class, userId));
+        Like like = new Like(em.find(Post.class, postId), em.find(User.class, userId), new java.sql.Date(System.currentTimeMillis()));
         em.persist(like);
         em.flush();
     }

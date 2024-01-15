@@ -71,7 +71,7 @@ public class PostDaoImpl implements PostDao {
                     "LEFT JOIN posts_users_likes pul on p.postid = pul.postId ";
 
     @Override
-    public List<Post> getPosts(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
+    public List<Post> getPosts(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, Long userId) {
         LOGGER.debug("Selecting Post from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channel, userId, tags, postStatus);
         StringBuilder query = new StringBuilder(FROM_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
         List<Object> queryParams = new ArrayList<>();
@@ -88,7 +88,7 @@ public class PostDaoImpl implements PostDao {
     // ---------------------------------------------------
 
     @Override
-    public int countPosts(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
+    public int countPosts(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, Long userId) {
         LOGGER.debug("Selecting Post Count from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channel, userId, tags, postStatus);
 
         StringBuilder query = new StringBuilder(COUNT_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);

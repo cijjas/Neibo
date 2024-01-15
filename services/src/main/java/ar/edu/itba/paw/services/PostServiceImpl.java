@@ -76,7 +76,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
+    public List<Post> getPosts(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, Long userId) {
         LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {}, by User {} and Post Status {} ", neighborhoodId, channel, tags, userId, postStatus);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -88,7 +88,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public int countPostsByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
+    public int countPosts(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, Long userId) {
         LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -99,7 +99,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculatePostPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
+    public int calculatePostPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, Long userId) {
         LOGGER.info("Getting Total Post Pages with size {} for Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", size, neighborhoodId, channel, tags, postStatus);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);

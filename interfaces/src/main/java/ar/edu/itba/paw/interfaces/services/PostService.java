@@ -17,11 +17,11 @@ public interface PostService {
 
     Optional<Post> findPost(long postId);
 
-    List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
+    List<Post> getPosts(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, Long userId);
 
     // ---------------------------------------------------
 
-    int countPostsByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
+    int countPosts(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, Long userId);
 
-    int calculatePostPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
+    int calculatePostPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, Long userId);
 }
