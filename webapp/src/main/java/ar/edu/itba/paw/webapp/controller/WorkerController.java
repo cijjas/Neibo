@@ -49,7 +49,6 @@ public class WorkerController extends GlobalControllerAdvice {
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("professions") final List<String> professions,
             @QueryParam("neighborhoodId") @DefaultValue("0") final long neighborhoodId,
-            @QueryParam("loggedUserId") final long loggedUserId,
             @QueryParam("workerRole") final WorkerRole workerRole,
             @QueryParam("workerStatus") final WorkerStatus workerStatus
     ) {

@@ -1,0 +1,24 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
+import {Post} from './post'
+import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { environment } from '../environments/environment';
+
+@Injectable({providedIn: 'root'})
+export class RequestService {
+    private apiServerUrl = environment.apiBaseUrl;
+
+    constructor(private http: HttpClient) { }
+
+    public getRequests(neighborhoodId: number, userId: number, productId: number, page: number, size: number): Observable<Request[]> {
+        const params = new HttpParams().set('userId', userId.toString()).set('productId', productId.toString()).set('page', page.toString()).set('size', size.toString());
+    
+        return this.http.get<Request[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/requests`, { params });
+    }
+
+    public addRequest(neighborhoodId: number, productId: number, request: Request): Observable<Request> {
+        const params = new HttpParams().set('productId', productId.toString());
+        return this.http.post<Request>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/requests`, request, { params });
+    }
+
+}
