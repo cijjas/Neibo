@@ -91,7 +91,7 @@ public class BookingDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Booking> userBookings = bookingDao.getBookings(1);
+        List<Booking> userBookings = bookingDao.getBookings(1L);
 
         // Validations & Post Conditions
         assertEquals(0, userBookings.size());

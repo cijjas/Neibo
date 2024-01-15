@@ -16,7 +16,7 @@ public interface BookingDao {
 
     Optional<Booking> findBooking(long bookingId);
 
-    List<Booking> getBookings(long userId);
+    List<Booking> getBookings(Long userId);
 
     // ------------------------------------------------- BOOKINGS DELETE -----------------------------------------------
 

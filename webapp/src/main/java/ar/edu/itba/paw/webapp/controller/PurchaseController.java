@@ -40,9 +40,8 @@ public class PurchaseController {
             @QueryParam("size") @DefaultValue("10") int size
     ) {
         LOGGER.info("GET request arrived at neighborhoods/{}/users/{}/transactions", neighborhoodId, userId);
-        Set<Purchase> transactions;
 
-        transactions = ps.getPurchases(userId, type, page, size);
+        Set<Purchase> transactions = ps.getPurchases(userId, type, page, size);
 
         // Convert transactions to DTOs if needed
         Set<PurchaseDto> transactionDto = transactions.stream()

@@ -14,26 +14,26 @@ public class ValidationUtils {
         checkSize(size);
     }
 
-    public static void checkId(long id, String entity) {
-        if (id <= 0) {
+    public static void checkId(Long id, String entity) {
+        if (id != null && id <= 0) {
             LOGGER.info("Invalid {} ID", entity);
-            throw new IllegalArgumentException("Invalid value (" + id + ") for the " + entity + " id. Please use a positive integer greater than 0.");
+            throw new IllegalArgumentException("Invalid value (" + id + ") for the " + entity + " ID. Please use a positive integer greater than 0.");
         }
     }
 
-    public static void checkIds(long id1, long id2, String entity) {
-        if (id1 <= 0) {
+    public static void checkIds(Long id1, Long id2, String entity) {
+        if (id1 != null && id1 <= 0) {
             LOGGER.info("Invalid {} ID", entity);
             throw new IllegalArgumentException("Invalid identifier value(s) for " + entity + ". IDs must be positive integers greater than 0.");
         }
-        if (id2 <= 0) {
+        if (id2 != null && id2 <= 0) {
             LOGGER.info("Invalid {} ID", entity);
             throw new IllegalArgumentException("Invalid identifier value(s) for " + entity + ". IDs must be positive integers greater than 0.");
         }
     }
 
     //only if both are <=0 throw exception
-    public static void checkConditionalIds(long id1, long id2, String entity) {
+    public static void checkConditionalIds(Long id1, Long id2, String entity) {
         if (id1 <= 0 && id2 <= 0) {
             LOGGER.info("Invalid {} ID", entity);
             throw new IllegalArgumentException("Invalid identifier value(s) for " + entity + ". IDs must be positive integers greater than 0.");
@@ -41,7 +41,7 @@ public class ValidationUtils {
     }
 
     //Checks if an id is negative, since both can be 0 (get all case); Also checks that not both are > 0 (only one condition allowed)
-    public static void checkNegativeIds(long id1, long id2, String entity) {
+    public static void checkNegativeIds(Long id1, Long id2, String entity) {
         if (id1 < 0 || id2 < 0) {
             LOGGER.info("Invalid {} ID", entity);
             throw new IllegalArgumentException("Invalid identifier value(s) for " + entity + ". IDs must be positive integers greater than 0.");
@@ -52,7 +52,7 @@ public class ValidationUtils {
         }
     }
 
-    public static void checkNegativeId(long id1, String entity) {
+    public static void checkNegativeId(Long id1, String entity) {
         if (id1 < 0) {
             LOGGER.info("Invalid {} ID", entity);
             throw new IllegalArgumentException("Invalid identifier value(s) for " + entity + ". ID must be positive integer greater than 0.");
@@ -68,132 +68,132 @@ public class ValidationUtils {
         }
     }
 
-    public static void checkAmenityId(long amenityId) {
+    public static void checkAmenityId(Long amenityId) {
         ValidationUtils.checkId(amenityId, "Amenity");
     }
 
-    public static void checkNeighborhoodId(long neighborhoodId) {
+    public static void checkNeighborhoodId(Long neighborhoodId) {
         ValidationUtils.checkId(neighborhoodId, "Neighborhood");
     }
 
     public static void checkNeighborhoodsIds(long[] neighborhoods) {
-        for (long neighborhoodId : neighborhoods)
+        for (Long neighborhoodId : neighborhoods)
             ValidationUtils.checkId(neighborhoodId, "Neighborhood");
     }
 
-    public static void checkUserId(long userId) {
+    public static void checkUserId(Long userId) {
         ValidationUtils.checkId(userId, "User");
     }
 
-    public static void checkPostId(long postId) {
+    public static void checkPostId(Long postId) {
         ValidationUtils.checkId(postId, "Post");
     }
 
-    public static void checkDepartmentId(long departmentId) {
+    public static void checkDepartmentId(Long departmentId) {
         ValidationUtils.checkId(departmentId, "Department");
     }
 
-    public static void checkProductId(long productId) {
+    public static void checkProductId(Long productId) {
         ValidationUtils.checkId(productId, "Product");
     }
 
-    public static void checkWorkerId(long workerId) {
+    public static void checkWorkerId(Long workerId) {
         ValidationUtils.checkId(workerId, "Worker");
     }
 
-    public static void checkPurchaseId(long purchaseId) {
+    public static void checkPurchaseId(Long purchaseId) {
         ValidationUtils.checkId(purchaseId, "Purchase");
     }
 
-    public static void checkRequestId(long productId, long userId) {
+    public static void checkRequestId(Long productId, Long userId) {
         ValidationUtils.checkConditionalIds(userId, productId, "Request");
     }
 
-    public static void checkRequestId(long requestId) {
+    public static void checkRequestId(Long requestId) {
         ValidationUtils.checkId(requestId, "Request");
     }
 
-    public static void checkResourceId(long resourceId) {
+    public static void checkResourceId(Long resourceId) {
         ValidationUtils.checkId(resourceId, "Resource");
     }
 
-    public static void checkReviewId(long reviewId) {
+    public static void checkReviewId(Long reviewId) {
         ValidationUtils.checkId(reviewId, "Review");
     }
 
-    public static void checkShiftId(long startTimeId, long dayId) {
+    public static void checkShiftId(Long startTimeId, Long dayId) {
         ValidationUtils.checkIds(startTimeId, dayId, "Shift");
     }
 
-    public static void checkAttendanceId(long eventId, long userId) {
+    public static void checkAttendanceId(Long eventId, Long userId) {
         ValidationUtils.checkIds(eventId, userId, "Attendance");
     }
 
-    public static void checkNegativeTagId(long postId) {
+    public static void checkNegativeTagId(Long postId) {
         ValidationUtils.checkNegativeId(postId, "Tag");
     }
 
-    public static void checkAttendanceId(long attendanceId) {
+    public static void checkAttendanceId(Long attendanceId) {
         ValidationUtils.checkId(attendanceId, "Attendance");
     }
 
-    public static void checkEventId(long eventId) {
+    public static void checkEventId(Long eventId) {
         ValidationUtils.checkId(eventId, "Event");
     }
 
-    public static void checkTagId(long tagId) {
+    public static void checkTagId(Long tagId) {
         ValidationUtils.checkId(tagId, "Tag");
     }
 
-    public static void checkChannelId(long channelId) {
+    public static void checkChannelId(Long channelId) {
         ValidationUtils.checkId(channelId, "Channel");
     }
 
-    public static void checkCommentId(long commentId) {
+    public static void checkCommentId(Long commentId) {
         ValidationUtils.checkId(commentId, "Comment");
     }
 
-    public static void checkContactId(long contactId) {
+    public static void checkContactId(Long contactId) {
         ValidationUtils.checkId(contactId, "Contact");
     }
 
-    public static void checkBuyerId(long buyerId) {
+    public static void checkBuyerId(Long buyerId) {
         ValidationUtils.checkId(buyerId, "Buyer");
     }
 
-    public static void checkSellerId(long sellerId) {
+    public static void checkSellerId(Long sellerId) {
         ValidationUtils.checkId(sellerId, "Seller");
     }
 
-    public static void checkAvailabilityId(long availabilityId) {
+    public static void checkAvailabilityId(Long availabilityId) {
         ValidationUtils.checkId(availabilityId, "Availability");
     }
 
-    public static void checkBookingId(long bookingId) {
+    public static void checkBookingId(Long bookingId) {
         ValidationUtils.checkId(bookingId, "Booking");
     }
 
-    public static void checkImageId(long imageId) {
+    public static void checkImageId(Long imageId) {
         ValidationUtils.checkId(imageId, "Image");
     }
 
-    public static void checkInquiryId(long inquiryId) {
+    public static void checkInquiryId(Long inquiryId) {
         ValidationUtils.checkId(inquiryId, "Inquiry");
     }
 
-    public static void checkLikeId(long likeId) {
+    public static void checkLikeId(Long likeId) {
         ValidationUtils.checkId(likeId, "Like");
     }
 
-    public static void checkLikeIds(long postId, long userId) {
+    public static void checkLikeIds(Long postId, Long userId) {
         ValidationUtils.checkIds(postId, userId, "Like");
     }
 
-    public static void checkNegativeLikeIds(long postId, long userId) {
+    public static void checkNegativeLikeIds(Long postId, Long userId) {
         ValidationUtils.checkNegativeIds(postId, userId, "Like");
     }
 
-    public static void checkWorkerAreaIds(long workerId, long neighborhoodId) {
+    public static void checkWorkerAreaIds(Long workerId, Long neighborhoodId) {
         ValidationUtils.checkIds(workerId, neighborhoodId, "WorkerArea");
     }
 }
