@@ -40,25 +40,6 @@ public class ValidationUtils {
         }
     }
 
-    //Checks if an id is negative, since both can be 0 (get all case); Also checks that not both are > 0 (only one condition allowed)
-    public static void checkNegativeIds(Long id1, Long id2, String entity) {
-        if (id1 < 0 || id2 < 0) {
-            LOGGER.info("Invalid {} ID", entity);
-            throw new IllegalArgumentException("Invalid identifier value(s) for " + entity + ". IDs must be positive integers greater than 0.");
-        }
-        if(id1 > 0 && id2 > 0) {
-            LOGGER.info("Invalid {} ID", entity);
-            throw new IllegalArgumentException("Invalid identifier value(s) for " + entity + ". May only filter by one criteria.");
-        }
-    }
-
-    public static void checkNegativeId(Long id1, String entity) {
-        if (id1 < 0) {
-            LOGGER.info("Invalid {} ID", entity);
-            throw new IllegalArgumentException("Invalid identifier value(s) for " + entity + ". ID must be positive integer greater than 0.");
-        }
-    }
-
     // ---------------------------------------------------------------------------------------------------------
 
     public static void checkSize(int size) {
@@ -129,10 +110,6 @@ public class ValidationUtils {
         ValidationUtils.checkIds(eventId, userId, "Attendance");
     }
 
-    public static void checkNegativeTagId(Long postId) {
-        ValidationUtils.checkNegativeId(postId, "Tag");
-    }
-
     public static void checkAttendanceId(Long attendanceId) {
         ValidationUtils.checkId(attendanceId, "Attendance");
     }
@@ -191,10 +168,6 @@ public class ValidationUtils {
 
     public static void checkLikeIds(Long postId, Long userId) {
         ValidationUtils.checkIds(postId, userId, "Like");
-    }
-
-    public static void checkNegativeLikeIds(Long postId, Long userId) {
-        ValidationUtils.checkNegativeIds(postId, userId, "Like");
     }
 
     public static void checkWorkerAreaIds(Long workerId, Long neighborhoodId) {

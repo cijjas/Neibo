@@ -108,6 +108,7 @@ public class AmenityServiceImpl implements AmenityService {
     public int calculateAmenityPages(long neighborhoodId, int size) {
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(amenityDao.countAmenities(neighborhoodId), size) ;
     }

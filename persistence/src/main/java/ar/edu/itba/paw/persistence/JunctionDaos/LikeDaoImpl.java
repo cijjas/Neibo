@@ -34,15 +34,15 @@ public class LikeDaoImpl implements LikeDao {
     // -------------------------------------------------- LIKES SELECT -------------------------------------------------
 
     @Override
-    public List<Like> getLikes(long postId, long userId, long neighborhoodId, int page, int size) {
+    public List<Like> getLikes(Long postId, Long userId, long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Likes by Criteria");
         TypedQuery<Like> query = null;
 
-        if(userId > 0) {
+        if(userId != null) {
             query = em.createQuery("SELECT l FROM Like l WHERE l.user.userId = :userId", Like.class)
                     .setParameter("userId", userId);
         }
-        else if(postId > 0) {
+        else if(postId != null) {
             query = em.createQuery("SELECT l FROM Like l WHERE l.post.postId = :postId", Like.class)
                     .setParameter("postId", postId);
         }
@@ -57,14 +57,14 @@ public class LikeDaoImpl implements LikeDao {
     }
 
     @Override
-    public int countLikes(long postId, long userId, long neighborhoodId) {
+    public int countLikes(Long postId, Long userId, long neighborhoodId) {
         LOGGER.debug("Selecting Likes Count by Criteria");
         TypedQuery<Long> query = null;
-        if(userId > 0) {
+        if(userId != null) {
             query = em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.user.userId = :userId", Long.class)
                     .setParameter("userId", userId);
         }
-        else if(postId > 0) {
+        else if(postId != null) {
             query = em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.post.postId = :postId", Long.class)
                     .setParameter("postId", postId);
         }

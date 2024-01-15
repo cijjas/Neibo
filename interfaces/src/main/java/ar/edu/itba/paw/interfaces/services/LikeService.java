@@ -15,13 +15,13 @@ public interface LikeService {
 
     Optional<Like> findLike(long likeId);
 
-    List<Like> getLikes(long neighborhoodId, long postId, long userId, int page, int size);
+    List<Like> getLikes(long neighborhoodId, Long postId, Long userId, int page, int size);
 
     // ---------------------------------------------------
 
-    int countLikes(long neighborhoodId, long postId, long userId);
+    int countLikes(long neighborhoodId, Long postId, Long userId);
 
-    int calculateLikePages(long neighborhoodId, long postId, long userId, int size);
+    int calculateLikePages(long neighborhoodId, Long postId, Long userId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

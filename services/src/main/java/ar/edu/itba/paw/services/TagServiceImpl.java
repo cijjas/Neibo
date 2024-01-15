@@ -113,7 +113,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<Tag> getTags(Long postId, Long neighborhoodId, int page, int size) {
 
-        ValidationUtils.checkNegativeTagId(postId);
+        ValidationUtils.checkPostId(postId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
 
@@ -124,7 +124,7 @@ public class TagServiceImpl implements TagService {
     public int calculateTagPages(Long postId, Long neighborhoodId, int size) {
         LOGGER.info("Getting Total Tag Pages from Neighborhood {}", neighborhoodId);
 
-        ValidationUtils.checkNegativeTagId(postId);
+        ValidationUtils.checkPostId(postId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return PaginationUtils.calculatePages(tagDao.countTags(postId, neighborhoodId), size);
@@ -133,7 +133,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public int countTags(Long postId, Long neighborhoodId) {
 
-        ValidationUtils.checkNegativeTagId(postId);
+        ValidationUtils.checkPostId(postId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return tagDao.countTags(postId, neighborhoodId);
