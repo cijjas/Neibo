@@ -102,12 +102,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculatePostPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, Long userId) {
+    public int calculatePostPages(String channel, int size, List<String> tags, long neighborhoodId, String postStatus, Long userId) {
         LOGGER.info("Getting Total Post Pages with size {} for Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", size, neighborhoodId, channel, tags, postStatus);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkPostStatusString(postStatus);
 
-        return PaginationUtils.calculatePages(postDao.countPosts(channel, tags, neighborhoodId, postStatus, userId), size);
+        return PaginationUtils.calculatePages(postDao.countPosts(channel, tags, neighborhoodId, PostStatus.valueOf(postStatus.toLowerCase()), userId), size);
     }
 }
