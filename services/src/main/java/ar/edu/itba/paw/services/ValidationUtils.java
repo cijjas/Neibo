@@ -1,7 +1,15 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.TransactionType;
+import ar.edu.itba.paw.interfaces.exceptions.InvalidEnumValueException;
+import ar.edu.itba.paw.models.LinkEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ValidationUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(AmenityServiceImpl.class);
@@ -172,5 +180,92 @@ public class ValidationUtils {
 
     public static void checkWorkerAreaIds(Long workerId, Long neighborhoodId) {
         ValidationUtils.checkIds(workerId, neighborhoodId, "WorkerArea");
+    }
+
+    // ---------------------------------------------------------------------------------------------------------
+
+    public static void checkTransactionTypeString(String transactionType){
+        if(transactionType == null) {
+            Set<LinkEntry> links = new HashSet<>();
+            links.add(new LinkEntry("Valid Transaction Types", "transaction-types"));
+            throw new InvalidEnumValueException("Transaction type is required. Please specify a valid transaction type.", links);
+        }
+        try {
+            TransactionType.valueOf(transactionType.toLowerCase());
+        } catch (IllegalArgumentException e) {
+            Set<LinkEntry> links = new HashSet<>();
+            links.add(new LinkEntry("Valid Transaction Types", "/transaction-types"));
+            throw new InvalidEnumValueException("Invalid transaction type: '" + transactionType + "'. ", links);
+        }
+    }
+
+    public static void checkPostStatusString(String postStatus){
+        try {
+            TransactionType.valueOf(postStatus.toLowerCase());
+        } catch (IllegalArgumentException e) {
+            Set<LinkEntry> links = new HashSet<>();
+            links.add(new LinkEntry("Valid Post Statuses", "/post-statuses"));
+            throw new InvalidEnumValueException("Invalid post status : '" + postStatus + "'. ", links);
+        }
+    }
+
+    public static void checkDepartmentString(String department){
+        try {
+            TransactionType.valueOf(department.toLowerCase());
+        } catch (IllegalArgumentException e) {
+            Set<LinkEntry> links = new HashSet<>();
+            links.add(new LinkEntry("Valid Departments", "/departments"));
+            throw new InvalidEnumValueException("Invalid department : '" + department + "'. ", links);
+        }
+    }
+
+    public static void checkProductStatusString(String productStatus){
+        try {
+            TransactionType.valueOf(productStatus.toLowerCase());
+        } catch (IllegalArgumentException e) {
+            Set<LinkEntry> links = new HashSet<>();
+            links.add(new LinkEntry("Valid Product Statuses", "/product-statuses"));
+            throw new InvalidEnumValueException("Invalid product status: '" + productStatus + "'. ", links);
+        }
+    }
+
+    public static void checkUserRoleString(String userRole){
+        try {
+            TransactionType.valueOf(userRole.toLowerCase());
+        } catch (IllegalArgumentException e) {
+            Set<LinkEntry> links = new HashSet<>();
+            links.add(new LinkEntry("Valid User Roles", "/user-roles"));
+            throw new InvalidEnumValueException("Invalid user role: '" + userRole + "'. ",links);
+        }
+    }
+
+    public static void checkProfessionString(String profession){
+        try {
+            TransactionType.valueOf(profession.toLowerCase());
+        } catch (IllegalArgumentException e) {
+            Set<LinkEntry> links = new HashSet<>();
+            links.add(new LinkEntry("Valid Professions", "/professions"));
+            throw new InvalidEnumValueException("Invalid profession: '" + profession + "'. ", links);
+        }
+    }
+
+    public static void checkWorkerRoleString(String workerRole){
+        try {
+            TransactionType.valueOf(workerRole.toLowerCase());
+        } catch (IllegalArgumentException e) {
+            Set<LinkEntry> links = new HashSet<>();
+            links.add(new LinkEntry("Valid Worker Roles", "worker-roles"));
+            throw new InvalidEnumValueException("Invalid worker role: '" + workerRole + "'. ", links);
+        }
+    }
+
+    public static void checkWorkerStatusString(String workerStatus){
+        try {
+            TransactionType.valueOf(workerStatus.toLowerCase());
+        } catch (IllegalArgumentException e) {
+            Set<LinkEntry> links = new HashSet<>();
+            links.add(new LinkEntry("Valid Worker Statuses", "/worker-statuses"));
+            throw new InvalidEnumValueException("Invalid worker status: '" + workerStatus + "'. ", links);
+        }
     }
 }

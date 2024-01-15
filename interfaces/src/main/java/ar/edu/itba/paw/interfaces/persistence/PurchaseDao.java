@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
+import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.models.Entities.Purchase;
 
 import java.util.Optional;
@@ -15,7 +16,7 @@ public interface PurchaseDao {
 
     Optional<Purchase> findPurchase(long purchaseId);
 
-    Set<Purchase> getPurchases(long userId, String type, int page, int size);
+    Set<Purchase> getPurchases(long userId, TransactionType type, int page, int size);
 
     int countPurchases(long userId, String type);
 }

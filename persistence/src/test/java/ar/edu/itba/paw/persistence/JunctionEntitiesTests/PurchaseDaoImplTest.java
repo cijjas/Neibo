@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
 import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.enums.Table;
+import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.models.Entities.Purchase;
 import ar.edu.itba.paw.persistence.JunctionDaos.PurchaseDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
@@ -114,7 +115,7 @@ public class PurchaseDaoImplTest {
         long pcKey = testInserter.createPurchase(pKey, uKey2, UNITS_BOUGHT);
 
         // Exercise
-        Set<Purchase> purchase = purchaseDao.getPurchases(uKey1, "seller", BASE_PAGE, BASE_SIZE);
+        Set<Purchase> purchase = purchaseDao.getPurchases(uKey1, TransactionType.sale, BASE_PAGE, BASE_SIZE);
 
         // Validations & Post Conditions
         assertFalse(purchase.isEmpty());
@@ -126,7 +127,7 @@ public class PurchaseDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Set<Purchase> purchase = purchaseDao.getPurchases(1, "seller", BASE_PAGE, BASE_SIZE);
+        Set<Purchase> purchase = purchaseDao.getPurchases(1, TransactionType.sale, BASE_PAGE, BASE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(purchase.isEmpty());
@@ -146,7 +147,7 @@ public class PurchaseDaoImplTest {
         long pcKey = testInserter.createPurchase(pKey, uKey2, UNITS_BOUGHT);
 
         // Exercise
-        Set<Purchase> purchase = purchaseDao.getPurchases(uKey2, "buyer", BASE_PAGE, BASE_SIZE);
+        Set<Purchase> purchase = purchaseDao.getPurchases(uKey2, TransactionType.purchase, BASE_PAGE, BASE_SIZE);
 
         // Validations & Post Conditions
         assertFalse(purchase.isEmpty());
@@ -158,7 +159,7 @@ public class PurchaseDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Set<Purchase> purchase = purchaseDao.getPurchases(1, "buyer", BASE_PAGE, BASE_SIZE);
+        Set<Purchase> purchase = purchaseDao.getPurchases(1, TransactionType.purchase, BASE_PAGE, BASE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(purchase.isEmpty());

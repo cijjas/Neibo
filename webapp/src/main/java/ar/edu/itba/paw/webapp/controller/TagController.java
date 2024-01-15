@@ -30,7 +30,7 @@ public class TagController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response listTags(
-            @QueryParam("postId") @DefaultValue("0") final Long postId,
+            @QueryParam("postId") final Long postId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {

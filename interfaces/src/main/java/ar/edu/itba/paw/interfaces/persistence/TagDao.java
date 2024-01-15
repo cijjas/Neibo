@@ -20,9 +20,5 @@ public interface TagDao {
 
     List<Tag> getNeighborhoodTags(long neighborhoodId);
 
-//    int getTagsCount(long neighborhoodId);
-//
-//    int getTagsCountByPostId(long postId);
-
     List<Tag> getAllTags();
 }

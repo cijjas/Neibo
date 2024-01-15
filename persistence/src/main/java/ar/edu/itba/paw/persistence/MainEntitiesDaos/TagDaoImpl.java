@@ -35,7 +35,7 @@ public class TagDaoImpl implements TagDao {
     public List<Tag> getTags(Long postId, long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Tags By Criteria");
         TypedQuery<Tag> query = null;
-        if(postId != null ) {
+        if(postId == null ) {
             query = em.createQuery("SELECT t FROM Tag t ", Tag.class);
         } else {
             query = em.createQuery("SELECT DISTINCT t FROM Tag t " +

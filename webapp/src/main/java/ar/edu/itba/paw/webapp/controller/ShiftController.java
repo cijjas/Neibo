@@ -49,7 +49,7 @@ public class ShiftController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findBooking(@PathParam("id") final long id) {
+    public Response findShift(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at shifts/{}", id);
         return Response.ok(ShiftDto.fromShift(ss.findShift(id)
                 .orElseThrow(() -> new NotFoundException("Shift Not Found")), uriInfo)).build();

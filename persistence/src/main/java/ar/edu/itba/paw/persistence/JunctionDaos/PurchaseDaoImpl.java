@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
+import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.interfaces.persistence.PurchaseDao;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.models.Entities.Purchase;
@@ -11,10 +12,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.*;
 
 @Repository
@@ -45,7 +43,7 @@ public class PurchaseDaoImpl implements PurchaseDao {
     }
 
     @Override
-    public Set<Purchase> getPurchases(long userId, String type, int page, int size) {
+    public Set<Purchase> getPurchases(long userId, TransactionType type, int page, int size) {
         LOGGER.debug("Selecting Purchases By Criteria For User {}", userId);
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -56,12 +54,17 @@ public class PurchaseDaoImpl implements PurchaseDao {
         Join<Purchase, User> userJoin = purchaseRoot.join("user");
         idQuery.select(purchaseRoot.get("purchaseId"));
 
-        if("purchase".equalsIgnoreCase(type)) {
-            idQuery.where(cb.equal(userJoin.get("userId"), userId));
-        } else if("sale".equalsIgnoreCase(type)) {
-            idQuery.where(cb.equal(productJoin.get("seller").get("userId"), userId));
-        } else {
-            throw new IllegalArgumentException("Invalid type");
+        Predicate predicate;
+
+        switch (type) {
+            case purchase:
+                predicate = cb.equal(userJoin.get("userId"), userId);
+                break;
+            case sale:
+                predicate = cb.equal(productJoin.get("seller").get("userId"), userId);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid type");
         }
 
         TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
