@@ -35,6 +35,7 @@ public class EventDaoImplTest {
     private static final String EVENT_NAME = "Sample Event";
     private static final String EVENT_DESCRIPTION = "Sample Description";
     private static final Date EVENT_DATE = Date.valueOf("2022-12-12");
+    private static final String EVENT_DATE_2 = "2022-12-12";
     private static final Time EVENT_START_TIME = Time.valueOf("22:00:00");
     private static final Time EVENT_END_TIME = Time.valueOf("23:00:00");
     public static final Date DATE = Date.valueOf("2024-3-14");
@@ -140,7 +141,7 @@ public class EventDaoImplTest {
         long eKey = testInserter.createEvent(EVENT_NAME, EVENT_DESCRIPTION, EVENT_DATE, tKey1, tKey2, nhKey);
 
         // Exercise
-        List<Event> events = eventDao.getEvents(EVENT_DATE, nhKey);
+        List<Event> events = eventDao.getEvents(EVENT_DATE_2, nhKey);
 
         // Validations & Post Conditions
         assertEquals(1, events.size());

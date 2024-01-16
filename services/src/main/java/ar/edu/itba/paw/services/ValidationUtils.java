@@ -7,6 +7,8 @@ import org.hibernate.jdbc.Work;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -277,6 +279,15 @@ public class ValidationUtils {
             Set<LinkEntry> links = new HashSet<>();
             links.add(new LinkEntry("Valid Worker Statuses", "worker-statuses"));
             throw new InvalidEnumValueException("Invalid worker status: '" + workerStatus + "'. ", links);
+        }
+    }
+
+    public static void checkDateString(String date){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            dateFormat.parse(date);
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Invalid value (" + date + ") for the 'date' parameter. Please use a date in YYYY-(M)M-(D)D format.");
         }
     }
 }

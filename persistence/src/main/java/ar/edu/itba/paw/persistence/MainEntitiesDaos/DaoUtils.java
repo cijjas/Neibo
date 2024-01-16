@@ -34,12 +34,12 @@ class DaoUtils {
         }
     }
 
-    static void appendCommonWorkerConditions(StringBuilder query, List<Object> queryParams, long[] neighborhoodIds, List<String> professions, WorkerRole workerRole, WorkerStatus workerStatus) {
+    static void appendCommonWorkerConditions(StringBuilder query, List<Object> queryParams, long[] neighborhoodIds, List<String> professions, String workerRole, String workerStatus) {
         appendInitialWhereClause(query);
         appendWorkerNeighborhoodIdCondition(query, queryParams, neighborhoodIds);
         appendWorkerNeighborhoodRoleCondition(query, queryParams, workerRole);
 
-        if (workerStatus == WorkerStatus.hot){
+        if (workerStatus != null && WorkerStatus.valueOf(workerStatus) == WorkerStatus.hot){
             appendWorkerHotCondition(query);
         }
 
@@ -91,10 +91,10 @@ class DaoUtils {
         }
     }
 
-    static void appendWorkerNeighborhoodRoleCondition(StringBuilder query, List<Object> queryParams, WorkerRole workerRole) {
+    static void appendWorkerNeighborhoodRoleCondition(StringBuilder query, List<Object> queryParams, String workerRole) {
         if (workerRole != null) {
             query.append(" AND wn.role = ?");
-            queryParams.add(workerRole.toString());
+            queryParams.add(workerRole);
         }
     }
 

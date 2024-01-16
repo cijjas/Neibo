@@ -91,11 +91,13 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @Transactional(readOnly = true)
-    public Set<Worker> getWorkers(int page, int size, List<String> professions, long userId, WorkerRole workerRole, WorkerStatus workerStatus) {
+    public Set<Worker> getWorkers(int page, int size, List<String> professions, long userId, String workerRole, String workerStatus) {
         LOGGER.info("Getting Workers with professions {}", professions);
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPageAndSize(page, size);
+        ValidationUtils.checkWorkerRoleString(workerRole);
+        ValidationUtils.checkWorkerStatusString(workerStatus);
 
         //If inquirer is a worker, show return workers from any of the neighborhoods they are in
         User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User Not Found"));
@@ -114,19 +116,23 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @Transactional(readOnly = true)
-    public int countWorkers(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus) {
+    public int countWorkers(List<String> professions, long[] neighborhoodIds, String workerRole, String workerStatus) {
         LOGGER.info("Getting Workers Count for Neighborhood {} with professions {}", neighborhoodIds, professions);
 
         ValidationUtils.checkNeighborhoodsIds(neighborhoodIds);
+        ValidationUtils.checkWorkerRoleString(workerRole);
+        ValidationUtils.checkWorkerStatusString(workerStatus);
 
         return workerDao.countWorkers(professions, neighborhoodIds, workerRole, workerStatus);
     }
 
     @Override
-    public int calculateWorkerPages(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole, WorkerStatus workerStatus) {
+    public int calculateWorkerPages(List<String> professions, long[] neighborhoodIds, int size, String workerRole, String workerStatus) {
         LOGGER.info("Getting Pages of Workers with size {} from Neighborhoods {} with professions {}", size, neighborhoodIds, professions);
 
         ValidationUtils.checkNeighborhoodsIds(neighborhoodIds);
+        ValidationUtils.checkWorkerRoleString(workerRole);
+        ValidationUtils.checkWorkerStatusString(workerStatus);
 
         return PaginationUtils.calculatePages(workerDao.countWorkers(professions, neighborhoodIds, workerRole, workerStatus), size);
     }

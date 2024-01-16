@@ -20,11 +20,11 @@ public interface WorkerService {
 
     Optional<Worker> findWorker(String mail);
 
-    Set<Worker> getWorkers(int page, int size, List<String> professions, long loggedUserId, WorkerRole workerRole, WorkerStatus workerStatus);
+    Set<Worker> getWorkers(int page, int size, List<String> professions, long loggedUserId, String workerRole, String workerStatus);
 
-    int countWorkers(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus);
+    int countWorkers(List<String> professions, long[] neighborhoodIds, String workerRole, String workerStatus);
 
-    int calculateWorkerPages(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole, WorkerStatus workerStatus);
+    int calculateWorkerPages(List<String> professions, long[] neighborhoodIds, int size, String workerRole, String workerStatus);
 
     // -----------------------------------------------------------------------------------------------------------------
 
