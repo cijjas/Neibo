@@ -96,7 +96,7 @@ public class EmailServiceImpl implements EmailService {
         LOGGER.info("Sending New User message to {}", userName);
 
         Map<String, Object> variables = new HashMap<>();
-        List<User> admins = userDao.getUsers(UserRole.ADMINISTRATOR, neighborhoodId, 1, 10);
+        List<User> admins = userDao.getUsers(UserRole.ADMINISTRATOR.name(), neighborhoodId, 1, 10);
         Neighborhood neighborhood = neighborhoodDao.findNeighborhood(neighborhoodId).orElse(null);
         assert neighborhood != null;
 

@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.Department;
+import ar.edu.itba.paw.enums.ProductStatus;
 import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.DepartmentDao;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
@@ -63,22 +65,36 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProducts(long neighborhoodId, String department, long userId, String productStatus, int page, int size) {
+    public List<Product> getProducts(long neighborhoodId, String department, Long userId, String productStatus, int page, int size) {
         LOGGER.info("Selecting Products by neighborhood {} and departments {}", neighborhoodId, department);
+
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkProductStatusString(productStatus);
+        ValidationUtils.checkDepartmentString(department);
+
         return productDao.getProducts(neighborhoodId, department, userId, productStatus, page, size);
     }
 
+    // ---------------------------------------------------
+
     @Override
-    public int countProducts(long neighborhoodId, String department, long userId, String productStatus) {
+    public int countProducts(long neighborhoodId, String department, Long userId, String productStatus) {
         LOGGER.info("Counting Products by neighborhood {} and departments {}", neighborhoodId, department);
+
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkProductStatusString(productStatus);
+        ValidationUtils.checkDepartmentString(department);
+
         return productDao.countProducts(neighborhoodId, department, userId, productStatus);
     }
 
     @Override
-    public int calculateProductPages(long neighborhoodId, int size, String department, long userId, String productStatus){
-        return PaginationUtils.calculatePages(countProducts(neighborhoodId, department, userId, productStatus), size);
+    public int calculateProductPages(long neighborhoodId, int size, String department, Long userId, String productStatus){
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkProductStatusString(productStatus);
+
+        return PaginationUtils.calculatePages(productDao.countProducts(neighborhoodId, department, userId, productStatus), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

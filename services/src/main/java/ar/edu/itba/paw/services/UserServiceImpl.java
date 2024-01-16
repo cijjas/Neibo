@@ -114,31 +114,38 @@ public class UserServiceImpl implements UserService {
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        return userDao.getUsers(UserRole.NEIGHBOR, neighborhoodId, 0, 0);
+        return userDao.getUsers(UserRole.NEIGHBOR.name(), neighborhoodId, 0, 0);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> getUsers(UserRole role, long neighborhoodId, int page, int size) {
+    public List<User> getUsers(String role, long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Users from Neighborhood {} with Role {}", neighborhoodId, role);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
+        ValidationUtils.checkUserRoleString(role);
 
         return userDao.getUsers(role, neighborhoodId, page, size);
     }
 
     @Override
-    public int countUsers(UserRole role, long neighborhoodId, int page) {
+    public int countUsers(String role, long neighborhoodId) {
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkUserRoleString(role);
+
         return userDao.countTotalUsers(role, neighborhoodId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateUserPages(UserRole role, long neighborhoodId, int size) {
+    public int calculateUserPages(String role, long neighborhoodId, int size) {
         LOGGER.info("Getting Pages of Users with size {} from Neighborhood {} with Role {}", size, neighborhoodId, role);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkSize(size);
+        ValidationUtils.checkUserRoleString(role);
 
         return PaginationUtils.calculatePages(userDao.countTotalUsers(role, neighborhoodId), size);
     }

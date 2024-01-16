@@ -83,7 +83,7 @@ public class PostServiceImpl implements PostService {
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPostStatusString(postStatus);
 
-        return postDao.getPosts(channel, page, size, tags, neighborhoodId, PostStatus.valueOf(postStatus.toLowerCase()), userId);
+        return postDao.getPosts(channel, page, size, tags, neighborhoodId, postStatus, userId);
     }
 
     // ---------------------------------------------------
@@ -97,7 +97,7 @@ public class PostServiceImpl implements PostService {
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPostStatusString(postStatus);
 
-        return postDao.countPosts(channel, tags, neighborhoodId, PostStatus.valueOf(postStatus.toLowerCase()), userId);
+        return postDao.countPosts(channel, tags, neighborhoodId, postStatus, userId);
     }
 
     @Override
@@ -109,6 +109,6 @@ public class PostServiceImpl implements PostService {
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPostStatusString(postStatus);
 
-        return PaginationUtils.calculatePages(postDao.countPosts(channel, tags, neighborhoodId, PostStatus.valueOf(postStatus.toLowerCase()), userId), size);
+        return PaginationUtils.calculatePages(postDao.countPosts(channel, tags, neighborhoodId, postStatus, userId), size);
     }
 }

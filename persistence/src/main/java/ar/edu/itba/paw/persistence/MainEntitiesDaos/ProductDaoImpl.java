@@ -64,39 +64,44 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> getProducts(long neighborhoodId, String department, long userId, String productStatus, int page, int size) {
+    public List<Product> getProducts(long neighborhoodId, String department, Long userId, String productStatus, int page, int size) {
         LOGGER.debug("Selecting Products from neighborhood {}, in departments {}", neighborhoodId, department);
 
         List<Predicate> predicates = new ArrayList<>();
-        if(userId != 0 || productStatus != null){
-            ProductStatus productStatusEnum = ProductStatus.valueOf(productStatus);
+        if (userId != null || productStatus != null) {
+            ProductStatus productStatusEnum = ProductStatus.valueOf(productStatus.toUpperCase());
             TypedQuery<Long> idQuery = null;
-            if(productStatusEnum == ProductStatus.BOUGHT){
-                idQuery = em.createQuery(
-                        "SELECT DISTINCT p.product.id FROM Purchase p WHERE p.user.userId = :userId", Long.class);
-                idQuery.setParameter("userId", userId);
+            switch (productStatusEnum) {
+                case BOUGHT:
+                    idQuery = em.createQuery(
+                            "SELECT DISTINCT p.product.id FROM Purchase p WHERE p.user.userId = :userId", Long.class);
+                    idQuery.setParameter("userId", userId);
+                    break;
+                case SOLD:
+                    idQuery = em.createQuery(
+                            "SELECT DISTINCT p.product.id FROM Purchase p WHERE p.user IS NOT NULL AND p.product.seller.userId = :userId", Long.class);
+                    idQuery.setParameter("userId", userId);
+                    break;
+                case SELLING:
+                    idQuery = em.createQuery(
+                            "SELECT p.productId FROM Product p WHERE p.seller.userId = :userId", Long.class);
+                    idQuery.setParameter("userId", userId);
+                    break;
             }
-            else if(productStatusEnum == ProductStatus.SOLD){
-                idQuery = em.createQuery(
-                        "SELECT DISTINCT p.product.id FROM Purchase p WHERE p.user IS NOT NULL AND p.product.seller.userId = :userId", Long.class);
-                idQuery.setParameter("userId", userId);
+
+            if (idQuery != null) {
+                idQuery.setFirstResult((page - 1) * size);
+                idQuery.setMaxResults(size);
+                List<Long> productIds = idQuery.getResultList();
+
+                if (!productIds.isEmpty()) {
+                    TypedQuery<Product> productQuery = em.createQuery(
+                            "SELECT p FROM Product p WHERE p.productId IN :productIds ORDER BY p.creationDate DESC", Product.class);
+                    productQuery.setParameter("productIds", productIds);
+                    return productQuery.getResultList();
+                }
             }
-            else if(productStatusEnum == ProductStatus.SELLING){
-                idQuery = em.createQuery(
-                        "SELECT p.productId FROM Product p WHERE p.seller.userId = :userId", Long.class);
-                idQuery.setParameter("userId", userId);
-            }
-            idQuery.setFirstResult((page - 1) * size);
-            idQuery.setMaxResults(size);
-            List<Long> productIds = idQuery.getResultList();
-            if (!productIds.isEmpty()) {
-                TypedQuery<Product> productQuery = em.createQuery(
-                        "SELECT p FROM Product p WHERE p.productId IN :productIds ORDER BY p.creationDate DESC", Product.class);
-                productQuery.setParameter("productIds", productIds);
-                return productQuery.getResultList();
-            }
-        }
-        else if(department != null) {
+        } else if (department != null) {
             // Initialize CriteriaBuilder
             CriteriaBuilder cb = em.getCriteriaBuilder();
             // First Query to retrieve product ids
@@ -113,7 +118,7 @@ public class ProductDaoImpl implements ProductDao {
             // Create the query
             TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
             // Implement pagination in the first query
-            if(page > 0){
+            if (page > 0) {
                 idTypedQuery.setFirstResult((page - 1) * size);
                 idTypedQuery.setMaxResults(size);
             }
@@ -133,27 +138,34 @@ public class ProductDaoImpl implements ProductDao {
             // Return Results
             return dataTypedQuery.getResultList();
         }
+
         return Collections.emptyList();
     }
 
+
     @Override
-    public int countProducts(long neighborhoodId, String department, long userId, String productStatus) {
+    public int countProducts(long neighborhoodId, String department, Long userId, String productStatus) {
         LOGGER.debug("Selecting Products Count from neighborhood {}, in departments {}", neighborhoodId, department);
 
-        if(userId != 0 || productStatus != null){
-            ProductStatus productStatusEnum = ProductStatus.valueOf(productStatus);
+        if (userId != null || productStatus != null) {
+            ProductStatus productStatusEnum = ProductStatus.valueOf(productStatus.toUpperCase());
             TypedQuery<Long> query = null;
-            if(productStatusEnum == ProductStatus.BOUGHT){
-                query = em.createQuery("SELECT COUNT(*) FROM Product p JOIN Purchase pu ON p.productId = pu.product.productId WHERE pu.user.userId = :userId", Long.class);
+            switch (productStatusEnum) {
+                case BOUGHT:
+                    query = em.createQuery("SELECT COUNT(*) FROM Product p JOIN Purchase pu ON p.productId = pu.product.productId WHERE pu.user.userId = :userId", Long.class);
+                    break;
+                case SOLD:
+                    query = em.createQuery("SELECT COUNT(*) FROM Product p JOIN Purchase pu ON p.productId = pu.product.productId WHERE p.seller.userId = :userId", Long.class);
+                    break;
+                case SELLING:
+                    query = em.createQuery("SELECT COUNT(*) FROM Product p WHERE p.seller.userId = :userId", Long.class);
+                    break;
             }
-            else if(productStatusEnum == ProductStatus.SOLD){
-                query = em.createQuery("SELECT COUNT(*) FROM Product p JOIN Purchase pu ON p.productId = pu.product.productId WHERE p.seller.userId = :userId", Long.class);
+
+            if (query != null) {
+                query.setParameter("userId", userId);
+                return query.getSingleResult().intValue();
             }
-            else if(productStatusEnum == ProductStatus.SELLING){
-                query = em.createQuery("SELECT COUNT(*) FROM Product p WHERE p.seller.userId = :userId", Long.class);
-            }
-            query.setParameter("userId", userId);
-            return query.getSingleResult().intValue();
         }
 
         CriteriaBuilder cb = em.getCriteriaBuilder();

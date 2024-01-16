@@ -44,8 +44,8 @@ public class ProductController extends GlobalControllerAdvice {
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("department") @DefaultValue("NONE") final String department,
-            @QueryParam("userId") @DefaultValue("0") final long userId,
-            @QueryParam("productStatus") final String productStatus // BOUGHT/SOLD/SELLING
+            @QueryParam("userId") final Long userId,
+            @QueryParam("productStatus") final String productStatus
             ) {
         LOGGER.info("GET request arrived at neighborhoods/{}/products", neighborhoodId);
         final List<Product> products = ps.getProducts(neighborhoodId, department, userId, productStatus, page, size);

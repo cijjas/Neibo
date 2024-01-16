@@ -76,7 +76,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> getUsers(UserRole role, long neighborhoodId, int page, int size) {
+    public List<User> getUsers(String role, long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Users with Role {} and from Neighborhood {}", role, neighborhoodId);
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -86,7 +86,7 @@ public class UserDaoImpl implements UserDao {
         idQuery.select(idRoot.get("userId"));
         List<Predicate> predicates = new ArrayList<>();
         if (role != null)
-            predicates.add(cb.equal(idRoot.get("role"), role));
+            predicates.add(cb.equal(idRoot.get("role"), UserRole.valueOf(role.toUpperCase())));
         if (neighborhoodId > 0) {
             Join<User, Neighborhood> neighborhoodJoin = idRoot.join("neighborhood");
             predicates.add(cb.equal(neighborhoodJoin.get("neighborhoodId"), neighborhoodId));
@@ -111,7 +111,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public int countTotalUsers(UserRole role, long neighborhoodId) {
+    public int countTotalUsers(String role, long neighborhoodId) {
         LOGGER.debug("Selecting Users Count that have Role {} and from Neighborhood {}", role, neighborhoodId);
         StringBuilder jpqlConditions = new StringBuilder("SELECT COUNT(u) FROM User u WHERE 1 = 1");
         if (role != null)
@@ -120,7 +120,7 @@ public class UserDaoImpl implements UserDao {
             jpqlConditions.append(" AND u.neighborhood.id = :neighborhoodId");
         TypedQuery<Long> query = em.createQuery(jpqlConditions.toString(), Long.class);
         if (role != null)
-            query.setParameter("role", role);
+            query.setParameter("role", UserRole.valueOf(role.toUpperCase()));
         if (neighborhoodId > 0)
             query.setParameter("neighborhoodId", neighborhoodId);
         return query.getSingleResult().intValue();

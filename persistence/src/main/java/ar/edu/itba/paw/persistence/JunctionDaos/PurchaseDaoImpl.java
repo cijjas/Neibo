@@ -43,8 +43,9 @@ public class PurchaseDaoImpl implements PurchaseDao {
     }
 
     @Override
-    public Set<Purchase> getPurchases(long userId, TransactionType type, int page, int size) {
+    public Set<Purchase> getPurchases(long userId, String type, int page, int size) {
         LOGGER.debug("Selecting Purchases By Criteria For User {}", userId);
+
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
@@ -54,17 +55,15 @@ public class PurchaseDaoImpl implements PurchaseDao {
         Join<Purchase, User> userJoin = purchaseRoot.join("user");
         idQuery.select(purchaseRoot.get("purchaseId"));
 
-        Predicate predicate;
+        TransactionType tType = TransactionType.valueOf(type.toLowerCase());
 
-        switch (type) {
+        switch (tType) {
             case purchase:
-                predicate = cb.equal(userJoin.get("userId"), userId);
+                cb.equal(userJoin.get("userId"), userId);
                 break;
             case sale:
-                predicate = cb.equal(productJoin.get("seller").get("userId"), userId);
+                cb.equal(productJoin.get("seller").get("userId"), userId);
                 break;
-            default:
-                throw new IllegalArgumentException("Invalid type");
         }
 
         TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
@@ -94,6 +93,7 @@ public class PurchaseDaoImpl implements PurchaseDao {
     public int countPurchases(long userId, String type) {
         LOGGER.debug("Counting Purchases By Seller {}", userId);
 
+
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<Purchase> purchaseRoot = query.from(Purchase.class);
@@ -102,16 +102,18 @@ public class PurchaseDaoImpl implements PurchaseDao {
         Join<Purchase, User> userJoin = purchaseRoot.join("user");
 
         query.select(cb.count(purchaseRoot));
-        if("purchase".equalsIgnoreCase(type)) {
-            query.where(cb.equal(userJoin.get("userId"), userId));
-        } else if("sale".equalsIgnoreCase(type)) {
-            query.where(cb.equal(productJoin.get("seller").get("userId"), userId));
-        } else {
-            throw new IllegalArgumentException("Invalid type");
+
+        TransactionType tType = TransactionType.valueOf(type.toLowerCase());
+        switch (tType) {
+            case purchase:
+                cb.equal(userJoin.get("userId"), userId);
+                break;
+            case sale:
+                cb.equal(productJoin.get("seller").get("userId"), userId);
+                break;
         }
 
         TypedQuery<Long> typedQuery = em.createQuery(query);
         return typedQuery.getSingleResult().intValue();
     }
-
 }
