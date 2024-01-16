@@ -48,6 +48,11 @@ public class ShiftServiceImpl implements ShiftService {
     }
 
     @Override
+    public List<Shift> getShifts() {
+        return shiftDao.getShifts();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Optional<Shift> findShift(long shiftId) {
         LOGGER.info("Finding Shift with ID {}", shiftId);
@@ -59,7 +64,7 @@ public class ShiftServiceImpl implements ShiftService {
 
     // deprecated
 
-    @Override
+    /*@Override
     @Transactional(readOnly = true)
     public List<Shift> getShifts(long amenityId, Date date) {
         LOGGER.info("Getting Shifts for Amenity {} on date {}", amenityId, date);
@@ -70,7 +75,7 @@ public class ShiftServiceImpl implements ShiftService {
         calendar.setTime(date);
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         return shiftDao.getShifts(amenityId, DayOfTheWeek.convertToCustomDayId(dayOfWeek), date);
-    }
+    }*/
 
     @Override
     @Transactional(readOnly = true)
@@ -81,7 +86,7 @@ public class ShiftServiceImpl implements ShiftService {
         return shiftDao.getShifts(amenityId);
     }
 
-    public List<Shift> getShifts(long amenityId, long dayId, Date date) {
+    /*public List<Shift> getShifts(long amenityId, long dayId, Date date) {
 
         ValidationUtils.checkAmenityId(amenityId);
 
@@ -95,5 +100,5 @@ public class ShiftServiceImpl implements ShiftService {
             // No specific criteria provided, fetch all shifts
             return shiftDao.getShifts(amenityId);
         }
-    }
+    }*/
 }

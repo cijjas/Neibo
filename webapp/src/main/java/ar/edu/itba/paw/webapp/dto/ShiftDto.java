@@ -8,7 +8,6 @@ import java.sql.Time;
 
 public class ShiftDto {
     private java.sql.Time endTime;
-    private boolean taken;
     private URI self;
     private URI amenities;
     private URI day;
@@ -18,7 +17,6 @@ public class ShiftDto {
         final ShiftDto dto = new ShiftDto();
 
         dto.endTime = shift.getEndTime();
-        dto.taken = shift.isTaken();
 
         dto.self = uriInfo.getBaseUriBuilder()
                 .path("shifts")
@@ -34,14 +32,6 @@ public class ShiftDto {
 
     public void setEndTime(Time endTime) {
         this.endTime = endTime;
-    }
-
-    public boolean isTaken() {
-        return taken;
-    }
-
-    public void setTaken(boolean taken) {
-        this.taken = taken;
     }
 
     public URI getSelf() {

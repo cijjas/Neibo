@@ -80,6 +80,7 @@ public class PostServiceImpl implements PostService {
     public List<Post> getPosts(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, Long userId) {
         LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {}, by User {} and Post Status {} ", neighborhoodId, channel, tags, userId, postStatus);
 
+        ValidationUtils.checkChannelString(channel);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPostStatusString(postStatus);
         ValidationUtils.checkUserId(userId);

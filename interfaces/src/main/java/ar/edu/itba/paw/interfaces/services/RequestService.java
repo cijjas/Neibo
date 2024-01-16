@@ -3,11 +3,14 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.Entities.Request;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RequestService {
     Request createRequest(final long userId, final long productId, final String message);
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    Optional<Request> findRequest(long requestId);
 
     List<Request> getRequests(Long productId, Long userId, int page, int size);
 

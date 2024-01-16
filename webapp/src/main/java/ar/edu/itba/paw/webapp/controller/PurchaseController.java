@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.PurchaseService;
 import ar.edu.itba.paw.models.Entities.Purchase;
+import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.PurchaseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,5 +55,14 @@ public class PurchaseController {
         return Response.ok(new GenericEntity<Set<PurchaseDto>>(transactionDto){})
                 .links(links)
                 .build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response findTransaction(@PathParam("id") final long id) {
+        LOGGER.info("GET request arrived at neighborhoods/{}/users/{}/transactions/{}", neighborhoodId, userId, id);
+        return Response.ok(PurchaseDto.fromPurchase(ps.findPurchase(id)
+                .orElseThrow(() -> new NotFoundException("Purchase Not Found")), uriInfo)).build();
     }
 }

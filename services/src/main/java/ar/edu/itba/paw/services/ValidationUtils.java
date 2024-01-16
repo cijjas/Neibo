@@ -251,6 +251,16 @@ public class ValidationUtils {
         }
     }
 
+    public static void checkChannelString(String channel){
+        try {
+            BaseChannel.valueOf(channel.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            Set<LinkEntry> links = new HashSet<>();
+            links.add(new LinkEntry("Valid Channels", "base-channels"));
+            throw new InvalidEnumValueException("Invalid channel: '" + channel + "'. ", links);
+        }
+    }
+
     public static void checkProfessionsArray(List<String> professions){
         for ( String profession : professions ){
             checkProfessionString(profession);

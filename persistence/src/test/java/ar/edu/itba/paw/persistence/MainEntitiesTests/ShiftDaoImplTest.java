@@ -117,34 +117,6 @@ public class ShiftDaoImplTest {
     }
 
     @Test
-    public void testGetShifts() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long aKey = testInserter.createAmenity(nhKey);
-        long dKey = testInserter.createDay();
-        long tKey = testInserter.createTime();
-        long sKey = testInserter.createShift(dKey, tKey);
-        testInserter.createAvailability(aKey, sKey);
-
-        // Exercise
-        List<Shift> shifts = shiftDao.getShifts(aKey, dKey, Date.valueOf(DATE));
-
-        // Validations & Post Conditions
-        assertEquals(1, shifts.size());
-    }
-
-    @Test
-    public void testGetNoShifts() {
-        // Pre Conditions
-
-        // Exercise
-        List<Shift> shifts = shiftDao.getShifts(1, 1, Date.valueOf(DATE));
-
-        // Validations & Post Conditions
-        assertEquals(0, shifts.size());
-    }
-
-    @Test
     public void testGetAmenityShifts() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.models.Entities.Day;
+import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.Shift;
 import ar.edu.itba.paw.models.Entities.Time;
 import org.slf4j.Logger;
@@ -57,6 +58,14 @@ public class ShiftDaoImpl implements ShiftDao {
     }
 
     @Override
+    public List<Shift> getShifts() {
+        LOGGER.debug("Selecting All Shifts");
+        String jpql = "SELECT s FROM Shift s";
+        TypedQuery<Shift> query = em.createQuery(jpql, Shift.class);
+        return query.getResultList();
+    }
+
+    /*@Override
     public List<Shift> getShifts(long amenityId, long dayId, Date date) {
         // el dayId puede ser obviado
 
@@ -94,7 +103,7 @@ public class ShiftDaoImpl implements ShiftDao {
         }
 
         return shifts;
-    }
+    }*/
 
     @Override
     public List<Shift> getShifts(long amenityId) {

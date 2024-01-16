@@ -30,12 +30,9 @@ public class ShiftController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getShifts(
-            @QueryParam("amenityId") long amenityId,
-            @QueryParam("dayId") long dayId,
-            @QueryParam("date") Date date) {
+    public Response getShifts() {
         LOGGER.info("GET request arrived at shifts");
-        List<Shift> shifts = ss.getShifts(amenityId, dayId, date);
+        List<Shift> shifts = ss.getShifts();
 
         // Convert shifts to DTOs if needed
         List<ShiftDto> shiftDto = shifts.stream()

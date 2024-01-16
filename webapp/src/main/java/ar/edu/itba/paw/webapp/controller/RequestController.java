@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.RequestService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Request;
+import ar.edu.itba.paw.webapp.dto.PurchaseDto;
 import ar.edu.itba.paw.webapp.dto.RequestDto;
 import ar.edu.itba.paw.webapp.form.RequestForm;
 import org.slf4j.Logger;
@@ -59,6 +60,15 @@ public class RequestController extends GlobalControllerAdvice {
         return Response.ok(new GenericEntity<List<RequestDto>>(requestDto){})
                 .links(links)
                 .build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response findRequest(@PathParam("id") final long id) {
+        LOGGER.info("GET request arrived at neighborhoods/{}/requests/{}", neighborhoodId, id);
+        return Response.ok(RequestDto.fromRequest(rs.findRequest(id)
+                .orElseThrow(() -> new NotFoundException("Request Not Found")), uriInfo)).build();
     }
 
     @POST

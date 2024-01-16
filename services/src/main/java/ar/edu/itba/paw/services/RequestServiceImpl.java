@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -44,6 +45,14 @@ public class RequestServiceImpl implements RequestService {
         User sender = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User not found"));
         emailService.sendNewRequestMail(product, sender, message);
         return requestDao.createRequest(userId, productId, message);
+    }
+
+    @Override
+    public Optional<Request> findRequest(long requestId) {
+
+        ValidationUtils.checkRequestId(requestId);
+
+        return requestDao.findRequest(requestId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
