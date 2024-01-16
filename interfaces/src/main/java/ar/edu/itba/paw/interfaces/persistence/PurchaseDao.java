@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
+import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.models.Entities.Purchase;
 
 import java.util.Optional;

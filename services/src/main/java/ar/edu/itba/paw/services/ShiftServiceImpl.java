@@ -49,6 +49,17 @@ public class ShiftServiceImpl implements ShiftService {
 
     @Override
     @Transactional(readOnly = true)
+    public Optional<Shift> findShift(long shiftId) {
+        LOGGER.info("Finding Shift with ID {}", shiftId);
+
+        ValidationUtils.checkShiftId(shiftId);
+
+        return shiftDao.findShift(shiftId);
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
     public List<Shift> getShifts(long amenityId, Date date) {
         LOGGER.info("Getting Shifts for Amenity {} on date {}", amenityId, date);
 

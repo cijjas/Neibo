@@ -108,13 +108,9 @@ public class EventServiceImpl implements EventService {
         LOGGER.info("Getting Events for Neighborhood {} on Date {}", neighborhoodId, date);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkDateString(date);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            return eventDao.getEvents(dateFormat.parse(date), neighborhoodId);
-        } catch (ParseException e) {
-            return Collections.emptyList();
-        }
+        return eventDao.getEvents(date, neighborhoodId);
     }
 
     @Override
@@ -184,7 +180,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean hasEvents(Date date, long neighborhoodId) {
+    public boolean hasEvents(String date, long neighborhoodId) {
         LOGGER.info("Checking if Neighborhood {} has Events on {}", neighborhoodId, date);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);

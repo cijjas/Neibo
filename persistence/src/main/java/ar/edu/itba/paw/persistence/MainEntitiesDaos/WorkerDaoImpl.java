@@ -66,7 +66,7 @@ public class WorkerDaoImpl implements WorkerDao {
 
 
     @Override
-    public Set<Worker> getWorkers(int page, int size, List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus) {
+    public Set<Worker> getWorkers(int page, int size, List<String> professions, long[] neighborhoodIds, String workerRole, String workerStatus) {
         LOGGER.debug("Selecting Workers from Neighborhoods {} with professions {}", neighborhoodIds, professions);
         StringBuilder query = new StringBuilder(USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
@@ -91,7 +91,7 @@ public class WorkerDaoImpl implements WorkerDao {
     }
 
     @Override
-    public int countWorkers(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus){
+    public int countWorkers(List<String> professions, long[] neighborhoodIds, String workerRole, String workerStatus){
         LOGGER.debug("Selecting Workers Count from Neighborhood {} with professions {}", neighborhoodIds, professions);
         StringBuilder query = new StringBuilder(COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();

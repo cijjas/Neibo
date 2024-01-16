@@ -49,7 +49,7 @@ public class RequestServiceImpl implements RequestService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Request> getRequests(long productId, long userId, int page, int size){
+    public List<Request> getRequests(Long productId, Long userId, int page, int size){
 
         ValidationUtils.checkRequestId(productId, userId);
         ValidationUtils.checkPageAndSize(page, size);
@@ -58,7 +58,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public int countRequests(long productId, long userId) {
+    public int countRequests(Long productId, Long userId) {
 
 //        ValidationUtils.checkRequestId(productId, userId);
 
@@ -69,7 +69,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public int calculateRequestPages(long productId, long userId, int size) {
+    public int calculateRequestPages(Long productId, Long userId, int size) {
         return PaginationUtils.calculatePages(requestDao.countRequests(productId, userId), size);
     }
 

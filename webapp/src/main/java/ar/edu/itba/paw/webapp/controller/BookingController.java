@@ -38,7 +38,9 @@ public class BookingController extends GlobalControllerAdvice{
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response listBookings(@QueryParam("userId") final long userId) {
+    public Response listBookings(
+            @QueryParam("userId") final Long userId
+    ) {
         LOGGER.info("GET request arrived at neighborhoods/{}/bookings", neighborhoodId);
         final List<Booking> bookings = bs.getBookings(userId);
         final List<BookingDto> bookingsDto = bookings.stream()

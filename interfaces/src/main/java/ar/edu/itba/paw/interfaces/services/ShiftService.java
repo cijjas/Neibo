@@ -12,6 +12,8 @@ public interface ShiftService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    Optional<Shift> findShift(long shiftId);
+
     Optional<Shift> findShift(long amenityId, long dayId);
 
     List<Shift> getShifts(long amenityId, Date date);

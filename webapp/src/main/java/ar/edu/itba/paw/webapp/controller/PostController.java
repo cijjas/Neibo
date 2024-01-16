@@ -46,16 +46,15 @@ public class PostController extends GlobalControllerAdvice{
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("channel") final String channel,
             @QueryParam("tags") final List<String> tags,
-            @QueryParam("poststatus") @DefaultValue("none") final String postStatus,
-            @QueryParam("user") @DefaultValue("0") final Long userId) {
+            @QueryParam("postStatus") @DefaultValue("none") final String postStatus,
+            @QueryParam("user") final Long userId) {
         LOGGER.info("GET request arrived at neighborhoods/{}/posts", neighborhoodId);
-        final List<Post> posts = ps.getPostsByCriteria(channel, page, size, tags, neighborhoodId, PostStatus.valueOf(postStatus), userId);
+        final List<Post> posts = ps.getPosts(channel, page, size, tags, neighborhoodId, postStatus, userId);
         final List<PostDto> postsDto = posts.stream()
                 .map(p -> PostDto.fromPost(p, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts";
-        PostStatus pstat = PostStatus.valueOf(postStatus);
-        int totalPostsPages = ps.calculatePostPages(channel, size, tags, neighborhoodId, pstat, userId);
+        int totalPostsPages = ps.calculatePostPages(channel, size, tags, neighborhoodId, postStatus, userId);
         Link[] links = createPaginationLinks(baseUri, page, size, totalPostsPages);
 
         return Response.ok(new GenericEntity<List<PostDto>>(postsDto){})

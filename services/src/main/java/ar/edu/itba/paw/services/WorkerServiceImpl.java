@@ -91,11 +91,13 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @Transactional(readOnly = true)
-    public Set<Worker> getWorkers(int page, int size, List<String> professions, long userId, WorkerRole workerRole, WorkerStatus workerStatus) {
+    public Set<Worker> getWorkers(int page, int size, List<String> professions, long userId, String workerRole, String workerStatus) {
         LOGGER.info("Getting Workers with professions {}", professions);
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPageAndSize(page, size);
+        ValidationUtils.checkWorkerRoleString(workerRole);
+        ValidationUtils.checkWorkerStatusString(workerStatus);
 
         //If inquirer is a worker, show return workers from any of the neighborhoods they are in
         User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User Not Found"));
@@ -114,10 +116,12 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @Transactional(readOnly = true)
-    public int countWorkers(List<String> professions, long userId, WorkerRole workerRole, WorkerStatus workerStatus) {
+    public int countWorkers(List<String> professions, long userId, String workerRole, String workerStatus) {
         LOGGER.info("Getting Workers Count for User {} with professions {}", userId, professions);
 
         ValidationUtils.checkId(userId, "User");
+        ValidationUtils.checkWorkerRoleString(workerRole);
+        ValidationUtils.checkWorkerStatusString(workerStatus);
 
         User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User Not Found"));
         if(user.getNeighborhood().getNeighborhoodId() == 0) { //inquirer is a worker
@@ -134,10 +138,12 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
-    public int calculateWorkerPages(List<String> professions, long userId, int size, WorkerRole workerRole, WorkerStatus workerStatus) {
-        LOGGER.info("Getting Pages of Workers with size {} from User {} with professions {}", size, userId, professions);
+    public int calculateWorkerPages(List<String> professions, long userId, int size, String workerRole, String workerStatus) {
+        LOGGER.info("Getting Pages of Workers with size {} for User {} with professions {}", size, userId, professions);
 
         ValidationUtils.checkId(userId, "User");
+        ValidationUtils.checkWorkerRoleString(workerRole);
+        ValidationUtils.checkWorkerStatusString(workerStatus);
 
         return PaginationUtils.calculatePages(countWorkers(professions, userId, workerRole, workerStatus), size);
     }

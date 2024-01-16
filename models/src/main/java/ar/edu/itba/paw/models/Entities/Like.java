@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.compositeKeys.LikeKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -22,14 +23,19 @@ public class Like implements Serializable {
     @JoinColumn(name = "userid")
     private User user;
 
+    @Column(name = "likedate", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date likeDate;
+
     Like() {
         this.id = new LikeKey();
     }
 
-    public Like(Post post, User user) {
+    public Like(Post post, User user, Date likeDate) {
         this.id = new LikeKey(post.getPostId(), user.getUserId());
         this.post = post;
         this.user = user;
+        this.likeDate = likeDate;
     }
 
     public LikeKey getId() {
@@ -54,6 +60,14 @@ public class Like implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Date getLikeDate() {
+        return likeDate;
+    }
+
+    public void setLikeDate(Date likeDate) {
+        this.likeDate = likeDate;
     }
 
     @Override

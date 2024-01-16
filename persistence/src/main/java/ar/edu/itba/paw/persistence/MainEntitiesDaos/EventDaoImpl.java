@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -47,11 +49,17 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public List<Event> getEvents(Date date, long neighborhoodId) {
+    public List<Event> getEvents(String date, long neighborhoodId) {
         LOGGER.debug("Selecting Events from Date {}", date);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String jpql = "SELECT e FROM Event e WHERE e.date = :date AND e.neighborhood.neighborhoodId = :neighborhoodId";
         TypedQuery<Event> query = em.createQuery(jpql, Event.class);
-        query.setParameter("date", date);
+        try {
+            query.setParameter("date", dateFormat.parse(date));
+        } catch (ParseException e) {
+            // this code should never execute as the caller methods check for invalid parameters
+            throw new IllegalArgumentException();
+        }
         query.setParameter("neighborhoodId", neighborhoodId);
         return query.getResultList();
     }

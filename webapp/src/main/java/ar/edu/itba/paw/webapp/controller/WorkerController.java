@@ -48,8 +48,8 @@ public class WorkerController extends GlobalControllerAdvice {
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("professions") final List<String> professions,
             @QueryParam("neighborhoodId") @DefaultValue("0") final long neighborhoodId,
-            @QueryParam("workerRole") final WorkerRole workerRole,
-            @QueryParam("workerStatus") final WorkerStatus workerStatus
+            @QueryParam("workerRole") final String workerRole,
+            @QueryParam("workerStatus") final String workerStatus
     ) {
         LOGGER.info("GET request arrived at workers");
         Set<Worker> workers = ws.getWorkers(page, size, professions, getLoggedUser().getUserId(), workerRole, workerStatus);

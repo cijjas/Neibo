@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.models;
 
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * API model that represents an error.
  *
@@ -12,6 +15,7 @@ public class ApiErrorDetails {
     private String title;
     private String message;
     private String path;
+    private Set<LinkEntry> links;
 
     public Integer getStatus() {
         return status;
@@ -43,5 +47,13 @@ public class ApiErrorDetails {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public Set<LinkEntry> getLinks() {
+        return links;
+    }
+
+    public void setLinks(Set<LinkEntry> links) {
+        this.links = links;
     }
 }

@@ -40,8 +40,8 @@ public class LikeController extends GlobalControllerAdvice{
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listLikes(
-            @QueryParam("postId") @DefaultValue("0") final int postId,
-            @QueryParam("userId") @DefaultValue("0") final int userId,
+            @QueryParam("postId") final Long postId,
+            @QueryParam("userId") final Long userId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size){
         LOGGER.info("GET request arrived at neighborhoods/{}/likes", neighborhoodId);

@@ -11,13 +11,13 @@ public interface ProductService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    int calculateProductPages(long neighborhoodId, int size, String department, long userId, String productStatus);
-
     Optional<Product> findProduct(final long productId);
 
-    List<Product> getProducts(long neighborhoodId, String department, long userId, String productStatus, int page, int size);
+    List<Product> getProducts(long neighborhoodId, String department, Long userId, String productStatus, int page, int size);
 
-    int countProducts(long neighborhoodId, String department, long userId, String productStatus);
+    int countProducts(long neighborhoodId, String department, Long userId, String productStatus);
+
+    int calculateProductPages(long neighborhoodId, int size, String department, Long userId, String productStatus);
 
     // -----------------------------------------------------------------------------------------------------------------
 

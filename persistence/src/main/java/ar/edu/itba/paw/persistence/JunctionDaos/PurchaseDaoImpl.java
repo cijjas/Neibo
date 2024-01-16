@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
+import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.interfaces.persistence.PurchaseDao;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.models.Entities.Purchase;
@@ -11,10 +12,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.*;
 
 @Repository
@@ -48,6 +46,7 @@ public class PurchaseDaoImpl implements PurchaseDao {
     public Set<Purchase> getPurchases(long userId, String type, int page, int size) {
         LOGGER.debug("Selecting Purchases By Criteria For User {}", userId);
 
+
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
         Root<Purchase> purchaseRoot = idQuery.from(Purchase.class);
@@ -56,12 +55,15 @@ public class PurchaseDaoImpl implements PurchaseDao {
         Join<Purchase, User> userJoin = purchaseRoot.join("user");
         idQuery.select(purchaseRoot.get("purchaseId"));
 
-        if("purchase".equalsIgnoreCase(type)) {
-            idQuery.where(cb.equal(userJoin.get("userId"), userId));
-        } else if("sale".equalsIgnoreCase(type)) {
-            idQuery.where(cb.equal(productJoin.get("seller").get("userId"), userId));
-        } else {
-            throw new IllegalArgumentException("Invalid type");
+        TransactionType tType = TransactionType.valueOf(type.toLowerCase());
+
+        switch (tType) {
+            case purchase:
+                cb.equal(userJoin.get("userId"), userId);
+                break;
+            case sale:
+                cb.equal(productJoin.get("seller").get("userId"), userId);
+                break;
         }
 
         TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
@@ -91,6 +93,7 @@ public class PurchaseDaoImpl implements PurchaseDao {
     public int countPurchases(long userId, String type) {
         LOGGER.debug("Counting Purchases By Seller {}", userId);
 
+
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
         Root<Purchase> purchaseRoot = query.from(Purchase.class);
@@ -99,16 +102,18 @@ public class PurchaseDaoImpl implements PurchaseDao {
         Join<Purchase, User> userJoin = purchaseRoot.join("user");
 
         query.select(cb.count(purchaseRoot));
-        if("purchase".equalsIgnoreCase(type)) {
-            query.where(cb.equal(userJoin.get("userId"), userId));
-        } else if("sale".equalsIgnoreCase(type)) {
-            query.where(cb.equal(productJoin.get("seller").get("userId"), userId));
-        } else {
-            throw new IllegalArgumentException("Invalid type");
+
+        TransactionType tType = TransactionType.valueOf(type.toLowerCase());
+        switch (tType) {
+            case purchase:
+                cb.equal(userJoin.get("userId"), userId);
+                break;
+            case sale:
+                cb.equal(productJoin.get("seller").get("userId"), userId);
+                break;
         }
 
         TypedQuery<Long> typedQuery = em.createQuery(query);
         return typedQuery.getSingleResult().intValue();
     }
-
 }

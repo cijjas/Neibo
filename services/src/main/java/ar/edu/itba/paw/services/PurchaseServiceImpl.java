@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.interfaces.persistence.PurchaseDao;
 import ar.edu.itba.paw.interfaces.services.PurchaseService;
 import ar.edu.itba.paw.models.Entities.Purchase;
@@ -41,28 +42,31 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public Set<Purchase> getPurchases(long userId, String type, int page, int size) {
+    public Set<Purchase> getPurchases(long userId, String transactionType, int page, int size) {
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPageAndSize(page, size);
+        ValidationUtils.checkTransactionTypeString(transactionType);
 
-        return purchaseDao.getPurchases(userId, type, page, size);
+        return purchaseDao.getPurchases(userId, transactionType, page, size);
     }
 
     @Override
-    public int countPurchases(long userId, String type) {
+    public int countPurchases(long userId, String transactionType) {
         ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkTransactionTypeString(transactionType);
 
-        return purchaseDao.countPurchases(userId, type);
+        return purchaseDao.countPurchases(userId, transactionType);
     }
 
     @Override
-    public int calculatePurchasePages(long userId, String type, int size) {
+    public int calculatePurchasePages(long userId, String transactionType, int size) {
 
-        ValidationUtils.checkId(userId, "User");
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkTransactionTypeString(transactionType);
         ValidationUtils.checkSize(size);
 
-        return PaginationUtils.calculatePages(countPurchases(userId, type), size);
+        return PaginationUtils.calculatePages(purchaseDao.countPurchases(userId, transactionType), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

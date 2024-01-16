@@ -64,7 +64,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Booking> getBookings(long userId) {
+    public List<Booking> getBookings(Long userId) {
         LOGGER.info("Getting Bookings for User {}", userId);
 
         ValidationUtils.checkUserId(userId);

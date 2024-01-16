@@ -43,8 +43,8 @@ public class RequestController extends GlobalControllerAdvice {
     public Response listRequests(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("userId") @DefaultValue("0") final int userId,
-            @QueryParam("productId") @DefaultValue("0") final int productId
+            @QueryParam("userId") final Long userId,
+            @QueryParam("productId") final Long productId
             ) {
         LOGGER.info("GET request arrived at neighborhoods/{}/requests", neighborhoodId);
         List<Request> requests = rs.getRequests(userId, productId, page, size);

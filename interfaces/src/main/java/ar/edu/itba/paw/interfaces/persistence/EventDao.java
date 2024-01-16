@@ -16,7 +16,7 @@ public interface EventDao {
 
     Optional<Event> findEvent(long eventId);
 
-    List<Event> getEvents(Date date, long neighborhoodId);
+    List<Event> getEvents(String date, long neighborhoodId);
 
     List<Event> getEvents(long neighborhoodId);
 
