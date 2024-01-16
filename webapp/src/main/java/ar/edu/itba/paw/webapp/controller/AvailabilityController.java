@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,9 +40,12 @@ public class AvailabilityController {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response listAvailability() {
+    public Response getAvailability(
+            @QueryParam("status") String status,
+            @QueryParam("date") String date
+    ) {
         LOGGER.info("Listing Availability for Amenity with id {}", amenityId);
-        final List<Availability> availabilities = as.getAvailability(amenityId);
+        final List<Availability> availabilities = as.getAvailability(amenityId, status, date);
         final List<AvailabilityDto> availabilityDto = availabilities.stream()
                 .map(a -> AvailabilityDto.fromAvailability(a, uriInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<AvailabilityDto>>(availabilityDto){}).build();
@@ -52,7 +56,7 @@ public class AvailabilityController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findAmenity(@PathParam("id") final long id) {
         LOGGER.info("Finding Availability with id {}", id);
-        return Response.ok(AvailabilityDto.fromAvailability(as.findAvailability(id)
+        return Response.ok(AvailabilityDto.fromAvailability(as.findAvailability(amenityId, id)
                 .orElseThrow(() -> new NotFoundException("Amenity Not Found")), uriInfo)).build();
     }
 }

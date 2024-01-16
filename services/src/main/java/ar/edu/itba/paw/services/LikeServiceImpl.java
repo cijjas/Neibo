@@ -47,6 +47,7 @@ public class LikeServiceImpl implements LikeService {
     public List<Like> getLikes(long neighborhoodId, Long postId, Long userId, int page, int size){
 
         ValidationUtils.checkLikeIds(postId, userId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
 
         return likeDao.getLikes(postId, userId, neighborhoodId, page, size);
@@ -67,6 +68,10 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public int countLikes(long neighborhoodId, Long postId, Long userId) {
+
+        ValidationUtils.checkLikeIds(postId, userId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
         return likeDao.countLikes(postId, userId, neighborhoodId);
     }
 
@@ -74,6 +79,7 @@ public class LikeServiceImpl implements LikeService {
     public int calculateLikePages(long neighborhoodId, Long postId, Long userId, int size) {
 
         ValidationUtils.checkLikeIds(postId, userId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(likeDao.countLikes(postId, userId, neighborhoodId), size);

@@ -46,6 +46,9 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public Optional<Contact> findContact(long contactId) {
+
+        ValidationUtils.checkContactId(contactId);
+
         return contactDao.findContact(contactId);
     }
 
@@ -55,7 +58,7 @@ public class ContactServiceImpl implements ContactService {
     public Contact updateContact(long contactId, String contactName, String contactAddress, String contactPhone) {
         LOGGER.info("Updating Contact {}", contactId);
 
-        Contact contact = getContact(contactId);
+        Contact contact = findContact(contactId).orElseThrow(()-> new NotFoundException("Contact Not Found"));
 
         if (contactName != null && !contactName.isEmpty())
             contact.setContactName(contactName);
@@ -76,15 +79,5 @@ public class ContactServiceImpl implements ContactService {
         ValidationUtils.checkContactId(contactId);
 
         return contactDao.deleteContact(contactId);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    private Contact getContact(long contactId) {
-        LOGGER.info("Getting Contact {}", contactId);
-
-        ValidationUtils.checkContactId(contactId);
-
-        return contactDao.findContact(contactId).orElseThrow(() -> new NotFoundException("Contact not found"));
     }
 }

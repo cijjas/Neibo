@@ -73,6 +73,9 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     public int countInquiries(long productId) {
+
+        ValidationUtils.checkProductId(productId);
+
         return inquiryDao.countInquiries(productId);
     }
 
@@ -90,8 +93,6 @@ public class InquiryServiceImpl implements InquiryService {
     @Override
     public Inquiry replyInquiry(long inquiryId, String reply) {
         LOGGER.info("Replying to Inquiry with id {}", inquiryId);
-
-        ValidationUtils.checkInquiryId(inquiryId);
 
         //Send email to inquirer
         Inquiry inquiry = inquiryDao.findInquiry(inquiryId).orElseThrow(() -> new NotFoundException("Inquiry not found"));

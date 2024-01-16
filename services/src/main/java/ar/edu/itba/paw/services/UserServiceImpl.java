@@ -178,6 +178,7 @@ public class UserServiceImpl implements UserService {
         LOGGER.info("Getting Pages of Users with size {} attending Event {}", size, eventId);
 
         ValidationUtils.checkEventId(eventId);
+        ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(userDao.getEventUsers(eventId).size(), size);
     }

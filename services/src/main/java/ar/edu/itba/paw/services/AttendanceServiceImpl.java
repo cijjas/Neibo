@@ -58,6 +58,9 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public int countAttendance(long eventId) {
+
+        ValidationUtils.checkEventId(eventId);
+
         return attendanceDao.countAttendance(eventId);
     }
 

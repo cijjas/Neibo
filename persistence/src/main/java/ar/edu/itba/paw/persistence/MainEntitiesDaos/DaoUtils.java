@@ -9,7 +9,7 @@ import java.util.List;
 
 class DaoUtils {
 
-    static void appendCommonConditions(StringBuilder query, List<Object> queryParams, String channel, Long userId, long neighborhoodId, List<String> tags, PostStatus postStatus) {
+    static void appendCommonConditions(StringBuilder query, List<Object> queryParams, String channel, Long userId, long neighborhoodId, List<String> tags, String postStatus) {
         appendInitialWhereClause(query);
         appendNeighborhoodIdCondition(query, queryParams, neighborhoodId);
 
@@ -22,14 +22,14 @@ class DaoUtils {
         if (tags != null && !tags.isEmpty())
             appendTagsCondition(query, queryParams, tags);
 
-        switch (postStatus) {
-            case hot:
+        switch (PostStatus.valueOf(postStatus.toUpperCase())) {
+            case HOT:
                 appendHotClause(query);
                 break;
-            case trending:
+            case TRENDING:
                 appendTrendingClause(query);
                 break;
-            case none:
+            case NONE:
                 break;
         }
     }
@@ -39,7 +39,7 @@ class DaoUtils {
         appendWorkerNeighborhoodIdCondition(query, queryParams, neighborhoodIds);
         appendWorkerNeighborhoodRoleCondition(query, queryParams, workerRole);
 
-        if (workerStatus != null && WorkerStatus.valueOf(workerStatus) == WorkerStatus.hot){
+        if (workerStatus != null && WorkerStatus.valueOf(workerStatus.toUpperCase()) == WorkerStatus.HOT){
             appendWorkerHotCondition(query);
         }
 

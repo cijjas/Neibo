@@ -98,6 +98,7 @@ public class WorkerServiceImpl implements WorkerService {
         ValidationUtils.checkPageAndSize(page, size);
         ValidationUtils.checkWorkerRoleString(workerRole);
         ValidationUtils.checkWorkerStatusString(workerStatus);
+        ValidationUtils.checkProfessionsArray(professions);
 
         //If inquirer is a worker, show return workers from any of the neighborhoods they are in
         User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User Not Found"));
@@ -119,9 +120,10 @@ public class WorkerServiceImpl implements WorkerService {
     public int countWorkers(List<String> professions, long userId, String workerRole, String workerStatus) {
         LOGGER.info("Getting Workers Count for User {} with professions {}", userId, professions);
 
-        ValidationUtils.checkId(userId, "User");
+        ValidationUtils.checkUserId(userId);
         ValidationUtils.checkWorkerRoleString(workerRole);
         ValidationUtils.checkWorkerStatusString(workerStatus);
+        ValidationUtils.checkProfessionsArray(professions);
 
         User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User Not Found"));
         if(user.getNeighborhood().getNeighborhoodId() == 0) { //inquirer is a worker
@@ -141,9 +143,10 @@ public class WorkerServiceImpl implements WorkerService {
     public int calculateWorkerPages(List<String> professions, long userId, int size, String workerRole, String workerStatus) {
         LOGGER.info("Getting Pages of Workers with size {} for User {} with professions {}", size, userId, professions);
 
-        ValidationUtils.checkId(userId, "User");
+        ValidationUtils.checkUserId(userId);
         ValidationUtils.checkWorkerRoleString(workerRole);
         ValidationUtils.checkWorkerStatusString(workerStatus);
+        ValidationUtils.checkProfessionsArray(professions);
 
         return PaginationUtils.calculatePages(countWorkers(professions, userId, workerRole, workerStatus), size);
     }

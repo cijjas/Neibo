@@ -82,6 +82,8 @@ public class PostServiceImpl implements PostService {
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPostStatusString(postStatus);
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkPageAndSize(page, size);
 
         return postDao.getPosts(channel, page, size, tags, neighborhoodId, postStatus, userId);
     }
@@ -94,8 +96,8 @@ public class PostServiceImpl implements PostService {
         LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPostStatusString(postStatus);
+        ValidationUtils.checkUserId(userId);
 
         return postDao.countPosts(channel, tags, neighborhoodId, postStatus, userId);
     }
@@ -106,8 +108,9 @@ public class PostServiceImpl implements PostService {
         LOGGER.info("Getting Total Post Pages with size {} for Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", size, neighborhoodId, channel, tags, postStatus);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPostStatusString(postStatus);
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(postDao.countPosts(channel, tags, neighborhoodId, postStatus, userId), size);
     }

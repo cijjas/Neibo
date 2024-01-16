@@ -126,6 +126,7 @@ public class TagServiceImpl implements TagService {
 
         ValidationUtils.checkPostId(postId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(tagDao.countTags(postId, neighborhoodId), size);
     }

@@ -129,7 +129,7 @@ public class WorkerDaoImplTest {
         long[] neighborhoods = {nhKey1};
 
         // Exercise
-        Set<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, BASE_PAGE_SIZE, null, neighborhoods, WorkerRole.VERIFIED_WORKER.name(), WorkerStatus.none.name());
+        Set<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, BASE_PAGE_SIZE, null, neighborhoods, WorkerRole.VERIFIED_WORKER.name(), WorkerStatus.NONE.name());
 
         // Validations
         assertEquals(2, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
@@ -142,7 +142,7 @@ public class WorkerDaoImplTest {
         long[] neighborhoods = {nhKey1};
 
         // Exercise
-        Set<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, BASE_PAGE_SIZE, Collections.singletonList(Professions.PLUMBER.name()), neighborhoods, WorkerRole.VERIFIED_WORKER.name(), WorkerStatus.none.name());
+        Set<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, BASE_PAGE_SIZE, Collections.singletonList(Professions.PLUMBER.name()), neighborhoods, WorkerRole.VERIFIED_WORKER.name(), WorkerStatus.NONE.name());
 
         // Validations
         assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
@@ -155,7 +155,7 @@ public class WorkerDaoImplTest {
         long[] neighborhoods = {nhKey1};
 
         // Exercise
-        Set<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, 1, null, neighborhoods, WorkerRole.VERIFIED_WORKER.name(), WorkerStatus.none.name());
+        Set<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, 1, null, neighborhoods, WorkerRole.VERIFIED_WORKER.name(), WorkerStatus.NONE.name());
 
         // Validations
         assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
@@ -168,7 +168,7 @@ public class WorkerDaoImplTest {
         long[] neighborhoods = {nhKey1};
 
         // Exercise
-        Set<Worker> retrievedWorkers = workerDao.getWorkers(2, 1, null, neighborhoods, WorkerRole.VERIFIED_WORKER.name(), WorkerStatus.none.name());
+        Set<Worker> retrievedWorkers = workerDao.getWorkers(2, 1, null, neighborhoods, WorkerRole.VERIFIED_WORKER.name(), WorkerStatus.NONE.name());
 
         // Validations
         assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers

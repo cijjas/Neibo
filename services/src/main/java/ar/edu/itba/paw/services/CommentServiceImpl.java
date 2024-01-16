@@ -62,7 +62,7 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> getComments(long postId, int page, int size) {
         LOGGER.info("Finding Comments for Post {}", postId);
 
-        ValidationUtils.checkCommentId(postId);
+        ValidationUtils.checkPostId(postId);
         ValidationUtils.checkPageAndSize(page, size);
 
         return commentDao.getComments(postId, page, size);
@@ -75,16 +75,18 @@ public class CommentServiceImpl implements CommentService {
     public int countComments(long postId) {
         LOGGER.info("Getting Quantity of Comments for Post {}", postId);
 
+        ValidationUtils.checkPostId(postId);
+
         return commentDao.countComments(postId);
     }
 
     @Transactional(readOnly = true)
-    public int calculateCommentPages(long commentId, int size) {
+    public int calculateCommentPages(long postId, int size) {
         LOGGER.info("Getting Total Comment Pages for size {}", size);
 
-        ValidationUtils.checkCommentId(commentId);
+        ValidationUtils.checkPostId(postId);
         ValidationUtils.checkSize(size);
 
-        return PaginationUtils.calculatePages(commentDao.countComments(commentId), size);
+        return PaginationUtils.calculatePages(commentDao.countComments(postId), size);
     }
 }

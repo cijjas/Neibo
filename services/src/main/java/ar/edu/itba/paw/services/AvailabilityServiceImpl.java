@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,6 +46,15 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         return availabilityDao.findAvailability(id);
     }
 
+    @Override
+    public Optional<Availability> findAvailability(long amenityId, long availabilityId) {
+
+        ValidationUtils.checkAmenityId(amenityId);
+        ValidationUtils.checkAvailabilityId(availabilityId);
+
+        return availabilityDao.findAvailability(amenityId, availabilityId);
+    }
+
 
     @Override
     public List<Availability> getAvailability(long amenityId) {
@@ -52,6 +62,16 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         ValidationUtils.checkAmenityId(amenityId);
 
         return availabilityDao.getAvailability(amenityId);
+    }
+
+    @Override
+    public List<Availability> getAvailability(long amenityId, String status, String date) {
+
+        ValidationUtils.checkAmenityId(amenityId);
+        ValidationUtils.checkShiftStatusString(status);
+        ValidationUtils.checkDateString(date);
+
+        return availabilityDao.getAvailability(amenityId, status, date);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

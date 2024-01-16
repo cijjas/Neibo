@@ -55,13 +55,13 @@ public class PurchaseDaoImpl implements PurchaseDao {
         Join<Purchase, User> userJoin = purchaseRoot.join("user");
         idQuery.select(purchaseRoot.get("purchaseId"));
 
-        TransactionType tType = TransactionType.valueOf(type.toLowerCase());
+        TransactionType tType = TransactionType.valueOf(type.toUpperCase());
 
         switch (tType) {
-            case purchase:
+            case PURCHASE:
                 cb.equal(userJoin.get("userId"), userId);
                 break;
-            case sale:
+            case SALE:
                 cb.equal(productJoin.get("seller").get("userId"), userId);
                 break;
         }
@@ -103,12 +103,12 @@ public class PurchaseDaoImpl implements PurchaseDao {
 
         query.select(cb.count(purchaseRoot));
 
-        TransactionType tType = TransactionType.valueOf(type.toLowerCase());
+        TransactionType tType = TransactionType.valueOf(type.toUpperCase());
         switch (tType) {
-            case purchase:
+            case PURCHASE:
                 cb.equal(userJoin.get("userId"), userId);
                 break;
-            case sale:
+            case SALE:
                 cb.equal(productJoin.get("seller").get("userId"), userId);
                 break;
         }

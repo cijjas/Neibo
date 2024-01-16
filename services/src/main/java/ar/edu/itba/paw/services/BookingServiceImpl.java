@@ -115,18 +115,9 @@ public class BookingServiceImpl implements BookingService {
         boolean result = true;
         for (long bookingId : bookingIds) {
             ValidationUtils.checkBookingId(bookingId);
-            if (!bookingDao.deleteBooking(bookingId))
+            if (!deleteBooking(bookingId))
                 result = false;
         }
         return result;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    private Time calculateEndTime(Time startTime) {
-        // Calculate end time by adding an hour to the start time
-        long startTimeMillis = startTime.getTime();
-        long endTimeMillis = startTimeMillis + 60 * 60 * 1000; // 60 minutes * 60 seconds * 1000 milliseconds
-        return new Time(endTimeMillis);
     }
 }

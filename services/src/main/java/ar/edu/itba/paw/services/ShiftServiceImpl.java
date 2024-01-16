@@ -42,7 +42,7 @@ public class ShiftServiceImpl implements ShiftService {
     public Optional<Shift> findShift(long startTime, long dayId) {
         LOGGER.info("Finding Shift with Day Id {} and Start Time {}", dayId, startTime);
 
-        ValidationUtils.checkShiftId(startTime, dayId);
+        ValidationUtils.checkShiftIds(startTime, dayId);
 
         return shiftDao.findShift(startTime, dayId);
     }
@@ -57,6 +57,7 @@ public class ShiftServiceImpl implements ShiftService {
         return shiftDao.findShift(shiftId);
     }
 
+    // deprecated
 
     @Override
     @Transactional(readOnly = true)

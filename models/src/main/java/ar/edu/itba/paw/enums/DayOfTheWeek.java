@@ -9,13 +9,13 @@ import java.util.stream.Collectors;
 
 // DayOfTheWeek.java
 public enum DayOfTheWeek {
-    Monday,
-    Tuesday,
-    Wednesday,
-    Thursday,
-    Friday,
-    Saturday,
-    Sunday;
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY,
+    SUNDAY;
 
     public static final List<Pair<Integer, String>> DAY_PAIRS = Arrays.stream(values())
             .map(day -> new Pair<>(day.getId(), day.name()))
@@ -23,7 +23,7 @@ public enum DayOfTheWeek {
 
     public static long convertToCustomDayId(int calendarDayId) {
         if (calendarDayId == Calendar.SUNDAY) {
-            return DayOfTheWeek.Sunday.getId();
+            return DayOfTheWeek.SUNDAY.getId();
         }
 
         return calendarDayId - 1;

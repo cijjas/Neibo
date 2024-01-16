@@ -60,16 +60,17 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public int countRequests(Long productId, Long userId) {
 
-//        ValidationUtils.checkRequestId(productId, userId);
+        ValidationUtils.checkRequestId(productId, userId);
 
-        if(userId <= 0 && productId <= 0) {
-            throw new NotFoundException("Invalid combination of parameters.");
-        }
         return requestDao.countRequests(productId, userId);
     }
 
     @Override
     public int calculateRequestPages(Long productId, Long userId, int size) {
+
+        ValidationUtils.checkRequestId(productId, userId);
+        ValidationUtils.checkSize(size);
+
         return PaginationUtils.calculatePages(requestDao.countRequests(productId, userId), size);
     }
 

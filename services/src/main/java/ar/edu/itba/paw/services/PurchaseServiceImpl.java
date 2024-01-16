@@ -53,6 +53,8 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public int countPurchases(long userId, String transactionType) {
+
+
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkTransactionTypeString(transactionType);
 

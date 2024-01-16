@@ -75,7 +75,7 @@ public class PostDaoImpl implements PostDao {
         LOGGER.debug("Selecting Post from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channel, userId, tags, postStatus);
         StringBuilder query = new StringBuilder(FROM_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
         List<Object> queryParams = new ArrayList<>();
-        appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags, PostStatus.valueOf(postStatus.toLowerCase()));
+        appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags, postStatus);
         appendDateClause(query);
         if (page != 0)
             appendPaginationClause(query, queryParams, page, size);
@@ -94,7 +94,7 @@ public class PostDaoImpl implements PostDao {
         StringBuilder query = new StringBuilder(COUNT_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
         List<Object> queryParams = new ArrayList<>();
 
-        appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags, PostStatus.valueOf(postStatus.toLowerCase()));
+        appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags, postStatus);
 
         Query sqlQuery = em.createNativeQuery(query.toString());
 

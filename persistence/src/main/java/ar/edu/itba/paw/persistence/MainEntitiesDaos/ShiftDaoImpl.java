@@ -58,6 +58,9 @@ public class ShiftDaoImpl implements ShiftDao {
 
     @Override
     public List<Shift> getShifts(long amenityId, long dayId, Date date) {
+        // el dayId puede ser obviado
+
+
         List<Object[]> results = em.createNativeQuery(
                         "SELECT s.shiftid, s.dayid, s.starttime, " +
                                 "CASE " +

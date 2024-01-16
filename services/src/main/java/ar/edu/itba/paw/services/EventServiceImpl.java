@@ -65,25 +65,7 @@ public class EventServiceImpl implements EventService {
 
         return eventDao.findEvent(eventId).orElseThrow(() -> new NotFoundException("Event not found"));
     }
-    @Override
-    public Event updateEventPartially(long eventId, String name, String description, Date date, String startTime, String endTime){
 
-        ValidationUtils.checkEventId(eventId);
-
-        Event event = getEvent(eventId);
-        if(name != null && !name.isEmpty())
-            event.setName(name);
-        if(description != null && !description.isEmpty())
-            event.setDescription(description);
-        if(date != null)
-            event.setDate(date);
-        if(startTime != null && endTime != null){
-            Long[] times = stringToTime(startTime, endTime);
-            event.setStartTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, times[0]));
-            event.setEndTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, times[1]));
-        }
-        return event;
-    }
 
     private OptionalLong getTimeId(Time time) {
         return timeDao.findId(time);
@@ -190,6 +172,26 @@ public class EventServiceImpl implements EventService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
+    @Override
+    public Event updateEventPartially(long eventId, String name, String description, Date date, String startTime, String endTime){
+
+        ValidationUtils.checkEventId(eventId);
+
+        Event event = getEvent(eventId);
+        if(name != null && !name.isEmpty())
+            event.setName(name);
+        if(description != null && !description.isEmpty())
+            event.setDescription(description);
+        if(date != null)
+            event.setDate(date);
+        if(startTime != null && endTime != null){
+            Long[] times = stringToTime(startTime, endTime);
+            event.setStartTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, times[0]));
+            event.setEndTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, times[1]));
+        }
+        return event;
+    }
+    
     @Override
     public Event updateEvent(long eventId, String name, String description, Date date, String startTime, String endTime) {
 

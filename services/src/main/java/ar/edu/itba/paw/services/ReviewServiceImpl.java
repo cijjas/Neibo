@@ -90,6 +90,7 @@ public class ReviewServiceImpl implements ReviewService {
     public int calculateReviewPages(long workerId, int size) {
 
         ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(reviewDao.countReviews(workerId), size);
     }

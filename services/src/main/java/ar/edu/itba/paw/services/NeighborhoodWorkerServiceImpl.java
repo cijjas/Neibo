@@ -131,11 +131,9 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
         setNeighborhoodRole(workerId, WorkerRole.UNVERIFIED_WORKER, neighborhoodId);
     }
 
+    // weird function
     private void setNeighborhoodRole(long workerId, WorkerRole role, long neighborhoodId) {
         LOGGER.debug("Setting Worker {} role to {} in Neighborhood {}", workerId, role, neighborhoodId);
-
-        ValidationUtils.checkWorkerId(workerId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         WorkerArea workerArea = neighborhoodWorkerDao.findWorkerArea(workerId, neighborhoodId).orElseThrow(()-> new NotFoundException("Worker Area Not Found"));
         workerArea.setRole(role);

@@ -58,7 +58,7 @@ public class EventDaoImpl implements EventDao {
             query.setParameter("date", dateFormat.parse(date));
         } catch (ParseException e) {
             // this code should never execute as the caller methods check for invalid parameters
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Invalid value (" + date + ") for the 'date' parameter. Please use a date in YYYY-(M)M-(D)D format.");
         }
         query.setParameter("neighborhoodId", neighborhoodId);
         return query.getResultList();

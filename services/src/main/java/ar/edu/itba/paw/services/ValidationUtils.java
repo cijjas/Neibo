@@ -9,10 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class ValidationUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(AmenityServiceImpl.class);
@@ -38,14 +35,6 @@ public class ValidationUtils {
             throw new IllegalArgumentException("Invalid identifier value(s) for " + entity + ". IDs must be positive integers greater than 0.");
         }
         if (id2 != null && id2 <= 0) {
-            LOGGER.info("Invalid {} ID", entity);
-            throw new IllegalArgumentException("Invalid identifier value(s) for " + entity + ". IDs must be positive integers greater than 0.");
-        }
-    }
-
-    //only if both are <=0 throw exception
-    public static void checkConditionalIds(Long id1, Long id2, String entity) {
-        if (id1 != null && id2 != null && id1 <= 0 && id2 <= 0) {
             LOGGER.info("Invalid {} ID", entity);
             throw new IllegalArgumentException("Invalid identifier value(s) for " + entity + ". IDs must be positive integers greater than 0.");
         }
@@ -98,7 +87,7 @@ public class ValidationUtils {
     }
 
     public static void checkRequestId(Long productId, Long userId) {
-        ValidationUtils.checkConditionalIds(userId, productId, "Request");
+        ValidationUtils.checkIds(userId, productId, "Request");
     }
 
     public static void checkRequestId(Long requestId) {
@@ -113,7 +102,7 @@ public class ValidationUtils {
         ValidationUtils.checkId(reviewId, "Review");
     }
 
-    public static void checkShiftId(Long startTimeId, Long dayId) {
+    public static void checkShiftIds(Long startTimeId, Long dayId) {
         ValidationUtils.checkIds(startTimeId, dayId, "Shift");
     }
 
@@ -194,7 +183,7 @@ public class ValidationUtils {
             throw new InvalidEnumValueException("Transaction type is required. Please specify a valid transaction type.", links);
         }
         try {
-            TransactionType.valueOf(transactionType.toLowerCase());
+            TransactionType.valueOf(transactionType.toUpperCase());
         } catch (IllegalArgumentException e) {
             Set<LinkEntry> links = new HashSet<>();
             links.add(new LinkEntry("Valid Transaction Types", "transaction-types"));
@@ -204,7 +193,7 @@ public class ValidationUtils {
 
     public static void checkPostStatusString(String postStatus){
         try {
-            PostStatus.valueOf(postStatus.toLowerCase());
+            PostStatus.valueOf(postStatus.toUpperCase());
         } catch (IllegalArgumentException e) {
             Set<LinkEntry> links = new HashSet<>();
             links.add(new LinkEntry("Valid Post Statuses", "post-statuses"));
@@ -262,6 +251,12 @@ public class ValidationUtils {
         }
     }
 
+    public static void checkProfessionsArray(List<String> professions){
+        for ( String profession : professions ){
+            checkProfessionString(profession);
+        }
+    }
+
     public static void checkWorkerRoleString(String workerRole){
         try {
             WorkerRole.valueOf(workerRole.toUpperCase());
@@ -274,11 +269,21 @@ public class ValidationUtils {
 
     public static void checkWorkerStatusString(String workerStatus){
         try {
-            WorkerStatus.valueOf(workerStatus.toLowerCase());
+            WorkerStatus.valueOf(workerStatus.toUpperCase());
         } catch (IllegalArgumentException e) {
             Set<LinkEntry> links = new HashSet<>();
             links.add(new LinkEntry("Valid Worker Statuses", "worker-statuses"));
             throw new InvalidEnumValueException("Invalid worker status: '" + workerStatus + "'. ", links);
+        }
+    }
+
+    public static void checkShiftStatusString(String shiftStatus){
+        try {
+            ShiftStatus.valueOf(shiftStatus.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            Set<LinkEntry> links = new HashSet<>();
+            links.add(new LinkEntry("Valid Shift Statuses", "shift-statuses"));
+            throw new InvalidEnumValueException("Invalid shift status: '" + shiftStatus + "'. ", links);
         }
     }
 
