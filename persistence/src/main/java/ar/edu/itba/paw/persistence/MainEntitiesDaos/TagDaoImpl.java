@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.TagDao;
+import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.models.Entities.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -34,21 +36,29 @@ public class TagDaoImpl implements TagDao {
     @Override
     public List<Tag> getTags(long postId, long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Tags By Criteria");
-        TypedQuery<Tag> query = null;
+        TypedQuery<Long> query = null;
         if(postId > 0) {
-            query = em.createQuery("SELECT t FROM Tag t JOIN t.posts p WHERE p.postId = :postId", Tag.class)
+            query = em.createQuery("SELECT t.tagId FROM Tag t JOIN t.posts p WHERE p.postId = :postId", Long.class)
                     .setParameter("postId", postId);
         } else {
-            query = em.createQuery("SELECT DISTINCT t FROM Tag t " +
+            query = em.createQuery("SELECT DISTINCT t.tagId FROM Tag t " +
                             "JOIN t.posts p " +
                             "JOIN p.user u " +
                             "JOIN u.neighborhood nh " +
-                            "WHERE nh.neighborhoodId = :neighborhoodId", Tag.class)
+                            "WHERE nh.neighborhoodId = :neighborhoodId", Long.class)
                     .setParameter("neighborhoodId", neighborhoodId);
         }
-        return query.setFirstResult((page - 1) * size)
+        query.setFirstResult((page - 1) * size)
                 .setMaxResults(size)
                 .getResultList();
+        List<Long> tagIds = query.getResultList();
+        if (!tagIds.isEmpty()) {
+            TypedQuery<Tag> tagQuery = em.createQuery(
+                    "SELECT t FROM Tag t WHERE t.tagId IN :tagIds", Tag.class);
+            tagQuery.setParameter("tagIds", tagIds);
+            return tagQuery.getResultList();
+        }
+        return Collections.emptyList();
     }
 
     @Override

@@ -114,21 +114,32 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @Transactional(readOnly = true)
-    public int countWorkers(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus) {
-        LOGGER.info("Getting Workers Count for Neighborhood {} with professions {}", neighborhoodIds, professions);
+    public int countWorkers(List<String> professions, long userId, WorkerRole workerRole, WorkerStatus workerStatus) {
+        LOGGER.info("Getting Workers Count for User {} with professions {}", userId, professions);
 
-        ValidationUtils.checkNeighborhoodsIds(neighborhoodIds);
+        ValidationUtils.checkId(userId, "User");
 
-        return workerDao.countWorkers(professions, neighborhoodIds, workerRole, workerStatus);
+        User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User Not Found"));
+        if(user.getNeighborhood().getNeighborhoodId() == 0) { //inquirer is a worker
+            Set<Neighborhood> neighborhoods = neighborhoodWorkerDao.getNeighborhoods(userId);
+            long[] neighborhoodIds = neighborhoods.stream()
+                    .mapToLong(Neighborhood::getNeighborhoodId)
+                    .toArray();
+
+            return workerDao.countWorkers(professions, neighborhoodIds, workerRole, workerStatus);
+        } else {
+            //user isn't a worker, must only return workers from their neighborhood
+            return workerDao.countWorkers(professions, new long[]{user.getNeighborhood().getNeighborhoodId()}, workerRole, workerStatus);
+        }
     }
 
     @Override
-    public int calculateWorkerPages(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole, WorkerStatus workerStatus) {
-        LOGGER.info("Getting Pages of Workers with size {} from Neighborhoods {} with professions {}", size, neighborhoodIds, professions);
+    public int calculateWorkerPages(List<String> professions, long userId, int size, WorkerRole workerRole, WorkerStatus workerStatus) {
+        LOGGER.info("Getting Pages of Workers with size {} from User {} with professions {}", size, userId, professions);
 
-        ValidationUtils.checkNeighborhoodsIds(neighborhoodIds);
+        ValidationUtils.checkId(userId, "User");
 
-        return PaginationUtils.calculatePages(workerDao.countWorkers(professions, neighborhoodIds, workerRole, workerStatus), size);
+        return PaginationUtils.calculatePages(countWorkers(professions, userId, workerRole, workerStatus), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

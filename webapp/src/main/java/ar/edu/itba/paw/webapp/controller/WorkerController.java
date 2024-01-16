@@ -48,7 +48,6 @@ public class WorkerController extends GlobalControllerAdvice {
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("professions") final List<String> professions,
             @QueryParam("neighborhoodId") @DefaultValue("0") final long neighborhoodId,
-            @QueryParam("loggedUserId") final long loggedUserId,
             @QueryParam("workerRole") final WorkerRole workerRole,
             @QueryParam("workerStatus") final WorkerStatus workerStatus
     ) {
@@ -57,7 +56,7 @@ public class WorkerController extends GlobalControllerAdvice {
 
         String baseUri = uriInfo.getBaseUri().toString() + "workers";
 
-        int totalWorkerPages = ws.calculateWorkerPages(professions, new long[]{neighborhoodId}, size, workerRole, workerStatus);
+        int totalWorkerPages = ws.calculateWorkerPages(professions, getLoggedUser().getUserId(), size, workerRole, workerStatus);
         Link[] links = createPaginationLinks(baseUri, page, size, totalWorkerPages);
 
         List<WorkerDto> workerDto = workers.stream()

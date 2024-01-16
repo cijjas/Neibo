@@ -22,9 +22,9 @@ public interface WorkerService {
 
     Set<Worker> getWorkers(int page, int size, List<String> professions, long loggedUserId, WorkerRole workerRole, WorkerStatus workerStatus);
 
-    int countWorkers(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus);
+    int countWorkers(List<String> professions, long userId, WorkerRole workerRole, WorkerStatus workerStatus);
 
-    int calculateWorkerPages(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole, WorkerStatus workerStatus);
+    int calculateWorkerPages(List<String> professions, long userId, int size, WorkerRole workerRole, WorkerStatus workerStatus);
 
     // -----------------------------------------------------------------------------------------------------------------
 
