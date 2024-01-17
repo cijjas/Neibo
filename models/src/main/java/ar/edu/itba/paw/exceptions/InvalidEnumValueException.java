@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.interfaces.exceptions;
+package ar.edu.itba.paw.exceptions;
 
 import ar.edu.itba.paw.models.LinkEntry;
 

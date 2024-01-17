@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.enums;
 
+import ar.edu.itba.paw.exceptions.NotFoundException;
+
 import java.util.Arrays;
 
 public enum UserRole {
@@ -13,10 +15,12 @@ public enum UserRole {
         return ordinal() + 1;
     }
 
-    public static UserRole fromId(int id) {
+    public static UserRole fromId(long id) {
+        if(id <= 0)
+            throw new IllegalArgumentException("Invalid value (" + id + ") for the User Role ID. Please use a positive integer greater than 0.");
         return Arrays.stream(values())
-                .filter(language -> language.getId() == id)
+                .filter(ur -> ur.getId() == id)
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(()-> new NotFoundException("User Role Not Found"));
     }
 }

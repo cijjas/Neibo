@@ -2,7 +2,7 @@ package ar.edu.itba.paw.services.email;
 
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
-import ar.edu.itba.paw.interfaces.exceptions.MailingException;
+import ar.edu.itba.paw.exceptions.MailingException;
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;

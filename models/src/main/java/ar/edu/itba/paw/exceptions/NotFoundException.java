@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.interfaces.exceptions;
+package ar.edu.itba.paw.exceptions;
 
 public class NotFoundException extends RuntimeException {
     public NotFoundException(String message) {

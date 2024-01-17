@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Entities.Image;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.webapp.dto.ImageDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -65,4 +65,14 @@ public class TestController {
 
         // return Response.status(Response.Status.BAD_REQUEST).build();
     }
+
+    @GET
+    @Path("internal-server-error")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response internalServerError() {
+
+        throw new NullPointerException();
+
+        // return Response.status(Response.Status.BAD_REQUEST).build();
+    }
 }

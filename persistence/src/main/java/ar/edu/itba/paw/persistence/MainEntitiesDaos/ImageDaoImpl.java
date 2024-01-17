@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
-import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
+import ar.edu.itba.paw.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.ImageDao;
 import ar.edu.itba.paw.models.Entities.Image;
 import org.slf4j.Logger;

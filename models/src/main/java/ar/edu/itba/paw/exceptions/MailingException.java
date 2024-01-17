@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.interfaces.exceptions;
+package ar.edu.itba.paw.exceptions;
 
 public class MailingException extends RuntimeException {
     public MailingException(String message) {

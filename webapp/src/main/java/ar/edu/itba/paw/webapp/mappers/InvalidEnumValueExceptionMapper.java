@@ -1,15 +1,13 @@
 package ar.edu.itba.paw.webapp.mappers;
 
-import ar.edu.itba.paw.interfaces.exceptions.InvalidEnumValueException;
+import ar.edu.itba.paw.exceptions.InvalidEnumValueException;
 import ar.edu.itba.paw.models.ApiErrorDetails;
 import ar.edu.itba.paw.models.LinkEntry;
-import ar.edu.itba.paw.webapp.dto.LanguageDto;
 
 import javax.ws.rs.core.*;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Provider
 public class InvalidEnumValueExceptionMapper implements ExceptionMapper<InvalidEnumValueException> {

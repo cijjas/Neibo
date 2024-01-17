@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.mappers;
 
-import ar.edu.itba.paw.interfaces.exceptions.UnexpectedException;
+import ar.edu.itba.paw.exceptions.UnexpectedException;
 import ar.edu.itba.paw.models.ApiErrorDetails;
 
 import javax.ws.rs.core.Context;

@@ -1,9 +1,8 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.*;
-import ar.edu.itba.paw.interfaces.exceptions.InvalidEnumValueException;
+import ar.edu.itba.paw.exceptions.InvalidEnumValueException;
 import ar.edu.itba.paw.models.LinkEntry;
-import org.hibernate.jdbc.Work;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

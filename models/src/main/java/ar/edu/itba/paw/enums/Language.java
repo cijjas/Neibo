@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.enums;
 
+import ar.edu.itba.paw.exceptions.NotFoundException;
+
 import java.util.Arrays;
 
 public enum Language {
@@ -10,10 +12,12 @@ public enum Language {
         return ordinal() + 1;
     }
 
-    public static Language fromId(int id) {
+    public static Language fromId(long id) {
+        if(id <= 0)
+            throw new IllegalArgumentException("Invalid value (" + id + ") for the Language ID. Please use a positive integer greater than 0.");
         return Arrays.stream(values())
-                .filter(language -> language.getId() == id)
+                .filter(l -> l.getId() == id)
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(()-> new NotFoundException("Language Not Found"));
     }
 }
