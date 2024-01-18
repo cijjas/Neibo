@@ -1,5 +1,5 @@
-import {Amenity} from "./amenity"
-import {Day} from "./day"
+import { Amenity } from "./amenity"
+import { Day } from "./day"
 
 export interface Shift {
     shiftId: number

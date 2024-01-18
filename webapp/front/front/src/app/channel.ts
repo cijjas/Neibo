@@ -1,8 +1,8 @@
-import {Post} from "./post"
-
-export interface Channel {
-  channelId: number
-  channel: string
-  posts: Post[]
-  self: string
+export enum Channel {
+  ANNOUNCEMENTS = 'ANNOUNCEMENTS',
+  COMPLAINTS = 'COMPLAINTS',
+  FEED = 'FEED',
+  WORKERS = 'WORKERS',
+  RESERVATIONS = 'RESERVATIONS',
+  INFORMATION = 'INFORMATION'
 }

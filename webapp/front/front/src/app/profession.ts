@@ -1,8 +1,7 @@
-import { Worker } from './worker'
-
-export interface Profession {
-    professionId: number
-    name: string
-    workers: Worker[]
-    self: string
+export enum Profession {
+    PLUMBER = 'PLUMBER',
+    ELECTRICIAN = 'ELECTRICIAN',
+    POOL_MAINTENANCE = 'POOL_MAINTENANCE',
+    GARDENER = 'GARDENER',
+    CARPENTER = 'CARPENTER'
 }

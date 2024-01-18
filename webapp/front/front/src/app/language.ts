@@ -1,5 +1,4 @@
-export interface Language {
-    languageId: number
-    language: string
-    self: string
+export enum Language {
+    ENGLISH = 'ENGLISH',
+    SPANISH = 'SPANISH'
 }

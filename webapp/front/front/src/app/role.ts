@@ -1,5 +1,7 @@
-export interface Role {
-    roleId: number
-    userRole: string
-    self: string
+export enum Role {
+    ADMINISTRATOR = 'ADMINISTRATOR',
+    NEIGHBOR = 'NEIGHBOR',
+    UNVERIFIED_NEIGHBOR = 'UNVERIFIED_NEIGHBOR',
+    WORKER = 'WORKER',
+    REJECTED = 'REJECTED'
 }
