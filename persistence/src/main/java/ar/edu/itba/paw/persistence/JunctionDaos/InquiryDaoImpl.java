@@ -43,6 +43,20 @@ public class InquiryDaoImpl implements InquiryDao {
         return Optional.ofNullable(em.find(Inquiry.class, inquiryId));
     }
 
+    @Override
+    public Optional<Inquiry> findInquiry(long inquiryId, long productId, long neighborhoodId) {
+        TypedQuery<Inquiry> query = em.createQuery(
+                "SELECT i FROM Inquiry i WHERE i.id = :inquiryId AND i.product.id = :productId AND i.product.seller.neighborhood.id = :neighborhoodId",
+                Inquiry.class
+        );
+
+        query.setParameter("inquiryId", inquiryId);
+        query.setParameter("productId", productId);
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Inquiry> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
 
     @Override
     public List<Inquiry> getInquiries(long productId, int page, int size) {

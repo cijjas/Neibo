@@ -71,10 +71,21 @@ public class AttendanceDaoImpl implements AttendanceDao {
     }
 
     @Override
-    public Optional<Attendance> findAttendance(long attendanceId, long eventId) {
-        LOGGER.debug("Selecting Attendance with id {}", attendanceId);
-        return Optional.ofNullable(em.find(Attendance.class, new AttendanceKey(attendanceId, eventId)));
+    public Optional<Attendance> findAttendance(long userId, long eventId, long neighborhoodId) {
+        LOGGER.debug("Selecting Attendance with id {} and neighborhoodId {}", userId, neighborhoodId);
+
+        TypedQuery<Attendance> query = em.createQuery(
+                "SELECT a FROM Attendance a WHERE a.id = :attendanceId " + " AND a.event.neighborhood.neighborhoodId = :neighborhoodId",
+                Attendance.class
+        );
+
+        query.setParameter("attendanceId", new AttendanceKey(userId, eventId));
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Attendance> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
+
 
     @Override
     public Optional<Attendance> findAttendance(long attendanceId) {

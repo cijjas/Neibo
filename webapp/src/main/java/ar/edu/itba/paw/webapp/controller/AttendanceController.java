@@ -64,7 +64,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findAttendance(@PathParam("userId") final long userId) {
         LOGGER.info("GET request arrived at neighborhoods/{}/events/{}/attendance/{}", neighborhoodId, eventId, userId);
-        return Response.ok(AttendanceDto.fromAttendance(as.findAttendance(userId, eventId)
+        return Response.ok(AttendanceDto.fromAttendance(as.findAttendance(userId, eventId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Attendance Not Found")), uriInfo)).build();
     }
 

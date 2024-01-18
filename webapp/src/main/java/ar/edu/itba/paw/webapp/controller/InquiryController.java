@@ -64,9 +64,9 @@ public class InquiryController extends GlobalControllerAdvice{
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findInquiry(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/products/{}/inquiries/{}", neighborhoodId, productId,id);
-        return Response.ok(InquiryDto.fromInquiry(is.findInquiry(id)
+    public Response findInquiry(@PathParam("id") final long inquiryId) {
+        LOGGER.info("GET request arrived at neighborhoods/{}/products/{}/inquiries/{}", neighborhoodId, productId, inquiryId);
+        return Response.ok(InquiryDto.fromInquiry(is.findInquiry(inquiryId, productId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Inquiry Not Found")), uriInfo)).build();
     }
 

@@ -54,6 +54,20 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public Optional<User> findUser(final long userId, long neighborhoodId) {
+        TypedQuery<User> query = em.createQuery(
+                "SELECT u FROM User u WHERE u.userId = :userId AND u.neighborhood.id = :neighborhoodId",
+                User.class
+        );
+
+        query.setParameter("userId", userId);
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<User> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
+    @Override
     public Optional<User> findUser(final String mail) {
         LOGGER.debug("Selecting User with mail {}", mail);
         TypedQuery<User> query = em.createQuery("FROM User WHERE mail = :mail", User.class);

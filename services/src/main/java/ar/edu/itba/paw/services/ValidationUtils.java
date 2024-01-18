@@ -173,6 +173,10 @@ public class ValidationUtils {
         ValidationUtils.checkIds(workerId, neighborhoodId, "WorkerArea");
     }
 
+    public static void checkAmenityAvailabilityIds(Long amenityId, Long availabilityId) {
+        ValidationUtils.checkIds(amenityId, availabilityId, "AmenityAvailability");
+    }
+
     // ---------------------------------------------------------------------------------------------------------
 
     public static void checkTransactionTypeString(String transactionType){

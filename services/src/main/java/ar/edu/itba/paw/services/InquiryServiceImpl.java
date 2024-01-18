@@ -59,6 +59,16 @@ public class InquiryServiceImpl implements InquiryService {
         return inquiryDao.findInquiry(inquiryId);
     }
 
+    @Override
+    public Optional<Inquiry> findInquiry(long inquiryId, long productId, long neighborhoodId) {
+
+        ValidationUtils.checkInquiryId(inquiryId);
+        ValidationUtils.checkProductId(productId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return inquiryDao.findInquiry(inquiryId, productId, neighborhoodId);
+    }
+
 
     @Override
     public List<Inquiry> getInquiries(long productId, int page, int size) {

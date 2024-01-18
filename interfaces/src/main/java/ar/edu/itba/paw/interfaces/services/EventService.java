@@ -15,6 +15,8 @@ public interface EventService {
 
     Optional<Event> findEvent(long eventId);
 
+    Optional<Event> findEvent(long eventId, long neighborhoodId);
+
     boolean hasEvents(String date, long neighborhoodId);
 
     List<Event> getEvents(String date, long neighborhoodId);

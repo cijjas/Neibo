@@ -84,6 +84,15 @@ public class AmenityServiceImpl implements AmenityService {
     }
 
     @Override
+    public Optional<Amenity> findAmenity(long amenityId, long neighborhoodId) {
+
+        ValidationUtils.checkAmenityId(amenityId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return amenityDao.findAmenity(amenityId, neighborhoodId);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<Amenity> getAmenities(long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Amenities from Neighborhood {}", neighborhoodId);

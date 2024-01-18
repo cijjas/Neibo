@@ -46,9 +46,9 @@ public class ContactController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findContact(@PathParam("id") long id) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/contacts/{}", neighborhoodId, id);
-        return Response.ok(ContactDto.fromContact(cs.findContact(id)
+    public Response findContact(@PathParam("id") long contactId) {
+        LOGGER.info("GET request arrived at neighborhoods/{}/contacts/{}", neighborhoodId, contactId);
+        return Response.ok(ContactDto.fromContact(cs.findContact(contactId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Contact Not Found")), uriInfo)).build();
     }
 

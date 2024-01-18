@@ -18,6 +18,8 @@ public interface UserDao {
 
     Optional<User> findUser(final long userId);
 
+    Optional<User> findUser(final long userId, long neighborhoodId);
+
     Optional<User> findUser(final String mail);
 
     List<User> getUsers(String role, long neighborhoodId, int page, int size);

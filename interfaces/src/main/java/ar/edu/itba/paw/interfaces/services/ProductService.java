@@ -13,6 +13,8 @@ public interface ProductService {
 
     Optional<Product> findProduct(final long productId);
 
+    Optional<Product> findProduct(final long productId, long neighborhoodId);
+
     List<Product> getProducts(long neighborhoodId, String department, Long userId, String productStatus, int page, int size);
 
     int countProducts(long neighborhoodId, String department, Long userId, String productStatus);

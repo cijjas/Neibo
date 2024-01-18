@@ -64,6 +64,20 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    public Optional<Product> findProduct(long productId, long neighborhoodId) {
+        TypedQuery<Product> query = em.createQuery(
+                "SELECT p FROM Product p WHERE p.productId = :productId AND p.seller.neighborhood.neighborhoodId = :neighborhoodId",
+                Product.class
+        );
+
+        query.setParameter("productId", productId);
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Product> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
+    @Override
     public List<Product> getProducts(long neighborhoodId, String department, Long userId, String productStatus, int page, int size) {
         LOGGER.debug("Selecting Products from neighborhood {}, in departments {}", neighborhoodId, department);
 

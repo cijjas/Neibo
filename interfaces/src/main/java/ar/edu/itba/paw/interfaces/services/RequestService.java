@@ -12,6 +12,8 @@ public interface RequestService {
 
     Optional<Request> findRequest(long requestId);
 
+    Optional<Request> findRequest(long requestId, long neighborhoodId);
+
     List<Request> getRequests(Long productId, Long userId, int page, int size);
 
     int countRequests(Long productId, Long userId);

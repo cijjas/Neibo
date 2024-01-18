@@ -86,6 +86,17 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
+    public Optional<Event> findEvent(long eventId, long neighborhoodId) {
+        LOGGER.info("Finding Event {}", eventId);
+
+        ValidationUtils.checkEventId(eventId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return eventDao.findEvent(eventId, neighborhoodId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<Event> getEvents(String date, long neighborhoodId) {
         LOGGER.info("Getting Events for Neighborhood {} on Date {}", neighborhoodId, date);
 

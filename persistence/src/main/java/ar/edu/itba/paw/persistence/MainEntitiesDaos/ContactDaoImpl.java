@@ -63,4 +63,19 @@ public class ContactDaoImpl implements ContactDao {
         LOGGER.debug("Selecting Contact with id {}", contactId);
         return Optional.ofNullable(em.find(Contact.class, contactId));
     }
+
+    @Override
+    public Optional<Contact> findContact(long contactId, long neighborhoodId) {
+
+        TypedQuery<Contact> query = em.createQuery(
+                "SELECT c FROM Contact c WHERE c.id = :contactId AND c.neighborhood.id = :neighborhoodId",
+                Contact.class
+        );
+
+        query.setParameter("contactId", contactId);
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Contact> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
 }

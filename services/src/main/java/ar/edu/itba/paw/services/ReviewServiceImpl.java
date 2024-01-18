@@ -45,6 +45,14 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    public Optional<Review> findReview(long reviewId, long workerId) {
+        ValidationUtils.checkReviewId(reviewId);
+        ValidationUtils.checkWorkerId(workerId);
+
+        return reviewDao.findReview(reviewId, workerId);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<Review> getReviews(long workerId) {
         LOGGER.info("Getting reviews for Worker {}", workerId);

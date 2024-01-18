@@ -17,6 +17,8 @@ public interface PostService {
 
     Optional<Post> findPost(long postId);
 
+    Optional<Post> findPost(long postId, long neighborhoodId);
+
     List<Post> getPosts(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, Long userId);
 
     // ---------------------------------------------------

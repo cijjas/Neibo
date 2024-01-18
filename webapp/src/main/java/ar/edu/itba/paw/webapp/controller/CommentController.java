@@ -67,7 +67,7 @@ public class CommentController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findComment(@PathParam("id") long commentId) {
         LOGGER.info("GET request arrived at neighborhoods/{}/posts/{}/comments/{}", neighborhoodId, postId, commentId);
-        return Response.ok(CommentDto.fromComment(cs.findComment(commentId, postId)
+        return Response.ok(CommentDto.fromComment(cs.findComment(commentId, postId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Comment Not Found")), uriInfo)).build();
     }
 

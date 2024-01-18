@@ -62,7 +62,7 @@ public class UserController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findUser(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at neighborhoods/{}/users/{}", neighborhoodId, id);
-        return Response.ok(UserDto.fromUser(us.findUser(id)
+        return Response.ok(UserDto.fromUser(us.findUser(id, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("User Not Found")), uriInfo)).build();
     }
 

@@ -43,6 +43,21 @@ public class PurchaseDaoImpl implements PurchaseDao {
     }
 
     @Override
+    public Optional<Purchase> findPurchase(long purchaseId, long userId, long neighborhoodId) {
+        TypedQuery<Purchase> query = em.createQuery(
+                "SELECT p FROM Purchase p WHERE p.id = :purchaseId AND p.user.id = :userId AND p.product.seller.neighborhood.id = :neighborhoodId",
+                Purchase.class
+        );
+
+        query.setParameter("purchaseId", purchaseId);
+        query.setParameter("userId", userId);
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Purchase> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
+    @Override
     public Set<Purchase> getPurchases(long userId, String type, int page, int size) {
         LOGGER.debug("Selecting Purchases By Criteria For User {}", userId);
 

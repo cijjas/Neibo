@@ -55,6 +55,14 @@ public class RequestServiceImpl implements RequestService {
         return requestDao.findRequest(requestId);
     }
 
+    @Override
+    public Optional<Request> findRequest(long requestId, long neighborhoodId) {
+        ValidationUtils.checkRequestId(requestId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return requestDao.findRequest(requestId);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

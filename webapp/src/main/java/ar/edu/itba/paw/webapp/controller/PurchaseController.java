@@ -60,9 +60,9 @@ public class PurchaseController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findTransaction(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/users/{}/transactions/{}", neighborhoodId, userId, id);
-        return Response.ok(PurchaseDto.fromPurchase(ps.findPurchase(id)
+    public Response findTransaction(@PathParam("id") final long transactionId) {
+        LOGGER.info("GET request arrived at neighborhoods/{}/users/{}/transactions/{}", neighborhoodId, userId, transactionId);
+        return Response.ok(PurchaseDto.fromPurchase(ps.findPurchase(transactionId, userId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Purchase Not Found")), uriInfo)).build();
     }
 }

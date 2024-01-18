@@ -61,9 +61,9 @@ public class LikeController extends GlobalControllerAdvice{
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findLike(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/likes/{}", neighborhoodId, id);
-        return Response.ok(LikeDto.fromLike(ls.findLike(id)
+    public Response findLike(@PathParam("id") final long likeId) {
+        LOGGER.info("GET request arrived at neighborhoods/{}/likes/{}", neighborhoodId, likeId);
+        return Response.ok(LikeDto.fromLike(ls.findLike(likeId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Like Not Found")), uriInfo)).build();
     }
 

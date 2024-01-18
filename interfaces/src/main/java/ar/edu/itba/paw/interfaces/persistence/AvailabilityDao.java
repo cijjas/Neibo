@@ -21,7 +21,7 @@ public interface AvailabilityDao {
 
     Optional<Availability> findAvailability(long availabilityId);
 
-    Optional<Availability> findAvailability(long amenityId, long availabilityId);
+    Optional<Availability> findAvailability(long amenityId, long availabilityId, long neighborhoodId);
 
     OptionalLong findId(long amenityId, long shiftId);
 

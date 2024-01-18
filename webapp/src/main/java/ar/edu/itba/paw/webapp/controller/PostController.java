@@ -65,9 +65,9 @@ public class PostController extends GlobalControllerAdvice{
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findPostById(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/posts/{}", neighborhoodId, id);
-        return Response.ok(PostDto.fromPost(ps.findPost(id)
+    public Response findPostById(@PathParam("id") final long postId) {
+        LOGGER.info("GET request arrived at neighborhoods/{}/posts/{}", neighborhoodId, postId);
+        return Response.ok(PostDto.fromPost(ps.findPost(postId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Post Not Found")), uriInfo)).build();
     }
 

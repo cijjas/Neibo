@@ -13,6 +13,8 @@ public interface PurchaseService {
 
     Optional<Purchase> findPurchase(long purchaseId);
 
+    Optional<Purchase> findPurchase(long purchaseId, long userId, long neighborhoodId);
+
     Set<Purchase> getPurchases(long userId, String type, int page, int size);
 
     int countPurchases(long userId, String type);

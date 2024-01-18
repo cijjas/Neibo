@@ -44,6 +44,14 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
+    public Optional<Like> findLike(long likeId, long neighborhoodId) {
+
+        ValidationUtils.checkLikeId(likeId);
+
+        return likeDao.findLike(likeId, neighborhoodId);
+    }
+
+    @Override
     public List<Like> getLikes(long neighborhoodId, Long postId, Long userId, int page, int size){
 
         ValidationUtils.checkLikeIds(postId, userId);

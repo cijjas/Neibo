@@ -57,9 +57,17 @@ public class ProductServiceImpl implements ProductService {
 
         ValidationUtils.checkProductId(productId);
 
-        if (productId <= 0)
-            throw new IllegalArgumentException("Product ID must be a positive integer");
         return productDao.findProduct(productId);
+    }
+
+    @Override
+    public Optional<Product> findProduct(long productId, long neighborhoodId) {
+        LOGGER.info("Selecting Product with id {}", productId);
+
+        ValidationUtils.checkProductId(productId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return productDao.findProduct(productId, neighborhoodId);
     }
 
     @Override

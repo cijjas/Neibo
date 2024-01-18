@@ -48,6 +48,23 @@ public class AmenityDaoImpl implements AmenityDao {
     }
 
     @Override
+    public Optional<Amenity> findAmenity(long amenityId, long neighborhoodId) {
+        LOGGER.debug("Selecting Amenity with amenityId {} and neighborhoodId {}", amenityId, neighborhoodId);
+
+        TypedQuery<Amenity> query = em.createQuery(
+                "SELECT a FROM Amenity a WHERE a.amenityId = :amenityId AND a.neighborhood.neighborhoodId = :neighborhoodId",
+                Amenity.class
+        );
+
+        query.setParameter("amenityId", amenityId);
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Amenity> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
+
+    @Override
     public List<Amenity> getAmenities(long neighborhoodId, int page, int size) {
         // Initialize Query Builder
         CriteriaBuilder cb = em.getCriteriaBuilder();

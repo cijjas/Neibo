@@ -65,9 +65,9 @@ public class RequestController extends GlobalControllerAdvice {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findRequest(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/requests/{}", neighborhoodId, id);
-        return Response.ok(RequestDto.fromRequest(rs.findRequest(id)
+    public Response findRequest(@PathParam("id") final long requestId) {
+        LOGGER.info("GET request arrived at neighborhoods/{}/requests/{}", neighborhoodId, requestId);
+        return Response.ok(RequestDto.fromRequest(rs.findRequest(requestId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Request Not Found")), uriInfo)).build();
     }
 

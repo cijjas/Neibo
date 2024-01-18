@@ -46,12 +46,12 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     }
 
     @Override
-    public Optional<Availability> findAvailability(long amenityId, long availabilityId) {
+    public Optional<Availability> findAvailability(long amenityId, long availabilityId, long neighborhoodId) {
 
-        ValidationUtils.checkAmenityId(amenityId);
-        ValidationUtils.checkAvailabilityId(availabilityId);
+        ValidationUtils.checkAmenityAvailabilityIds(amenityId, availabilityId);
+        ValidationUtils.checkNeighborhoodId(availabilityId);
 
-        return availabilityDao.findAvailability(amenityId, availabilityId);
+        return availabilityDao.findAvailability(amenityId, availabilityId, neighborhoodId);
     }
 
 

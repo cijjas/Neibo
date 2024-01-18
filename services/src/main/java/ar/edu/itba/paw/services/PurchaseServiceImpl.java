@@ -38,7 +38,17 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         ValidationUtils.checkPurchaseId(purchaseId);
 
-        return  purchaseDao.findPurchase(purchaseId);
+        return purchaseDao.findPurchase(purchaseId);
+    }
+
+    @Override
+    public Optional<Purchase> findPurchase(long purchaseId, long userId, long neighborhoodId) {
+
+        ValidationUtils.checkPurchaseId(purchaseId);
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return purchaseDao.findPurchase(purchaseId, userId, neighborhoodId);
     }
 
     @Override

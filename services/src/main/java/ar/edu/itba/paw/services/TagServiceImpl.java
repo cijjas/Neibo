@@ -111,7 +111,7 @@ public class TagServiceImpl implements TagService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Tag> getTags(Long postId, Long neighborhoodId, int page, int size) {
+    public List<Tag> getTags(Long postId, long neighborhoodId, int page, int size) {
 
         ValidationUtils.checkPostId(postId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);

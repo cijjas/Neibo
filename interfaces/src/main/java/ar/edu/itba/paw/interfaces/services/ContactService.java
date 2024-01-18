@@ -14,6 +14,8 @@ public interface ContactService {
 
     Optional<Contact> findContact(long contactId);
 
+    Optional<Contact> findContact(long contactId, long neighborhoodId);
+
     // -----------------------------------------------------------------------------------------------------------------
 
     Contact updateContact(long contactId, String contactName, String contactAddress, String contactPhone);

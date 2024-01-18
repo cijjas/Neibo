@@ -91,6 +91,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> findUser(long userId, long neighborhoodId) {
+        LOGGER.info("Finding User with id {}", userId);
+
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return userDao.findUser(userId, neighborhoodId);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Optional<User> findUser(String mail) {
         LOGGER.info("Finding User with mail {}", mail);

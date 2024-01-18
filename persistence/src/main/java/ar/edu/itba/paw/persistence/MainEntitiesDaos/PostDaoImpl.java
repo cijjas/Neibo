@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,20 @@ public class PostDaoImpl implements PostDao {
     public Optional<Post> findPost(long postId) {
         LOGGER.debug("Selecting Post with id {}", postId);
         return Optional.ofNullable(em.find(Post.class, postId));
+    }
+
+    @Override
+    public Optional<Post> findPost(long postId, long neighborhoodId) {
+        TypedQuery<Post> query = em.createQuery(
+                "SELECT p FROM Post p WHERE p.postId = :postId AND p.user.neighborhood.neighborhoodId = :neighborhoodId",
+                Post.class
+        );
+
+        query.setParameter("postId", postId);
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Post> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
     // --------------------------------------------------- COMPLEX -----------------------------------------------------

@@ -61,7 +61,7 @@ public class ReviewController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findReview(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at workers/{}/reviews/{}", workerId, id);
-        return Response.ok(ReviewDto.fromReview(rs.findReview(id)
+        return Response.ok(ReviewDto.fromReview(rs.findReview(id, workerId)
                 .orElseThrow(() -> new NotFoundException("Review Not Found")), uriInfo)).build();
     }
 

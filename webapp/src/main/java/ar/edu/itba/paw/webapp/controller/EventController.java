@@ -48,9 +48,9 @@ public class EventController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findEvent(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/events/{}", neighborhoodId, id);
-        return Response.ok(EventDto.fromEvent(es.findEvent(id)
+    public Response findEvent(@PathParam("id") final long eventId) {
+        LOGGER.info("GET request arrived at neighborhoods/{}/events/{}", neighborhoodId, eventId);
+        return Response.ok(EventDto.fromEvent(es.findEvent(eventId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Event Not Found")), uriInfo)).build();
     }
 

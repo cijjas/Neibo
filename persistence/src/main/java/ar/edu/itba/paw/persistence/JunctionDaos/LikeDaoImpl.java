@@ -92,6 +92,21 @@ public class LikeDaoImpl implements LikeDao {
         return Optional.ofNullable(em.find(Like.class, likeId));
     }
 
+    @Override
+    public Optional<Like> findLike(long likeId, long neighborhoodId) {
+        /*TypedQuery<Like> query = em.createQuery(
+                "SELECT a FROM Amenity a WHERE a.amenityId = :amenityId AND a.neighborhood.neighborhoodId = :neighborhoodId",
+                Like.class
+        );
+
+        query.setParameter("amenityId", amenityId);
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Like> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));*/
+        return Optional.empty();
+    }
+
     // -------------------------------------------------- LIKES DELETE -------------------------------------------------
 
     @Override

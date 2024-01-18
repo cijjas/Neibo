@@ -49,6 +49,20 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
+    public Optional<Event> findEvent(long eventId, long neighborhoodId) {
+        TypedQuery<Event> query = em.createQuery(
+                "SELECT e FROM Event e WHERE e.eventId = :eventId AND e.neighborhood.id = :neighborhoodId",
+                Event.class
+        );
+
+        query.setParameter("eventId", eventId);
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Event> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
+    @Override
     public List<Event> getEvents(String date, long neighborhoodId) {
         LOGGER.debug("Selecting Events from Date {}", date);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");

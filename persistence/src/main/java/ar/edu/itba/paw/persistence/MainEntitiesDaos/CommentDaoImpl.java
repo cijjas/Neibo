@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.CommentDao;
 import ar.edu.itba.paw.models.Entities.Comment;
+import ar.edu.itba.paw.models.Entities.Event;
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
@@ -38,16 +39,23 @@ public class CommentDaoImpl implements CommentDao {
     // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
 
     @Override
-    public Optional<Comment> findComment(long commentId, long postId) {
+    public Optional<Comment> findComment(long commentId) {
+        LOGGER.debug("Selecting Comment with id {}", commentId);
+        return Optional.ofNullable(em.find(Comment.class, commentId));
+    }
+
+    @Override
+    public Optional<Comment> findComment(long commentId, long postId, long neighborhoodId) {
         LOGGER.debug("Selecting Comment with commentId {} and postId {}", commentId, postId);
 
         TypedQuery<Comment> query = em.createQuery(
-                "SELECT c FROM Comment c WHERE c.commentId = :commentId AND c.post.postId = :postId",
+                "SELECT c FROM Comment c WHERE c.commentId = :commentId AND c.post.postId = :postId AND c.post.user.neighborhood.id = :neighborhoodId",
                 Comment.class
         );
 
         query.setParameter("commentId", commentId);
         query.setParameter("postId", postId);
+        query.setParameter("neighborhoodId", neighborhoodId);
 
         List<Comment> result = query.getResultList();
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));

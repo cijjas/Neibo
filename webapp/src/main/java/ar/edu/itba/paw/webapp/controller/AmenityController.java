@@ -57,7 +57,7 @@ public class AmenityController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findAmenity(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at neighborhoods/{}/amenities/{}", neighborhoodId, id);
-        return Response.ok(AmenityDto.fromAmenity(as.findAmenity(id)
+        return Response.ok(AmenityDto.fromAmenity(as.findAmenity(id, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Amenity Not Found")), uriInfo)).build();
     }
 

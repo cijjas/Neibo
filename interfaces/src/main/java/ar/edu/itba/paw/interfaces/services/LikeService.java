@@ -15,6 +15,8 @@ public interface LikeService {
 
     Optional<Like> findLike(long likeId);
 
+    Optional<Like> findLike(long likeId, long neighborhoodId);
+
     List<Like> getLikes(long neighborhoodId, Long postId, Long userId, int page, int size);
 
     // ---------------------------------------------------

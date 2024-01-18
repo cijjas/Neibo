@@ -64,9 +64,9 @@ public class ProductController extends GlobalControllerAdvice {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findProduct(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived neighborhoods/{}/products/{}", neighborhoodId, id);
-        return Response.ok(ProductDto.fromProduct(ps.findProduct(id)
+    public Response findProduct(@PathParam("id") final long productId) {
+        LOGGER.info("GET request arrived neighborhoods/{}/products/{}", neighborhoodId, productId);
+        return Response.ok(ProductDto.fromProduct(ps.findProduct(productId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Product Not Found")), uriInfo)).build();
     }
 

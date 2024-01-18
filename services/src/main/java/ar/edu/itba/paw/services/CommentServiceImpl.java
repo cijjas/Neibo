@@ -49,13 +49,23 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Comment> findComment(long commentId, long postId) {
+    public Optional<Comment> findComment(long commentId) {
+        LOGGER.info("Finding Comment {}", commentId);
+
+        ValidationUtils.checkCommentId(commentId);
+
+        return commentDao.findComment(commentId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Comment> findComment(long commentId, long postId, long neighborhoodId) {
         LOGGER.info("Finding Comment {}", commentId);
 
         ValidationUtils.checkCommentId(commentId);
         ValidationUtils.checkPostId(postId);
 
-        return commentDao.findComment(commentId, postId);
+        return commentDao.findComment(commentId, postId, neighborhoodId);
     }
 
     @Override

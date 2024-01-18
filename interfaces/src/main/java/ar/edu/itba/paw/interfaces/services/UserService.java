@@ -15,7 +15,9 @@ public interface UserService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<User> findUser(final long neighborId);
+    Optional<User> findUser(final long userId);
+
+    Optional<User> findUser(final long userId, long neighborhoodId);
 
     Optional<User> findUser(final String mail);
 

@@ -44,6 +44,20 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
+    public Optional<Request> findRequest(long requestId, long neighborhoodId) {
+        TypedQuery<Request> query = em.createQuery(
+                "SELECT r FROM Request r WHERE r.id = :requestId AND r.user.neighborhood.id = :neighborhoodId",
+                Request.class
+        );
+
+        query.setParameter("requestId", requestId);
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Request> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
+    @Override
     public List<Request> getRequests(Long userId, Long productId, int page, int size) {
         LOGGER.debug("Selecting Requests By Criteria");
         TypedQuery<Long> idQuery = null;

@@ -118,6 +118,7 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
     @Override
     public OptionalLong findId(long amenityId, long shiftId) {
         LOGGER.debug("Selecting Availability with amenityId {} and shiftId {}", amenityId, shiftId);
+
         TypedQuery<Long> query = em.createQuery("SELECT a.amenityAvailabilityId FROM Availability a WHERE a.shift.shiftId = :shiftId AND a.amenity.amenityId = :amenityId", Long.class);
         query.setParameter("shiftId", shiftId);
         query.setParameter("amenityId", amenityId);
@@ -126,11 +127,14 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
     }
 
     @Override
-    public Optional<Availability> findAvailability(long amenityId, long availabilityId) {
+    public Optional<Availability> findAvailability(long amenityId, long availabilityId, long neighborhoodId) {
         LOGGER.debug("Selecting Availability with amenity Id {} and availability Id {}", amenityId, availabilityId);
-        TypedQuery<Availability> query = em.createQuery("SELECT a FROM Availability a WHERE a.amenityAvailabilityId = :availabilityId AND a.amenity.amenityId = :amenityId", Availability.class);
+
+        TypedQuery<Availability> query = em.createQuery("SELECT a FROM Availability a WHERE a.amenityAvailabilityId = :availabilityId AND a.amenity.amenityId = :amenityId AND a.amenity.neighborhood.id = :neighborhoodId", Availability.class);
         query.setParameter("availabilityId", availabilityId);
         query.setParameter("amenityId", amenityId);
+        query.setParameter("neighborhoodId", neighborhoodId);
+
         List<Availability> resultList = query.getResultList();
         return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
     }

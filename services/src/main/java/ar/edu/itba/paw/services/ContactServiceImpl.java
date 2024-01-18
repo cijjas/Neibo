@@ -52,6 +52,15 @@ public class ContactServiceImpl implements ContactService {
         return contactDao.findContact(contactId);
     }
 
+    @Override
+    public Optional<Contact> findContact(long contactId, long neighborhoodId) {
+
+        ValidationUtils.checkContactId(contactId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return contactDao.findContact(contactId, neighborhoodId);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

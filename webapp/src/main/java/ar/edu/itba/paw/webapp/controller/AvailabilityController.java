@@ -40,7 +40,7 @@ public class AvailabilityController {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response getAvailability(
+    public Response listAvailability(
             @QueryParam("status") String status,
             @QueryParam("date") String date
     ) {
@@ -54,9 +54,9 @@ public class AvailabilityController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findAvailability(@PathParam("id") final long id) {
-        LOGGER.info("Finding Availability with id {}", id);
-        return Response.ok(AvailabilityDto.fromAvailability(as.findAvailability(amenityId, id)
+    public Response findAvailability(@PathParam("id") final long availabilityId) {
+        LOGGER.info("Finding Availability with id {}", availabilityId);
+        return Response.ok(AvailabilityDto.fromAvailability(as.findAvailability(amenityId, availabilityId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Availability Not Found")), uriInfo)).build();
     }
 }

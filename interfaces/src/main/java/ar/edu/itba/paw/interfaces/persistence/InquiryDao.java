@@ -15,6 +15,8 @@ public interface InquiryDao {
 
     Optional<Inquiry> findInquiry(final long inquiryId);
 
+    Optional<Inquiry> findInquiry(final long inquiryId, long productId, long neighborhoodId);
+
     List<Inquiry> getInquiries(long productId, int page, int size);
 
     // ---------------------------------------------------

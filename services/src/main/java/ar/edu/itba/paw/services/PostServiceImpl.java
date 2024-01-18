@@ -75,6 +75,17 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
+    public Optional<Post> findPost(final long postId, long neighborhoodId) {
+        LOGGER.info("Finding Post with ID {}", postId);
+
+        ValidationUtils.checkPostId(postId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return postDao.findPost(postId, neighborhoodId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<Post> getPosts(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, Long userId) {
         LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {}, by User {} and Post Status {} ", neighborhoodId, channel, tags, userId, postStatus);
 
