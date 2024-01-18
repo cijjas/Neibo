@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
-        ValidationUtils.checkUserRoleString(role);
+        ValidationUtils.checkOptionalUserRoleString(role);
 
         return userDao.getUsers(role, neighborhoodId, page, size);
     }
@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
     public int countUsers(String role, long neighborhoodId) {
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkUserRoleString(role);
+        ValidationUtils.checkOptionalUserRoleString(role);
 
         return userDao.countTotalUsers(role, neighborhoodId);
     }
@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService {
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkSize(size);
-        ValidationUtils.checkUserRoleString(role);
+        ValidationUtils.checkOptionalUserRoleString(role);
 
         return PaginationUtils.calculatePages(userDao.countTotalUsers(role, neighborhoodId), size);
     }

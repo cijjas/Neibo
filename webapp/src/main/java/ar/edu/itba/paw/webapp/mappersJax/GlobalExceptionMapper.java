@@ -10,7 +10,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-@Provider
+/*@Provider
 public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
 
     @Context
@@ -28,4 +28,4 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
 
         return Response.status(status).entity(errorDetails).type(MediaType.APPLICATION_JSON).build();
     }
-}
+}*/

@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.models.Entities.Channel;
 import ar.edu.itba.paw.webapp.dto.ChannelDto;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +25,16 @@ public class ChannelController {
     private UriInfo uriInfo;
 
     @PathParam("neighborhoodId")
-    private String neighborhoodId;
+    private long neighborhoodId;
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listChannels() {
         LOGGER.info("GET request arrived at neighborhoods/{}/channels", neighborhoodId);
-        List<Channel> channels = cs.getChannels(Long.parseLong(neighborhoodId));
+        List<Channel> channels = cs.getChannels(neighborhoodId);
 
         List<ChannelDto> channelDto = channels.stream()
-                .map(c -> ChannelDto.fromChannel(c, uriInfo, Long.parseLong(neighborhoodId))).collect(Collectors.toList());
+                .map(c -> ChannelDto.fromChannel(c, uriInfo, neighborhoodId)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<ChannelDto>>(channelDto){})
                 .build();
@@ -42,10 +43,10 @@ public class ChannelController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findChannel(@PathParam("id") long id) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/channels/{}", neighborhoodId, id);
-        return Response.ok(ChannelDto.fromChannel(cs.findChannel(id)
-                .orElseThrow(() -> new NotFoundException("Channel Not Found")), uriInfo, Long.parseLong(neighborhoodId))).build();
+    public Response findChannel(@PathParam("id") long channelId) {
+        LOGGER.info("GET request arrived at neighborhoods/{}/channels/{}", neighborhoodId, channelId);
+        return Response.ok(ChannelDto.fromChannel(cs.findChannel(channelId, neighborhoodId)
+                .orElseThrow(() -> new NotFoundException("Channel Not Found")), uriInfo, neighborhoodId)).build();
     }
 }
 

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
@@ -53,22 +55,39 @@ public class BookingDaoImpl implements BookingDao {
     }
 
     @Override
-    public List<Booking> getBookings(Long userId) {
-        LOGGER.debug("Selecting Bookings from userId {}", userId);
+    public List<Booking> getBookings(Long userId, Long amenityId) {
+        LOGGER.debug("Selecting Bookings from userId {} and amenityId {}", userId, amenityId);
 
-        if (userId == null) {
-            String sql = BOOKINGS_JOIN_AVAILABILITY + " ORDER BY uav.date, asa.amenityid, timeinterval asc";
-            List<Booking> allBookings = em.createNativeQuery(sql, Booking.class)
-                    .getResultList();
-            return allBookings;
-        } else {
-            String sql = BOOKINGS_JOIN_AVAILABILITY + " WHERE userid = :userId ORDER BY uav.date, asa.amenityid, timeinterval asc";
-            List<Booking> userBookings = em.createNativeQuery(sql, Booking.class)
-                    .setParameter("userId", userId)
-                    .getResultList();
-            return userBookings;
+        StringBuilder sqlBuilder = new StringBuilder(BOOKINGS_JOIN_AVAILABILITY);
+        sqlBuilder.append(" WHERE 1 = 1");
+
+        if (userId != null) {
+            sqlBuilder.append(" AND userid = :userId");
         }
+
+        if (amenityId != null) {
+            sqlBuilder.append(" AND asa.amenityid = :amenityId");
+        }
+
+        sqlBuilder.append(" ORDER BY uav.date, asa.amenityid, timeinterval asc");
+
+        String sql = sqlBuilder.toString();
+
+        // Specify the result class (Booking.class) in createNativeQuery
+        Query query = em.createNativeQuery(sql, Booking.class);
+
+        if (userId != null) {
+            query.setParameter("userId", userId);
+        }
+
+        if (amenityId != null) {
+            query.setParameter("amenityId", amenityId);
+        }
+
+        return query.getResultList();
     }
+
+
 
     // ---------------------------------------- USERS_AVAILABILITY DELETE ----------------------------------------------
 

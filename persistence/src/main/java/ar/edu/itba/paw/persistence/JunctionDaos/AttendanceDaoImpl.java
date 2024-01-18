@@ -71,6 +71,12 @@ public class AttendanceDaoImpl implements AttendanceDao {
     }
 
     @Override
+    public Optional<Attendance> findAttendance(long attendanceId, long eventId) {
+        LOGGER.debug("Selecting Attendance with id {}", attendanceId);
+        return Optional.ofNullable(em.find(Attendance.class, new AttendanceKey(attendanceId, eventId)));
+    }
+
+    @Override
     public Optional<Attendance> findAttendance(long attendanceId) {
         LOGGER.debug("Selecting Attendance with id {}", attendanceId);
         return Optional.ofNullable(em.find(Attendance.class, attendanceId));

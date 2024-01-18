@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.*;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,7 +78,7 @@ public class PostServiceImpl implements PostService {
     public List<Post> getPosts(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, Long userId) {
         LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {}, by User {} and Post Status {} ", neighborhoodId, channel, tags, userId, postStatus);
 
-        ValidationUtils.checkChannelString(channel);
+        ValidationUtils.checkOptionalChannelString(channel);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPostStatusString(postStatus);
         ValidationUtils.checkUserId(userId);
@@ -96,6 +94,7 @@ public class PostServiceImpl implements PostService {
     public int countPosts(String channel, List<String> tags, long neighborhoodId, String postStatus, Long userId) {
         LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
 
+        ValidationUtils.checkOptionalChannelString(channel);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPostStatusString(postStatus);
         ValidationUtils.checkUserId(userId);
@@ -108,6 +107,7 @@ public class PostServiceImpl implements PostService {
     public int calculatePostPages(String channel, int size, List<String> tags, long neighborhoodId, String postStatus, Long userId) {
         LOGGER.info("Getting Total Post Pages with size {} for Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", size, neighborhoodId, channel, tags, postStatus);
 
+        ValidationUtils.checkOptionalChannelString(channel);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPostStatusString(postStatus);
         ValidationUtils.checkUserId(userId);

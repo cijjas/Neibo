@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Availability;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.AvailabilityDto;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 
 @Path("neighborhoods/{neighborhoodId}/amenities/{amenityId}/availability")
-@CrossOrigin(origins = "http://localhost:4200/")
 @Component
 public class AvailabilityController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AmenityController.class);
@@ -54,9 +54,9 @@ public class AvailabilityController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findAmenity(@PathParam("id") final long id) {
+    public Response findAvailability(@PathParam("id") final long id) {
         LOGGER.info("Finding Availability with id {}", id);
         return Response.ok(AvailabilityDto.fromAvailability(as.findAvailability(amenityId, id)
-                .orElseThrow(() -> new NotFoundException("Amenity Not Found")), uriInfo)).build();
+                .orElseThrow(() -> new NotFoundException("Availability Not Found")), uriInfo)).build();
     }
 }

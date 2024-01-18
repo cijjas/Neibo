@@ -67,9 +67,11 @@ public class ChannelDaoImplTest {
     public void testFindChannelById() {
         // Pre Conditions
         long chKey = testInserter.createChannel();
+        long nhKey = testInserter.createNeighborhood();
+        testInserter.createChannelMapping(nhKey, chKey);
 
         // Exercise
-        Optional<Channel> ch = channelDao.findChannel(chKey);
+        Optional<Channel> ch = channelDao.findChannel(chKey, nhKey);
 
         // Validations & Post Conditions
         assertTrue(ch.isPresent());
@@ -81,7 +83,7 @@ public class ChannelDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<Channel> ch = channelDao.findChannel(1);
+        Optional<Channel> ch = channelDao.findChannel(1, 1);
 
         // Validations & Post Conditions
         assertFalse(ch.isPresent());

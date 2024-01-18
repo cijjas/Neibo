@@ -110,7 +110,7 @@ public class ValidationUtils {
     }
 
     public static void checkAttendanceId(Long attendanceId) {
-        ValidationUtils.checkId(attendanceId, "Attendance");
+        ValidationUtils.checkId(attendanceId, "User ID needed to determine the Attendance");
     }
 
     public static void checkEventId(Long eventId) {
@@ -200,7 +200,7 @@ public class ValidationUtils {
         }
     }
 
-    public static void checkDepartmentString(String department){
+    public static void checkOptionalDepartmentString(String department){
         if(department == null) {
             return;
         }
@@ -213,11 +213,9 @@ public class ValidationUtils {
         }
     }
 
-    public static void checkProductStatusString(String productStatus){
+    public static void checkOptionalProductStatusString(String productStatus){
         if(productStatus == null) {
-            Set<LinkEntry> links = new HashSet<>();
-            links.add(new LinkEntry("Valid Product Statuses", "product-statuses"));
-            throw new InvalidEnumValueException("Product Status is required. Please specify a valid Product Status.", links);
+            return;
         }
         try {
             ProductStatus.valueOf(productStatus.toUpperCase());
@@ -228,7 +226,7 @@ public class ValidationUtils {
         }
     }
 
-    public static void checkUserRoleString(String userRole){
+    public static void checkOptionalUserRoleString(String userRole){
         if (userRole == null)
             return;
         try {
@@ -250,7 +248,9 @@ public class ValidationUtils {
         }
     }
 
-    public static void checkChannelString(String channel){
+    public static void checkOptionalChannelString(String channel){
+        if (channel == null)
+            return;
         try {
             BaseChannel.valueOf(channel.toUpperCase());
         } catch (IllegalArgumentException e) {
@@ -286,7 +286,9 @@ public class ValidationUtils {
         }
     }
 
-    public static void checkShiftStatusString(String shiftStatus){
+    public static void checkOptionalShiftStatusString(String shiftStatus){
+        if (shiftStatus == null)
+            return;
         try {
             ShiftStatus.valueOf(shiftStatus.toUpperCase());
         } catch (IllegalArgumentException e) {
@@ -296,7 +298,9 @@ public class ValidationUtils {
         }
     }
 
-    public static void checkDateString(String date){
+    public static void checkOptionalDateString(String date){
+        if (date == null)
+            return;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
             dateFormat.parse(date);

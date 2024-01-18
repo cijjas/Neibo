@@ -57,14 +57,12 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
     @Override
     public List<Availability> getAvailability(long amenityId, String status, String date) {
         LOGGER.debug("Selecting Availability with status {} on date {} Amenity {}", status, date, amenityId);
-        System.out.println("Selecting Availability with status " + status + " on date " + date + " Amenity " + amenityId);
 
         StringBuilder nativeQuery = new StringBuilder("SELECT a.* FROM amenities_shifts_availability a");
         nativeQuery.append(" JOIN amenities_shifts_availability asa ON a.amenityAvailabilityId = asa.amenityAvailabilityId");
         nativeQuery.append(" JOIN shifts s ON asa.shiftId = s.shiftId");
         nativeQuery.append(" WHERE a.amenityId = :amenityId");
 
-        ShiftStatus shiftStatus = ShiftStatus.valueOf(status);
         int dayOfWeek = -1;
 
         if (date != null) {
@@ -80,21 +78,24 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
             nativeQuery.append(" AND s.dayId = :dayOfWeek");
         }
 
-        switch (shiftStatus) {
-            case FREE:
-                nativeQuery.append(" AND NOT EXISTS (SELECT ua.amenityAvailabilityId FROM users_availability ua WHERE ua.amenityAvailabilityId = a.amenityAvailabilityId");
-                if (date != null) {
-                    nativeQuery.append(" AND ua.date = :date");
-                }
-                nativeQuery.append(")");
-                break;
-            case TAKEN:
-                nativeQuery.append(" AND EXISTS (SELECT ua.amenityAvailabilityId FROM users_availability ua WHERE ua.amenityAvailabilityId = a.amenityAvailabilityId");
-                if (date != null) {
-                    nativeQuery.append(" AND ua.date = :date");
-                }
-                nativeQuery.append(")");
-                break;
+        if (status != null) {
+            ShiftStatus shiftStatus = ShiftStatus.valueOf(status.toUpperCase());
+            switch (shiftStatus) {
+                case FREE:
+                    nativeQuery.append(" AND NOT EXISTS (SELECT ua.amenityAvailabilityId FROM users_availability ua WHERE ua.amenityAvailabilityId = a.amenityAvailabilityId");
+                    if (date != null) {
+                        nativeQuery.append(" AND ua.date = to_date(:date, 'YYYY-MM-DD')");
+                    }
+                    nativeQuery.append(")");
+                    break;
+                case TAKEN:
+                    nativeQuery.append(" AND EXISTS (SELECT ua.amenityAvailabilityId FROM users_availability ua WHERE ua.amenityAvailabilityId = a.amenityAvailabilityId");
+                    if (date != null) {
+                        nativeQuery.append(" AND ua.date = to_date(:date, 'YYYY-MM-DD')");
+                    }
+                    nativeQuery.append(")");
+                    break;
+            }
         }
 
         Query query = em.createNativeQuery(nativeQuery.toString(), Availability.class);
@@ -103,14 +104,14 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
         // Set parameters if present
         if (date != null && dayOfWeek != -1) {
             query.setParameter("dayOfWeek", dayOfWeek);
+        }
+        if (date != null && status != null) {
             query.setParameter("date", date);
         }
 
         // Execute the query and return the result
         return query.getResultList();
     }
-
-
 
 
 

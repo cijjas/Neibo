@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -68,8 +67,8 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     public List<Availability> getAvailability(long amenityId, String status, String date) {
 
         ValidationUtils.checkAmenityId(amenityId);
-        ValidationUtils.checkShiftStatusString(status);
-        ValidationUtils.checkDateString(date);
+        ValidationUtils.checkOptionalShiftStatusString(status);
+        ValidationUtils.checkOptionalDateString(date);
 
         return availabilityDao.getAvailability(amenityId, status, date);
     }

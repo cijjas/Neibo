@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Booking;
 import ar.edu.itba.paw.webapp.dto.BookingDto;
 import ar.edu.itba.paw.webapp.form.BookingForm;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +40,11 @@ public class BookingController extends GlobalControllerAdvice{
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listBookings(
-            @QueryParam("userId") final Long userId
+            @QueryParam("userId") final Long userId,
+            @QueryParam("amenityId") final Long amenityId
     ) {
         LOGGER.info("GET request arrived at neighborhoods/{}/bookings", neighborhoodId);
-        final List<Booking> bookings = bs.getBookings(userId);
+        final List<Booking> bookings = bs.getBookings(userId, amenityId);
         final List<BookingDto> bookingsDto = bookings.stream()
                 .map(b -> BookingDto.fromBooking(b, uriInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<BookingDto>>(bookingsDto){})
@@ -67,6 +69,4 @@ public class BookingController extends GlobalControllerAdvice{
                 .path(String.valueOf(bookingIds)).build();
         return Response.created(uri).build();
     }
-
-    // query params para filtrar segun userid o amenityid
 }

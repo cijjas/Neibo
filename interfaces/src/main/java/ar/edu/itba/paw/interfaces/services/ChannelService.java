@@ -11,7 +11,7 @@ public interface ChannelService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Channel> findChannel(long channelId);
+    Optional<Channel> findChannel(long channelId, long neighborhoodId);
 
     List<Channel> getChannels(long neighborhoodId);
 }

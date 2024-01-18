@@ -15,7 +15,7 @@ public interface ChannelDao {
 
     List<Channel> getChannels(final long neighborhoodId);
 
-    Optional<Channel> findChannel(long channelId);
+    Optional<Channel> findChannel(long channelId, long NeighborhoodId);
 
     Optional<Channel> findChannel(String name);
 }

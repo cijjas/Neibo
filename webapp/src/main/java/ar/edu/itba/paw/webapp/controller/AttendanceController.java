@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.AttendanceService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Attendance;
 import ar.edu.itba.paw.webapp.dto.AttendanceDto;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,11 +60,11 @@ public class AttendanceController extends GlobalControllerAdvice {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{userId}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findAttendance(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/events/{}/attendance/{}", neighborhoodId, eventId, id);
-        return Response.ok(AttendanceDto.fromAttendance(as.findAttendance(id)
+    public Response findAttendance(@PathParam("userId") final long userId) {
+        LOGGER.info("GET request arrived at neighborhoods/{}/events/{}/attendance/{}", neighborhoodId, eventId, userId);
+        return Response.ok(AttendanceDto.fromAttendance(as.findAttendance(userId, eventId)
                 .orElseThrow(() -> new NotFoundException("Attendance Not Found")), uriInfo)).build();
     }
 

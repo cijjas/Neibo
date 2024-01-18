@@ -38,11 +38,21 @@ public class CommentDaoImpl implements CommentDao {
     // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
 
     @Override
-    public Optional<Comment> findComment(long commentId) {
-        LOGGER.debug("Selecting Comments with commentId {}", commentId);
-        Comment comment = em.find(Comment.class, commentId);
-        return Optional.ofNullable(comment);
+    public Optional<Comment> findComment(long commentId, long postId) {
+        LOGGER.debug("Selecting Comment with commentId {} and postId {}", commentId, postId);
+
+        TypedQuery<Comment> query = em.createQuery(
+                "SELECT c FROM Comment c WHERE c.commentId = :commentId AND c.post.postId = :postId",
+                Comment.class
+        );
+
+        query.setParameter("commentId", commentId);
+        query.setParameter("postId", postId);
+
+        List<Comment> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
+
 
     @Override
     public List<Comment> getComments(long postId, int page, int size) {

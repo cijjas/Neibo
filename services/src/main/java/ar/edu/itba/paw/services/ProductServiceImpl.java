@@ -67,8 +67,8 @@ public class ProductServiceImpl implements ProductService {
         LOGGER.info("Selecting Products by neighborhood {} and departments {}", neighborhoodId, department);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkProductStatusString(productStatus);
-        ValidationUtils.checkDepartmentString(department);
+        ValidationUtils.checkOptionalProductStatusString(productStatus);
+        ValidationUtils.checkOptionalDepartmentString(department);
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPageAndSize(page, size);
 
@@ -82,8 +82,8 @@ public class ProductServiceImpl implements ProductService {
         LOGGER.info("Counting Products by neighborhood {} and departments {}", neighborhoodId, department);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkProductStatusString(productStatus);
-        ValidationUtils.checkDepartmentString(department);
+        ValidationUtils.checkOptionalProductStatusString(productStatus);
+        ValidationUtils.checkOptionalDepartmentString(department);
         ValidationUtils.checkUserId(userId);
 
         return productDao.countProducts(neighborhoodId, department, userId, productStatus);
@@ -93,7 +93,8 @@ public class ProductServiceImpl implements ProductService {
     public int calculateProductPages(long neighborhoodId, int size, String department, Long userId, String productStatus){
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkProductStatusString(productStatus);
+        ValidationUtils.checkOptionalProductStatusString(productStatus);
+        ValidationUtils.checkOptionalDepartmentString(department);
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkSize(size);
 

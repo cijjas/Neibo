@@ -90,7 +90,7 @@ public class EventServiceImpl implements EventService {
         LOGGER.info("Getting Events for Neighborhood {} on Date {}", neighborhoodId, date);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkDateString(date);
+        ValidationUtils.checkOptionalDateString(date);
 
         return eventDao.getEvents(date, neighborhoodId);
     }

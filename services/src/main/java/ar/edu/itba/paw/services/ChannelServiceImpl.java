@@ -41,11 +41,12 @@ public class ChannelServiceImpl implements ChannelService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Channel> findChannel(long channelId) {
+    public Optional<Channel> findChannel(long channelId, long neighborhoodId) {
 
         ValidationUtils.checkChannelId(channelId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        return channelDao.findChannel(channelId);
+        return channelDao.findChannel(channelId, neighborhoodId);
     }
 
     @Override

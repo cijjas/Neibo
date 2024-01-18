@@ -80,7 +80,7 @@ public class BookingDaoImplTest {
         long bKey = testInserter.createBooking(uKey, avKey, RESERVATION_DATE);
 
         // Exercise
-        List<Booking> userBookings = bookingDao.getBookings(uKey);
+        List<Booking> userBookings = bookingDao.getBookings(uKey, nhKey);
 
         // Validations & Post Conditions
         assertEquals(1, userBookings.size());
@@ -91,7 +91,7 @@ public class BookingDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Booking> userBookings = bookingDao.getBookings(1L);
+        List<Booking> userBookings = bookingDao.getBookings(1L, 1L);
 
         // Validations & Post Conditions
         assertEquals(0, userBookings.size());

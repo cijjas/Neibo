@@ -37,6 +37,16 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     @Transactional(readOnly = true)
+    public Optional<Attendance> findAttendance(long attendanceId, long eventId) {
+
+        ValidationUtils.checkAttendanceId(attendanceId);
+        ValidationUtils.checkEventId(eventId);
+
+        return attendanceDao.findAttendance(attendanceId, eventId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Optional<Attendance> findAttendance(long attendanceId) {
 
         ValidationUtils.checkAttendanceId(attendanceId);

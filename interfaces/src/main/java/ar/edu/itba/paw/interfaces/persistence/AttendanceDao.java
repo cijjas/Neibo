@@ -15,6 +15,8 @@ public interface AttendanceDao {
 
     Set<Attendance> getAttendance(long eventId, int page, int size);
 
+    Optional<Attendance> findAttendance(long attendanceId, long eventId);
+
     Optional<Attendance> findAttendance(long attendanceId);
 
     // ---------------------------------------------------

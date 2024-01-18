@@ -3,9 +3,9 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.CommentService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Comment;
-import ar.edu.itba.paw.webapp.dto.ChannelDto;
 import ar.edu.itba.paw.webapp.dto.CommentDto;
 import ar.edu.itba.paw.webapp.form.CommentForm;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,9 +65,9 @@ public class CommentController extends GlobalControllerAdvice{
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findComment(@PathParam("id") long id) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/posts/{}/comments/{}", neighborhoodId, postId, id);
-        return Response.ok(CommentDto.fromComment(cs.findComment(id)
+    public Response findComment(@PathParam("id") long commentId) {
+        LOGGER.info("GET request arrived at neighborhoods/{}/posts/{}/comments/{}", neighborhoodId, postId, commentId);
+        return Response.ok(CommentDto.fromComment(cs.findComment(commentId, postId)
                 .orElseThrow(() -> new NotFoundException("Comment Not Found")), uriInfo)).build();
     }
 

@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.form.AmenityForm;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,9 +2,9 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.Entities.Contact;
-import ar.edu.itba.paw.webapp.dto.CommentDto;
 import ar.edu.itba.paw.webapp.dto.ContactDto;
 import ar.edu.itba.paw.webapp.form.ContactForm;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

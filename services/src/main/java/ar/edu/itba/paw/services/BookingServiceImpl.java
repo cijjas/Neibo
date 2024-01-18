@@ -63,12 +63,13 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Booking> getBookings(Long userId) {
+    public List<Booking> getBookings(Long userId, Long amenityId) {
         LOGGER.info("Getting Bookings for User {}", userId);
 
         ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkAmenityId(amenityId);
 
-        return bookingDao.getBookings(userId);
+        return bookingDao.getBookings(userId, amenityId);
 //        List<GroupedBooking> groupedBookings = new ArrayList<>();
 //        GroupedBooking currentGroupedBooking = null;
 //

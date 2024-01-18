@@ -77,7 +77,7 @@ public class CommentDaoImplTest {
         long cKey = testInserter.createComment(uKey, pKey);
 
         // Exercise
-        Optional<Comment> comment = commentDao.findComment(cKey);
+        Optional<Comment> comment = commentDao.findComment(cKey, pKey);
 
         // Validations & Post Conditions
         assertTrue(comment.isPresent());
@@ -89,7 +89,7 @@ public class CommentDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<Comment> comment = commentDao.findComment(1);
+        Optional<Comment> comment = commentDao.findComment(1, 1);
 
         // Validations & Post Conditions
         assertFalse(comment.isPresent());
