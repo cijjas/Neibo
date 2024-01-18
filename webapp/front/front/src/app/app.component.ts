@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
   }
 
   public getAmenities(): void {
-    this.amenityService.getAmenities().subscribe(
+    this.amenityService.getAmenities(1,1,10).subscribe(
       (response: Amenity[]) => {
         this.amenities = response
       },
@@ -34,7 +34,7 @@ export class AppComponent implements OnInit {
 
   public onAddAmenity(addForm: NgForm): void {
     document.getElementById('add-amenity-form')!.click()
-    this.amenityService.addAmenity(addForm.value).subscribe(
+    this.amenityService.addAmenity(addForm.value,1).subscribe(
       (response: Amenity) => {
         console.log(response)
         this.getAmenities()
@@ -48,7 +48,7 @@ export class AppComponent implements OnInit {
   }
 
   public onUpdateAmenity(amenity: Amenity): void {
-    this.amenityService.updateAmenity(amenity).subscribe(
+    this.amenityService.updateAmenity(amenity,1).subscribe(
       (response: Amenity) => {
         console.log(response)
         this.getAmenities()
@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
 
   public onDeleteAmenity(amenityId: number | undefined): void {
     if(amenityId != undefined) {
-      this.amenityService.deleteAmenity(amenityId).subscribe(
+      this.amenityService.deleteAmenity(amenityId,1).subscribe(
         (response: void) => {
           console.log(response)
           this.getAmenities()

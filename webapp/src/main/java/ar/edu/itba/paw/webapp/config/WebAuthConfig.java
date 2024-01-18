@@ -92,10 +92,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.headers().referrerPolicy(ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER_WHEN_DOWNGRADE);
         http
+                .cors().and()
                 .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
-                .and()
-                .cors()
                 .and()
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and()
@@ -115,6 +114,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/images/*",
                         "/shifts",          "/shifts/{id:[1-9][0-9]*}",
                         "/neighborhoods",   "/neighborhoods/{id:[1-9][0-9]*}",
+                        "/neighborhoods/{id:[1-9][0-9]*}/amenities",
 
 
                         "/test/**"
@@ -211,53 +211,20 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setAllowedOrigins(Collections.singletonList(ALL));
+        corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
+                "Accept", "Authorization", "Origin, Accept", "X-Requested-With",
+                "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+        corsConfiguration.setExposedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization",
+                "Access-Control-Allow-Origin", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
+        return new CorsFilter(urlBasedCorsConfigurationSource);
+    }
 
-//    @Bean
-//    public CorsFilter corsFilter() {
-////        LOGGER.info("Inside cors filter");
-//        CorsConfiguration corsConfiguration = new CorsConfiguration();
-//        corsConfiguration.setAllowCredentials(true);
-//        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:4200", "http://localhost:4200/", "localhost:4200"));
-//        corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
-//                "Accept", "Authorization", "Origin, Accept", "X-Requested-With",
-//                "Access-Control-Request-Method", "Access-Control-Request-Headers"));
-//        corsConfiguration.setExposedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization",
-//                "Access-Control-Allow-Origin", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
-//        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-//        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-//        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
-//        return new CorsFilter(urlBasedCorsConfigurationSource);
-//    }
-
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.addAllowedOrigin("*");
-//        configuration.addAllowedOriginPattern("*");
-//        configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
-//        configuration.setAllowCredentials(false);
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
-//
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .cors(AbstractHttpConfigurer::disable)
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(request -> request
-//                        .requestMatchers("/api/auth").permitAll()
-//                        .requestMatchers(HttpMethod.OPTIONS).permitAll()
-//                        .requestMatchers(SYS_ADMIN_PATTERNS).hasAuthority("SYSTEM_ADMIN")
-//                        .requestMatchers("/api/v1/**").authenticated()
-//                )
-//                .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
-//                .authenticationProvider(authenticationProvider())
-//                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-//        ;
-//        SecurityFilterChain chain = http.build();
-////        log.info("Configured security filter chain: {}",chain);
-//        return chain;
-//    }
 }
