@@ -1,12 +1,12 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http'
 import { Channel } from './channel'
-import { Observable } from 'rxjs';
-import { Injectable } from '@angular/core';
-import { environment } from '../environments/environment';
+import { Observable } from 'rxjs'
+import { Injectable } from '@angular/core'
+import { environment } from '../environments/environment'
 
 @Injectable({providedIn: 'root'})
 export class ChannelService {
-    private apiServerUrl = environment.apiBaseUrl;
+    private apiServerUrl = environment.apiBaseUrl
 
     constructor(private http: HttpClient) { }
 

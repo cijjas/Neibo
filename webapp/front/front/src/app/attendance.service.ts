@@ -1,12 +1,12 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http'
 import { Attendance } from './attendance'
-import { Observable } from 'rxjs';
-import { Injectable } from '@angular/core';
-import { environment } from '../environments/environment';
+import { Observable } from 'rxjs'
+import { Injectable } from '@angular/core'
+import { environment } from '../environments/environment'
 
 @Injectable({providedIn: 'root'})
 export class AttendanceService {
-    private apiServerUrl = environment.apiBaseUrl;
+    private apiServerUrl = environment.apiBaseUrl
 
     constructor(private http: HttpClient) { }
 
@@ -15,7 +15,7 @@ export class AttendanceService {
     }
 
     public getAttendance(neighborhoodId : number, eventId : number, page : number, size : number): Observable<Attendance[]> {
-        const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+        const params = new HttpParams().set('page', page.toString()).set('size', size.toString())
         return this.http.get<Attendance[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/events/${eventId}/attendance`)
     }
 

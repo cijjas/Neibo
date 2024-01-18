@@ -1,31 +1,31 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import {User} from './user'
-import { Observable } from 'rxjs';
-import { Injectable } from '@angular/core';
-import { environment } from '../environments/environment';
+import { HttpClient, HttpParams } from '@angular/common/http'
+import { User } from './user'
+import { Observable } from 'rxjs'
+import { Injectable } from '@angular/core'
+import { environment } from '../environments/environment'
 
 @Injectable({providedIn: 'root'})
 export class UserService {
-    private apiServerUrl = environment.apiBaseUrl;
+    private apiServerUrl = environment.apiBaseUrl
 
     constructor(private http: HttpClient) { }
 
     public getUsers(neighborhoodId: number, userRole: string, page: number, size: number): Observable<User[]> {
-        const params = new HttpParams().set('userRole', userRole).set('page', page.toString()).set('size', size.toString());
+        const params = new HttpParams().set('userRole', userRole).set('page', page.toString()).set('size', size.toString())
     
-        return this.http.get<User[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users`, { params });
+        return this.http.get<User[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users`, { params })
     }
 
     public getUser(neighborhoodId: number, userId: number): Observable<User> {    
-        return this.http.get<User>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users/${userId}`);
+        return this.http.get<User>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users/${userId}`)
     }
 
     public addUser(neighborhoodId: number, user: User): Observable<User> {
-        return this.http.post<User>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users`, user);
+        return this.http.post<User>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users`, user)
     }
 
     public updateUser(neighborhoodId: number, user: User): Observable<User> {
-        return this.http.patch<User>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users/${user.userId}`, user);
+        return this.http.patch<User>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users/${user.userId}`, user)
     }
 
 }

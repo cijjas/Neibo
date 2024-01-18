@@ -1,12 +1,12 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http'
 import { Event } from './event'
-import { Observable } from 'rxjs';
-import { Injectable } from '@angular/core';
-import { environment } from '../environments/environment';
+import { Observable } from 'rxjs'
+import { Injectable } from '@angular/core'
+import { environment } from '../environments/environment'
 
 @Injectable({providedIn: 'root'})
 export class EventService {
-    private apiServerUrl = environment.apiBaseUrl;
+    private apiServerUrl = environment.apiBaseUrl
 
     constructor(private http: HttpClient) { }
 
@@ -15,7 +15,7 @@ export class EventService {
     }
 
     public getEventsByDate(neighborhoodId : number, date : Date): Observable<Event[]> {
-        const params = new HttpParams().set('date', date.toString());
+        const params = new HttpParams().set('date', date.toString())
         return this.http.get<Event[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/events`)
     }
 

@@ -1,12 +1,12 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http'
 import { Booking } from './booking'
-import { Observable } from 'rxjs';
-import { Injectable } from '@angular/core';
-import { environment } from '../environments/environment';
+import { Observable } from 'rxjs'
+import { Injectable } from '@angular/core'
+import { environment } from '../environments/environment'
 
 @Injectable({providedIn: 'root'})
 export class BookingService {
-    private apiServerUrl = environment.apiBaseUrl;
+    private apiServerUrl = environment.apiBaseUrl
 
     constructor(private http: HttpClient) { }
 
@@ -15,7 +15,7 @@ export class BookingService {
     }
 
     public getBookings(neighborhoodId : number, userId : number): Observable<Booking[]> {
-        const params = new HttpParams().set('userId', userId.toString());
+        const params = new HttpParams().set('userId', userId.toString())
         return this.http.get<Booking[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/bookings`)
     }
 

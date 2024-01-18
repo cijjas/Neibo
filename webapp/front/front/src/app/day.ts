@@ -1,5 +1,5 @@
 export interface Day {
-    dayId: number;
-    day: string;
-    self: string;
+    dayId: number
+    day: string
+    self: string
 }

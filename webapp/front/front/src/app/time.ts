@@ -1,5 +1,5 @@
 export interface Time {
-    timeId: number;
-    timeInterval: string;
-    self: string;
+    timeId: number
+    timeInterval: string
+    self: string
 }

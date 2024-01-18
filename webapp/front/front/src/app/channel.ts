@@ -1,9 +1,8 @@
-import {Neighborhood} from "./neighborhood";
-import {Post} from "./post";
+import {Post} from "./post"
 
 export interface Channel {
-  channelId: number;
-  channel: string;
-  posts: Post[];
-  self: string;
+  channelId: number
+  channel: string
+  posts: Post[]
+  self: string
 }
