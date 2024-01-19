@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { UserForm } from './userForm'
+import { User } from './user'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -10,14 +11,14 @@ export class UserService {
 
     constructor(private http: HttpClient) { }
 
-    public getUsers(neighborhoodId: number, userRole: string, page: number, size: number): Observable<UserForm[]> {
+    public getUsers(neighborhoodId: number, userRole: string, page: number, size: number): Observable<User[]> {
         const params = new HttpParams().set('userRole', userRole).set('page', page.toString()).set('size', size.toString())
 
-        return this.http.get<UserForm[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users`, { params })
+        return this.http.get<User[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users`, { params })
     }
 
-    public getUser(neighborhoodId: number, userId: number): Observable<UserForm> {
-        return this.http.get<UserForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users/${userId}`)
+    public getUser(neighborhoodId: number, userId: number): Observable<User> {
+        return this.http.get<User>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users/${userId}`)
     }
 
     public addUser(neighborhoodId: number, user: UserForm): Observable<UserForm> {

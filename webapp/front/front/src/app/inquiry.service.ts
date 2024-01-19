@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { InquiryForm } from './inquiryForm'
+import { Inquiry } from './inquiry'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -10,9 +11,9 @@ export class InquiryService {
 
     constructor(private http: HttpClient) { }
 
-    public getInquiries(neighborhoodId : number, productId : number, page : number, size : number): Observable<InquiryForm[]> {
+    public getInquiries(neighborhoodId : number, productId : number, page : number, size : number): Observable<Inquiry[]> {
         const params = new HttpParams().set('page', page.toString()).set('size', size.toString())
-        return this.http.get<InquiryForm[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/products/${productId}/inquiries`)
+        return this.http.get<Inquiry[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/products/${productId}/inquiries`)
     }
 
     public addInquiry(inquiry: InquiryForm, neighborhoodId : number, productId : number): Observable<InquiryForm> {

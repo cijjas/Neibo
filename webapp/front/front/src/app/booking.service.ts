@@ -3,6 +3,7 @@ import { BookingForm } from './bookingForm'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
+import { Booking } from './booking'
 
 @Injectable({providedIn: 'root'})
 export class BookingService {
@@ -10,13 +11,13 @@ export class BookingService {
 
     constructor(private http: HttpClient) { }
 
-    public getBooking(bookingId : number, neighborhoodId : number): Observable<BookingForm> {
-        return this.http.get<BookingForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/bookings/${bookingId}`)
+    public getBooking(bookingId : number, neighborhoodId : number): Observable<Booking> {
+        return this.http.get<Booking>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/bookings/${bookingId}`)
     }
 
-    public getBookings(neighborhoodId : number, userId : number): Observable<BookingForm[]> {
+    public getBookings(neighborhoodId : number, userId : number): Observable<Booking[]> {
         const params = new HttpParams().set('userId', userId.toString())
-        return this.http.get<BookingForm[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/bookings`)
+        return this.http.get<Booking[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/bookings`)
     }
 
     public addBooking(booking: BookingForm, neighborhoodId : number): Observable<BookingForm> {

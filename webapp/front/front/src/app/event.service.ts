@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { EventForm } from './eventForm'
+import { Event } from './event'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -10,13 +11,13 @@ export class EventService {
 
     constructor(private http: HttpClient) { }
 
-    public getEvent(eventId : number, neighborhoodId : number): Observable<EventForm> {
-        return this.http.get<EventForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/events/${eventId}`)
+    public getEvent(eventId : number, neighborhoodId : number): Observable<Event> {
+        return this.http.get<Event>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/events/${eventId}`)
     }
 
-    public getEventsByDate(neighborhoodId : number, date : Date): Observable<EventForm[]> {
+    public getEventsByDate(neighborhoodId : number, date : Date): Observable<Event[]> {
         const params = new HttpParams().set('date', date.toString())
-        return this.http.get<EventForm[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/events`)
+        return this.http.get<Event[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/events`)
     }
 
     public addEvent(event: EventForm, neighborhoodId : number): Observable<EventForm> {

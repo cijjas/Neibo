@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { ResourceForm } from './resourceForm'
+import { Resource } from './resource'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -10,8 +11,8 @@ export class ResourceService {
 
     constructor(private http: HttpClient) { }
 
-    public getResources(neighborhoodId: number): Observable<ResourceForm[]> {
-        return this.http.get<ResourceForm[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/resources`)
+    public getResources(neighborhoodId: number): Observable<Resource[]> {
+        return this.http.get<Resource[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/resources`)
     }
 
     public addResource(neighborhoodId: number, resource: ResourceForm): Observable<ResourceForm> {

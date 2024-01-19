@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { ContactForm } from './contactForm'
+import { Contact } from './contact'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -10,8 +11,8 @@ export class ContactService {
 
     constructor(private http: HttpClient) { }
 
-    public getContacts(neighborhoodId : number): Observable<ContactForm[]> {
-        return this.http.get<ContactForm[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/contacts`)
+    public getContacts(neighborhoodId : number): Observable<Contact[]> {
+        return this.http.get<Contact[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/contacts`)
     }
 
     public addContact(contact: ContactForm, neighborhoodId : number): Observable<ContactForm> {

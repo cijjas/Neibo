@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { LikeForm } from './likeForm'
+import { Like } from './like'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -10,13 +11,13 @@ export class LikeService {
 
     constructor(private http: HttpClient) { }
 
-    public getLikes(postId : number, userId : number, page : number, size : number): Observable<LikeForm[]> {
+    public getLikes(postId : number, userId : number, page : number, size : number): Observable<Like[]> {
         const params = new HttpParams()
             .set('page', page.toString())
             .set('size', size.toString())
             .set('postId', postId.toString())
             .set('userId', userId.toString())
-        return this.http.get<LikeForm[]>(`${this.apiServerUrl}/likes`)
+        return this.http.get<Like[]>(`${this.apiServerUrl}/likes`)
     }
 
     public addLike(like: LikeForm): Observable<LikeForm> {

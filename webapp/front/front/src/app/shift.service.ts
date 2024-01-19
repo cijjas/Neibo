@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { ShiftForm } from './shiftForm'
+import { Shift } from './shift'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -10,9 +10,9 @@ export class ShiftService {
 
     constructor(private http: HttpClient) { }
 
-    public getShifts(amenityId: number, dayId: number, date: string): Observable<ShiftForm[]> {
+    public getShifts(amenityId: number, dayId: number, date: string): Observable<Shift[]> {
         const params = new HttpParams().set('amenityId', amenityId.toString()).set('dayId', dayId.toString()).set('date', date)
 
-        return this.http.get<ShiftForm[]>(`${this.apiServerUrl}/shifts`, { params })
+        return this.http.get<Shift[]>(`${this.apiServerUrl}/shifts`, { params })
     }
 }
