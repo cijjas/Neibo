@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { Inquiry } from './inquiry'
+import { InquiryForm } from './inquiryForm'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -10,17 +10,17 @@ export class InquiryService {
 
     constructor(private http: HttpClient) { }
 
-    public getInquiries(neighborhoodId : number, productId : number, page : number, size : number): Observable<Inquiry[]> {
+    public getInquiries(neighborhoodId : number, productId : number, page : number, size : number): Observable<InquiryForm[]> {
         const params = new HttpParams().set('page', page.toString()).set('size', size.toString())
-        return this.http.get<Inquiry[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/products/${productId}/inquiries`)
+        return this.http.get<InquiryForm[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/products/${productId}/inquiries`)
     }
 
-    public addInquiry(inquiry: Inquiry, neighborhoodId : number, productId : number): Observable<Inquiry> {
-        return this.http.post<Inquiry>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/products/${productId}/inquiries`, inquiry)
+    public addInquiry(inquiry: InquiryForm, neighborhoodId : number, productId : number): Observable<InquiryForm> {
+        return this.http.post<InquiryForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/products/${productId}/inquiries`, inquiry)
     }
 
-    public updateInquiry(inquiry: Inquiry, neighborhoodId : number, productId : number): Observable<Inquiry> {
-        return this.http.patch<Inquiry>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/products/${productId}/inquiries/${inquiry.inquiryId}`, inquiry)
+    public updateInquiry(inquiry: InquiryForm, neighborhoodId : number, productId : number): Observable<InquiryForm> {
+        return this.http.patch<InquiryForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/products/${productId}/inquiries/${inquiry.inquiryId}`, inquiry)
     }
 
 }

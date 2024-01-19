@@ -79,7 +79,7 @@
                                 </div>
                             </div>
 
-                            <%--Image upload--%>
+                            <%--ImageForm upload--%>
                             <div class="w-100 lila-upload-box">
                                 <div class="upload__box w-100">
                                     <div class="upload__btn-box">

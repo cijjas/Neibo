@@ -26,7 +26,7 @@ public class MultipleImagesValidator implements ConstraintValidator<MultipleImag
             if (multipartFile.getContentType().startsWith("image/")) {
                 if (multipartFile.getSize() > MAX_IMAGE_SIZE_BYTES) {
                     constraintValidatorContext.disableDefaultConstraintViolation();
-                    constraintValidatorContext.buildConstraintViolationWithTemplate("Image size exceeds the maximum allowed size")
+                    constraintValidatorContext.buildConstraintViolationWithTemplate("ImageForm size exceeds the maximum allowed size")
                             .addConstraintViolation();
                     return false;
                 }

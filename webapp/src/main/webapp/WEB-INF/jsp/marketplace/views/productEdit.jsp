@@ -270,7 +270,7 @@
                     console.log(inputElement.files);
 
                     // Trigger the 'change' event
-                    inputElement.dispatchEvent(new Event('change'));
+                    inputElement.dispatchEvent(new EventForm('change'));
                 }*/
                 /*function ImgUpload() {
                     let imgWrap = '';

@@ -67,7 +67,7 @@ public class ProductController extends GlobalControllerAdvice {
     public Response findProduct(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived neighborhoods/{}/products/{}", neighborhoodId, id);
         return Response.ok(ProductDto.fromProduct(ps.findProductById(id)
-                .orElseThrow(() -> new NotFoundException("Product Not Found")), uriInfo)).build();
+                .orElseThrow(() -> new NotFoundException("ProductForm Not Found")), uriInfo)).build();
     }
 
     @POST

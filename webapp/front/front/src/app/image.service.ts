@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { Image } from './image'
+import { ImageForm } from './imageForm'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -10,12 +10,12 @@ export class ImageService {
 
     constructor(private http: HttpClient) { }
 
-    public getImage(imageId : number): Observable<Image> {
-        return this.http.get<Image>(`${this.apiServerUrl}/images/${imageId}`)
+    public getImage(imageId : number): Observable<ImageForm> {
+        return this.http.get<ImageForm>(`${this.apiServerUrl}/images/${imageId}`)
     }
 
-    public addImage(image: Image): Observable<Image> {
-        return this.http.post<Image>(`${this.apiServerUrl}/images`, image)
+    public addImage(image: ImageForm): Observable<ImageForm> {
+        return this.http.post<ImageForm>(`${this.apiServerUrl}/images`, image)
     }
 
 }

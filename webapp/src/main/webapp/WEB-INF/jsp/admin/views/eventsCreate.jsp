@@ -29,7 +29,7 @@
             <div class="cool-static-container">
                 <h2 class="card-title"><spring:message code="CreateNewEvent.title"/></h2>
                 <div class="divider"></div>
-                <!-- Post Creation Form -->
+                <!-- PostForm Creation Form -->
                 <form:form method="post" action="add-event" modelAttribute="eventForm" enctype="multipart/form-data">
 
                     <div class="form-column" style="margin-top:1rem;">

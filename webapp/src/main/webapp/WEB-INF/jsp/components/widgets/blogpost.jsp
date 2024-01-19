@@ -96,7 +96,7 @@
             }
         }
 
-        let likeButtonLocked = false; // Like Semaphore
+        let likeButtonLocked = false; // LikeForm Semaphore
 
         document.getElementById('like-button-${param.postID}').addEventListener('click', async function () {
             if (likeButtonLocked) {

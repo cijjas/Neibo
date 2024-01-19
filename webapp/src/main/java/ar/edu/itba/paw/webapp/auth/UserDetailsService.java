@@ -33,7 +33,7 @@ public class UserDetailsService implements org.springframework.security.core.use
     public UserDetails loadUserByUsername(String mail) throws NotFoundException {
         LOGGER.info("Loading user with mail {}" , mail);
 
-        final User n = us.findUserByMail(mail).orElseThrow(() -> new NotFoundException("User not found"));
+        final User n = us.findUserByMail(mail).orElseThrow(() -> new NotFoundException("UserForm not found"));
         final Set<GrantedAuthority> authorities = new HashSet<>();
 
         // Add roles based on user data from the database

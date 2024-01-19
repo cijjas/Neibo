@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { Amenity } from './amenity'
+import { AmenityForm } from './amenityForm'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -10,21 +10,21 @@ export class AmenityService {
 
     constructor(private http: HttpClient) { }
 
-    public getAmenity(amenityId : number, neighborhoodId : number): Observable<Amenity> {
-        return this.http.get<Amenity>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities/${amenityId}`)
+    public getAmenity(amenityId : number, neighborhoodId : number): Observable<AmenityForm> {
+        return this.http.get<AmenityForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities/${amenityId}`)
     }
 
-    public getAmenities(neighborhoodId : number, page : number, size : number): Observable<Amenity[]> {
+    public getAmenities(neighborhoodId : number, page : number, size : number): Observable<AmenityForm[]> {
         const params = new HttpParams().set('page', page.toString()).set('size', size.toString())
-        return this.http.get<Amenity[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities`)
+        return this.http.get<AmenityForm[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities`)
     }
 
-    public addAmenity(amenity: Amenity, neighborhoodId : number): Observable<Amenity> {
-        return this.http.post<Amenity>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities`, amenity)
+    public addAmenity(amenity: AmenityForm, neighborhoodId : number): Observable<AmenityForm> {
+        return this.http.post<AmenityForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities`, amenity)
     }
 
-    public updateAmenity(amenity: Amenity, neighborhoodId : number): Observable<Amenity> {
-        return this.http.patch<Amenity>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities/${amenity.amenityId}`, amenity)
+    public updateAmenity(amenity: AmenityForm, neighborhoodId : number): Observable<AmenityForm> {
+        return this.http.patch<AmenityForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities/${amenity.amenityId}`, amenity)
     }
 
     public deleteAmenity(amenityId: number, neighborhoodId : number): Observable<void> {

@@ -37,7 +37,7 @@
             <div class="cool-static-container">
                 <h2 class="card-title"><spring:message code="Create.an.announcement"/></h2>
                 <div class="divider"></div>
-                <!-- Post Creation Form -->
+                <!-- PostForm Creation Form -->
                 <form:form method="post" action="publish" modelAttribute="publishForm" enctype="multipart/form-data">
                     <form:errors cssClass="error" element="p"/>
 

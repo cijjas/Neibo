@@ -103,7 +103,7 @@
         <%-- Signup dialog--%>
         <%@ include file="/WEB-INF/jsp/components/widgets/landingPage/signupDialog.jsp" %>
 
-        <%-- Worker signup dialog--%>
+        <%-- WorkerForm signup dialog--%>
         <%@ include file="/WEB-INF/jsp/components/widgets/landingPage/workerSignupDialog.jsp" %>
 
         <%--Signup dialog--%>

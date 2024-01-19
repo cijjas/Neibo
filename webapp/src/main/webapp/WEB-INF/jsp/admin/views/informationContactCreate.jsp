@@ -29,7 +29,7 @@
             <div class="cool-static-container">
                 <h2 class="card-title"><spring:message code="CreateContact"/></h2>
                 <div class="divider"></div>
-                <!-- Post Creation Form -->
+                <!-- PostForm Creation Form -->
                 <form:form method="post" action="create-contact" modelAttribute="contactForm">
                     <form:errors cssClass="error" element="p"/>
 

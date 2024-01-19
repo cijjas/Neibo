@@ -58,7 +58,7 @@ public class BookingController extends GlobalControllerAdvice{
     public Response findBooking(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at neighborhoods/{}/bookings/{}", neighborhoodId, id);
         return Response.ok(BookingDto.fromBooking(bs.findBooking(id)
-                .orElseThrow(() -> new NotFoundException("Booking Not Found")), uriInfo)).build();
+                .orElseThrow(() -> new NotFoundException("BookingForm Not Found")), uriInfo)).build();
     }
 
     @POST

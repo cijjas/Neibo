@@ -88,7 +88,7 @@ public class JwtTokenParser {
      * Extract the user authorities from the token claims.
      *
      * @param claims
-     * @return User authorities from the JWT token
+     * @return UserForm authorities from the JWT token
      */
     private Set<Authority> extractAuthoritiesFromClaims(@NotNull Claims claims) {
         List<String> rolesAsString = (List<String>) claims.getOrDefault(settings.getAuthoritiesClaimName(), new ArrayList<>());

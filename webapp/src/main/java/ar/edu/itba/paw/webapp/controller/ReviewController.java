@@ -64,7 +64,7 @@ public class ReviewController extends GlobalControllerAdvice {
     public Response findReview(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at workers/{}/reviews/{}", workerId, id);
         return Response.ok(ReviewDto.fromReview(rs.findReviewById(id)
-                .orElseThrow(() -> new NotFoundException("Review Not Found")), uriInfo)).build();
+                .orElseThrow(() -> new NotFoundException("ReviewForm Not Found")), uriInfo)).build();
     }
 
     @POST

@@ -489,7 +489,7 @@ create table if not exists products_users_purchases
 
 -- Insert neighborhoods
 INSERT INTO neighborhoods (neighborhoodid, neighborhoodname) VALUES (-1, 'Rejected') ON CONFLICT DO NOTHING;
-INSERT INTO neighborhoods (neighborhoodid, neighborhoodname) VALUES (0, 'Worker Neighborhood') ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods (neighborhoodid, neighborhoodname) VALUES (0, 'WorkerForm NeighborhoodForm') ON CONFLICT DO NOTHING;
 INSERT INTO neighborhoods (neighborhoodid, neighborhoodname) VALUES (1, 'Olivos Golf Club') ON CONFLICT DO NOTHING;
 INSERT INTO neighborhoods (neighborhoodid, neighborhoodname) VALUES (2, 'Pacheco Golf') ON CONFLICT DO NOTHING;
 INSERT INTO neighborhoods (neighborhoodid, neighborhoodname) VALUES (3, 'Martindale') ON CONFLICT DO NOTHING;

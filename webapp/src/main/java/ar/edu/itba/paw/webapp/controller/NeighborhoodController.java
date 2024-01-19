@@ -62,7 +62,7 @@ public class NeighborhoodController {
     public Response findNeighborhood(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at neighborhoods/{}", id);
         return Response.ok(NeighborhoodDto.fromNeighborhood(ns.findNeighborhoodById(id)
-                .orElseThrow(() -> new NotFoundException("Neighborhood Not Found")), uriInfo)).build();
+                .orElseThrow(() -> new NotFoundException("NeighborhoodForm Not Found")), uriInfo)).build();
     }
 
     @POST

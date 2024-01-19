@@ -106,7 +106,7 @@ public class MainController extends GlobalControllerAdvice{
             @RequestParam(value = "tag", required = false) List<String> tags,
             @RequestParam(value = "postStatus", required = false, defaultValue = "none") String postStatus
     ) {
-        LOGGER.info("User arriving at '/feed'");
+        LOGGER.info("UserForm arriving at '/feed'");
         return handleChannelRequest(BaseChannel.FEED.toString(), page, size, tags, postStatus);
     }
 
@@ -117,7 +117,7 @@ public class MainController extends GlobalControllerAdvice{
     public ModelAndView profile(
             @ModelAttribute("profilePictureForm") final ProfilePictureForm profilePictureForm
     ) {
-        LOGGER.info("User arriving at '/profile'");
+        LOGGER.info("UserForm arriving at '/profile'");
         ModelAndView mav = new ModelAndView("views/userProfile");
         mav.addObject("neighbor", getLoggedUser());
         return mav;
@@ -173,7 +173,7 @@ public class MainController extends GlobalControllerAdvice{
             @RequestParam(value = "tag", required = false) List<String> tags,
             @RequestParam(value = "postStatus", required = false, defaultValue = "none") String postStatus
     ) {
-        LOGGER.info("User arriving at '/announcements'");
+        LOGGER.info("UserForm arriving at '/announcements'");
         return handleChannelRequest(BaseChannel.ANNOUNCEMENTS.toString(), page, size, tags, postStatus);
     }
 
@@ -186,13 +186,13 @@ public class MainController extends GlobalControllerAdvice{
             @RequestParam(value = "tag", required = false) List<String> tags,
             @RequestParam(value = "postStatus", required = false, defaultValue = "none") String postStatus
     ) {
-        LOGGER.info("User arriving at '/complaints'");
+        LOGGER.info("UserForm arriving at '/complaints'");
         return handleChannelRequest(BaseChannel.COMPLAINTS.toString(), page, size, tags, postStatus);
     }
 
     @RequestMapping(value = "/unverified", method = RequestMethod.GET)
     public ModelAndView unverified() {
-        LOGGER.info("User arriving at '/unverified'");
+        LOGGER.info("UserForm arriving at '/unverified'");
         return new ModelAndView("views/unverified");
     }
 
@@ -200,7 +200,7 @@ public class MainController extends GlobalControllerAdvice{
     public ModelAndView rejectedForm(
             @ModelAttribute("neighborhoodForm") final NeighborhoodForm neighborhoodForm
     ) {
-        LOGGER.info("User arriving at '/rejected'");
+        LOGGER.info("UserForm arriving at '/rejected'");
         ModelAndView mav = new ModelAndView("views/rejected");
         mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
         return mav;
@@ -212,7 +212,7 @@ public class MainController extends GlobalControllerAdvice{
             final BindingResult errors
     ) {
         if (errors.hasErrors()) {
-            LOGGER.error("Error in Neighborhood Form'");
+            LOGGER.error("Error in NeighborhoodForm Form'");
             return rejectedForm(neighborhoodForm);
         }
         us.unverifyNeighbor(getLoggedUser().getUserId(), neighborhoodForm.getNeighborhoodId());
@@ -226,7 +226,7 @@ public class MainController extends GlobalControllerAdvice{
             @ModelAttribute("publishForm") final PublishForm publishForm,
             @RequestParam(value = "onChannelId", required = false) Long onChannelId
     ) {
-        LOGGER.info("User arriving at '/publish'");
+        LOGGER.info("UserForm arriving at '/publish'");
         final ModelAndView mav = new ModelAndView("views/publish");
         mav.addObject("tagList", ts.getTags(getLoggedUser().getNeighborhood().getNeighborhoodId()));
         mav.addObject("channel", onChannelId);
@@ -284,11 +284,11 @@ public class MainController extends GlobalControllerAdvice{
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
-        LOGGER.info("User arriving at '/posts/{}", postId);
+        LOGGER.info("UserForm arriving at '/posts/{}", postId);
 
         ModelAndView mav = new ModelAndView("views/post");
 
-        Post post = ps.findPostById(postId).orElseThrow(() -> new NotFoundException("Post Not Found"));
+        Post post = ps.findPostById(postId).orElseThrow(() -> new NotFoundException("PostForm Not Found"));
         mav.addObject("post", post);
         mav.addObject("comments", cs.getCommentsByPostId(postId, page, size));
         mav.addObject("page", page);
@@ -311,7 +311,7 @@ public class MainController extends GlobalControllerAdvice{
             @RequestParam(value = "post_size", defaultValue = "10") int postSize
     ) {
         if (errors.hasErrors()) {
-            LOGGER.error("Error in Comment Form");
+            LOGGER.error("Error in CommentForm Form");
             return viewPost(postId, commentForm, false, postPage, postSize);
         }
         cs.createComment(commentForm.getComment(), getLoggedUser().getUserId(), postId);
@@ -342,7 +342,7 @@ public class MainController extends GlobalControllerAdvice{
             @RequestParam(value = "signup-error", required = false, defaultValue = "false") boolean signupError,
             @RequestParam(value = "email", required = false) String email
     ) {
-        LOGGER.info("User arriving at '/login'");
+        LOGGER.info("UserForm arriving at '/login'");
         ModelAndView mav = new ModelAndView("views/landingPage");
 
         mav.addObject("email", email);
@@ -366,7 +366,7 @@ public class MainController extends GlobalControllerAdvice{
             @ModelAttribute("workerSignupForm") final WorkerSignupForm workerSignupForm,
             @RequestParam(value = "successfullySignup", required = false) boolean successfullySignup
     ) {
-        LOGGER.info("User arriving at '/signup'");
+        LOGGER.info("UserForm arriving at '/signup'");
         ModelAndView mav = new ModelAndView("views/landingPage");
         mav.addObject("successfullySignup", successfullySignup);
         mav.addObject("neighborhoodsList", nhs.getNeighborhoods());
@@ -397,7 +397,7 @@ public class MainController extends GlobalControllerAdvice{
             @ModelAttribute("signupForm") final SignupForm signupForm,
             @RequestParam(value = "successfullySignup", required = false) boolean successfullySignup
     ) {
-        LOGGER.info("User arriving at '/signup-worker'");
+        LOGGER.info("UserForm arriving at '/signup-worker'");
 
         ModelAndView mav = new ModelAndView("views/landingPage");
 
@@ -428,7 +428,7 @@ public class MainController extends GlobalControllerAdvice{
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public void logOut() {
-        LOGGER.info("User arriving at '/logout'");
+        LOGGER.info("UserForm arriving at '/logout'");
     }
 
 
@@ -440,12 +440,12 @@ public class MainController extends GlobalControllerAdvice{
             @RequestParam(value = "amenityId") long amenityId,
             @RequestParam(value = "date") java.sql.Date date
     ) {
-        LOGGER.info("User arriving at '/reservation'");
+        LOGGER.info("UserForm arriving at '/reservation'");
         ModelAndView mav = new ModelAndView("views/reservation");
 
         mav.addObject("amenityId", amenityId);
         mav.addObject("date", date);
-        mav.addObject("amenityName", as.findAmenityById(amenityId).orElseThrow(() -> new NotFoundException("Amenity not Found")).getName());
+        mav.addObject("amenityName", as.findAmenityById(amenityId).orElseThrow(() -> new NotFoundException("AmenityForm not Found")).getName());
         mav.addObject("bookings", shs.getShifts(amenityId, date));
         mav.addObject("reservationsList", bs.getUserBookings(getLoggedUser().getUserId()));
         return mav;
@@ -469,7 +469,7 @@ public class MainController extends GlobalControllerAdvice{
             @RequestParam(value = "page", defaultValue = "1", required = false) int page,
             @RequestParam(value = "size", defaultValue = "10", required = false) int size
     ) {
-        LOGGER.info("User arriving at '/amenities'");
+        LOGGER.info("UserForm arriving at '/amenities'");
 
         ModelAndView mav = new ModelAndView("views/amenities");
 
@@ -490,7 +490,7 @@ public class MainController extends GlobalControllerAdvice{
             @RequestParam(value = "size", defaultValue = "10", required = false) int size
     ) {
         if (errors.hasErrors()) {
-            LOGGER.error("Error in Booking Form");
+            LOGGER.error("Error in BookingForm Form");
             return amenities(reservationForm, page, size);
         }
         ModelAndView mav = new ModelAndView("redirect:/reservation");
@@ -514,7 +514,7 @@ public class MainController extends GlobalControllerAdvice{
     public ModelAndView calendar(
             @RequestParam(required = false, defaultValue = "0") long timestamp
     ) {
-        LOGGER.info("User arriving at '/calendar'");
+        LOGGER.info("UserForm arriving at '/calendar'");
 
         Date selectedDate = new Date(timestamp != 0 ? timestamp : System.currentTimeMillis());
 
@@ -545,13 +545,13 @@ public class MainController extends GlobalControllerAdvice{
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
-        LOGGER.info("User arriving at '/events/{}'", eventId);
+        LOGGER.info("UserForm arriving at '/events/{}'", eventId);
 
         ModelAndView mav = new ModelAndView("views/event");
 
-        Date selectedDate = new Date(es.findEventById(eventId).orElseThrow(() -> new NotFoundException("Event not found")).getDate().getTime());
+        Date selectedDate = new Date(es.findEventById(eventId).orElseThrow(() -> new NotFoundException("EventForm not found")).getDate().getTime());
 
-        mav.addObject("event", es.findEventById(eventId).orElseThrow(() -> new NotFoundException("Event not found")));
+        mav.addObject("event", es.findEventById(eventId).orElseThrow(() -> new NotFoundException("EventForm not found")));
         mav.addObject("attendees", us.getEventUsersByCriteria(eventId,page,size));
         mav.addObject("willAttend", us.isAttending(eventId, getLoggedUser().getUserId()));
         mav.addObject("showSuccessMessage", success);
@@ -588,7 +588,7 @@ public class MainController extends GlobalControllerAdvice{
 
     @RequestMapping(value = "/information", method = RequestMethod.GET)
     public ModelAndView information() {
-        LOGGER.info("User arriving at '/information'");
+        LOGGER.info("UserForm arriving at '/information'");
 
         ModelAndView mav = new ModelAndView("views/information");
         mav.addObject("resourceList", res.getResources(getLoggedUser().getNeighborhood().getNeighborhoodId()));

@@ -125,7 +125,7 @@
                 </div>
 
 
-                    <%--                    <!-- Image Input 1 (for uploading an image file) -->--%>
+                    <%--                    <!-- ImageForm Input 1 (for uploading an image file) -->--%>
                 <form:label path="imageFile" for="imageInput1"><spring:message code="Background.image"/></form:label>
                 <form:input path="imageFile" class="cool-input" type="file" accept="image/*"/>
                 <form:errors path="imageFile" cssClass="error" element="p"/>

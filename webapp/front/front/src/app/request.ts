@@ -1,8 +1,12 @@
-import { User } from "./user"
-import { Product } from "./product"
+import {User} from "./user";
+import {Product} from "./product";
 
 export interface Request {
-    requestId: number
-    requestMessage: string
-    self: string
+    requestId: number;
+    message: string;
+    requestDate: Date;
+    fulfilled: boolean;
+    product: Product;
+    user: User;
+    self: string;
 }

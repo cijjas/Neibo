@@ -53,7 +53,7 @@ public class EventController {
     public Response findEvent(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at neighborhoods/{}/events/{}", neighborhoodId, id);
         return Response.ok(EventDto.fromEvent(es.findEventById(id)
-                .orElseThrow(() -> new NotFoundException("Event Not Found")), uriInfo)).build();
+                .orElseThrow(() -> new NotFoundException("EventForm Not Found")), uriInfo)).build();
     }
 
     @POST

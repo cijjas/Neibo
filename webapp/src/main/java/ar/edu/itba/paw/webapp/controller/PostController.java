@@ -48,7 +48,7 @@ public class PostController extends GlobalControllerAdvice{
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("channel") final String channel,
             @QueryParam("tags") final List<String> tags,
-            @QueryParam("poststatus") @DefaultValue("none") final String postStatus,
+            @QueryParam("postStatus") @DefaultValue("none") final String postStatus,
             @QueryParam("user") @DefaultValue("0") final Long userId) {
         LOGGER.info("GET request arrived at neighborhoods/{}/posts", neighborhoodId);
         final List<Post> posts = ps.getPostsByCriteria(channel, page, size, tags, neighborhoodId, PostStatus.valueOf(postStatus));
@@ -71,7 +71,7 @@ public class PostController extends GlobalControllerAdvice{
     public Response findPostById(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at neighborhoods/{}/posts/{}", neighborhoodId, id);
         return Response.ok(PostDto.fromPost(ps.findPostById(id)
-                .orElseThrow(() -> new NotFoundException("Post Not Found")), uriInfo)).build();
+                .orElseThrow(() -> new NotFoundException("PostForm Not Found")), uriInfo)).build();
     }
 
     @POST

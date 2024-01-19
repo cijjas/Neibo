@@ -1,16 +1,18 @@
+import {Neighborhood} from "./neighborhood";
+import {User} from "./user";
+import {Review} from "./review";
+import {Profession} from "./profession";
+
 export interface Worker {
-    workerId: number
-    name: string
-    surname: string
-    professionIds: number[]
-    phoneNumber: string
-    businessName: string
-    address: string
-    mail: string
-    password: string
-    identification: string
-    language: string
-    bio: string
-    backgroundPicture: string
-    self: string
+    workerId: number;
+    phoneNumber: string;
+    businessName: string;
+    address: string;
+    bio: string;
+    user: User;
+    backgroundPicture: string;
+    reviews: Review[];
+    professions: Profession[];
+    workerNeighborhoods: Neighborhood[];
+    self: string;
 }

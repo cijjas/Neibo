@@ -38,7 +38,7 @@ Iñaki Bengolea
 > Estas son algunas de las utilidades más grandes que ofrece la aplicación para conocerla mejor utilice las credenciales de abajo para ingresar y probarla.
 
 
-# User credentials by neighborhood
+# UserForm credentials by neighborhood
 
 > [!INFO]
 > There are 4 access levels

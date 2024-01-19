@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { Attendance } from './attendance'
+import { AttendanceForm } from './attendanceForm'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -10,17 +10,17 @@ export class AttendanceService {
 
     constructor(private http: HttpClient) { }
 
-    public getAttendanceById(attendanceId : number, neighborhoodId : number, eventId : number): Observable<Attendance> {
-        return this.http.get<Attendance>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/events/${eventId}/attendance/${attendanceId}`)
+    public getAttendanceById(attendanceId : number, neighborhoodId : number, eventId : number): Observable<AttendanceForm> {
+        return this.http.get<AttendanceForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/events/${eventId}/attendance/${attendanceId}`)
     }
 
-    public getAttendance(neighborhoodId : number, eventId : number, page : number, size : number): Observable<Attendance[]> {
+    public getAttendance(neighborhoodId : number, eventId : number, page : number, size : number): Observable<AttendanceForm[]> {
         const params = new HttpParams().set('page', page.toString()).set('size', size.toString())
-        return this.http.get<Attendance[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/events/${eventId}/attendance`)
+        return this.http.get<AttendanceForm[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/events/${eventId}/attendance`)
     }
 
-    public addAttendance(attendance: Attendance, neighborhoodId : number, eventId : number): Observable<Attendance> {
-        return this.http.post<Attendance>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/events/${eventId}/attendance`, attendance)
+    public addAttendance(attendance: AttendanceForm, neighborhoodId : number, eventId : number): Observable<AttendanceForm> {
+        return this.http.post<AttendanceForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/events/${eventId}/attendance`, attendance)
     }
 
     public deleteAttendance(attendanceId: number, neighborhoodId : number, eventId : number): Observable<void> {

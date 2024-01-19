@@ -26,7 +26,7 @@ public class ImageValidator implements ConstraintValidator<ImageConstraint, Mult
                 return true;
             } else {
                 constraintValidatorContext.disableDefaultConstraintViolation();
-                constraintValidatorContext.buildConstraintViolationWithTemplate("Image size exceeds the maximum allowed size")
+                constraintValidatorContext.buildConstraintViolationWithTemplate("ImageForm size exceeds the maximum allowed size")
                         .addConstraintViolation();
                 return false;
             }

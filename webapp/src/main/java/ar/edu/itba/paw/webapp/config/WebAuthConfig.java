@@ -115,7 +115,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/shifts",          "/shifts/{id:[1-9][0-9]*}",
                         "/neighborhoods",   "/neighborhoods/{id:[1-9][0-9]*}",
                         "/neighborhoods/{id:[1-9][0-9]*}/amenities",
-
+                        "neighborhoods/{id:[1-9][0-9]*/posts",
 
                         "/test/**"
                 ).permitAll()
@@ -218,7 +218,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         corsConfiguration.setAllowedOrigins(Collections.singletonList(ALL));
         corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
                 "Accept", "Authorization", "Origin, Accept", "X-Requested-With",
-                "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+                "Access-Control-RequestForm-Method", "Access-Control-RequestForm-Headers"));
         corsConfiguration.setExposedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization",
                 "Access-Control-Allow-Origin", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));

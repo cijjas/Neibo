@@ -63,7 +63,7 @@ public class AmenityController {
     public Response findAmenity(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at neighborhoods/{}/amenities/{}", neighborhoodId, id);
         return Response.ok(AmenityDto.fromAmenity(as.findAmenityById(id)
-                .orElseThrow(() -> new NotFoundException("Amenity Not Found")), uriInfo)).build();
+                .orElseThrow(() -> new NotFoundException("AmenityForm Not Found")), uriInfo)).build();
     }
 
     @POST

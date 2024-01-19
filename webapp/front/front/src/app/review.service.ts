@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { Review } from './review'
+import { ReviewForm } from './reviewForm'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -10,18 +10,18 @@ export class ReviewService {
 
     constructor(private http: HttpClient) { }
 
-    public getReviews(workerId: number, page: number, size: number): Observable<Review[]> {
+    public getReviews(workerId: number, page: number, size: number): Observable<ReviewForm[]> {
         const params = new HttpParams().set('page', page.toString()).set('size', size.toString())
-    
-        return this.http.get<Review[]>(`${this.apiServerUrl}/workers/${workerId}/reviews`, { params })
+
+        return this.http.get<ReviewForm[]>(`${this.apiServerUrl}/workers/${workerId}/reviews`, { params })
     }
 
-    public getReview(workerId: number, reviewId: number): Observable<Review> {    
-        return this.http.get<Review>(`${this.apiServerUrl}/workers/${workerId}/reviews/${reviewId}`)
+    public getReview(workerId: number, reviewId: number): Observable<ReviewForm> {
+        return this.http.get<ReviewForm>(`${this.apiServerUrl}/workers/${workerId}/reviews/${reviewId}`)
     }
 
-    public addPost(workerId: number, review: Review): Observable<Review> {
-        return this.http.post<Review>(`${this.apiServerUrl}/workers/${workerId}/reviews`, review)
+    public addPost(workerId: number, review: ReviewForm): Observable<ReviewForm> {
+        return this.http.post<ReviewForm>(`${this.apiServerUrl}/workers/${workerId}/reviews`, review)
     }
 
 }

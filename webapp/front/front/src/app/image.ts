@@ -1,5 +1,5 @@
 export interface Image {
-    imageId: number
-    image: string
-    self: string
+    imageId: number;
+    image: string;
+    self: string;
 }

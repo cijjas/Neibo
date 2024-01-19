@@ -2,7 +2,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <div class="card-container ">
-    <!-- Post information -->
+    <!-- PostForm information -->
     <div class="post-section">
         <div class="post-info">
 
@@ -46,7 +46,7 @@
             </div>
         </div>
 
-        <!-- Image section -->
+        <!-- ImageForm section -->
         <c:if test="${post.postPicture.imageId ne null}">
             <div class="placeholder-glow" style="display: flex; justify-content: center; align-items: center;">
                 <img id="postImage"
@@ -122,7 +122,7 @@
             }
         }
 
-        let likeButtonLocked = false; // Like Semaphore
+        let likeButtonLocked = false; // LikeForm Semaphore
 
         document.getElementById('post-like-button').addEventListener('click', function () {
             if (likeButtonLocked) {
@@ -183,7 +183,7 @@
 
 
 
-    <!-- Comment section -->
+    <!-- CommentForm section -->
     <div class="comments-section">
         <!-- Input box for adding a new comment -->
 

@@ -842,7 +842,7 @@
     width: 100%;
 }
 
-/*---------------------------- Tag selector filter ------------------------------------*/
+/*---------------------------- TagForm selector filter ------------------------------------*/
 .tags-row,
 .professions-row {
     display: flex;
@@ -1899,7 +1899,7 @@ footer div {
 }
 
 
-/*------------------- User setting -----------------------------*/
+/*------------------- UserForm setting -----------------------------*/
 
 .static-container {
     position: relative;

@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { Worker } from './worker'
+import { WorkerForm } from './workerForm'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -10,22 +10,22 @@ export class WorkerService {
 
     constructor(private http: HttpClient) { }
 
-    public getWorkers(neighborhoodId: number, professions: string[], workerRole: string, workerStatus: string, page: number, size: number): Observable<Worker[]> {
+    public getWorkers(neighborhoodId: number, professions: string[], workerRole: string, workerStatus: string, page: number, size: number): Observable<WorkerForm[]> {
         const params = new HttpParams().set('neighborhoodId', neighborhoodId).set('professions', professions.toString()).set('workerRole', workerRole).set('workerStatus', workerStatus).set('page', page.toString()).set('size', size.toString())
-    
-        return this.http.get<Worker[]>(`${this.apiServerUrl}/workers`, { params })
+
+        return this.http.get<WorkerForm[]>(`${this.apiServerUrl}/workers`, { params })
     }
 
-    public getWorker(workerId: number): Observable<Worker> {    
-        return this.http.get<Worker>(`${this.apiServerUrl}/workers/${workerId}`)
+    public getWorker(workerId: number): Observable<WorkerForm> {
+        return this.http.get<WorkerForm>(`${this.apiServerUrl}/workers/${workerId}`)
     }
 
-    public addWorker(worker: Worker): Observable<Worker> {
-        return this.http.post<Worker>(`${this.apiServerUrl}/workers`, worker)
+    public addWorker(worker: WorkerForm): Observable<WorkerForm> {
+        return this.http.post<WorkerForm>(`${this.apiServerUrl}/workers`, worker)
     }
 
-    public updateWorker(worker: Worker): Observable<Worker> {
-        return this.http.patch<Worker>(`${this.apiServerUrl}/workers/${worker.workerId}`, worker)
+    public updateWorker(worker: WorkerForm): Observable<WorkerForm> {
+        return this.http.patch<WorkerForm>(`${this.apiServerUrl}/workers/${worker.workerId}`, worker)
     }
 
 }

@@ -76,7 +76,7 @@ public class WorkerController extends GlobalControllerAdvice {
         LOGGER.info("GET request arrived at workers/{}", id);
         Optional<Worker> worker = ws.findWorkerById(id);
         if (!worker.isPresent()) {
-            throw new NotFoundException("Worker Not Found");
+            throw new NotFoundException("WorkerForm Not Found");
         }
         return Response.ok(WorkerDto.fromWorker(worker.get(), uriInfo)).build();
     }

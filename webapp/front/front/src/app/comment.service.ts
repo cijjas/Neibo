@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { Comment } from './comment'
+import { CommentForm } from './commentForm'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -10,13 +10,13 @@ export class CommentService {
 
     constructor(private http: HttpClient) { }
 
-    public getComments(neighborhoodId : number, postId : number, page : number, size : number): Observable<Comment[]> {
+    public getComments(neighborhoodId : number, postId : number, page : number, size : number): Observable<CommentForm[]> {
         const params = new HttpParams().set('page', page.toString()).set('size', size.toString())
-        return this.http.get<Comment[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/posts/${postId}/comments`)
+        return this.http.get<CommentForm[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/posts/${postId}/comments`)
     }
 
-    public addComment(comment: Comment, neighborhoodId : number, postId : number): Observable<Comment> {
-        return this.http.post<Comment>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/posts/${postId}/comments`, comment)
+    public addComment(comment: CommentForm, neighborhoodId : number, postId : number): Observable<CommentForm> {
+        return this.http.post<CommentForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/posts/${postId}/comments`, comment)
     }
 
 }

@@ -60,7 +60,7 @@ public class EndpointController extends GlobalControllerAdvice {
         LOGGER.debug("Requesting information from '/endpoint/commentById'");
         response.setCharacterEncoding("UTF-8"); // Set the character encoding for the response
         response.setContentType("text/plain; charset=UTF-8");
-        return cs.findCommentById(commentId).orElseThrow(() -> new NotFoundException("Comment Not Found")).getComment();
+        return cs.findCommentById(commentId).orElseThrow(() -> new NotFoundException("CommentForm Not Found")).getComment();
     }
 
     @RequestMapping(value = "/get-event-timestamps", method = RequestMethod.GET)
@@ -78,7 +78,7 @@ public class EndpointController extends GlobalControllerAdvice {
         LOGGER.debug("Requesting information from '/endpoint/like'");
         long userId = getLoggedUser().getUserId();
         ls.addLikeToPost(postId, userId);
-        return ResponseEntity.ok("{\"message\": \"Post liked successfully.\"}");
+        return ResponseEntity.ok("{\"message\": \"PostForm liked successfully.\"}");
     }
 
     @RequestMapping(value = "/unlike", method = RequestMethod.POST)
@@ -89,7 +89,7 @@ public class EndpointController extends GlobalControllerAdvice {
         LOGGER.debug("Requesting information from '/endpoint/unlike'");
         long userId = getLoggedUser().getUserId();
         ls.removeLikeFromPost(postId, userId);
-        return ResponseEntity.ok("{\"message\": \"Post unliked successfully.\"}");
+        return ResponseEntity.ok("{\"message\": \"PostForm unliked successfully.\"}");
     }
 
     @RequestMapping(value = "/is-liked", method = RequestMethod.GET)
@@ -119,7 +119,7 @@ public class EndpointController extends GlobalControllerAdvice {
             @RequestParam(value = "id", required = false) int imageId
     ) {
         LOGGER.debug("Requesting information from '/endpoint/image'");
-        return is.getImage(imageId).orElseThrow(() -> new NotFoundException("Image Not Found")).getImage();
+        return is.getImage(imageId).orElseThrow(() -> new NotFoundException("ImageForm Not Found")).getImage();
     }
 
     @RequestMapping(value = "/posts", method = RequestMethod.GET)
@@ -128,7 +128,7 @@ public class EndpointController extends GlobalControllerAdvice {
             @RequestParam(value = "id", required = false) int postId
     ) {
         LOGGER.debug("Requesting information from '/endpoint/posts'");
-        return ps.findPostById(postId).orElseThrow(() -> new NotFoundException("Post Not Found")).toString();
+        return ps.findPostById(postId).orElseThrow(() -> new NotFoundException("PostForm Not Found")).toString();
     }
 
     @RequestMapping(value = "/profession", method = RequestMethod.GET)
@@ -146,7 +146,7 @@ public class EndpointController extends GlobalControllerAdvice {
             @RequestParam(value = "id") long userId
     ) {
         LOGGER.debug("Requesting information from '/endpoint/user-name'");
-        return us.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found")).getName();
+        return us.findUserById(userId).orElseThrow(() -> new NotFoundException("UserForm not found")).getName();
     }
 
     @RequestMapping(value = "/neighborhood-name", method = RequestMethod.GET)
@@ -155,8 +155,8 @@ public class EndpointController extends GlobalControllerAdvice {
             @RequestParam(value = "id") long userId
     ) {
         LOGGER.debug("Requesting information from '/endpoint/neighborhood-name'");
-        return nhs.findNeighborhoodById(us.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found"))
-                .getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
+        return nhs.findNeighborhoodById(us.findUserById(userId).orElseThrow(() -> new NotFoundException("UserForm not found"))
+                .getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("NeighborhoodForm not found")).getName();
     }
 
     @RequestMapping(value = "/role", method = RequestMethod.GET)

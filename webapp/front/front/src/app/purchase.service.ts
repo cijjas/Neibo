@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { Purchase } from './purchase'
+import { PurchaseForm } from './purchaseForm'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -10,9 +10,9 @@ export class PostService {
 
     constructor(private http: HttpClient) { }
 
-    public getPurchases(neighborhoodId: number, userId: number, type: string, page: number, size: number): Observable<Purchase[]> {
+    public getPurchases(neighborhoodId: number, userId: number, type: string, page: number, size: number): Observable<PurchaseForm[]> {
         const params = new HttpParams().set('type', type).set('page', page.toString()).set('size', size.toString())
-    
-        return this.http.get<Purchase[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users/${userId}/transactions`, { params })
+
+        return this.http.get<PurchaseForm[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users/${userId}/transactions`, { params })
     }
 }

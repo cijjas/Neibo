@@ -33,10 +33,10 @@ public class GlobalControllerAdvice {
     public User getLoggedUser() {
         String mail = (((UserAuth)SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUsername();
         if(mail == null) {
-            throw new NotFoundException("User Not Found");
+            throw new NotFoundException("UserForm Not Found");
         }
 
-        return us.findUserByMail(mail).orElseThrow(() -> new NotFoundException("User Not Found"));
+        return us.findUserByMail(mail).orElseThrow(() -> new NotFoundException("UserForm Not Found"));
 //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //
 //        if (!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken)
@@ -44,7 +44,7 @@ public class GlobalControllerAdvice {
 //
 //        String email = authentication.getName();
 //
-//        return us.findUserByMail(email).orElseThrow(()-> new NotFoundException("User Not Found"));
+//        return us.findUserByMail(email).orElseThrow(()-> new NotFoundException("UserForm Not Found"));
     }
 
     // -------------------------------------------------- EXCEPTIONS ---------------------------------------------------

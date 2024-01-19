@@ -59,7 +59,7 @@ public class ServiceController extends GlobalControllerAdvice{
             @RequestParam(value = "size", defaultValue = "10", required = false) int size,
             @RequestParam(value = "tab", defaultValue = "reviews", required = false) String tab
     ) {
-        LOGGER.info("User arriving at '/services/profile/{}'", workerId);
+        LOGGER.info("UserForm arriving at '/services/profile/{}'", workerId);
 
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
 
@@ -74,7 +74,7 @@ public class ServiceController extends GlobalControllerAdvice{
 
         int postsSize = ps.getWorkerPostsCountByCriteria(BaseChannel.WORKERS.toString(), null, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), PostStatus.none, workerId);
 
-        mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found")));
+        mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("WorkerForm not found")));
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
         mav.addObject("reviews", rws.getReviews(workerId));
@@ -100,12 +100,12 @@ public class ServiceController extends GlobalControllerAdvice{
             @PathVariable(value = "id") int workerId,
             @ModelAttribute("editWorkerProfileForm") final EditWorkerProfileForm editWorkerProfileForm
     ) {
-        LOGGER.info("User arriving at '/services/profile/{}/review'", workerId);
+        LOGGER.info("UserForm arriving at '/services/profile/{}/review'", workerId);
 
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
 
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
-        mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found")));
+        mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("WorkerForm not found")));
         mav.addObject("channel", "Profile");
         mav.addObject("reviews", rws.getReviews(workerId));
         mav.addObject("reviewsCount", rws.getReviewsCount(workerId));
@@ -123,7 +123,7 @@ public class ServiceController extends GlobalControllerAdvice{
             @RequestParam(value = "size", defaultValue = "10", required = false) int size
     ) {
         if (errors.hasErrors()) {
-            LOGGER.error("Error in Review Form");
+            LOGGER.error("Error in ReviewForm Form");
             ModelAndView mav = serviceProfile(reviewForm, workerId, new EditWorkerProfileForm(), page, size, "reviews");
             mav.addObject("openReviewDialog", true);
             return mav;
@@ -138,12 +138,12 @@ public class ServiceController extends GlobalControllerAdvice{
             @ModelAttribute("reviewForm") final ReviewForm reviewForm,
             @ModelAttribute("editWorkerProfileForm") final EditWorkerProfileForm editWorkerProfileForm
     ) {
-        LOGGER.info("User arriving at '/services/profile/edit'");
+        LOGGER.info("UserForm arriving at '/services/profile/edit'");
 
         ModelAndView mav = new ModelAndView("serviceProvider/views/serviceProfile");
         long workerId = getLoggedUser().getUserId();
 
-        mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found")));
+        mav.addObject("worker", ws.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("WorkerForm not found")));
         mav.addObject("professions", pws.getWorkerProfessions(workerId));
         mav.addObject("channel", "Profile" + workerId);
         mav.addObject("reviews", rws.getReviews(workerId));
@@ -186,7 +186,7 @@ public class ServiceController extends GlobalControllerAdvice{
         }
 
         ModelAndView mav = new ModelAndView("serviceProvider/views/services");
-//        Set<Worker> workerList = ws.getWorkersByCriteria(page, size, professions, getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
+//        Set<WorkerForm> workerList = ws.getWorkersByCriteria(page, size, professions, getLoggedUser().getNeighborhood().getNeighborhoodId(), getLoggedUser().getUserId(), WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
 //        mav.addObject("workersList", workerList);
         mav.addObject("channel", "Services");
         mav.addObject("totalPages", ws.getTotalWorkerPagesByCriteria(professions, new long[] {getLoggedUser().getNeighborhood().getNeighborhoodId()}, size, WorkerRole.VERIFIED_WORKER, WorkerStatus.none));
@@ -201,7 +201,7 @@ public class ServiceController extends GlobalControllerAdvice{
 
     @RequestMapping(value = "/neighborhoods", method = RequestMethod.GET)
     public ModelAndView workersNeighborhoods(@ModelAttribute("neighborhoodsForm") final NeighborhoodsForm neighborhoodsForm) {
-        LOGGER.info("User arriving at '/services/neighborhoods'");
+        LOGGER.info("UserForm arriving at '/services/neighborhoods'");
         ModelAndView mav = new ModelAndView("serviceProvider/views/neighborhoods");
         mav.addObject("channel", "Neighborhoods");
         mav.addObject("associatedNeighborhoods", nhws.getNeighborhoods(getLoggedUser().getUserId()));

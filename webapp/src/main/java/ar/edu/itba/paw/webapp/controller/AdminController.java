@@ -66,7 +66,7 @@ public class AdminController extends GlobalControllerAdvice {
 
     @RequestMapping(value = "/information", method = RequestMethod.GET)
     public ModelAndView adminInformation() {
-        LOGGER.info("User arriving at '/admin/information'");
+        LOGGER.info("UserForm arriving at '/admin/information'");
 
         ModelAndView mav = new ModelAndView("admin/views/information");
 
@@ -84,7 +84,7 @@ public class AdminController extends GlobalControllerAdvice {
             @RequestParam(value = "size", defaultValue = "5") int size,
             @RequestParam(value = "verified", defaultValue = "true") boolean verified
     ) {
-        LOGGER.info("User arriving at '/admin/neighbors'");
+        LOGGER.info("UserForm arriving at '/admin/neighbors'");
 
         final ModelAndView mav = new ModelAndView("admin/views/adminRequestHandler");
 
@@ -117,7 +117,7 @@ public class AdminController extends GlobalControllerAdvice {
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "5") int size
     ) {
-        LOGGER.info("User arriving at '/admin/unverified'");
+        LOGGER.info("UserForm arriving at '/admin/unverified'");
 
         final ModelAndView mav = new ModelAndView("admin/views/adminRequestHandler");
 
@@ -162,7 +162,7 @@ public class AdminController extends GlobalControllerAdvice {
             @RequestParam(value = "size", defaultValue = "5") int size,
             @RequestParam(value = "verified", defaultValue = "true") boolean verified
     ) {
-        LOGGER.info("User arriving at '/admin/workers'");
+        LOGGER.info("UserForm arriving at '/admin/workers'");
 
         final ModelAndView mav = new ModelAndView("admin/views/adminWorkerRequestHandler");
 
@@ -193,7 +193,7 @@ public class AdminController extends GlobalControllerAdvice {
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "5") int size
     ) {
-        LOGGER.info("User arriving at '/admin/unverified-workers'");
+        LOGGER.info("UserForm arriving at '/admin/unverified-workers'");
 
         final ModelAndView mav = new ModelAndView("admin/views/adminWorkerRequestHandler");
 
@@ -244,7 +244,7 @@ public class AdminController extends GlobalControllerAdvice {
     public ModelAndView publishAdminForm(
             @ModelAttribute("publishForm") final PublishForm publishForm
     ) {
-        LOGGER.info("User arriving at '/admin/publish'");
+        LOGGER.info("UserForm arriving at '/admin/publish'");
 
         final ModelAndView mav = new ModelAndView("admin/views/adminPublish");
 
@@ -282,7 +282,7 @@ public class AdminController extends GlobalControllerAdvice {
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     ) {
-        LOGGER.info("User arriving at '/admin/amenities'");
+        LOGGER.info("UserForm arriving at '/admin/amenities'");
 
         ModelAndView mav = new ModelAndView("admin/views/amenitiesPanel");
 
@@ -312,7 +312,7 @@ public class AdminController extends GlobalControllerAdvice {
     public ModelAndView createAmenityForm(
             @ModelAttribute("amenityForm") final AmenityForm amenityForm
     ) {
-        LOGGER.info("User arriving at '/admin/create-amenity'");
+        LOGGER.info("UserForm arriving at '/admin/create-amenity'");
 
         ModelAndView mav = new ModelAndView("admin/views/amenitiesCreate");
 
@@ -328,7 +328,7 @@ public class AdminController extends GlobalControllerAdvice {
             final BindingResult errors
     ) {
         if (errors.hasErrors()) {
-            LOGGER.error("Error in Create Amenity Form");
+            LOGGER.error("Error in Create AmenityForm Form");
             return createAmenityForm(amenityForm);
         }
 
@@ -341,10 +341,10 @@ public class AdminController extends GlobalControllerAdvice {
             @PathVariable(value = "id") Long amenityId,
             @ModelAttribute("amenityForm") final AmenityForm amenityForm
     ) {
-        LOGGER.info("User arriving at '/admin/edit-amenity'");
+        LOGGER.info("UserForm arriving at '/admin/edit-amenity'");
 
         ModelAndView mav = new ModelAndView("admin/views/amenitiesEdit");
-        mav.addObject("amenity", as.findAmenityById(amenityId).orElseThrow(() -> new NotFoundException("Amenity not found")));
+        mav.addObject("amenity", as.findAmenityById(amenityId).orElseThrow(() -> new NotFoundException("AmenityForm not found")));
         mav.addObject("daysPairs", DayOfTheWeek.DAY_PAIRS);
         mav.addObject("timesPairs", StandardTime.TIME_PAIRS);
         return mav;
@@ -358,7 +358,7 @@ public class AdminController extends GlobalControllerAdvice {
             final BindingResult errors
     ) {
         if (errors.hasErrors()) {
-            LOGGER.error("Error in Edit Amenity Form ");
+            LOGGER.error("Error in Edit AmenityForm Form ");
             return createAmenityForm(amenityForm);
         }
         as.updateAmenity(amenityId, amenityForm.getName(), amenityForm.getDescription());
@@ -371,7 +371,7 @@ public class AdminController extends GlobalControllerAdvice {
     public ModelAndView eventForm(
             @ModelAttribute("eventForm") final EventForm eventForm
     ) {
-        LOGGER.info("User arriving at '/admin/add-event'");
+        LOGGER.info("UserForm arriving at '/admin/add-event'");
 
         return new ModelAndView("admin/views/eventsCreate");
     }
@@ -382,7 +382,7 @@ public class AdminController extends GlobalControllerAdvice {
             final BindingResult errors
     ) {
         if (errors.hasErrors()) {
-            LOGGER.error("Error in Event Form");
+            LOGGER.error("Error in EventForm Form");
             return eventForm(eventForm);
         }
         es.createEvent(eventForm.getName(), eventForm.getDescription(), eventForm.getDate(), eventForm.getStartTime(), eventForm.getEndTime(), getLoggedUser().getNeighborhood().getNeighborhoodId());
@@ -408,7 +408,7 @@ public class AdminController extends GlobalControllerAdvice {
     public ModelAndView createContact(
             @ModelAttribute("contactForm") final ContactForm contactForm
     ) {
-        LOGGER.info("User arriving at '/admin/create-contact'");
+        LOGGER.info("UserForm arriving at '/admin/create-contact'");
         return new ModelAndView("admin/views/informationContactCreate");
     }
 
@@ -418,7 +418,7 @@ public class AdminController extends GlobalControllerAdvice {
             final BindingResult errors
     ) {
         if (errors.hasErrors()) {
-            LOGGER.error("Error in Contact Form");
+            LOGGER.error("Error in ContactForm Form");
             return createContact(contactForm);
         }
         cos.createContact(getLoggedUser().getNeighborhood().getNeighborhoodId(), contactForm.getContactName(), contactForm.getContactAddress(), contactForm.getContactPhone());
@@ -429,7 +429,7 @@ public class AdminController extends GlobalControllerAdvice {
     public ModelAndView deleteContact(
             @PathVariable(value = "id") int contactId
     ) {
-        LOGGER.info("User arriving at '/admin/delete-contact/{}'", contactId);
+        LOGGER.info("UserForm arriving at '/admin/delete-contact/{}'", contactId);
         ModelAndView mav = new ModelAndView("redirect:/admin/information");
         cos.deleteContact(contactId);
         return mav;
@@ -442,7 +442,7 @@ public class AdminController extends GlobalControllerAdvice {
     public ModelAndView createResourceForm(
             @ModelAttribute("resourceForm") final ResourceForm resourceForm
     ) {
-        LOGGER.info("User arriving at '/admin/create-resource'");
+        LOGGER.info("UserForm arriving at '/admin/create-resource'");
         return new ModelAndView("admin/views/informationResourceCreate");
     }
 
@@ -452,7 +452,7 @@ public class AdminController extends GlobalControllerAdvice {
             final BindingResult errors
     ) {
         if (errors.hasErrors()) {
-            LOGGER.error("Error in Resource Form");
+            LOGGER.error("Error in ResourceForm Form");
             return createResourceForm(resourceForm);
         }
         res.createResource(getLoggedUser().getNeighborhood().getNeighborhoodId(), resourceForm.getTitle(), resourceForm.getDescription(), resourceForm.getImageFile());
@@ -463,7 +463,7 @@ public class AdminController extends GlobalControllerAdvice {
     public ModelAndView deleteResource(
             @PathVariable(value = "id") int resourceId
     ) {
-        LOGGER.info("User arriving at '/admin/delete-resource/{}'", resourceId);
+        LOGGER.info("UserForm arriving at '/admin/delete-resource/{}'", resourceId);
         ModelAndView mav = new ModelAndView("redirect:/admin/information");
         res.deleteResource(resourceId);
         return mav;

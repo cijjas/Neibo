@@ -1,7 +1,10 @@
+import {Neighborhood} from "./neighborhood";
+import {Image} from "./image";
+
 export interface Resource {
-  resourceId: number
-  description: string
-  imageFile: string
-  title: string
-  self: string
+    resourceId: number;
+    title: string;
+    description: string;
+    image: Image;
+    neighborhood: Neighborhood;
 }

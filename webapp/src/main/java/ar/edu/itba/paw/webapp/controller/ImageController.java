@@ -35,7 +35,7 @@ public class ImageController {
         LOGGER.info("GET request arrived at images/{}", id);
         Optional<Image> image = is.getImage(id);
         if (!image.isPresent()) {
-            throw new NotFoundException("Image not found");
+            throw new NotFoundException("ImageForm not found");
         }
         return Response.ok(ImageDto.fromImage(image.get(), uriInfo)).build();
     }

@@ -65,7 +65,7 @@ public class UserController {
     public Response findUser(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at neighborhoods/{}/users/{}", neighborhoodId, id);
         return Response.ok(UserDto.fromUser(us.findUserById(id)
-                .orElseThrow(() -> new NotFoundException("User Not Found")), uriInfo)).build();
+                .orElseThrow(() -> new NotFoundException("UserForm Not Found")), uriInfo)).build();
     }
 
     @POST
@@ -95,7 +95,7 @@ public class UserController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(@PathParam("id") final long id) {
-        LOGGER.info("Deleting User with id {}", id);
+        LOGGER.info("Deleting UserForm with id {}", id);
         us.deleteById(id);
         return Response.noContent().build();
     }*/
