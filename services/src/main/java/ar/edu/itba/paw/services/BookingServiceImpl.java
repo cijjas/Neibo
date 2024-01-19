@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.services.BookingService;
 import ar.edu.itba.paw.models.Entities.Booking;
 import org.slf4j.Logger;
@@ -23,11 +24,13 @@ public class BookingServiceImpl implements BookingService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingServiceImpl.class);
     private final BookingDao bookingDao;
     private final AvailabilityDao availabilityDao;
+    private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public BookingServiceImpl(final BookingDao bookingDao, final AvailabilityDao availabilityDao) {
+    public BookingServiceImpl(final BookingDao bookingDao, final AvailabilityDao availabilityDao, final NeighborhoodDao neighborhoodDao) {
         this.availabilityDao = availabilityDao;
         this.bookingDao = bookingDao;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -63,11 +66,13 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Booking> getBookings(Long userId, Long amenityId) {
+    public List<Booking> getBookings(Long userId, Long amenityId, long neighborhoodId) {
         LOGGER.info("Getting Bookings for User {}", userId);
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkAmenityId(amenityId);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return bookingDao.getBookings(userId, amenityId);
 //        List<GroupedBooking> groupedBookings = new ArrayList<>();

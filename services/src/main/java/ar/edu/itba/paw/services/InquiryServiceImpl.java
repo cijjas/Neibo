@@ -71,10 +71,13 @@ public class InquiryServiceImpl implements InquiryService {
 
 
     @Override
-    public List<Inquiry> getInquiries(long productId, int page, int size) {
+    public List<Inquiry> getInquiries(long productId, int page, int size, long neighborhoodId) {
 
         ValidationUtils.checkProductId(productId);
         ValidationUtils.checkPageAndSize(page, size);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        productDao.findProduct(productId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         return inquiryDao.getInquiries(productId, page, size);
     }

@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.CategorizationDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.TagDao;
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.interfaces.services.TagService;
@@ -21,14 +23,14 @@ import java.util.stream.Collectors;
 public class TagServiceImpl implements TagService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TagServiceImpl.class);
     private final TagDao tagDao;
-    private CategorizationDao categorizationDao;
-    private ChannelService channelService;
+    private final CategorizationDao categorizationDao;
+    private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public TagServiceImpl(TagDao tagDao, CategorizationDao categorizationDao, final ChannelService channelService) {
-        this.channelService = channelService;
+    public TagServiceImpl(TagDao tagDao, CategorizationDao categorizationDao, NeighborhoodDao neighborhoodDao) {
         this.tagDao = tagDao;
         this.categorizationDao = categorizationDao;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -116,6 +118,8 @@ public class TagServiceImpl implements TagService {
         ValidationUtils.checkPostId(postId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return tagDao.getTags(postId, neighborhoodId, page, size);
     }

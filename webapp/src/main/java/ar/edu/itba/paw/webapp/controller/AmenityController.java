@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.form.AmenityForm;
-import ar.edu.itba.paw.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +39,10 @@ public class AmenityController {
             @QueryParam("size") @DefaultValue("10") final int size) {
         LOGGER.info("GET request arrived at neighborhoods/{}/amenities", neighborhoodId);
         final List<Amenity> amenities = as.getAmenities(neighborhoodId, page, size);
+
+        if (amenities.isEmpty())
+            return Response.noContent().build();
+
         final List<AmenityDto> amenitiesDto = amenities.stream()
                 .map(a -> AmenityDto.fromAmenity(a, uriInfo)).collect(Collectors.toList());
 
@@ -58,7 +61,7 @@ public class AmenityController {
     public Response findAmenity(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at neighborhoods/{}/amenities/{}", neighborhoodId, id);
         return Response.ok(AmenityDto.fromAmenity(as.findAmenity(id, neighborhoodId)
-                .orElseThrow(() -> new NotFoundException("Amenity Not Found")), uriInfo)).build();
+                .orElseThrow(NotFoundException::new), uriInfo)).build();
     }
 
     @POST

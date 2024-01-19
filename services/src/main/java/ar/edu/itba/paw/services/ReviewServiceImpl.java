@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ReviewDao;
+import ar.edu.itba.paw.interfaces.persistence.WorkerDao;
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.models.Entities.Review;
 import org.slf4j.Logger;
@@ -17,10 +19,12 @@ import java.util.Optional;
 public class ReviewServiceImpl implements ReviewService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewServiceImpl.class);
     private final ReviewDao reviewDao;
+    private final WorkerDao workerDao;
 
     @Autowired
-    public ReviewServiceImpl(ReviewDao reviewDao) {
+    public ReviewServiceImpl(ReviewDao reviewDao, WorkerDao workerDao) {
         this.reviewDao = reviewDao;
+        this.workerDao = workerDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -69,6 +73,8 @@ public class ReviewServiceImpl implements ReviewService {
 
         ValidationUtils.checkWorkerId(workerId);
         ValidationUtils.checkPageAndSize(page, size);
+
+        workerDao.findWorker(workerId).orElseThrow(NotFoundException::new);
 
         return reviewDao.getReviews(workerId, page, size);
     }

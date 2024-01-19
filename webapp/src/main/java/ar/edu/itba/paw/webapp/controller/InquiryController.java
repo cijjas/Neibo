@@ -48,7 +48,7 @@ public class InquiryController extends GlobalControllerAdvice{
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size) {
         LOGGER.info("GET request arrived at neighborhoods/{}/products/{}/inquiries", neighborhoodId, productId);
-        final List<Inquiry> inquiries = is.getInquiries(productId, page, size);
+        final List<Inquiry> inquiries = is.getInquiries(productId, page, size, neighborhoodId);
         final List<InquiryDto> inquiriesDto = inquiries.stream()
                 .map(i -> InquiryDto.fromInquiry(i, uriInfo)).collect(Collectors.toList());
 

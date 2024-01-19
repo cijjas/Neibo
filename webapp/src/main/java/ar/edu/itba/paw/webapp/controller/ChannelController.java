@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.models.Entities.Channel;
 import ar.edu.itba.paw.webapp.dto.ChannelDto;
-import ar.edu.itba.paw.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,7 @@ public class ChannelController {
     public Response findChannel(@PathParam("id") long channelId) {
         LOGGER.info("GET request arrived at neighborhoods/{}/channels/{}", neighborhoodId, channelId);
         return Response.ok(ChannelDto.fromChannel(cs.findChannel(channelId, neighborhoodId)
-                .orElseThrow(() -> new NotFoundException("Channel Not Found")), uriInfo, neighborhoodId)).build();
+                .orElseThrow(NotFoundException::new), uriInfo, neighborhoodId)).build();
     }
 }
 

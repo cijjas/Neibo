@@ -28,10 +28,10 @@ public class PurchaseController {
     private UriInfo uriInfo;
 
     @PathParam("neighborhoodId")
-    private Long neighborhoodId;
+    private long neighborhoodId;
 
     @PathParam("userId")
-    private Long userId;
+    private long userId;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -42,7 +42,7 @@ public class PurchaseController {
     ) {
         LOGGER.info("GET request arrived at neighborhoods/{}/users/{}/transactions", neighborhoodId, userId);
 
-        Set<Purchase> transactions = ps.getPurchases(userId, type, page, size);
+        Set<Purchase> transactions = ps.getPurchases(userId, type, page, size, neighborhoodId);
 
         // Convert transactions to DTOs if needed
         Set<PurchaseDto> transactionDto = transactions.stream()

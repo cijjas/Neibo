@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
@@ -56,7 +55,7 @@ public class NeighborhoodController {
     public Response findNeighborhood(@PathParam("id") final long id) {
         LOGGER.info("GET request arrived at neighborhoods/{}", id);
         return Response.ok(NeighborhoodDto.fromNeighborhood(ns.findNeighborhood(id)
-                .orElseThrow(() -> new NotFoundException("Neighborhood Not Found")), uriInfo)).build();
+                .orElseThrow(NotFoundException::new), uriInfo)).build();
     }
 
     @POST

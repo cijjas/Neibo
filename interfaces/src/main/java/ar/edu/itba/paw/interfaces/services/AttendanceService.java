@@ -11,7 +11,7 @@ public interface AttendanceService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Set<Attendance> getAttendance(long eventId, int page, int size);
+    Set<Attendance> getAttendance(long eventId, int page, int size, long neighborhoodId);
 
     Optional<Attendance> findAttendance(long attendanceId, long eventId, long neighborhoodId);
 

@@ -2,7 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.models.Entities.Image;
-import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.ImageDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +31,7 @@ public class ImageController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findById(@PathParam("id") long id) {
         LOGGER.info("GET request arrived at images/{}", id);
-        Optional<Image> image = is.findImage(id);
-        if (!image.isPresent()) {
-            throw new NotFoundException("Image not found");
-        }
-        return Response.ok(ImageDto.fromImage(image.get(), uriInfo)).build();
+        return Response.ok(ImageDto.fromImage(is.findImage(id).orElseThrow(NotFoundException::new), uriInfo)).build();
     }
 
     @POST

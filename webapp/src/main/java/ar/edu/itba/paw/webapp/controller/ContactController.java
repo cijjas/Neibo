@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.Entities.Contact;
 import ar.edu.itba.paw.webapp.dto.ContactDto;
 import ar.edu.itba.paw.webapp.form.ContactForm;
-import ar.edu.itba.paw.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ public class ContactController {
     public Response findContact(@PathParam("id") long contactId) {
         LOGGER.info("GET request arrived at neighborhoods/{}/contacts/{}", neighborhoodId, contactId);
         return Response.ok(ContactDto.fromContact(cs.findContact(contactId, neighborhoodId)
-                .orElseThrow(() -> new NotFoundException("Contact Not Found")), uriInfo)).build();
+                .orElseThrow(NotFoundException::new), uriInfo)).build();
     }
 
     @POST

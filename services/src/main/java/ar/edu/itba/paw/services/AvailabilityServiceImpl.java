@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.services.AvailabilityService;
 import ar.edu.itba.paw.models.Entities.Availability;
@@ -21,11 +24,15 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AvailabilityServiceImpl.class);
     private final ShiftDao shiftDao;
     private final AvailabilityDao availabilityDao;
+    private final NeighborhoodDao neighborhoodDao;
+    private final AmenityDao amenityDao;
 
     @Autowired
-    public AvailabilityServiceImpl(final ShiftDao shiftDao, final AvailabilityDao availabilityDao) {
+    public AvailabilityServiceImpl(final ShiftDao shiftDao, final AvailabilityDao availabilityDao, final NeighborhoodDao neighborhoodDao, final AmenityDao amenityDao) {
         this.availabilityDao = availabilityDao;
         this.shiftDao = shiftDao;
+        this.neighborhoodDao = neighborhoodDao;
+        this.amenityDao = amenityDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -49,7 +56,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     public Optional<Availability> findAvailability(long amenityId, long availabilityId, long neighborhoodId) {
 
         ValidationUtils.checkAmenityAvailabilityIds(amenityId, availabilityId);
-        ValidationUtils.checkNeighborhoodId(availabilityId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return availabilityDao.findAvailability(amenityId, availabilityId, neighborhoodId);
     }
@@ -64,11 +71,14 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     }
 
     @Override
-    public List<Availability> getAvailability(long amenityId, String status, String date) {
+    public List<Availability> getAvailability(long amenityId, String status, String date, long neighborhoodId) {
 
         ValidationUtils.checkAmenityId(amenityId);
         ValidationUtils.checkOptionalShiftStatusString(status);
         ValidationUtils.checkOptionalDateString(date);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        amenityDao.findAmenity(amenityId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         return availabilityDao.getAvailability(amenityId, status, date);
     }

@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.services.AttendanceService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Attendance;
 import ar.edu.itba.paw.webapp.dto.AttendanceDto;
-import ar.edu.itba.paw.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,11 @@ public class AttendanceController extends GlobalControllerAdvice {
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size) {
         LOGGER.info("GET request arrived at neighborhoods/{}/events/{}/attendance", neighborhoodId, eventId);
-        final Set<Attendance> attendance = as.getAttendance(eventId, page, size);
+        final Set<Attendance> attendance = as.getAttendance(eventId, page, size, neighborhoodId);
+
+        if (attendance.isEmpty())
+            return Response.noContent().build();
+
         final Set<AttendanceDto> attendanceDto = attendance.stream()
                 .map(a -> AttendanceDto.fromAttendance(a, uriInfo)).collect(Collectors.toSet());
 
@@ -65,7 +68,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     public Response findAttendance(@PathParam("userId") final long userId) {
         LOGGER.info("GET request arrived at neighborhoods/{}/events/{}/attendance/{}", neighborhoodId, eventId, userId);
         return Response.ok(AttendanceDto.fromAttendance(as.findAttendance(userId, eventId, neighborhoodId)
-                .orElseThrow(() -> new NotFoundException("Attendance Not Found")), uriInfo)).build();
+                .orElseThrow(NotFoundException::new), uriInfo)).build();
     }
 
     @POST

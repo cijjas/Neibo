@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.CommentDao;
+import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.CommentService;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.PostService;
@@ -23,14 +24,14 @@ public class CommentServiceImpl implements CommentService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentServiceImpl.class);
     private final CommentDao commentDao;
     private final EmailService emailService;
-    private final PostService postService;
+    private final PostDao postDao;
     private final UserService userService;
 
     @Autowired
-    public CommentServiceImpl(final CommentDao commentDao, EmailService emailService, PostService postService, UserService userService) {
+    public CommentServiceImpl(final CommentDao commentDao, EmailService emailService, PostDao postDao, UserService userService) {
         this.commentDao = commentDao;
         this.emailService = emailService;
-        this.postService = postService;
+        this.postDao = postDao;
         this.userService = userService;
     }
 
@@ -40,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
     public Comment createComment(String comment, long userId, long postId) {
         LOGGER.info("Creating Comment {} from User {} for Post {}", comment, userId, postId);
 
-        Post post = postService.findPost(postId).orElseThrow(()-> new NotFoundException("Post Not Found"));
+        Post post = postDao.findPost(postId).orElseThrow(()-> new NotFoundException("Post Not Found"));
         emailService.sendNewCommentMail(post, userService.getNeighborsSubscribed(postId));
         return commentDao.createComment(comment, userId, postId);
     }
@@ -70,11 +71,13 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Comment> getComments(long postId, int page, int size) {
+    public List<Comment> getComments(long postId, int page, int size, long neighborhoodId) {
         LOGGER.info("Finding Comments for Post {}", postId);
 
         ValidationUtils.checkPostId(postId);
         ValidationUtils.checkPageAndSize(page, size);
+
+        postDao.findPost(postId, neighborhoodId);
 
         return commentDao.getComments(postId, page, size);
     }

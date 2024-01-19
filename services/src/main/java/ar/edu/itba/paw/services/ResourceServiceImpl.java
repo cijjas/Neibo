@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.ResourceDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.ResourceService;
@@ -21,12 +22,14 @@ import java.util.Optional;
 public class ResourceServiceImpl implements ResourceService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceServiceImpl.class);
     private final ResourceDao resourceDao;
+    private final NeighborhoodDao neighborhoodDao;
     private final ImageService imageService;
 
     @Autowired
-    public ResourceServiceImpl(final ResourceDao resourceDao, ImageService imageService) {
+    public ResourceServiceImpl(final ResourceDao resourceDao, ImageService imageService, NeighborhoodDao neighborhoodDao) {
         this.resourceDao = resourceDao;
         this.imageService = imageService;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -57,6 +60,8 @@ public class ResourceServiceImpl implements ResourceService {
         LOGGER.info("Getting Resources from Neighborhood {}", neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return resourceDao.getResources(neighborhoodId);
     }

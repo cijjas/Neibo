@@ -4,6 +4,7 @@ import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.exceptions.UnexpectedException;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
@@ -27,18 +28,18 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserDao userDao;
+    private final NeighborhoodDao neighborhoodDao;
     private final ImageService imageService;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
-    private final NeighborhoodService neighborhoodService;
 
     @Autowired
-    public UserServiceImpl(final UserDao userDao, final ImageService imageService, final PasswordEncoder passwordEncoder, final EmailService emailService, final NeighborhoodService neighborhoodService) {
+    public UserServiceImpl(final UserDao userDao, final ImageService imageService, final PasswordEncoder passwordEncoder, final EmailService emailService, final NeighborhoodDao neighborhoodDao) {
         this.emailService = emailService;
         this.imageService = imageService;
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
-        this.neighborhoodService = neighborhoodService;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -135,6 +136,8 @@ public class UserServiceImpl implements UserService {
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
         ValidationUtils.checkOptionalUserRoleString(role);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return userDao.getUsers(role, neighborhoodId, page, size);
     }

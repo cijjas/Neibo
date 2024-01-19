@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.Entities.Contact;
 import org.slf4j.Logger;
@@ -18,10 +19,12 @@ import java.util.Optional;
 public class ContactServiceImpl implements ContactService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactServiceImpl.class);
     private final ContactDao contactDao;
+    private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public ContactServiceImpl(final ContactDao contactDao) {
+    public ContactServiceImpl(final ContactDao contactDao, final NeighborhoodDao neighborhoodDao) {
         this.contactDao = contactDao;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -40,6 +43,8 @@ public class ContactServiceImpl implements ContactService {
         LOGGER.info("Getting Contacts for Neighborhood {}", neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return contactDao.getContacts(neighborhoodId);
     }

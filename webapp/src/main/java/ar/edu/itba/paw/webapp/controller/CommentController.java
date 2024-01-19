@@ -5,7 +5,6 @@ import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Comment;
 import ar.edu.itba.paw.webapp.dto.CommentDto;
 import ar.edu.itba.paw.webapp.form.CommentForm;
-import ar.edu.itba.paw.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ public class CommentController extends GlobalControllerAdvice{
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at neighborhoods/{}/posts/{}/comments", neighborhoodId, postId);
-        final List<Comment> comments = cs.getComments(postId, page, size);
+        final List<Comment> comments = cs.getComments(postId, page, size, neighborhoodId);
         final List<CommentDto> commentsDto = comments.stream()
                 .map(c -> CommentDto.fromComment(c, uriInfo)).collect(Collectors.toList());
 
@@ -68,7 +67,7 @@ public class CommentController extends GlobalControllerAdvice{
     public Response findComment(@PathParam("id") long commentId) {
         LOGGER.info("GET request arrived at neighborhoods/{}/posts/{}/comments/{}", neighborhoodId, postId, commentId);
         return Response.ok(CommentDto.fromComment(cs.findComment(commentId, postId, neighborhoodId)
-                .orElseThrow(() -> new NotFoundException("Comment Not Found")), uriInfo)).build();
+                .orElseThrow(NotFoundException::new), uriInfo)).build();
     }
 
     @POST

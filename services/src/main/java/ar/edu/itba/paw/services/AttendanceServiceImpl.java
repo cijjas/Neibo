@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.AttendanceDao;
+import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.interfaces.services.AttendanceService;
 import ar.edu.itba.paw.models.Entities.Attendance;
 import org.slf4j.Logger;
@@ -17,10 +19,12 @@ import java.util.Set;
 public class AttendanceServiceImpl implements AttendanceService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AttendanceServiceImpl.class);
     private final AttendanceDao attendanceDao;
+    private final EventDao eventDao;
 
     @Autowired
-    public AttendanceServiceImpl(AttendanceDao attendanceDao) {
+    public AttendanceServiceImpl(AttendanceDao attendanceDao, EventDao eventDao) {
         this.attendanceDao = attendanceDao;
+        this.eventDao = eventDao;
     }
 
 
@@ -55,11 +59,13 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public Set<Attendance> getAttendance(long eventId, int page, int size) {
+    public Set<Attendance> getAttendance(long eventId, int page, int size, long neighborhoodId) {
         LOGGER.info("Getting Attendance for Event {}", eventId);
 
         ValidationUtils.checkEventId(eventId);
         ValidationUtils.checkPageAndSize(page, size);
+
+        eventDao.findEvent(eventId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         return attendanceDao.getAttendance(eventId, page, size);
     }

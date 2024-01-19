@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.interfaces.services.EmailService;
@@ -26,17 +27,19 @@ public class AmenityServiceImpl implements AmenityService {
     private final AmenityDao amenityDao;
     private final ShiftDao shiftDao;
     private final AvailabilityDao availabilityDao;
+    private final NeighborhoodDao neighborhoodDao;
     private final EmailService emailService;
-
     private final UserService userService;
 
     @Autowired
-    public AmenityServiceImpl(final AmenityDao amenityDao, final ShiftDao shiftDao, final AvailabilityDao availabilityDao, final EmailService emailService, UserService userService) {
+    public AmenityServiceImpl(final AmenityDao amenityDao, final ShiftDao shiftDao, final AvailabilityDao availabilityDao,
+                              final EmailService emailService, final UserService userService, final NeighborhoodDao neighborhoodDao) {
         this.availabilityDao = availabilityDao;
         this.shiftDao = shiftDao;
         this.amenityDao = amenityDao;
         this.emailService = emailService;
         this.userService = userService;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
 
@@ -99,6 +102,8 @@ public class AmenityServiceImpl implements AmenityService {
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return amenityDao.getAmenities(neighborhoodId, page, size);
     }

@@ -14,7 +14,7 @@ public interface AvailabilityService {
 
     List<Availability> getAvailability(long amenityId);
 
-    List<Availability> getAvailability(long amenityId, String status, String date);
+    List<Availability> getAvailability(long amenityId, String status, String date, long neighborhoodId);
 
     Optional<Availability> findAvailability(long availabilityId);
 

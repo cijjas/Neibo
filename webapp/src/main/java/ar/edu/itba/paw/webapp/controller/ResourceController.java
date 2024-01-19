@@ -53,6 +53,7 @@ public class ResourceController {
                 .path(String.valueOf(resource.getResourceId())).build();
         return Response.created(uri).build();
     }
+
     @PATCH
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON, })
@@ -73,5 +74,4 @@ public class ResourceController {
         rs.deleteResource(id);
         return Response.noContent().build();
     }
-
 }

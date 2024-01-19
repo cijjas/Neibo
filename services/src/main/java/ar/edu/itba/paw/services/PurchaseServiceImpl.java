@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.TransactionType;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.PurchaseDao;
+import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.PurchaseService;
 import ar.edu.itba.paw.models.Entities.Purchase;
 import org.slf4j.Logger;
@@ -17,10 +19,12 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PurchaseServiceImpl.class);
     private final PurchaseDao purchaseDao;
+    private final UserDao userDao;
 
     @Autowired
-    public PurchaseServiceImpl(PurchaseDao purchaseDao) {
+    public PurchaseServiceImpl(PurchaseDao purchaseDao, UserDao userDao) {
         this.purchaseDao = purchaseDao;
+        this.userDao = userDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -52,11 +56,14 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public Set<Purchase> getPurchases(long userId, String transactionType, int page, int size) {
+    public Set<Purchase> getPurchases(long userId, String transactionType, int page, int size, long neighborhoodId) {
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPageAndSize(page, size);
         ValidationUtils.checkTransactionTypeString(transactionType);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        userDao.findUser(userId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         return purchaseDao.getPurchases(userId, transactionType, page, size);
     }

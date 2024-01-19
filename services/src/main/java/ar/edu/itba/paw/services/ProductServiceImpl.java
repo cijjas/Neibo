@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.DepartmentDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.interfaces.persistence.PurchaseDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
@@ -23,16 +24,17 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
     private final ProductDao productDao;
-    private final PurchaseDao purchaseDao;
+    private final NeighborhoodDao neighborhoodDao;
     private final ImageService imageService;
     private final DepartmentDao departmentDao;
 
     @Autowired
-    public ProductServiceImpl(final ProductDao productDao, final PurchaseDao purchaseDao, final ImageService imageService, DepartmentDao departmentDao) {
+    public ProductServiceImpl(final ProductDao productDao, final ImageService imageService,
+                              DepartmentDao departmentDao, NeighborhoodDao neighborhoodDao) {
         this.productDao = productDao;
-        this.purchaseDao = purchaseDao;
         this.imageService = imageService;
         this.departmentDao = departmentDao;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -79,6 +81,8 @@ public class ProductServiceImpl implements ProductService {
         ValidationUtils.checkOptionalDepartmentString(department);
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPageAndSize(page, size);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return productDao.getProducts(neighborhoodId, department, userId, productStatus, page, size);
     }

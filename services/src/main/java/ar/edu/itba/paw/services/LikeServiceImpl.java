@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.LikeDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.services.LikeService;
 import ar.edu.itba.paw.models.Entities.Like;
 import org.slf4j.Logger;
@@ -17,10 +19,12 @@ import java.util.Optional;
 public class LikeServiceImpl implements LikeService {
     private static final Logger LOGGER = LoggerFactory.getLogger(LikeServiceImpl.class);
     private final LikeDao likeDao;
+    private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public LikeServiceImpl(final LikeDao likeDao) {
+    public LikeServiceImpl(final LikeDao likeDao, final NeighborhoodDao neighborhoodDao) {
         this.likeDao = likeDao;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -57,6 +61,8 @@ public class LikeServiceImpl implements LikeService {
         ValidationUtils.checkLikeIds(postId, userId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return likeDao.getLikes(postId, userId, neighborhoodId, page, size);
     }

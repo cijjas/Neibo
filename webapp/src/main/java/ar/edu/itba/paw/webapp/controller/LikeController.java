@@ -38,14 +38,19 @@ public class LikeController extends GlobalControllerAdvice{
     private Long neighborhoodId;
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { MediaType.APPLICATION_JSON })
     public Response listLikes(
             @QueryParam("postId") final Long postId,
             @QueryParam("userId") final Long userId,
             @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size){
+            @QueryParam("size") @DefaultValue("10") final int size) {
         LOGGER.info("GET request arrived at neighborhoods/{}/likes", neighborhoodId);
+
         final List<Like> likes = ls.getLikes(neighborhoodId, postId, userId, page, size);
+
+        if (likes.isEmpty())
+            return Response.noContent().build();
+
         final List<LikeDto> likesDto = likes.stream()
                 .map(l -> LikeDto.fromLike(l, uriInfo)).collect(Collectors.toList());
 
@@ -53,19 +58,11 @@ public class LikeController extends GlobalControllerAdvice{
         int totalLikePages = ls.calculateLikePages(neighborhoodId, postId, userId, size);
         Link[] links = ControllerUtils.createPaginationLinks(baseUri, page, size, totalLikePages);
 
-        return Response.ok(new GenericEntity<List<LikeDto>>(likesDto){})
+        return Response.ok(new GenericEntity<List<LikeDto>>(likesDto) {})
                 .links(links)
                 .build();
     }
 
-    @GET
-    @Path("/{id}")
-    @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findLike(@PathParam("id") final long likeId) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/likes/{}", neighborhoodId, likeId);
-        return Response.ok(LikeDto.fromLike(ls.findLike(likeId, neighborhoodId)
-                .orElseThrow(() -> new NotFoundException("Like Not Found")), uriInfo)).build();
-    }
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })

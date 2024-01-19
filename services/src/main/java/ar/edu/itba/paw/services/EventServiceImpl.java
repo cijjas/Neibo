@@ -5,6 +5,7 @@ import ar.edu.itba.paw.enums.Month;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.exceptions.UnexpectedException;
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.EventService;
@@ -30,6 +31,7 @@ public class EventServiceImpl implements EventService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
     private final EventDao eventDao;
     private final TimeDao timeDao;
+    private final NeighborhoodDao neighborhoodDao;
     private final EmailService emailService;
 
     private final UserService userService;
@@ -38,11 +40,13 @@ public class EventServiceImpl implements EventService {
     private EntityManager em;
 
     @Autowired
-    public EventServiceImpl(final EventDao eventDao, final TimeDao timeDao, final EmailService emailService, UserService userService) {
+    public EventServiceImpl(final EventDao eventDao, final TimeDao timeDao, final EmailService emailService,
+                            final UserService userService, NeighborhoodDao neighborhoodDao) {
         this.eventDao = eventDao;
         this.timeDao = timeDao;
         this.emailService = emailService;
         this.userService = userService;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -102,6 +106,8 @@ public class EventServiceImpl implements EventService {
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkOptionalDateString(date);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return eventDao.getEvents(date, neighborhoodId);
     }

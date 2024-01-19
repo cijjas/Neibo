@@ -15,7 +15,7 @@ public interface CommentService {
 
     Optional<Comment> findComment(long commentId, long postId, long neighborhoodId);
 
-    List<Comment> getComments(long postId, int page, int size);
+    List<Comment> getComments(long postId, int page, int size, long neighborhoodId);
 
     // ---------------------------------------------------
 

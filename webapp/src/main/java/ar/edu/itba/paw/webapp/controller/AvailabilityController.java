@@ -6,7 +6,6 @@ import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Availability;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.AvailabilityDto;
-import ar.edu.itba.paw.exceptions.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +44,7 @@ public class AvailabilityController {
             @QueryParam("date") String date
     ) {
         LOGGER.info("Listing Availability for Amenity with id {}", amenityId);
-        final List<Availability> availabilities = as.getAvailability(amenityId, status, date);
+        final List<Availability> availabilities = as.getAvailability(amenityId, status, date, neighborhoodId);
         final List<AvailabilityDto> availabilityDto = availabilities.stream()
                 .map(a -> AvailabilityDto.fromAvailability(a, uriInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<AvailabilityDto>>(availabilityDto){}).build();
@@ -57,6 +56,6 @@ public class AvailabilityController {
     public Response findAvailability(@PathParam("id") final long availabilityId) {
         LOGGER.info("Finding Availability with id {}", availabilityId);
         return Response.ok(AvailabilityDto.fromAvailability(as.findAvailability(amenityId, availabilityId, neighborhoodId)
-                .orElseThrow(() -> new NotFoundException("Availability Not Found")), uriInfo)).build();
+                .orElseThrow(NotFoundException::new), uriInfo)).build();
     }
 }

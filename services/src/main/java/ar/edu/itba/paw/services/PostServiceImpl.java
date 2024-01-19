@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Entities.Image;
@@ -20,20 +22,21 @@ import java.util.Optional;
 public class PostServiceImpl implements PostService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PostServiceImpl.class);
     private final PostDao postDao;
-    private final ChannelDao channelDao;
+    private final NeighborhoodDao neighborhoodDao;
     private final UserService userService;
     private final EmailService emailService;
     private final TagService tagService;
     private final ImageService imageService;
 
     @Autowired
-    public PostServiceImpl(final PostDao postDao, final ChannelDao channelDao, UserService userService, EmailService emailService, TagService tagService, ImageService imageService) {
+    public PostServiceImpl(final PostDao postDao, UserService userService, EmailService emailService,
+                           TagService tagService, ImageService imageService, NeighborhoodDao neighborhoodDao) {
         this.imageService = imageService;
         this.tagService = tagService;
         this.postDao = postDao;
-        this.channelDao = channelDao;
         this.userService = userService;
         this.emailService = emailService;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -94,6 +97,8 @@ public class PostServiceImpl implements PostService {
         ValidationUtils.checkPostStatusString(postStatus);
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPageAndSize(page, size);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return postDao.getPosts(channel, page, size, tags, neighborhoodId, postStatus, userId);
     }

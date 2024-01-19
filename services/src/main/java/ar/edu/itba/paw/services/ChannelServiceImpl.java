@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.interfaces.persistence.ChannelMappingDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.models.Entities.Channel;
 import org.slf4j.Logger;
@@ -19,11 +21,14 @@ public class ChannelServiceImpl implements ChannelService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelServiceImpl.class);
     private final ChannelDao channelDao;
     private final ChannelMappingDao channelMappingDao;
+    private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public ChannelServiceImpl(final ChannelDao channelDao, final ChannelMappingDao channelMappingDao) {
+    public ChannelServiceImpl(final ChannelDao channelDao, final ChannelMappingDao channelMappingDao,
+                              final NeighborhoodDao neighborhoodDao) {
         this.channelDao = channelDao;
         this.channelMappingDao = channelMappingDao;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -55,6 +60,8 @@ public class ChannelServiceImpl implements ChannelService {
         LOGGER.info("Getting Channels from Neighborhood {}", neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return channelDao.getChannels(neighborhoodId);
     }
