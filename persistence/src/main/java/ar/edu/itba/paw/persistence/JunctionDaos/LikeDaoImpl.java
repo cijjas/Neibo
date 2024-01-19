@@ -26,6 +26,7 @@ public class LikeDaoImpl implements LikeDao {
     @Override
     public Like createLike(long postId, long userId) {
         LOGGER.debug("Inserting Like");
+
         Like like = new Like(em.find(Post.class, postId), em.find(User.class, userId), new java.sql.Date(System.currentTimeMillis()));
         em.persist(like);
         return like;
@@ -36,6 +37,7 @@ public class LikeDaoImpl implements LikeDao {
     @Override
     public List<Like> getLikes(Long postId, Long userId, long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Likes by Criteria");
+
         TypedQuery<Like> query = null;
 
         if(userId != null) {
@@ -59,6 +61,7 @@ public class LikeDaoImpl implements LikeDao {
     @Override
     public int countLikes(Long postId, Long userId, long neighborhoodId) {
         LOGGER.debug("Selecting Likes Count by Criteria");
+
         TypedQuery<Long> query = null;
         if(userId != null) {
             query = em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.user.userId = :userId", Long.class)
@@ -79,6 +82,7 @@ public class LikeDaoImpl implements LikeDao {
     @Override
     public boolean isPostLiked(long postId, long userId) {
         LOGGER.debug("Selecting Likes from Post {} and userId {}", postId, userId);
+
         Long count = (Long) em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.post.postId = :postId AND l.user.userId = :userId")
                 .setParameter("postId", postId)
                 .setParameter("userId", userId)
@@ -91,6 +95,7 @@ public class LikeDaoImpl implements LikeDao {
     @Override
     public boolean deleteLike(long postId, long userId) {
         LOGGER.debug("Deleting Like from Post {} and userId {}", postId, userId);
+
         Like like = em.find(Like.class, new LikeKey(postId, userId));
         if (like != null) {
             em.remove(like);

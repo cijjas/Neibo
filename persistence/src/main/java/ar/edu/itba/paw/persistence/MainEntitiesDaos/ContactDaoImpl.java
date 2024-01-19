@@ -25,6 +25,7 @@ public class ContactDaoImpl implements ContactDao {
     @Override
     public Contact createContact(long neighborhoodId, String contactName, String contactAddress, String contactPhone) {
         LOGGER.debug("Inserting Contact {}", contactName);
+
         Contact contact = new Contact.Builder()
                 .contactAddress(contactAddress)
                 .contactName(contactName)
@@ -40,6 +41,7 @@ public class ContactDaoImpl implements ContactDao {
     @Override
     public List<Contact> getContacts(final long neighborhoodId) {
         LOGGER.debug("Selecting Contacts from Neighborhood {}", neighborhoodId);
+
         TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.neighborhood.neighborhoodId = :neighborhoodId", Contact.class);
         query.setParameter("neighborhoodId", neighborhoodId);
         return query.getResultList();
@@ -50,6 +52,7 @@ public class ContactDaoImpl implements ContactDao {
     @Override
     public boolean deleteContact(long contactId) {
         LOGGER.debug("Deleting Contact with id {}", contactId);
+
         Contact contact = em.find(Contact.class, contactId);
         if (contact != null) {
             em.remove(contact);
@@ -61,11 +64,13 @@ public class ContactDaoImpl implements ContactDao {
     @Override
     public Optional<Contact> findContact(final long contactId) {
         LOGGER.debug("Selecting Contact with id {}", contactId);
+
         return Optional.ofNullable(em.find(Contact.class, contactId));
     }
 
     @Override
     public Optional<Contact> findContact(long contactId, long neighborhoodId) {
+        LOGGER.debug("Selecting Contact with contactId {}, neighborhoodId {}", contactId, neighborhoodId);
 
         TypedQuery<Contact> query = em.createQuery(
                 "SELECT c FROM Contact c WHERE c.id = :contactId AND c.neighborhood.id = :neighborhoodId",

@@ -29,7 +29,8 @@ public class AmenityDaoImpl implements AmenityDao {
 
     @Override
     public Amenity createAmenity(String name, String description, long neighborhoodId) {
-        LOGGER.debug("Inserting Amenity {}", name);
+        LOGGER.debug("Inserting Amenity");
+
         Amenity amenity = new Amenity.Builder()
                 .name(name)
                 .neighborhood(em.find(Neighborhood.class, neighborhoodId))
@@ -44,6 +45,7 @@ public class AmenityDaoImpl implements AmenityDao {
     @Override
     public Optional<Amenity> findAmenity(long amenityId) {
         LOGGER.debug("Selecting Amenity with id {}", amenityId);
+
         return Optional.ofNullable(em.find(Amenity.class, amenityId));
     }
 
@@ -66,6 +68,8 @@ public class AmenityDaoImpl implements AmenityDao {
 
     @Override
     public List<Amenity> getAmenities(long neighborhoodId, int page, int size) {
+        LOGGER.debug("Selecting Amenity with neighborhoodId {}", neighborhoodId);
+
         // Initialize Query Builder
         CriteriaBuilder cb = em.getCriteriaBuilder();
         // We retrieve a list of amenity ids which are Longs, from the Amenity Entity
@@ -100,6 +104,8 @@ public class AmenityDaoImpl implements AmenityDao {
 
     @Override
     public int countAmenities(long neighborhoodId) {
+        LOGGER.debug("Counting Amenity with neighborhoodId {}", neighborhoodId);
+
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
         Root<Amenity> root = criteriaQuery.from(Amenity.class);
@@ -115,6 +121,7 @@ public class AmenityDaoImpl implements AmenityDao {
     @Override
     public boolean deleteAmenity(long amenityId) {
         LOGGER.debug("Deleting Amenity with id {}", amenityId);
+
         int deletedCount = em.createQuery("DELETE FROM Amenity WHERE amenityId = :amenityId ")
                 .setParameter("amenityId", amenityId)
                 .executeUpdate();

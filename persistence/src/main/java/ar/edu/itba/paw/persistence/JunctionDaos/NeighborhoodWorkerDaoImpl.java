@@ -28,6 +28,7 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
     @Override
     public WorkerArea createWorkerArea(long workerId, long neighborhoodId) {
         LOGGER.debug("Inserting Worker {} to Neighborhood {}", workerId, neighborhoodId);
+
         WorkerArea workerArea = new WorkerArea(em.find(Worker.class, workerId), em.find(Neighborhood.class, neighborhoodId));
         workerArea.setRole(WorkerRole.UNVERIFIED_WORKER);
         em.persist(workerArea);
@@ -39,12 +40,14 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
     @Override
     public Optional<WorkerArea> findWorkerArea(long workerId, long neighborhoodId) {
         LOGGER.debug("Finding Worker area with worker id {} in Neighborhood {}", workerId, neighborhoodId);
+
         return Optional.ofNullable(em.find(WorkerArea.class, new WorkerAreaKey(workerId, neighborhoodId)));
     }
 
     @Override
     public Set<Neighborhood> getNeighborhoods(long workerId) {
         LOGGER.debug("Selecting neighborhoods for the Worker {}", workerId);
+
         TypedQuery<Neighborhood> query = em.createQuery("SELECT n FROM Worker w JOIN w.workNeighborhoods n WHERE w.user.id = :workerId", Neighborhood.class);
         query.setParameter("workerId", workerId);
         return new HashSet<>(query.getResultList());
@@ -55,6 +58,7 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
     @Override
     public boolean deleteWorkerArea(long workerId, long neighborhoodId) {
         LOGGER.debug("Deleting Worker {} from Neighborhood {}", workerId, neighborhoodId);
+
         WorkerArea workerArea = em.find(WorkerArea.class, new WorkerAreaKey(workerId, neighborhoodId));
         if (workerArea != null) {
             em.remove(workerArea);

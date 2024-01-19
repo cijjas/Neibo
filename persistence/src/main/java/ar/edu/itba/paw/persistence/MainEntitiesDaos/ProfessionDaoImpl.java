@@ -21,6 +21,7 @@ public class ProfessionDaoImpl implements ProfessionDao {
 
     @Override
     public Profession createProfession(Professions professionType) {
+
         LOGGER.debug("Inserting Profession {}", professionType);
         final Profession profession = new Profession.Builder()
                 .profession(professionType)

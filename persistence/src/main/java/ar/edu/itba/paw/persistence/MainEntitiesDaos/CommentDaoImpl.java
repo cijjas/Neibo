@@ -27,6 +27,7 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public Comment createComment(String commentText, long userId, long postId) {
         LOGGER.debug("Inserting Comment {}", commentText);
+
         Comment comment = new Comment.Builder()
                 .comment(commentText)
                 .user(em.find(User.class, userId))
@@ -41,6 +42,7 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public Optional<Comment> findComment(long commentId) {
         LOGGER.debug("Selecting Comment with id {}", commentId);
+
         return Optional.ofNullable(em.find(Comment.class, commentId));
     }
 
@@ -89,6 +91,7 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public int countComments(long id) {
         LOGGER.debug("Selecting Comments Count from Post {}", id);
+
         Long count = (Long) em.createQuery("SELECT COUNT(c) FROM Comment c " +
                         "WHERE c.post.postId = :postId")
                 .setParameter("postId", id)

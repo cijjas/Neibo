@@ -23,6 +23,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     @Override
     public Neighborhood createNeighborhood(String name) {
         LOGGER.debug("Inserting Neighborhood {}", name);
+
         Neighborhood neighborhood = new Neighborhood.Builder()
                 .name(name)
                 .build();
@@ -35,12 +36,14 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     @Override
     public Optional<Neighborhood> findNeighborhood(long id) {
         LOGGER.debug("Selecting Neighborhood with id {}", id);
+
         return Optional.ofNullable(em.find(Neighborhood.class,  id));
     }
 
     @Override
     public Optional<Neighborhood> findNeighborhood(String name) {
         LOGGER.debug("Selecting Neighborhood with name {}", name);
+
         TypedQuery<Neighborhood> query = em.createQuery("FROM Neighborhood WHERE neighborhoodname = :neighborhoodName", Neighborhood.class);
         query.setParameter("neighborhoodName", name);
         return query.getResultList().stream().findFirst();
@@ -49,6 +52,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     @Override
     public List<Neighborhood> getNeighborhoods() {
         LOGGER.debug("Selecting All Neighborhoods");
+
         String jpql = "SELECT n FROM Neighborhood n";
         TypedQuery<Neighborhood> query = em.createQuery(jpql, Neighborhood.class);
         return query.getResultList();
@@ -57,6 +61,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     @Override
     public List<Neighborhood> getNeighborhoods(int page, int size) {
         LOGGER.debug("Selecting All Neighborhoods");
+
         String jpql = "SELECT n FROM Neighborhood n";
         TypedQuery<Neighborhood> query = em.createQuery(jpql, Neighborhood.class);
         query.setFirstResult((page - 1) * size);
@@ -69,6 +74,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     @Override
     public int getNeighborhoodsCount() {
         LOGGER.debug("Counting All Neighborhoods");
+
         String jpql = "SELECT COUNT(n) FROM Neighborhood n";
         TypedQuery<Long> query = em.createQuery(jpql, Long.class);
         return query.getSingleResult().intValue();

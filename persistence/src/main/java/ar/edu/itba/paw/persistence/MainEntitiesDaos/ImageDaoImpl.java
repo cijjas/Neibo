@@ -24,6 +24,7 @@ public class ImageDaoImpl implements ImageDao {
     @Override
     public Image storeImage(MultipartFile image) {
         LOGGER.debug("Inserting Image {}", image.getName());
+
         byte[] imageBytes;
         try {
             imageBytes = image.getBytes();
@@ -43,6 +44,7 @@ public class ImageDaoImpl implements ImageDao {
     @Override
     public Optional<Image> findImage(long imageId) {
         LOGGER.debug("Selecting Image with id {}", imageId);
+
         return Optional.ofNullable(em.find(Image.class, imageId));
     }
 }

@@ -51,6 +51,7 @@ public class ChannelDaoImpl implements ChannelDao {
     @Override
     public Optional<Channel> findChannel(String channelName) {
         LOGGER.debug("Selecting Channel with name {}", channelName);
+
         TypedQuery<Channel> query = em.createQuery("FROM Channel WHERE channel = :channel", Channel.class);
         query.setParameter("channel", channelName);
         return query.getResultList().stream().findFirst();
@@ -59,6 +60,7 @@ public class ChannelDaoImpl implements ChannelDao {
     @Override
     public List<Channel> getChannels(final long neighborhoodId) {
         LOGGER.debug("Selecting Channels from Neighborhood {}", neighborhoodId);
+
         TypedQuery<Channel> query = em.createQuery("SELECT c FROM Channel c JOIN c.neighborhoods n WHERE n.neighborhoodId = :neighborhoodId", Channel.class);
         query.setParameter("neighborhoodId", neighborhoodId);
         return query.getResultList();

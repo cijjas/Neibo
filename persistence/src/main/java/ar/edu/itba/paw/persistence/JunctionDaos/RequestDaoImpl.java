@@ -26,6 +26,7 @@ public class RequestDaoImpl implements RequestDao {
     @Override
     public Request createRequest(long userId, long productId, String message) {
         LOGGER.debug("Inserting Request for product with id {}", productId);
+
         Request request = new Request.Builder()
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
@@ -40,11 +41,14 @@ public class RequestDaoImpl implements RequestDao {
     @Override
     public Optional<Request> findRequest(long requestId) {
         LOGGER.debug("Selecting Request {}", requestId);
+
         return Optional.ofNullable(em.find(Request.class, requestId));
     }
 
     @Override
     public Optional<Request> findRequest(long requestId, long neighborhoodId) {
+        LOGGER.debug("Selecting Request with requestId {}, neighborhoodId {}", requestId, neighborhoodId);
+
         TypedQuery<Request> query = em.createQuery(
                 "SELECT r FROM Request r WHERE r.id = :requestId AND r.user.neighborhood.id = :neighborhoodId",
                 Request.class
@@ -60,6 +64,7 @@ public class RequestDaoImpl implements RequestDao {
     @Override
     public List<Request> getRequests(Long userId, Long productId, int page, int size) {
         LOGGER.debug("Selecting Requests By Criteria");
+
         TypedQuery<Long> idQuery = null;
         if(userId != null && productId != null) {
             idQuery = em.createQuery(
@@ -92,6 +97,7 @@ public class RequestDaoImpl implements RequestDao {
     @Override
     public int countRequests(Long userId, Long productId) {
         LOGGER.debug("Selecting Requests Count by Criteria");
+
         Long count = null;
         if(userId != null && productId != null ) {
             count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +

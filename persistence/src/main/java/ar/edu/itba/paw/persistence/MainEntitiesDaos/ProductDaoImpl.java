@@ -31,6 +31,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Product createProduct(long userId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId, Long units) {
         LOGGER.debug("Inserting Product {}", name);
+
         Product product = new Product.Builder()
                 .name(name)
                 .description(description)
@@ -51,6 +52,7 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public boolean deleteProduct(long productId) {
         LOGGER.debug("Deleting Product with id {}", productId);
+
         int deletedCount = em.createQuery("DELETE FROM Product WHERE productId = :productId ")
                 .setParameter("productId", productId)
                 .executeUpdate();
@@ -60,11 +62,14 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Optional<Product> findProduct(long productId) {
         LOGGER.debug("Selecting Product with id {}", productId);
+
         return Optional.ofNullable(em.find(Product.class, productId));
     }
 
     @Override
     public Optional<Product> findProduct(long productId, long neighborhoodId) {
+        LOGGER.debug("Selecting Product with productId {}, neighborhoodId {}", productId, neighborhoodId);
+
         TypedQuery<Product> query = em.createQuery(
                 "SELECT p FROM Product p WHERE p.productId = :productId AND p.seller.neighborhood.neighborhoodId = :neighborhoodId",
                 Product.class
@@ -202,5 +207,4 @@ public class ProductDaoImpl implements ProductDao {
         // Return the count as an integer
         return countResult.intValue();
     }
-
 }

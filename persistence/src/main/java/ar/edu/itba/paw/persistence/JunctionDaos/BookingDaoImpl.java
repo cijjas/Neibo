@@ -28,6 +28,7 @@ public class BookingDaoImpl implements BookingDao {
     @Override
     public Booking createBooking(long userId, long amenityAvailabilityId, Date reservationDate) {
         LOGGER.debug("Inserting Booking");
+
         Booking booking = new Booking.Builder()
                 .user(em.find(User.class, userId))
                 .bookingDate(reservationDate)
@@ -51,6 +52,7 @@ public class BookingDaoImpl implements BookingDao {
     @Override
     public Optional<Booking> findBooking(long bookingId){
         LOGGER.debug("Selecting Booking with id {}", bookingId);
+
         return Optional.ofNullable(em.find(Booking.class, bookingId));
     }
 
@@ -94,6 +96,7 @@ public class BookingDaoImpl implements BookingDao {
     @Override
     public boolean deleteBooking(long bookingId) {
         LOGGER.debug("Deleting Booking with bookingId {}", bookingId);
+
         String hql = "DELETE FROM Booking b WHERE b.bookingId = :bookingId";
         int deletedCount = em.createQuery(hql)
                 .setParameter("bookingId", bookingId)

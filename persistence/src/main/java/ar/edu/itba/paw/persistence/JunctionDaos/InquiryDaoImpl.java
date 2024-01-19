@@ -24,6 +24,7 @@ public class InquiryDaoImpl implements InquiryDao {
     @Override
     public Inquiry createInquiry(long userId, long productId, String message) {
         LOGGER.debug("Inserting Inquiry for product with id {}", productId);
+
         Inquiry inquiry = new Inquiry.Builder()
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
@@ -40,11 +41,14 @@ public class InquiryDaoImpl implements InquiryDao {
     @Override
     public Optional<Inquiry> findInquiry(long inquiryId) {
         LOGGER.debug("Selecting Inquiry with id {}", inquiryId);
+
         return Optional.ofNullable(em.find(Inquiry.class, inquiryId));
     }
 
     @Override
     public Optional<Inquiry> findInquiry(long inquiryId, long productId, long neighborhoodId) {
+        LOGGER.debug("Selecting Inquiry with inquiryId {}, productId {} and neighborhoodId {}", inquiryId, productId, neighborhoodId);
+
         TypedQuery<Inquiry> query = em.createQuery(
                 "SELECT i FROM Inquiry i WHERE i.id = :inquiryId AND i.product.id = :productId AND i.product.seller.neighborhood.id = :neighborhoodId",
                 Inquiry.class
@@ -85,6 +89,7 @@ public class InquiryDaoImpl implements InquiryDao {
     @Override
     public int countInquiries(long productId) {
         LOGGER.debug("Selecting Inquiries Count from Product {}", productId);
+
         Long count = (Long) em.createQuery("SELECT COUNT(i) FROM Inquiry i " +
                         "WHERE i.product.productId = :productId")
                 .setParameter("productId", productId)

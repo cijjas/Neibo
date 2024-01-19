@@ -31,6 +31,7 @@ public class PostDaoImpl implements PostDao {
     @Override
     public Post createPost(String title, String description, long userId, long channelId, long imageId) {
         LOGGER.debug("Inserting Post {}", title);
+
         Post post = new Post.Builder()
                 .title(title)
                 .description(description)
@@ -47,11 +48,14 @@ public class PostDaoImpl implements PostDao {
     @Override
     public Optional<Post> findPost(long postId) {
         LOGGER.debug("Selecting Post with id {}", postId);
+
         return Optional.ofNullable(em.find(Post.class, postId));
     }
 
     @Override
     public Optional<Post> findPost(long postId, long neighborhoodId) {
+        LOGGER.debug("Selecting Post with postId {}, neighborhoodId {}", postId, neighborhoodId);
+
         TypedQuery<Post> query = em.createQuery(
                 "SELECT p FROM Post p WHERE p.postId = :postId AND p.user.neighborhood.neighborhoodId = :neighborhoodId",
                 Post.class
@@ -88,6 +92,7 @@ public class PostDaoImpl implements PostDao {
     @Override
     public List<Post> getPosts(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, Long userId) {
         LOGGER.debug("Selecting Post from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channel, userId, tags, postStatus);
+
         StringBuilder query = new StringBuilder(FROM_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
         List<Object> queryParams = new ArrayList<>();
         appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags, postStatus);

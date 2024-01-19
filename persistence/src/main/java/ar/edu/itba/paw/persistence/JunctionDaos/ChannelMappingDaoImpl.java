@@ -23,6 +23,7 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
     @Override
     public ChannelMapping createChannelMapping(long channelId, long neighborhoodId) {
         LOGGER.debug("Inserting Channel Mapping");
+
         ChannelMapping channelMapping = new ChannelMapping(em.find(Neighborhood.class, neighborhoodId), em.find(Channel.class, channelId));
         em.persist(channelMapping);
         return channelMapping;
@@ -32,6 +33,7 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
 
     public boolean deleteChannelMapping(long channelId, long neighborhoodId) {
         LOGGER.debug("Deleting ChannelMapping with channelId {} and neighborhoodId {}", channelId, neighborhoodId);
+
         ChannelMapping channelMapping = em.find(ChannelMapping.class, new ChannelMappingKey(neighborhoodId, channelId));
         if (channelMapping != null) {
             em.remove(channelMapping);

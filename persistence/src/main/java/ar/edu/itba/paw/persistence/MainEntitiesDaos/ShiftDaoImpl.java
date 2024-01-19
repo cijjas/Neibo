@@ -28,6 +28,7 @@ public class ShiftDaoImpl implements ShiftDao {
     @Override
     public Shift createShift(long dayId, long startTimeId) {
         LOGGER.debug("Inserting Shift");
+
         Shift shift = new Shift.Builder()
                 .day(em.find(Day.class, dayId))
                 .startTime(em.find(Time.class, startTimeId))
@@ -41,12 +42,14 @@ public class ShiftDaoImpl implements ShiftDao {
     @Override
     public Optional<Shift> findShift(long shiftId) {
         LOGGER.debug("Selecting Shift with shiftId {}", shiftId);
+
         return Optional.ofNullable(em.find(Shift.class, shiftId));
     }
 
     @Override
     public Optional<Shift> findShift(long startTime, long dayId) {
         LOGGER.debug("Selecting Shift with startTime {} and dayId {}", startTime, dayId);
+
         String jpql = "SELECT s FROM Shift s " +
                 "JOIN s.day d " +
                 "WHERE s.startTime.timeId = :startTime AND d.dayId = :dayId";
@@ -60,6 +63,7 @@ public class ShiftDaoImpl implements ShiftDao {
     @Override
     public List<Shift> getShifts() {
         LOGGER.debug("Selecting All Shifts");
+
         String jpql = "SELECT s FROM Shift s";
         TypedQuery<Shift> query = em.createQuery(jpql, Shift.class);
         return query.getResultList();

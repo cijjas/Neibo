@@ -22,6 +22,7 @@ public class CategorizationDaoImpl implements CategorizationDao {
     @Override
     public Categorization createCategorization(final long tagId, final long postId) {
         LOGGER.debug("Inserting Category");
+
         Categorization categorization = new Categorization(em.find(Post.class, postId), em.find(Tag.class, tagId));
         em.persist(categorization);
         return categorization;

@@ -31,6 +31,7 @@ public class UserDaoImpl implements UserDao {
     public User createUser(final String mail, final String password, final String name, final String surname,
                            final long neighborhoodId, final Language language, final boolean darkMode, final UserRole role, final int identification) {
         LOGGER.debug("Inserting User {}", mail);
+
         User user = new User.Builder()
                 .name(name).mail(mail)
                 .surname(surname)
@@ -49,12 +50,15 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<User> findUser(final long userId) {
-        LOGGER.debug("Selecting User with userId {}", userId);
+        LOGGER.debug("Selecting User with Id {}", userId);
+
         return Optional.ofNullable(em.find(User.class, userId));
     }
 
     @Override
     public Optional<User> findUser(final long userId, long neighborhoodId) {
+        LOGGER.debug("Selecting User with userId {}, neighborhoodId {}", userId, neighborhoodId);
+
         TypedQuery<User> query = em.createQuery(
                 "SELECT u FROM User u WHERE u.userId = :userId AND u.neighborhood.id = :neighborhoodId",
                 User.class
@@ -127,6 +131,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public int countTotalUsers(String role, long neighborhoodId) {
         LOGGER.debug("Selecting Users Count that have Role {} and from Neighborhood {}", role, neighborhoodId);
+
         StringBuilder jpqlConditions = new StringBuilder("SELECT COUNT(u) FROM User u WHERE 1 = 1");
         if (role != null)
             jpqlConditions.append(" AND u.role = :role");
@@ -143,6 +148,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getEventUsers(long eventId) {
         LOGGER.debug("Selecting Users that will attend Event {}", eventId);
+
         String hql = "SELECT u FROM User u " +
                 "JOIN u.eventsSubscribed e " +
                 "WHERE e.eventId = :eventId";
@@ -154,6 +160,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getEventUsers(long eventId, int page, int size) {
         LOGGER.debug("Selecting Users that will attend Event {}", eventId);
+
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u JOIN u.eventsSubscribed e WHERE e.eventId = :eventId", User.class);
         query.setParameter("eventId", eventId);
         query.setFirstResult((page - 1) * size);
@@ -177,6 +184,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getProductRequesters(long productId, int page, int size) {
         LOGGER.debug("Selecting Users that requested product {}", productId);
+
         TypedQuery<User> query = em.createQuery("SELECT u FROM User u JOIN u.requestedProducts p WHERE p.productId = :productId", User.class);
         query.setParameter("productId", productId);
         query.setFirstResult((page - 1) * size);

@@ -28,6 +28,7 @@ public class EventDaoImpl implements EventDao {
     @Override
     public Event createEvent(final String name, final String description, final Date date, final long startTimeId, final long endTimeId, final long neighborhoodId) {
         LOGGER.debug("Inserting Event {}", name);
+
         Event event = new Event.Builder()
                 .name(name)
                 .description(description)
@@ -45,11 +46,14 @@ public class EventDaoImpl implements EventDao {
     @Override
     public Optional<Event> findEvent(long eventId) {
         LOGGER.debug("Selecting Event with id {}", eventId);
+
         return Optional.ofNullable(em.find(Event.class, eventId));
     }
 
     @Override
     public Optional<Event> findEvent(long eventId, long neighborhoodId) {
+        LOGGER.debug("Selecting Event with eventId {}, neighborhoodId {}", eventId, neighborhoodId);
+
         TypedQuery<Event> query = em.createQuery(
                 "SELECT e FROM Event e WHERE e.eventId = :eventId AND e.neighborhood.id = :neighborhoodId",
                 Event.class

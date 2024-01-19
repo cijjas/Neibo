@@ -21,6 +21,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
     @Override
     public Department createDepartment(ar.edu.itba.paw.enums.Department departmentType) {
         LOGGER.debug("Inserting Department {}", departmentType);
+
         final Department department = new Department.Builder()
                 .department(departmentType)
                 .build();
@@ -31,6 +32,7 @@ public class DepartmentDaoImpl implements DepartmentDao {
     @Override
     public Optional<Department> findDepartment(long departmentId) {
         LOGGER.debug("Selecting Department with id {}", departmentId);
+
         return Optional.ofNullable(em.find(Department.class, departmentId));
     }
 }

@@ -26,6 +26,7 @@ public class PurchaseDaoImpl implements PurchaseDao {
     @Override
     public Purchase createPurchase(long productId, long userId, long unitsBought) {
         LOGGER.debug("Inserting Purchase for product with id {} by user {}", productId, userId);
+
         Purchase purchase = new Purchase.Builder()
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
@@ -38,12 +39,15 @@ public class PurchaseDaoImpl implements PurchaseDao {
 
     @Override
     public Optional<Purchase> findPurchase(long purchaseId) {
-        LOGGER.debug("Selecting Purchase  {}", purchaseId);
+        LOGGER.debug("Selecting Purchase {}", purchaseId);
+
         return Optional.ofNullable(em.find(Purchase.class, purchaseId));
     }
 
     @Override
     public Optional<Purchase> findPurchase(long purchaseId, long userId, long neighborhoodId) {
+        LOGGER.debug("Selecting Purchase with purchaseId {}, userId {}, neighborhoodId {}", purchaseId, userId, neighborhoodId);
+
         TypedQuery<Purchase> query = em.createQuery(
                 "SELECT p FROM Purchase p WHERE p.id = :purchaseId AND p.user.id = :userId AND p.product.seller.neighborhood.id = :neighborhoodId",
                 Purchase.class

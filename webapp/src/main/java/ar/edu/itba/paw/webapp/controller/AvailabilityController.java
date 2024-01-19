@@ -23,7 +23,7 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 @Path("neighborhoods/{neighborhoodId}/amenities/{amenityId}/availability")
 @Component
 public class AvailabilityController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AmenityController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AvailabilityController.class);
 
     @Autowired
     private AvailabilityService as;
