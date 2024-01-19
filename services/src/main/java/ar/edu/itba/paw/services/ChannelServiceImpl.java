@@ -47,6 +47,7 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Channel> findChannel(long channelId, long neighborhoodId) {
+        LOGGER.info("Creating Channel {} from Neighborhood {}", channelId, neighborhoodId);
 
         ValidationUtils.checkChannelId(channelId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);

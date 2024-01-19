@@ -73,7 +73,7 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Worker> findWorker(long userId) {
-        LOGGER.info("Finding Worker with id {}", userId);
+        LOGGER.info("Finding Worker {}", userId);
 
         ValidationUtils.checkUserId(userId);
 
@@ -84,7 +84,7 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Worker> findWorker(String mail) {
-        LOGGER.info("Finding Worker with mail {}", mail);
+        LOGGER.info("Finding Worker {}", mail);
         Optional<User> optionalUser = userDao.findUser(mail);
         return optionalUser.isPresent() ? workerDao.findWorker(optionalUser.get().getUserId()) : Optional.empty();
     }
@@ -92,7 +92,7 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     @Transactional(readOnly = true)
     public Set<Worker> getWorkers(int page, int size, List<String> professions, long userId, String workerRole, String workerStatus) {
-        LOGGER.info("Getting Workers with professions {}", professions);
+        LOGGER.info("Getting Workers with status {} professions {}", workerStatus, professions);
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPageAndSize(page, size);
@@ -118,7 +118,7 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     @Transactional(readOnly = true)
     public int countWorkers(List<String> professions, long userId, String workerRole, String workerStatus) {
-        LOGGER.info("Getting Workers Count for User {} with professions {}", userId, professions);
+        LOGGER.info("Counting workers for User {} with professions {}", userId, professions);
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkWorkerRoleString(workerRole);
@@ -141,7 +141,7 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     public int calculateWorkerPages(List<String> professions, long userId, int size, String workerRole, String workerStatus) {
-        LOGGER.info("Getting Pages of Workers with size {} for User {} with professions {}", size, userId, professions);
+        LOGGER.info("Calculating Worker Pages with size {} for User {} with professions {}", size, userId, professions);
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkWorkerRoleString(workerRole);
@@ -157,7 +157,7 @@ public class WorkerServiceImpl implements WorkerService {
     public Worker updateWorkerPartially(long workerId, String phoneNumber, String address, String businessName, MultipartFile backgroundPicture, String bio){
         LOGGER.info("Updating Worker {}", workerId);
 
-        Worker worker = getWorker(workerId);
+        Worker worker = workerDao.findWorker(workerId).orElseThrow(()-> new NotFoundException("Worker Not Found"));
         if(phoneNumber != null && !phoneNumber.isEmpty())
             worker.setPhoneNumber(phoneNumber);
         if(address != null && !address.isEmpty())
@@ -171,15 +171,5 @@ public class WorkerServiceImpl implements WorkerService {
             worker.setBackgroundPictureId(i.getImageId());
         }
         return worker;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    private Worker getWorker(long workerId) {
-        LOGGER.info("Getting Worker {}", workerId);
-
-        ValidationUtils.checkWorkerId(workerId);
-
-        return workerDao.findWorker(workerId).orElseThrow(() -> new NotFoundException("Worker not found"));
     }
 }

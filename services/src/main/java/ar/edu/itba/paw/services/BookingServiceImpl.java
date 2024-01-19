@@ -36,7 +36,7 @@ public class BookingServiceImpl implements BookingService {
     // -----------------------------------------------------------------------------------------------------------------
 
     public long[] createBooking(long userId, long amenityId, List<Long> shiftIds, Date reservationDate) {
-        LOGGER.info("Creating a Booking for Amenity {} on {} for User {}", amenityId, reservationDate, userId);
+        LOGGER.info("Creating a Booking for Amenity {} on Date {} for User {}", amenityId, reservationDate, userId);
 
         List<Long> bookingIds = new ArrayList<>();
 
@@ -58,6 +58,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Booking> findBooking(long bookingId){
+        LOGGER.info("Finding Booking {}", bookingId);
 
         ValidationUtils.checkBookingId(bookingId);
 
@@ -67,7 +68,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional(readOnly = true)
     public List<Booking> getBookings(Long userId, Long amenityId, long neighborhoodId) {
-        LOGGER.info("Getting Bookings for User {}", userId);
+        LOGGER.info("Getting Bookings for User {} on Amenity {} from Neighborhood {}", userId, amenityId, neighborhoodId);
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkAmenityId(amenityId);

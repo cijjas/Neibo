@@ -37,14 +37,14 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Neighborhood> findNeighborhood(String name) {
-        LOGGER.info("Finding Neighborhood with name {}", name);
+        LOGGER.info("Finding Neighborhood {}", name);
         return neighborhoodDao.findNeighborhood(name);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Neighborhood> findNeighborhood(long neighborhoodId) {
-        LOGGER.info("Selecting Neighborhood with id {}", neighborhoodId);
+        LOGGER.info("Finding Neighborhood {}", neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
@@ -54,7 +54,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     @Override
     @Transactional(readOnly = true)
     public List<Neighborhood> getNeighborhoods() {
-        LOGGER.info("Getting All Neighborhoods");
+        LOGGER.info("Getting Neighborhoods");
 
         List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoods();
         neighborhoods.removeIf(neighborhood -> neighborhood.getName().equals("Worker Neighborhood"));
@@ -65,7 +65,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     @Override
     @Transactional(readOnly = true)
     public List<Neighborhood> getNeighborhoods(int page, int size) {
-        LOGGER.info("Getting All Neighborhoods");
+        LOGGER.info("Getting Neighborhoods");
 
         ValidationUtils.checkPageAndSize(page, size);
 
@@ -79,12 +79,14 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
 
     @Override
     public int countNeighborhoods() {
+        LOGGER.info("Counting Neighborhoods");
+
         return neighborhoodDao.getNeighborhoodsCount();
     }
 
     @Override
     public int calculateNeighborhoodPages(int size) {
-        LOGGER.info("Getting Total Neighborhood Pages");
+        LOGGER.info("Calculating Neighborhood Pages");
 
         ValidationUtils.checkSize(size);
 

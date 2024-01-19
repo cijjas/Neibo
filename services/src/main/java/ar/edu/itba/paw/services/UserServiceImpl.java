@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public Optional<User> findUser(long userId) {
-        LOGGER.info("Finding User with id {}", userId);
+        LOGGER.info("Finding User {}", userId);
 
         ValidationUtils.checkUserId(userId);
 
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findUser(long userId, long neighborhoodId) {
-        LOGGER.info("Finding User with id {}", userId);
+        LOGGER.info("Finding User {} from Neighborhood {}", userId, neighborhoodId);
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -104,7 +104,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public Optional<User> findUser(String mail) {
-        LOGGER.info("Finding User with mail {}", mail);
+        LOGGER.info("Finding User {}", mail);
+
         return userDao.findUser(mail);
     }
 
@@ -131,7 +132,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public List<User> getUsers(String role, long neighborhoodId, int page, int size) {
-        LOGGER.info("Getting Users from Neighborhood {} with Role {}", neighborhoodId, role);
+        LOGGER.info("Getting Users with Role {} from Neighborhood {} ", role, neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
@@ -144,6 +145,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int countUsers(String role, long neighborhoodId) {
+        LOGGER.info("Counting Users with Role {} from Neighborhood {} ", role, neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkOptionalUserRoleString(role);
@@ -154,7 +156,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public int calculateUserPages(String role, long neighborhoodId, int size) {
-        LOGGER.info("Getting Pages of Users with size {} from Neighborhood {} with Role {}", size, neighborhoodId, role);
+        LOGGER.info("Calculating User Pages with Role {} from Neighborhood {} ", role, neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkSize(size);
@@ -188,7 +190,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public int calculateEventPages(long eventId, int size) {
-        LOGGER.info("Getting Pages of Users with size {} attending Event {}", size, eventId);
+        LOGGER.info("Calculating User Pages attending Event {}", eventId);
 
         ValidationUtils.checkEventId(eventId);
         ValidationUtils.checkSize(size);
@@ -198,6 +200,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getProductRequesters(long productId, int page, int size) {
+        LOGGER.info("Getting Users Requesting Product {} ", productId);
 
         ValidationUtils.checkProductId(productId);
         ValidationUtils.checkPageAndSize(page, size);

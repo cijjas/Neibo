@@ -24,13 +24,11 @@ public class InquiryServiceImpl implements InquiryService {
     private static final Logger LOGGER = LoggerFactory.getLogger(InquiryServiceImpl.class);
     private final InquiryDao inquiryDao;
     private final EmailService emailService;
-    private final UserDao userDao;
     private final ProductDao productDao;
 
     @Autowired
-    public InquiryServiceImpl(final InquiryDao inquiryDao, final UserDao userDao, final ProductDao productDao, final EmailService emailService) {
+    public InquiryServiceImpl(final InquiryDao inquiryDao, final ProductDao productDao, final EmailService emailService) {
         this.inquiryDao = inquiryDao;
-        this.userDao = userDao;
         this.productDao = productDao;
         this.emailService = emailService;
     }
@@ -39,7 +37,7 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     public Inquiry createInquiry(long userId, long productId, String message) {
-        LOGGER.info("User {} Inquiring on Product {}", userId, productId);
+        LOGGER.info("Creating Inquiry for Product {} from User {}", productId, userId);
 
         //Send email to seller
         Product product = productDao.findProduct(productId).orElseThrow(() -> new NotFoundException("Product not found"));
@@ -53,6 +51,7 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     public Optional<Inquiry> findInquiry(long inquiryId) {
+        LOGGER.info("Finding Inquiry {}", inquiryId);
 
         ValidationUtils.checkInquiryId(inquiryId);
 
@@ -61,6 +60,7 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     public Optional<Inquiry> findInquiry(long inquiryId, long productId, long neighborhoodId) {
+        LOGGER.info("Finding Inquiry {} for Product {} from Neighborhood {}", inquiryId, productId, neighborhoodId);
 
         ValidationUtils.checkInquiryId(inquiryId);
         ValidationUtils.checkProductId(productId);
@@ -72,6 +72,7 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     public List<Inquiry> getInquiries(long productId, int page, int size, long neighborhoodId) {
+        LOGGER.info("Getting Inquiries for Product {} from Neighborhood {}", productId, neighborhoodId);
 
         ValidationUtils.checkProductId(productId);
         ValidationUtils.checkPageAndSize(page, size);
@@ -86,6 +87,7 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     public int countInquiries(long productId) {
+        LOGGER.info("Counting Inquiries for Product {}", productId);
 
         ValidationUtils.checkProductId(productId);
 
@@ -94,6 +96,7 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     public int calculateInquiryPages(long productId, int size) {
+        LOGGER.info("Calculating Inquiry Pages for Product {}", productId);
 
         ValidationUtils.checkProductId(productId);
         ValidationUtils.checkSize(size);
@@ -105,7 +108,7 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     public Inquiry replyInquiry(long inquiryId, String reply) {
-        LOGGER.info("Replying to Inquiry with id {}", inquiryId);
+        LOGGER.info("Creating a reply for Inquiry {}", inquiryId);
 
         //Send email to inquirer
         Inquiry inquiry = inquiryDao.findInquiry(inquiryId).orElseThrow(() -> new NotFoundException("Inquiry not found"));

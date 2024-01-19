@@ -61,7 +61,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Comment> findComment(long commentId, long postId, long neighborhoodId) {
-        LOGGER.info("Finding Comment {}", commentId);
+        LOGGER.info("Finding Comment {} in Post {} from Neighborhood {}", commentId, postId, neighborhoodId);
 
         ValidationUtils.checkCommentId(commentId);
         ValidationUtils.checkPostId(postId);
@@ -72,9 +72,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional(readOnly = true)
     public List<Comment> getComments(long postId, int page, int size, long neighborhoodId) {
-        LOGGER.info("Finding Comments for Post {}", postId);
+        LOGGER.info("Getting Comments for Post {} from Neighborhood {}", postId, neighborhoodId);
 
         ValidationUtils.checkPostId(postId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
 
         postDao.findPost(postId, neighborhoodId);
@@ -87,7 +88,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional(readOnly = true)
     public int countComments(long postId) {
-        LOGGER.info("Getting Quantity of Comments for Post {}", postId);
+        LOGGER.info("Counting Comments for Post {}", postId);
 
         ValidationUtils.checkPostId(postId);
 
@@ -96,7 +97,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional(readOnly = true)
     public int calculateCommentPages(long postId, int size) {
-        LOGGER.info("Getting Total Comment Pages for size {}", size);
+        LOGGER.info("Calculating Comment for Post {}", postId);
 
         ValidationUtils.checkPostId(postId);
         ValidationUtils.checkSize(size);

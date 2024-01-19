@@ -39,23 +39,28 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
     @Override
     public Availability createAvailability(long amenityId, long shiftId) {
+        LOGGER.info("Getting Availability for Amenity {} on Shift {}", amenityId, shiftId);
+
         return availabilityDao.createAvailability(amenityId, shiftId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Optional<Availability> findAvailability(long id) {
+    public Optional<Availability> findAvailability(long availabilityId) {
+        LOGGER.info("Finding Availability {}", availabilityId);
 
-        ValidationUtils.checkAvailabilityId(id);
+        ValidationUtils.checkAvailabilityId(availabilityId);
 
-        return availabilityDao.findAvailability(id);
+        return availabilityDao.findAvailability(availabilityId);
     }
 
     @Override
     public Optional<Availability> findAvailability(long amenityId, long availabilityId, long neighborhoodId) {
+        LOGGER.info("Finding Availability {} for Amenity {} from Neighborhood {}", availabilityId, amenityId, neighborhoodId);
 
-        ValidationUtils.checkAmenityAvailabilityIds(amenityId, availabilityId);
+        ValidationUtils.checkAvailabilityId(availabilityId);
+        ValidationUtils.checkAmenityId(amenityId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return availabilityDao.findAvailability(amenityId, availabilityId, neighborhoodId);
@@ -64,6 +69,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
     @Override
     public List<Availability> getAvailability(long amenityId) {
+        LOGGER.info("Getting Availability for Amenity {}", amenityId);
 
         ValidationUtils.checkAmenityId(amenityId);
 
@@ -72,6 +78,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
     @Override
     public List<Availability> getAvailability(long amenityId, String status, String date, long neighborhoodId) {
+        LOGGER.info("Getting Availabilities with status {} for Amenity {} from Neighborhood {} on Date {}", status, amenityId, neighborhoodId, date);
 
         ValidationUtils.checkAmenityId(amenityId);
         ValidationUtils.checkOptionalShiftStatusString(status);
@@ -87,7 +94,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
     @Override
     public boolean updateAvailability(long amenityId, List<String> newShiftDescriptions) {
-        LOGGER.info("Updating the Availability for Amenity");
+        LOGGER.info("Updating Availability for Amenity {}", amenityId);
 
         // Convert the List of Shift descriptions to a List of shift IDs
         List<Long> newShiftIds = newShiftDescriptions.stream()

@@ -36,7 +36,7 @@ public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
     @Override
     @Transactional(readOnly = true)
     public List<Profession> getWorkerProfessions(long workerId) {
-        LOGGER.info("Adding Professions for Worker {}", workerId);
+        LOGGER.info("Getting Professions for Worker {}", workerId);
 
         ValidationUtils.checkWorkerId(workerId);
 
@@ -46,7 +46,7 @@ public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
     @Override
     @Transactional(readOnly = true)
     public String getWorkerProfessionsAsString(long workerId) {
-        LOGGER.info("Getting Worker {} Professions as String", workerId);
+        LOGGER.info("Getting Worker Professions for Worker {} as String", workerId);
 
         ValidationUtils.checkWorkerId(workerId);
 

@@ -42,7 +42,6 @@ public class AmenityServiceImpl implements AmenityService {
         this.neighborhoodDao = neighborhoodDao;
     }
 
-
     // -----------------------------------------------------------------------------------------------------------------
 
     // Function has to create the shifts if they do not already exist and match them with the amenity through the junction table
@@ -79,7 +78,7 @@ public class AmenityServiceImpl implements AmenityService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Amenity> findAmenity(long amenityId) {
-        LOGGER.info("Finding Amenity with id {}", amenityId);
+        LOGGER.info("Finding Amenity Amenity {}", amenityId);
 
         ValidationUtils.checkAmenityId(amenityId);
 
@@ -88,6 +87,7 @@ public class AmenityServiceImpl implements AmenityService {
 
     @Override
     public Optional<Amenity> findAmenity(long amenityId, long neighborhoodId) {
+        LOGGER.info("Finding Amenity {} from Neighborhood {}", amenityId, neighborhoodId);
 
         ValidationUtils.checkAmenityId(amenityId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -112,6 +112,7 @@ public class AmenityServiceImpl implements AmenityService {
 
     @Override
     public int countAmenities(long neighborhoodId) {
+        LOGGER.info("Counting Amenities from Neighborhood {}", neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
@@ -120,6 +121,7 @@ public class AmenityServiceImpl implements AmenityService {
 
     @Override
     public int calculateAmenityPages(long neighborhoodId, int size) {
+        LOGGER.info("Calculating Amenity Pages for Neighborhood {}", neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkSize(size);
@@ -131,6 +133,7 @@ public class AmenityServiceImpl implements AmenityService {
 
     @Override
     public Amenity updateAmenityPartially(long amenityId, String name, String description){
+        LOGGER.info("Updating Amenity {}", amenityId);
 
         Amenity amenity = amenityDao.findAmenity(amenityId).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
         if(name != null && !name.isEmpty())

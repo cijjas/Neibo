@@ -51,6 +51,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public Optional<Contact> findContact(long contactId) {
+        LOGGER.info("Finding Contact {}", contactId);
 
         ValidationUtils.checkContactId(contactId);
 
@@ -59,6 +60,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public Optional<Contact> findContact(long contactId, long neighborhoodId) {
+        LOGGER.info("Finding Contact {} from Neighborhood {}", contactId, neighborhoodId);
 
         ValidationUtils.checkContactId(contactId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);

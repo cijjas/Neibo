@@ -14,10 +14,6 @@ public interface LikeDao {
 
     // -------------------------------------------------- LIKES SELECT -------------------------------------------------
 
-    Optional<Like> findLike(long likeId);
-
-    Optional<Like> findLike(long likeId, long neighborhoodId);
-
     List<Like> getLikes(Long postId, Long userId, long neighborhoodId, int page, int size);
 
     int countLikes(Long postId, Long userId, long neighborhoodId);

@@ -31,7 +31,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Review createReview(long workerId, long userId, float rating, String review) {
-        LOGGER.info("Creating Review for Worker {} from User {}", workerId, userId);
+        LOGGER.info("Creating a Review for Worker {} made by User {}", workerId, userId);
 
         return reviewDao.createReview(workerId, userId, rating, review);
     }
@@ -41,7 +41,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Review> findReview(long reviewId) {
-        LOGGER.info("Finding Review with id {}", reviewId);
+        LOGGER.info("Finding Review {}", reviewId);
 
         ValidationUtils.checkReviewId(reviewId);
 
@@ -50,6 +50,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public Optional<Review> findReview(long reviewId, long workerId) {
+        LOGGER.info("Finding Review {} from Worker {}", reviewId, workerId);
+
         ValidationUtils.checkReviewId(reviewId);
         ValidationUtils.checkWorkerId(workerId);
 
@@ -59,7 +61,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional(readOnly = true)
     public List<Review> getReviews(long workerId) {
-        LOGGER.info("Getting reviews for Worker {}", workerId);
+        LOGGER.info("Getting Reviews for Worker {}", workerId);
 
         ValidationUtils.checkWorkerId(workerId);
 
@@ -69,7 +71,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional(readOnly = true)
     public List<Review> getReviews(long workerId, int page, int size) {
-        LOGGER.info("Getting reviews for Worker {}", workerId);
+        LOGGER.info("Getting Reviews for Worker {}", workerId);
 
         ValidationUtils.checkWorkerId(workerId);
         ValidationUtils.checkPageAndSize(page, size);
@@ -94,6 +96,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     @Transactional(readOnly = true)
     public int countReviews(long workerId) {
+        LOGGER.info("Counting Reviews for Worker {}", workerId);
 
         ValidationUtils.checkWorkerId(workerId);
 
@@ -102,6 +105,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public int calculateReviewPages(long workerId, int size) {
+        LOGGER.info("Calculating Review Pages for Worker {}", workerId);
 
         ValidationUtils.checkWorkerId(workerId);
         ValidationUtils.checkSize(size);
@@ -113,6 +117,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void deleteReview(long reviewId) {
+        LOGGER.info("Deleting Review {}", reviewId);
 
         ValidationUtils.checkReviewId(reviewId);
 

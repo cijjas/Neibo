@@ -42,6 +42,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Attendance> findAttendance(long userId, long eventId, long neighborhoodId) {
+        LOGGER.info("Finding Attendance for User {} and Event {}", userId, eventId);
 
         ValidationUtils.checkAttendanceId(userId, eventId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -52,6 +53,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Attendance> findAttendance(long attendanceId) {
+        LOGGER.info("Finding Attendance {}", attendanceId);
 
         ValidationUtils.checkAttendanceId(attendanceId);
 
@@ -64,6 +66,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         ValidationUtils.checkEventId(eventId);
         ValidationUtils.checkPageAndSize(page, size);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         eventDao.findEvent(eventId, neighborhoodId).orElseThrow(NotFoundException::new);
 
@@ -74,6 +77,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public int countAttendance(long eventId) {
+        LOGGER.info("Counting Attendance for Event {}", eventId);
 
         ValidationUtils.checkEventId(eventId);
 
@@ -82,6 +86,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public int calculateAttendancePages(long eventId, int size) {
+        LOGGER.info("Calculating Attendance Pages for Event {}", eventId);
 
         ValidationUtils.checkEventId(eventId);
         ValidationUtils.checkSize(size);

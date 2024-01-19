@@ -38,12 +38,13 @@ public class TagServiceImpl implements TagService {
     @Override
     public Tag createTag(String name) {
         LOGGER.info("Creating Tag {}", name);
+
         return tagDao.createTag(name);
     }
 
     @Override
     public void createTagsAndCategorizePost(long postId, String tagsString) {
-        LOGGER.info("Creating Tags in {} and Associating it with the Post {}", tagsString, postId);
+        LOGGER.info("Creating Tags in {} and associating it with Post {}", tagsString, postId);
 
         ValidationUtils.checkPostId(postId);
 
@@ -114,6 +115,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> getTags(Long postId, long neighborhoodId, int page, int size) {
+        LOGGER.info("Getting Tags in Post {} from Neighborhood {}", postId, neighborhoodId);
 
         ValidationUtils.checkPostId(postId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -125,22 +127,23 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public int countTags(Long postId, Long neighborhoodId) {
+        LOGGER.info("Counting Tags in Post {} from Neighborhood {}", postId, neighborhoodId);
+
+        ValidationUtils.checkPostId(postId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return tagDao.countTags(postId, neighborhoodId);
+    }
+
+    @Override
     public int calculateTagPages(Long postId, Long neighborhoodId, int size) {
-        LOGGER.info("Getting Total Tag Pages from Neighborhood {}", neighborhoodId);
+        LOGGER.info("Calculating Tag Pages in Post {} from Neighborhood {}", postId, neighborhoodId);
 
         ValidationUtils.checkPostId(postId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(tagDao.countTags(postId, neighborhoodId), size);
-    }
-
-    @Override
-    public int countTags(Long postId, Long neighborhoodId) {
-
-        ValidationUtils.checkPostId(postId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        return tagDao.countTags(postId, neighborhoodId);
     }
 }

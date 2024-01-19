@@ -53,6 +53,8 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
 
     @Override
     public void addWorkerToNeighborhoods(long workerId, String neighborhoodIds) {
+        LOGGER.info("Adding Worker {} to Neighborhoods {}", workerId, neighborhoodIds);
+
         //convert the id's string into a List<Long>, where the values are comma separated in the string
         String[] idsString = neighborhoodIds.split(",");
         Long[] idsLong = new Long[idsString.length];
@@ -71,7 +73,7 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     @Override
     @Transactional(readOnly = true)
     public Set<Neighborhood> getNeighborhoods(long workerId) {
-        LOGGER.info("Getting Neighborhoods for Worker {}", workerId);
+        LOGGER.info("Getting the Neighborhoods that Worker {} belongs to", workerId);
 
         ValidationUtils.checkWorkerId(workerId);
 
@@ -81,7 +83,7 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     @Override
     @Transactional(readOnly = true)
     public List<Neighborhood> getOtherNeighborhoods(long workerId) {
-        LOGGER.info("Getting Other Neighborhoods for Worker {}", workerId);
+        LOGGER.info("Getting Neighborhoods that Worker {} does not belong to", workerId);
 
         ValidationUtils.checkWorkerId(workerId);
 
@@ -131,7 +133,6 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
         setNeighborhoodRole(workerId, WorkerRole.UNVERIFIED_WORKER, neighborhoodId);
     }
 
-    // weird function
     private void setNeighborhoodRole(long workerId, WorkerRole role, long neighborhoodId) {
         LOGGER.debug("Setting Worker {} role to {} in Neighborhood {}", workerId, role, neighborhoodId);
 

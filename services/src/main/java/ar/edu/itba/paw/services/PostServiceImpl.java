@@ -42,22 +42,23 @@ public class PostServiceImpl implements PostService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Post createPost(String title, String description, long neighborId, long channelId, String tags, MultipartFile imageFile) {
-        LOGGER.info("Creating Post with Title {} by User {}", title, neighborId);
+    public Post createPost(String title, String description, long userId, long channelId, String tags, MultipartFile imageFile) {
+        LOGGER.info("Creating Post with Title {} by User {}", title, userId);
 
         Image i = null;
         if (imageFile != null && !imageFile.isEmpty()) {
             i = imageService.storeImage(imageFile);
         }
-        Post p = postDao.createPost(title, description, neighborId, channelId, i == null ? 0 : i.getImageId());
+        Post p = postDao.createPost(title, description, userId, channelId, i == null ? 0 : i.getImageId());
         tagService.createTagsAndCategorizePost(p.getPostId(), tags);
         return p;
     }
 
     @Override
-    public Post createAdminPost(final long neighborhoodId, final String title, final String description, final long neighborId, final int channelId, final String tags, final MultipartFile imageFile) {
+    public Post createAdminPost(final long neighborhoodId, final String title, final String description, final long userId, final int channelId, final String tags, final MultipartFile imageFile) {
+        LOGGER.info("Creating Admin Post with Title {} by User {}", title, userId);
 
-        Post post = createPost(title, description, neighborId, channelId, tags, imageFile);
+        Post post = createPost(title, description, userId, channelId, tags, imageFile);
         assert post != null;
         emailService.sendAnnouncementMail(post, userService.getNeighbors(neighborhoodId));
         return post;
@@ -69,7 +70,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Post> findPost(final long postId) {
-        LOGGER.info("Finding Post with ID {}", postId);
+        LOGGER.info("Finding Post {}", postId);
 
         ValidationUtils.checkPostId(postId);
 
@@ -79,7 +80,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Post> findPost(final long postId, long neighborhoodId) {
-        LOGGER.info("Finding Post with ID {}", postId);
+        LOGGER.info("Finding Post {} from Neighborhood {}", postId, neighborhoodId);
 
         ValidationUtils.checkPostId(postId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -90,7 +91,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public List<Post> getPosts(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, Long userId) {
-        LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {}, by User {} and Post Status {} ", neighborhoodId, channel, tags, userId, postStatus);
+        LOGGER.info("Getting Posts with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatus, channel, tags, userId, neighborhoodId);
 
         ValidationUtils.checkOptionalChannelString(channel);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -108,7 +109,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public int countPosts(String channel, List<String> tags, long neighborhoodId, String postStatus, Long userId) {
-        LOGGER.info("Getting Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", neighborhoodId, channel, tags, postStatus);
+        LOGGER.info("Counting Posts with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatus, channel, tags, userId, neighborhoodId);
 
         ValidationUtils.checkOptionalChannelString(channel);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -121,7 +122,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly = true)
     public int calculatePostPages(String channel, int size, List<String> tags, long neighborhoodId, String postStatus, Long userId) {
-        LOGGER.info("Getting Total Post Pages with size {} for Posts from Neighborhood {}, on Channel {}, with Tags {} and Post Status {}", size, neighborhoodId, channel, tags, postStatus);
+        LOGGER.info("Calculating Post pages with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatus, channel, tags, userId, neighborhoodId);
 
         ValidationUtils.checkOptionalChannelString(channel);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);

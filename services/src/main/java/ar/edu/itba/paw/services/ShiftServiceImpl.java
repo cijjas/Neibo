@@ -40,7 +40,7 @@ public class ShiftServiceImpl implements ShiftService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Shift> findShift(long startTime, long dayId) {
-        LOGGER.info("Finding Shift with Day Id {} and Start Time {}", dayId, startTime);
+        LOGGER.info("Finding Shift with Day {} and Start Time {}", dayId, startTime);
 
         ValidationUtils.checkShiftIds(startTime, dayId);
 
@@ -49,13 +49,15 @@ public class ShiftServiceImpl implements ShiftService {
 
     @Override
     public List<Shift> getShifts() {
+        LOGGER.info("Getting Shifts");
+
         return shiftDao.getShifts();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Shift> findShift(long shiftId) {
-        LOGGER.info("Finding Shift with ID {}", shiftId);
+        LOGGER.info("Finding Shift {}", shiftId);
 
         ValidationUtils.checkShiftId(shiftId);
 
@@ -80,6 +82,7 @@ public class ShiftServiceImpl implements ShiftService {
     @Override
     @Transactional(readOnly = true)
     public List<Shift> getShifts(long amenityId) {
+        LOGGER.info("Getting Shifts for Amenity {}", amenityId);
 
         ValidationUtils.checkAmenityId(amenityId);
 

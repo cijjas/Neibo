@@ -31,6 +31,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public Purchase createPurchase(long productId, long userId, long unitsBought) {
+        LOGGER.info("Creating a Purchase for Product {} for {} Units from User {}", productId, unitsBought, userId);
 
         return purchaseDao.createPurchase(productId, userId, unitsBought);
     }
@@ -39,6 +40,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public Optional<Purchase> findPurchase(long purchaseId) {
+        LOGGER.info("Finding Purchase {}", purchaseId);
 
         ValidationUtils.checkPurchaseId(purchaseId);
 
@@ -47,6 +49,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public Optional<Purchase> findPurchase(long purchaseId, long userId, long neighborhoodId) {
+        LOGGER.info("Finding Purchase {} made by User {} from Neighborhood {}", purchaseId, userId, neighborhoodId);
 
         ValidationUtils.checkPurchaseId(purchaseId);
         ValidationUtils.checkUserId(userId);
@@ -57,6 +60,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public Set<Purchase> getPurchases(long userId, String transactionType, int page, int size, long neighborhoodId) {
+        LOGGER.info("Getting Transactions of type {} made by User {} from Neighborhood {}", transactionType, userId, neighborhoodId);
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPageAndSize(page, size);
@@ -70,7 +74,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public int countPurchases(long userId, String transactionType) {
-
+        LOGGER.info("Counting Transactions of type {} made by User {}", transactionType, userId);
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkTransactionTypeString(transactionType);
@@ -80,6 +84,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public int calculatePurchasePages(long userId, String transactionType, int size) {
+        LOGGER.info("Calculating Transaction Pages of type {} made by User {}", transactionType, userId);
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkTransactionTypeString(transactionType);

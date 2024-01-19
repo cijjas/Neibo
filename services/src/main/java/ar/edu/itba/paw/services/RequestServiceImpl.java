@@ -43,7 +43,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Request createRequest(long userId, long productId, String message) {
-        LOGGER.info("User {} Requesting Product {}", userId, productId);
+        LOGGER.info("Creating a Request for Product {} by User {}", productId, userId);
 
         Product product = productDao.findProduct(productId).orElseThrow(() -> new NotFoundException("Product not found"));
         User sender = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User not found"));
@@ -53,6 +53,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Optional<Request> findRequest(long requestId) {
+        LOGGER.info("Finding Request {}", requestId);
 
         ValidationUtils.checkRequestId(requestId);
 
@@ -61,6 +62,8 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Optional<Request> findRequest(long requestId, long neighborhoodId) {
+        LOGGER.info("Finding Request {} from Neighborhood {}", requestId, neighborhoodId);
+
         ValidationUtils.checkRequestId(requestId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
@@ -71,6 +74,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<Request> getRequests(Long productId, Long userId, int page, int size, long neighborhoodId){
+        LOGGER.info("Getting Requests for Product {} made by User {} from Neighborhood {}", productId, userId, neighborhoodId);
 
         ValidationUtils.checkRequestId(productId, userId);
         ValidationUtils.checkPageAndSize(page, size);
@@ -83,6 +87,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public int countRequests(Long productId, Long userId) {
+        LOGGER.info("Counting Requests for Product {} made by User {}", productId, userId);
 
         ValidationUtils.checkRequestId(productId, userId);
 
@@ -91,6 +96,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public int calculateRequestPages(Long productId, Long userId, int size) {
+        LOGGER.info("Calculating Request Pages for Product {} made by User {}", productId, userId);
 
         ValidationUtils.checkRequestId(productId, userId);
         ValidationUtils.checkSize(size);
@@ -102,6 +108,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public void markRequestAsFulfilled(long requestId) {
+        LOGGER.info("Marking Request {} as fulfilled", requestId);
 
         ValidationUtils.checkRequestId(requestId);
 

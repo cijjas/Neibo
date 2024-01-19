@@ -41,13 +41,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createProduct(long userId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, long units) {
-        LOGGER.info("User {} Creating Product {}", userId, name);
+        LOGGER.info("Creating Product {} from User {}", name, userId);
+
         double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
         Long[] idArray = {0L, 0L, 0L};
         int pictureFilesLength = pictureFiles == null? 0 : pictureFiles.length;
-        for(int i = 0; i < pictureFilesLength; i++){
+        for(int i = 0; i < pictureFilesLength; i++)
             idArray[i] = getImageId(pictureFiles[i]);
-        }
+
         return productDao.createProduct(userId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2], units);
     }
 
@@ -55,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Optional<Product> findProduct(long productId) {
-        LOGGER.info("Selecting Product with id {}", productId);
+        LOGGER.info("Finding Product {}", productId);
 
         ValidationUtils.checkProductId(productId);
 
@@ -64,7 +65,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Optional<Product> findProduct(long productId, long neighborhoodId) {
-        LOGGER.info("Selecting Product with id {}", productId);
+        LOGGER.info("Finding Product {} from Neighborhood {}", productId, neighborhoodId);
 
         ValidationUtils.checkProductId(productId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -74,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getProducts(long neighborhoodId, String department, Long userId, String productStatus, int page, int size) {
-        LOGGER.info("Selecting Products by neighborhood {} and departments {}", neighborhoodId, department);
+        LOGGER.info("Getting Products with status {} from Department {} by User {} from Neighborhood {}", productStatus, department, userId, neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkOptionalProductStatusString(productStatus);
@@ -91,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public int countProducts(long neighborhoodId, String department, Long userId, String productStatus) {
-        LOGGER.info("Counting Products by neighborhood {} and departments {}", neighborhoodId, department);
+        LOGGER.info("Counting Products with status {} from Department {} by User {} from Neighborhood {}", productStatus, department, userId, neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkOptionalProductStatusString(productStatus);
@@ -103,6 +104,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public int calculateProductPages(long neighborhoodId, int size, String department, Long userId, String productStatus){
+        LOGGER.info("Calculating Product Pages with status {} from Department {} by User {} from Neighborhood {}", productStatus, department, userId, neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkOptionalProductStatusString(productStatus);

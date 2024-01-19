@@ -61,19 +61,6 @@ public class EventServiceImpl implements EventService {
         return createdEvent;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
-    private Event getEvent(long eventId){
-
-        ValidationUtils.checkEventId(eventId);
-
-        return eventDao.findEvent(eventId).orElseThrow(() -> new NotFoundException("Event not found"));
-    }
-
-
-    private OptionalLong getTimeId(Time time) {
-        return timeDao.findId(time);
-    }
 
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -91,7 +78,7 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Event> findEvent(long eventId, long neighborhoodId) {
-        LOGGER.info("Finding Event {}", eventId);
+        LOGGER.info("Finding Event {} from Neighborhood {}", eventId, neighborhoodId);
 
         ValidationUtils.checkEventId(eventId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -163,10 +150,6 @@ public class EventServiceImpl implements EventService {
     public String getSelectedMonth(int month, Language language) {
         LOGGER.info("Getting Selected Month {}", month);
 
-        if (month < 0 || month >= Month.values().length) {
-            throw new IllegalArgumentException("Invalid month index");
-        }
-
         return Month.values()[month].getName(language);
     }
 
@@ -174,6 +157,7 @@ public class EventServiceImpl implements EventService {
     @Transactional(readOnly = true)
     public int getSelectedYear(int year) {
         LOGGER.info("Getting selected Years {}", year);
+
         return year + 1900;
     }
 
@@ -191,10 +175,11 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event updateEventPartially(long eventId, String name, String description, Date date, String startTime, String endTime){
+        LOGGER.info("Updating Event {}", eventId);
 
         ValidationUtils.checkEventId(eventId);
 
-        Event event = getEvent(eventId);
+        Event event = eventDao.findEvent(eventId).orElseThrow(()-> new NotFoundException("Event Not Found"));
         if(name != null && !name.isEmpty())
             event.setName(name);
         if(description != null && !description.isEmpty())
@@ -211,6 +196,7 @@ public class EventServiceImpl implements EventService {
     
     @Override
     public Event updateEvent(long eventId, String name, String description, Date date, String startTime, String endTime) {
+        LOGGER.info("Updating Event {}", eventId);
 
         Long[] times = stringToTime(startTime, endTime);
         Event event = em.find(Event.class, eventId);
@@ -270,4 +256,11 @@ public class EventServiceImpl implements EventService {
         }
         return timeArray;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    private OptionalLong getTimeId(Time time) {
+        return timeDao.findId(time);
+    }
+
 }

@@ -37,6 +37,7 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public Resource createResource(long neighborhoodId, String title, String description, MultipartFile imageFile) {
         LOGGER.info("Creating Resource {} for Neighborhood {}", title, neighborhoodId);
+
         Image i = null;
         if (imageFile != null && !imageFile.isEmpty()) {
             i = imageService.storeImage(imageFile);
@@ -47,7 +48,7 @@ public class ResourceServiceImpl implements ResourceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     public Optional<Resource> findResource(long resourceId) {
-        LOGGER.info("Getting Resource {}", resourceId);
+        LOGGER.info("Finding Resource {}", resourceId);
 
         ValidationUtils.checkResourceId(resourceId);
 

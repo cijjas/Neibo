@@ -31,7 +31,7 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public Like createLike(long postId, long userId) {
-        LOGGER.info("Liking Post {} due to User {}", postId, userId);
+        LOGGER.info("Creating Like for Post {} by User {}", postId, userId);
 
         return likeDao.createLike(postId, userId);
     }
@@ -39,24 +39,8 @@ public class LikeServiceImpl implements LikeService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Optional<Like> findLike(long likeId) {
-        LOGGER.info("Finding Like with Id {}", likeId);
-
-        ValidationUtils.checkLikeId(likeId);
-
-        return likeDao.findLike(likeId);
-    }
-
-    @Override
-    public Optional<Like> findLike(long likeId, long neighborhoodId) {
-
-        ValidationUtils.checkLikeId(likeId);
-
-        return likeDao.findLike(likeId, neighborhoodId);
-    }
-
-    @Override
     public List<Like> getLikes(long neighborhoodId, Long postId, Long userId, int page, int size){
+        LOGGER.info("Getting Likes for Post {} by User {} from Neighborhood {}", postId, userId, neighborhoodId);
 
         ValidationUtils.checkLikeIds(postId, userId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -70,7 +54,7 @@ public class LikeServiceImpl implements LikeService {
     @Override
     @Transactional(readOnly = true)
     public boolean isPostLiked(long postId, long userId) {
-        LOGGER.info("Checking if User {} has liked Post {}", userId, postId);
+        LOGGER.info("Checking a Like from User {} to Post {} exists", userId, postId);
 
         ValidationUtils.checkLikeIds(postId, userId);
 
@@ -82,6 +66,7 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public int countLikes(long neighborhoodId, Long postId, Long userId) {
+        LOGGER.info("Counting Likes for Post {} by User {} from Neighborhood {}", userId, postId, neighborhoodId);
 
         ValidationUtils.checkLikeIds(postId, userId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -91,6 +76,7 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public int calculateLikePages(long neighborhoodId, Long postId, Long userId, int size) {
+        LOGGER.info("Calculating Like Pages for Post {} by User {} from Neighborhood {}", userId, postId, neighborhoodId);
 
         ValidationUtils.checkLikeIds(postId, userId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
