@@ -82,10 +82,10 @@
                                 [postID]="post.postId"
                                 [postNeighborMail]="post.user.mail"
                                 [postDate]="post.date"
-                                [postTitle]="post.subject"
-                                [postDescription]="post.message"
-                                [postImage]="image.imageId"
-                                [postLikes]="post.likedByUsers.length"
+                                [postTitle]="post.title"
+                                [postDescription]="post.description"
+                                [postImage]="post.postPicture.imageId"
+                                [postLikes]="post.likes.length"
                                 [postUserProfilePictureId]="post.user.profilePicture.imageId"
                                 [contextPath]="contextPath">
                             </app-blogpost>
