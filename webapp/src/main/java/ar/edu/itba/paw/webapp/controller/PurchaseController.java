@@ -40,11 +40,10 @@ public class PurchaseController {
             @QueryParam("page") @DefaultValue("1") int page,
             @QueryParam("size") @DefaultValue("10") int size
     ) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/users/{}/transactions", neighborhoodId, userId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}/transactions'", neighborhoodId, userId);
 
         Set<Purchase> transactions = ps.getPurchases(userId, type, page, size, neighborhoodId);
 
-        // Convert transactions to DTOs if needed
         Set<PurchaseDto> transactionDto = transactions.stream()
                 .map(p -> PurchaseDto.fromPurchase(p, uriInfo))
                 .collect(Collectors.toSet());
@@ -61,7 +60,7 @@ public class PurchaseController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findTransaction(@PathParam("id") final long transactionId) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/users/{}/transactions/{}", neighborhoodId, userId, transactionId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}/transactions/{}'", neighborhoodId, userId, transactionId);
         return Response.ok(PurchaseDto.fromPurchase(ps.findPurchase(transactionId, userId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Purchase Not Found")), uriInfo)).build();
     }

@@ -43,7 +43,7 @@ public class BookingController extends GlobalControllerAdvice{
             @QueryParam("userId") final Long userId,
             @QueryParam("amenityId") final Long amenityId
     ) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/bookings", neighborhoodId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
         final List<Booking> bookings = bs.getBookings(userId, amenityId, neighborhoodId);
         final List<BookingDto> bookingsDto = bookings.stream()
                 .map(b -> BookingDto.fromBooking(b, uriInfo)).collect(Collectors.toList());
@@ -55,7 +55,7 @@ public class BookingController extends GlobalControllerAdvice{
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findBooking(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/bookings/{}", neighborhoodId, id);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, id);
         return Response.ok(BookingDto.fromBooking(bs.findBooking(id)
                 .orElseThrow(() -> new NotFoundException("Booking Not Found")), uriInfo)).build();
     }
@@ -63,7 +63,7 @@ public class BookingController extends GlobalControllerAdvice{
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createBooking(@Valid BookingForm form) {
-        LOGGER.info("POST request arrived at neighborhoods/{}/bookings", neighborhoodId);
+        LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
         final long[] bookingIds = bs.createBooking(getLoggedUser().getUserId(), form.getAmenityId(), form.getShiftIds(), form.getReservationDate());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(Arrays.toString(bookingIds)).build();

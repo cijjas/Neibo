@@ -30,14 +30,14 @@ public class ImageController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findById(@PathParam("id") long id) {
-        LOGGER.info("GET request arrived at images/{}", id);
+        LOGGER.info("GET request arrived at '/images/{}'", id);
         return Response.ok(ImageDto.fromImage(is.findImage(id).orElseThrow(NotFoundException::new), uriInfo)).build();
     }
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response storeImage(MultipartFile imageFile) {
-        LOGGER.info("POST request arrived at images/");
+        LOGGER.info("POST request arrived at '/images/'");
         final Image image = is.storeImage(imageFile);
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(image.getImageId())).build();

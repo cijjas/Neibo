@@ -26,7 +26,7 @@ public class TimeController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listTimes() {
-        LOGGER.info("GET request arrived at times");
+        LOGGER.info("GET request arrived at '/times'");
         List<TimeDto> timeDto = Arrays.stream(StandardTime.values())
                 .map(t -> TimeDto.fromTime(t, uriInfo))
                 .collect(Collectors.toList());
@@ -39,7 +39,7 @@ public class TimeController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findTime(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived at times/{}", id);
+        LOGGER.info("GET request arrived at '/times/{}'", id);
         return Response.ok(TimeDto.fromTime(StandardTime.fromId(id), uriInfo)).build();
     }
 }

@@ -29,7 +29,7 @@ public class ChannelController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listChannels() {
-        LOGGER.info("GET request arrived at neighborhoods/{}/channels", neighborhoodId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
         List<Channel> channels = cs.getChannels(neighborhoodId);
 
         List<ChannelDto> channelDto = channels.stream()
@@ -43,7 +43,7 @@ public class ChannelController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findChannel(@PathParam("id") long channelId) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/channels/{}", neighborhoodId, channelId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
         return Response.ok(ChannelDto.fromChannel(cs.findChannel(channelId, neighborhoodId)
                 .orElseThrow(NotFoundException::new), uriInfo, neighborhoodId)).build();
     }

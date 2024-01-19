@@ -37,7 +37,7 @@ public class AmenityController {
     public Response listAmenities(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/amenities", neighborhoodId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
         final List<Amenity> amenities = as.getAmenities(neighborhoodId, page, size);
 
         if (amenities.isEmpty())
@@ -59,7 +59,7 @@ public class AmenityController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findAmenity(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/amenities/{}", neighborhoodId, id);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
         return Response.ok(AmenityDto.fromAmenity(as.findAmenity(id, neighborhoodId)
                 .orElseThrow(NotFoundException::new), uriInfo)).build();
     }
@@ -67,7 +67,7 @@ public class AmenityController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createAmenity(@Valid final AmenityForm form) {
-        LOGGER.info("POST request arrived at neighborhoods/{}/amenities", neighborhoodId);
+        LOGGER.info("POST request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
         final Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, form.getSelectedShifts());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(amenity.getAmenityId())).build();
@@ -81,7 +81,7 @@ public class AmenityController {
     public Response updateAmenityPartially(
             @PathParam("id") final long id,
             @Valid final AmenityForm partialUpdate) {
-        LOGGER.info("PATCH request arrived at neighborhoods/{}/amenities/{}", neighborhoodId, id);
+        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
         final Amenity amenity = as.updateAmenityPartially(id, partialUpdate.getName(), partialUpdate.getDescription());
         return Response.ok(AmenityDto.fromAmenity(amenity, uriInfo)).build();
     }
@@ -90,7 +90,7 @@ public class AmenityController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(@PathParam("id") final long id) {
-        LOGGER.info("DELETE request arrived at neighborhoods/{}/amenities/{}", neighborhoodId, id);
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
         as.deleteAmenity(id);
         return Response.noContent().build();
     }

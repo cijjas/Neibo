@@ -29,7 +29,7 @@ public class ShiftController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getShifts() {
-        LOGGER.info("GET request arrived at shifts");
+        LOGGER.info("GET request arrived at '/shifts'");
         List<Shift> shifts = ss.getShifts();
 
         // Convert shifts to DTOs if needed
@@ -45,7 +45,7 @@ public class ShiftController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findShift(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived at shifts/{}", id);
+        LOGGER.info("GET request arrived at '/shifts/{}'", id);
         return Response.ok(ShiftDto.fromShift(ss.findShift(id)
                 .orElseThrow(NotFoundException::new), uriInfo)).build();
     }

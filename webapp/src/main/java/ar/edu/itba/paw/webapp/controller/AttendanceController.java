@@ -44,7 +44,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     public Response listAttendance(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/events/{}/attendance", neighborhoodId, eventId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
         final Set<Attendance> attendance = as.getAttendance(eventId, page, size, neighborhoodId);
 
         if (attendance.isEmpty())
@@ -66,7 +66,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     @Path("/{userId}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findAttendance(@PathParam("userId") final long userId) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/events/{}/attendance/{}", neighborhoodId, eventId, userId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
         return Response.ok(AttendanceDto.fromAttendance(as.findAttendance(userId, eventId, neighborhoodId)
                 .orElseThrow(NotFoundException::new), uriInfo)).build();
     }
@@ -74,7 +74,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createAttendance() {
-        LOGGER.info("POST request arrived at neighborhoods/{}/events/{}/attendance", neighborhoodId, eventId);
+        LOGGER.info("POST request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
         final Attendance attendance = as.createAttendance(getLoggedUser().getUserId(), eventId);
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(attendance.getId())).build();
@@ -84,7 +84,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     @DELETE
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteByUser() {
-        LOGGER.info("DELETE request arrived at neighborhoods/{}/events/{}/attendance", neighborhoodId, eventId);
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
         as.deleteAttendance(getLoggedUser().getUserId(), eventId);
         return Response.noContent().build();
     }

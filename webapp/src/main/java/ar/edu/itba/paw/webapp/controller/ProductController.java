@@ -47,7 +47,7 @@ public class ProductController extends GlobalControllerAdvice {
             @QueryParam("userId") final Long userId,
             @QueryParam("productStatus") final String productStatus
             ) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/products", neighborhoodId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
         final List<Product> products = ps.getProducts(neighborhoodId, department, userId, productStatus, page, size);
         final List<ProductDto> productsDto = products.stream()
                 .map(p -> ProductDto.fromProduct(p, uriInfo)).collect(Collectors.toList());
@@ -65,7 +65,7 @@ public class ProductController extends GlobalControllerAdvice {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findProduct(@PathParam("id") final long productId) {
-        LOGGER.info("GET request arrived neighborhoods/{}/products/{}", neighborhoodId, productId);
+        LOGGER.info("GET request arrived '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
         return Response.ok(ProductDto.fromProduct(ps.findProduct(productId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Product Not Found")), uriInfo)).build();
     }
@@ -73,7 +73,7 @@ public class ProductController extends GlobalControllerAdvice {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createProduct(@Valid final ListingForm form) {
-        LOGGER.info("POST request arrived at neighborhoods/{}/products", neighborhoodId);
+        LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
         final Product product = ps.createProduct(getLoggedUser().getUserId(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentId(), form.getImageFiles(), form.getQuantity());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(product.getProductId())).build();
@@ -87,7 +87,7 @@ public class ProductController extends GlobalControllerAdvice {
     public Response updateProductPartially(
             @PathParam("id") final long id,
             @Valid final ListingForm partialUpdate) {
-        LOGGER.info("UPDATE request arrived at neighborhoods/{}/products/{}", neighborhoodId, id);
+        LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);
         final Product product = ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartmentId(), partialUpdate.getImageFiles(), partialUpdate.getQuantity());
         return Response.ok(ProductDto.fromProduct(product, uriInfo)).build();
     }
@@ -96,7 +96,7 @@ public class ProductController extends GlobalControllerAdvice {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(@PathParam("id") final long id) {
-        LOGGER.info("DELETE request arrived at neighborhoods/{}/products/{}", neighborhoodId, id);
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);
         ps.deleteProduct(id);
         return Response.noContent().build();
     }

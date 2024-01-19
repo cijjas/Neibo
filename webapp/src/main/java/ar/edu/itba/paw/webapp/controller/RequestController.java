@@ -47,7 +47,7 @@ public class RequestController extends GlobalControllerAdvice {
             @QueryParam("userId") final Long userId,
             @QueryParam("productId") final Long productId
             ) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/requests", neighborhoodId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
         List<Request> requests = rs.getRequests(userId, productId, page, size, neighborhoodId);
 
         List<RequestDto> requestDto = requests.stream()
@@ -66,7 +66,7 @@ public class RequestController extends GlobalControllerAdvice {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findRequest(@PathParam("id") final long requestId) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/requests/{}", neighborhoodId, requestId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
         return Response.ok(RequestDto.fromRequest(rs.findRequest(requestId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Request Not Found")), uriInfo)).build();
     }
@@ -77,7 +77,7 @@ public class RequestController extends GlobalControllerAdvice {
             @Valid final RequestForm form,
             @QueryParam("productId") @DefaultValue("0") final int productId
     ) {
-        LOGGER.info("POST request arrived at neighborhoods/{}/requests", neighborhoodId);
+        LOGGER.info("POST request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
         final Request request = rs.createRequest(getLoggedUser().getUserId(), productId, form.getRequestMessage());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(request.getRequestId())).build();

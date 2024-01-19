@@ -43,7 +43,7 @@ public class AvailabilityController {
             @QueryParam("status") String status,
             @QueryParam("date") String date
     ) {
-        LOGGER.info("Listing Availability for Amenity with id {}", amenityId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}/availability'", neighborhoodId, amenityId);
         final List<Availability> availabilities = as.getAvailability(amenityId, status, date, neighborhoodId);
         final List<AvailabilityDto> availabilityDto = availabilities.stream()
                 .map(a -> AvailabilityDto.fromAvailability(a, uriInfo)).collect(Collectors.toList());
@@ -54,7 +54,7 @@ public class AvailabilityController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findAvailability(@PathParam("id") final long availabilityId) {
-        LOGGER.info("Finding Availability with id {}", availabilityId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}/availability/{}'", neighborhoodId, amenityId, availabilityId);
         return Response.ok(AvailabilityDto.fromAvailability(as.findAvailability(amenityId, availabilityId, neighborhoodId)
                 .orElseThrow(NotFoundException::new), uriInfo)).build();
     }

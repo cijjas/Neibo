@@ -30,7 +30,7 @@ public class LanguageController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listLanguages() {
-        LOGGER.info("Listing Languages");
+        LOGGER.info("GET request arrived at '/languages'");
         List<LanguageDto> languagesDto = Arrays.stream(Language.values())
                 .map(l -> LanguageDto.fromLanguage(l, uriInfo))
                 .collect(Collectors.toList());
@@ -42,7 +42,7 @@ public class LanguageController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findLanguage(@PathParam("id") final long id) {
-        LOGGER.info("Finding Language with id {}", id);
+        LOGGER.info("GET request arrived at '/languages/{}'", id);
         return Response.ok(LanguageDto.fromLanguage(Language.fromId(id), uriInfo)).build();
     }
 }

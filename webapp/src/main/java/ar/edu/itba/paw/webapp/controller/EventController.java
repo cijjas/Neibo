@@ -36,7 +36,7 @@ public class EventController {
     public Response listEventsByDate(
             @QueryParam("date") final String date
             ) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/events", neighborhoodId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/events'", neighborhoodId);
         final List<Event> events = es.getEvents(date, neighborhoodId);
         final List<EventDto> eventsDto = events.stream()
                 .map(e -> EventDto.fromEvent(e, uriInfo)).collect(Collectors.toList());
@@ -49,7 +49,7 @@ public class EventController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findEvent(@PathParam("id") final long eventId) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/events/{}", neighborhoodId, eventId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, eventId);
         return Response.ok(EventDto.fromEvent(es.findEvent(eventId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Event Not Found")), uriInfo)).build();
     }
@@ -57,7 +57,7 @@ public class EventController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createEvent(@Valid final EventForm form) {
-        LOGGER.info("POST request arrived at neighborhoods/{}/events", neighborhoodId);
+        LOGGER.info("POST request arrived at '/neighborhoods/{}/events'", neighborhoodId);
         final Event event = es.createEvent(form.getName(), form.getDescription(), form.getDate(), form.getStartTime(), form.getEndTime() , neighborhoodId);
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(event.getEventId())).build();
@@ -71,7 +71,7 @@ public class EventController {
     public Response updateEventPartially(
             @PathParam("id") final long id,
             @Valid final EventForm partialUpdate) {
-        LOGGER.info("PATCH request arrived at neighborhoods/{}/events/{}", neighborhoodId, id);
+        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
         final Event event = es.updateEventPartially(id, partialUpdate.getName(), partialUpdate.getDescription(), partialUpdate.getDate(), partialUpdate.getStartTime(), partialUpdate.getEndTime());
         return Response.ok(EventDto.fromEvent(event, uriInfo)).build();
     }
@@ -80,7 +80,7 @@ public class EventController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(@PathParam("id") final long id) {
-        LOGGER.info("DELETE request arrived at neighborhoods/{}/events/{}", neighborhoodId, id);
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
         es.deleteEvent(id);
         return Response.noContent().build();
     }

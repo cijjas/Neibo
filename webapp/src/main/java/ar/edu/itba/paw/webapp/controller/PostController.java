@@ -48,7 +48,7 @@ public class PostController extends GlobalControllerAdvice{
             @QueryParam("tags") final List<String> tags,
             @QueryParam("postStatus") @DefaultValue("none") final String postStatus,
             @QueryParam("user") final Long userId) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/posts", neighborhoodId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
         final List<Post> posts = ps.getPosts(channel, page, size, tags, neighborhoodId, postStatus, userId);
         final List<PostDto> postsDto = posts.stream()
                 .map(p -> PostDto.fromPost(p, uriInfo)).collect(Collectors.toList());
@@ -66,7 +66,7 @@ public class PostController extends GlobalControllerAdvice{
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findPostById(@PathParam("id") final long postId) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/posts/{}", neighborhoodId, postId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
         return Response.ok(PostDto.fromPost(ps.findPost(postId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Post Not Found")), uriInfo)).build();
     }
@@ -74,7 +74,7 @@ public class PostController extends GlobalControllerAdvice{
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createPost(@Valid final PublishForm form) {
-        LOGGER.info("POST request arrived at neighborhoods/{}/posts", neighborhoodId);
+        LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
         final Post post = ps.createPost(form.getSubject(), form.getMessage(), getLoggedUser().getUserId(), form.getChannel(), form.getTags(), form.getImageFile());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(post.getPostId())).build();

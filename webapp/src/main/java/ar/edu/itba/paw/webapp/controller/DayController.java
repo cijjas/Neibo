@@ -25,7 +25,7 @@ public class DayController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listDays() {
-        LOGGER.info("GET request arrived at days");
+        LOGGER.info("GET request arrived at '/days'");
         List<DayDto> dayDto = Arrays.stream(DayOfTheWeek.values())
                 .map(d -> DayDto.fromDay(d, uriInfo))
                 .collect(Collectors.toList());
@@ -38,7 +38,7 @@ public class DayController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findDay(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived at days/{}", id);
+        LOGGER.info("GET request arrived at '/days/{}'", id);
         return Response.ok(DayDto.fromDay(DayOfTheWeek.fromId(id), uriInfo)).build();
     }
 }

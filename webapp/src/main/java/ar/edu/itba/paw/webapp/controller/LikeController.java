@@ -44,7 +44,7 @@ public class LikeController extends GlobalControllerAdvice{
             @QueryParam("userId") final Long userId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/likes", neighborhoodId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
 
         final List<Like> likes = ls.getLikes(neighborhoodId, postId, userId, page, size);
 
@@ -67,7 +67,7 @@ public class LikeController extends GlobalControllerAdvice{
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createLike(@Valid LikeForm form) {
-        LOGGER.info("POST request arrived at 'neighborhoods/{}/likes'", neighborhoodId);
+        LOGGER.info("POST request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
         final Like like = ls.createLike(form.getPostId(), getLoggedUser().getUserId());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(like.getId())).build();
@@ -78,7 +78,7 @@ public class LikeController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(@QueryParam("userId") final long userId,
                                @QueryParam("postId") final long postId) {
-        LOGGER.info("DELETE request arrived at 'neighborhoods/{}/likes/'", neighborhoodId);
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/likes/'", neighborhoodId);
         ls.deleteLike(postId, userId);
         return Response.noContent().build();
     }
