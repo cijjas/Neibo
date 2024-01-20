@@ -54,9 +54,9 @@ public class BookingController extends GlobalControllerAdvice{
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findBooking(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, id);
-        return Response.ok(BookingDto.fromBooking(bs.findBooking(id)
+    public Response findBooking(@PathParam("id") final long bookingId) {
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
+        return Response.ok(BookingDto.fromBooking(bs.findBooking(bookingId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Booking Not Found")), uriInfo)).build();
     }
 

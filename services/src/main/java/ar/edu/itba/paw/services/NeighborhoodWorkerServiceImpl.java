@@ -6,6 +6,7 @@ import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.interfaces.persistence.WorkerDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodWorkerService;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
@@ -26,15 +27,18 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodWorkerServiceImpl.class);
     private final NeighborhoodWorkerDao neighborhoodWorkerDao;
     private final UserDao userDao;
+    private final WorkerDao workerDao;
     private final EmailService emailService;
     private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public NeighborhoodWorkerServiceImpl(NeighborhoodWorkerDao neighborhoodWorkerDao, UserDao userDao, EmailService emailService, NeighborhoodDao neighborhoodDao) {
+    public NeighborhoodWorkerServiceImpl(NeighborhoodWorkerDao neighborhoodWorkerDao, UserDao userDao, EmailService emailService,
+                                         NeighborhoodDao neighborhoodDao, WorkerDao workerDao) {
         this.neighborhoodWorkerDao = neighborhoodWorkerDao;
         this.userDao = userDao;
         this.emailService = emailService;
         this.neighborhoodDao = neighborhoodDao;
+        this.workerDao = workerDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -76,6 +80,8 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
         LOGGER.info("Getting the Neighborhoods that Worker {} belongs to", workerId);
 
         ValidationUtils.checkWorkerId(workerId);
+
+        workerDao.findWorker(workerId).orElseThrow(NotFoundException::new);
 
         return neighborhoodWorkerDao.getNeighborhoods(workerId);
     }

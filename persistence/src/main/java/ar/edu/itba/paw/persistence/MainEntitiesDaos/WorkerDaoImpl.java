@@ -96,7 +96,7 @@ public class WorkerDaoImpl implements WorkerDao {
     @Override
     public int countWorkers(List<String> professions, long[] neighborhoodIds, String workerRole, String workerStatus){
         LOGGER.debug("Selecting Workers Count from Neighborhood {} with professions {}", neighborhoodIds, professions);
-        
+
         StringBuilder query = new StringBuilder(COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
         if(neighborhoodIds.length == 0) {

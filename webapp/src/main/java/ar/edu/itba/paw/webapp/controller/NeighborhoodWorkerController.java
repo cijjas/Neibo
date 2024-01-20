@@ -36,8 +36,8 @@ public class NeighborhoodWorkerController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listWorkersNeighborhoods(
-            @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size
+            /*@QueryParam("page") @DefaultValue("1") final int page,
+            @QueryParam("size") @DefaultValue("10") final int size*/
     ) {
         LOGGER.info("GET request arrived at '/workers/{}/neighborhoods'", workerId);
         Set<Neighborhood> neighborhoods = nws.getNeighborhoods(workerId);

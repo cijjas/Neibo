@@ -57,10 +57,13 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Booking> findBooking(long bookingId){
+    public Optional<Booking> findBooking(long bookingId, long neighborhoodId){
         LOGGER.info("Finding Booking {}", bookingId);
 
         ValidationUtils.checkBookingId(bookingId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return bookingDao.findBooking(bookingId);
     }
@@ -72,6 +75,7 @@ public class BookingServiceImpl implements BookingService {
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkAmenityId(amenityId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 

@@ -58,7 +58,7 @@ class DaoUtils {
 
     static void appendChannelCondition(StringBuilder query, List<Object> queryParams, String channel) {
         query.append(" AND channel LIKE ?");
-        queryParams.add(channel);
+        queryParams.add(channel.substring(0, 1).toUpperCase() + channel.substring(1).toLowerCase());
     }
 
     static void appendRoleCondition(StringBuilder query, List<Object> queryParams, UserRole role) {
@@ -123,15 +123,21 @@ class DaoUtils {
     }
 
     static void appendParams(StringBuilder query, List<Object> queryParams, List<String> tags) {
-        //third parameter will either be tags or professions
+        // Third parameter will either be tags or professions
         for (int i = 0; i < tags.size(); i++) {
+            String formattedTag = capitalizeFirstLetter(tags.get(i));
             query.append("?");
-            queryParams.add(tags.get(i)); // Use the tag/profession name as a string
+            queryParams.add(formattedTag); // Use the formatted tag/profession name
             if (i < tags.size() - 1) {
                 query.append(", ");
             }
         }
     }
+
+    static String capitalizeFirstLetter(String input) {
+        return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
+    }
+
 
     static void appendPaginationClause(StringBuilder query, List<Object> queryParams, int page, int size) {
         // Calculate the offset based on the page and size

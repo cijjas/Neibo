@@ -38,25 +38,32 @@ public class LikeDaoImpl implements LikeDao {
     public List<Like> getLikes(Long postId, Long userId, long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Likes by Criteria");
 
-        TypedQuery<Like> query = null;
+        TypedQuery<Like> query;
 
-        if(userId != null) {
+        if (userId != null && postId != null) {
+            // Both userId and postId are provided
+            query = em.createQuery("SELECT l FROM Like l WHERE l.user.userId = :userId AND l.post.postId = :postId", Like.class)
+                    .setParameter("userId", userId)
+                    .setParameter("postId", postId);
+        } else if (userId != null) {
+            // Only userId is provided
             query = em.createQuery("SELECT l FROM Like l WHERE l.user.userId = :userId", Like.class)
                     .setParameter("userId", userId);
-        }
-        else if(postId != null) {
+        } else if (postId != null) {
+            // Only postId is provided
             query = em.createQuery("SELECT l FROM Like l WHERE l.post.postId = :postId", Like.class)
                     .setParameter("postId", postId);
-        }
-        else {
-            //get all likes (within a neighborhood)
+        } else {
+            // No specific condition provided, get all likes within a neighborhood
             query = em.createQuery("SELECT l FROM Like l WHERE l.user.neighborhood.neighborhoodId = :neighborhoodId", Like.class)
                     .setParameter("neighborhoodId", neighborhoodId);
         }
+
         return query.setFirstResult((page - 1) * size)
                 .setMaxResults(size)
                 .getResultList();
     }
+
 
     @Override
     public int countLikes(Long postId, Long userId, long neighborhoodId) {

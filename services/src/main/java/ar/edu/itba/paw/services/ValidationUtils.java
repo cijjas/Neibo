@@ -270,7 +270,9 @@ public class ValidationUtils {
         }
     }
 
-    public static void checkWorkerRoleString(String workerRole){
+    public static void checkOptionalWorkerRoleString(String workerRole){
+        if (workerRole == null)
+            return;
         try {
             WorkerRole.valueOf(workerRole.toUpperCase());
         } catch (IllegalArgumentException e) {
@@ -280,7 +282,9 @@ public class ValidationUtils {
         }
     }
 
-    public static void checkWorkerStatusString(String workerStatus){
+    public static void checkOptionalWorkerStatusString(String workerStatus){
+        if (workerStatus == null)
+            return;
         try {
             WorkerStatus.valueOf(workerStatus.toUpperCase());
         } catch (IllegalArgumentException e) {

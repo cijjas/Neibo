@@ -47,7 +47,7 @@ public class PostController extends GlobalControllerAdvice{
             @QueryParam("channel") final String channel,
             @QueryParam("tags") final List<String> tags,
             @QueryParam("postStatus") @DefaultValue("none") final String postStatus,
-            @QueryParam("user") final Long userId) {
+            @QueryParam("userId") final Long userId) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
         final List<Post> posts = ps.getPosts(channel, page, size, tags, neighborhoodId, postStatus, userId);
         final List<PostDto> postsDto = posts.stream()

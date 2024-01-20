@@ -96,8 +96,8 @@ public class WorkerServiceImpl implements WorkerService {
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPageAndSize(page, size);
-        ValidationUtils.checkWorkerRoleString(workerRole);
-        ValidationUtils.checkWorkerStatusString(workerStatus);
+        ValidationUtils.checkOptionalWorkerRoleString(workerRole);
+        ValidationUtils.checkOptionalWorkerStatusString(workerStatus);
         ValidationUtils.checkProfessionsArray(professions);
 
         //If inquirer is a worker, show return workers from any of the neighborhoods they are in
@@ -121,8 +121,8 @@ public class WorkerServiceImpl implements WorkerService {
         LOGGER.info("Counting workers for User {} with professions {}", userId, professions);
 
         ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkWorkerRoleString(workerRole);
-        ValidationUtils.checkWorkerStatusString(workerStatus);
+        ValidationUtils.checkOptionalWorkerRoleString(workerRole);
+        ValidationUtils.checkOptionalWorkerStatusString(workerStatus);
         ValidationUtils.checkProfessionsArray(professions);
 
         User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User Not Found"));
@@ -144,8 +144,8 @@ public class WorkerServiceImpl implements WorkerService {
         LOGGER.info("Calculating Worker Pages with size {} for User {} with professions {}", size, userId, professions);
 
         ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkWorkerRoleString(workerRole);
-        ValidationUtils.checkWorkerStatusString(workerStatus);
+        ValidationUtils.checkOptionalWorkerRoleString(workerRole);
+        ValidationUtils.checkOptionalWorkerStatusString(workerStatus);
         ValidationUtils.checkProfessionsArray(professions);
 
         return PaginationUtils.calculatePages(countWorkers(professions, userId, workerRole, workerStatus), size);

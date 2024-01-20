@@ -65,6 +65,7 @@ public class CommentServiceImpl implements CommentService {
 
         ValidationUtils.checkCommentId(commentId);
         ValidationUtils.checkPostId(postId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return commentDao.findComment(commentId, postId, neighborhoodId);
     }
@@ -78,7 +79,7 @@ public class CommentServiceImpl implements CommentService {
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
 
-        postDao.findPost(postId, neighborhoodId);
+        postDao.findPost(postId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         return commentDao.getComments(postId, page, size);
     }
