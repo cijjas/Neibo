@@ -1,6 +1,7 @@
 import {User} from "./user";
 import {Inquiry} from "./inquiry";
 import {Department} from "./department";
+import {Request} from "./request";
 
 export interface Product {
     productId: number;

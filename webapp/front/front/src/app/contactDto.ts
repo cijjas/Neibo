@@ -1,10 +1,8 @@
-import { Neighborhood } from "./neighborhood";
-
-export interface Contact {
+export interface ContactDto {
     contactId: number;
     contactName: string;
     contactAddress: string;
     contactPhone: string;
-    neighborhood: Neighborhood;
+    neighborhood: string;
     self: string;
 }
