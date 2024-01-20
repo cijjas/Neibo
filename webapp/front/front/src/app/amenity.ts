@@ -1,11 +1,11 @@
 import { Neighborhood } from './neighborhood';
-import { AvailabilityForm } from './availabilityForm';
+import { Availability } from './availability';
 
 export interface Amenity {
     amenityId: number;
     name: string;
     description: string;
     neighborhood: Neighborhood;
-    availability: AvailabilityForm;
+    availability: Availability[];
     self: string;
 }

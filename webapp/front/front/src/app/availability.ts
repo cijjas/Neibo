@@ -1,5 +1,4 @@
 import {Amenity} from "./amenity";
-import {User} from "./user";
 import {Shift} from "./shift";
 
 export interface Availability {

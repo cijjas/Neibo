@@ -17,7 +17,7 @@ export class NeighborhoodService {
         return this.http.get<Neighborhood[]>(`${this.apiServerUrl}/neighborhoods`, { params })
     }
 
-    public getNeighborhoodById(neighborhoodId: number): Observable<NeighborhoodForm> {
+    public getNeighborhood(neighborhoodId: number): Observable<Neighborhood> {
         return this.http.get<Neighborhood>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}`)
     }
 
