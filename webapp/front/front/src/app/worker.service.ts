@@ -1,6 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { WorkerForm } from './workerForm'
-import { Worker } from './worker'
+import { Worker, WorkerDto, WorkerForm } from './worker'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'

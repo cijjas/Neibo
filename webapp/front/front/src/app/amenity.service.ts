@@ -1,9 +1,9 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { AmenityForm } from './amenityForm'
-import { Amenity } from './amenity'
-import { AmenityDto } from './amenityDto'
+import { Amenity, AmenityDto, AmenityForm } from './amenity'
 import { NeighborhoodService } from './neighborhood.service'
 import { AvailabilityService } from './availability.service'
+import { NeighborhoodDto } from './neighborhood'
+import { AvailabilityDto } from './availability'
 import { Observable, forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -26,8 +26,8 @@ export class AmenityService {
             mergeMap((amenityDto: AmenityDto) => {
                 // Use forkJoin to make parallel requests for associated data
                 return forkJoin([
-                    this.neighborhoodService.getNeighborhood(neighborhoodId),
-                    this.availabilityService.getAvailabilities(neighborhoodId, amenityId, 1, 10) // Adjust parameters as needed
+                    this.http.get<NeighborhoodDto>(amenityDto.neighborhood),
+                    this.http.get<AvailabilityDto[]>(amenityDto.availability, { params: new HttpParams().set('page', '1').set('size', '10') })
                 ]).pipe(
                     map(([neighborhood, availabilities]) => {
                         // Construct the Amenity object using the retrieved data
@@ -53,8 +53,8 @@ export class AmenityService {
                 // Use forkJoin to make parallel requests for associated data for each AmenityDto
                 const amenitiesObservables = amenitiesDto.map(amenityDto => 
                     forkJoin([
-                        this.neighborhoodService.getNeighborhood(neighborhoodId),
-                        this.availabilityService.getAvailabilities(neighborhoodId, amenityDto.amenityId, 1, 10) // Adjust parameters as needed
+                        this.http.get<NeighborhoodDto>(amenityDto.neighborhood),
+                        this.http.get<AvailabilityDto[]>(amenityDto.availability, { params: new HttpParams().set('page', '1').set('size', '10') })
                     ]).pipe(
                         map(([neighborhood, availabilities]) => {
                             // Construct the Amenity object using the retrieved data

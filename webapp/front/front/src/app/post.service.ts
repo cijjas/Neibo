@@ -1,6 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { PostForm } from './postForm'
-import { Post } from './post'
+import { Post, PostDto, PostForm } from './post'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -12,7 +11,7 @@ export class PostService {
     constructor(private http: HttpClient) { }
 
     public getPosts(neighborhoodId: number, channel: string, tags: string[], postStatus: string, userId: number, page: number, size: number): Observable<Post[]> {
-        const params = new HttpParams().set('channel', channel).set('tags', tags.toString()).set('postStatus', postStatus).set('user', userId.toString()).set('page', page.toString()).set('size', size.toString());
+        const params = new HttpParams().set('channel', channel).set('tags', tags.toString()).set('postStatus', postStatus).set('user', userId.toString()).set('page', page.toString()).set('size', size.toString())
 
         return this.http.get<Post[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/posts`, { params })
     }

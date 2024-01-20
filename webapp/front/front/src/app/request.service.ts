@@ -1,6 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { RequestForm } from './requestForm'
-import { Request } from './request'
+import { Request, RequestDto, RequestForm } from './request'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'

@@ -1,6 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { LikeForm } from './likeForm'
-import { Like } from './like'
+import { Like, LikeDto, LikeForm } from './like'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'

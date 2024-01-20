@@ -1,6 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { ContactForm } from './contactForm'
-import { Contact } from './contact'
+import { Contact, ContactDto, ContactForm } from './contact'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'

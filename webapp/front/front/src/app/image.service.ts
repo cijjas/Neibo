@@ -1,6 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { ImageForm } from './imageForm'
-import { Image } from './image'
+import { Image, ImageDto, ImageForm } from './image'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'

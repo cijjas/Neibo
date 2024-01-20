@@ -1,9 +1,16 @@
-import {Amenity} from "./amenity";
-import {Shift} from "./shift";
+import { AmenityDto } from "./amenity"
+import { ShiftDto } from "./shift"
 
 export interface Availability {
-    availabilityId: number;
-    amenity: Amenity;
-    shift: Shift;
-    self: string;
+    availabilityId: number
+    amenity: AmenityDto
+    shift: ShiftDto
+    self: string
+}
+
+export interface AvailabilityDto {
+    availabilityId: number
+    amenity: string
+    shift: string
+    self: string
 }

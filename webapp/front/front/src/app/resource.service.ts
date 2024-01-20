@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http'
-import { ResourceForm } from './resourceForm'
-import { Resource } from './resource'
+import { Resource, ResourceDto, ResourceForm } from './resource'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'

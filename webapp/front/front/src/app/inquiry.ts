@@ -1,12 +1,28 @@
-import {Product} from "./product";
-import {User} from "./user";
+import { ProductDto } from "./product"
+import { UserDto } from "./user"
 
 export interface Inquiry {
-    inquiryId: number;
-    message: string;
-    reply: string;
-    inquiryDate: Date;
-    product: Product;
-    user: User;
-    self: string;
+    inquiryId: number
+    message: string
+    reply: string
+    inquiryDate: Date
+    product: ProductDto
+    user: UserDto
+    self: string
+}
+
+export interface InquiryDto {
+    inquiryId: number
+    message: string
+    reply: string
+    inquiryDate: Date
+    product: string
+    user: string
+    self: string
+}
+
+export interface InquiryForm {
+    inquiryId: number
+    message: string
+    self: string
 }

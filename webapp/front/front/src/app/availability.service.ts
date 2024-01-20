@@ -1,7 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { AvailabilityForm } from './availabilityForm'
-import { Availability } from './availability'
-import { AvailabilityDto } from './availabilityDto'
+import { Availability, AvailabilityDto } from './availability'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
@@ -18,8 +16,8 @@ export class AvailabilityService {
         return this.http.get<Availability[]>(`${this.apiServerUrl}/neighborhoods/{neighborhoodId}/amenities/{amenityId}/availability`, { params })
     }
 
-    public getAvailability(availabilityId: number, neighborhoodId : number, amenityId : number,): Observable<AvailabilityForm> {
-        return this.http.get<AvailabilityForm>(`${this.apiServerUrl}/neighborhoods/{neighborhoodId}/amenities/{amenityId}/availability/{availabilityId}`)
+    public getAvailability(availabilityId: number, neighborhoodId : number, amenityId : number,): Observable<Availability> {
+        return this.http.get<Availability>(`${this.apiServerUrl}/neighborhoods/{neighborhoodId}/amenities/{amenityId}/availability/{availabilityId}`)
     }
 
 }

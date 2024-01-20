@@ -1,6 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { ReviewForm } from './reviewForm'
-import { Review } from './review'
+import { Review, ReviewDto, ReviewForm } from './review'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'

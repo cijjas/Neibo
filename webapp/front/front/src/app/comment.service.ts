@@ -1,6 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { CommentForm } from './commentForm'
-import { Comment } from './comment'
+import { Comment, CommentDto, CommentForm } from './comment'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'

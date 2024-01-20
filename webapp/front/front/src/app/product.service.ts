@@ -1,6 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { ProductForm } from './productForm'
-import { Product } from './product'
+import { Product, ProductDto, ProductForm } from './product'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'

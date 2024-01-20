@@ -1,9 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { BookingForm } from './bookingForm'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
-import { Booking } from './booking'
+import { Booking, BookingDto, BookingForm } from './booking'
 
 @Injectable({providedIn: 'root'})
 export class BookingService {

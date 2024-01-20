@@ -1,6 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { InquiryForm } from './inquiryForm'
-import { Inquiry } from './inquiry'
+import { Inquiry, InquiryDto, InquiryForm } from './inquiry'
 import { Observable } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'

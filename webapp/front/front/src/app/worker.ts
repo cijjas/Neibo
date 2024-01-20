@@ -1,18 +1,50 @@
-import {Neighborhood} from "./neighborhood";
-import {User} from "./user";
-import {Review} from "./review";
-import {Profession} from "./profession";
+import { NeighborhoodDto } from "./neighborhood"
+import { UserDto } from "./user"
+import { ReviewDto } from "./review"
+import { Profession } from "./profession"
 
 export interface Worker {
-    workerId: number;
-    phoneNumber: string;
-    businessName: string;
-    address: string;
-    bio: string;
-    user: User;
-    backgroundPicture: string;
-    reviews: Review[];
-    professions: Profession[];
-    workerNeighborhoods: Neighborhood[];
-    self: string;
+    workerId: number
+    phoneNumber: string
+    businessName: string
+    address: string
+    bio: string
+    user: UserDto
+    backgroundPicture: string
+    reviews: ReviewDto[]
+    professions: Profession[]
+    workerNeighborhoods: NeighborhoodDto[]
+    self: string
 }
+
+export interface WorkerDto {
+    workerId: number
+    phoneNumber: string
+    businessName: string
+    address: string
+    bio: string
+    user: string
+    backgroundPicture: string
+    reviews: string
+    professions: string
+    workerNeighborhoods: string
+    self: string
+}
+
+export interface WorkerForm {
+    workerId: number
+    name: string
+    surname: string
+    professionIds: number[]
+    phoneNumber: string
+    businessName: string
+    address: string
+    mail: string
+    password: string
+    identification: string
+    language: string
+    bio: string
+    backgroundPicture: string
+    self: string
+}
+
