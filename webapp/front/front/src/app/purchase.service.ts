@@ -1,8 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Purchase, PurchaseDto } from './purchase'
-import { Observable } from 'rxjs'
+import { UserDto } from "./user"
+import { Product, ProductDto } from "./product"
+import { Observable, forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
+import { map, mergeMap } from 'rxjs/operators'
 
 @Injectable({providedIn: 'root'})
 export class PostService {
@@ -10,9 +13,31 @@ export class PostService {
 
     constructor(private http: HttpClient) { }
 
-    public getPurchases(neighborhoodId: number, userId: number, type: string, page: number, size: number): Observable<Purchase[]> {
-        const params = new HttpParams().set('type', type).set('page', page.toString()).set('size', size.toString())
+    public getPurchases(neighborhoodId: number, userId: number, transactionType: string, page: number, size: number): Observable<Purchase[]> {
+        const params = new HttpParams().set('transactionType', transactionType).set('page', page.toString()).set('size', size.toString())
 
-        return this.http.get<Purchase[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users/${userId}/transactions`, { params })
+        return this.http.get<PurchaseDto[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users/${userId}/transactions`, { params }).pipe(
+            mergeMap((purchasesDto: PurchaseDto[]) => {
+                const purchaseObservables = purchasesDto.map(purchaseDto => 
+                    forkJoin([
+                        this.http.get<ProductDto>(purchaseDto.product),
+                        this.http.get<UserDto>(purchaseDto.user)
+                    ]).pipe(
+                        map(([product, user]) => {
+                            return {
+                                purchaseId: purchaseDto.purchaseId,
+                                units: purchaseDto.units,
+                                purchaseDate: purchaseDto.purchaseDate,
+                                product: product,
+                                user: user,
+                                self: purchaseDto.self
+                            } as Purchase;
+                        })
+                    )
+                );
+        
+                 return forkJoin(purchaseObservables);
+            })
+        );
     }
 }

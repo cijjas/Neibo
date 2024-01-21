@@ -1,8 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Contact, ContactDto, ContactForm } from './contact'
-import { Observable } from 'rxjs'
+import { NeighborhoodDto } from './neighborhood'
+import { Observable, forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
+import { map, mergeMap } from 'rxjs/operators'
 
 @Injectable({providedIn: 'root'})
 export class ContactService {
@@ -11,7 +13,26 @@ export class ContactService {
     constructor(private http: HttpClient) { }
 
     public getContacts(neighborhoodId : number): Observable<Contact[]> {
-        return this.http.get<Contact[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/contacts`)
+        return this.http.get<ContactDto[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/contacts`).pipe(
+            mergeMap((contactsDto: ContactDto[]) => {
+                const contactObservables = contactsDto.map(contactDto => 
+                    this.http.get<NeighborhoodDto>(contactDto.neighborhood).pipe(
+                        map((neighborhood) => {
+                            return {
+                                contactId: contactDto.contactId,
+                                contactName: contactDto.contactName,
+                                contactAddress: contactDto.contactAddress,
+                                contactPhone: contactDto.contactPhone,
+                                neighborhood: neighborhood,
+                                self: contactDto.self
+                            } as Contact;
+                        })
+                    )
+                );
+        
+                 return forkJoin(contactObservables);
+            })
+        );
     }
 
     public addContact(contact: ContactForm, neighborhoodId : number): Observable<ContactForm> {

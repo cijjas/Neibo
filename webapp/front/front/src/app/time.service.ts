@@ -10,12 +10,12 @@ export class TimeService {
 
     constructor(private http: HttpClient) { }
 
-    public getTimes(): Observable<Time[]> {    
-        return this.http.get<Time[]>(`${this.apiServerUrl}/times`)
-    }
-
     public getTime(timeId: number): Observable<Time> {    
         return this.http.get<Time>(`${this.apiServerUrl}/times/${timeId}`)
+    }
+
+    public getTimes(): Observable<Time[]> {    
+        return this.http.get<Time[]>(`${this.apiServerUrl}/times`)
     }
 
 }

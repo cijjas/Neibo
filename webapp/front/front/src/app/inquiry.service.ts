@@ -1,8 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Inquiry, InquiryDto, InquiryForm } from './inquiry'
-import { Observable } from 'rxjs'
+import { ProductDto } from './product'
+import { UserDto } from './user'
+import { Observable, forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
+import { map, mergeMap } from 'rxjs/operators'
 
 @Injectable({providedIn: 'root'})
 export class InquiryService {
@@ -11,8 +14,32 @@ export class InquiryService {
     constructor(private http: HttpClient) { }
 
     public getInquiries(neighborhoodId : number, productId : number, page : number, size : number): Observable<Inquiry[]> {
-        const params = new HttpParams().set('page', page.toString()).set('size', size.toString())
-        return this.http.get<Inquiry[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/products/${productId}/inquiries`)
+        const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+            
+        return this.http.get<InquiryDto[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/products/${productId}/inquiries`, { params }).pipe(
+            mergeMap((inquiriesDto: InquiryDto[]) => {
+                const inquiryObservables = inquiriesDto.map(inquiryDto => 
+                    forkJoin([
+                        this.http.get<ProductDto>(inquiryDto.product),
+                        this.http.get<UserDto>(inquiryDto.user)
+                    ]).pipe(
+                        map(([product, user]) => {
+                            return {
+                                inquiryId: inquiryDto.inquiryId,
+                                message: inquiryDto.message,
+                                reply: inquiryDto.reply,
+                                inquiryDate: inquiryDto.inquiryDate,
+                                product: product,
+                                user: user,
+                                self: inquiryDto.self
+                            } as Inquiry;
+                        })
+                    )
+                );
+        
+                 return forkJoin(inquiryObservables);
+            })
+        );
     }
 
     public addInquiry(inquiry: InquiryForm, neighborhoodId : number, productId : number): Observable<InquiryForm> {

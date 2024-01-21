@@ -1,7 +1,7 @@
-import { NeighborhoodDto } from "./neighborhood"
 import { UserDto } from "./user"
 import { ReviewDto } from "./review"
 import { Profession } from "./profession"
+import { NeighborhoodDto } from "./neighborhood"
 
 export interface Worker {
     workerId: number

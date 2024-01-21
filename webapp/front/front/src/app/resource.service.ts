@@ -1,8 +1,11 @@
 import { HttpClient } from '@angular/common/http'
 import { Resource, ResourceDto, ResourceForm } from './resource'
-import { Observable } from 'rxjs'
+import { ImageDto } from "./image"
+import { NeighborhoodDto } from "./neighborhood"
+import { Observable, forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
+import { map, mergeMap } from 'rxjs/operators'
 
 @Injectable({providedIn: 'root'})
 export class ResourceService {
@@ -10,8 +13,30 @@ export class ResourceService {
 
     constructor(private http: HttpClient) { }
 
-    public getResources(neighborhoodId: number): Observable<Resource[]> {
-        return this.http.get<Resource[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/resources`)
+    public getResources(neighborhoodId: number): Observable<Resource[]> {            
+        return this.http.get<ResourceDto[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/resources`).pipe(
+            mergeMap((resourcesDto: ResourceDto[]) => {
+                const resourceObservables = resourcesDto.map(resourceDto => 
+                    forkJoin([
+                        this.http.get<ImageDto>(resourceDto.image),
+                        this.http.get<NeighborhoodDto>(resourceDto.neighborhood)
+                    ]).pipe(
+                        map(([image, neighborhood]) => {
+                            return {
+                                resourceId: resourceDto.resourceId,
+                                title: resourceDto.title,
+                                description: resourceDto.description,
+                                image: image,
+                                neighborhood: neighborhood,
+                                self: resourceDto.self
+                            } as Resource;
+                        })
+                    )
+                );
+        
+                 return forkJoin(resourceObservables);
+            })
+        );
     }
 
     public addResource(neighborhoodId: number, resource: ResourceForm): Observable<ResourceForm> {

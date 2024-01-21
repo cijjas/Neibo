@@ -1,8 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
-import { Observable } from 'rxjs'
+import { Observable, forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
 import { Booking, BookingDto, BookingForm } from './booking'
+import { UserDto } from './user'
+import { AvailabilityDto } from './availability'
+import { map, mergeMap } from 'rxjs/operators'
 
 @Injectable({providedIn: 'root'})
 export class BookingService {
@@ -11,12 +14,53 @@ export class BookingService {
     constructor(private http: HttpClient) { }
 
     public getBooking(bookingId : number, neighborhoodId : number): Observable<Booking> {
-        return this.http.get<Booking>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/bookings/${bookingId}`)
+        const bookingDto$ = this.http.get<BookingDto>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/bookings/${bookingId}`);
+            
+        return bookingDto$.pipe(
+            mergeMap((bookingDto: BookingDto) => {
+                return forkJoin([
+                    this.http.get<UserDto>(bookingDto.user),
+                    this.http.get<AvailabilityDto>(bookingDto.amenityAvailability)
+                ]).pipe(
+                    map(([user, availability]) => {
+                        return {
+                            bookingId: bookingDto.bookingId,
+                            bookingDate: bookingDto.bookingDate,
+                            user: user,
+                            amenityAvailability: availability,
+                            self: bookingDto.self
+                        } as Booking;
+                    })
+                );
+            })
+        );
     }
 
-    public getBookings(neighborhoodId : number, userId : number): Observable<Booking[]> {
-        const params = new HttpParams().set('userId', userId.toString())
-        return this.http.get<Booking[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/bookings`)
+    public getBookings(neighborhoodId : number, userId : number, amenityId : number): Observable<Booking[]> {
+        const params = new HttpParams().set('userId', userId.toString()).set('amenityId', amenityId.toString());
+            
+        return this.http.get<BookingDto[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/bookings`, { params }).pipe(
+            mergeMap((bookingsDto: BookingDto[]) => {
+                const bookingObservables = bookingsDto.map(bookingDto => 
+                    forkJoin([
+                        this.http.get<UserDto>(bookingDto.user),
+                        this.http.get<AvailabilityDto>(bookingDto.amenityAvailability)
+                    ]).pipe(
+                        map(([user, availability]) => {
+                            return {
+                                bookingId: bookingDto.bookingId,
+                                bookingDate: bookingDto.bookingDate,
+                                user: user,
+                                amenityAvailability: availability,
+                                self: bookingDto.self
+                            } as Booking;
+                        })
+                    )
+                );
+        
+                 return forkJoin(bookingObservables);
+            })
+        );
     }
 
     public addBooking(booking: BookingForm, neighborhoodId : number): Observable<BookingForm> {

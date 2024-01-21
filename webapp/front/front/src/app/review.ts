@@ -1,5 +1,5 @@
-import { UserDto } from "./user"
 import { WorkerDto } from "./worker"
+import { UserDto } from "./user"
 
 export interface Review {
     reviewId: number

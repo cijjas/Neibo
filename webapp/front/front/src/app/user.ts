@@ -1,9 +1,9 @@
 import { NeighborhoodDto } from "./neighborhood"
-import { ProductDto } from "./product"
-import { PostDto} from "./post"
 import { ImageDto } from "./image"
-import { BookingDto } from "./booking"
 import { CommentDto } from "./comment"
+import { PostDto } from "./post"
+import { BookingDto } from "./booking"
+import { ProductDto } from "./product"
 import { EventDto } from "./event"
 
 export interface User {

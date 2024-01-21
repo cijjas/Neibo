@@ -1,7 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Amenity, AmenityDto, AmenityForm } from './amenity'
-import { NeighborhoodService } from './neighborhood.service'
-import { AvailabilityService } from './availability.service'
 import { NeighborhoodDto } from './neighborhood'
 import { AvailabilityDto } from './availability'
 import { Observable, forkJoin } from 'rxjs'
@@ -13,24 +11,18 @@ import { map, mergeMap } from 'rxjs/operators'
 export class AmenityService {
     private apiServerUrl = environment.apiBaseUrl
 
-    constructor(
-        private http: HttpClient,
-        private neighborhoodService: NeighborhoodService,
-        private availabilityService: AvailabilityService
-        ) { }
+    constructor(private http: HttpClient) { }
 
     public getAmenity(amenityId: number, neighborhoodId: number): Observable<Amenity> {
         const amenityDto$ = this.http.get<AmenityDto>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities/${amenityId}`);
             
         return amenityDto$.pipe(
             mergeMap((amenityDto: AmenityDto) => {
-                // Use forkJoin to make parallel requests for associated data
                 return forkJoin([
                     this.http.get<NeighborhoodDto>(amenityDto.neighborhood),
-                    this.http.get<AvailabilityDto[]>(amenityDto.availability, { params: new HttpParams().set('page', '1').set('size', '10') })
+                    this.http.get<AvailabilityDto[]>(amenityDto.availability)
                 ]).pipe(
                     map(([neighborhood, availabilities]) => {
-                        // Construct the Amenity object using the retrieved data
                         return {
                             amenityId: amenityDto.amenityId,
                             name: amenityDto.name,
@@ -50,14 +42,12 @@ export class AmenityService {
             
         return this.http.get<AmenityDto[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities`, { params }).pipe(
             mergeMap((amenitiesDto: AmenityDto[]) => {
-                // Use forkJoin to make parallel requests for associated data for each AmenityDto
-                const amenitiesObservables = amenitiesDto.map(amenityDto => 
+                const amenityObservables = amenitiesDto.map(amenityDto => 
                     forkJoin([
                         this.http.get<NeighborhoodDto>(amenityDto.neighborhood),
-                        this.http.get<AvailabilityDto[]>(amenityDto.availability, { params: new HttpParams().set('page', '1').set('size', '10') })
+                        this.http.get<AvailabilityDto[]>(amenityDto.availability)
                     ]).pipe(
                         map(([neighborhood, availabilities]) => {
-                            // Construct the Amenity object using the retrieved data
                             return {
                                 amenityId: amenityDto.amenityId,
                                 name: amenityDto.name,
@@ -70,7 +60,7 @@ export class AmenityService {
                     )
                 );
         
-                 return forkJoin(amenitiesObservables);
+                 return forkJoin(amenityObservables);
             })
         );
     }

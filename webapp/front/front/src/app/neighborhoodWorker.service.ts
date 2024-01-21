@@ -10,10 +10,8 @@ export class NeighborhoodWorkerService {
 
     constructor(private http: HttpClient) { }
 
-    public getWorkersNeighborhoods(workerId: number, page: number, size: number): Observable<Neighborhood[]> {
-        const params = new HttpParams().set('page', page.toString()).set('size', size.toString())
-
-        return this.http.get<Neighborhood[]>(`${this.apiServerUrl}/workers/${workerId}/neighborhoods`, { params })
+    public getWorkersNeighborhoods(workerId: number): Observable<NeighborhoodDto[]> {
+        return this.http.get<NeighborhoodDto[]>(`${this.apiServerUrl}/workers/${workerId}/neighborhoods`)
     }
 
     public addWorkerToNeighborhood(workerId: number, neighborhoodId: number): void {

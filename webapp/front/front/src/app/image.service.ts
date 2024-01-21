@@ -11,7 +11,7 @@ export class ImageService {
     constructor(private http: HttpClient) { }
 
     public getImage(imageId : number): Observable<Image> {
-        return this.http.get<ImageForm>(`${this.apiServerUrl}/images/${imageId}`)
+        return this.http.get<Image>(`${this.apiServerUrl}/images/${imageId}`)
     }
 
     public addImage(image: ImageForm): Observable<ImageForm> {

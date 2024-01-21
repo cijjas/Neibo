@@ -1,8 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Availability, AvailabilityDto } from './availability'
-import { Observable } from 'rxjs'
+import { AmenityDto } from './amenity'
+import { Shift, ShiftDto } from './shift'
+import { Observable, forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../environments/environment'
+import { map, mergeMap } from 'rxjs/operators'
 
 @Injectable({providedIn: 'root'})
 export class AvailabilityService {
@@ -10,14 +13,52 @@ export class AvailabilityService {
 
     constructor(private http: HttpClient) { }
 
-    public getAvailabilities(neighborhoodId : number, amenityId : number, page: number, size: number): Observable<Availability[]> {
-        const params = new HttpParams().set('page', page.toString()).set('size', size.toString())
-
-        return this.http.get<Availability[]>(`${this.apiServerUrl}/neighborhoods/{neighborhoodId}/amenities/{amenityId}/availability`, { params })
+    public getAvailability(availabilityId: number, neighborhoodId : number, amenityId : number,): Observable<Availability> {
+        const availabilityDto$ = this.http.get<AvailabilityDto>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities/${amenityId}/availability/${availabilityId}`);
+            
+        return availabilityDto$.pipe(
+            mergeMap((availabilityDto: AvailabilityDto) => {
+                return forkJoin([
+                    this.http.get<AmenityDto>(availabilityDto.amenity),
+                    this.http.get<ShiftDto>(availabilityDto.shift)
+                ]).pipe(
+                    map(([amenity, shift]) => {
+                        return {
+                            availabilityId: availabilityDto.availabilityId,
+                            amenity: amenity,
+                            shift: shift,
+                            self: availabilityDto.self
+                        } as Availability;
+                    })
+                );
+            })
+        );
     }
 
-    public getAvailability(availabilityId: number, neighborhoodId : number, amenityId : number,): Observable<Availability> {
-        return this.http.get<Availability>(`${this.apiServerUrl}/neighborhoods/{neighborhoodId}/amenities/{amenityId}/availability/{availabilityId}`)
+    public getAvailabilities(neighborhoodId : number, amenityId : number, status: string, date: string ): Observable<Availability[]> {
+        const params = new HttpParams().set('status', status).set('date', date);
+            
+        return this.http.get<AvailabilityDto[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities/${amenityId}/availability`, { params }).pipe(
+            mergeMap((availabilitiesDto: AvailabilityDto[]) => {
+                const availabilityObservables = availabilitiesDto.map(availabilityDto => 
+                    forkJoin([
+                        this.http.get<AmenityDto>(availabilityDto.amenity),
+                        this.http.get<ShiftDto>(availabilityDto.shift)
+                    ]).pipe(
+                        map(([amenity, shift]) => {
+                            return {
+                                availabilityId: availabilityDto.availabilityId,
+                                amenity: amenity,
+                                shift: shift,
+                                self: availabilityDto.self
+                            } as Availability;
+                        })
+                    )
+                );
+        
+                 return forkJoin(availabilityObservables);
+            })
+        );
     }
 
 }
