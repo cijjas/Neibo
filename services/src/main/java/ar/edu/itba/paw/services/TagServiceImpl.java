@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -112,6 +114,18 @@ public class TagServiceImpl implements TagService {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public Optional<Tag> findTag(long tagId, long neighborhoodId) {
+        LOGGER.info("Finding Tag {} from Neighborhood {}", tagId, neighborhoodId);
+
+        ValidationUtils.checkTagId(tagId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return tagDao.findTag(tagId);
+    }
 
     @Override
     public List<Tag> getTags(Long postId, long neighborhoodId, int page, int size) {

@@ -43,7 +43,7 @@ public class ProductController extends GlobalControllerAdvice {
     public Response listProducts(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("department") @DefaultValue("NONE") final String department,
+            @QueryParam("department") final String department,
             @QueryParam("userId") final Long userId,
             @QueryParam("productStatus") final String productStatus
             ) {

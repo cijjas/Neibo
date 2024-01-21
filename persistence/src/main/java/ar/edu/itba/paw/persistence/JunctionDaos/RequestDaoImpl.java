@@ -66,19 +66,22 @@ public class RequestDaoImpl implements RequestDao {
         LOGGER.debug("Selecting Requests By Criteria");
 
         TypedQuery<Long> idQuery = null;
-        if(userId != null && productId != null) {
+        if (userId != null && productId != null) {
             idQuery = em.createQuery(
                     "SELECT r.requestId FROM Request r WHERE r.product.productId = :productId AND r.user.userId = :userId AND r.fulfilled = false", Long.class);
             idQuery.setParameter("productId", productId);
             idQuery.setParameter("userId", userId);
-        } else if(userId != null) {
+        } else if (userId != null) {
             idQuery = em.createQuery("SELECT r.requestId FROM Request r " +
                     "WHERE r.user.userId = :userId AND r.fulfilled = false", Long.class);
             idQuery.setParameter("userId", userId);
-        } else {
+        } else if (productId != null) {
             idQuery = em.createQuery(
                     "SELECT r.requestId FROM Request r WHERE r.product.productId = :productId AND r.fulfilled = false", Long.class);
             idQuery.setParameter("productId", productId);
+        } else {
+            // Both productId and userId are null, retrieve all requests
+            idQuery = em.createQuery("SELECT r.requestId FROM Request r WHERE r.fulfilled = false", Long.class);
         }
 
         idQuery.setFirstResult((page - 1) * size);
@@ -99,21 +102,25 @@ public class RequestDaoImpl implements RequestDao {
         LOGGER.debug("Selecting Requests Count by Criteria");
 
         Long count = null;
-        if(userId != null && productId != null ) {
+        if (userId != null && productId != null) {
             count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
                             "WHERE r.product.productId = :productId AND r.user.userId = :userId AND r.fulfilled = false")
                     .setParameter("productId", productId)
                     .setParameter("userId", userId)
                     .getSingleResult();
-        } else if(userId != null ) {
+        } else if (userId != null) {
             count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
                             "WHERE r.user.userId = :userId AND r.fulfilled = false")
                     .setParameter("userId", userId)
                     .getSingleResult();
-        } else {
+        } else if (productId != null) {
             count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
                             "WHERE r.product.productId = :productId AND r.fulfilled = false")
                     .setParameter("productId", productId)
+                    .getSingleResult();
+        } else {
+            // Both productId and userId are null, count all requests
+            count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r WHERE r.fulfilled = false")
                     .getSingleResult();
         }
         return count != null ? count.intValue() : 0;

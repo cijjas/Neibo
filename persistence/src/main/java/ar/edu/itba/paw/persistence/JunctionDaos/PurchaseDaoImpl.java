@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.*;
@@ -65,45 +66,38 @@ public class PurchaseDaoImpl implements PurchaseDao {
     public Set<Purchase> getPurchases(long userId, String type, int page, int size) {
         LOGGER.debug("Selecting Purchases By Criteria For User {}", userId);
 
+        StringBuilder queryStringBuilder = new StringBuilder();
+        queryStringBuilder.append("SELECT p.* ")
+                .append("FROM products_users_purchases p ")
+                .append("JOIN products pr ON p.productid = pr.productid ")
+                .append("JOIN users u ON p.userid = u.userid ");
 
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
-        Root<Purchase> purchaseRoot = idQuery.from(Purchase.class);
+        if (type != null) {
+            TransactionType tType = TransactionType.valueOf(type.toUpperCase());
 
-        Join<Purchase, Product> productJoin = purchaseRoot.join("product");
-        Join<Purchase, User> userJoin = purchaseRoot.join("user");
-        idQuery.select(purchaseRoot.get("purchaseId"));
-
-        TransactionType tType = TransactionType.valueOf(type.toUpperCase());
-
-        switch (tType) {
-            case PURCHASE:
-                cb.equal(userJoin.get("userId"), userId);
-                break;
-            case SALE:
-                cb.equal(productJoin.get("seller").get("userId"), userId);
-                break;
+            switch (tType) {
+                case PURCHASE:
+                    queryStringBuilder.append("WHERE p.userid = :userId ");
+                    break;
+                case SALE:
+                    queryStringBuilder.append("WHERE pr.sellerid = :userId ");
+                    break;
+            }
+        } else {
+            queryStringBuilder.append("WHERE p.userid = :userId OR pr.sellerid = :userId ");
         }
 
-        TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
-        idTypedQuery.setFirstResult((page - 1) * size);
-        idTypedQuery.setMaxResults(size);
+        queryStringBuilder.append("ORDER BY p.purchasedate DESC ")
+                .append("LIMIT :size OFFSET :offset");
 
-        List<Long> purchaseIds = idTypedQuery.getResultList();
+        String queryString = queryStringBuilder.toString();
 
-        if (purchaseIds.isEmpty()) {
-            return Collections.emptySet();
-        }
+        Query nativeQuery = em.createNativeQuery(queryString, Purchase.class);
+        nativeQuery.setParameter("userId", userId);
+        nativeQuery.setParameter("size", size);
+        nativeQuery.setParameter("offset", (page - 1) * size);
 
-        CriteriaQuery<Purchase> purchaseQuery = cb.createQuery(Purchase.class);
-        Root<Purchase> purchaseRootFetch = purchaseQuery.from(Purchase.class);
-
-        purchaseQuery.select(purchaseRootFetch);
-        purchaseQuery.where(purchaseRootFetch.get("purchaseId").in(purchaseIds));
-        purchaseQuery.orderBy(cb.desc(purchaseRootFetch.get("purchaseDate")));
-
-        TypedQuery<Purchase> purchaseTypedQuery = em.createQuery(purchaseQuery);
-        List<Purchase> purchases = purchaseTypedQuery.getResultList();
+        List<Purchase> purchases = nativeQuery.getResultList();
 
         return new HashSet<>(purchases);
     }
@@ -112,27 +106,33 @@ public class PurchaseDaoImpl implements PurchaseDao {
     public int countPurchases(long userId, String type) {
         LOGGER.debug("Counting Purchases By Seller {}", userId);
 
+        StringBuilder queryStringBuilder = new StringBuilder();
+        queryStringBuilder.append("SELECT COUNT(p.*) ")
+                .append("FROM products_users_purchases p ")
+                .append("JOIN products pr ON p.productid = pr.productid ")
+                .append("JOIN users u ON p.userid = u.userid ");
 
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Long> query = cb.createQuery(Long.class);
-        Root<Purchase> purchaseRoot = query.from(Purchase.class);
+        if (type != null) {
+            TransactionType tType = TransactionType.valueOf(type.toUpperCase());
 
-        Join<Purchase, Product> productJoin = purchaseRoot.join("product");
-        Join<Purchase, User> userJoin = purchaseRoot.join("user");
-
-        query.select(cb.count(purchaseRoot));
-
-        TransactionType tType = TransactionType.valueOf(type.toUpperCase());
-        switch (tType) {
-            case PURCHASE:
-                cb.equal(userJoin.get("userId"), userId);
-                break;
-            case SALE:
-                cb.equal(productJoin.get("seller").get("userId"), userId);
-                break;
+            switch (tType) {
+                case PURCHASE:
+                    queryStringBuilder.append("WHERE p.userid = :userId ");
+                    break;
+                case SALE:
+                    queryStringBuilder.append("WHERE pr.sellerid = :userId ");
+                    break;
+            }
+        } else {
+            queryStringBuilder.append("WHERE p.userid = :userId OR pr.sellerid = :userId ");
         }
 
-        TypedQuery<Long> typedQuery = em.createQuery(query);
-        return typedQuery.getSingleResult().intValue();
+        String queryString = queryStringBuilder.toString();
+
+        Query nativeQuery = em.createNativeQuery(queryString);
+        nativeQuery.setParameter("userId", userId);
+
+        return Integer.parseInt((nativeQuery.getSingleResult()).toString());
     }
+
 }

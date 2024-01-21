@@ -8,8 +8,8 @@ public enum UserRole {
     ADMINISTRATOR,
     NEIGHBOR,
     UNVERIFIED_NEIGHBOR,
-    WORKER,
-    REJECTED;
+    REJECTED,
+    WORKER;
 
     public int getId() {
         return ordinal() + 1;

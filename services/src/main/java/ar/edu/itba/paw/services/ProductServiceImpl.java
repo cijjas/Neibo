@@ -78,9 +78,8 @@ public class ProductServiceImpl implements ProductService {
         LOGGER.info("Getting Products with status {} from Department {} by User {} from Neighborhood {}", productStatus, department, userId, neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkOptionalProductStatusString(productStatus);
         ValidationUtils.checkOptionalDepartmentString(department);
-        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkProductStatusUserIdStrings(productStatus, userId);
         ValidationUtils.checkPageAndSize(page, size);
 
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
@@ -95,9 +94,9 @@ public class ProductServiceImpl implements ProductService {
         LOGGER.info("Counting Products with status {} from Department {} by User {} from Neighborhood {}", productStatus, department, userId, neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkOptionalProductStatusString(productStatus);
         ValidationUtils.checkOptionalDepartmentString(department);
-        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkProductStatusUserIdStrings(productStatus, userId);
+        ValidationUtils.checkOptionalDepartmentString(department);
 
         return productDao.countProducts(neighborhoodId, department, userId, productStatus);
     }
@@ -107,9 +106,8 @@ public class ProductServiceImpl implements ProductService {
         LOGGER.info("Calculating Product Pages with status {} from Department {} by User {} from Neighborhood {}", productStatus, department, userId, neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkOptionalProductStatusString(productStatus);
         ValidationUtils.checkOptionalDepartmentString(department);
-        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkProductStatusUserIdStrings(productStatus, userId);
         ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(productDao.countProducts(neighborhoodId, department, userId, productStatus), size);

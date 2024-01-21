@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.ArrayList;
@@ -84,127 +85,129 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<Product> getProducts(long neighborhoodId, String department, Long userId, String productStatus, int page, int size) {
-        LOGGER.debug("Selecting Products from neighborhood {}, in departments {}", neighborhoodId, department);
+        LOGGER.debug("Selecting Products from neighborhood {}, in department {}", neighborhoodId, department);
 
-        List<Predicate> predicates = new ArrayList<>();
-        if (userId != null || productStatus != null) {
-            ProductStatus productStatusEnum = ProductStatus.valueOf(productStatus.toUpperCase());
-            TypedQuery<Long> idQuery = null;
-            switch (productStatusEnum) {
-                case BOUGHT:
-                    idQuery = em.createQuery(
-                            "SELECT DISTINCT p.product.id FROM Purchase p WHERE p.user.userId = :userId", Long.class);
-                    idQuery.setParameter("userId", userId);
-                    break;
-                case SOLD:
-                    idQuery = em.createQuery(
-                            "SELECT DISTINCT p.product.id FROM Purchase p WHERE p.user IS NOT NULL AND p.product.seller.userId = :userId", Long.class);
-                    idQuery.setParameter("userId", userId);
-                    break;
-                case SELLING:
-                    idQuery = em.createQuery(
-                            "SELECT p.productId FROM Product p WHERE p.seller.userId = :userId", Long.class);
-                    idQuery.setParameter("userId", userId);
-                    break;
-            }
+        StringBuilder nativeQuery = new StringBuilder("SELECT p.* FROM products p " +
+                "JOIN users u ON p.sellerid = u.userid " +
+                "WHERE u.neighborhoodid = :neighborhoodId ");
 
-            if (idQuery != null) {
-                idQuery.setFirstResult((page - 1) * size);
-                idQuery.setMaxResults(size);
-                List<Long> productIds = idQuery.getResultList();
-
-                if (!productIds.isEmpty()) {
-                    TypedQuery<Product> productQuery = em.createQuery(
-                            "SELECT p FROM Product p WHERE p.productId IN :productIds ORDER BY p.creationDate DESC", Product.class);
-                    productQuery.setParameter("productIds", productIds);
-                    return productQuery.getResultList();
-                }
-            }
-        } else if (department != null) {
-            // Initialize CriteriaBuilder
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            // First Query to retrieve product ids
-            CriteriaQuery<Long> idQuery = cb.createQuery(Long.class);
-            Root<Product> idRoot = idQuery.from(Product.class);
-            idQuery.select(idRoot.get("productId"));
-            Department departmentEnum = Department.valueOf(department);
-            predicates.add(cb.equal(idRoot.get("seller").get("neighborhood").get("neighborhoodId"), neighborhoodId));
-            if (departmentEnum != Department.NONE) {
-                predicates.add(cb.equal(idRoot.get("department").get("departmentId"), departmentEnum.getId()));
-            }
-            predicates.add(cb.greaterThan(idRoot.get("remainingUnits"), 0L));
-            idQuery.where(predicates.toArray(new Predicate[0]));
-            // Create the query
-            TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
-            // Implement pagination in the first query
-            if (page > 0) {
-                idTypedQuery.setFirstResult((page - 1) * size);
-                idTypedQuery.setMaxResults(size);
-            }
-            // Results
-            List<Long> productIds = idTypedQuery.getResultList();
-            // Check if productIds is empty for better performance
-            if (productIds.isEmpty()) {
-                return Collections.emptyList();
-            }
-            // Second Query to retrieve actual products
-            CriteriaQuery<Product> dataQuery = cb.createQuery(Product.class);
-            Root<Product> dataRoot = dataQuery.from(Product.class);
-            // Add predicate that enforces existence within the IDs recovered in the first query
-            dataQuery.where(dataRoot.get("productId").in(productIds));
-            // Create the query
-            TypedQuery<Product> dataTypedQuery = em.createQuery(dataQuery);
-            // Return Results
-            return dataTypedQuery.getResultList();
+        if (department != null) {
+            nativeQuery.append("AND p.departmentid = :departmentId ");
         }
 
-        return Collections.emptyList();
-    }
+        if (userId != null && productStatus == null) {
+            // Was bought by a user with this ID or is being sold by a user with this ID
+            nativeQuery.append("AND (p.productid IN (" +
+                    "SELECT DISTINCT p.productid FROM products_users_purchases p " +
+                    "WHERE p.userid = :userId ) " +
+                    "OR " +
+                    "p.sellerid = :userId ) ");
 
+        }
+
+        if (productStatus != null) {
+            switch (ProductStatus.valueOf(productStatus.toUpperCase())) {
+                case BOUGHT:
+                    nativeQuery.append("AND (p.productId IN (" +
+                            "SELECT DISTINCT p.productid FROM products_users_purchases pc " +
+                            "WHERE pc.userid = :userId AND p.remainingunits = 0)) ");
+                    break;
+                case SOLD:
+                    nativeQuery.append("AND (p.productId IN (" +
+                            "SELECT DISTINCT p.productid FROM products_users_purchases pc " +
+                            "JOIN products pd ON pd.productid = pc.productid " +
+                            "WHERE pd.sellerid = :userId AND p.remainingunits = 0)) ");
+                    break;
+                case SELLING:
+                    nativeQuery.append("AND (p.productId IN (" +
+                            "SELECT DISTINCT p.productid FROM products p " +
+                            "WHERE p.sellerid = :userId AND p.remainingunits > 0)) ");
+                    break;
+            }
+        }
+
+
+        nativeQuery.append(" ORDER BY p.creationdate DESC");
+
+        Query query = em.createNativeQuery(nativeQuery.toString(), Product.class);
+
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        if (department != null) {
+            query.setParameter("departmentId", Department.valueOf(department.toUpperCase()).getId());
+        }
+
+        if (userId != null) {
+            query.setParameter("userId", userId);
+        }
+
+        // No parameters have to be set for the ProductStatus Condition
+
+        query.setFirstResult((page - 1) * size);
+        query.setMaxResults(size);
+
+        return query.getResultList();
+    }
 
     @Override
     public int countProducts(long neighborhoodId, String department, Long userId, String productStatus) {
-        LOGGER.debug("Selecting Products Count from neighborhood {}, in departments {}", neighborhoodId, department);
+        LOGGER.debug("Selecting Products Count from neighborhood {}, in department {}", neighborhoodId, department);
 
-        if (userId != null || productStatus != null) {
-            ProductStatus productStatusEnum = ProductStatus.valueOf(productStatus.toUpperCase());
-            TypedQuery<Long> query = null;
-            switch (productStatusEnum) {
+        StringBuilder nativeQuery = new StringBuilder("SELECT COUNT(DISTINCT p.productid) FROM products p " +
+                "JOIN users u ON p.sellerid = u.userid " +
+                "WHERE u.neighborhoodid = :neighborhoodId ");
+
+        if (department != null) {
+            nativeQuery.append("AND p.departmentid = :departmentId ");
+        }
+
+        if (userId != null && productStatus == null) {
+            // Was bought by a user with this ID or is being sold by a user with this ID
+            nativeQuery.append("AND (p.productid IN (" +
+                    "SELECT DISTINCT p.productid FROM products_users_purchases p " +
+                    "WHERE p.userid = :userId ) " +
+                    "OR " +
+                    "p.sellerid = :userId ) ");
+
+        }
+
+        if (productStatus != null) {
+            switch (ProductStatus.valueOf(productStatus.toUpperCase())) {
                 case BOUGHT:
-                    query = em.createQuery("SELECT COUNT(*) FROM Product p JOIN Purchase pu ON p.productId = pu.product.productId WHERE pu.user.userId = :userId", Long.class);
+                    nativeQuery.append("AND (p.productId IN (" +
+                            "SELECT DISTINCT p.productid FROM products_users_purchases pc " +
+                            "WHERE pc.userid = :userId AND p.remainingunits = 0)) ");
                     break;
                 case SOLD:
-                    query = em.createQuery("SELECT COUNT(*) FROM Product p JOIN Purchase pu ON p.productId = pu.product.productId WHERE p.seller.userId = :userId", Long.class);
+                    nativeQuery.append("AND (p.productId IN (" +
+                            "SELECT DISTINCT p.productid FROM products_users_purchases pc " +
+                            "JOIN products pd ON pd.productid = pc.productid " +
+                            "WHERE pd.sellerid = :userId AND p.remainingunits = 0)) ");
                     break;
                 case SELLING:
-                    query = em.createQuery("SELECT COUNT(*) FROM Product p WHERE p.seller.userId = :userId", Long.class);
+                    nativeQuery.append("AND (p.productId IN (" +
+                            "SELECT DISTINCT p.productid FROM products p " +
+                            "WHERE p.sellerid = :userId AND p.remainingunits > 0)) ");
                     break;
             }
-
-            if (query != null) {
-                query.setParameter("userId", userId);
-                return query.getSingleResult().intValue();
-            }
         }
 
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        // First Query to retrieve product count
-        CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
-        Root<Product> countRoot = countQuery.from(Product.class);
-        countQuery.select(cb.countDistinct(countRoot));
-        // Add conditions for filtering
-        List<Predicate> predicates = new ArrayList<>();
-        predicates.add(cb.equal(countRoot.get("seller").get("neighborhood").get("neighborhoodId"), neighborhoodId));
-        if (department != null && Department.valueOf(department) != Department.NONE) {
-            predicates.add(cb.equal(countRoot.get("department").get("departmentId"), Department.valueOf(department).getId()));
+        Query query = em.createNativeQuery(nativeQuery.toString());
+
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        if (department != null) {
+            query.setParameter("departmentId", Department.valueOf(department.toUpperCase()).getId());
         }
-        predicates.add(cb.greaterThan(countRoot.get("remainingUnits"), 0L));
-        countQuery.where(predicates.toArray(new Predicate[0]));
-        // Create the query
-        TypedQuery<Long> countTypedQuery = em.createQuery(countQuery);
-        // Result
-        Long countResult = countTypedQuery.getSingleResult();
-        // Return the count as an integer
-        return countResult.intValue();
+
+        if (userId != null) {
+            query.setParameter("userId", userId);
+        }
+
+        // No parameters have to be set for the ProductStatus Condition
+
+        Object countResult = query.getSingleResult();
+
+        return Integer.parseInt(countResult.toString());
     }
 }

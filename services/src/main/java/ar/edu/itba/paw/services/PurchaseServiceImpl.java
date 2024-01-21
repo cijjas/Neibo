@@ -64,7 +64,7 @@ public class PurchaseServiceImpl implements PurchaseService {
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPageAndSize(page, size);
-        ValidationUtils.checkTransactionTypeString(transactionType);
+        ValidationUtils.checkOptionalTransactionTypeString(transactionType);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         userDao.findUser(userId, neighborhoodId).orElseThrow(NotFoundException::new);
@@ -77,7 +77,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         LOGGER.info("Counting Transactions of type {} made by User {}", transactionType, userId);
 
         ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkTransactionTypeString(transactionType);
+        ValidationUtils.checkOptionalTransactionTypeString(transactionType);
 
         return purchaseDao.countPurchases(userId, transactionType);
     }
@@ -87,7 +87,7 @@ public class PurchaseServiceImpl implements PurchaseService {
         LOGGER.info("Calculating Transaction Pages of type {} made by User {}", transactionType, userId);
 
         ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkTransactionTypeString(transactionType);
+        ValidationUtils.checkOptionalTransactionTypeString(transactionType);
         ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(purchaseDao.countPurchases(userId, transactionType), size);

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.models.Entities.Tag;
+import ar.edu.itba.paw.webapp.dto.ResourceDto;
 import ar.edu.itba.paw.webapp.dto.TagDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,4 +49,12 @@ public class TagController {
                 .build();
     }
 
+    @GET
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response findTags(@PathParam("id") final long tagId) {
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
+        return Response.ok(TagDto.fromTag(ts.findTag(tagId, neighborhoodId)
+                .orElseThrow(NotFoundException::new), neighborhoodId, uriInfo)).build();
+    }
 }

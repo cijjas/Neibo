@@ -2,7 +2,9 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Entities.Tag;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 public interface TagService {
 
@@ -11,6 +13,8 @@ public interface TagService {
     // -----------------------------------------------------------------------------------------------------------------
 
     List<Tag> getTags(Long postId, long neighborhoodId, int page, int size);
+
+    Optional<Tag> findTag(long tagId, long neighborhoodId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

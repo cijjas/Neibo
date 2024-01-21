@@ -177,13 +177,18 @@ public class ValidationUtils {
         ValidationUtils.checkIds(amenityId, availabilityId, "AmenityAvailability");
     }
 
+    public static void checkProductStatusUserIdStrings(String productStatus, Long userId){
+        if (userId == null && productStatus != null)
+            throw new IllegalArgumentException("Invalid Query Param Combination. A Product Status param must be accompanied by a User ID param");
+        checkUserId(userId);
+        checkOptionalProductStatusString(productStatus);
+    }
+
     // ---------------------------------------------------------------------------------------------------------
 
-    public static void checkTransactionTypeString(String transactionType){
+    public static void checkOptionalTransactionTypeString(String transactionType){
         if(transactionType == null) {
-            Set<LinkEntry> links = new HashSet<>();
-            links.add(new LinkEntry("Valid Transaction Types", "transaction-types"));
-            throw new InvalidEnumValueException("Transaction type is required. Please specify a valid transaction type.", links);
+            return;
         }
         try {
             TransactionType.valueOf(transactionType.toUpperCase());
@@ -218,9 +223,8 @@ public class ValidationUtils {
     }
 
     public static void checkOptionalProductStatusString(String productStatus){
-        if(productStatus == null) {
+        if (productStatus == null)
             return;
-        }
         try {
             ProductStatus.valueOf(productStatus.toUpperCase());
         } catch (IllegalArgumentException e) {

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Entities.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ResourceService {
 
@@ -14,6 +15,8 @@ public interface ResourceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     List<Resource> getResources(final long neighborhoodId);
+
+    Optional<Resource> findResource(final long resourceId, final long neighborhoodId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

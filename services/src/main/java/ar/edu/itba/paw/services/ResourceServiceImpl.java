@@ -67,6 +67,18 @@ public class ResourceServiceImpl implements ResourceService {
         return resourceDao.getResources(neighborhoodId);
     }
 
+    @Override
+    public Optional<Resource> findResource(long resourceId, long neighborhoodId) {
+        LOGGER.info("Finding Resource {} from Neighborhood {}", resourceId, neighborhoodId);
+
+        ValidationUtils.checkResourceId(resourceId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return resourceDao.findResource(resourceId);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

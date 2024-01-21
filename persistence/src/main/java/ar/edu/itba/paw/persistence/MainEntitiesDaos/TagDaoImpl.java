@@ -10,8 +10,10 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.swing.text.html.Option;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class TagDaoImpl implements TagDao {
@@ -32,6 +34,11 @@ public class TagDaoImpl implements TagDao {
     }
 
     // ---------------------------------------------- TAGS SELECT ------------------------------------------------------
+
+    @Override
+    public Optional<Tag> findTag(long tagId) {
+        return Optional.ofNullable(em.find(Tag.class, tagId));
+    }
 
     @Override
     public List<Tag> getTags(Long postId, long neighborhoodId, int page, int size) {

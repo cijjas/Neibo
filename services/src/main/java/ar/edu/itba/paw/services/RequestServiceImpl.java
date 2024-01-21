@@ -67,6 +67,8 @@ public class RequestServiceImpl implements RequestService {
         ValidationUtils.checkRequestId(requestId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+
         return requestDao.findRequest(requestId);
     }
 
@@ -76,7 +78,8 @@ public class RequestServiceImpl implements RequestService {
     public List<Request> getRequests(Long productId, Long userId, int page, int size, long neighborhoodId){
         LOGGER.info("Getting Requests for Product {} made by User {} from Neighborhood {}", productId, userId, neighborhoodId);
 
-        ValidationUtils.checkRequestId(productId, userId);
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkProductId(productId);
         ValidationUtils.checkPageAndSize(page, size);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
@@ -89,7 +92,8 @@ public class RequestServiceImpl implements RequestService {
     public int countRequests(Long productId, Long userId) {
         LOGGER.info("Counting Requests for Product {} made by User {}", productId, userId);
 
-        ValidationUtils.checkRequestId(productId, userId);
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkProductId(productId);
 
         return requestDao.countRequests(productId, userId);
     }
@@ -98,7 +102,8 @@ public class RequestServiceImpl implements RequestService {
     public int calculateRequestPages(Long productId, Long userId, int size) {
         LOGGER.info("Calculating Request Pages for Product {} made by User {}", productId, userId);
 
-        ValidationUtils.checkRequestId(productId, userId);
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkProductId(productId);
         ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(requestDao.countRequests(productId, userId), size);

@@ -55,6 +55,8 @@ public class ReviewServiceImpl implements ReviewService {
         ValidationUtils.checkReviewId(reviewId);
         ValidationUtils.checkWorkerId(workerId);
 
+        workerDao.findWorker(workerId).orElseThrow(NotFoundException::new);
+
         return reviewDao.findReview(reviewId, workerId);
     }
 

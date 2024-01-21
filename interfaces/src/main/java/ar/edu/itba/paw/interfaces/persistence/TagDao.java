@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 import ar.edu.itba.paw.models.Entities.Tag;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TagDao {
 
@@ -13,6 +14,8 @@ public interface TagDao {
     // ---------------------------------------------- TAGS SELECT ------------------------------------------------------
 
     List<Tag> getTags(Long postId, long neighborhoodId, int page, int size);
+
+    Optional<Tag> findTag(long tagId);
 
     int countTags(Long postId, long neighborhoodId);
 

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ResourceService;
 import ar.edu.itba.paw.models.Entities.Resource;
+import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.ResourceDto;
 import ar.edu.itba.paw.webapp.form.ResourceForm;
 import org.slf4j.Logger;
@@ -38,10 +39,16 @@ public class ResourceController {
         final List<ResourceDto> resourcesDto = resources.stream()
                 .map(r -> ResourceDto.fromResource(r, uriInfo)).collect(Collectors.toList());
 
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/resources";
-
         return Response.ok(new GenericEntity<List<ResourceDto>>(resourcesDto){}).build();
+    }
 
+    @GET
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response findResource(@PathParam("id") final long resourceId) {
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
+        return Response.ok(ResourceDto.fromResource(rs.findResource(resourceId, neighborhoodId)
+                .orElseThrow(NotFoundException::new), uriInfo)).build();
     }
 
     @POST
