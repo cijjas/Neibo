@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.interfaces.services;
 
-import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.models.Entities.Product;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,41 +11,19 @@ public interface ProductService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    int getProductsTotalPages(long neighborhoodId, int size, Department department);
+    Optional<Product> findProduct(final long productId);
 
-    int getProductsSellingTotalPages(long userId, int size);
+    Optional<Product> findProduct(final long productId, long neighborhoodId);
 
-    int getProductsSoldTotalPages(long userId, int size);
+    List<Product> getProducts(long neighborhoodId, String department, Long userId, String productStatus, int page, int size);
 
-    int getProductsBoughtTotalPages(long userId, int size);
+    int countProducts(long neighborhoodId, String department, Long userId, String productStatus);
 
-    Optional<Product> findProductById(final long productId);
-
-    List<Product> getProductsByCriteria(long neighborhoodId, Department department, int page, int size);
-
-    int getProductsCountByCriteria(long neighborhoodId, Department department);
-
-    int getProductsSellingCount(long userId);
-
-    int getProductsSoldCount(long userId);
-
-    int getProductsBoughtCount(long userId);
-
-    List<Product> getProductsSelling(long userId, int page, int size);
-
-    List<Product> getProductsSold(long userId, int page, int size);
-
-    List<Product> getProductsBought(long userId, int page, int size);
+    int calculateProductPages(long neighborhoodId, int size, String department, Long userId, String productStatus);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    void markAsBought(long buyerId, long productId, long units);
-
-    void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, Long stock) ;
-
     Product updateProductPartially(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, Long stock);
-
-    void restockProduct(long productId, long extraUnits);
 
     // -----------------------------------------------------------------------------------------------------------------
 

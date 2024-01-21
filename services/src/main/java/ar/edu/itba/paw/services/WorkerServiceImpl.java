@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.*;
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
-import ar.edu.itba.paw.interfaces.exceptions.UnexpectedException;
+import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.exceptions.UnexpectedException;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
@@ -72,84 +72,92 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Worker> findWorkerById(long userId) {
-        LOGGER.info("Finding Worker with id {}", userId);
-        if (userId <= 0)
-            throw new IllegalArgumentException("Worker ID must be a positive integer");
-        Optional<User> optionalUser = userDao.findUserById(userId);
-        return optionalUser.isPresent() ? workerDao.findWorkerById(userId) : Optional.empty();
+    public Optional<Worker> findWorker(long userId) {
+        LOGGER.info("Finding Worker {}", userId);
+
+        ValidationUtils.checkUserId(userId);
+
+        Optional<User> optionalUser = userDao.findUser(userId);
+        return optionalUser.isPresent() ? workerDao.findWorker(userId) : Optional.empty();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Worker> findWorkerByMail(String mail) {
-        LOGGER.info("Finding Worker with mail {}", mail);
-        Optional<User> optionalUser = userDao.findUserByMail(mail);
-        return optionalUser.isPresent() ? workerDao.findWorkerById(optionalUser.get().getUserId()) : Optional.empty();
+    public Optional<Worker> findWorker(String mail) {
+        LOGGER.info("Finding Worker {}", mail);
+        Optional<User> optionalUser = userDao.findUser(mail);
+        return optionalUser.isPresent() ? workerDao.findWorker(optionalUser.get().getUserId()) : Optional.empty();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Set<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long neighborhoodId, long loggedUserId, WorkerRole workerRole, WorkerStatus workerStatus) {
-        LOGGER.info("Getting Workers from Neighborhoods {} with professions {}", neighborhoodId, professions);
-        if (neighborhoodId != 0)
-            return workerDao.getWorkersByCriteria(page, size, professions, new long[]{neighborhoodId}, workerRole, workerStatus);
+    public Set<Worker> getWorkers(int page, int size, List<String> professions, long userId, String workerRole, String workerStatus) {
+        LOGGER.info("Getting Workers with status {} professions {}", workerStatus, professions);
 
-        List<Neighborhood> neighborhoods = neighborhoodWorkerDao.getNeighborhoods(loggedUserId);
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkPageAndSize(page, size);
+        ValidationUtils.checkOptionalWorkerRoleString(workerRole);
+        ValidationUtils.checkOptionalWorkerStatusString(workerStatus);
+        ValidationUtils.checkProfessionsArray(professions);
 
-        long[] neighborhoodIds = neighborhoods.stream()
-                .mapToLong(Neighborhood::getNeighborhoodId)
-                .toArray();
+        //If inquirer is a worker, show return workers from any of the neighborhoods they are in
+        User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User Not Found"));
+        if(user.getNeighborhood().getNeighborhoodId() == 0) { //inquirer is a worker
+            Set<Neighborhood> neighborhoods = neighborhoodWorkerDao.getNeighborhoods(userId);
+            long[] neighborhoodIds = neighborhoods.stream()
+                    .mapToLong(Neighborhood::getNeighborhoodId)
+                    .toArray();
 
-        return workerDao.getWorkersByCriteria(page, size, professions, neighborhoodIds, workerRole, workerStatus);
+            return workerDao.getWorkers(page, size, professions, neighborhoodIds, workerRole, workerStatus);
+        } else {
+            //user isn't a worker, must only return workers from their neighborhood
+            return workerDao.getWorkers(page, size, professions, new long[]{user.getNeighborhood().getNeighborhoodId()}, workerRole, workerStatus);
+        }
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus) {
-        LOGGER.info("Getting Workers Count for Neighborhood {} with professions {}", neighborhoodIds, professions);
-        return workerDao.getWorkersCountByCriteria(professions, neighborhoodIds, workerRole, workerStatus);
+    public int countWorkers(List<String> professions, long userId, String workerRole, String workerStatus) {
+        LOGGER.info("Counting workers for User {} with professions {}", userId, professions);
+
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkOptionalWorkerRoleString(workerRole);
+        ValidationUtils.checkOptionalWorkerStatusString(workerStatus);
+        ValidationUtils.checkProfessionsArray(professions);
+
+        User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User Not Found"));
+        if(user.getNeighborhood().getNeighborhoodId() == 0) { //inquirer is a worker
+            Set<Neighborhood> neighborhoods = neighborhoodWorkerDao.getNeighborhoods(userId);
+            long[] neighborhoodIds = neighborhoods.stream()
+                    .mapToLong(Neighborhood::getNeighborhoodId)
+                    .toArray();
+
+            return workerDao.countWorkers(professions, neighborhoodIds, workerRole, workerStatus);
+        } else {
+            //user isn't a worker, must only return workers from their neighborhood
+            return workerDao.countWorkers(professions, new long[]{user.getNeighborhood().getNeighborhoodId()}, workerRole, workerStatus);
+        }
     }
 
     @Override
-    public int getTotalWorkerPages(long neighborhoodId, int size) {
-        LOGGER.info("Getting Pages of Workers with size {} from Neighborhood {}", size, neighborhoodId);
-        long[] neighborhoodIds = {neighborhoodId};
-        return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(null, neighborhoodIds, WorkerRole.VERIFIED_WORKER, WorkerStatus.none) / size);
-    }
+    public int calculateWorkerPages(List<String> professions, long userId, int size, String workerRole, String workerStatus) {
+        LOGGER.info("Calculating Worker Pages with size {} for User {} with professions {}", size, userId, professions);
 
-    @Override
-    public int getTotalWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole, WorkerStatus workerStatus) {
-        LOGGER.info("Getting Pages of Workers with size {} from Neighborhoods {} with professions {}", size, neighborhoodIds, professions);
-        return (int) Math.ceil((double) workerDao.getWorkersCountByCriteria(professions, neighborhoodIds, workerRole, workerStatus) / size);
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkOptionalWorkerRoleString(workerRole);
+        ValidationUtils.checkOptionalWorkerStatusString(workerStatus);
+        ValidationUtils.checkProfessionsArray(professions);
+
+        return PaginationUtils.calculatePages(countWorkers(professions, userId, workerRole, workerStatus), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void updateWorker(long userId, String phoneNumber, String address, String businessName,
-                             MultipartFile backgroundPicture, String bio) {
-        LOGGER.info("Updating Worker {}", userId);
-        Worker worker = workerDao.findWorkerById(userId).orElseThrow(()-> new NotFoundException("Worker Not Found"));
-        worker.setPhoneNumber(phoneNumber);
-        worker.setAddress(address);
-        worker.setBusinessName(businessName);
-        worker.setBio(bio);
-        if(!backgroundPicture.isEmpty()) {
-            Image i = imageService.storeImage(backgroundPicture);
-            worker.setBackgroundPictureId(i.getImageId());
-        }
-    }
+    public Worker updateWorkerPartially(long workerId, String phoneNumber, String address, String businessName, MultipartFile backgroundPicture, String bio){
+        LOGGER.info("Updating Worker {}", workerId);
 
-    private Worker getWorker(long workerId) {
-        LOGGER.info("Getting Worker {}", workerId);
-        return workerDao.findWorkerById(workerId).orElseThrow(() -> new NotFoundException("Worker not found"));
-    }
-
-    @Override
-    public Worker updateWorkerPartially(long userId, String phoneNumber, String address, String businessName, MultipartFile backgroundPicture, String bio){
-        LOGGER.info("Updating Worker {}", userId);
-        Worker worker = getWorker(userId);
+        Worker worker = workerDao.findWorker(workerId).orElseThrow(()-> new NotFoundException("Worker Not Found"));
         if(phoneNumber != null && !phoneNumber.isEmpty())
             worker.setPhoneNumber(phoneNumber);
         if(address != null && !address.isEmpty())

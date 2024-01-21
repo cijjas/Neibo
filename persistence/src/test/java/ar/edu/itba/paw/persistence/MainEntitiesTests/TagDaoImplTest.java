@@ -69,7 +69,7 @@ public class TagDaoImplTest {
         testInserter.createCategorization(tKey, pKey);
 
         // Exercise
-        List<Tag> tags = tagDao.getTagsByPostId(pKey);
+        List<Tag> tags = tagDao.getTags(pKey);
 
         // Validations & Post Conditions
         assertFalse(tags.isEmpty());
@@ -81,7 +81,7 @@ public class TagDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Tag> tags = tagDao.getTagsByPostId(1);
+        List<Tag> tags = tagDao.getTags(1);
 
         // Validations & Post Conditions
         assertTrue(tags.isEmpty());
@@ -98,7 +98,7 @@ public class TagDaoImplTest {
         testInserter.createCategorization(tKey, pKey);
 
         // Exercise
-        List<Tag> tags = tagDao.getTags(nhKey);
+        List<Tag> tags = tagDao.getNeighborhoodTags(nhKey);
 
         // Validations & Post Conditions
         assertEquals(1, tags.size());
@@ -109,7 +109,7 @@ public class TagDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Tag> tags = tagDao.getTags(1);
+        List<Tag> tags = tagDao.getNeighborhoodTags(1);
 
         // Validations & Post Conditions
         assertEquals(0, tags.size());

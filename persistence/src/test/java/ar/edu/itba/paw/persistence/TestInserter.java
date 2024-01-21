@@ -4,7 +4,7 @@ import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.Professions;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.enums.WorkerRole;
-import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
+import ar.edu.itba.paw.exceptions.InsertionException;
 import ar.edu.itba.paw.models.Entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -52,7 +52,7 @@ public class TestInserter {
     }
 
     public void createLike(long postId, long userId) {
-        Like like = new Like(em.find(Post.class, postId), em.find(User.class, userId));
+        Like like = new Like(em.find(Post.class, postId), em.find(User.class, userId), new java.sql.Date(System.currentTimeMillis()));
         em.persist(like);
         em.flush();
     }

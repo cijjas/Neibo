@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
-import ar.edu.itba.paw.interfaces.exceptions.InsertionException;
+import ar.edu.itba.paw.exceptions.InsertionException;
 import ar.edu.itba.paw.interfaces.persistence.ImageDao;
 import ar.edu.itba.paw.models.Entities.Image;
 import org.slf4j.Logger;
@@ -24,6 +24,7 @@ public class ImageDaoImpl implements ImageDao {
     @Override
     public Image storeImage(MultipartFile image) {
         LOGGER.debug("Inserting Image {}", image.getName());
+
         byte[] imageBytes;
         try {
             imageBytes = image.getBytes();
@@ -41,8 +42,9 @@ public class ImageDaoImpl implements ImageDao {
     // --------------------------------------------- IMAGES SELECT -----------------------------------------------------
 
     @Override
-    public Optional<Image> getImage(long imageId) {
+    public Optional<Image> findImage(long imageId) {
         LOGGER.debug("Selecting Image with id {}", imageId);
+
         return Optional.ofNullable(em.find(Image.class, imageId));
     }
 }

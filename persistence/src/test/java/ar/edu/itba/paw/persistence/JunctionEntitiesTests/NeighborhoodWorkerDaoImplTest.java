@@ -22,6 +22,7 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -99,7 +100,7 @@ public class NeighborhoodWorkerDaoImplTest {
         testInserter.createWorkerArea(uKey, nhKey);
 
         // Exercise
-        List<Neighborhood> neighborhoods = neighborhoodWorkerDaoImpl.getNeighborhoods(uKey);
+        Set<Neighborhood> neighborhoods = neighborhoodWorkerDaoImpl.getNeighborhoods(uKey);
 
         // Validations & Post Conditions
         assertEquals(1, neighborhoods.size());
@@ -110,7 +111,7 @@ public class NeighborhoodWorkerDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Neighborhood> neighborhoods = neighborhoodWorkerDaoImpl.getNeighborhoods(1);
+        Set<Neighborhood> neighborhoods = neighborhoodWorkerDaoImpl.getNeighborhoods(1);
 
         // Validations & Post Conditions
         assertEquals(0, neighborhoods.size());

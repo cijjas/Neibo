@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Entities.WorkerArea;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface NeighborhoodWorkerDao {
 
@@ -16,7 +17,7 @@ public interface NeighborhoodWorkerDao {
 
     Optional<WorkerArea> findWorkerArea(long workerId, long neighborhoodId);
 
-    List<Neighborhood> getNeighborhoods(long workerId);
+    Set<Neighborhood> getNeighborhoods(long workerId);
 
     // --------------------------------------- NEIGHBORHOODS WORKERS DELETE ----------------------------------------
 

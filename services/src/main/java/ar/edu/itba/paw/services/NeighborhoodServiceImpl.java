@@ -28,6 +28,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     @Override
     public Neighborhood createNeighborhood(String name) {
         LOGGER.info("Creating Neighborhood {}", name);
+
         return neighborhoodDao.createNeighborhood(name);
     }
 
@@ -35,24 +36,26 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Neighborhood> findNeighborhoodByName(String name) {
-        LOGGER.info("Finding Neighborhood with name {}", name);
-        return neighborhoodDao.findNeighborhoodByName(name);
+    public Optional<Neighborhood> findNeighborhood(String name) {
+        LOGGER.info("Finding Neighborhood {}", name);
+        return neighborhoodDao.findNeighborhood(name);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Neighborhood> findNeighborhoodById(long id) {
-        LOGGER.info("Selecting Neighborhood with id {}", id);
-        if (id <= 0)
-            throw new IllegalArgumentException("Neighborhood ID must be a positive integer");
-        return neighborhoodDao.findNeighborhoodById(id);
+    public Optional<Neighborhood> findNeighborhood(long neighborhoodId) {
+        LOGGER.info("Finding Neighborhood {}", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return neighborhoodDao.findNeighborhood(neighborhoodId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Neighborhood> getNeighborhoods() {
-        LOGGER.info("Getting All Neighborhoods");
+        LOGGER.info("Getting Neighborhoods");
+
         List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoods();
         neighborhoods.removeIf(neighborhood -> neighborhood.getName().equals("Worker Neighborhood"));
         neighborhoods.removeIf(neighborhood -> neighborhood.getName().equals("Rejected"));
@@ -61,19 +64,32 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Neighborhood> getNeighborhoodsByCriteria(int page, int size) {
-        LOGGER.info("Getting All Neighborhoods");
-        List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoodsByCriteria(page, size);
+    public List<Neighborhood> getNeighborhoods(int page, int size) {
+        LOGGER.info("Getting Neighborhoods");
+
+        ValidationUtils.checkPageAndSize(page, size);
+
+        List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoods(page, size);
         neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == 0);
         neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == -1);
         return neighborhoods;
+    }
 
+    // ---------------------------------------------------
+
+    @Override
+    public int countNeighborhoods() {
+        LOGGER.info("Counting Neighborhoods");
+
+        return neighborhoodDao.getNeighborhoodsCount();
     }
 
     @Override
-    public int getTotalNeighborhoodPages(int size) {
-        LOGGER.info("Getting Total Neighborhood Pages");
-        return (int) Math.ceil((double) neighborhoodDao.getNeighborhoodsCount() / size);
-    }
+    public int calculateNeighborhoodPages(int size) {
+        LOGGER.info("Calculating Neighborhood Pages");
 
+        ValidationUtils.checkSize(size);
+
+        return PaginationUtils.calculatePages(neighborhoodDao.getNeighborhoodsCount(), size);
+    }
 }

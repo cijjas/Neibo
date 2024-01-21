@@ -2,10 +2,11 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.enums.WorkerRole;
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
+import ar.edu.itba.paw.interfaces.persistence.WorkerDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.NeighborhoodWorkerService;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -25,15 +27,18 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodWorkerServiceImpl.class);
     private final NeighborhoodWorkerDao neighborhoodWorkerDao;
     private final UserDao userDao;
+    private final WorkerDao workerDao;
     private final EmailService emailService;
     private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public NeighborhoodWorkerServiceImpl(NeighborhoodWorkerDao neighborhoodWorkerDao, UserDao userDao, EmailService emailService, NeighborhoodDao neighborhoodDao) {
+    public NeighborhoodWorkerServiceImpl(NeighborhoodWorkerDao neighborhoodWorkerDao, UserDao userDao, EmailService emailService,
+                                         NeighborhoodDao neighborhoodDao, WorkerDao workerDao) {
         this.neighborhoodWorkerDao = neighborhoodWorkerDao;
         this.userDao = userDao;
         this.emailService = emailService;
         this.neighborhoodDao = neighborhoodDao;
+        this.workerDao = workerDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -41,10 +46,10 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     @Override
     public void addWorkerToNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Adding Worker {} to Neighborhood {}", workerId, neighborhoodId);
-        neighborhoodWorkerDao.createWorkerArea(workerId, neighborhoodId);
 
+        neighborhoodWorkerDao.createWorkerArea(workerId, neighborhoodId);
         //send admin email notifying new worker
-        User worker = userDao.findUserById(workerId).orElse(null);
+        User worker = userDao.findUser(workerId).orElse(null);
         assert worker != null;
         emailService.sendNewUserMail(neighborhoodId, worker.getName(), UserRole.WORKER);
     }
@@ -52,6 +57,8 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
 
     @Override
     public void addWorkerToNeighborhoods(long workerId, String neighborhoodIds) {
+        LOGGER.info("Adding Worker {} to Neighborhoods {}", workerId, neighborhoodIds);
+
         //convert the id's string into a List<Long>, where the values are comma separated in the string
         String[] idsString = neighborhoodIds.split(",");
         Long[] idsLong = new Long[idsString.length];
@@ -69,17 +76,25 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
 
     @Override
     @Transactional(readOnly = true)
-    public List<Neighborhood> getNeighborhoods(long workerId) {
-        LOGGER.info("Getting Neighborhoods for Worker {}", workerId);
+    public Set<Neighborhood> getNeighborhoods(long workerId) {
+        LOGGER.info("Getting the Neighborhoods that Worker {} belongs to", workerId);
+
+        ValidationUtils.checkWorkerId(workerId);
+
+        workerDao.findWorker(workerId).orElseThrow(NotFoundException::new);
+
         return neighborhoodWorkerDao.getNeighborhoods(workerId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Neighborhood> getOtherNeighborhoods(long workerId) {
-        LOGGER.info("Getting Other Neighborhoods for Worker {}", workerId);
+        LOGGER.info("Getting Neighborhoods that Worker {} does not belong to", workerId);
+
+        ValidationUtils.checkWorkerId(workerId);
+
         List<Neighborhood> allNeighborhoods = neighborhoodDao.getNeighborhoods();
-        List<Neighborhood> workerNeighborhoods = neighborhoodWorkerDao.getNeighborhoods(workerId);
+        Set<Neighborhood> workerNeighborhoods = neighborhoodWorkerDao.getNeighborhoods(workerId);
 
         for (Neighborhood neighborhood : workerNeighborhoods) {
             allNeighborhoods.removeIf(neighborhoodName -> neighborhoodName.getName().equals(neighborhood.getName()));
@@ -94,27 +109,39 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     @Override
     public void verifyWorkerInNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Verifying Worker {} in Neighborhood {}", workerId, neighborhoodId);
+
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
         setNeighborhoodRole(workerId, WorkerRole.VERIFIED_WORKER, neighborhoodId);
-        User worker = userDao.findUserById(workerId).orElse(null);
-        assert worker != null;
-        String neighborhoodName = neighborhoodDao.findNeighborhoodById(worker.getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
+        User worker = userDao.findUser(workerId).orElseThrow(()->  new NotFoundException("User Not Found"));
+        String neighborhoodName = neighborhoodDao.findNeighborhood(worker.getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
         emailService.sendVerifiedNeighborMail(worker, neighborhoodName);
     }
 
     @Override
     public void rejectWorkerFromNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Rejecting Worker {} from Neighborhood {}", workerId, neighborhoodId);
+
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
         setNeighborhoodRole(workerId, WorkerRole.REJECTED, neighborhoodId);
     }
 
     @Override
     public void unverifyWorkerFromNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Un-verifying Worker {} from Neighborhood {}", workerId, neighborhoodId);
+
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
         setNeighborhoodRole(workerId, WorkerRole.UNVERIFIED_WORKER, neighborhoodId);
     }
 
     private void setNeighborhoodRole(long workerId, WorkerRole role, long neighborhoodId) {
         LOGGER.debug("Setting Worker {} role to {} in Neighborhood {}", workerId, role, neighborhoodId);
+
         WorkerArea workerArea = neighborhoodWorkerDao.findWorkerArea(workerId, neighborhoodId).orElseThrow(()-> new NotFoundException("Worker Area Not Found"));
         workerArea.setRole(role);
     }
@@ -124,6 +151,9 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     @Override
     public void removeWorkerFromNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Removing Worker {} from Neighborhood {}", workerId, neighborhoodId);
+
+        ValidationUtils.checkWorkerAreaIds(workerId, neighborhoodId);
+
         neighborhoodWorkerDao.deleteWorkerArea(workerId, neighborhoodId);
     }
 }

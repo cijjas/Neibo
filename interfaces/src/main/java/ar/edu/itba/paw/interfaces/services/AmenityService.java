@@ -11,22 +11,23 @@ public interface AmenityService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Amenity> findAmenityById(long amenityId);
+    Optional<Amenity> findAmenity(long amenityId);
+
+    Optional<Amenity> findAmenity(long amenityId, long neighborhoodId);
 
     List<Amenity> getAmenities(long neighborhoodId, int page, int size);
 
-    int getAmenitiesCount(long neighborhoodId);
+    // ---------------------------------------------------
 
-    int getTotalAmenitiesPages(long neighborhoodId, int size);
+    int countAmenities(long neighborhoodId);
+
+    int calculateAmenityPages(long neighborhoodId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    void updateAmenity(long id, String name, String description);
-
-    Amenity updateAmenityPartially(long id, String name, String description);
+    Amenity updateAmenityPartially(long amenityId, String name, String description);
 
     // -----------------------------------------------------------------------------------------------------------------
 
     boolean deleteAmenity(long amenityId);
-
 }

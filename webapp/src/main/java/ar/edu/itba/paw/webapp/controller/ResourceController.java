@@ -4,6 +4,8 @@ import ar.edu.itba.paw.interfaces.services.ResourceService;
 import ar.edu.itba.paw.models.Entities.Resource;
 import ar.edu.itba.paw.webapp.dto.ResourceDto;
 import ar.edu.itba.paw.webapp.form.ResourceForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 @Path("neighborhoods/{neighborhoodId}/resources")
 @Component
 public class ResourceController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResourceController.class);
 
     @Autowired
     private ResourceService rs;
@@ -30,6 +33,7 @@ public class ResourceController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listResources() {
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
         final List<Resource> resources = rs.getResources(neighborhoodId);
         final List<ResourceDto> resourcesDto = resources.stream()
                 .map(r -> ResourceDto.fromResource(r, uriInfo)).collect(Collectors.toList());
@@ -43,11 +47,13 @@ public class ResourceController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createResource(@Valid final ResourceForm form) {
+        LOGGER.info("POST request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
         final Resource resource = rs.createResource(neighborhoodId, form.getTitle(), form.getDescription(), form.getImageFile());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(resource.getResourceId())).build();
         return Response.created(uri).build();
     }
+
     @PATCH
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON, })
@@ -55,6 +61,7 @@ public class ResourceController {
     public Response updateResourcePartially(
             @PathParam("id") final long id,
             @Valid final ResourceForm partialUpdate) {
+        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
         final Resource resource = rs.updateResource(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getImageFile());
         return Response.ok(ResourceDto.fromResource(resource, uriInfo)).build();
     }
@@ -63,8 +70,8 @@ public class ResourceController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(@PathParam("id") final long id) {
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
         rs.deleteResource(id);
         return Response.noContent().build();
     }
-
 }

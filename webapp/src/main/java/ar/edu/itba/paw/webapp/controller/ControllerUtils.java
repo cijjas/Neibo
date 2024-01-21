@@ -1,10 +1,21 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Entities.User;
+import ar.edu.itba.paw.webapp.auth.UserAuth;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+
 import javax.ws.rs.core.Link;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class ControllerUtils {
+    @Autowired
+    private UserService us;
 
     public static Link[] createPaginationLinks(String baseUri, int page, int size, int totalPages) {
         List<Link> links = new ArrayList<>();
@@ -34,5 +45,11 @@ public class ControllerUtils {
         }
 
         return links.toArray(new Link[0]);
+    }
+
+    public long getLoggedUser() {
+        String email = (((UserAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUsername();
+        User user = us.findUser(email).orElseThrow(() -> new NotFoundException("User not found"));
+        return user.getUserId();
     }
 }

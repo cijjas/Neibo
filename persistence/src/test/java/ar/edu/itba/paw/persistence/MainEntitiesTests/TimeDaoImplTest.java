@@ -66,7 +66,7 @@ public class TimeDaoImplTest {
         long timeKey = testInserter.createTime();
 
         // Exercise
-        Optional<Time> foundTime = timeDao.findTimeById(timeKey);
+        Optional<Time> foundTime = timeDao.findTime(timeKey);
 
         // Validations & Post Conditions
         assertTrue(foundTime.isPresent());
@@ -77,7 +77,7 @@ public class TimeDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<Time> foundTime = timeDao.findTimeById(1);
+        Optional<Time> foundTime = timeDao.findTime(1);
 
         // Validations & Post Conditions
         assertFalse(foundTime.isPresent());
@@ -89,7 +89,7 @@ public class TimeDaoImplTest {
         long timeKey = testInserter.createTime(TIME);
 
         // Exercise
-        OptionalLong foundTime = timeDao.findIdByTime(TIME);
+        OptionalLong foundTime = timeDao.findId(TIME);
 
         // Validations & Post Conditions
         assertTrue(foundTime.isPresent());
@@ -100,7 +100,7 @@ public class TimeDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        OptionalLong foundTime = timeDao.findIdByTime(TIME);
+        OptionalLong foundTime = timeDao.findId(TIME);
 
         // Validations & Post Conditions
         assertFalse(foundTime.isPresent());

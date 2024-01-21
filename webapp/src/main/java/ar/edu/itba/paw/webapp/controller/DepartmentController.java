@@ -1,13 +1,13 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.Pair;
+import ar.edu.itba.paw.enums.DayOfTheWeek;
 import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
-import ar.edu.itba.paw.webapp.dto.AmenityDto;
-import ar.edu.itba.paw.webapp.dto.ChannelDto;
-import ar.edu.itba.paw.webapp.dto.DepartmentDto;
-import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
+import ar.edu.itba.paw.webapp.dto.*;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @Path("departments")
 @Component
 public class DepartmentController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DepartmentController.class);
 
     @Context
     private UriInfo uriInfo;
@@ -27,6 +28,7 @@ public class DepartmentController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listDepartments() {
+        LOGGER.info("GET request arrived at '/departments'");
         List<DepartmentDto> departmentDto = Arrays.stream(Department.values())
                 .map(d -> DepartmentDto.fromDepartment(d, uriInfo))
                 .collect(Collectors.toList());
@@ -38,14 +40,8 @@ public class DepartmentController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findDepartment(@PathParam("id") final int id) {
-        Department department = Department.fromId(id);
-
-        if (department != null) {
-            DepartmentDto departmentDto = DepartmentDto.fromDepartment(department, uriInfo);
-            return Response.ok(departmentDto).build();
-        } else {
-            throw new NotFoundException("Department not found");
-        }
+        LOGGER.info("GET request arrived at '/departments/{}'", id);
+        return Response.ok(DepartmentDto.fromDepartment(Department.fromId(id), uriInfo)).build();
     }
 
 }

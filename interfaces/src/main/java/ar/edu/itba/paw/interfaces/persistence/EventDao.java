@@ -14,13 +14,15 @@ public interface EventDao {
 
     // ---------------------------------------------- EVENTS SELECT ----------------------------------------------------
 
-    Optional<Event> findEventById(long eventId);
+    Optional<Event> findEvent(long eventId);
 
-    List<Event> getEventsByDate(Date date, long neighborhoodId);
+    Optional<Event> findEvent(long eventId, long neighborhoodId);
 
-    List<Event> getEventsByNeighborhoodId(long neighborhoodId);
+    List<Event> getEvents(String date, long neighborhoodId);
 
-    List<Event> getEventsByNeighborhoodIdAndDateRange(long neighborhoodId, Date startDate, Date endDate);
+    List<Event> getEvents(long neighborhoodId);
+
+    List<Event> getEvents(long neighborhoodId, Date startDate, Date endDate);
 
     List<Date> getEventDates(long neighborhoodId);
 

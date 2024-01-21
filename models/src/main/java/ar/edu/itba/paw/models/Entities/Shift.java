@@ -26,9 +26,6 @@ public class Shift {
     @Transient
     private java.sql.Time endTime;
 
-    @Transient
-    private boolean taken;
-
     Shift() {
     }
 
@@ -36,7 +33,6 @@ public class Shift {
         this.shiftId = builder.shiftId;
         this.day = builder.day;
         this.startTime = builder.startTime;
-        this.taken = builder.taken;
         if (builder.startTime != null) {
             this.endTime = calculateEndTime(builder.startTime);
         }
@@ -72,10 +68,6 @@ public class Shift {
         return endTime;
     }
 
-    public boolean isTaken() {
-        return taken;
-    }
-
     @Override
     public String toString() {
         return "Shift{" +
@@ -83,7 +75,6 @@ public class Shift {
                 ", day='" + day + '\'' +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
-                ", taken=" + taken +
                 '}';
     }
 
@@ -104,7 +95,6 @@ public class Shift {
         private Long shiftId;
         private Day day;
         private Time startTime;
-        private boolean taken;
 
         public Builder shiftId(Long shiftId) {
             this.shiftId = shiftId;
@@ -118,11 +108,6 @@ public class Shift {
 
         public Builder startTime(Time startTime) {
             this.startTime = startTime;
-            return this;
-        }
-
-        public Builder taken(boolean taken) {
-            this.taken = taken;
             return this;
         }
 

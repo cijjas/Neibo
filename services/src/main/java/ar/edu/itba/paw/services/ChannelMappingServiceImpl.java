@@ -25,6 +25,7 @@ public class ChannelMappingServiceImpl implements ChannelMappingService {
     @Override
     public void createChannelMapping(long channelId, long neighborhoodId) {
         LOGGER.info("Associating Channel {} with Neighborhood {}", channelId, neighborhoodId);
+
         channelMappingDao.createChannelMapping(channelId, neighborhoodId);
     }
 }

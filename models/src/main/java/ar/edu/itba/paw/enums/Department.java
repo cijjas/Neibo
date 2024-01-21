@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.enums;
 
 import ar.edu.itba.paw.Pair;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -62,11 +63,13 @@ public enum Department {
                 .collect(Collectors.toList());
     }
 
-    public static Department fromId(int id) {
+    public static Department fromId(long id) {
+        if(id <= 0)
+            throw new IllegalArgumentException("Invalid value (" + id + ") for the Department ID. Please use a positive integer greater than 0.");
         return Arrays.stream(values())
-                .filter(department -> department.getId() == id)
+                .filter(d -> d.getId() == id)
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(()-> new NotFoundException("Department Not Found"));
     }
 
     private String toURLString() {

@@ -15,17 +15,15 @@ public interface PostService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Post> findPostById(long id);
+    Optional<Post> findPost(long postId);
 
-    List<Post> getWorkerPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
+    Optional<Post> findPost(long postId, long neighborhoodId);
 
-    int getWorkerPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
+    List<Post> getPosts(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, Long userId);
 
-    int getWorkerTotalPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
+    // ---------------------------------------------------
 
-    List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus);
+    int countPosts(String channel, List<String> tags, long neighborhoodId, String postStatus, Long userId);
 
-    int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
-
-    int getTotalPages(String channel, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId);
+    int calculatePostPages(String channel, int size, List<String> tags, long neighborhoodId, String postStatus, Long userId);
 }

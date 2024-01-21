@@ -14,9 +14,13 @@ public interface PostDao {
 
     // ------------------------------------------------ POSTS SELECT ---------------------------------------------------
 
-    Optional<Post> findPostById(long id);
+    Optional<Post> findPost(long postId);
 
-    List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus hot, long userId);
+    Optional<Post> findPost(long postId, long neighborhoodId);
 
-    int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus hot, long userId);
+    List<Post> getPosts(String channel, int page, int size, List<String> tags, long neighborhoodId, String hot, Long userId);
+
+    // ---------------------------------------------------
+
+    int countPosts(String channel, List<String> tags, long neighborhoodId, String hot, Long userId);
 }

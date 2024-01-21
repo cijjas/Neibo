@@ -12,17 +12,13 @@ public interface TagDao {
 
     // ---------------------------------------------- TAGS SELECT ------------------------------------------------------
 
-    List<Tag> getTagsByPostId(long id);
+    List<Tag> getTags(Long postId, long neighborhoodId, int page, int size);
 
-    List<Tag> getTagsByPostId(long id, int page, int size);
+    int countTags(Long postId, long neighborhoodId);
 
-    List<Tag> getTags(long neighborhoodId);
+    List<Tag> getTags(long postId);
 
-    List<Tag> getTags(long neighborhoodId, int page, int size);
-
-    int getTagsCount(long neighborhoodId);
-
-    int getTagsCountByPostId(long postId);
+    List<Tag> getNeighborhoodTags(long neighborhoodId);
 
     List<Tag> getAllTags();
 }

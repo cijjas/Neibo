@@ -19,5 +19,5 @@ public interface ResourceDao {
 
     boolean deleteResource(final long resourceId);
 
-    Optional<Resource> findResourceById(final long resourceId);
+    Optional<Resource> findResource(final long resourceId);
 }

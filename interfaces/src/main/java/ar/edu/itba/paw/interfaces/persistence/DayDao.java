@@ -12,5 +12,5 @@ public interface DayDao {
 
     // ------------------------------------------------ DAYS SELECT ----------------------------------------------------
 
-    Optional<Day> findDayById(long dayId);
+    Optional<Day> findDay(long dayId);
 }

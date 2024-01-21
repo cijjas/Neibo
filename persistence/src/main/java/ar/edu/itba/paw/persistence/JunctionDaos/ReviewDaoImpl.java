@@ -25,6 +25,7 @@ public class ReviewDaoImpl implements ReviewDao {
     @Override
     public Review createReview(long workerId, long userId, float rating, String reviewString) {
         LOGGER.debug("Inserting Review");
+
         Review review = new Review.Builder()
                 .user(em.find(User.class, userId))
                 .worker(em.find(Worker.class, workerId))
@@ -38,14 +39,32 @@ public class ReviewDaoImpl implements ReviewDao {
     // ---------------------------------------------- REVIEWS SELECT ---------------------------------------------------
 
     @Override
-    public Optional<Review> findReviewById(long reviewId) {
+    public Optional<Review> findReview(long reviewId) {
         LOGGER.debug("Selecting Review with reviewId {}", reviewId);
+
         return Optional.ofNullable(em.find(Review.class, reviewId));
+    }
+
+    @Override
+    public Optional<Review> findReview(long reviewId, long workerId) {
+        LOGGER.debug("Selecting Review with reviewId {}, workerId {}", reviewId, workerId);
+
+        TypedQuery<Review> query = em.createQuery(
+                "SELECT r FROM Review r WHERE r.id = :reviewId AND r.worker.id = :workerId",
+                Review.class
+        );
+
+        query.setParameter("reviewId", reviewId);
+        query.setParameter("workerId", workerId);
+
+        List<Review> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
     @Override
     public List<Review> getReviews(long workerId) {
         LOGGER.debug("Selecting Reviews from Worker {}", workerId);
+
         TypedQuery<Review> query = em.createQuery("SELECT r FROM Review r WHERE r.worker.user.userId = :workerId ORDER BY r.date DESC", Review.class);
         query.setParameter("workerId", workerId);
         return query.getResultList();
@@ -54,6 +73,7 @@ public class ReviewDaoImpl implements ReviewDao {
     @Override
     public List<Review> getReviews(long workerId, int page, int size) {
         LOGGER.debug("Selecting Reviews from Worker {}", workerId);
+
         TypedQuery<Review> query = em.createQuery("SELECT r FROM Review r WHERE r.worker.user.userId = :workerId ORDER BY r.date DESC", Review.class);
         query.setParameter("workerId", workerId);
         query.setFirstResult((page - 1) * size);
@@ -64,6 +84,7 @@ public class ReviewDaoImpl implements ReviewDao {
     @Override
     public Optional<Float> getAvgRating(long workerId) {
         LOGGER.debug("Selecting Average Rating for Worker {}", workerId);
+
         TypedQuery<Double> query = em.createQuery("SELECT AVG(rating) FROM Review r WHERE r.worker.user.userId = :workerId", Double.class);
         query.setParameter("workerId", workerId);
         if(query.getSingleResult() == null)
@@ -71,9 +92,12 @@ public class ReviewDaoImpl implements ReviewDao {
         return Optional.of(query.getSingleResult().floatValue());
     }
 
+    // ---------------------------------------------------
+
     @Override
-    public int getReviewsCount(long workerId) {
+    public int countReviews(long workerId) {
         LOGGER.debug("Selecting Review Count for Worker {}", workerId);
+
         TypedQuery<Long> query = em.createQuery("SELECT COUNT(*) FROM Review r WHERE r.worker.user.userId = :workerId", Long.class);
         query.setParameter("workerId", workerId);
         return query.getSingleResult().intValue();
@@ -84,6 +108,7 @@ public class ReviewDaoImpl implements ReviewDao {
     @Override
     public boolean deleteReview(long reviewId) {
         LOGGER.debug("Deleting Review with reviewId {}", reviewId);
+
         Review review = em.find(Review.class, reviewId);
         if (review != null) {
             em.remove(review);

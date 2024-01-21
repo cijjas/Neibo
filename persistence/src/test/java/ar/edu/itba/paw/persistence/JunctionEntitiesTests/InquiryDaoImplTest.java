@@ -89,7 +89,7 @@ public class InquiryDaoImplTest {
         long iqKey = testInserter.createInquiry(pKey, uKey3);
 
         // Exercise
-        Optional<Inquiry> maybeInquiry = inquiryDao.findInquiryById(iqKey);
+        Optional<Inquiry> maybeInquiry = inquiryDao.findInquiry(iqKey);
 
         // Validations & Post Conditions
         assertTrue(maybeInquiry.isPresent());
@@ -108,7 +108,7 @@ public class InquiryDaoImplTest {
         long iqKey = testInserter.createInquiry(pKey, uKey3);
 
         // Exercise
-        List<Inquiry> inquiries = inquiryDao.getInquiriesByProductAndCriteria(pKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Inquiry> inquiries = inquiryDao.getInquiries(pKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertFalse(inquiries.isEmpty());
@@ -119,7 +119,7 @@ public class InquiryDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<Inquiry> maybeInquiry = inquiryDao.findInquiryById(1);
+        Optional<Inquiry> maybeInquiry = inquiryDao.findInquiry(1);
 
         // Validations & Post Conditions
         assertFalse(maybeInquiry.isPresent());

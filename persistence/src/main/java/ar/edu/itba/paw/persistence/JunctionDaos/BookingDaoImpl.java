@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +28,7 @@ public class BookingDaoImpl implements BookingDao {
     @Override
     public Booking createBooking(long userId, long amenityAvailabilityId, Date reservationDate) {
         LOGGER.debug("Inserting Booking");
+
         Booking booking = new Booking.Builder()
                 .user(em.find(User.class, userId))
                 .bookingDate(reservationDate)
@@ -47,26 +50,53 @@ public class BookingDaoImpl implements BookingDao {
                     "INNER JOIN times t ON s.starttime = t.timeid";
 
     @Override
-    public Optional<Booking> findBookingById(long bookingId){
+    public Optional<Booking> findBooking(long bookingId){
         LOGGER.debug("Selecting Booking with id {}", bookingId);
+
         return Optional.ofNullable(em.find(Booking.class, bookingId));
     }
 
     @Override
-    public List<Booking> getUserBookings(long userId) {
-        LOGGER.debug("Selecting Bookings from userId {}", userId);
-        String sql = BOOKINGS_JOIN_AVAILABILITY + " WHERE userid = :userId ORDER BY uav.date, asa.amenityid, timeinterval asc";
-        List<Booking> bookings = em.createNativeQuery(sql, Booking.class)
-                .setParameter("userId", userId)
-                .getResultList();
-        return bookings;
+    public List<Booking> getBookings(Long userId, Long amenityId) {
+        LOGGER.debug("Selecting Bookings from userId {} and amenityId {}", userId, amenityId);
+
+        StringBuilder sqlBuilder = new StringBuilder(BOOKINGS_JOIN_AVAILABILITY);
+        sqlBuilder.append(" WHERE 1 = 1");
+
+        if (userId != null) {
+            sqlBuilder.append(" AND userid = :userId");
+        }
+
+        if (amenityId != null) {
+            sqlBuilder.append(" AND asa.amenityid = :amenityId");
+        }
+
+        sqlBuilder.append(" ORDER BY uav.date, asa.amenityid, timeinterval asc");
+
+        String sql = sqlBuilder.toString();
+
+        // Specify the result class (Booking.class) in createNativeQuery
+        Query query = em.createNativeQuery(sql, Booking.class);
+
+        if (userId != null) {
+            query.setParameter("userId", userId);
+        }
+
+        if (amenityId != null) {
+            query.setParameter("amenityId", amenityId);
+        }
+
+        return query.getResultList();
     }
+
+
 
     // ---------------------------------------- USERS_AVAILABILITY DELETE ----------------------------------------------
 
     @Override
     public boolean deleteBooking(long bookingId) {
         LOGGER.debug("Deleting Booking with bookingId {}", bookingId);
+
         String hql = "DELETE FROM Booking b WHERE b.bookingId = :bookingId";
         int deletedCount = em.createQuery(hql)
                 .setParameter("bookingId", bookingId)

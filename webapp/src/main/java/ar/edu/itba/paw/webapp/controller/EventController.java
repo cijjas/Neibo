@@ -2,9 +2,10 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Entities.Event;
-import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.EventDto;
 import ar.edu.itba.paw.webapp.form.EventForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,13 +14,13 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
 @Path("neighborhoods/{neighborhoodId}/events")
 @Component
 public class EventController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EventController.class);
 
     @Autowired
     private EventService es;
@@ -35,7 +36,8 @@ public class EventController {
     public Response listEventsByDate(
             @QueryParam("date") final String date
             ) {
-        final List<Event> events = es.getEventsByDate(date, neighborhoodId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/events'", neighborhoodId);
+        final List<Event> events = es.getEvents(date, neighborhoodId);
         final List<EventDto> eventsDto = events.stream()
                 .map(e -> EventDto.fromEvent(e, uriInfo)).collect(Collectors.toList());
 
@@ -46,14 +48,16 @@ public class EventController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findEvent(@PathParam("id") final long id) {
-        return Response.ok(EventDto.fromEvent(es.findEventById(id)
+    public Response findEvent(@PathParam("id") final long eventId) {
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, eventId);
+        return Response.ok(EventDto.fromEvent(es.findEvent(eventId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Event Not Found")), uriInfo)).build();
     }
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createEvent(@Valid final EventForm form) {
+        LOGGER.info("POST request arrived at '/neighborhoods/{}/events'", neighborhoodId);
         final Event event = es.createEvent(form.getName(), form.getDescription(), form.getDate(), form.getStartTime(), form.getEndTime() , neighborhoodId);
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(event.getEventId())).build();
@@ -67,6 +71,7 @@ public class EventController {
     public Response updateEventPartially(
             @PathParam("id") final long id,
             @Valid final EventForm partialUpdate) {
+        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
         final Event event = es.updateEventPartially(id, partialUpdate.getName(), partialUpdate.getDescription(), partialUpdate.getDate(), partialUpdate.getStartTime(), partialUpdate.getEndTime());
         return Response.ok(EventDto.fromEvent(event, uriInfo)).build();
     }
@@ -75,6 +80,7 @@ public class EventController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(@PathParam("id") final long id) {
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
         es.deleteEvent(id);
         return Response.noContent().build();
     }

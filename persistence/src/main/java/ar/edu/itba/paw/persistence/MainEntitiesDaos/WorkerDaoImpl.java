@@ -27,6 +27,7 @@ public class WorkerDaoImpl implements WorkerDao {
     @Override
     public Worker createWorker(long workerId, String phoneNumber, String address, String businessName) {
         LOGGER.debug("Inserting Worker");
+
         Worker worker = new Worker.Builder()
                 .workerId(workerId)
                 .user(em.find(User.class, workerId))
@@ -41,8 +42,9 @@ public class WorkerDaoImpl implements WorkerDao {
     // ---------------------------------------------- WORKERS SELECT -----------------------------------------------------
 
     @Override
-    public Optional<Worker> findWorkerById(long workerId) {
+    public Optional<Worker> findWorker(long workerId) {
         LOGGER.debug("Selecting Worker with workerId {}", workerId);
+
         return Optional.ofNullable(em.find(Worker.class, workerId));
     }
 
@@ -66,8 +68,9 @@ public class WorkerDaoImpl implements WorkerDao {
 
 
     @Override
-    public Set<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus) {
+    public Set<Worker> getWorkers(int page, int size, List<String> professions, long[] neighborhoodIds, String workerRole, String workerStatus) {
         LOGGER.debug("Selecting Workers from Neighborhoods {} with professions {}", neighborhoodIds, professions);
+
         StringBuilder query = new StringBuilder(USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
         if(neighborhoodIds.length == 0) {
@@ -91,8 +94,9 @@ public class WorkerDaoImpl implements WorkerDao {
     }
 
     @Override
-    public int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus){
+    public int countWorkers(List<String> professions, long[] neighborhoodIds, String workerRole, String workerStatus){
         LOGGER.debug("Selecting Workers Count from Neighborhood {} with professions {}", neighborhoodIds, professions);
+
         StringBuilder query = new StringBuilder(COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
         List<Object> queryParams = new ArrayList<>();
         if(neighborhoodIds.length == 0) {

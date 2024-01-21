@@ -1,8 +1,9 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.interfaces.services.EmailService;
@@ -26,19 +27,20 @@ public class AmenityServiceImpl implements AmenityService {
     private final AmenityDao amenityDao;
     private final ShiftDao shiftDao;
     private final AvailabilityDao availabilityDao;
+    private final NeighborhoodDao neighborhoodDao;
     private final EmailService emailService;
-
     private final UserService userService;
 
     @Autowired
-    public AmenityServiceImpl(final AmenityDao amenityDao, final ShiftDao shiftDao, final AvailabilityDao availabilityDao, final EmailService emailService, UserService userService) {
+    public AmenityServiceImpl(final AmenityDao amenityDao, final ShiftDao shiftDao, final AvailabilityDao availabilityDao,
+                              final EmailService emailService, final UserService userService, final NeighborhoodDao neighborhoodDao) {
         this.availabilityDao = availabilityDao;
         this.shiftDao = shiftDao;
         this.amenityDao = amenityDao;
         this.emailService = emailService;
         this.userService = userService;
+        this.neighborhoodDao = neighborhoodDao;
     }
-
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -46,15 +48,15 @@ public class AmenityServiceImpl implements AmenityService {
     @Override
     public Amenity createAmenity(String name, String description, long neighborhoodId, List<String> selectedShifts) {
         LOGGER.info("Creating Amenity {}", name);
-        Amenity amenity = amenityDao.createAmenity(name, description, neighborhoodId);
 
+        Amenity amenity = amenityDao.createAmenity(name, description, neighborhoodId);
         for (String shiftPair : selectedShifts) {
             String[] shiftParts = shiftPair.split("-");
 
             long dayId = Long.parseLong(shiftParts[0]);
             long timeId = Long.parseLong(shiftParts[1]);
 
-            Optional<Shift> existingShift = shiftDao.findShiftId(timeId, dayId);
+            Optional<Shift> existingShift = shiftDao.findShift(timeId, dayId);
 
             if (existingShift.isPresent()) {
                 availabilityDao.createAvailability(amenity.getAmenityId(), existingShift.get().getShiftId());
@@ -75,41 +77,65 @@ public class AmenityServiceImpl implements AmenityService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Amenity> findAmenityById(long amenityId) {
-        if (amenityId <= 0)
-            throw new IllegalArgumentException("Amenity ID must be a positive integer");
-        return amenityDao.findAmenityById(amenityId);
+    public Optional<Amenity> findAmenity(long amenityId) {
+        LOGGER.info("Finding Amenity Amenity {}", amenityId);
+
+        ValidationUtils.checkAmenityId(amenityId);
+
+        return amenityDao.findAmenity(amenityId);
+    }
+
+    @Override
+    public Optional<Amenity> findAmenity(long amenityId, long neighborhoodId) {
+        LOGGER.info("Finding Amenity {} from Neighborhood {}", amenityId, neighborhoodId);
+
+        ValidationUtils.checkAmenityId(amenityId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return amenityDao.findAmenity(amenityId, neighborhoodId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Amenity> getAmenities(long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Amenities from Neighborhood {}", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkPageAndSize(page, size);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+
         return amenityDao.getAmenities(neighborhoodId, page, size);
     }
 
+    // ---------------------------------------------------
+
     @Override
-    public int getAmenitiesCount(long neighborhoodId) {
-        return amenityDao.getAmenitiesCount(neighborhoodId);
+    public int countAmenities(long neighborhoodId) {
+        LOGGER.info("Counting Amenities from Neighborhood {}", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return amenityDao.countAmenities(neighborhoodId);
     }
 
     @Override
-    public int getTotalAmenitiesPages(long neighborhoodId, int size) {
-        return (int) Math.ceil((double) amenityDao.getAmenitiesCount(neighborhoodId) / size);
+    public int calculateAmenityPages(long neighborhoodId, int size) {
+        LOGGER.info("Calculating Amenity Pages for Neighborhood {}", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkSize(size);
+
+        return PaginationUtils.calculatePages(amenityDao.countAmenities(neighborhoodId), size) ;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void updateAmenity(long id, String name, String description){
-        Amenity amenity = amenityDao.findAmenityById(id).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
-        amenity.setName(name);
-        amenity.setDescription(description);
-    }
+    public Amenity updateAmenityPartially(long amenityId, String name, String description){
+        LOGGER.info("Updating Amenity {}", amenityId);
 
-    @Override
-    public Amenity updateAmenityPartially(long id, String name, String description){
-        Amenity amenity = amenityDao.findAmenityById(id).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
+        Amenity amenity = amenityDao.findAmenity(amenityId).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
         if(name != null && !name.isEmpty())
             amenity.setName(name);
         if(description != null && !description.isEmpty())
@@ -122,6 +148,9 @@ public class AmenityServiceImpl implements AmenityService {
     @Override
     public boolean deleteAmenity(long amenityId) {
         LOGGER.info("Deleting Amenity {}", amenityId);
+
+        ValidationUtils.checkAmenityId(amenityId);
+
         return amenityDao.deleteAmenity(amenityId);
     }
 }

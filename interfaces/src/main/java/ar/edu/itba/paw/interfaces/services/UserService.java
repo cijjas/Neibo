@@ -15,46 +15,34 @@ public interface UserService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<User> findUserById(final long neighborId);
+    Optional<User> findUser(final long userId);
 
-    Optional<User> findUserByMail(final String mail);
+    Optional<User> findUser(final long userId, long neighborhoodId);
+
+    Optional<User> findUser(final String mail);
 
     boolean isAttending(long eventId, long userId);
 
     List<User> getNeighbors(long neighborhoodId);
 
-    List<User> getNeighborsSubscribedByPostId(long id);
+    List<User> getNeighborsSubscribed(long postId);
 
-    List<User> getUsersByCriteria(UserRole role, long neighborhoodId, int page, int size);
+    int countUsers(String role, long neighborhoodId);
 
-    int getTotalPages(UserRole role, long neighborhoodId, int size);
+    List<User> getUsers(String role, long neighborhoodId, int page, int size);
+
+    int calculateUserPages(String role, long neighborhoodId, int size);
 
     List<User> getEventUsers(long eventId);
 
-    List<User> getEventUsersByCriteria(long eventId, int page, int size);
+    List<User> getEventUsers(long eventId, int page, int size);
 
-    int getTotalEventPages(long eventId, int size);
+    int calculateEventPages(long eventId, int size);
 
     List<User> getProductRequesters(long productId, int page, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    void updateProfilePicture(long userId, MultipartFile image);
-
-    void updatePhoneNumber(long userId, String phoneNumber);
-
-    void toggleDarkMode(final long id);
-
-    void verifyNeighbor(final long id);
-
-    void unverifyNeighbor(final long id, final long neighborhoodId);
-
-    void rejectNeighbor(final long id);
-
-    void toggleLanguage(long id);
-
-    void changeNeighborhood(long userId, long neighborhoodId);
-
-    User updateUser(long id, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification);
+    User updateUser(long userId, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification, Integer languageId, Integer userRoleId);
 
 }

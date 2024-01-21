@@ -11,19 +11,17 @@ public interface EventService {
 
     Event createEvent(String name, String description, Date date, String startTime, String endTime, long neighborhoodId);
 
-    Event updateEvent(long eventId, String name, String description, Date date, String startTime, String endTime);
-
-    Event updateEventPartially(long eventId, String name, String description, Date date, String startTime, String endTime);
-
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Event> findEventById(long eventId);
+    Optional<Event> findEvent(long eventId);
 
-    boolean hasEvents(Date date, long neighborhoodId);
+    Optional<Event> findEvent(long eventId, long neighborhoodId);
 
-    List<Event> getEventsByDate(String date, long neighborhoodId);
+    boolean hasEvents(String date, long neighborhoodId);
 
-    List<Event> getEventsByNeighborhoodId(long neighborhoodId);
+    List<Event> getEvents(String date, long neighborhoodId);
+
+    List<Event> getEvents(long neighborhoodId);
 
     List<Date> getEventDates(long neighborhoodId);
 
@@ -34,6 +32,12 @@ public interface EventService {
     String getSelectedMonth(int month, Language language);
 
     int getSelectedYear(int year);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    Event updateEvent(long eventId, String name, String description, Date date, String startTime, String endTime);
+
+    Event updateEventPartially(long eventId, String name, String description, Date date, String startTime, String endTime);
 
     // -----------------------------------------------------------------------------------------------------------------
 

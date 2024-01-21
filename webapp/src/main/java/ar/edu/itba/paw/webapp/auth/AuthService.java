@@ -24,12 +24,12 @@ public class AuthService {
             return false;
         }
 
-        Optional<Product> optionalProduct = ps.findProductById(productId);
+        Optional<Product> optionalProduct = ps.findProduct(productId);
         if (!optionalProduct.isPresent()) {
             return false;
         }
 
-        Optional<User> optionalUser = us.findUserByMail(principal.getUsername());
+        Optional<User> optionalUser = us.findUser(principal.getUsername());
         if (!optionalUser.isPresent()) {
             return false;
         }

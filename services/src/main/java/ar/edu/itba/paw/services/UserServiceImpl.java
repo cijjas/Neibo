@@ -2,8 +2,9 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
-import ar.edu.itba.paw.interfaces.exceptions.UnexpectedException;
+import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.exceptions.UnexpectedException;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
@@ -27,18 +28,18 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserDao userDao;
+    private final NeighborhoodDao neighborhoodDao;
     private final ImageService imageService;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
-    private final NeighborhoodService neighborhoodService;
 
     @Autowired
-    public UserServiceImpl(final UserDao userDao, final ImageService imageService, final PasswordEncoder passwordEncoder, final EmailService emailService, final NeighborhoodService neighborhoodService) {
+    public UserServiceImpl(final UserDao userDao, final ImageService imageService, final PasswordEncoder passwordEncoder, final EmailService emailService, final NeighborhoodDao neighborhoodDao) {
         this.emailService = emailService;
         this.imageService = imageService;
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
-        this.neighborhoodService = neighborhoodService;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService {
             throw new UnexpectedException("Unexpected Error while creating Neighbor");
         }
 
-        User n = findUserByMail(mail).orElse(null);
+        User n = findUser(mail).orElse(null);
         if (n == null) {
             User createdUser = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, neighborhoodId, language, false, UserRole.UNVERIFIED_NEIGHBOR, id);
 
@@ -82,157 +83,148 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<User> findUserById(long neighborId) {
-        LOGGER.info("Finding User with id {}", neighborId);
-        if (neighborId <= 0)
-            throw new IllegalArgumentException("User ID must be a positive integer");
-        return userDao.findUserById(neighborId);
+    public Optional<User> findUser(long userId) {
+        LOGGER.info("Finding User {}", userId);
+
+        ValidationUtils.checkUserId(userId);
+
+        return userDao.findUser(userId);
+    }
+
+    @Override
+    public Optional<User> findUser(long userId, long neighborhoodId) {
+        LOGGER.info("Finding User {} from Neighborhood {}", userId, neighborhoodId);
+
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return userDao.findUser(userId, neighborhoodId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<User> findUserByMail(String mail) {
-        LOGGER.info("Finding User with mail {}", mail);
-        return userDao.findUserByMail(mail);
+    public Optional<User> findUser(String mail) {
+        LOGGER.info("Finding User {}", mail);
+
+        return userDao.findUser(mail);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public boolean isAttending(long eventId, long userId) {
-        LOGGER.info("Checking if User {} is attending Event {}", userId, eventId);
-        return userDao.isAttending(eventId, userId);
-    }
+    public List<User> getNeighborsSubscribed(long postId) {
+        LOGGER.info("Getting Neighbors Subscribed to Post {}", postId);
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<User> getNeighborsSubscribedByPostId(long id) {
-        LOGGER.info("Getting Neighbors Subscribed to Post {}", id);
-        return userDao.getNeighborsSubscribedByPostId(id);
+        ValidationUtils.checkPostId(postId);
+
+        return userDao.getNeighborsSubscribed(postId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<User> getNeighbors(long neighborhoodId) {
         LOGGER.info("Getting Neighbors from Neighborhood {}", neighborhoodId);
-        return userDao.getUsersByCriteria(UserRole.NEIGHBOR, neighborhoodId, 0, 0);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return userDao.getUsers(UserRole.NEIGHBOR.name(), neighborhoodId, 0, 0);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> getUsersByCriteria(UserRole role, long neighborhoodId, int page, int size) {
-        LOGGER.info("Getting Users from Neighborhood {} with Role {}", neighborhoodId, role);
-        return userDao.getUsersByCriteria(role, neighborhoodId, page, size);
+    public List<User> getUsers(String role, long neighborhoodId, int page, int size) {
+        LOGGER.info("Getting Users with Role {} from Neighborhood {} ", role, neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkPageAndSize(page, size);
+        ValidationUtils.checkOptionalUserRoleString(role);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return userDao.getUsers(role, neighborhoodId, page, size);
+    }
+
+    @Override
+    public int countUsers(String role, long neighborhoodId) {
+        LOGGER.info("Counting Users with Role {} from Neighborhood {} ", role, neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkOptionalUserRoleString(role);
+
+        return userDao.countTotalUsers(role, neighborhoodId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int getTotalPages(UserRole role, long neighborhoodId, int size) {
-        LOGGER.info("Getting Pages of Users with size {} from Neighborhood {} with Role {}", size, neighborhoodId, role);
-        return (int) Math.ceil((double) userDao.getTotalUsers(role, neighborhoodId) / size);
+    public int calculateUserPages(String role, long neighborhoodId, int size) {
+        LOGGER.info("Calculating User Pages with Role {} from Neighborhood {} ", role, neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkSize(size);
+        ValidationUtils.checkOptionalUserRoleString(role);
+
+        return PaginationUtils.calculatePages(userDao.countTotalUsers(role, neighborhoodId), size);
     }
 
+    //funcion deprecada?? ahora existe attendanceController
     @Override
     @Transactional(readOnly = true)
     public List<User> getEventUsers(long eventId) {
-        LOGGER.info("Getting User attending Event {}", eventId);
+        LOGGER.info("Getting Users attending Event {}", eventId);
+
+        ValidationUtils.checkEventId(eventId);
+
         return userDao.getEventUsers(eventId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> getEventUsersByCriteria(long eventId, int page, int size) {
+    public List<User> getEventUsers(long eventId, int page, int size) {
         LOGGER.info("Getting User attending Event {}", eventId);
-        return userDao.getEventUsersByCriteria(eventId, page, size);
+
+        ValidationUtils.checkEventId(eventId);
+        ValidationUtils.checkPageAndSize(page, size);
+
+        return userDao.getEventUsers(eventId, page, size);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int getTotalEventPages(long eventId, int size) {
-        LOGGER.info("Getting Pages of Users with size {} attending Event {}", size, eventId);
-        return (int) Math.ceil((double) userDao.getEventUsers(eventId).size() / size);
+    public int calculateEventPages(long eventId, int size) {
+        LOGGER.info("Calculating User Pages attending Event {}", eventId);
+
+        ValidationUtils.checkEventId(eventId);
+        ValidationUtils.checkSize(size);
+
+        return PaginationUtils.calculatePages(userDao.getEventUsers(eventId).size(), size);
     }
 
     @Override
     public List<User> getProductRequesters(long productId, int page, int size) {
+        LOGGER.info("Getting Users Requesting Product {} ", productId);
+
+        ValidationUtils.checkProductId(productId);
+        ValidationUtils.checkPageAndSize(page, size);
+
         return userDao.getProductRequesters(productId, page, size);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public boolean isAttending(long eventId, long userId) {
+        LOGGER.info("Checking if User {} is attending Event {}", userId, eventId);
+
+        ValidationUtils.checkAttendanceId(eventId, userId);
+
+        return userDao.isAttending(eventId, userId);
+    }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void updateProfilePicture(long userId, MultipartFile image) {
-        LOGGER.info("Updating User {} profile picture", userId);
-        Image i = imageService.storeImage(image);
-        User user = getUser(userId);
-        user.setProfilePicture(i);
-    }
+    public User updateUser(long userId, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification, Integer languageId, Integer userRoleId) {
+        LOGGER.info("Updating User {}", userId);
 
-    @Override
-    public void updatePhoneNumber(long userId, String phoneNumber) {
-        LOGGER.info("Updating User {} phone number", userId);
-        User user = getUser(userId);
-        user.setPhoneNumber(phoneNumber);
-    }
-
-
-    @Override
-    public void toggleDarkMode(long id) {
-        LOGGER.info("Toggling Dark Mode for User {}", id);
-        User user = getUser(id);
-        user.setDarkMode(!user.isDarkMode());
-    }
-
-    @Override
-    public void verifyNeighbor(long id) {
-        LOGGER.info("Verifying User {}", id);
-        User user = getUser(id);
-        // This method has to change
-        user.setRole(UserRole.NEIGHBOR);
-        String neighborhoodName = neighborhoodService.findNeighborhoodById(user.getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
-        emailService.sendVerifiedNeighborMail(user, neighborhoodName);
-    }
-
-    //for users that were rejected/removed from a neighborhood and have selected a new one to become a part of
-    @Override
-    public void unverifyNeighbor(long id, long neighborhoodId) {
-        LOGGER.info("Un-verifying User {}", id);
-        User user = getUser(id);
-        user.setRole(UserRole.UNVERIFIED_NEIGHBOR);
-    }
-
-    @Override
-    public void rejectNeighbor(long id) {
-        LOGGER.info("Rejecting User {}", id);
-        User user = getUser(id);
-        user.setRole(UserRole.REJECTED);
-    }
-
-    // Will be deprecated if more languages are included
-    @Override
-    public void toggleLanguage(long id) {
-        LOGGER.info("Toggling Language for User {}", id);
-        User user = getUser(id);
-        Language newLanguage = (user.getLanguage() == Language.ENGLISH) ? Language.SPANISH : Language.ENGLISH;
-        user.setLanguage(newLanguage);
-    }
-
-    @Override
-    public void changeNeighborhood(long userId, long neighborhoodId) {
-        LOGGER.info("Setting new neighborhood for User {}", userId);
-        User user = getUser(userId);
-        user.setNeighborhood(neighborhoodService.findNeighborhoodById(neighborhoodId).orElseThrow(()-> new NotFoundException("Neighborhood Not Found")));
-    }
-
-    private User getUser(long userId){
-        return userDao.findUserById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-    }
-
-    @Override
-    public User updateUser(long id, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification) {
-        LOGGER.info("Updating User {}", id);
-
-        User user = getUser(id);
+        User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User not found"));
 
         if (mail != null && !mail.isEmpty())
             user.setMail(mail);
@@ -252,6 +244,10 @@ public class UserServiceImpl implements UserService {
         }
         if (identification != null)
             user.setIdentification(identification);
+        if(languageId != null)
+            user.setLanguage(Language.fromId(languageId));
+        if(userRoleId != null)
+            user.setRole(UserRole.fromId(userRoleId));
 
         return user;
     }

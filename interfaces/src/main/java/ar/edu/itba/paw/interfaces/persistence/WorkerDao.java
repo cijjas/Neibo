@@ -16,9 +16,9 @@ public interface WorkerDao {
 
     // ---------------------------------------------- WORKERS SELECT ---------------------------------------------------
 
-    Optional<Worker> findWorkerById(long workerId);
+    Optional<Worker> findWorker(long workerId);
 
-    Set<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus);
+    Set<Worker> getWorkers(int page, int size, List<String> professions, long[] neighborhoodIds, String workerRole, String workerStatus);
 
-    int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus);
+    int countWorkers(List<String> professions, long[] neighborhoodIds, String workerRole, String workerStatus);
 }

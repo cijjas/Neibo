@@ -1,11 +1,10 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.LikeDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.services.LikeService;
 import ar.edu.itba.paw.models.Entities.Like;
-import ar.edu.itba.paw.models.Entities.Post;
-import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,71 +19,81 @@ import java.util.Optional;
 public class LikeServiceImpl implements LikeService {
     private static final Logger LOGGER = LoggerFactory.getLogger(LikeServiceImpl.class);
     private final LikeDao likeDao;
+    private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public LikeServiceImpl(final LikeDao likeDao) {
+    public LikeServiceImpl(final LikeDao likeDao, final NeighborhoodDao neighborhoodDao) {
         this.likeDao = likeDao;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Like addLikeToPost(long postId, long userId) {
-        LOGGER.info("Liking Post {} due to User {}", postId, userId);
+    public Like createLike(long postId, long userId) {
+        LOGGER.info("Creating Like for Post {} by User {}", postId, userId);
+
         return likeDao.createLike(postId, userId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
+    public List<Like> getLikes(long neighborhoodId, Long postId, Long userId, int page, int size){
+        LOGGER.info("Getting Likes for Post {} by User {} from Neighborhood {}", postId, userId, neighborhoodId);
+
+        ValidationUtils.checkLikeIds(postId, userId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkPageAndSize(page, size);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return likeDao.getLikes(postId, userId, neighborhoodId, page, size);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public boolean isPostLiked(long postId, long userId) {
-        LOGGER.info("Checking if User {} has liked Post {}", userId, postId);
+        LOGGER.info("Checking a Like from User {} to Post {} exists", userId, postId);
+
+        ValidationUtils.checkLikeIds(postId, userId);
+
         return likeDao.isPostLiked(postId, userId);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
+
     @Override
-    public Optional<Like> findLikeById(long likeId) {
-        LOGGER.info("Finding Like with Id {}", likeId);
-        return likeDao.findLikeById(likeId);
+    public int countLikes(long neighborhoodId, Long postId, Long userId) {
+        LOGGER.info("Counting Likes for Post {} by User {} from Neighborhood {}", userId, postId, neighborhoodId);
+
+        ValidationUtils.checkLikeIds(postId, userId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return likeDao.countLikes(postId, userId, neighborhoodId);
     }
+
+    @Override
+    public int calculateLikePages(long neighborhoodId, Long postId, Long userId, int size) {
+        LOGGER.info("Calculating Like Pages for Post {} by User {} from Neighborhood {}", userId, postId, neighborhoodId);
+
+        ValidationUtils.checkLikeIds(postId, userId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkSize(size);
+
+        return PaginationUtils.calculatePages(likeDao.countLikes(postId, userId, neighborhoodId), size);
+    }
+
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void removeLikeFromPost(long postId, long userId) {
+    public void deleteLike(long postId, long userId) {
         LOGGER.info("Removing Like from Post {} given by User {}", postId, userId);
+
+        ValidationUtils.checkLikeIds(postId, userId);
+
         likeDao.deleteLike(postId, userId);
     }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public List<Like> getLikesByCriteria(long postId, long userId, int page, int size){
-        if (userId == 0 && postId == 0) {
-            return likeDao.getAllLikes();
-        }
-        else if (userId > 0) {
-            return likeDao.getLikesByUser(userId, page, size);
-        } else if (postId > 0) {
-            return likeDao.getLikesByPost(postId, page, size);
-        } else {
-            throw new NotFoundException("Invalid combination of parameters.");
-        }
-    }
-
-    @Override
-    public int getTotalLikePagesByCriteria(long postId, long userId, int size) {
-        if (userId == 0 && postId == 0) {
-            return (int) Math.ceil((double) likeDao.getAllLikesCount() / size);
-        }
-        else if (userId > 0) {
-            return (int) Math.ceil((double) likeDao.getLikesByUserCount(userId) / size);
-        } else if (postId > 0) {
-            return (int) Math.ceil((double) likeDao.getLikesByPostCount(postId) / size);
-        } else {
-            throw new NotFoundException("Invalid combination of parameters.");
-        }
-    }
-
 }

@@ -3,12 +3,14 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.enums.WorkerStatus;
+import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Worker;
-import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
 import ar.edu.itba.paw.webapp.form.WorkerUpdateForm;
 import ar.edu.itba.paw.webapp.form.WorkerSignupForm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,13 +27,19 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("/workers")
 @Component
-public class WorkerController {
+public class WorkerController extends GlobalControllerAdvice {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WorkerController.class);
 
-    @Autowired
     private WorkerService ws;
 
     @Context
     private UriInfo uriInfo;
+
+    @Autowired
+    public WorkerController(final UserService us, final WorkerService ws) {
+        super(us);
+        this.ws = ws;
+    }
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
@@ -39,16 +47,15 @@ public class WorkerController {
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("professions") final List<String> professions,
-            @QueryParam("neighborhoodId") @DefaultValue("0") final long neighborhoodId,
-            @QueryParam("loggedUserId") final long loggedUserId,
-            @QueryParam("workerRole") final WorkerRole workerRole,
-            @QueryParam("workerStatus") final WorkerStatus workerStatus
+            @QueryParam("workerRole") final String workerRole,
+            @QueryParam("workerStatus") final String workerStatus
     ) {
-        Set<Worker> workers = ws.getWorkersByCriteria(page, size, professions, neighborhoodId, loggedUserId, workerRole, workerStatus);
+        LOGGER.info("GET request arrived at '/workers'");
+        Set<Worker> workers = ws.getWorkers(page, size, professions, getLoggedUser().getUserId(), workerRole, workerStatus);
 
         String baseUri = uriInfo.getBaseUri().toString() + "workers";
 
-        int totalWorkerPages = ws.getTotalWorkerPagesByCriteria(professions, new long[]{neighborhoodId}, size, workerRole, workerStatus);
+        int totalWorkerPages = ws.calculateWorkerPages(professions, getLoggedUser().getUserId(), size, workerRole, workerStatus);
         Link[] links = createPaginationLinks(baseUri, page, size, totalWorkerPages);
 
         List<WorkerDto> workerDto = workers.stream()
@@ -64,7 +71,8 @@ public class WorkerController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findWorker(@PathParam("id") final long id) {
-        Optional<Worker> worker = ws.findWorkerById(id);
+        LOGGER.info("GET request arrived at '/workers/{}'", id);
+        Optional<Worker> worker = ws.findWorker(id);
         if (!worker.isPresent()) {
             throw new NotFoundException("Worker Not Found");
         }
@@ -74,6 +82,7 @@ public class WorkerController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createWorker(@Valid final WorkerSignupForm form) {
+        LOGGER.info("POST request arrived at '/workers'");
         final Worker worker = ws.createWorker(form.getW_mail(), form.getW_name(), form.getW_surname(), form.getW_password(), form.getW_identification(), form.getPhoneNumber(), form.getAddress(), Language.ENGLISH, form.getProfessionIds(), form.getBusinessName());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(worker.getWorkerId())).build(); //esto esta bien o es el userId que necesita??
@@ -87,6 +96,7 @@ public class WorkerController {
     public Response updateWorkerPartially(
             @PathParam("id") final long id,
             @Valid final WorkerUpdateForm partialUpdate) {
+        LOGGER.info("PATCH request arrived at '/workers/{}'", id);
         final Worker worker = ws.updateWorkerPartially(id, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio());
         return Response.ok(WorkerDto.fromWorker(worker, uriInfo)).build();
     }

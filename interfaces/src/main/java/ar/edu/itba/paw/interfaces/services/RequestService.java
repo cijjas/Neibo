@@ -3,29 +3,22 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.Entities.Request;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RequestService {
     Request createRequest(final long userId, final long productId, final String message);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    List<Request> getRequestsByCriteria(long productId, long userId, int page, int size);
+    Optional<Request> findRequest(long requestId);
 
-    int getRequestsCountByCriteria(long productId, long userId);
+    Optional<Request> findRequest(long requestId, long neighborhoodId);
 
-    List<Request> getRequestsByProductId(long productId, int page, int size);
+    List<Request> getRequests(Long productId, Long userId, int page, int size, long neighborhoodId);
 
-    int getRequestsCountByProductId(long productId);
+    int countRequests(Long productId, Long userId);
 
-    int getRequestsPagesByCriteria(long productId, long userId, int pageSize);
-
-    List<Request> getRequestsByProductAndUser(long productId, long userId, int page, int size);
-
-    List<Request> getRequestsByUserId(long userId, int page, int size);
-
-    int getRequestsCountByProductAndUser(long productId, long userId);
-
-    int getRequestsCountUser(long userId);
+    int calculateRequestPages(Long productId, Long userId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

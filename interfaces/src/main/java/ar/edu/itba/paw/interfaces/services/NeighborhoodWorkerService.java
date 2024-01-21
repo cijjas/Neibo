@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 
 import java.util.List;
+import java.util.Set;
 
 public interface NeighborhoodWorkerService {
 
@@ -12,7 +13,7 @@ public interface NeighborhoodWorkerService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    List<Neighborhood> getNeighborhoods(long workerId);
+    Set<Neighborhood> getNeighborhoods(long workerId);
 
     List<Neighborhood> getOtherNeighborhoods(long workerId);
 

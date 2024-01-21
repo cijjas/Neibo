@@ -17,7 +17,9 @@ public interface ResourceService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteResource(final long resourceId);
+    Resource updateResource(long resourceId, String title, String description, MultipartFile image);
 
-    Resource updateResource(long id, String title, String description, MultipartFile image);
+    // -----------------------------------------------------------------------------------------------------------------
+
+    boolean deleteResource(final long resourceId);
 }

@@ -1,19 +1,17 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Booking;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.Date;
-import java.util.List;
 
 public class BookingDto {
 
     private Date bookingDate;
     private URI self;
-    private URI user; // localhost:8080/users/{id}QUERYPARAM
-    private URI amenityAvailability; // localhost:8080/amenities/{id}/availabilityQUERYPARAM
+    private URI user; // localhost:8080/users/{id}
+    private URI amenityAvailability; // localhost:8080/neighborhoods/{id}/amenities/{id}/availabilityQUERYPARAM
 
     // booking tiene un user y un availability (amenity y shift)
 
@@ -28,9 +26,12 @@ public class BookingDto {
                 .build();
         dto.user = uriInfo.getBaseUriBuilder()
                 .path("users")
-//                .queryParam("bookedAmenity", String.valueOf(user.getUserId())) //??????????????????????????????
+                .path(String.valueOf(booking.getUser().getUserId()))
+//                .queryParam("bookedAmenity", String.valueOf(booking.getUser().getUserId()))
                 .build();
         dto.amenityAvailability = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(booking.getAmenityAvailability().getAmenity().getNeighborhood().getNeighborhoodId()))
                 .path("amenities")
                 .path(String.valueOf(booking.getAmenityAvailability().getAmenity().getAmenityId()))
                 .path("availability")
