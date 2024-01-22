@@ -1,29 +1,30 @@
 import { Component, OnInit } from '@angular/core'
-import { Post } from './post'
-import { PostService } from './post.service'
-import { Image } from './image'
-import { ImageService } from './image.service'
+import { Amenity, AmenityForm } from './amenity'
+import { AmenityService } from './amenity.service'
 import { HttpErrorResponse } from '@angular/common/http'
+import { NgForm } from '@angular/forms'
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: '../../../../src/main/webapp/resources/css/home.css'
+  styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
   title = 'neibo'
-  public postList: Post[] = []
+  public amenities: Amenity[] = []
+  public editAmenity: AmenityForm = {} as AmenityForm
+  public deleteAmenity: AmenityForm = {} as AmenityForm
 
-  constructor(private postService: PostService){}
+  constructor(private amenityService: AmenityService){}
 
   ngOnInit() {
-    this.getPosts()
+    this.getAmenities()
   }
 
-  public getPosts(): void {
-    this.postService.getPosts(1, "FEED", [], "none", 1, 1, 10).subscribe(
-      (response: Post[]) => {
-        this.postList = response
+  public getAmenities(): void {
+    this.amenityService.getAmenities(1,1,10).subscribe(
+      (response: Amenity[]) => {
+        this.amenities = response
       },
       (error: HttpErrorResponse) => {
         alert(error.message)
@@ -31,4 +32,69 @@ export class AppComponent implements OnInit {
     )
   }
 
+  public onAddAmenity(addForm: NgForm): void {
+    document.getElementById('add-amenity-form')!.click()
+    this.amenityService.addAmenity(addForm.value, 1).subscribe(
+      (response: AmenityForm) => {
+        console.log(response)
+        this.getAmenities()
+        addForm.reset()
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message)
+        addForm.reset()
+      }
+    )
+  }
+
+  public onUpdateAmenity(updateForm: NgForm): void {
+    this.amenityService.updateAmenity(updateForm.value, 1).subscribe(
+      (response: AmenityForm) => {
+        console.log(response)
+        this.getAmenities()
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message)
+      }
+    )
+  }
+
+  public onDeleteAmenity(amenityId: number | undefined): void {
+    if(amenityId != undefined) {
+      this.amenityService.deleteAmenity(amenityId, 1).subscribe(
+        (response: void) => {
+          console.log(response)
+          this.getAmenities()
+        },
+        (error: HttpErrorResponse) => {
+          alert(error.message)
+        }
+      )
+    }
+  }
+
+  public onOpenModal(amenity: AmenityForm | null, mode: string): void {
+    const container = document.getElementById('main-container')
+    const button = document.createElement('button')
+    button.type = 'button'
+    button.style.display = 'none'
+    button.setAttribute('data-toggle', 'modal')
+    if (mode === 'add') {
+      button.setAttribute('data-target', '#addAmenityModal')
+    }
+    if(amenity != null) {
+      if (mode === 'edit') {
+        this.editAmenity = amenity
+        button.setAttribute('data-target', '#updateEmployeeModal')
+      }
+      if (mode === 'delete') {
+        this.deleteAmenity = amenity
+        button.setAttribute('data-target', '#deleteEmployeeModal')
+      }
+    }
+
+    //creates button in 'main-container'
+    container!.appendChild(button)
+    button.click()
+  }
 }

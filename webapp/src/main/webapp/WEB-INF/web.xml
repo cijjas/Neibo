@@ -121,6 +121,10 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
         </init-param>
         <!-- pass to next filter if Jersey/App returns 404 -->
         <init-param>
+            <param-name>jersey.config.servlet.filter.contextPath</param-name>
+            <param-value>/</param-value>
+        </init-param>
+        <init-param>
             <param-name>jersey.config.servlet.filter.forwardOn404</param-name>
             <param-value>true</param-value>
         </init-param>

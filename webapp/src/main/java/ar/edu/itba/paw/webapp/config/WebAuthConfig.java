@@ -88,6 +88,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(jwtAuthenticationProvider);
     }
 
+    /* THE REAL N
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.headers().referrerPolicy(ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER_WHEN_DOWNGRADE);
@@ -114,13 +115,27 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/images/*",
                         "/shifts",          "/shifts/{id:[1-9][0-9]*}",
                         "/neighborhoods",   "/neighborhoods/{id:[1-9][0-9]*}",
-                        "/neighborhoods/{id:[1-9][0-9]*}/amenities",
-                        "neighborhoods/{id:[1-9][0-9]*/posts",
 
                         "/test/**"
                 ).permitAll()
                 .anyRequest().authenticated();
+    }*/
+
+    // 4TESTING
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.headers().referrerPolicy(ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER_WHEN_DOWNGRADE);
+        http
+                .cors().and()
+                .csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
+                .and()
+                .sessionManagement().sessionCreationPolicy(STATELESS)
+                .and()
+                .authorizeRequests()
+                .antMatchers("/**").permitAll();  // Allow access to all paths for testing purposes
     }
+
 
     /*@Override
     protected void configure(HttpSecurity http) throws Exception {

@@ -22,5 +22,5 @@ export interface BookingForm {
     shiftIds: number[]
     reservationDate: Date
     self: string
-  }
+}
   

@@ -45,15 +45,15 @@ export class AmenityService {
                 const amenityObservables = amenitiesDto.map(amenityDto => 
                     forkJoin([
                         this.http.get<NeighborhoodDto>(amenityDto.neighborhood),
-                        this.http.get<AvailabilityDto[]>(amenityDto.availability)
+                        //this.http.get<AvailabilityDto[]>(amenityDto.availability)
                     ]).pipe(
-                        map(([neighborhood, availabilities]) => {
+                        map(([neighborhood, /*availabilities*/]) => {
                             return {
                                 amenityId: amenityDto.amenityId,
                                 name: amenityDto.name,
                                 description: amenityDto.description,
                                 neighborhood: neighborhood,
-                                availability: availabilities,
+                                //availability: availabilities,
                                 self: amenityDto.self
                             } as Amenity;
                         })
