@@ -141,7 +141,7 @@ public class EventDaoImplTest {
         long eKey = testInserter.createEvent(EVENT_NAME, EVENT_DESCRIPTION, EVENT_DATE, tKey1, tKey2, nhKey);
 
         // Exercise
-        List<Event> events = eventDao.getEvents(EVENT_DATE_2, nhKey);
+        List<Event> events = eventDao.getEvents(EVENT_DATE_2, nhKey, 1, 10);
 
         // Validations & Post Conditions
         assertEquals(1, events.size());

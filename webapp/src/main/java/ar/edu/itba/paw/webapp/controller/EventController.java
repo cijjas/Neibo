@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.models.Entities.Event;
+import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.EventDto;
 import ar.edu.itba.paw.webapp.form.EventForm;
 import org.slf4j.Logger;
@@ -15,6 +16,8 @@ import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 
 
 @Path("neighborhoods/{neighborhoodId}/events")
@@ -34,14 +37,23 @@ public class EventController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listEventsByDate(
-            @QueryParam("date") final String date
-            ) {
+            @QueryParam("date") final String date,
+            @QueryParam("page") @DefaultValue("1") final int page,
+            @QueryParam("size") @DefaultValue("10") final int size
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events'", neighborhoodId);
-        final List<Event> events = es.getEvents(date, neighborhoodId);
+        final List<Event> events = es.getEvents(date, neighborhoodId, page, size);
+        if(events.isEmpty())
+            return Response.noContent().build();
         final List<EventDto> eventsDto = events.stream()
                 .map(e -> EventDto.fromEvent(e, uriInfo)).collect(Collectors.toList());
 
+        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/events";
+        int totalEventPages = es.calculateEventPages(date, neighborhoodId, size);
+        Link[] links = createPaginationLinks(baseUri, page, size, totalEventPages);
+
         return Response.ok(new GenericEntity<List<EventDto>>(eventsDto){})
+                .links(links)
                 .build();
     }
 

@@ -18,7 +18,7 @@ public interface EventDao {
 
     Optional<Event> findEvent(long eventId, long neighborhoodId);
 
-    List<Event> getEvents(String date, long neighborhoodId);
+    List<Event> getEvents(String date, long neighborhoodId, int page, int size);
 
     List<Event> getEvents(long neighborhoodId);
 
@@ -27,6 +27,8 @@ public interface EventDao {
     List<Date> getEventDates(long neighborhoodId);
 
     boolean isUserSubscribedToEvent(long userId, long eventId);
+
+    int countEvents(String date, long neighborhoodId);
 
     // ---------------------------------------------- EVENTS DELETE ----------------------------------------------------
 

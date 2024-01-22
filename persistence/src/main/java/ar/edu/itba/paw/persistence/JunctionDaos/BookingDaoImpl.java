@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
-import ar.edu.itba.paw.models.Entities.Availability;
-import ar.edu.itba.paw.models.Entities.Booking;
-import ar.edu.itba.paw.models.Entities.Image;
-import ar.edu.itba.paw.models.Entities.User;
+import ar.edu.itba.paw.models.Entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -14,6 +11,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.sql.Date;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,38 +55,114 @@ public class BookingDaoImpl implements BookingDao {
     }
 
     @Override
-    public List<Booking> getBookings(Long userId, Long amenityId) {
+    public List<Booking> getBookings(Long userId, Long amenityId, int page, int size) {
         LOGGER.debug("Selecting Bookings from userId {} and amenityId {}", userId, amenityId);
 
-        StringBuilder sqlBuilder = new StringBuilder(BOOKINGS_JOIN_AVAILABILITY);
-        sqlBuilder.append(" WHERE 1 = 1");
+        StringBuilder query = new StringBuilder(BOOKINGS_JOIN_AVAILABILITY);
+        query.append(" WHERE 1 = 1");
 
         if (userId != null) {
-            sqlBuilder.append(" AND userid = :userId");
+            query.append(" AND userid = :userId");
         }
 
         if (amenityId != null) {
-            sqlBuilder.append(" AND asa.amenityid = :amenityId");
+            query.append(" AND asa.amenityid = :amenityId");
         }
 
-        sqlBuilder.append(" ORDER BY uav.date, asa.amenityid, timeinterval asc");
+        query.append(" ORDER BY uav.date, asa.amenityid, timeinterval asc");
+        query.append(" LIMIT :limit OFFSET :offset");
 
-        String sql = sqlBuilder.toString();
+        String sql = query.toString();
 
         // Specify the result class (Booking.class) in createNativeQuery
-        Query query = em.createNativeQuery(sql, Booking.class);
+        Query sqlQuery = em.createNativeQuery(sql, Booking.class);
 
         if (userId != null) {
-            query.setParameter("userId", userId);
+            sqlQuery.setParameter("userId", userId);
         }
 
         if (amenityId != null) {
-            query.setParameter("amenityId", amenityId);
+            sqlQuery.setParameter("amenityId", amenityId);
         }
 
-        return query.getResultList();
+        int offset = (page - 1) * size;
+        sqlQuery.setParameter("limit", size);
+        sqlQuery.setParameter("offset", offset);
+
+        return sqlQuery.getResultList();
     }
 
+    @Override
+    public int countBookings(Long userId, Long amenityId) {
+        LOGGER.debug("Counting Bookings for userId {} and amenityId {}", userId, amenityId);
+
+        StringBuilder countQuery = new StringBuilder("WITH CountCTE AS (SELECT COUNT(*) FROM ");
+        countQuery.append(" users_availability uav ");
+        countQuery.append(" INNER JOIN amenities_shifts_availability asa ON uav.amenityavailabilityid = asa.amenityavailabilityid ");
+        countQuery.append(" INNER JOIN amenities a ON asa.amenityid = a.amenityid ");
+        countQuery.append(" INNER JOIN shifts s ON s.shiftid = asa.shiftid ");
+        countQuery.append(" INNER JOIN days d ON s.dayid = d.dayid ");
+        countQuery.append(" INNER JOIN times t ON s.starttime = t.timeid ");
+        countQuery.append(" WHERE 1 = 1");
+
+        if (userId != null) {
+            countQuery.append(" AND uav.userid = :userId");
+        }
+
+        if (amenityId != null) {
+            countQuery.append(" AND asa.amenityid = :amenityId");
+        }
+
+        countQuery.append(") SELECT * FROM CountCTE");
+
+        String sql = countQuery.toString();
+
+        Query sqlQuery = em.createNativeQuery(sql);
+
+        if (userId != null) {
+            sqlQuery.setParameter("userId", userId);
+        }
+
+        if (amenityId != null) {
+            sqlQuery.setParameter("amenityId", amenityId);
+        }
+
+        return ((Number) sqlQuery.getSingleResult()).intValue();
+    }
+
+
+//    @Override
+//    public int countBookings(Long userId, Long amenityId) {
+//        LOGGER.debug("Counting Bookings for userId {} and amenityId {}", userId, amenityId);
+//
+//        StringBuilder countQuery = new StringBuilder(BOOKINGS_JOIN_AVAILABILITY);
+//        countQuery.insert(0, "WITH CountCTE AS (SELECT COUNT(*) FROM ");
+//        countQuery.append(" WHERE 1 = 1");
+//
+//        if (userId != null) {
+//            countQuery.append(" AND userid = :userId");
+//        }
+//
+//        if (amenityId != null) {
+//            countQuery.append(" AND asa.amenityid = :amenityId");
+//        }
+//
+//        countQuery.append(") SELECT * FROM CountCTE");
+//
+//        String sql = countQuery.toString();
+//
+//        Query sqlQuery = em.createNativeQuery(sql);
+//
+//        if (userId != null) {
+//            sqlQuery.setParameter("userId", userId);
+//        }
+//
+//        if (amenityId != null) {
+//            sqlQuery.setParameter("amenityId", amenityId);
+//        }
+//
+//        return ((Number) sqlQuery.getSingleResult()).intValue();
+//    }
 
 
     // ---------------------------------------- USERS_AVAILABILITY DELETE ----------------------------------------------

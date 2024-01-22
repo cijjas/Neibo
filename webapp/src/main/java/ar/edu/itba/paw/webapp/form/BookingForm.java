@@ -1,14 +1,19 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.ExistingAmenityConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.ShiftsConstraint;
+
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
 import java.util.List;
 
 public class BookingForm {
     @NotNull
+    @ExistingAmenityConstraint
     private long amenityId;
 
     @NotNull
+    @ShiftsConstraint
     private List<Long> shiftIds;
 
     @NotNull

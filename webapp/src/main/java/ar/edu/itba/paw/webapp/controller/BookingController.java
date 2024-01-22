@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+
 @Path("neighborhoods/{neighborhoodId}/bookings")
 @Component
 public class BookingController extends GlobalControllerAdvice{
@@ -41,13 +43,26 @@ public class BookingController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listBookings(
             @QueryParam("userId") final Long userId,
-            @QueryParam("amenityId") final Long amenityId
+            @QueryParam("amenityId") final Long amenityId,
+            @QueryParam("page") @DefaultValue("1") final int page,
+            @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
-        final List<Booking> bookings = bs.getBookings(userId, amenityId, neighborhoodId);
+        final List<Booking> bookings = bs.getBookings(userId, amenityId, neighborhoodId, page, size);
+
+        if (bookings.isEmpty())
+            return Response.noContent().build();
+
         final List<BookingDto> bookingsDto = bookings.stream()
                 .map(b -> BookingDto.fromBooking(b, uriInfo)).collect(Collectors.toList());
+
+        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/amenities";
+        int totalBookingPages = bs.calculateBookingPages(userId, amenityId, neighborhoodId, size);
+        LOGGER.info("totalBookingPages: {}", totalBookingPages);
+        Link[] links = createPaginationLinks(baseUri, page, size, totalBookingPages);
+
         return Response.ok(new GenericEntity<List<BookingDto>>(bookingsDto){})
+                .links(links)
                 .build();
     }
 

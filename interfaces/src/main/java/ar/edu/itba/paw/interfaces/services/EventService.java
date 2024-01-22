@@ -19,7 +19,7 @@ public interface EventService {
 
     boolean hasEvents(String date, long neighborhoodId);
 
-    List<Event> getEvents(String date, long neighborhoodId);
+    List<Event> getEvents(String date, long neighborhoodId, int page, int size);
 
     List<Event> getEvents(long neighborhoodId);
 
@@ -32,6 +32,8 @@ public interface EventService {
     String getSelectedMonth(int month, Language language);
 
     int getSelectedYear(int year);
+
+    int calculateEventPages(String date, long neighborhoodId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

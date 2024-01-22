@@ -29,6 +29,12 @@ public enum BaseChannel {
                 .orElseThrow(()-> new NotFoundException("Base Channel Not Found"));
     }
 
+    public static BaseChannel nullableFromId(long id) {
+        return Arrays.stream(values())
+                .filter(bc -> bc.getId() == id)
+                .findFirst().orElse(null);
+    }
+
     public int getId() {
         return ordinal() + 1;
     }

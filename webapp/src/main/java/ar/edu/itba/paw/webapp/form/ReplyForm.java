@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.ExistingInquiryConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
@@ -8,6 +9,7 @@ import javax.validation.constraints.Size;
 public class ReplyForm {
 
     @NotBlank
+    @ExistingInquiryConstraint
     private String inquiryId;
 
     @NotBlank

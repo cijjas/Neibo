@@ -70,16 +70,17 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Booking> getBookings(Long userId, Long amenityId, long neighborhoodId) {
+    public List<Booking> getBookings(Long userId, Long amenityId, long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Bookings for User {} on Amenity {} from Neighborhood {}", userId, amenityId, neighborhoodId);
 
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkAmenityId(amenityId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkPageAndSize(page, size);
 
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
-        return bookingDao.getBookings(userId, amenityId);
+        return bookingDao.getBookings(userId, amenityId, page, size);
 //        List<GroupedBooking> groupedBookings = new ArrayList<>();
 //        GroupedBooking currentGroupedBooking = null;
 //
@@ -105,6 +106,20 @@ public class BookingServiceImpl implements BookingService {
 //        }
 //
 //        return groupedBookings;
+    }
+
+    @Override
+    public int calculateBookingPages(Long userId, Long amenityId, long neighborhoodId, int size) {
+        LOGGER.info("Calculating Booking Pages for User {} on Amenity {} from Neighborhood {}", userId, amenityId, neighborhoodId);
+
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkAmenityId(amenityId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkSize(size);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return PaginationUtils.calculatePages(bookingDao.countBookings(userId, amenityId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

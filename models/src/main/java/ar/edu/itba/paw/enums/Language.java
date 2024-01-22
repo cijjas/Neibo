@@ -20,4 +20,10 @@ public enum Language {
                 .findFirst()
                 .orElseThrow(()-> new NotFoundException("Language Not Found"));
     }
+
+    public static Language nullableFromId(long id) {
+        return Arrays.stream(values())
+                .filter(l -> l.getId() == id)
+                .findFirst().orElse(null);
+    }
 }

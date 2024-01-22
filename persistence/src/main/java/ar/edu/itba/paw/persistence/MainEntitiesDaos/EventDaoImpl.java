@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
-import ar.edu.itba.paw.models.Entities.Event;
-import ar.edu.itba.paw.models.Entities.Neighborhood;
-import ar.edu.itba.paw.models.Entities.Time;
+import ar.edu.itba.paw.models.Entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -11,8 +9,13 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Root;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -67,16 +70,54 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public List<Event> getEvents(String date, long neighborhoodId) {
+    public List<Event> getEvents(String date, long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Events from Date {}", date);
 
-        StringBuilder jpqlBuilder = new StringBuilder("SELECT e FROM Event e WHERE e.neighborhood.neighborhoodId = :neighborhoodId");
+        StringBuilder jpqlBuilder = new StringBuilder("SELECT e.eventId FROM Event e WHERE e.neighborhood.neighborhoodId = :neighborhoodId");
 
         if (date != null) {
             jpqlBuilder.append(" AND e.date = :date");
         }
 
-        TypedQuery<Event> query = em.createQuery(jpqlBuilder.toString(), Event.class);
+        TypedQuery<Long> query = em.createQuery(jpqlBuilder.toString(), Long.class);
+
+        if (date != null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                query.setParameter("date", dateFormat.parse(date));
+            } catch (ParseException e) {
+                // Handle the exception if needed
+                throw new IllegalArgumentException("Invalid value (" + date + ") for the 'date' parameter. Please use a date in YYYY-(M)M-(D)D format.");
+            }
+        }
+
+        query.setParameter("neighborhoodId", neighborhoodId);
+        query.setFirstResult((page - 1) * size);
+        query.setMaxResults(size);
+
+        List<Long> eventIds = query.getResultList();
+
+        if (!eventIds.isEmpty()) {
+            TypedQuery<Event> eventQuery = em.createQuery(
+                    "SELECT e FROM Event e WHERE e.eventId IN :eventIds", Event.class);
+            eventQuery.setParameter("eventIds", eventIds);
+            return eventQuery.getResultList();
+        }
+
+        return Collections.emptyList();
+    }
+
+    @Override
+    public int countEvents(String date, long neighborhoodId) {
+        LOGGER.debug("Counting Events with neighborhoodId {}", neighborhoodId);
+
+        StringBuilder jpqlBuilder = new StringBuilder("SELECT DISTINCT COUNT(e.eventId) FROM Event e WHERE e.neighborhood.neighborhoodId = :neighborhoodId");
+
+        if (date != null) {
+            jpqlBuilder.append(" AND e.date = :date");
+        }
+
+        TypedQuery<Long> query = em.createQuery(jpqlBuilder.toString(), Long.class);
 
         if (date != null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -90,9 +131,8 @@ public class EventDaoImpl implements EventDao {
 
         query.setParameter("neighborhoodId", neighborhoodId);
 
-        return query.getResultList();
+        return query.getSingleResult().intValue();
     }
-
 
     @Override
     public List<Event> getEvents(long neighborhoodId) {
