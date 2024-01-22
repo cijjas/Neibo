@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
+import ar.edu.itba.paw.enums.DayOfTheWeek;
 import ar.edu.itba.paw.enums.ShiftStatus;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.models.Entities.Amenity;
@@ -66,7 +67,7 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
         nativeQuery.append(" JOIN shifts s ON asa.shiftId = s.shiftId");
         nativeQuery.append(" WHERE a.amenityId = :amenityId");
 
-        int dayOfWeek = -1;
+        long dayOfWeek = -1;
 
         if (date != null) {
             Calendar calendar = Calendar.getInstance();
@@ -77,7 +78,8 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
                 // this should never activate due to service validation
                 throw new IllegalArgumentException("Invalid value (" + date + ") for the 'date' parameter. Please use a date in YYYY-(M)M-(D)D format.");
             }
-            dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+            dayOfWeek = DayOfTheWeek.convertToCustomDayId(calendar.get(Calendar.DAY_OF_WEEK));
+            System.out.println(dayOfWeek);
             nativeQuery.append(" AND s.dayId = :dayOfWeek");
         }
 
@@ -101,6 +103,7 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
             }
         }
 
+        System.out.println(nativeQuery);
         Query query = em.createNativeQuery(nativeQuery.toString(), Availability.class);
         query.setParameter("amenityId", amenityId);
 

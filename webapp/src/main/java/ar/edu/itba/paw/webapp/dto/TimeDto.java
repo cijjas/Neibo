@@ -13,7 +13,7 @@ public class TimeDto {
     public static TimeDto fromTime(StandardTime time, UriInfo uriInfo){
         final TimeDto dto = new TimeDto();
 
-        dto.timeInterval = time.name();
+        dto.timeInterval = time.toString();
 
         dto.self = uriInfo.getBaseUriBuilder()
                 .path("times")

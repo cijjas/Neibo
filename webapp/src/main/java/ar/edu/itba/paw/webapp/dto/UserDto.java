@@ -10,7 +10,6 @@ public class UserDto {
     private String mail;
     private String name;
     private String surname;
-    private String password;
     private Boolean darkMode;
     private String phoneNumber;
     private Integer identification;
@@ -19,11 +18,9 @@ public class UserDto {
     private URI profilePicture;
     private URI posts;
     private URI bookings;
-    private URI subscribedPosts;
     private URI likedPosts;
     private URI purchases;
     private URI sales;
-    private URI eventsSubscribed;
 
     public static UserDto fromUser(final User user, final UriInfo uriInfo){
         final UserDto dto = new UserDto();
@@ -31,7 +28,6 @@ public class UserDto {
         dto.mail = user.getMail();
         dto.name = user.getName();
         dto.surname = user.getSurname();
-        dto.password = user.getPassword();
         dto.darkMode = user.getDarkMode();
         dto.phoneNumber = user.getPhoneNumber();
         dto.identification = user.getIdentification();
@@ -57,46 +53,35 @@ public class UserDto {
                 .path("neighborhoods")
                 .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                 .path("posts")
-                .queryParam("postedBy", String.valueOf(user.getUserId()))
+                .queryParam("userId", String.valueOf(user.getUserId()))
                 .build();
         dto.bookings = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
-                .path("users")
-                .path(String.valueOf(user.getUserId()))
                 .path("bookings")
-                .build();
-        dto.subscribedPosts = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
-                .path("posts")
-                .queryParam("subscribedBy", String.valueOf(user.getUserId()))
+                .queryParam("userId", String.valueOf(user.getUserId()))
                 .build();
         dto.likedPosts = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
-                .path("posts")
-                .queryParam("likedBy", String.valueOf(user.getUserId()))
+                .path("likes")
+                .queryParam("userId", String.valueOf(user.getUserId()))
                 .build();
         dto.purchases = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(user.getUserId()))
-                .path("purchases")
+                .path("transactions")
+                .queryParam("userId", user.getUserId())
+                .queryParam("transactionType", "PURCHASE")
                 .build();
         dto.sales = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(user.getUserId()))
-                .path("sales")
-                .build();
-        dto.eventsSubscribed = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
-                .path("events")
-                .queryParam("subscribedBy", String.valueOf(user.getUserId()))
+                .path("transactions")
+                .queryParam("userId", user.getUserId())
+                .queryParam("transactionType", "SALE")
                 .build();
 
         return dto;
@@ -116,8 +101,6 @@ public class UserDto {
     }
     public String getSurname() { return surname; }
     public void setSurname(String surname) { this.surname = surname; }
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
     public Boolean isDarkMode() { return darkMode; }
     public void setDarkMode(Boolean darkMode) { this.darkMode = darkMode; }
     public String getPhoneNumber() { return phoneNumber; }
@@ -175,14 +158,6 @@ public class UserDto {
         this.bookings = bookings;
     }
 
-    public URI getSubscribedPosts() {
-        return subscribedPosts;
-    }
-
-    public void setSubscribedPosts(URI subscribedPosts) {
-        this.subscribedPosts = subscribedPosts;
-    }
-
     public URI getLikedPosts() {
         return likedPosts;
     }
@@ -205,13 +180,5 @@ public class UserDto {
 
     public void setSales(URI sales) {
         this.sales = sales;
-    }
-
-    public URI getEventsSubscribed() {
-        return eventsSubscribed;
-    }
-
-    public void setEventsSubscribed(URI eventsSubscribed) {
-        this.eventsSubscribed = eventsSubscribed;
     }
 }

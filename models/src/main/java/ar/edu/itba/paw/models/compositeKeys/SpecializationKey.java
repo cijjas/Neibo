@@ -10,6 +10,22 @@ public class SpecializationKey implements Serializable {
     public SpecializationKey() {
     }
 
+    public Long getWorkerId() {
+        return workerId;
+    }
+
+    public void setWorkerId(Long workerId) {
+        this.workerId = workerId;
+    }
+
+    public Long getProfessionId() {
+        return professionId;
+    }
+
+    public void setProfessionId(Long professionId) {
+        this.professionId = professionId;
+    }
+
     public SpecializationKey(Long workerId, Long professionId) {
         this.workerId = workerId;
         this.professionId = professionId;

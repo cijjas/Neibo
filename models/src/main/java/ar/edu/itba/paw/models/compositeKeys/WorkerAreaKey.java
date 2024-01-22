@@ -27,4 +27,20 @@ public class WorkerAreaKey implements Serializable {
     public int hashCode() {
         return Objects.hash(workerId, neighborhoodId);
     }
+
+    public Long getWorkerId() {
+        return workerId;
+    }
+
+    public void setWorkerId(Long workerId) {
+        this.workerId = workerId;
+    }
+
+    public Long getNeighborhoodId() {
+        return neighborhoodId;
+    }
+
+    public void setNeighborhoodId(Long neighborhoodId) {
+        this.neighborhoodId = neighborhoodId;
+    }
 }

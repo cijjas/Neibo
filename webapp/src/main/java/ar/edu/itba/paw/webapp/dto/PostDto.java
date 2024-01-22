@@ -40,7 +40,7 @@ public class PostDto {
                 .path(String.valueOf(post.getUser().getUserId()))
                 .build();
         dto.channel = uriInfo.getBaseUriBuilder()
-                .path("channels")
+                .path("base-channels")
                 .path(String.valueOf(post.getChannel().getChannelId()))
                 .build();
         if ( post.getPostPicture() != null ){

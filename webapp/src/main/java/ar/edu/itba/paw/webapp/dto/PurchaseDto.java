@@ -25,7 +25,7 @@ public class PurchaseDto {
                 .path(String.valueOf(purchase.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(purchase.getUser().getUserId()))
-                .path("purchases")
+                .path("transactions")
                 .path(String.valueOf(purchase.getPurchaseId()))
                 .build();
         dto.product = uriInfo.getBaseUriBuilder()

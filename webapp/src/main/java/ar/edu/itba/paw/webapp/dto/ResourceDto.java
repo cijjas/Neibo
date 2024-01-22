@@ -25,13 +25,14 @@ public class ResourceDto {
                 .path("resources")
                 .path(String.valueOf(resource.getResourceId()))
                 .build();
-        dto.image = uriInfo.getBaseUriBuilder()
-                .path("resources")
-                .path(String.valueOf(resource.getResourceId()))
-                .path("image")
-                .build();
+        if (resource.getImage() != null){
+            dto.image = uriInfo.getBaseUriBuilder()
+                    .path("image")
+                    .path(String.valueOf(resource.getImage().getImageId()))
+                    .build();
+        }
         dto.neighborhood = uriInfo.getBaseUriBuilder()
-                .path("neighborhood")
+                .path("neighborhoods")
                 .path(String.valueOf(resource.getNeighborhood().getNeighborhoodId()))
                 .build();
 
