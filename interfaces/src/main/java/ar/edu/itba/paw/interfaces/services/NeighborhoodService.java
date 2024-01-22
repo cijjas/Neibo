@@ -17,11 +17,11 @@ public interface NeighborhoodService {
 
     List<Neighborhood> getNeighborhoods();
 
-    List<Neighborhood> getNeighborhoods(int page, int size);
+    List<Neighborhood> getNeighborhoods(int page, int size, Long workerId);
 
     // ---------------------------------------------------
 
-    int countNeighborhoods();
+    int countNeighborhoods(Long workerId);
 
-    int calculateNeighborhoodPages(int size);
+    int calculateNeighborhoodPages(Long workerId, int size);
 }

@@ -21,11 +21,6 @@ public class WorkerDto {
     public static WorkerDto fromWorker(Worker worker, UriInfo uriInfo){
         final WorkerDto dto = new WorkerDto();
 
-        dto.phoneNumber = worker.getPhoneNumber();
-        dto.businessName = worker.getBusinessName();
-        dto.address = worker.getAddress();
-        dto.bio = worker.getBio();
-
         dto.self = uriInfo.getBaseUriBuilder()
                 .path("workers")
                 .path(String.valueOf(worker.getWorkerId()))
@@ -58,6 +53,11 @@ public class WorkerDto {
                 .path("neighborhoods")
                 .queryParam("worker", String.valueOf(worker.getWorkerId()))
                 .build();
+
+        dto.phoneNumber = worker.getPhoneNumber();
+        dto.businessName = worker.getBusinessName();
+        dto.address = worker.getAddress();
+        dto.bio = worker.getBio();
 
         return dto;
     }

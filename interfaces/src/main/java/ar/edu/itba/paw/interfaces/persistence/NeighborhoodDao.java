@@ -19,10 +19,10 @@ public interface NeighborhoodDao {
 
     List<Neighborhood> getNeighborhoods();
 
-    List<Neighborhood> getNeighborhoods(int page, int size);
+    List<Neighborhood> getNeighborhoods(int page, int size, Long workerId);
 
     // ---------------------------------------------------
 
-    int getNeighborhoodsCount();
+    int countNeighborhoods(Long workerId);
 
 }

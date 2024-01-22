@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.security.api.filter;
 
+import ar.edu.itba.paw.webapp.controller.WorkerController;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -10,13 +11,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class NeighborhoodAccessControlFilter extends OncePerRequestFilter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodAccessControlFilter.class);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        System.out.println(SecurityContextHolder.getContext().getAuthentication());
+        LOGGER.info("{}", SecurityContextHolder.getContext().getAuthentication());
 
         if (authentication != null && authentication.isAuthenticated()) {
             String requestedPath = getRequestPath(request);

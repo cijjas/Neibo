@@ -2,13 +2,19 @@ package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
+import ar.edu.itba.paw.models.Entities.WorkerArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,25 +65,47 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     }
 
     @Override
-    public List<Neighborhood> getNeighborhoods(int page, int size) {
-        LOGGER.debug("Selecting All Neighborhoods");
+    public List<Neighborhood> getNeighborhoods(int page, int size, Long workerId) {
+        LOGGER.debug("Selecting Neighborhoods");
 
-        String jpql = "SELECT n FROM Neighborhood n";
-        TypedQuery<Neighborhood> query = em.createQuery(jpql, Neighborhood.class);
-        query.setFirstResult((page - 1) * size);
-        query.setMaxResults(size);
-        return query.getResultList();
+        StringBuilder queryStringBuilder = new StringBuilder();
+        queryStringBuilder.append("SELECT DISTINCT n.* FROM neighborhoods n ");
+
+        if (workerId != null) {
+            queryStringBuilder.append("JOIN workers_neighborhoods wn ON n.neighborhoodid = wn.neighborhoodid ");
+            queryStringBuilder.append("WHERE wn.workerid = :workerId ");
+        }
+
+        Query nativeQuery = em.createNativeQuery(queryStringBuilder.toString(), Neighborhood.class);
+        nativeQuery.setFirstResult((page - 1) * size);
+        nativeQuery.setMaxResults(size);
+
+        if (workerId != null) {
+            nativeQuery.setParameter("workerId", workerId);
+        }
+
+        List<Neighborhood> neighborhoods = nativeQuery.getResultList();
+        return neighborhoods;
     }
-
-    // ---------------------------------------------------
 
     @Override
-    public int getNeighborhoodsCount() {
-        LOGGER.debug("Counting All Neighborhoods");
+    public int countNeighborhoods(Long workerId) {
+        LOGGER.debug("Counting Neighborhoods");
 
-        String jpql = "SELECT COUNT(n) FROM Neighborhood n";
-        TypedQuery<Long> query = em.createQuery(jpql, Long.class);
-        return query.getSingleResult().intValue();
+        StringBuilder queryStringBuilder = new StringBuilder();
+        queryStringBuilder.append("SELECT COUNT(DISTINCT n.neighborhoodid) FROM neighborhoods n ");
+
+        if (workerId != null) {
+            queryStringBuilder.append("JOIN workers_neighborhoods wn ON n.neighborhoodid = wn.neighborhoodid ");
+            queryStringBuilder.append("WHERE wn.workerid = :workerId ");
+        }
+
+        Query nativeQuery = em.createNativeQuery(queryStringBuilder.toString());
+
+        if (workerId != null) {
+            nativeQuery.setParameter("workerId", workerId);
+        }
+
+        return Integer.parseInt(( nativeQuery.getSingleResult()).toString());
     }
-
 }

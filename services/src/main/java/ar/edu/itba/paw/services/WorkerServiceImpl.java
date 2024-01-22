@@ -3,10 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.exceptions.UnexpectedException;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
-import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
-import ar.edu.itba.paw.interfaces.persistence.WorkerDao;
+import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Image;
@@ -21,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -30,6 +28,7 @@ import java.util.Set;
 public class WorkerServiceImpl implements WorkerService {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerServiceImpl.class);
     private final WorkerDao workerDao;
+    private final NeighborhoodDao neighborhoodDao;
     private final ProfessionWorkerDao professionWorkerDao;
     private final UserDao userDao;
     private final ImageService imageService;
@@ -37,13 +36,15 @@ public class WorkerServiceImpl implements WorkerService {
     private final NeighborhoodWorkerDao neighborhoodWorkerDao;
 
     @Autowired
-    public WorkerServiceImpl(WorkerDao workerDao, ProfessionWorkerDao professionWorkerDao, UserDao userDao, ImageService imageService, PasswordEncoder passwordEncoder, NeighborhoodWorkerDao neighborhoodWorkerDao) {
+    public WorkerServiceImpl(WorkerDao workerDao, ProfessionWorkerDao professionWorkerDao, UserDao userDao, ImageService imageService,
+                             PasswordEncoder passwordEncoder, NeighborhoodWorkerDao neighborhoodWorkerDao, NeighborhoodDao neighborhoodDao) {
         this.workerDao = workerDao;
         this.professionWorkerDao = professionWorkerDao;
         this.userDao = userDao;
         this.imageService = imageService;
         this.passwordEncoder = passwordEncoder;
         this.neighborhoodWorkerDao = neighborhoodWorkerDao;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -90,65 +91,59 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Set<Worker> getWorkers(int page, int size, List<String> professions, long userId, String workerRole, String workerStatus) {
-        LOGGER.info("Getting Workers with status {} professions {}", workerStatus, professions);
+    public Set<Worker> getWorkers(int page, int size, List<String> professions, List<String> neighborhoodIds, String workerRole, String workerStatus) {
+        LOGGER.info("Getting Workers with Status {} Role {} Professions {} from Neighborhoods {}", workerStatus, workerRole, professions, neighborhoodIds);
 
-        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkOptionalWorkerRoleString(workerRole);
+        ValidationUtils.checkOptionalWorkerStatusString(workerStatus);
+        ValidationUtils.checkProfessionsArray(professions);
         ValidationUtils.checkPageAndSize(page, size);
-        ValidationUtils.checkOptionalWorkerRoleString(workerRole);
-        ValidationUtils.checkOptionalWorkerStatusString(workerStatus);
-        ValidationUtils.checkProfessionsArray(professions);
+        List<Long> parsedNeighborhoodIds = parseNeighborhoodIds(neighborhoodIds);
 
-        //If inquirer is a worker, show return workers from any of the neighborhoods they are in
-        User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User Not Found"));
-        if(user.getNeighborhood().getNeighborhoodId() == 0) { //inquirer is a worker
-            Set<Neighborhood> neighborhoods = neighborhoodWorkerDao.getNeighborhoods(userId);
-            long[] neighborhoodIds = neighborhoods.stream()
-                    .mapToLong(Neighborhood::getNeighborhoodId)
-                    .toArray();
-
-            return workerDao.getWorkers(page, size, professions, neighborhoodIds, workerRole, workerStatus);
-        } else {
-            //user isn't a worker, must only return workers from their neighborhood
-            return workerDao.getWorkers(page, size, professions, new long[]{user.getNeighborhood().getNeighborhoodId()}, workerRole, workerStatus);
-        }
+        return workerDao.getWorkers(page, size, professions, parsedNeighborhoodIds, workerRole, workerStatus);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public int countWorkers(List<String> professions, long userId, String workerRole, String workerStatus) {
-        LOGGER.info("Counting workers for User {} with professions {}", userId, professions);
+    public int countWorkers(List<String> professions, List<String> neighborhoodIds, String workerRole, String workerStatus) {
+        LOGGER.info("Counting Workers with Status {} Role {} Professions {} from Neighborhoods {}", workerStatus, workerRole, professions, neighborhoodIds);
 
-        ValidationUtils.checkUserId(userId);
         ValidationUtils.checkOptionalWorkerRoleString(workerRole);
         ValidationUtils.checkOptionalWorkerStatusString(workerStatus);
         ValidationUtils.checkProfessionsArray(professions);
 
-        User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User Not Found"));
-        if(user.getNeighborhood().getNeighborhoodId() == 0) { //inquirer is a worker
-            Set<Neighborhood> neighborhoods = neighborhoodWorkerDao.getNeighborhoods(userId);
-            long[] neighborhoodIds = neighborhoods.stream()
-                    .mapToLong(Neighborhood::getNeighborhoodId)
-                    .toArray();
+        List<Long> parsedNeighborhoodIds = parseNeighborhoodIds(neighborhoodIds);
 
-            return workerDao.countWorkers(professions, neighborhoodIds, workerRole, workerStatus);
-        } else {
-            //user isn't a worker, must only return workers from their neighborhood
-            return workerDao.countWorkers(professions, new long[]{user.getNeighborhood().getNeighborhoodId()}, workerRole, workerStatus);
-        }
+        return workerDao.countWorkers(professions, parsedNeighborhoodIds, workerRole, workerStatus);
     }
 
     @Override
-    public int calculateWorkerPages(List<String> professions, long userId, int size, String workerRole, String workerStatus) {
-        LOGGER.info("Calculating Worker Pages with size {} for User {} with professions {}", size, userId, professions);
+    public int calculateWorkerPages(List<String> professions, List<String> neighborhoodIds, int size, String workerRole, String workerStatus) {
+        LOGGER.info("Calculating Worker Pages with Status {} Role {} Professions {} from Neighborhoods {}", workerStatus, workerRole, professions, neighborhoodIds);
 
-        ValidationUtils.checkUserId(userId);
         ValidationUtils.checkOptionalWorkerRoleString(workerRole);
         ValidationUtils.checkOptionalWorkerStatusString(workerStatus);
         ValidationUtils.checkProfessionsArray(professions);
+        ValidationUtils.checkSize(size);
 
-        return PaginationUtils.calculatePages(countWorkers(professions, userId, workerRole, workerStatus), size);
+        List<Long> parsedNeighborhoodIds = parseNeighborhoodIds(neighborhoodIds);
+
+        return PaginationUtils.calculatePages(workerDao.countWorkers(professions, parsedNeighborhoodIds, workerRole, workerStatus), size);
+    }
+
+    private List<Long> parseNeighborhoodIds(List<String> neighborhoodIds) {
+        List<Long> parsedNeighborhoodIds = new ArrayList<>();
+
+        if (neighborhoodIds != null && !neighborhoodIds.isEmpty()) {
+            for (String neighborhoodId : neighborhoodIds) {
+                long parsedId = Long.parseLong(neighborhoodId);
+                if (parsedId <= 0)
+                    throw new IllegalArgumentException("Invalid value (" + parsedId + ") for the Neighborhood ID. Please use a positive integer greater than 0.");
+                neighborhoodDao.findNeighborhood(parsedId).orElseThrow(NotFoundException::new);
+                parsedNeighborhoodIds.add(parsedId);
+            }
+        }
+
+        return parsedNeighborhoodIds;
     }
 
     // -----------------------------------------------------------------------------------------------------------------

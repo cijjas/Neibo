@@ -33,15 +33,16 @@ public class NeighborhoodController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listNeighborhoods(
             @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size) {
+            @QueryParam("size") @DefaultValue("10") final int size,
+            @QueryParam("workerId") final Long workerId) {
         LOGGER.info("GET request arrived at '/neighborhoods/'");
-        final List<Neighborhood> neighborhoods = ns.getNeighborhoods(page, size);
+        final List<Neighborhood> neighborhoods = ns.getNeighborhoods(page, size, workerId);
         final List<NeighborhoodDto> neighborhoodsDto = neighborhoods.stream()
                 .map(n -> NeighborhoodDto.fromNeighborhood(n, uriInfo)).collect(Collectors.toList());
 
         // Add pagination links to the response header
         String baseUri = uriInfo.getBaseUri().toString();
-        int totalNeighborhoodPages = ns.calculateNeighborhoodPages(size);
+        int totalNeighborhoodPages = ns.calculateNeighborhoodPages(workerId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalNeighborhoodPages);
 
         return Response.ok(new GenericEntity<List<NeighborhoodDto>>(neighborhoodsDto){})

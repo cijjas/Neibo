@@ -22,9 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -126,7 +124,7 @@ public class WorkerDaoImplTest {
     public void testGetWorkersByNeighborhood() {
         // Pre Conditions
         populateWorkers();
-        long[] neighborhoods = {nhKey1};
+        List<Long> neighborhoods = Collections.singletonList(nhKey1);
 
         // Exercise
         Set<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, BASE_PAGE_SIZE, null, neighborhoods, WorkerRole.VERIFIED_WORKER.name(), WorkerStatus.NONE.name());
@@ -139,7 +137,7 @@ public class WorkerDaoImplTest {
     public void testGetWorkersByNeighborhoodAndProfessions() {
         // Pre Conditions
         populateWorkers();
-        long[] neighborhoods = {nhKey1};
+        List<Long> neighborhoods = Collections.singletonList(nhKey1);
 
         // Exercise
         Set<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, BASE_PAGE_SIZE, Collections.singletonList(Professions.PLUMBER.name()), neighborhoods, WorkerRole.VERIFIED_WORKER.name(), WorkerStatus.NONE.name());
@@ -152,7 +150,7 @@ public class WorkerDaoImplTest {
     public void testGetWorkersByNeighborhoodAndSize() {
         // Pre Conditions
         populateWorkers();
-        long[] neighborhoods = {nhKey1};
+        List<Long> neighborhoods = Collections.singletonList(nhKey1);
 
         // Exercise
         Set<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, 1, null, neighborhoods, WorkerRole.VERIFIED_WORKER.name(), WorkerStatus.NONE.name());
@@ -165,7 +163,7 @@ public class WorkerDaoImplTest {
     public void testGetWorkersByNeighborhoodAndSizeAndPage() {
         // Pre Conditions
         populateWorkers();
-        long[] neighborhoods = {nhKey1};
+        List<Long> neighborhoods = Collections.singletonList(nhKey1);
 
         // Exercise
         Set<Worker> retrievedWorkers = workerDao.getWorkers(2, 1, null, neighborhoods, WorkerRole.VERIFIED_WORKER.name(), WorkerStatus.NONE.name());

@@ -6,6 +6,7 @@ import ar.edu.itba.paw.enums.WorkerStatus;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Worker;
+import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
 import ar.edu.itba.paw.webapp.form.WorkerUpdateForm;
 import ar.edu.itba.paw.webapp.form.WorkerSignupForm;
@@ -47,15 +48,16 @@ public class WorkerController extends GlobalControllerAdvice {
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("professions") final List<String> professions,
+            @QueryParam("neighborhoodIds") final List<String> neighborhoodIds,
             @QueryParam("workerRole") final String workerRole,
             @QueryParam("workerStatus") final String workerStatus
     ) {
         LOGGER.info("GET request arrived at '/workers'");
-        Set<Worker> workers = ws.getWorkers(page, size, professions, getLoggedUser().getUserId(), workerRole, workerStatus);
+        Set<Worker> workers = ws.getWorkers(page, size, professions, neighborhoodIds, workerRole, workerStatus);
 
         String baseUri = uriInfo.getBaseUri().toString() + "workers";
 
-        int totalWorkerPages = ws.calculateWorkerPages(professions, getLoggedUser().getUserId(), size, workerRole, workerStatus);
+        int totalWorkerPages = ws.calculateWorkerPages(professions, neighborhoodIds, size, workerRole, workerStatus);
         Link[] links = createPaginationLinks(baseUri, page, size, totalWorkerPages);
 
         List<WorkerDto> workerDto = workers.stream()
@@ -70,13 +72,10 @@ public class WorkerController extends GlobalControllerAdvice {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findWorker(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived at '/workers/{}'", id);
-        Optional<Worker> worker = ws.findWorker(id);
-        if (!worker.isPresent()) {
-            throw new NotFoundException("Worker Not Found");
-        }
-        return Response.ok(WorkerDto.fromWorker(worker.get(), uriInfo)).build();
+    public Response findWorker(@PathParam("id") final long workerId) {
+        LOGGER.info("GET request arrived at '/workers/{}'", workerId);
+        return Response.ok(WorkerDto.fromWorker(ws.findWorker(workerId)
+                .orElseThrow(() -> new NotFoundException("Worker Not Found")), uriInfo)).build();
     }
 
     @POST

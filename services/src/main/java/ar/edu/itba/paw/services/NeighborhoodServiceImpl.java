@@ -64,32 +64,36 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Neighborhood> getNeighborhoods(int page, int size) {
+    public List<Neighborhood> getNeighborhoods(int page, int size, Long workerId) {
         LOGGER.info("Getting Neighborhoods");
 
         ValidationUtils.checkPageAndSize(page, size);
+        ValidationUtils.checkWorkerId(workerId);
 
-        List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoods(page, size);
-        neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == 0);
-        neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == -1);
+        List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoods(page, size, workerId);
+/*        neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == 0);
+        neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == -1);*/
         return neighborhoods;
     }
 
     // ---------------------------------------------------
 
     @Override
-    public int countNeighborhoods() {
+    public int countNeighborhoods(Long workerId) {
         LOGGER.info("Counting Neighborhoods");
 
-        return neighborhoodDao.getNeighborhoodsCount();
+        ValidationUtils.checkWorkerId(workerId);
+
+        return neighborhoodDao.countNeighborhoods(workerId);
     }
 
     @Override
-    public int calculateNeighborhoodPages(int size) {
+    public int calculateNeighborhoodPages(Long workerId, int size) {
         LOGGER.info("Calculating Neighborhood Pages");
 
+        ValidationUtils.checkWorkerId(workerId);
         ValidationUtils.checkSize(size);
 
-        return PaginationUtils.calculatePages(neighborhoodDao.getNeighborhoodsCount(), size);
+        return PaginationUtils.calculatePages(neighborhoodDao.countNeighborhoods(workerId), size);
     }
 }
