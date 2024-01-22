@@ -75,6 +75,37 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
+    public Set<WorkerArea> getAffiliations(Long workerId, Long neighborhoodId, int page, int size) {
+        LOGGER.info("Getting Affiliations between Worker {} and Neighborhood {}", workerId, neighborhoodId);
+
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkPageAndSize(page, size);
+
+        return neighborhoodWorkerDao.getAffiliations(workerId, neighborhoodId, page, size);
+    }
+
+    @Override
+    public int countAffiliations(Long workerId, Long neighborhoodId){
+        LOGGER.info("Counting Affiliations between Worker {} and Neighborhood {}", workerId, neighborhoodId);
+
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        return neighborhoodWorkerDao.countAffiliations(workerId, neighborhoodId);
+    }
+
+    @Override
+    public int calculateAffiliationPages(Long workerId, Long neighborhoodId, int size) {
+        LOGGER.info("Calculating Affiliation Pages between Worker {} and Neighborhood {}", workerId, neighborhoodId);
+
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkSize(size);
+
+        return PaginationUtils.calculatePages(neighborhoodWorkerDao.countAffiliations(workerId, neighborhoodId), size);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Set<Neighborhood> getNeighborhoods(long workerId) {
         LOGGER.info("Getting the Neighborhoods that Worker {} belongs to", workerId);

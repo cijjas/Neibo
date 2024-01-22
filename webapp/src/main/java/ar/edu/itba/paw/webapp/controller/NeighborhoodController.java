@@ -67,5 +67,4 @@ public class NeighborhoodController {
                 .path(String.valueOf(neighborhood.getNeighborhoodId())).build();
         return Response.created(uri).build();
     }
-
 }

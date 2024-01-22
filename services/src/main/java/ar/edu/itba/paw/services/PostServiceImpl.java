@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.exceptions.NotFoundException;
-import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.*;
@@ -95,7 +94,7 @@ public class PostServiceImpl implements PostService {
 
         ValidationUtils.checkOptionalChannelString(channel);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkPostStatusString(postStatus);
+        ValidationUtils.checkOptionalPostStatusString(postStatus);
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkPageAndSize(page, size);
 
@@ -113,7 +112,7 @@ public class PostServiceImpl implements PostService {
 
         ValidationUtils.checkOptionalChannelString(channel);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkPostStatusString(postStatus);
+        ValidationUtils.checkOptionalPostStatusString(postStatus);
         ValidationUtils.checkUserId(userId);
 
         return postDao.countPosts(channel, tags, neighborhoodId, postStatus, userId);
@@ -126,7 +125,7 @@ public class PostServiceImpl implements PostService {
 
         ValidationUtils.checkOptionalChannelString(channel);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkPostStatusString(postStatus);
+        ValidationUtils.checkOptionalPostStatusString(postStatus);
         ValidationUtils.checkUserId(userId);
         ValidationUtils.checkSize(size);
 

@@ -15,6 +15,10 @@ public interface NeighborhoodWorkerDao {
 
     // --------------------------------------- NEIGHBORHOODS WORKERS SELECT ------------------------------------------
 
+    Set<WorkerArea> getAffiliations(Long workerId, Long neighborhoodId, int page, int size);
+
+    int countAffiliations(Long workerId, Long neighborhoodId);
+
     Optional<WorkerArea> findWorkerArea(long workerId, long neighborhoodId);
 
     Set<Neighborhood> getNeighborhoods(long workerId);

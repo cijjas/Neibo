@@ -22,15 +22,17 @@ class DaoUtils {
         if (tags != null && !tags.isEmpty())
             appendTagsCondition(query, queryParams, tags);
 
-        switch (PostStatus.valueOf(postStatus.toUpperCase())) {
-            case HOT:
-                appendHotClause(query);
-                break;
-            case TRENDING:
-                appendTrendingClause(query);
-                break;
-            case NONE:
-                break;
+        if (postStatus != null ){
+            switch (PostStatus.valueOf(postStatus.toUpperCase())) {
+                case HOT:
+                    appendHotClause(query);
+                    break;
+                case TRENDING:
+                    appendTrendingClause(query);
+                    break;
+                case NONE:
+                    break;
+            }
         }
     }
 

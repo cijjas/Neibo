@@ -13,9 +13,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Repository
 public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
@@ -34,6 +32,73 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
         em.persist(workerArea);
         return workerArea;
     }
+
+    @Override
+    public Set<WorkerArea> getAffiliations(Long workerId, Long neighborhoodId, int page, int size) {
+        LOGGER.debug("Selecting Worker Affiliations By Criteria");
+
+        TypedQuery<WorkerAreaKey> idQuery = null;
+        if (workerId != null && neighborhoodId != null) {
+            idQuery = em.createQuery(
+                    "SELECT wa.id FROM WorkerArea wa WHERE wa.id.workerId = :workerId AND wa.id.neighborhoodId = :neighborhoodId", WorkerAreaKey.class);
+            idQuery.setParameter("workerId", workerId);
+            idQuery.setParameter("neighborhoodId", neighborhoodId);
+        } else if (workerId != null) {
+            idQuery = em.createQuery(
+                    "SELECT wa.id FROM WorkerArea wa WHERE wa.id.workerId = :workerId", WorkerAreaKey.class);
+            idQuery.setParameter("workerId", workerId);
+        } else if (neighborhoodId != null) {
+            idQuery = em.createQuery(
+                    "SELECT wa.id FROM WorkerArea wa WHERE wa.id.neighborhoodId = :neighborhoodId", WorkerAreaKey.class);
+            idQuery.setParameter("neighborhoodId", neighborhoodId);
+        } else {
+            idQuery = em.createQuery(
+                    "SELECT wa.id FROM WorkerArea wa", WorkerAreaKey.class);
+        }
+
+        idQuery.setFirstResult((page - 1) * size);
+        idQuery.setMaxResults(size);
+        List<WorkerAreaKey> ids = idQuery.getResultList();
+
+        if (!ids.isEmpty()) {
+            TypedQuery<WorkerArea> workerAreaQuery = em.createQuery(
+                    "SELECT wa FROM WorkerArea wa WHERE wa.id IN :ids", WorkerArea.class);
+            workerAreaQuery.setParameter("ids", ids);
+            return new HashSet<>(workerAreaQuery.getResultList());
+        }
+        return Collections.emptySet();
+    }
+
+    @Override
+    public int countAffiliations(Long workerId, Long neighborhoodId) {
+        LOGGER.debug("Counting Worker Affiliations By Criteria");
+
+        Long count = null;
+        if (workerId != null && neighborhoodId != null) {
+            count = (Long) em.createQuery(
+                            "SELECT COUNT(wa) FROM WorkerArea wa WHERE wa.id.workerId = :workerId AND wa.id.neighborhoodId = :neighborhoodId")
+                    .setParameter("workerId", workerId)
+                    .setParameter("neighborhoodId", neighborhoodId)
+                    .getSingleResult();
+        } else if (workerId != null) {
+            count = (Long) em.createQuery(
+                            "SELECT COUNT(wa) FROM WorkerArea wa WHERE wa.id.workerId = :workerId")
+                    .setParameter("workerId", workerId)
+                    .getSingleResult();
+        } else if (neighborhoodId != null) {
+            count = (Long) em.createQuery(
+                            "SELECT COUNT(wa) FROM WorkerArea wa WHERE wa.id.neighborhoodId = :neighborhoodId")
+                    .setParameter("neighborhoodId", neighborhoodId)
+                    .getSingleResult();
+        } else {
+            count = (Long) em.createQuery(
+                            "SELECT COUNT(wa) FROM WorkerArea wa")
+                    .getSingleResult();
+        }
+
+        return count != null ? count.intValue() : 0;
+    }
+
 
     // ----------------------------------------- NEIGHBORHOOD WORKERS SELECT -------------------------------------------
 

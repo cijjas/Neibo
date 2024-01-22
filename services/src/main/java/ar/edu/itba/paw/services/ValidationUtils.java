@@ -199,7 +199,9 @@ public class ValidationUtils {
         }
     }
 
-    public static void checkPostStatusString(String postStatus){
+    public static void checkOptionalPostStatusString(String postStatus){
+        if (postStatus == null)
+            return;
         try {
             PostStatus.valueOf(postStatus.toUpperCase());
         } catch (IllegalArgumentException e) {
