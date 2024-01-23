@@ -1,6 +1,6 @@
 // app.component.ts
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Amenity, AmenityForm } from './shared/models/amenity';
 import { AmenityService } from './shared/services/amenity.service';
 import { HttpErrorResponse } from '@angular/common/http';
