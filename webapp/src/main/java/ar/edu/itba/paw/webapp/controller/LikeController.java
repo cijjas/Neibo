@@ -4,12 +4,14 @@ import ar.edu.itba.paw.interfaces.services.LikeService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Like;
 import ar.edu.itba.paw.webapp.dto.InquiryDto;
+import ar.edu.itba.paw.webapp.dto.LikeCountDto;
 import ar.edu.itba.paw.webapp.dto.LikeDto;
 import ar.edu.itba.paw.webapp.form.LikeForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.thymeleaf.spring4.processor.SpringOptionInSelectFieldTagProcessor;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -63,6 +65,21 @@ public class LikeController extends GlobalControllerAdvice{
                 .build();
     }
 
+    @GET
+    @Path("/count")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response countLikes(
+            @QueryParam("postId") final Long postId,
+            @QueryParam("userId") final Long userId
+
+    ){
+        int count = ls.countLikes(neighborhoodId, postId, userId);
+
+
+        LikeCountDto dto = LikeCountDto.fromLikeCount(count, postId, userId, neighborhoodId,  uriInfo);
+        return Response.ok(new GenericEntity<LikeCountDto>(dto) {})
+                .build();
+    }
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
