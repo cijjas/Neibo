@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
-import { Amenity, AmenityForm } from './amenity'
-import { AmenityService } from './amenity.service'
+import { Amenity, AmenityForm } from './shared/models/amenity'
+import { AmenityService } from './shared/services/amenity.service'
 import { HttpErrorResponse } from '@angular/common/http'
 import { NgForm } from '@angular/forms'
 
