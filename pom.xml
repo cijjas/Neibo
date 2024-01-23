@@ -13,8 +13,10 @@
         <spring.version>4.2.5.RELEASE</spring.version>
         <spring-security.version>4.2.5.RELEASE</spring-security.version>
         <org.postgresql.version>42.2.5</org.postgresql.version>
-        <javax.validation-api.version>1.0.0.GA</javax.validation-api.version>
-        <org.hibernate-validator.version>4.3.1.Final</org.hibernate-validator.version>
+        <javax.validation-api.version>2.0.1.Final</javax.validation-api.version>
+        <org.hibernate-validator.version>5.1.0.Final</org.hibernate-validator.version>
+        <org.hibernate.version>5.1.0.Final</org.hibernate.version>
+        <hibernate-orm.version>5.1.0.Final</hibernate-orm.version>
         <mockito.version>2.25.1</mockito.version>
         <org.hsqldb.version>2.3.1</org.hsqldb.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,8 +26,6 @@
         <logback.version>1.1.2</logback.version>
         <logback-ext-spring.version>0.1.1</logback-ext-spring.version>
         <maven-war-plugin.version>2.6</maven-war-plugin.version>
-        <org.hibernate.version>5.1.0.Final</org.hibernate.version>
-        <hibernate-orm.version>5.1.0.Final</hibernate-orm.version>
         <org.hibernate.jpa.version>1.0.0.Final</org.hibernate.jpa.version>
         <jersey.version>3.0-SNAPSHOT</jersey.version>
         <jjwt.version>0.7.0</jjwt.version>
@@ -185,6 +185,12 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
                 <version>${org.hibernate.version}</version>
+<!--                <exclusions>
+                    <exclusion>
+                        <groupId>com.fasterxml</groupId>
+                        <artifactId>classmate</artifactId>
+                    </exclusion>
+                </exclusions>-->
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
@@ -224,11 +230,11 @@
                 <artifactId>hk2</artifactId>
                 <version>2.5.0-b05</version> <!-- última versión compatible con Java 8 -->
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>org.glassfish.jersey.ext</groupId>-->
-<!--                <artifactId>jersey-bean-validation</artifactId>-->
-<!--                <version>${jersey.version}</version>-->
-<!--            </dependency>-->
+            <dependency>
+                <groupId>org.glassfish.jersey.ext</groupId>
+                <artifactId>jersey-bean-validation</artifactId>
+                <version>${jersey.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.core</groupId>
                 <artifactId>jersey-server</artifactId>

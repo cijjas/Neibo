@@ -56,6 +56,14 @@ public class ValidationUtils {
         ValidationUtils.checkId(neighborhoodId, "Neighborhood");
     }
 
+    public static void checkNeighborhoodIdInUsers(Long neighborhoodId) {
+        if (neighborhoodId != null && neighborhoodId < 0) {
+            LOGGER.info("Invalid {} ID", "Neighborhood");
+            throw new IllegalArgumentException("Invalid value (" + neighborhoodId + ") for the " + "Neighborhood" + " ID. Please use a positive integer greater or equal to 0.");
+        }
+    }
+
+
     public static void checkNeighborhoodsIds(long[] neighborhoods) {
         for (Long neighborhoodId : neighborhoods)
             ValidationUtils.checkId(neighborhoodId, "Neighborhood");

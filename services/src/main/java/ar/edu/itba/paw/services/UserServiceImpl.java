@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
         LOGGER.info("Finding User {} from Neighborhood {}", userId, neighborhoodId);
 
         ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkNeighborhoodIdInUsers(neighborhoodId);
 
         return userDao.findUser(userId, neighborhoodId);
     }
@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
     public List<User> getNeighbors(long neighborhoodId) {
         LOGGER.info("Getting Neighbors from Neighborhood {}", neighborhoodId);
 
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkNeighborhoodIdInUsers(neighborhoodId);
 
         return userDao.getUsers(UserRole.NEIGHBOR.name(), neighborhoodId, 0, 0);
     }
@@ -134,7 +134,7 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsers(String role, long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Users with Role {} from Neighborhood {} ", role, neighborhoodId);
 
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkNeighborhoodIdInUsers(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
         ValidationUtils.checkOptionalUserRoleString(role);
 
@@ -147,7 +147,7 @@ public class UserServiceImpl implements UserService {
     public int countUsers(String role, long neighborhoodId) {
         LOGGER.info("Counting Users with Role {} from Neighborhood {} ", role, neighborhoodId);
 
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkNeighborhoodIdInUsers(neighborhoodId);
         ValidationUtils.checkOptionalUserRoleString(role);
 
         return userDao.countTotalUsers(role, neighborhoodId);
@@ -158,7 +158,7 @@ public class UserServiceImpl implements UserService {
     public int calculateUserPages(String role, long neighborhoodId, int size) {
         LOGGER.info("Calculating User Pages with Role {} from Neighborhood {} ", role, neighborhoodId);
 
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkNeighborhoodIdInUsers(neighborhoodId);
         ValidationUtils.checkSize(size);
         ValidationUtils.checkOptionalUserRoleString(role);
 

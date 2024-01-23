@@ -89,7 +89,7 @@ public class ProfessionWorkerDaoImplTest {
 //        long pKey = testInserter.createProfession(PROFESSION_NAME);
 
         // Exercise
-        List<Profession> profession = professionWorkerDao.getWorkerProfessions(1);
+        List<Profession> profession = professionWorkerDao.getWorkerProfessions(1L);
 
         // Validations & Post Conditions
         assertTrue(profession.isEmpty());

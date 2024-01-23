@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models;
 
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,6 +17,15 @@ public class ApiErrorDetails {
     private String message;
     private String path;
     private Set<LinkEntry> links;
+    private List<ErrorDetail> errors; // Change this field to a List
+
+    public List<ErrorDetail> getErrors() {
+        return errors;
+    }
+
+    public void setErrors(List<ErrorDetail> errors) {
+        this.errors = errors;
+    }
 
     public Integer getStatus() {
         return status;
