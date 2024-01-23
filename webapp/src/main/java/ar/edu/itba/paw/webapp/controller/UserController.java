@@ -41,7 +41,7 @@ public class UserController {
     public Response listUsers(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("userRole") final String userRole
+            @QueryParam("withRole") final String userRole
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users'", neighborhoodId);
         final List<User> users = us.getUsers(userRole, neighborhoodId, page, size);

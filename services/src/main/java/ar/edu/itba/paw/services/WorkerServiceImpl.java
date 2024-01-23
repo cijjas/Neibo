@@ -7,7 +7,6 @@ import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Image;
-import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.models.Entities.Worker;
 import org.slf4j.Logger;
@@ -33,17 +32,17 @@ public class WorkerServiceImpl implements WorkerService {
     private final UserDao userDao;
     private final ImageService imageService;
     private final PasswordEncoder passwordEncoder;
-    private final NeighborhoodWorkerDao neighborhoodWorkerDao;
+    private final AffiliationDao affiliationDao;
 
     @Autowired
     public WorkerServiceImpl(WorkerDao workerDao, ProfessionWorkerDao professionWorkerDao, UserDao userDao, ImageService imageService,
-                             PasswordEncoder passwordEncoder, NeighborhoodWorkerDao neighborhoodWorkerDao, NeighborhoodDao neighborhoodDao) {
+                             PasswordEncoder passwordEncoder, AffiliationDao affiliationDao, NeighborhoodDao neighborhoodDao) {
         this.workerDao = workerDao;
         this.professionWorkerDao = professionWorkerDao;
         this.userDao = userDao;
         this.imageService = imageService;
         this.passwordEncoder = passwordEncoder;
-        this.neighborhoodWorkerDao = neighborhoodWorkerDao;
+        this.affiliationDao = affiliationDao;
         this.neighborhoodDao = neighborhoodDao;
     }
 

@@ -36,7 +36,7 @@ public class PurchaseController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTransactions(
-            @QueryParam("transactionType") String type,
+            @QueryParam("withType") String type,
             @QueryParam("page") @DefaultValue("1") int page,
             @QueryParam("size") @DefaultValue("10") int size
     ) {

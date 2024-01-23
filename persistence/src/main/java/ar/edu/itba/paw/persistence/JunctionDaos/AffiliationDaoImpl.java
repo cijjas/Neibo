@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
 import ar.edu.itba.paw.enums.WorkerRole;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
+import ar.edu.itba.paw.interfaces.persistence.AffiliationDao;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.Worker;
-import ar.edu.itba.paw.models.Entities.WorkerArea;
-import ar.edu.itba.paw.models.compositeKeys.WorkerAreaKey;
+import ar.edu.itba.paw.models.Entities.Affiliation;
+import ar.edu.itba.paw.models.compositeKeys.AffiliationKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -16,55 +16,55 @@ import javax.persistence.TypedQuery;
 import java.util.*;
 
 @Repository
-public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
-    private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodWorkerDaoImpl.class);
+public class AffiliationDaoImpl implements AffiliationDao {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AffiliationDaoImpl.class);
     @PersistenceContext
     private EntityManager em;
 
     // ----------------------------------------- NEIGHBORHOOD WORKERS INSERT -------------------------------------------
 
     @Override
-    public WorkerArea createWorkerArea(long workerId, long neighborhoodId) {
+    public Affiliation createAffiliation(long workerId, long neighborhoodId) {
         LOGGER.debug("Inserting Worker {} to Neighborhood {}", workerId, neighborhoodId);
 
-        WorkerArea workerArea = new WorkerArea(em.find(Worker.class, workerId), em.find(Neighborhood.class, neighborhoodId));
-        workerArea.setRole(WorkerRole.UNVERIFIED_WORKER);
-        em.persist(workerArea);
-        return workerArea;
+        Affiliation affiliation = new Affiliation(em.find(Worker.class, workerId), em.find(Neighborhood.class, neighborhoodId));
+        affiliation.setRole(WorkerRole.UNVERIFIED_WORKER);
+        em.persist(affiliation);
+        return affiliation;
     }
 
     @Override
-    public Set<WorkerArea> getAffiliations(Long workerId, Long neighborhoodId, int page, int size) {
+    public Set<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Worker Affiliations By Criteria");
 
-        TypedQuery<WorkerAreaKey> idQuery = null;
+        TypedQuery<AffiliationKey> idQuery = null;
         if (workerId != null && neighborhoodId != null) {
             idQuery = em.createQuery(
-                    "SELECT wa.id FROM WorkerArea wa WHERE wa.id.workerId = :workerId AND wa.id.neighborhoodId = :neighborhoodId", WorkerAreaKey.class);
+                    "SELECT a.id FROM Affiliation a WHERE a.worker.id = :workerId AND a.neighborhood.neighborhoodId = :neighborhoodId", AffiliationKey.class);
             idQuery.setParameter("workerId", workerId);
             idQuery.setParameter("neighborhoodId", neighborhoodId);
         } else if (workerId != null) {
             idQuery = em.createQuery(
-                    "SELECT wa.id FROM WorkerArea wa WHERE wa.id.workerId = :workerId", WorkerAreaKey.class);
+                    "SELECT a.id FROM Affiliation a WHERE a.worker.id = :workerId", AffiliationKey.class);
             idQuery.setParameter("workerId", workerId);
         } else if (neighborhoodId != null) {
             idQuery = em.createQuery(
-                    "SELECT wa.id FROM WorkerArea wa WHERE wa.id.neighborhoodId = :neighborhoodId", WorkerAreaKey.class);
+                    "SELECT a.id FROM Affiliation a WHERE a.neighborhood.neighborhoodId = :neighborhoodId", AffiliationKey.class);
             idQuery.setParameter("neighborhoodId", neighborhoodId);
         } else {
             idQuery = em.createQuery(
-                    "SELECT wa.id FROM WorkerArea wa", WorkerAreaKey.class);
+                    "SELECT a.id FROM Affiliation a", AffiliationKey.class);
         }
 
         idQuery.setFirstResult((page - 1) * size);
         idQuery.setMaxResults(size);
-        List<WorkerAreaKey> ids = idQuery.getResultList();
+        List<AffiliationKey> ids = idQuery.getResultList();
 
         if (!ids.isEmpty()) {
-            TypedQuery<WorkerArea> workerAreaQuery = em.createQuery(
-                    "SELECT wa FROM WorkerArea wa WHERE wa.id IN :ids", WorkerArea.class);
-            workerAreaQuery.setParameter("ids", ids);
-            return new HashSet<>(workerAreaQuery.getResultList());
+            TypedQuery<Affiliation> affiliationQuery = em.createQuery(
+                    "SELECT a FROM Affiliation a WHERE a.id IN :ids", Affiliation.class);
+            affiliationQuery.setParameter("ids", ids);
+            return new HashSet<>(affiliationQuery.getResultList());
         }
         return Collections.emptySet();
     }
@@ -76,23 +76,23 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
         Long count = null;
         if (workerId != null && neighborhoodId != null) {
             count = (Long) em.createQuery(
-                            "SELECT COUNT(wa) FROM WorkerArea wa WHERE wa.id.workerId = :workerId AND wa.id.neighborhoodId = :neighborhoodId")
+                            "SELECT COUNT(a) FROM Affiliation a WHERE a.worker.id = :workerId AND a.neighborhood.neighborhoodId = :neighborhoodId")
                     .setParameter("workerId", workerId)
                     .setParameter("neighborhoodId", neighborhoodId)
                     .getSingleResult();
         } else if (workerId != null) {
             count = (Long) em.createQuery(
-                            "SELECT COUNT(wa) FROM WorkerArea wa WHERE wa.id.workerId = :workerId")
+                            "SELECT COUNT(a) FROM Affiliation a WHERE a.worker.id = :workerId")
                     .setParameter("workerId", workerId)
                     .getSingleResult();
         } else if (neighborhoodId != null) {
             count = (Long) em.createQuery(
-                            "SELECT COUNT(wa) FROM WorkerArea wa WHERE wa.id.neighborhoodId = :neighborhoodId")
+                            "SELECT COUNT(a) FROM Affiliation a WHERE a.neighborhood.neighborhoodId = :neighborhoodId")
                     .setParameter("neighborhoodId", neighborhoodId)
                     .getSingleResult();
         } else {
             count = (Long) em.createQuery(
-                            "SELECT COUNT(wa) FROM WorkerArea wa")
+                            "SELECT COUNT(a) FROM Affiliation a")
                     .getSingleResult();
         }
 
@@ -103,10 +103,10 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
     // ----------------------------------------- NEIGHBORHOOD WORKERS SELECT -------------------------------------------
 
     @Override
-    public Optional<WorkerArea> findWorkerArea(long workerId, long neighborhoodId) {
-        LOGGER.debug("Finding Worker area with worker id {} in Neighborhood {}", workerId, neighborhoodId);
+    public Optional<Affiliation> findAffiliation(long workerId, long neighborhoodId) {
+        LOGGER.debug("Finding Affiliation with worker id {} in Neighborhood {}", workerId, neighborhoodId);
 
-        return Optional.ofNullable(em.find(WorkerArea.class, new WorkerAreaKey(workerId, neighborhoodId)));
+        return Optional.ofNullable(em.find(Affiliation.class, new AffiliationKey(workerId, neighborhoodId)));
     }
 
     @Override
@@ -121,12 +121,12 @@ public class NeighborhoodWorkerDaoImpl implements NeighborhoodWorkerDao {
     // ----------------------------------------- NEIGHBORHOOD WORKERS DELETE -------------------------------------------
 
     @Override
-    public boolean deleteWorkerArea(long workerId, long neighborhoodId) {
+    public boolean deleteAffiliation(long workerId, long neighborhoodId) {
         LOGGER.debug("Deleting Worker {} from Neighborhood {}", workerId, neighborhoodId);
 
-        WorkerArea workerArea = em.find(WorkerArea.class, new WorkerAreaKey(workerId, neighborhoodId));
-        if (workerArea != null) {
-            em.remove(workerArea);
+        Affiliation affiliation = em.find(Affiliation.class, new AffiliationKey(workerId, neighborhoodId));
+        if (affiliation != null) {
+            em.remove(affiliation);
             return true;
         } else {
             return false;

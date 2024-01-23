@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
 import ar.edu.itba.paw.enums.WorkerRole;
-import ar.edu.itba.paw.models.compositeKeys.WorkerAreaKey;
+import ar.edu.itba.paw.models.compositeKeys.AffiliationKey;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -9,9 +9,9 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "workers_neighborhoods")
-public class WorkerArea implements Serializable {
+public class Affiliation implements Serializable {
     @EmbeddedId
-    private WorkerAreaKey id;
+    private AffiliationKey id;
 
     @ManyToOne
     @MapsId("workerId")
@@ -27,21 +27,21 @@ public class WorkerArea implements Serializable {
     @Enumerated(EnumType.STRING)
     private WorkerRole role;
 
-    WorkerArea() {
-        this.id = new WorkerAreaKey();
+    Affiliation() {
+        this.id = new AffiliationKey();
     }
 
-    public WorkerArea(Worker worker, Neighborhood neighborhood) {
-        this.id = new WorkerAreaKey(worker.getUser().getUserId(), neighborhood.getNeighborhoodId());
+    public Affiliation(Worker worker, Neighborhood neighborhood) {
+        this.id = new AffiliationKey(worker.getUser().getUserId(), neighborhood.getNeighborhoodId());
         this.worker = worker;
         this.neighborhood = neighborhood;
     }
 
-    public WorkerAreaKey getId() {
+    public AffiliationKey getId() {
         return id;
     }
 
-    public void setId(WorkerAreaKey id) {
+    public void setId(AffiliationKey id) {
         this.id = id;
     }
 
@@ -72,8 +72,8 @@ public class WorkerArea implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof WorkerArea)) return false;
-        WorkerArea that = (WorkerArea) o;
+        if (!(o instanceof Affiliation)) return false;
+        Affiliation that = (Affiliation) o;
         return Objects.equals(id, that.id);
     }
 

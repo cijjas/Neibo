@@ -37,7 +37,7 @@ public class EventController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listEventsByDate(
-            @QueryParam("date") final String date,
+            @QueryParam("forDate") final String date,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {

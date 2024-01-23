@@ -212,10 +212,10 @@ public class TestInserter {
         return time.getTimeId();
     }
 
-    public void createWorkerArea(long workerId, long neighborhoodId) {
-        WorkerArea workerArea = new WorkerArea(em.find(Worker.class, workerId), em.find(Neighborhood.class, neighborhoodId));
-        workerArea.setRole(WorkerRole.VERIFIED_WORKER);
-        em.persist(workerArea);
+    public void createAffiliation(long workerId, long neighborhoodId) {
+        Affiliation affiliation = new Affiliation(em.find(Worker.class, workerId), em.find(Neighborhood.class, neighborhoodId));
+        affiliation.setRole(WorkerRole.VERIFIED_WORKER);
+        em.persist(affiliation);
         em.flush();
     }
 

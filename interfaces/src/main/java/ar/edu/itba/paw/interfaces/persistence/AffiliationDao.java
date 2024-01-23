@@ -1,29 +1,28 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Entities.Neighborhood;
-import ar.edu.itba.paw.models.Entities.WorkerArea;
+import ar.edu.itba.paw.models.Entities.Affiliation;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-public interface NeighborhoodWorkerDao {
+public interface AffiliationDao {
 
     // --------------------------------------- NEIGHBORHOODS WORKERS SELECT ----------------------------------------
 
-    WorkerArea createWorkerArea(long workerId, long neighborhoodId);
+    Affiliation createAffiliation(long workerId, long neighborhoodId);
 
     // --------------------------------------- NEIGHBORHOODS WORKERS SELECT ------------------------------------------
 
-    Set<WorkerArea> getAffiliations(Long workerId, Long neighborhoodId, int page, int size);
+    Set<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size);
 
     int countAffiliations(Long workerId, Long neighborhoodId);
 
-    Optional<WorkerArea> findWorkerArea(long workerId, long neighborhoodId);
+    Optional<Affiliation> findAffiliation(long workerId, long neighborhoodId);
 
     Set<Neighborhood> getNeighborhoods(long workerId);
 
     // --------------------------------------- NEIGHBORHOODS WORKERS DELETE ----------------------------------------
 
-    boolean deleteWorkerArea(long workerId, long neighborhoodId);
+    boolean deleteAffiliation(long workerId, long neighborhoodId);
 }

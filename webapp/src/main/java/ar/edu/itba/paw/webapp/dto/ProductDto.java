@@ -76,7 +76,7 @@ public class ProductDto {
                 .path("neighborhoods")
                 .path(String.valueOf(product.getSeller().getNeighborhood().getNeighborhoodId()))
                 .path("requests")
-                .queryParam("productId", product.getProductId())
+                .queryParam("forProduct", product.getProductId())
                 .build();
 
         return dto;

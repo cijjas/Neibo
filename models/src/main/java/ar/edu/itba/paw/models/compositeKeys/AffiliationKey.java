@@ -3,14 +3,14 @@ package ar.edu.itba.paw.models.compositeKeys;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class WorkerAreaKey implements Serializable {
+public class AffiliationKey implements Serializable {
     private Long workerId;
     private Long neighborhoodId;
 
-    public WorkerAreaKey() {
+    public AffiliationKey() {
     }
 
-    public WorkerAreaKey(Long workerId, Long neighborhoodId) {
+    public AffiliationKey(Long workerId, Long neighborhoodId) {
         this.workerId = workerId;
         this.neighborhoodId = neighborhoodId;
     }
@@ -18,8 +18,8 @@ public class WorkerAreaKey implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof WorkerAreaKey)) return false;
-        WorkerAreaKey that = (WorkerAreaKey) o;
+        if (!(o instanceof AffiliationKey)) return false;
+        AffiliationKey that = (AffiliationKey) o;
         return Objects.equals(workerId, that.workerId) && Objects.equals(neighborhoodId, that.neighborhoodId);
     }
 

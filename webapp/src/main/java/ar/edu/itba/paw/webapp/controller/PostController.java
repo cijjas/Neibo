@@ -44,10 +44,10 @@ public class PostController extends GlobalControllerAdvice{
     public Response listPosts(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("channel") final String channel,
-            @QueryParam("tags") final List<String> tags,
-            @QueryParam("postStatus") @DefaultValue("none") final String postStatus,
-            @QueryParam("userId") final Long userId) {
+            @QueryParam("inChannel") final String channel,
+            @QueryParam("withTags") final List<String> tags,
+            @QueryParam("withStatus") @DefaultValue("none") final String postStatus,
+            @QueryParam("postedBy") final Long userId) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
         final List<Post> posts = ps.getPosts(channel, page, size, tags, neighborhoodId, postStatus, userId);
         final List<PostDto> postsDto = posts.stream()

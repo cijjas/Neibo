@@ -47,10 +47,10 @@ public class WorkerController extends GlobalControllerAdvice {
     public Response listWorkers(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("professions") final List<String> professions,
-            @QueryParam("neighborhoodIds") final List<String> neighborhoodIds,
-            @QueryParam("workerRole") final String workerRole,
-            @QueryParam("workerStatus") final String workerStatus
+            @QueryParam("withProfessions") final List<String> professions,
+            @QueryParam("inNeighborhoods") final List<String> neighborhoodIds,
+            @QueryParam("withRole") final String workerRole,
+            @QueryParam("withStatus") final String workerStatus
     ) {
         LOGGER.info("GET request arrived at '/workers'");
         Set<Worker> workers = ws.getWorkers(page, size, professions, neighborhoodIds, workerRole, workerStatus);
