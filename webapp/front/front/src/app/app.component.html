@@ -31,18 +31,18 @@
                 <a href=""><img src="{{employee?.imageUrl}}" alt="" class="img-fluid rounded-circle w-60"></a>
              </div> -->
              <div class="col-6 card-title align-self-center mb-0">
-                <h5>{{amenity?.name}}</h5>
-                <p class="m-0">{{amenity?.description}}</p>
+                <h5>{{amenity.name}}</h5>
+                <p class="m-0">{{amenity.description}}</p>
              </div>
           </div>
           <ul class="list-group list-group-flush">
-             <li class="list-group-item"><i class="fa fa-envelope float-right"></i>{{amenity?.name}}</li>
-             <li class="list-group-item"><i class="fa fa-phone float-right"></i>Description : {{amenity?.description}}</li>
+             <li class="list-group-item"><i class="fa fa-envelope float-right"></i>{{amenity.name}}</li>
+             <li class="list-group-item"><i class="fa fa-phone float-right"></i>Description : {{amenity.description}}</li>
           </ul>
           <div class="card-body">
              <div class="float-right btn-group btn-group-sm">
-                <a (click)="onOpenModal(amenity, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
-                <a (click)="onOpenModal(amenity, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>
+                <a (click)="onOpenModal(editAmenity, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                <a (click)="onOpenModal(editAmenity, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>
              </div>
           </div>
        </div>

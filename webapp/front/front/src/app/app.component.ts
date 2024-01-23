@@ -73,7 +73,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  public onOpenModal(amenity: AmenityForm | null, mode: string): void {
+  public onOpenModal(amenityForm: AmenityForm | null, mode: string): void {
     const container = document.getElementById('main-container')
     const button = document.createElement('button')
     button.type = 'button'
@@ -82,13 +82,13 @@ export class AppComponent implements OnInit {
     if (mode === 'add') {
       button.setAttribute('data-target', '#addAmenityModal')
     }
-    if(amenity != null) {
+    if(amenityForm != null) {
       if (mode === 'edit') {
-        this.editAmenity = amenity
+        this.editAmenity = amenityForm
         button.setAttribute('data-target', '#updateEmployeeModal')
       }
       if (mode === 'delete') {
-        this.deleteAmenity = amenity
+        this.deleteAmenity = amenityForm
         button.setAttribute('data-target', '#deleteEmployeeModal')
       }
     }
