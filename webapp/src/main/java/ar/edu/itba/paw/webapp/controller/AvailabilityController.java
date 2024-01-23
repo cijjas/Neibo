@@ -40,8 +40,8 @@ public class AvailabilityController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listAvailability(
-            @QueryParam("status") String status,
-            @QueryParam("date") String date
+            @QueryParam("withStatus") String status,
+            @QueryParam("forDate") String date
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}/availability'", neighborhoodId, amenityId);
         final List<Availability> availabilities = as.getAvailability(amenityId, status, date, neighborhoodId);

@@ -169,8 +169,8 @@ public class ValidationUtils {
         ValidationUtils.checkIds(postId, userId, "Like");
     }
 
-    public static void checkWorkerAreaIds(Long workerId, Long neighborhoodId) {
-        ValidationUtils.checkIds(workerId, neighborhoodId, "WorkerArea");
+    public static void checkAffiliationIds(Long workerId, Long neighborhoodId) {
+        ValidationUtils.checkIds(workerId, neighborhoodId, "Affiliation");
     }
 
     public static void checkAmenityAvailabilityIds(Long amenityId, Long availabilityId) {

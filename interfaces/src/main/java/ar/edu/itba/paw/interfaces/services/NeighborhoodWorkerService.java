@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Entities.Neighborhood;
-import ar.edu.itba.paw.models.Entities.WorkerArea;
+import ar.edu.itba.paw.models.Entities.Affiliation;
 
 import java.util.List;
 import java.util.Set;
@@ -14,7 +14,7 @@ public interface NeighborhoodWorkerService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Set<WorkerArea> getAffiliations(Long workerId, Long neighborhoodId, int page, int size);
+    Set<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size);
 
     int countAffiliations(Long workerId, Long neighborhoodId);
 

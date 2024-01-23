@@ -2,8 +2,8 @@ package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
-import ar.edu.itba.paw.models.Entities.WorkerArea;
-import ar.edu.itba.paw.persistence.JunctionDaos.NeighborhoodWorkerDaoImpl;
+import ar.edu.itba.paw.models.Entities.Affiliation;
+import ar.edu.itba.paw.persistence.JunctionDaos.AffiliationDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -30,7 +29,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
 @Transactional
 @Rollback
-public class NeighborhoodWorkerDaoImplTest {
+public class AffiliationDaoImplTest {
 
     @Autowired
     private DataSource ds;
@@ -39,7 +38,7 @@ public class NeighborhoodWorkerDaoImplTest {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private NeighborhoodWorkerDaoImpl neighborhoodWorkerDaoImpl;
+    private AffiliationDaoImpl affiliationDaoImpl;
 
     @PersistenceContext
     private EntityManager em;
@@ -50,14 +49,14 @@ public class NeighborhoodWorkerDaoImplTest {
     }
 
     @Test
-    public void testCreateWorkerArea() {
+    public void testCreateAffiliation() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
         testInserter.createWorker(uKey);
 
         // Exercise
-        neighborhoodWorkerDaoImpl.createWorkerArea(uKey, nhKey);
+        affiliationDaoImpl.createAffiliation(uKey, nhKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -70,13 +69,13 @@ public class NeighborhoodWorkerDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
         testInserter.createWorker(uKey);
-        testInserter.createWorkerArea(uKey, nhKey);
+        testInserter.createAffiliation(uKey, nhKey);
 
         // Exercise
-        Optional<WorkerArea> workerArea = neighborhoodWorkerDaoImpl.findWorkerArea(uKey, nhKey);
+        Optional<Affiliation> affiliation = affiliationDaoImpl.findAffiliation(uKey, nhKey);
 
         // Validations & Post Conditions
-        assertTrue(workerArea.isPresent());
+        assertTrue(affiliation.isPresent());
     }
 
     @Test
@@ -84,10 +83,10 @@ public class NeighborhoodWorkerDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<WorkerArea> workerArea = neighborhoodWorkerDaoImpl.findWorkerArea(1, 1);
+        Optional<Affiliation> affiliation = affiliationDaoImpl.findAffiliation(1, 1);
 
         // Validations & Post Conditions
-        assertFalse(workerArea.isPresent());
+        assertFalse(affiliation.isPresent());
     }
 
 
@@ -97,10 +96,10 @@ public class NeighborhoodWorkerDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
         testInserter.createWorker(uKey);
-        testInserter.createWorkerArea(uKey, nhKey);
+        testInserter.createAffiliation(uKey, nhKey);
 
         // Exercise
-        Set<Neighborhood> neighborhoods = neighborhoodWorkerDaoImpl.getNeighborhoods(uKey);
+        Set<Neighborhood> neighborhoods = affiliationDaoImpl.getNeighborhoods(uKey);
 
         // Validations & Post Conditions
         assertEquals(1, neighborhoods.size());
@@ -111,7 +110,7 @@ public class NeighborhoodWorkerDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Set<Neighborhood> neighborhoods = neighborhoodWorkerDaoImpl.getNeighborhoods(1);
+        Set<Neighborhood> neighborhoods = affiliationDaoImpl.getNeighborhoods(1);
 
         // Validations & Post Conditions
         assertEquals(0, neighborhoods.size());
@@ -119,15 +118,15 @@ public class NeighborhoodWorkerDaoImplTest {
 
 
     @Test
-    public void testDeleteWorkerArea() {
+    public void testDeleteAffiliation() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
         testInserter.createWorker(uKey);
-        testInserter.createWorkerArea(uKey, nhKey);
+        testInserter.createAffiliation(uKey, nhKey);
 
         // Exercise
-        boolean deleted = neighborhoodWorkerDaoImpl.deleteWorkerArea(uKey, nhKey);
+        boolean deleted = affiliationDaoImpl.deleteAffiliation(uKey, nhKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -135,11 +134,11 @@ public class NeighborhoodWorkerDaoImplTest {
     }
 
     @Test
-    public void testDeleteInvalidWorkerArea() {
+    public void testDeleteInvalidAffiliation() {
         // Pre Conditions
 
         // Exercise
-        boolean deleted = neighborhoodWorkerDaoImpl.deleteWorkerArea(1, 1);
+        boolean deleted = affiliationDaoImpl.deleteAffiliation(1, 1);
 
         // Validations & Post Conditions
         em.flush();

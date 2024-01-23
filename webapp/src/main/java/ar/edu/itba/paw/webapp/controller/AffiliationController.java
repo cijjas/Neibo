@@ -2,11 +2,9 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.NeighborhoodWorkerService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
-import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.Worker;
-import ar.edu.itba.paw.models.Entities.WorkerArea;
-import ar.edu.itba.paw.webapp.dto.NeighborhoodDto;
-import ar.edu.itba.paw.webapp.dto.WorkerAreaDto;
+import ar.edu.itba.paw.models.Entities.Affiliation;
+import ar.edu.itba.paw.webapp.dto.AffiliationDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +21,8 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 
 @Path("/affiliations")
 @Component
-public class NeighborhoodWorkerController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodWorkerController.class);
+public class AffiliationController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AffiliationController.class);
 
     @Autowired
     private NeighborhoodWorkerService nws;
@@ -39,23 +37,23 @@ public class NeighborhoodWorkerController {
     public Response listAffiliations(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("neighborhoodId") Long neighborhoodId,
-            @QueryParam("workerId") Long workerId
+            @QueryParam("inNeighborhood") Long neighborhoodId,
+            @QueryParam("forWorker") Long workerId
     ) {
         LOGGER.info("GET request arrived at '/affiliations'");
 
-        Set<WorkerArea> workerAreas = nws.getAffiliations(workerId, neighborhoodId, page, size);
+        Set<Affiliation> affiliations = nws.getAffiliations(workerId, neighborhoodId, page, size);
 
-        if (workerAreas.isEmpty())
+        if (affiliations.isEmpty())
             return Response.noContent().build();
 
-        List<WorkerAreaDto> workerAreaDto = workerAreas.stream()
-                .map(wa -> WorkerAreaDto.fromWorkerArea(wa, uriInfo)).collect(Collectors.toList());
+        List<AffiliationDto> affiliationDto = affiliations.stream()
+                .map(wa -> AffiliationDto.fromAffiliation(wa, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "affiliations/";
         int totalAmenityPages = nws.calculateAffiliationPages(workerId, neighborhoodId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalAmenityPages);
-        return Response.ok(new GenericEntity<List<WorkerAreaDto>>(workerAreaDto){})
+        return Response.ok(new GenericEntity<List<AffiliationDto>>(affiliationDto){})
                 .links(links)
                 .build();
     }
@@ -64,7 +62,7 @@ public class NeighborhoodWorkerController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response addWorkerToNeighborhood(
             @QueryParam("neighborhoodId") Long neighborhoodId,
-            @QueryParam("workerId") Long workerId
+            @QueryParam("worker") Long workerId
     ) {
         LOGGER.info("PATCH request arrived at '/workers/{}/neighborhoods'", neighborhoodId);
         nws.addWorkerToNeighborhood(workerId, neighborhoodId);
@@ -77,8 +75,8 @@ public class NeighborhoodWorkerController {
     @DELETE
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response removeWorkerFromNeighborhood(
-            @QueryParam("neighborhoodId") Long neighborhoodId,
-            @QueryParam("workerId") Long workerId
+            @QueryParam("toNeighborhood") Long neighborhoodId,
+            @QueryParam("worker") Long workerId
     ) {
         LOGGER.info("DELETE request arrived at '/workers/{}/neighborhoods'", neighborhoodId);
         nws.removeWorkerFromNeighborhood(workerId, neighborhoodId);

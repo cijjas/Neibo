@@ -42,8 +42,8 @@ public class BookingController extends GlobalControllerAdvice{
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listBookings(
-            @QueryParam("userId") final Long userId,
-            @QueryParam("amenityId") final Long amenityId,
+            @QueryParam("bookedBy") final Long userId,
+            @QueryParam("forAmenity") final Long amenityId,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
@@ -83,5 +83,14 @@ public class BookingController extends GlobalControllerAdvice{
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(Arrays.toString(bookingIds)).build();
         return Response.created(uri).build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response deleteById(@PathParam("id") final long id) {
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, id);
+        bs.deleteBooking(id);
+        return Response.noContent().build();
     }
 }

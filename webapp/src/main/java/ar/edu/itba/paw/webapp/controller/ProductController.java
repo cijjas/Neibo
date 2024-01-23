@@ -43,9 +43,9 @@ public class ProductController extends GlobalControllerAdvice {
     public Response listProducts(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("department") final String department,
-            @QueryParam("userId") final Long userId,
-            @QueryParam("productStatus") final String productStatus
+            @QueryParam("inDepartment") final String department,
+            @QueryParam("listedBy") final Long userId,
+            @QueryParam("withStatus") final String productStatus
             ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
         final List<Product> products = ps.getProducts(neighborhoodId, department, userId, productStatus, page, size);

@@ -34,7 +34,7 @@ public class NeighborhoodController {
     public Response listNeighborhoods(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("workerId") final Long workerId) {
+            @QueryParam("withWorker") final Long workerId) {
         LOGGER.info("GET request arrived at '/neighborhoods/'");
         final List<Neighborhood> neighborhoods = ns.getNeighborhoods(page, size, workerId);
         final List<NeighborhoodDto> neighborhoodsDto = neighborhoods.stream()

@@ -1,31 +1,30 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.models.Entities.Availability;
-import ar.edu.itba.paw.models.Entities.WorkerArea;
+import ar.edu.itba.paw.models.Entities.Affiliation;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
-public class WorkerAreaDto {
+public class AffiliationDto {
     private URI self;
     private URI worker; // localhost:8080/amenities/{id}
     private URI neighborhood; // localhost:8080/shifts/{id}
 
-    public static WorkerAreaDto fromWorkerArea(WorkerArea workerArea, UriInfo uriInfo){
-        final WorkerAreaDto dto = new WorkerAreaDto();
+    public static AffiliationDto fromAffiliation(Affiliation affiliation, UriInfo uriInfo){
+        final AffiliationDto dto = new AffiliationDto();
 
         dto.self = uriInfo.getBaseUriBuilder()
                 .path("affiliations")
-                .queryParam("neighborhoodId", workerArea.getNeighborhood().getNeighborhoodId())
-                .queryParam("workerId", workerArea.getWorker().getWorkerId())
+                .queryParam("inNeighborhood", affiliation.getNeighborhood().getNeighborhoodId())
+                .queryParam("forWorker", affiliation.getWorker().getWorkerId())
                 .build();
         dto.neighborhood = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
-                .path(String.valueOf(workerArea.getNeighborhood().getNeighborhoodId()))
+                .path(String.valueOf(affiliation.getNeighborhood().getNeighborhoodId()))
                 .build();
         dto.worker = uriInfo.getBaseUriBuilder()
                 .path("workers")
-                .path(String.valueOf(workerArea.getWorker().getWorkerId()))
+                .path(String.valueOf(affiliation.getWorker().getWorkerId()))
                 .build();
 
         return dto;

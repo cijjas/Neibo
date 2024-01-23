@@ -202,9 +202,9 @@ public class WorkerDaoImplTest {
         testInserter.createSpecialization(uKey4, pKey1);
         testInserter.createSpecialization(uKey4, pKey2);
 
-        testInserter.createWorkerArea(uKey1, nhKey1);
-        testInserter.createWorkerArea(uKey2, nhKey1);
-        testInserter.createWorkerArea(uKey3, nhKey2);
-        testInserter.createWorkerArea(uKey4, nhKey2);
+        testInserter.createAffiliation(uKey1, nhKey1);
+        testInserter.createAffiliation(uKey2, nhKey1);
+        testInserter.createAffiliation(uKey3, nhKey2);
+        testInserter.createAffiliation(uKey4, nhKey2);
     }
 }

@@ -28,7 +28,7 @@ public class TagDto {
                 .path("neighborhoods")
                 .path(String.valueOf(neighborhoodId))
                 .path("posts")
-                .queryParam("tag", tag.getTag())
+                .queryParam("withTags", tag.getTag())
                 .build();
 
         return dto;

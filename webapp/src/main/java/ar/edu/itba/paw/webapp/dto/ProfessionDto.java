@@ -24,7 +24,7 @@ public class ProfessionDto {
 
         dto.workers = uriInfo.getBaseUriBuilder()
                 .path("workers")
-                .queryParam("profession", String.valueOf(profession.getId()))
+                .queryParam("withProfessions", String.valueOf(profession.getId()))
                 .build();
 
         return dto;

@@ -53,17 +53,17 @@ public class UserDto {
                 .path("neighborhoods")
                 .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                 .path("posts")
-                .queryParam("userId", String.valueOf(user.getUserId()))
+                .queryParam("postedBy", String.valueOf(user.getUserId()))
                 .build();
         dto.bookings = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                 .path("bookings")
-                .queryParam("userId", String.valueOf(user.getUserId()))
+                .queryParam("bookedBy", String.valueOf(user.getUserId()))
                 .build();
         dto.likedPosts = uriInfo.getBaseUriBuilder()
                 .path("likes")
-                .queryParam("userId", String.valueOf(user.getUserId()))
+                .queryParam("likedBy", String.valueOf(user.getUserId()))
                 .build();
         dto.purchases = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
@@ -71,8 +71,7 @@ public class UserDto {
                 .path("users")
                 .path(String.valueOf(user.getUserId()))
                 .path("transactions")
-                .queryParam("userId", user.getUserId())
-                .queryParam("transactionType", "PURCHASE")
+                .queryParam("withType", "PURCHASE")
                 .build();
         dto.sales = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
@@ -80,8 +79,7 @@ public class UserDto {
                 .path("users")
                 .path(String.valueOf(user.getUserId()))
                 .path("transactions")
-                .queryParam("userId", user.getUserId())
-                .queryParam("transactionType", "SALE")
+                .queryParam("withType", "SALE")
                 .build();
 
         return dto;

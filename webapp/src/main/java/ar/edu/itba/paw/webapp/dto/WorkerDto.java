@@ -54,7 +54,7 @@ public class WorkerDto {
 
         dto.workerNeighborhoods = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
-                .queryParam("workerId", String.valueOf(worker.getWorkerId()))
+                .queryParam("withWorker", String.valueOf(worker.getWorkerId()))
                 .build();
 
         dto.phoneNumber = worker.getPhoneNumber();
