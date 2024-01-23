@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import {Component, OnInit, ViewEncapsulation} from '@angular/core'
 import { Amenity, AmenityForm } from './shared/models/amenity'
 import { AmenityService } from './shared/services/amenity.service'
 import { HttpErrorResponse } from '@angular/common/http'
@@ -7,7 +7,18 @@ import { NgForm } from '@angular/forms'
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: [
+    '../assets/styles/commons.css',
+    '../assets/styles/home.css',
+    '../assets/styles/calendarBox.css',
+    '../assets/styles/calendarWidget.css',
+    '../assets/styles/error.css',
+    '../assets/styles/landingPage.css',
+    '../assets/styles/postcard.css',
+    '../assets/styles/service.css'
+  ],
+  encapsulation: ViewEncapsulation.None
+
 })
 export class AppComponent implements OnInit {
   title = 'neibo'
