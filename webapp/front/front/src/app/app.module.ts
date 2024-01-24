@@ -8,6 +8,7 @@ import {NavbarComponent} from "./components/navbar/navbar.component";
 import {UserProfileWidgetComponent} from "./components/user-profile-widget/user-profile-widget.component";
 import {BlogpostComponent} from "./components/blogpost/blogpost.component";
 import {LeftColumnComponent} from "./components/left-column/left-column.component";
+import {UpperFeedButtonsComponent} from "./components/upper-feed-buttons/upper-feed-buttons.component";
 
 @NgModule({
     declarations: [
@@ -17,12 +18,13 @@ import {LeftColumnComponent} from "./components/left-column/left-column.componen
       BlogpostComponent
 
     ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    FormsModule,
-    LeftColumnComponent
-  ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        FormsModule,
+        LeftColumnComponent,
+        UpperFeedButtonsComponent
+    ],
     providers: [AmenityService],
     bootstrap: [AppComponent]
 })

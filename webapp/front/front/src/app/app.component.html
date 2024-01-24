@@ -73,10 +73,10 @@
     <div class="row init">
       <div class="column-left">
         <app-left-column></app-left-column>
-<!--        <%@ include file="/WEB-INF/jsp/components/widgets/leftColumn.jsp" %>-->
       </div>
 
       <div class="column-middle">
+        <app-upper-feed-buttons></app-upper-feed-buttons>
 <!--        <%@ include file="/WEB-INF/jsp/components/widgets/upperFeedButtons.jsp" %>-->
 
         <div id="placeholder-posts-container">
@@ -103,7 +103,7 @@
           <ng-template #noPostsFound>
             <div class="no-posts-found">
               <i class="circle-icon fa-solid fa-magnifying-glass" style="color: var(--text)"></i>
-              <span>Posts not found</span>
+              <span i18n>Posts not found</span>
             </div>
           </ng-template>
          <!-- <c:choose>
