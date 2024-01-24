@@ -62,6 +62,7 @@ public class PostDto {
                 .path("neighborhoods")
                 .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("tags")
+                .queryParam("post", String.valueOf(post.getPostId()))
                 .build();
         dto.likes = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")

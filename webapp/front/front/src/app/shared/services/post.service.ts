@@ -62,20 +62,9 @@ export class PostService {
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());
     
-        console.log(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/posts`);
-        console.log(params);
-
         return this.http.get<PostDto[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/posts`, { params }).pipe(
           mergeMap((postsDto: PostDto[]) => {
-            for (let postDto of postsDto) {
-                console.log(postDto);
-                console.log(this.http.get<UserDto>(postDto.user))
-                console.log(this.http.get<Channel>(postDto.channel))
-                console.log(this.http.get<CommentDto[]>(postDto.comments))
-                console.log(this.http.get<TagDto[]>(postDto.tags))
-                console.log(this.http.get<LikeDto[]>(postDto.likes))
-                console.log(this.http.get<UserDto[]>(postDto.subscribers))
-            }
+            
             const postsObservable = postsDto.map((postDto) =>
               forkJoin([
                 this.getRequestOrNull(this.http.get<UserDto>(postDto.user)),
@@ -106,23 +95,21 @@ export class PostService {
             );
     
             return forkJoin(postsObservable);
+            
           })
         );
     }
 
     private getRequestOrNull<T>(request: Observable<T>): Observable<T | null> {
+        console.log('I');
         return request.pipe(
-          catchError((error) => {
-            if (error && error.message) {
-              console.error('Error fetching data:', error.message);
-            } else {
-              console.error('Error fetching data:', error);
-            }
-            return of(null); 
-          })
+            catchError((error) => {
+                console
+                console.error('Error fetching data:', error);
+                return of(null); 
+            })
         );
-      }
-      
+    }
 
     public addPost(neighborhoodId: number, post: PostForm): Observable<PostForm> {
         return this.http.post<PostForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/posts`, post)
