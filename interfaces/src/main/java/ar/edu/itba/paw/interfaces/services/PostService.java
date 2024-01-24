@@ -4,14 +4,15 @@ import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.models.Entities.Post;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
 public interface PostService {
 
-    Post createPost(final String title, final String description, final long neighborId, final long channelId, String tags, final MultipartFile imageFile);
+    Post createPost(final String title, final String description, final long neighborId, final long channelId, String tags, final InputStream imageFile);
 
-    Post createAdminPost(final long neighborhoodId, final String title, final String description, final long neighborId, final int channelId, String tags, final MultipartFile imageFile);
+    Post createAdminPost(final long neighborhoodId, final String title, final String description, final long neighborId, final int channelId, String tags, final InputStream imageFile);
 
     // -----------------------------------------------------------------------------------------------------------------
 

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,11 +42,11 @@ public class PostServiceImpl implements PostService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Post createPost(String title, String description, long userId, long channelId, String tags, MultipartFile imageFile) {
+    public Post createPost(String title, String description, long userId, long channelId, String tags, InputStream imageFile) {
         LOGGER.info("Creating Post with Title {} by User {}", title, userId);
 
         Image i = null;
-        if (imageFile != null && !imageFile.isEmpty()) {
+        if (imageFile != null) {
             i = imageService.storeImage(imageFile);
         }
         Post p = postDao.createPost(title, description, userId, channelId, i == null ? 0 : i.getImageId());
@@ -54,7 +55,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post createAdminPost(final long neighborhoodId, final String title, final String description, final long userId, final int channelId, final String tags, final MultipartFile imageFile) {
+    public Post createAdminPost(final long neighborhoodId, final String title, final String description, final long userId, final int channelId, final String tags, final InputStream imageFile) {
         LOGGER.info("Creating Admin Post with Title {} by User {}", title, userId);
 
         Post post = createPost(title, description, userId, channelId, tags, imageFile);
