@@ -40,6 +40,8 @@ public class PostDto {
                 .path(String.valueOf(post.getUser().getUserId()))
                 .build();
         dto.channel = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("channels")
                 .path(String.valueOf(post.getChannel().getChannelId()))
                 .build();
@@ -59,11 +61,11 @@ public class PostDto {
         dto.tags = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("posts")
-                .path(String.valueOf(post.getPostId()))
                 .path("tags")
                 .build();
         dto.likes = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("likes")
                 .queryParam("post", String.valueOf(post.getPostId()))
                 .build();

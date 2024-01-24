@@ -6,18 +6,18 @@ import { LikeDto } from "./like"
 import { CommentDto } from "./comment"
 
 export interface Post {
-    postId: number
-    title: string
-    description: string
-    date: Date
-    user: UserDto
-    channel: Channel
-    postPicture: ImageDto
-    comments: CommentDto[]
-    tags: TagDto[]
-    likes: LikeDto[]
-    subscribers: UserDto[]
-    self: string
+    postId: number 
+    title: string 
+    description: string 
+    date: Date 
+    user: UserDto  
+    channel: Channel    
+    postPicture: ImageDto   
+    comments: CommentDto[]  
+    tags: TagDto[]  
+    likes: LikeDto[]    
+    subscribers: UserDto[]  
+    self: string        
 }
 
 export interface PostDto {
