@@ -72,6 +72,7 @@
 
     <div class="row init">
       <div class="column-left">
+        <app-left-column></app-left-column>
 <!--        <%@ include file="/WEB-INF/jsp/components/widgets/leftColumn.jsp" %>-->
       </div>
 
@@ -89,7 +90,7 @@
 
             <div *ngFor="let post of postList">
               {{post.postId}}
-              <blogpost
+              <!--<blogpost
                 [postID]="post.postId"
                 [postNeighborMail]="post.user.mail"
                 [postDate]="post.date"
@@ -97,7 +98,7 @@
                 [postDescription]="post.description"
                 [postImage]="post.postPicture.imageId"
                 [postLikes]="post.likes.length"
-              ></blogpost>
+              ></blogpost>-->
             </div>
 
           </ng-container>

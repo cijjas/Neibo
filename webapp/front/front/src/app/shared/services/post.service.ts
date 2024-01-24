@@ -55,7 +55,6 @@ export class PostService {
   public getPosts(neighborhoodId: number, channel: string, tags: string[], postStatus: string, userId: number, page: number, size: number): Observable<Post[]> {
     // Create an empty HttpParams object
     let params = new HttpParams();
-    console.log("------------------")
     // Add non-empty parameters to the HttpParams object
     if (channel) params = params.set('channel', channel);
     if (tags && tags.length > 0) params = params.set('tags', tags.join(','));
@@ -66,11 +65,9 @@ export class PostService {
 
     // Log the URL being hit
     const url = `${this.apiServerUrl}/neighborhoods/${neighborhoodId}/posts`;
-    console.log('Request URL:', url);
 
     // Make the HTTP request with the dynamic HttpParams object
     return this.http.get<PostDto[]>(url, { params }).pipe(
-      tap(postsDto => console.log('Posts received:', postsDto)), // Log the posts before processing
       mergeMap((postsDto: PostDto[]) => {
         const postsObservable = postsDto.map((postDto) =>
           forkJoin([
