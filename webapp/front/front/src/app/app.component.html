@@ -72,11 +72,11 @@
 
     <div class="row init">
       <div class="column-left">
-<!--        <%@ include file="/WEB-INF/jsp/components/widgets/leftColumn.jsp" %>-->
+        <app-left-column></app-left-column>
       </div>
 
       <div class="column-middle">
-<!--        <%@ include file="/WEB-INF/jsp/components/widgets/upperFeedButtons.jsp" %>-->
+        <app-upper-feed-buttons></app-upper-feed-buttons>
 
         <div id="placeholder-posts-container">
           <!--<c:forEach begin="1" end="10" var="index">
@@ -88,7 +88,6 @@
             <!-- Include the page selector -->
 
             <div *ngFor="let post of postList">
-              {{post.postId}}
               <blogpost
                 [postID]="post.postId"
                 [postNeighborMail]="post.user.mail"
@@ -103,7 +102,7 @@
           <ng-template #noPostsFound>
             <div class="no-posts-found">
               <i class="circle-icon fa-solid fa-magnifying-glass" style="color: var(--text)"></i>
-              <span>Posts not found</span>
+              <span i18n>Posts not found</span>
             </div>
           </ng-template>
          <!-- <c:choose>
@@ -172,7 +171,7 @@
           integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
           crossorigin="anonymous"></script>
 
-  <!--<%@ include file="/WEB-INF/jsp/components/displays/footer.jsp" %>-->
+  <app-wave-footer></app-wave-footer>
 </div>
 
 </body>

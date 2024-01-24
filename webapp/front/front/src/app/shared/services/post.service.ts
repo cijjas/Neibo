@@ -54,7 +54,7 @@ export class PostService {
 
     public getPosts(neighborhoodId: number, channel: string, tags: string[], postStatus: string, userId: number, page: number, size: number): Observable<Post[]> {
         let params = new HttpParams();
-    
+
         if (channel) params = params.set('channel', channel);
         if (tags && tags.length > 0) params = params.set('tags', tags.join(','));
         if (postStatus) params = params.set('postStatus', postStatus);
@@ -93,7 +93,7 @@ export class PostService {
                 })
               )
             );
-    
+
             return forkJoin(postsObservable);
             
           })

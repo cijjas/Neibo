@@ -2,11 +2,10 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../shared/services/user.service";
 import {User} from "../../shared/models/user";
-import {Observable} from "rxjs";
 
 @Component({
   selector: 'user-profile-widget',
-  templateUrl: './userProfileWidget.component.html',
+  templateUrl: './user-profile-widget.component.html',
 })
 export class UserProfileWidgetComponent implements OnInit {
   loggedUser: User | null = null; // Initialize to null or a default user model

@@ -17,15 +17,15 @@ export class AppComponent implements OnInit {
     this.getPosts();
   }
 
+
   public getPosts(): void {
-
-    this.postService.getPosts(1, 'Feed', [], 'none', 1, 1, 10).subscribe(
-      (response: Post[]) => {
-
-        this.postList = response;
+    this.postService.getPosts(1, 'Feed', [], 'none', 1, 1, 10)
+      .subscribe(
+      (posts: Post[]) => {
+        this.postList = posts;
       },
       (error: HttpErrorResponse) => {
-        alert(error.message);
+        // Handle error if needed
       }
     );
   }
