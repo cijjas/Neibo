@@ -89,15 +89,14 @@
             <!-- Include the page selector -->
 
             <div *ngFor="let post of postList">
-              {{post.postId}}
-              <!--<blogpost
+              <blogpost
                 [postID]="post.postId"
                 [postNeighborMail]="post.user.mail"
                 [postDate]="post.date"
                 [postTitle]="post.title"
                 [postDescription]="post.description"
                 [postLikes]="post.likes.length"
-              ></blogpost>-->
+              ></blogpost>
             </div>
 
           </ng-container>
