@@ -2,6 +2,13 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en-US" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="6213920311927728726" datatype="html">
+        <source>Posts not found</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.html</context>
+          <context context-type="linenumber">105,106</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="6003844488952028818" datatype="html">
         <source>Announcements</source>
         <context-group purpose="location">
@@ -49,6 +56,27 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/left-column/left-column.component.html</context>
           <context context-type="linenumber">79,81</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5423991647761194551" datatype="html">
+        <source>Newest</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/upper-feed-buttons/upper-feed-buttons.component.html</context>
+          <context context-type="linenumber">8,9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="232050922346936574" datatype="html">
+        <source>Trending</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/upper-feed-buttons/upper-feed-buttons.component.html</context>
+          <context context-type="linenumber">13,14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="676860092433275829" datatype="html">
+        <source>Hot</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/upper-feed-buttons/upper-feed-buttons.component.html</context>
+          <context context-type="linenumber">17,18</context>
         </context-group>
       </trans-unit>
     </body>

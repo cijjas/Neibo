@@ -9,6 +9,7 @@ import {UserProfileWidgetComponent} from "./components/user-profile-widget/user-
 import {BlogpostComponent} from "./components/blogpost/blogpost.component";
 import {LeftColumnComponent} from "./components/left-column/left-column.component";
 import {UpperFeedButtonsComponent} from "./components/upper-feed-buttons/upper-feed-buttons.component";
+import {WaveFooterComponent} from "./components/wave-footer/wave-footer.component";
 
 @NgModule({
     declarations: [
@@ -18,13 +19,14 @@ import {UpperFeedButtonsComponent} from "./components/upper-feed-buttons/upper-f
       BlogpostComponent
 
     ],
-    imports: [
-        BrowserModule,
-        HttpClientModule,
-        FormsModule,
-        LeftColumnComponent,
-        UpperFeedButtonsComponent
-    ],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    FormsModule,
+    LeftColumnComponent,
+    UpperFeedButtonsComponent,
+    WaveFooterComponent
+  ],
     providers: [AmenityService],
     bootstrap: [AppComponent]
 })
