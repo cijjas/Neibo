@@ -576,13 +576,21 @@
 }
 
 .circle-icon {
-    border: var(--lightertext) 1px solid;
-    border-radius: 50px;
-    width: 45px;
-    height: 45px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: relative;
+  border: var(--lightertext) 1px solid;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle-icon:before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .error {
