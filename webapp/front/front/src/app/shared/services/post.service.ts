@@ -109,7 +109,8 @@ export class PostService {
                 return of(null); 
             })
         );
-    }
+      }
+      
 
     public addPost(neighborhoodId: number, post: PostForm): Observable<PostForm> {
         return this.http.post<PostForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/posts`, post)
