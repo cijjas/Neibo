@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-left-column',
+  selector: 'app-services',
   standalone: true,
   imports: [],
-  templateUrl: './left-column.component.html',
+  templateUrl: './services.component.html',
   styleUrls: ['../../app.component.css']
 })
-export class LeftColumnComponent {
+export class ServicesComponent {
 
 }

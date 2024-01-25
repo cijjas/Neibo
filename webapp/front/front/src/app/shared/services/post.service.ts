@@ -10,6 +10,7 @@ import { Observable, forkJoin, of, catchError } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../../../environments/environment'
 import { map, mergeMap } from 'rxjs/operators'
+import { PostStatus } from '../models/postStatus'
 
 @Injectable({providedIn: 'root'})
 export class PostService {
@@ -52,7 +53,7 @@ export class PostService {
         );
     }
 
-    public getPosts(neighborhoodId: number, channel: string, tags: string[], postStatus: string, userId: number, page: number, size: number): Observable<Post[]> {
+    public getPosts(neighborhoodId: number, channel: Channel, tags: string[], postStatus: PostStatus, userId: number, page: number, size: number): Observable<Post[]> {
         let params = new HttpParams();
 
         if (channel) params = params.set('channel', channel);
