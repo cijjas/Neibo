@@ -8,7 +8,7 @@
       <!-- Include the page selector -->
 
       <div *ngFor="let post of postList">
-        <blogpost [post]="post"></blogpost>
+        <blogpost routerLink="post" [post]="post"></blogpost>
       </div>
 
     </ng-container>

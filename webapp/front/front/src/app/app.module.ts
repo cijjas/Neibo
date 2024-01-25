@@ -11,6 +11,9 @@ import {LeftColumnComponent} from "./components/left-column/left-column.componen
 import {UpperFeedButtonsComponent} from "./components/upper-feed-buttons/upper-feed-buttons.component";
 import {WaveFooterComponent} from "./components/wave-footer/wave-footer.component";
 import { FeedComponent } from "./components/feed/feed.component"
+import { PostComponent } from "./components/post/post.component"
+import { RouterModule } from "@angular/router"
+import { routes } from "./app.routes"
 
 @NgModule({
     declarations: [
@@ -18,8 +21,8 @@ import { FeedComponent } from "./components/feed/feed.component"
         NavbarComponent,
         UserProfileWidgetComponent,
         BlogpostComponent,
-        FeedComponent
-
+        FeedComponent,
+        PostComponent
     ],
   imports: [
     BrowserModule,
@@ -27,7 +30,8 @@ import { FeedComponent } from "./components/feed/feed.component"
     FormsModule,
     LeftColumnComponent,
     UpperFeedButtonsComponent,
-    WaveFooterComponent
+    WaveFooterComponent,
+    RouterModule.forRoot(routes)
   ],
     providers: [AmenityService],
     bootstrap: [AppComponent]
