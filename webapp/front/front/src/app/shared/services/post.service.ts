@@ -101,10 +101,8 @@ export class PostService {
     }
 
     private getRequestOrNull<T>(request: Observable<T>): Observable<T | null> {
-        console.log('I');
         return request.pipe(
             catchError((error) => {
-                console
                 console.error('Error fetching data:', error);
                 return of(null); 
             })
