@@ -33,7 +33,7 @@ export class PostService {
                 ]).pipe(
                     map(([user, channel, postPicture, comments, tags, likes, subscribers]) => {
                         return {
-                            postId: postDto.postId,
+                            postId: postId,
                             title: postDto.title,
                             description: postDto.description,
                             date: postDto.date,
@@ -76,8 +76,11 @@ export class PostService {
                 this.http.get<UserDto[]>(postDto.subscribers),
               ]).pipe(
                 map(([user, channel, comments, tags, likes, subscribers]) => {
+
+                  const postId = this.extractIdFromSelf(postDto.self)
+
                   return {
-                    postId: postDto.postId,
+                    postId: postId,
                     title: postDto.title,
                     description: postDto.description,
                     date: postDto.date,
@@ -97,6 +100,15 @@ export class PostService {
             
           })
         );
+    }
+
+    private extractIdFromSelf(selfUrl: string): number {
+      // Assuming the postId is the last part of the URL, extract it using a regular expression
+      const regex = /\/(\d+)$/;
+      const match = selfUrl.match(regex);
+    
+      // Return the extracted postId or handle it based on your requirements
+      return match ? +match[1] : -1; // Convert to number or handle the case where postId extraction fails
     }
 
     public addPost(neighborhoodId: number, post: PostForm): Observable<PostForm> {

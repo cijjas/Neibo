@@ -10,14 +10,8 @@ import {environment} from "../../../environments/environment";
 export class BlogpostComponent{
   @Input() post: Post | undefined;
 
-
-
   generateTagUrl(tag: string): string {
     return `${environment.apiBaseUrl}/tags?tag=${tag}`;
   }
 
-  generatePostUrl(postId: number | undefined): string {
-    const validPostId = postId || 0; // Replace 0 with the desired default value
-    return `${environment.apiBaseUrl}/posts/${validPostId}`;
-  }
 }

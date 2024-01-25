@@ -6,5 +6,5 @@ import { FeedComponent } from './components/feed/feed.component'
 export const routes: Routes = [
     // Add routes here
     { path: '', component: FeedComponent },
-    { path: 'post', component: PostComponent}
+    { path: 'post/:postId', component: PostComponent}
 ]

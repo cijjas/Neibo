@@ -18,7 +18,7 @@
       <div class="col-md-11 pt-3 pb-3 pr-3 col-md-push-11">
         <!--${pageContext.request.contextPath}/posts/<c:out value="${param.postID}" />-->
         <a
-          [href]="generatePostUrl(post?.postId)"
+          [routerLink]="['/post', post?.postId]"
           style="text-decoration: none;">
         <div class="post-header">
           <div class="blogpost-author-and-date">
