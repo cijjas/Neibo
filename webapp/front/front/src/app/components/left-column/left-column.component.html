@@ -36,8 +36,8 @@
               </a>
               <div class="divider"></div>
             </c:if>-->
-            <a id="announcementsButton" routerLink="/" queryParams="{channel: 'Announcements'}"
-               class="cool-left-button  ${channel == 'Announcements' ? 'active' : ''} f-r-sb-c">
+            <a id="announcementsButton" routerLink="/" [queryParams]="{channel: 'Announcements'}"
+               class="cool-left-button f-r-sb-c">
               <i class="fas fa-bullhorn"></i>
               <span i18n>Announcements</span>
             </a>
@@ -46,7 +46,7 @@
               <i class="fas fa-comments"></i>
               <span i18n>Feed</span>
             </a>
-            <a id="complaintsButton" routerLink="/" queryParams="{channel: 'Complaints'}"
+            <a id="complaintsButton" routerLink="/" [queryParams]="{channel: 'Complaints'}"
                class="cool-left-button ${channel == 'Complaints' ? 'active' : ''} f-r-sb-c">
               <i class="fas fa-envelope"></i>
               <span i18n>Complaints</span>
@@ -55,7 +55,7 @@
           </div>
           <div class="f-c-c-c second">
             <div class="divider"></div>
-            <a id="marketplaceButton" routerLink="/marketplace"
+            <a id="marketplaceButton" routerLink="marketplace"
                class="cool-left-button lila ${channel == 'Marketplace' ? 'active' : ''} f-r-sb-c">
               <i class="fa-solid fa-store"></i>
               <span i18n>Marketplace</span>

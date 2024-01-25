@@ -2,11 +2,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-left-column',
-  standalone: true,
-  imports: [],
   templateUrl: './left-column.component.html',
   styleUrls: ['../../app.component.css']
 })
 export class LeftColumnComponent {
-
 }

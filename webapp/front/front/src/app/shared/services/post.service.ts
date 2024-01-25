@@ -34,17 +34,6 @@ export class PostService {
                     this.http.get<UserDto[]>(postDto.subscribers)
                 ]).pipe(
                     map(([user, channel, comments, tags, likes, subscribers]) => {
-                      console.log(postId)
-                      console.log(postDto.title)
-                      console.log(postDto.description)
-                      console.log(postDto.date)
-                      console.log(user)
-                      console.log(channel.channel)
-                      console.log(comments)
-                      console.log(tags)
-                      console.log(likes)
-                      console.log(subscribers)
-                      console.log(postDto.self)
                         return {
                             postId: postId,
                             title: postDto.title,

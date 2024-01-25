@@ -4,12 +4,12 @@ import { BrowserModule } from "@angular/platform-browser"
 import { NgModule } from "@angular/core"
 import { AmenityService } from "./shared/services/amenity.service"
 import { FormsModule } from '@angular/forms'
-import {NavbarComponent} from "./components/navbar/navbar.component";
-import {UserProfileWidgetComponent} from "./components/user-profile-widget/user-profile-widget.component";
-import {BlogpostComponent} from "./components/blogpost/blogpost.component";
-import {LeftColumnComponent} from "./components/left-column/left-column.component";
-import {UpperFeedButtonsComponent} from "./components/upper-feed-buttons/upper-feed-buttons.component";
-import {WaveFooterComponent} from "./components/wave-footer/wave-footer.component";
+import { NavbarComponent} from "./components/navbar/navbar.component";
+import { UserProfileWidgetComponent } from "./components/user-profile-widget/user-profile-widget.component";
+import { BlogpostComponent } from "./components/blogpost/blogpost.component";
+import { LeftColumnComponent } from "./components/left-column/left-column.component";
+import { UpperFeedButtonsComponent } from "./components/upper-feed-buttons/upper-feed-buttons.component";
+import { WaveFooterComponent } from "./components/wave-footer/wave-footer.component";
 import { FeedComponent } from "./components/feed/feed.component"
 import { PostComponent } from "./components/post/post.component"
 import { RouterModule } from "@angular/router"
@@ -22,15 +22,16 @@ import { routes } from "./app.routes"
         UserProfileWidgetComponent,
         BlogpostComponent,
         FeedComponent,
-        PostComponent
+        PostComponent,
+        LeftColumnComponent,
+        UpperFeedButtonsComponent,
+        WaveFooterComponent,
+
     ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    LeftColumnComponent,
-    UpperFeedButtonsComponent,
-    WaveFooterComponent,
     RouterModule.forRoot(routes)
   ],
     providers: [AmenityService],
