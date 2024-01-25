@@ -67,15 +67,15 @@ export class PostService {
             
             const postsObservable = postsDto.map((postDto) =>
               forkJoin([
-                this.getRequestOrNull(this.http.get<UserDto>(postDto.user)),
-                this.getRequestOrNull(this.http.get<Channel>(postDto.channel)),
-                this.getRequestOrNull(this.http.get<ImageDto>(postDto.postPicture)),
-                this.getRequestOrNull(this.http.get<CommentDto[]>(postDto.comments)),
-                this.getRequestOrNull(this.http.get<TagDto[]>(postDto.tags)),
-                this.getRequestOrNull(this.http.get<LikeDto[]>(postDto.likes)),
-                this.getRequestOrNull(this.http.get<UserDto[]>(postDto.subscribers)),
+                this.http.get<UserDto>(postDto.user),
+                this.http.get<Channel>(postDto.channel),
+                //this.http.get<ImageDto>(postDto.postPicture),
+                this.http.get<CommentDto[]>(postDto.comments),
+                this.http.get<TagDto[]>(postDto.tags),
+                this.http.get<LikeDto[]>(postDto.likes),
+                this.http.get<UserDto[]>(postDto.subscribers),
               ]).pipe(
-                map(([user, channel, postPicture, comments, tags, likes, subscribers]) => {
+                map(([user, channel, comments, tags, likes, subscribers]) => {
                   return {
                     postId: postDto.postId,
                     title: postDto.title,
@@ -83,7 +83,6 @@ export class PostService {
                     date: postDto.date,
                     user: user,
                     channel: channel,
-                    postPicture: postPicture,
                     comments: comments,
                     tags: tags,
                     likes: likes,
@@ -99,16 +98,6 @@ export class PostService {
           })
         );
     }
-
-    private getRequestOrNull<T>(request: Observable<T>): Observable<T | null> {
-        return request.pipe(
-            catchError((error) => {
-                console.error('Error fetching data:', error);
-                return of(null); 
-            })
-        );
-      }
-      
 
     public addPost(neighborhoodId: number, post: PostForm): Observable<PostForm> {
         return this.http.post<PostForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/posts`, post)
