@@ -26,13 +26,13 @@ export class PostService {
                 return forkJoin([
                     this.http.get<UserDto>(postDto.user),
                     this.http.get<Channel>(postDto.channel),
-                    this.http.get<ImageDto>(postDto.postPicture),
+                    //this.http.get<ImageDto>(postDto.postPicture),
                     this.http.get<CommentDto[]>(postDto.comments),
                     this.http.get<TagDto[]>(postDto.tags),
                     this.http.get<LikeDto[]>(postDto.likes),
                     this.http.get<UserDto[]>(postDto.subscribers)
                 ]).pipe(
-                    map(([user, channel, postPicture, comments, tags, likes, subscribers]) => {
+                    map(([user, channel, comments, tags, likes, subscribers]) => {
                         return {
                             postId: postId,
                             title: postDto.title,
@@ -40,7 +40,7 @@ export class PostService {
                             date: postDto.date,
                             user: user,
                             channel: channel,
-                            postPicture: postPicture,
+                            // postPicture: postPicture,
                             comments: comments,
                             tags: tags,
                             likes: likes,
