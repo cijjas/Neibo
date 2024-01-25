@@ -52,8 +52,5 @@ export class PostComponent implements OnInit {
       }
     );
   }
-  public getFormattedChannelName(channel: Channel): string {
-    return Channel.toString(channel);
-  }
 
 }
