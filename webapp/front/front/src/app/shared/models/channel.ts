@@ -1,8 +1,11 @@
 export enum Channel {
-  ANNOUNCEMENTS = 'ANNOUNCEMENTS',
-  COMPLAINTS = 'COMPLAINTS',
-  FEED = 'FEED',
-  WORKERS = 'WORKERS',
-  RESERVATIONS = 'RESERVATIONS',
-  INFORMATION = 'INFORMATION'
+  ANNOUNCEMENTS = 'Announcments',
+  COMPLAINTS = 'Complaints',
+  FEED = 'Feed',
+}
+
+export interface ChannelDto {
+  channelId: number,
+  channel: Channel,
+  self: string
 }

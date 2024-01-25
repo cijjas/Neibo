@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { Post, PostDto, PostForm } from '../models/post'
 import { UserDto } from "../models/user"
-import { Channel } from "../models/channel"
+import { Channel, ChannelDto } from "../models/channel"
 import { ImageDto } from "../models/image"
 import { TagDto } from "../models/tag"
 import { LikeDto } from "../models/like"
@@ -23,9 +23,10 @@ export class PostService {
 
         return postDto$.pipe(
             mergeMap((postDto: PostDto) => {
+                console.log(postDto)
                 return forkJoin([
                     this.http.get<UserDto>(postDto.user),
-                    this.http.get<Channel>(postDto.channel),
+                    this.http.get<ChannelDto>(postDto.channel),
                     //this.http.get<ImageDto>(postDto.postPicture),
                     this.http.get<CommentDto[]>(postDto.comments),
                     this.http.get<TagDto[]>(postDto.tags),
@@ -33,13 +34,24 @@ export class PostService {
                     this.http.get<UserDto[]>(postDto.subscribers)
                 ]).pipe(
                     map(([user, channel, comments, tags, likes, subscribers]) => {
+                      console.log(postId)
+                      console.log(postDto.title)
+                      console.log(postDto.description)
+                      console.log(postDto.date)
+                      console.log(user)
+                      console.log(channel.channel)
+                      console.log(comments)
+                      console.log(tags)
+                      console.log(likes)
+                      console.log(subscribers)
+                      console.log(postDto.self)
                         return {
                             postId: postId,
                             title: postDto.title,
                             description: postDto.description,
                             date: postDto.date,
                             user: user,
-                            channel: channel,
+                            channel: channel.channel,
                             // postPicture: postPicture,
                             comments: comments,
                             tags: tags,
@@ -69,7 +81,7 @@ export class PostService {
             const postsObservable = postsDto.map((postDto) =>
               forkJoin([
                 this.http.get<UserDto>(postDto.user),
-                this.http.get<Channel>(postDto.channel),
+                this.http.get<ChannelDto>(postDto.channel),
                 //this.http.get<ImageDto>(postDto.postPicture),
                 this.http.get<CommentDto[]>(postDto.comments),
                 this.http.get<TagDto[]>(postDto.tags),
@@ -86,7 +98,7 @@ export class PostService {
                     description: postDto.description,
                     date: postDto.date,
                     user: user,
-                    channel: channel,
+                    channel: channel.channel,
                     comments: comments,
                     tags: tags,
                     likes: likes,
