@@ -133,7 +133,7 @@ html {
 
 a {
     color: inherit; /* Inherit the color from the parent element */
-    text-decoration: none; /* Remove underlines */
+    text-decoration: none !important; /* Remove underlines */
 }
 
 a:hover {

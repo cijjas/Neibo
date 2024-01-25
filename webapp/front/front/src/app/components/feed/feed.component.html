@@ -8,14 +8,7 @@
       <!-- Include the page selector -->
 
       <div *ngFor="let post of postList">
-        <blogpost
-          [postID]="post.postId"
-          [postNeighborMail]="post.user.mail"
-          [postDate]="post.date"
-          [postTitle]="post.title"
-          [postDescription]="post.description"
-          [postLikes]="post.likes.length"
-        ></blogpost>
+        <blogpost [post]="post"></blogpost>
       </div>
 
     </ng-container>
