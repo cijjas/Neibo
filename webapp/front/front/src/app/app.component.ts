@@ -8,25 +8,6 @@ import { PostService } from './shared/services/post.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
-  public postList: Post[] = [];
-
-  constructor(private postService: PostService) {}
-
-  ngOnInit() {
-    this.getPosts();
-  }
-
-
-  public getPosts(): void {
-    this.postService.getPosts(1, 'Feed', [], 'none', 1, 1, 10)
-      .subscribe(
-      (posts: Post[]) => {
-        this.postList = posts;
-      },
-      (error: HttpErrorResponse) => {
-        // Handle error if needed
-      }
-    );
-  }
+export class AppComponent {
+  
 }

@@ -10,13 +10,15 @@ import {BlogpostComponent} from "./components/blogpost/blogpost.component";
 import {LeftColumnComponent} from "./components/left-column/left-column.component";
 import {UpperFeedButtonsComponent} from "./components/upper-feed-buttons/upper-feed-buttons.component";
 import {WaveFooterComponent} from "./components/wave-footer/wave-footer.component";
+import { FeedComponent } from "./components/feed/feed.component"
 
 @NgModule({
     declarations: [
         AppComponent,
         NavbarComponent,
         UserProfileWidgetComponent,
-      BlogpostComponent
+        BlogpostComponent,
+        FeedComponent
 
     ],
   imports: [
