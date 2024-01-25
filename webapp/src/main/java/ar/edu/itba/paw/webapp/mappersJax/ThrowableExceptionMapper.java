@@ -17,7 +17,7 @@ import java.util.Arrays;
 @Provider
 public class ThrowableExceptionMapper implements ExceptionMapper<Throwable> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TransactionTypeController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ThrowableExceptionMapper.class);
 
     @Context
     private UriInfo uriInfo;

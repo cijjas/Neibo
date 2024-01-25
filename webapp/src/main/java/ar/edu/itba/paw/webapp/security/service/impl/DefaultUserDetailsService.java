@@ -37,8 +37,7 @@ public class DefaultUserDetailsService implements UserDetailsService {
 
         Set<GrantedAuthority> authorities = new HashSet<>();
 
-        // todo change this so it understands all our roles
-        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        authorities.add(new SimpleGrantedAuthority(user.getRole().name()));
 
         return new AuthenticatedUserDetails.Builder()
                 .withUsername(user.getMail())

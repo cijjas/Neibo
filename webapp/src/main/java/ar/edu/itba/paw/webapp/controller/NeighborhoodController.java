@@ -7,6 +7,7 @@ import ar.edu.itba.paw.webapp.form.NewNeighborhoodForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -31,6 +32,7 @@ public class NeighborhoodController {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @PreAuthorize("@authService.hasAccess(#workerId)")
     public Response listNeighborhoods(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,

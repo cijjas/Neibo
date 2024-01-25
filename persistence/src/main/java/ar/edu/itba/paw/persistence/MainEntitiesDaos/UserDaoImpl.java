@@ -105,7 +105,7 @@ public class UserDaoImpl implements UserDao {
         List<Predicate> predicates = new ArrayList<>();
         if (role != null)
             predicates.add(cb.equal(idRoot.get("role"), UserRole.valueOf(role.toUpperCase())));
-        if (neighborhoodId > 0) {
+        if (neighborhoodId >= 0) {
             Join<User, Neighborhood> neighborhoodJoin = idRoot.join("neighborhood");
             predicates.add(cb.equal(neighborhoodJoin.get("neighborhoodId"), neighborhoodId));
         }

@@ -44,7 +44,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         writeJsonResponse(response, errorDetails);
     }
 
-    // todo improve this temp solution
+    // todo improve this temp solution, maybe using a jackson mapper is the only way to go :(((
     private void writeJsonResponse(HttpServletResponse response, ApiErrorDetails errorDetails) throws IOException {
         String jsonResponse = "{"
                 + "\"status\":\"" + errorDetails.getStatus() + "\","
@@ -52,6 +52,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
                 + "\"message\":\"" + errorDetails.getMessage() + "\","
                 + "\"path\":\"" + errorDetails.getPath() + "\""
                 + "}";
+
 
         response.getWriter().write(jsonResponse);
     }
