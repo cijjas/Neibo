@@ -25,10 +25,9 @@ export class PostComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-
-
     this.getPost();
     this.getComments();
+
   }
   public getComments(): void {
     this.commentService.getComments(1, this.postId, 1, 10)
