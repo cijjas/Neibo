@@ -85,8 +85,10 @@ public class AttendanceController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteByUser() {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
-        as.deleteAttendance(getLoggedUser().getUserId(), eventId);
-        return Response.noContent().build();
+        if(as.deleteAttendance(getLoggedUser().getUserId(), eventId)) {
+            return Response.noContent().build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 }
 

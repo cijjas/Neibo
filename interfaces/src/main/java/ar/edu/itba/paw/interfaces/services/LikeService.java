@@ -23,5 +23,5 @@ public interface LikeService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    void deleteLike(long postId, long userId);
+    boolean deleteLike(long postId, long userId);
 }

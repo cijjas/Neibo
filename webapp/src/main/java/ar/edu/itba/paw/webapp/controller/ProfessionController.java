@@ -46,6 +46,8 @@ public class ProfessionController {
     ) {
         LOGGER.info("GET request arrived at '/professions'");
         List<Profession> professions = ps.getWorkerProfessions(workerId);
+        if (professions.isEmpty())
+            return Response.noContent().build();
 
         List<ProfessionDto> professionDto = professions.stream()
                 .map(p -> ProfessionDto.fromProfession(p, uriInfo)).collect(Collectors.toList());

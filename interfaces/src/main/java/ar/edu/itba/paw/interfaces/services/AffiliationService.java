@@ -6,7 +6,7 @@ import ar.edu.itba.paw.models.Entities.Affiliation;
 import java.util.List;
 import java.util.Set;
 
-public interface NeighborhoodWorkerService {
+public interface AffiliationService {
 
     void addWorkerToNeighborhood(long workerId, long neighborhoodId);
 
@@ -26,7 +26,7 @@ public interface NeighborhoodWorkerService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    void removeWorkerFromNeighborhood(long workerId, long neighborhoodId);
+    boolean removeWorkerFromNeighborhood(long workerId, long neighborhoodId);
 
     void verifyWorkerInNeighborhood(long workerId, long neighborhoodId);
 

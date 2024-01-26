@@ -32,6 +32,9 @@ public class ShiftController {
         LOGGER.info("GET request arrived at '/shifts'");
         List<Shift> shifts = ss.getShifts();
 
+        if (shifts.isEmpty())
+            return Response.noContent().build();
+
         // Convert shifts to DTOs if needed
         List<ShiftDto> shiftDto = shifts.stream()
                 .map(s -> ShiftDto.fromShift(s, uriInfo))

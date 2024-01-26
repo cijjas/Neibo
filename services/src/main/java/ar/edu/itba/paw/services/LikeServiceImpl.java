@@ -89,11 +89,11 @@ public class LikeServiceImpl implements LikeService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void deleteLike(long postId, long userId) {
+    public boolean deleteLike(long postId, long userId) {
         LOGGER.info("Removing Like from Post {} given by User {}", postId, userId);
 
         ValidationUtils.checkLikeIds(postId, userId);
 
-        likeDao.deleteLike(postId, userId);
+        return likeDao.deleteLike(postId, userId);
     }
 }

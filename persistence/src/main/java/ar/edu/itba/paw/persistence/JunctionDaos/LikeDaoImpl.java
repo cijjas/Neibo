@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Entities.Like;
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.models.Entities.Tag;
 import ar.edu.itba.paw.models.Entities.User;
+import ar.edu.itba.paw.models.compositeKeys.AffiliationKey;
 import ar.edu.itba.paw.models.compositeKeys.LikeKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,11 +115,10 @@ public class LikeDaoImpl implements LikeDao {
     public boolean deleteLike(long postId, long userId) {
         LOGGER.debug("Deleting Like from Post {} and userId {}", postId, userId);
 
-        Like like = em.find(Like.class, new LikeKey(postId, userId));
-        if (like != null) {
-            em.remove(like);
-            return true;
-        }
-        return false;
+        String hql = "DELETE FROM Like l WHERE l.id = :likeId";
+        int deletedCount = em.createQuery(hql)
+                .setParameter("likeId", new LikeKey(postId, userId))
+                .executeUpdate();
+        return deletedCount > 0;
     }
 }

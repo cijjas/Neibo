@@ -79,7 +79,8 @@ public class BookingController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createBooking(@Valid BookingForm form) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
-        final long[] bookingIds = bs.createBooking(getLoggedUser().getUserId(), form.getAmenityId(), form.getShiftIds(), form.getReservationDate());
+//        final long[] bookingIds = bs.createBooking(getLoggedUser().getUserId(), form.getAmenityId(), form.getShiftIds(), form.getReservationDate());
+        final long[] bookingIds = bs.createBooking(1, form.getAmenityId(), form.getShiftIds(), form.getReservationDate());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(Arrays.toString(bookingIds)).build();
         return Response.created(uri).build();
@@ -90,7 +91,9 @@ public class BookingController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(@PathParam("id") final long id) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, id);
-        bs.deleteBooking(id);
-        return Response.noContent().build();
+        if(bs.deleteBooking(id)) {
+            return Response.noContent().build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

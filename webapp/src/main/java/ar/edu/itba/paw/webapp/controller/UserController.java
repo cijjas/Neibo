@@ -45,6 +45,8 @@ public class UserController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users'", neighborhoodId);
         final List<User> users = us.getUsers(userRole, neighborhoodId, page, size);
+        if (users.isEmpty())
+            return Response.noContent().build();
         final List<UserDto> usersDto = users.stream()
                 .map(u -> UserDto.fromUser(u, uriInfo)).collect(Collectors.toList());
 

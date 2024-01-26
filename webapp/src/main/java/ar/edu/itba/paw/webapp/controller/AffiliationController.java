@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.services.NeighborhoodWorkerService;
+import ar.edu.itba.paw.interfaces.services.AffiliationService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.models.Entities.Affiliation;
@@ -25,7 +25,7 @@ public class AffiliationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AffiliationController.class);
 
     @Autowired
-    private NeighborhoodWorkerService nws;
+    private AffiliationService nws;
 
     @Autowired WorkerService ws;
 
@@ -62,9 +62,9 @@ public class AffiliationController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response addWorkerToNeighborhood(
             @QueryParam("neighborhoodId") Long neighborhoodId,
-            @QueryParam("worker") Long workerId
+            @QueryParam("workerId") Long workerId
     ) {
-        LOGGER.info("PATCH request arrived at '/workers/{}/neighborhoods'", neighborhoodId);
+        LOGGER.info("PATCH request arrived at '/affiliations'");
         nws.addWorkerToNeighborhood(workerId, neighborhoodId);
         Worker worker = ws.findWorker(workerId).orElseThrow(() -> new NotFoundException("Worker Not Found"));
         final URI uri = uriInfo.getAbsolutePathBuilder()
@@ -75,14 +75,14 @@ public class AffiliationController {
     @DELETE
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response removeWorkerFromNeighborhood(
-            @QueryParam("toNeighborhood") Long neighborhoodId,
-            @QueryParam("worker") Long workerId
+            @QueryParam("neighborhoodId") Long neighborhoodId,
+            @QueryParam("workerId") Long workerId
     ) {
         LOGGER.info("DELETE request arrived at '/workers/{}/neighborhoods'", neighborhoodId);
-        nws.removeWorkerFromNeighborhood(workerId, neighborhoodId);
-        Worker worker = ws.findWorker(workerId).orElseThrow(() -> new NotFoundException("Worker Not Found"));
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(worker.getWorkerId())).build();
-        return Response.created(uri).build();
+
+        if(nws.removeWorkerFromNeighborhood(workerId, neighborhoodId)) {
+            return Response.noContent().build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

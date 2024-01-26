@@ -45,6 +45,10 @@ public class AvailabilityController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}/availability'", neighborhoodId, amenityId);
         final List<Availability> availabilities = as.getAvailability(amenityId, status, date, neighborhoodId);
+
+        if (availabilities.isEmpty())
+            return Response.noContent().build();
+
         final List<AvailabilityDto> availabilityDto = availabilities.stream()
                 .map(a -> AvailabilityDto.fromAvailability(a, uriInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<AvailabilityDto>>(availabilityDto){}).build();

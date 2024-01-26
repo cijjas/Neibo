@@ -49,6 +49,10 @@ public class CommentController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
         final List<Comment> comments = cs.getComments(postId, page, size, neighborhoodId);
+
+        if (comments.isEmpty())
+            return Response.noContent().build();
+
         final List<CommentDto> commentsDto = comments.stream()
                 .map(c -> CommentDto.fromComment(c, uriInfo)).collect(Collectors.toList());
 

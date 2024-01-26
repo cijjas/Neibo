@@ -25,5 +25,5 @@ public interface AttendanceService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    void deleteAttendance(long userId, long eventId);
+    boolean deleteAttendance(long userId, long eventId);
 }
