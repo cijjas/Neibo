@@ -68,7 +68,7 @@ public class PostDto {
                 .path("neighborhoods")
                 .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("likes")
-                .queryParam("post", String.valueOf(post.getPostId()))
+                .queryParam("postId", String.valueOf(post.getPostId()))
                 .build();
         dto.subscribers = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")

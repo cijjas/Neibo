@@ -1,17 +1,15 @@
 // ./app/components/navbar/navbar.component.ts
 import {Component, Input} from '@angular/core';
 import {Post} from "../../shared/models/post";
-import {environment} from "../../../environments/environment";
+import { LikeService } from '../../shared/services/like.service';
 
 @Component({
   selector: 'blogpost',
   templateUrl: './blogpost.component.html',
 })
 export class BlogpostComponent{
-  @Input() post: Post | undefined;
+  @Input() post!: Post;
 
-  generateTagUrl(tag: string): string {
-    return `${environment.apiBaseUrl}/tags?tag=${tag}`;
-  }
+  constructor(likeService : LikeService) {}
 
 }

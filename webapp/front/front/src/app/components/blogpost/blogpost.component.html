@@ -9,7 +9,7 @@
                     </span>
           <span class="like-count c-light-text" id="like-count-${param.postID}"
                 data-like-count="${param.postLikes}">
-            {{post?.likes?.length}}
+            {{post.likes.length}}
                     </span>
 
 
@@ -18,7 +18,7 @@
       <div class="col-md-11 pt-3 pb-3 pr-3 col-md-push-11">
         <!--${pageContext.request.contextPath}/posts/<c:out value="${param.postID}" />-->
         <a
-          [routerLink]="['/post', post?.postId]"
+          [routerLink]="['/post', post.postId]"
           style="text-decoration: none;">
         <div class="post-header">
           <div class="blogpost-author-and-date">
@@ -39,7 +39,7 @@
                 })();
               </script>-->
 
-              <span class="post-author pt-1 pb-1 pl-1">{{post?.user?.mail}}<!--<c:out value="${param.postNeighborMail}"/>--></span>
+              <span class="post-author pt-1 pb-1 pl-1">{{post.user.mail}}<!--<c:out value="${param.postNeighborMail}"/>--></span>
 
             </div>
 
@@ -50,9 +50,9 @@
             </div>
 
           </div>
-          <h1 class="post-title">{{post?.title}}<!--<c:out value="${param.postTitle}"/>--></h1>
+          <h1 class="post-title">{{post.title}}<!--<c:out value="${param.postTitle}"/>--></h1>
         </div>
-        <p class="post-description mb-2">{{post?.description}}<!--<c:out value="${param.postDescription}"/>--></p>
+        <p class="post-description mb-2">{{post.description}}<!--<c:out value="${param.postDescription}"/>--></p>
 
          <!-- <div *ngIf="postImage">
             <div style="display: flex; justify-content: center; align-items: center;">
@@ -74,7 +74,7 @@
         <div class="mt-2 d-flex flex-row justify-content-start align-items-center flex-wrap">
 
           <!-- Assuming postTags is an array property in your component -->
-          <ng-container *ngFor="let tag of post?.tags">
+          <ng-container *ngFor="let tag of post.tags">
             <a routerLink= "/" [queryParams]="{tag: tag.tag}"
                class="post-tag static m-l-3 m-r-3"
                >
