@@ -56,7 +56,7 @@ public class UserDetailsService implements org.springframework.security.core.use
                 break;
         }
 
-        return new UserAuth(n.getMail(), n.getPassword(), authorities);
+        return new UserAuth(n.getMail(), n.getPassword(), authorities, n.getUserId(), n.getNeighborhood().getNeighborhoodId());
     }
 
 }

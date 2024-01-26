@@ -13,6 +13,7 @@ import ar.edu.itba.paw.webapp.form.WorkerSignupForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -44,6 +45,7 @@ public class WorkerController extends GlobalControllerAdvice {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_WORKER"})
     public Response listWorkers(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,

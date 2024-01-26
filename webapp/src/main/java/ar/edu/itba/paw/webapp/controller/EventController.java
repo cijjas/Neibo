@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.form.EventForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -68,6 +69,7 @@ public class EventController {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured("ROLE_ADMINISTRATOR")
     public Response createEvent(@Valid final EventForm form) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events'", neighborhoodId);
         final Event event = es.createEvent(form.getName(), form.getDescription(), form.getDate(), form.getStartTime(), form.getEndTime() , neighborhoodId);
@@ -80,6 +82,7 @@ public class EventController {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured("ROLE_ADMINISTRATOR")
     public Response updateEventPartially(
             @PathParam("id") final long id,
             @Valid final EventForm partialUpdate) {
@@ -91,6 +94,7 @@ public class EventController {
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured("ROLE_ADMINISTRATOR")
     public Response deleteById(@PathParam("id") final long id) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
         es.deleteEvent(id);

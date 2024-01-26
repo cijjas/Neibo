@@ -7,6 +7,7 @@ import ar.edu.itba.paw.webapp.form.ContactForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -53,6 +54,7 @@ public class ContactController {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured("ROLE_ADMINISTRATOR")
     public Response createContact(@Valid final ContactForm form) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
         final Contact contact = cs.createContact(neighborhoodId, form.getContactName(), form.getContactAddress(), form.getContactPhone());
@@ -65,6 +67,7 @@ public class ContactController {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured("ROLE_ADMINISTRATOR")
     public Response updateContactPartially(
             @PathParam("id") final long id,
             @Valid final ContactForm partialUpdate) {
@@ -76,6 +79,7 @@ public class ContactController {
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured("ROLE_ADMINISTRATOR")
     public Response deleteById(@PathParam("id") final long id) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
         cs.deleteContact(id);

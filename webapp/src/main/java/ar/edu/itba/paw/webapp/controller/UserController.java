@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -62,8 +63,8 @@ public class UserController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    // if unverified can only access his own userId page same for patch
-    public Response findUser(@PathParam("id") final long id) {
+    @PreAuthorize("@accessControlHelper.hasAccessToAllUsers(#neighborhoodId, #id)")
+    public Response findUser(@PathParam("id") final long id, @PathParam("neighborhoodId") final long neighborhoodId) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
         return Response.ok(UserDto.fromUser(us.findUser(id, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("User Not Found")), uriInfo)).build();
@@ -83,6 +84,7 @@ public class UserController {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @PreAuthorize("@accessControlHelper.canUpdateAnyone(#id)")
     public Response updateUserPartially(
             @PathParam("id") final long id,
             @Valid final UserUpdateForm partialUpdate) {

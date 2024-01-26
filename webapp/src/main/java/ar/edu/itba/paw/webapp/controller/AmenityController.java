@@ -7,6 +7,7 @@ import ar.edu.itba.paw.webapp.form.AmenityForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -66,6 +67,7 @@ public class AmenityController {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured("ROLE_ADMINISTRATOR")
     public Response createAmenity(@Valid final AmenityForm form) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
         final Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, form.getSelectedShifts());
@@ -78,6 +80,7 @@ public class AmenityController {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured("ROLE_ADMINISTRATOR")
     public Response updateAmenityPartially(
             @PathParam("id") final long id,
             @Valid final AmenityForm partialUpdate) {
@@ -89,6 +92,7 @@ public class AmenityController {
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured("ROLE_ADMINISTRATOR")
     public Response deleteById(@PathParam("id") final long id) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
         as.deleteAmenity(id);

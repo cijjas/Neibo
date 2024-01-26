@@ -112,12 +112,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/neighborhoods/*/users",                   // needed for sign-up, restriction on GET
                         "/workers"                                  // needed for sign-up, restriction on GET
                 ).permitAll()
-                // BELONGING CONDITION
-                .antMatchers("/neighborhoods/**").access("@accessControlHelper.isNeighborhoodMember(request)")
                 // ANY USER WITH AN ACCOUNT CAN ACCESS HIS PROFILE
                 .antMatchers(
                         "/neighborhoods/*/users/*"
-                ).hasAnyRole("VERIFIED","WORKER", "NEIGHBOR", "ADMINISTRATOR")
+                ).hasAnyRole("VERIFIED","WORKER", "NEIGHBOR", "ADMINISTRATOR", "REJECTED")
+                // BELONGING CONDITION
+                .antMatchers("/neighborhoods/**").access("@accessControlHelper.isNeighborhoodMember(request)")
                 // WORKERS, NEIGHBOR AND ADMINISTRATOR
                 .antMatchers(
                         "/affiliations/*",

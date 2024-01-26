@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.form.ReviewForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -66,6 +67,7 @@ public class ReviewController extends GlobalControllerAdvice {
     }
 
     @POST
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR"})
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createReview(@Valid final ReviewForm form) {
         LOGGER.info("POST request arrived at '/workers/{}/reviews'", workerId);
@@ -74,5 +76,4 @@ public class ReviewController extends GlobalControllerAdvice {
                 .path(String.valueOf(review.getReviewId())).build();
         return Response.created(uri).build();
     }
-
 }

@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.form.ResourceForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -53,6 +54,7 @@ public class ResourceController {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured("ROLE_ADMINISTRATOR")
     public Response createResource(@Valid final ResourceForm form) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
         final Resource resource = rs.createResource(neighborhoodId, form.getTitle(), form.getDescription(), form.getImageFile());
@@ -65,6 +67,7 @@ public class ResourceController {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured("ROLE_ADMINISTRATOR")
     public Response updateResourcePartially(
             @PathParam("id") final long id,
             @Valid final ResourceForm partialUpdate) {
@@ -76,6 +79,7 @@ public class ResourceController {
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured("ROLE_ADMINISTRATOR")
     public Response deleteById(@PathParam("id") final long id) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
         rs.deleteResource(id);
