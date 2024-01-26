@@ -14,6 +14,10 @@ import { FeedComponent } from "./components/feed/feed.component"
 import { PostComponent } from "./components/post/post.component"
 import { RouterModule } from "@angular/router"
 import { routes } from "./app.routes"
+import { MarketplaceComponent } from "./components/marketplace/marketplace.component"
+import { ServicesComponent } from "./components/services/services.component"
+import { InformationComponent } from "./components/information/information.component"
+import { ReservationsComponent } from "./components/reservations/reservations.component"
 
 @NgModule({
     declarations: [
@@ -26,7 +30,10 @@ import { routes } from "./app.routes"
         LeftColumnComponent,
         UpperFeedButtonsComponent,
         WaveFooterComponent,
-
+        MarketplaceComponent,
+        ServicesComponent, 
+        InformationComponent,
+        ReservationsComponent
     ],
   imports: [
     BrowserModule,
