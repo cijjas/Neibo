@@ -1,14 +1,21 @@
 import { Component } from '@angular/core';
-import {ChannelService} from "../../shared/services/channel.service";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-upper-feed-buttons',
-  standalone: true,
-  imports: [],
   templateUrl: './upper-feed-buttons.component.html',
-  styleUrl: './upper-feed-buttons.component.css'
+  styleUrls: ['../../app.component.css']
 })
 export class UpperFeedButtonsComponent {
 
+  postStatus: string = 'none';
+
+  constructor(private route: ActivatedRoute) { }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(queryParams => {
+      this.postStatus = queryParams['postStatus'] || 'none';
+    });
+  }
 
 }

@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {Post} from "../../shared/models/post";
+import { Post } from "../../shared/models/post";
 import {PostService} from "../../shared/services/post.service";
 import {Comment} from "../../shared/models/comment";
 import {CommentService} from "../../shared/services/comment.service";
