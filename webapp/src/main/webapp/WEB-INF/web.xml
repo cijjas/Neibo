@@ -135,6 +135,16 @@ http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
             <param-name>jersey.config.server.response.setStatusOverSendError</param-name>
             <param-value>true</param-value>
         </init-param>
+
+        <!-- Add MultiPartFeature configuration -->
+        <init-param>
+            <param-name>jersey.config.server.provider.classnames</param-name>
+            <param-value>
+                org.glassfish.jersey.media.multipart.MultiPartFeature
+            </param-value>
+        </init-param>
+        <!-- End of MultiPartFeature configuration -->
+
     </filter>
     <filter-mapping>
         <filter-name>jersey</filter-name>

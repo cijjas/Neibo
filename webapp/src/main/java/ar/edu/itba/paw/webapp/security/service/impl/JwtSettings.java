@@ -12,7 +12,7 @@ class JwtSettings {
     /**
      * Secret for signing and verifying the token signature.
      */
-    @Value("YourSecretKeyHere")
+    @Value("classpath:jwt.key")
     private String secret;
 
     /**
@@ -24,31 +24,31 @@ class JwtSettings {
     /**
      * Identifies the recipients that the JWT token is intended for.
      */
-    @Value("your-audience")
+    @Value("${jwt.audience}")
     private String audience;
 
     /**
      * Identifies the JWT token issuer.
      */
-    @Value("your-issuer")
+    @Value("${jwt.issuer}")
     private String issuer;
 
     /**
      * JWT claim for the authorities.
      */
-    @Value("your-authorities-claim")
+    @Value("${jwt.authorityClaim}")
     private String authoritiesClaimName;
 
     /**
      * JWT claim for the token refreshment count.
      */
-    @Value("your-refresh-count-claim")
+    @Value("${jwt.refreshCountClaim}")
     private String refreshCountClaimName;
 
     /**
      * JWT claim for the maximum times that a token can be refreshed.
      */
-    @Value("your-refresh-limit-claim")
+    @Value("${refreshLimitClaim}")
     private String refreshLimitClaimName;
 
     public String getSecret() {

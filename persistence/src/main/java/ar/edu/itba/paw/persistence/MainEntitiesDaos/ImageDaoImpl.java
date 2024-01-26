@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.exceptions.InsertionException;
+import ar.edu.itba.paw.exceptions.UnexpectedException;
 import ar.edu.itba.paw.interfaces.persistence.ImageDao;
 import ar.edu.itba.paw.models.Entities.Image;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -11,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 
 @Repository
@@ -38,6 +41,27 @@ public class ImageDaoImpl implements ImageDao {
         em.persist(img);
         return img;
     }
+
+    @Override
+    public Image storeImage(InputStream imageStream) {
+        LOGGER.debug("Inserting Image");
+
+        byte[] imageBytes;
+        try {
+            // Read the input stream into a byte array
+            imageBytes = IOUtils.toByteArray(imageStream);
+        } catch (IOException e) {
+            LOGGER.error("Error reading Image InputStream", e);
+            throw new UnexpectedException("An error occurred while storing the image");
+        }
+
+        Image img = new Image.Builder()
+                .image(imageBytes)
+                .build();
+        em.persist(img);
+        return img;
+    }
+
 
     // --------------------------------------------- IMAGES SELECT -----------------------------------------------------
 
