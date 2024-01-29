@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
 import ar.edu.itba.paw.enums.WorkerRole;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.AffiliationDao;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.Worker;
@@ -27,7 +28,13 @@ public class AffiliationDaoImpl implements AffiliationDao {
     public Affiliation createAffiliation(long workerId, long neighborhoodId) {
         LOGGER.debug("Inserting Worker {} to Neighborhood {}", workerId, neighborhoodId);
 
-        Affiliation affiliation = new Affiliation(em.find(Worker.class, workerId), em.find(Neighborhood.class, neighborhoodId));
+        Worker worker = em.find(Worker.class, workerId);
+        Neighborhood neighborhood = em.find(Neighborhood.class, neighborhoodId);
+        if(worker == null)
+            throw new NotFoundException("Worker Not Found");
+        if(neighborhood == null)
+            throw new NotFoundException("Neighborhood Not Found");
+        Affiliation affiliation = new Affiliation(worker, neighborhood);
         affiliation.setRole(WorkerRole.UNVERIFIED_WORKER);
         em.persist(affiliation);
         return affiliation;
@@ -124,12 +131,10 @@ public class AffiliationDaoImpl implements AffiliationDao {
     public boolean deleteAffiliation(long workerId, long neighborhoodId) {
         LOGGER.debug("Deleting Worker {} from Neighborhood {}", workerId, neighborhoodId);
 
-        Affiliation affiliation = em.find(Affiliation.class, new AffiliationKey(workerId, neighborhoodId));
-        if (affiliation != null) {
-            em.remove(affiliation);
-            return true;
-        } else {
-            return false;
-        }
+        String hql = "DELETE FROM Affiliation a WHERE a.id = :affiliationId";
+        int deletedCount = em.createQuery(hql)
+                .setParameter("affiliationId", new AffiliationKey(workerId, neighborhoodId))
+                .executeUpdate();
+        return deletedCount > 0;
     }
 }

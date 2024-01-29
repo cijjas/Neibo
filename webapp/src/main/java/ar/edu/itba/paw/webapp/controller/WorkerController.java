@@ -57,6 +57,9 @@ public class WorkerController extends GlobalControllerAdvice {
         LOGGER.info("GET request arrived at '/workers'");
         Set<Worker> workers = ws.getWorkers(page, size, professions, neighborhoodIds, workerRole, workerStatus);
 
+        if (workers.isEmpty())
+            return Response.noContent().build();
+
         String baseUri = uriInfo.getBaseUri().toString() + "workers";
 
         int totalWorkerPages = ws.calculateWorkerPages(professions, neighborhoodIds, size, workerRole, workerStatus);

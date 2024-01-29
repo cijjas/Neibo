@@ -44,7 +44,7 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
             // Add each violation to the list with the original field name
             errorDetailsList.add(new ErrorDetail(
                     lastSection,
-                    violation.getMessage()
+                    violation.getMessage().substring(0, 1).toUpperCase() + violation.getMessage().substring(1)
             ));
         }
 

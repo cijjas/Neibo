@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.form.AmenityForm;
+import ar.edu.itba.paw.webapp.form.AmenityUpdateForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +84,7 @@ public class AmenityController {
     @Secured("ROLE_ADMINISTRATOR")
     public Response updateAmenityPartially(
             @PathParam("id") final long id,
-            @Valid final AmenityForm partialUpdate) {
+            @Valid final AmenityUpdateForm partialUpdate) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
         final Amenity amenity = as.updateAmenityPartially(id, partialUpdate.getName(), partialUpdate.getDescription());
         return Response.ok(AmenityDto.fromAmenity(amenity, uriInfo)).build();
@@ -95,8 +96,11 @@ public class AmenityController {
     @Secured("ROLE_ADMINISTRATOR")
     public Response deleteById(@PathParam("id") final long id) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
-        as.deleteAmenity(id);
-        return Response.noContent().build();
+        if(as.deleteAmenity(id)) {
+            return Response.noContent().build();
+        }
+        Response.Status status = Response.Status.NOT_FOUND;
+        return Response.status(status).build();
     }
 }
 

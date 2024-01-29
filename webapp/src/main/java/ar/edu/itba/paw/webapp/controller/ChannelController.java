@@ -32,6 +32,9 @@ public class ChannelController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
         List<Channel> channels = cs.getChannels(neighborhoodId);
 
+        if (channels.isEmpty())
+            return Response.noContent().build();
+
         List<ChannelDto> channelDto = channels.stream()
                 .map(c -> ChannelDto.fromChannel(c, uriInfo, neighborhoodId)).collect(Collectors.toList());
 

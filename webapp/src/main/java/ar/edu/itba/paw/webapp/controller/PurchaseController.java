@@ -35,7 +35,7 @@ public class PurchaseController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTransactions(
+    public Response listTransactions(
             @QueryParam("withType") String type,
             @QueryParam("page") @DefaultValue("1") int page,
             @QueryParam("size") @DefaultValue("10") int size
@@ -43,6 +43,8 @@ public class PurchaseController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}/transactions'", neighborhoodId, userId);
 
         Set<Purchase> transactions = ps.getPurchases(userId, type, page, size, neighborhoodId);
+        if (transactions.isEmpty())
+            return Response.noContent().build();
 
         Set<PurchaseDto> transactionDto = transactions.stream()
                 .map(p -> PurchaseDto.fromPurchase(p, uriInfo))

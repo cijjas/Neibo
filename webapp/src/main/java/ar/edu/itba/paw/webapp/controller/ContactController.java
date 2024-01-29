@@ -36,6 +36,10 @@ public class ContactController {
     public Response listContacts() {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
         final List<Contact> contacts = cs.getContacts(neighborhoodId);
+
+        if (contacts.isEmpty())
+            return Response.noContent().build();
+
         final List<ContactDto> contactsDto = contacts.stream()
                 .map(c -> ContactDto.fromContact(c, uriInfo)).collect(Collectors.toList());
 
@@ -82,8 +86,10 @@ public class ContactController {
     @Secured("ROLE_ADMINISTRATOR")
     public Response deleteById(@PathParam("id") final long id) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
-        cs.deleteContact(id);
-        return Response.noContent().build();
+        if(cs.deleteContact(id)) {
+            return Response.noContent().build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
 }

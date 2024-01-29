@@ -50,6 +50,9 @@ public class RequestController extends GlobalControllerAdvice {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
         List<Request> requests = rs.getRequests(productId, userId, page, size, neighborhoodId);
 
+        if (requests.isEmpty())
+            return Response.noContent().build();
+
         List<RequestDto> requestDto = requests.stream()
                 .map(r -> RequestDto.fromRequest(r, uriInfo)).collect(Collectors.toList());
 

@@ -96,8 +96,10 @@ public class LikeController extends GlobalControllerAdvice{
     public Response deleteById(@QueryParam("userId") final long userId,
                                @QueryParam("postId") final long postId) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/likes/'", neighborhoodId);
-        ls.deleteLike(postId, userId);
-        return Response.noContent().build();
+        if(ls.deleteLike(postId, userId)) {
+            return Response.noContent().build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 }
 

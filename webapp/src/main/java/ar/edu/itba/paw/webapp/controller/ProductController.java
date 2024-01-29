@@ -49,6 +49,8 @@ public class ProductController extends GlobalControllerAdvice {
             ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
         final List<Product> products = ps.getProducts(neighborhoodId, department, userId, productStatus, page, size);
+        if (products.isEmpty())
+            return Response.noContent().build();
         final List<ProductDto> productsDto = products.stream()
                 .map(p -> ProductDto.fromProduct(p, uriInfo)).collect(Collectors.toList());
 
@@ -97,7 +99,9 @@ public class ProductController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(@PathParam("id") final long id) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);
-        ps.deleteProduct(id);
-        return Response.noContent().build();
+        if(ps.deleteProduct(id)) {
+            return Response.noContent().build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

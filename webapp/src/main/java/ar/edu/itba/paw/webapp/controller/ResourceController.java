@@ -37,6 +37,8 @@ public class ResourceController {
     public Response listResources() {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
         final List<Resource> resources = rs.getResources(neighborhoodId);
+        if (resources.isEmpty())
+            return Response.noContent().build();
         final List<ResourceDto> resourcesDto = resources.stream()
                 .map(r -> ResourceDto.fromResource(r, uriInfo)).collect(Collectors.toList());
 
@@ -82,7 +84,9 @@ public class ResourceController {
     @Secured("ROLE_ADMINISTRATOR")
     public Response deleteById(@PathParam("id") final long id) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
-        rs.deleteResource(id);
-        return Response.noContent().build();
+        if(rs.deleteResource(id)) {
+            return Response.noContent().build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

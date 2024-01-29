@@ -45,6 +45,8 @@ public class ReviewController extends GlobalControllerAdvice {
             @QueryParam("size") @DefaultValue("10") final int size) {
         LOGGER.info("GET request arrived at '/workers/{}/reviews'", workerId);
         final List<Review> reviews = rs.getReviews(workerId, page, size);
+        if (reviews.isEmpty())
+            return Response.noContent().build();
         final List<ReviewDto> reviewsDto = reviews.stream()
                 .map(r -> ReviewDto.fromReview(r, uriInfo)).collect(Collectors.toList());
 

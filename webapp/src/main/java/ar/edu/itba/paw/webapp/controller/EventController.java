@@ -97,7 +97,9 @@ public class EventController {
     @Secured("ROLE_ADMINISTRATOR")
     public Response deleteById(@PathParam("id") final long id) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
-        es.deleteEvent(id);
-        return Response.noContent().build();
+        if(es.deleteEvent(id)) {
+            return Response.noContent().build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

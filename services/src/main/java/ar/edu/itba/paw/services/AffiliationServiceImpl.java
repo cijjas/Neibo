@@ -8,7 +8,7 @@ import ar.edu.itba.paw.interfaces.persistence.AffiliationDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.persistence.WorkerDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.interfaces.services.NeighborhoodWorkerService;
+import ar.edu.itba.paw.interfaces.services.AffiliationService;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.models.Entities.Affiliation;
@@ -23,8 +23,8 @@ import java.util.Set;
 
 @Service
 @Transactional
-public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodWorkerServiceImpl.class);
+public class AffiliationServiceImpl implements AffiliationService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AffiliationServiceImpl.class);
     private final AffiliationDao affiliationDao;
     private final UserDao userDao;
     private final WorkerDao workerDao;
@@ -32,8 +32,8 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public NeighborhoodWorkerServiceImpl(AffiliationDao affiliationDao, UserDao userDao, EmailService emailService,
-                                         NeighborhoodDao neighborhoodDao, WorkerDao workerDao) {
+    public AffiliationServiceImpl(AffiliationDao affiliationDao, UserDao userDao, EmailService emailService,
+                                  NeighborhoodDao neighborhoodDao, WorkerDao workerDao) {
         this.affiliationDao = affiliationDao;
         this.userDao = userDao;
         this.emailService = emailService;
@@ -46,6 +46,9 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     @Override
     public void addWorkerToNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Adding Worker {} to Neighborhood {}", workerId, neighborhoodId);
+
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         affiliationDao.createAffiliation(workerId, neighborhoodId);
         //send admin email notifying new worker
@@ -180,12 +183,13 @@ public class NeighborhoodWorkerServiceImpl implements NeighborhoodWorkerService 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void removeWorkerFromNeighborhood(long workerId, long neighborhoodId) {
+    public boolean removeWorkerFromNeighborhood(long workerId, long neighborhoodId) {
         LOGGER.info("Removing Worker {} from Neighborhood {}", workerId, neighborhoodId);
 
         ValidationUtils.checkAffiliationIds(workerId, neighborhoodId);
+        ValidationUtils.checkWorkerId(workerId);
 
-        affiliationDao.deleteAffiliation(workerId, neighborhoodId);
+        return affiliationDao.deleteAffiliation(workerId, neighborhoodId);
     }
 }
 
