@@ -1,8 +1,13 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.interfaces.services.InquiryService;
 import ar.edu.itba.paw.interfaces.services.ProductService;
+import ar.edu.itba.paw.interfaces.services.RequestService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Entities.Inquiry;
 import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +31,12 @@ public class AccessControlHelper {
 
     @Autowired
     private ProductService ps;
+
+    @Autowired
+    private InquiryService is;
+
+    @Autowired
+    private RequestService rs;
 
     // All requests that correspond to a certain Neighborhood have to be done from a User from that same Neighborhood
     public boolean isNeighborhoodMember(HttpServletRequest request) {
@@ -138,5 +149,100 @@ public class AccessControlHelper {
         return userAuth.getUserId() == userId;
     }
 
+    // Neighbors can access their own Transactions and Administrators can access all their neighbors' Transactions
+    public Boolean canAccessTransactions(long userId) {
+        LOGGER.info("Verifying List Transactions Accessibility");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        UserAuth userAuth = (UserAuth) authentication.getPrincipal();
+
+        if (userAuth.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMINISTRATOR")))
+            return true;
+
+        return userAuth.getUserId() == userId;
+    }
+
+    // Only the owner of the product and the Administrator can delete the product
+    public Boolean canDeleteProduct(long productId){
+        LOGGER.info("Verifying List Transactions Accessibility");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserAuth userAuth = (UserAuth) authentication.getPrincipal();
+
+        if (userAuth.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMINISTRATOR")))
+            return true;
+
+        Product p = ps.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+
+        return p.getSeller().getUserId() == userAuth.getUserId();
+    }
+
+    // The seller of the product cant create an Inquiry for it
+    public Boolean canCreateInquiry(long productId){
+        LOGGER.info("Verifying Inquiry Creation Accessibility");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserAuth userAuth = (UserAuth) authentication.getPrincipal();
+
+        Product p = ps.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+
+        return p.getSeller().getUserId() != userAuth.getUserId();
+    }
+
+    // The seller of the product can answer Inquiries for that Product
+    public Boolean canAnswerInquiry(long inquiryId){
+        LOGGER.info("Verifying Inquiry Answering Accessibility");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserAuth userAuth = (UserAuth) authentication.getPrincipal();
+
+        Inquiry i = is.findInquiry(inquiryId).orElseThrow(()-> new NotFoundException("Inquiry Not Found"));
+
+        return i.getProduct().getSeller().getUserId() == userAuth.getUserId();
+    }
+
+    // A Neighbor can access the Requests for their products and the Administrator can access all requests
+    public Boolean canAccessRequests(Long productId, Long userId){
+        LOGGER.info("Verifying Requests Accessibility");
+
+        // null verification is missing
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserAuth userAuth = (UserAuth) authentication.getPrincipal();
+
+        if (userAuth.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMINISTRATOR")))
+            return true;
+
+        Product p = ps.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+
+        return p.getSeller().getUserId() == userAuth.getUserId() || userId == userAuth.getUserId();
+    }
+
+    // The seller of the product and the requester can access the request
+    public Boolean canAccessRequest(long requestId){
+        LOGGER.info("Verifying Request Accessibility");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserAuth userAuth = (UserAuth) authentication.getPrincipal();
+
+        if (userAuth.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMINISTRATOR")))
+            return true;
+
+        Request r = rs.findRequest(requestId).orElseThrow(()-> new NotFoundException("Request Not Found"));
+
+        return r.getUser().getUserId() == userAuth.getUserId() || r.getProduct().getSeller().getUserId() == userAuth.getUserId();
+    }
+
+    // The seller cant create a Request for his own Products
+    public Boolean canCreateRequest(long productId){
+        LOGGER.info("Verifying Request Creation Accessibility");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserAuth userAuth = (UserAuth) authentication.getPrincipal();
+
+        Product p = ps.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+
+        return p.getSeller().getUserId() != userAuth.getUserId();
+    }
 }

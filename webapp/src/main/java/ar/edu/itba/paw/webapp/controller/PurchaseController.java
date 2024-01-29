@@ -7,6 +7,7 @@ import ar.edu.itba.paw.webapp.dto.PurchaseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -35,10 +36,12 @@ public class PurchaseController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @PreAuthorize("@accessControlHelper.canAccessTransactions(#userId)")
     public Response listTransactions(
             @QueryParam("withType") String type,
             @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("size") @DefaultValue("10") int size
+            @QueryParam("size") @DefaultValue("10") int size,
+            @PathParam("userId") final long userId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}/transactions'", neighborhoodId, userId);
 
@@ -61,7 +64,9 @@ public class PurchaseController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findTransaction(@PathParam("id") final long transactionId) {
+    @PreAuthorize("@accessControlHelper.canAccessTransactions(#userId)")
+    public Response findTransaction(@PathParam("id") final long transactionId,
+                                    @PathParam("userId") final long userId) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}/transactions/{}'", neighborhoodId, userId, transactionId);
         return Response.ok(PurchaseDto.fromPurchase(ps.findPurchase(transactionId, userId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Purchase Not Found")), uriInfo)).build();

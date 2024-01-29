@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.form.RequestForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -41,6 +42,7 @@ public class RequestController extends GlobalControllerAdvice {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @PreAuthorize("@accessControlHelper.canAccessRequests(#productId, #userId)")
     public Response listRequests(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
@@ -68,6 +70,7 @@ public class RequestController extends GlobalControllerAdvice {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @PreAuthorize("@accessControlHelper.canAccessRequest(#requestId)")
     public Response findRequest(@PathParam("id") final long requestId) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
         return Response.ok(RequestDto.fromRequest(rs.findRequest(requestId, neighborhoodId)
@@ -76,6 +79,7 @@ public class RequestController extends GlobalControllerAdvice {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @PreAuthorize("@accessControlHelper.canCreateRequest(#productId)")
     public Response createRequest(
             @Valid final RequestForm form,
             @QueryParam("productId") @DefaultValue("0") final int productId

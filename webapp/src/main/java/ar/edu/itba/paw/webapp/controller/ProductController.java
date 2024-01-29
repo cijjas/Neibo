@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.form.ListingForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -97,9 +98,10 @@ public class ProductController extends GlobalControllerAdvice {
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response deleteById(@PathParam("id") final long id) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);
-        if(ps.deleteProduct(id)) {
+    @PreAuthorize("@accessControlHelper.canDeleteProduct(#productId)")
+    public Response deleteById(@PathParam("id") final long productId) {
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
+        if(ps.deleteProduct(productId)) {
             return Response.noContent().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
