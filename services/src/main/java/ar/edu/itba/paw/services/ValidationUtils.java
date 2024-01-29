@@ -57,9 +57,9 @@ public class ValidationUtils {
     }
 
     public static void checkNeighborhoodIdInUsers(Long neighborhoodId) {
-        if (neighborhoodId != null && neighborhoodId < 0) {
+        if (neighborhoodId != null && neighborhoodId < -1) {
             LOGGER.info("Invalid {} ID", "Neighborhood");
-            throw new IllegalArgumentException("Invalid value (" + neighborhoodId + ") for the " + "Neighborhood" + " ID. Please use a positive integer greater or equal to 0.");
+            throw new IllegalArgumentException("Invalid value (" + neighborhoodId + ") for the " + "Neighborhood" + " ID. Please use a positive integer greater or equal to -1.");
         }
     }
 

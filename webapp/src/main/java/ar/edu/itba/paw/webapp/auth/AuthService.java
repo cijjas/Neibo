@@ -24,26 +24,7 @@ public class AuthService {
     @Autowired
     private UserService us;
 
-    public boolean canAccessProduct(UserDetails principal, Long productId) {
-        if (principal == null) {
-            return false;
-        }
 
-        Optional<Product> optionalProduct = ps.findProduct(productId);
-        if (!optionalProduct.isPresent()) {
-            return false;
-        }
-
-        Optional<User> optionalUser = us.findUser(principal.getUsername());
-        if (!optionalUser.isPresent()) {
-            return false;
-        }
-
-        User user = optionalUser.get();
-        Product product = optionalProduct.get();
-
-        return user.getUserId().equals(product.getSeller().getUserId());
-    }
 
 
 

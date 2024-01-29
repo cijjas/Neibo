@@ -40,11 +40,12 @@ public class UserController {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON})
-    @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_WORKER"})
+    @PreAuthorize("@accessControlHelper.hasAccessToUserList(#neighborhoodId)")
     public Response listUsers(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("withRole") final String userRole
+            @QueryParam("withRole") final String userRole,
+            @PathParam("neighborhoodId") final long neighborhoodId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users'", neighborhoodId);
         final List<User> users = us.getUsers(userRole, neighborhoodId, page, size);
@@ -65,7 +66,7 @@ public class UserController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.hasAccessToAllUsers(#neighborhoodId, #id)")
+    @PreAuthorize("@accessControlHelper.hasAccessToUserDetail(#neighborhoodId, #id)")
     public Response findUser(@PathParam("id") final long id, @PathParam("neighborhoodId") final long neighborhoodId) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
         return Response.ok(UserDto.fromUser(us.findUser(id, neighborhoodId)
@@ -86,9 +87,10 @@ public class UserController {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.canUpdateAnyone(#id)")
+    @PreAuthorize("@accessControlHelper.canUpdateUser(#id, #neighborhoodId)")
     public Response updateUserPartially(
             @PathParam("id") final long id,
+            @PathParam("neighborhoodId") final long neighborhoodId,
             @Valid final UserUpdateForm partialUpdate) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
         final User user = us.updateUser(id, partialUpdate.getEmail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), partialUpdate.getProfilePicture(), partialUpdate.getIdentification(), partialUpdate.getLanguageId(), partialUpdate.getUserRoleId());

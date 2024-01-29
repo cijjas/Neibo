@@ -115,7 +115,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // ANY USER WITH AN ACCOUNT CAN ACCESS HIS PROFILE
                 .antMatchers(
                         "/neighborhoods/*/users/*"
-                ).hasAnyRole("VERIFIED","WORKER", "NEIGHBOR", "ADMINISTRATOR", "REJECTED")
+                ).hasAnyRole("UNVERIFIED_NEIGHBOR","WORKER", "NEIGHBOR", "ADMINISTRATOR", "REJECTED")
                 // BELONGING CONDITION
                 .antMatchers("/neighborhoods/**").access("@accessControlHelper.isNeighborhoodMember(request)")
                 // WORKERS, NEIGHBOR AND ADMINISTRATOR
