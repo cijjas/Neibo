@@ -81,6 +81,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
                 .and()
+                .exceptionHandling().accessDeniedHandler(authenticationEntryPoint)
+                .and()
                 .cors()
                 .and()
                 .sessionManagement().sessionCreationPolicy(STATELESS)

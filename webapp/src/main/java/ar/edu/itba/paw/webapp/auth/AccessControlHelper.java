@@ -27,9 +27,6 @@ public class AccessControlHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(AccessControlHelper.class);
 
     @Autowired
-    private UserService us;
-
-    @Autowired
     private ProductService ps;
 
     @Autowired
@@ -102,18 +99,15 @@ public class AccessControlHelper {
 
         UserAuth userAuth = (UserAuth) authentication.getPrincipal();
 
-        if (userAuth.getNeighborhoodId() != neighborhoodId)
-            return false;
-
         if (authentication.getAuthorities().stream()
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_UNVERIFIED_NEIGHBOR") || authority.getAuthority().equals("ROLE_REJECTED"))) {
             return ((UserAuth) authentication.getPrincipal()).getUserId() == userId;
         }
 
-        return true;
+        return neighborhoodId == 0 || neighborhoodId == userAuth.getNeighborhoodId();
     }
 
-    // Neighbors and Administrators can access the whole user list
+    // Neighbors and Administrators can access the whole user list and the workers user list
     public boolean hasAccessToUserList(long neighborhoodId) {
         LOGGER.info("Verifying User List Accessibility");
 
@@ -124,12 +118,12 @@ public class AccessControlHelper {
 
         UserAuth userAuth = (UserAuth) authentication.getPrincipal();
 
-        if (userAuth.getNeighborhoodId() != neighborhoodId)
+        if (authentication.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_UNVERIFIED_NEIGHBOR") || authority.getAuthority().equals("ROLE_REJECTED"))) {
             return false;
+        }
 
-
-        return authentication.getAuthorities().stream()
-                .noneMatch(authority -> authority.getAuthority().equals("ROLE_UNVERIFIED_NEIGHBOR") || authority.getAuthority().equals("ROLE_REJECTED"));
+        return neighborhoodId == 0 || neighborhoodId == userAuth.getNeighborhoodId();
     }
 
 
