@@ -22,10 +22,17 @@ public class NeighborhoodSelectionValidator implements ConstraintValidator<Neigh
 
     @Override
     public boolean isValid(Long id, ConstraintValidatorContext constraintValidatorContext) {
-        List<Neighborhood> neighborhoods = neighborhoodService.getNeighborhoods();
+        if(id == null) {
+            //returns true so the invalid neighborhood message isn't displayed, the null will be caught by another validation
+            return true;
+        }
 
+        System.out.println("before grabbing neighborhoods");
+        List<Neighborhood> neighborhoods = neighborhoodService.getNeighborhoods();
+        System.out.println("after grabbing neighborhoods");
         for (Neighborhood neighborhood : neighborhoods) {
             if (Objects.equals(neighborhood.getNeighborhoodId(), id)) {
+                System.out.println("gonna return true in neighborhood validator");
                 return true;
             }
         }
@@ -33,6 +40,7 @@ public class NeighborhoodSelectionValidator implements ConstraintValidator<Neigh
         constraintValidatorContext.disableDefaultConstraintViolation();
         constraintValidatorContext.buildConstraintViolationWithTemplate("Invalid neighborhood")
                 .addConstraintViolation();
+        System.out.println("gonna return false in neighborhood validator");
         return false;
     }
 

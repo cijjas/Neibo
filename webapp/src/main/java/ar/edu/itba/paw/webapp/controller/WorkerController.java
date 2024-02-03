@@ -87,9 +87,9 @@ public class WorkerController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createWorker(@Valid final WorkerSignupForm form) {
         LOGGER.info("POST request arrived at '/workers'");
-        final Worker worker = ws.createWorker(form.getW_mail(), form.getW_name(), form.getW_surname(), form.getW_password(), form.getW_identification(), form.getPhoneNumber(), form.getAddress(), Language.ENGLISH, form.getProfessionIds(), form.getBusinessName());
+        final Worker worker = ws.createWorker(form.getWorker_mail(), form.getWorker_name(), form.getWorker_surname(), form.getWorker_password(), form.getWorker_identification(), form.getPhoneNumber(), form.getAddress(), Language.ENGLISH, form.getProfessionIds(), form.getBusinessName());
         final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(worker.getWorkerId())).build(); //esto esta bien o es el userId que necesita??
+                .path(String.valueOf(worker.getWorkerId())).build();
         return Response.created(uri).build();
     }
 

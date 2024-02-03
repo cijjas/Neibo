@@ -90,4 +90,19 @@ public class RequestController extends GlobalControllerAdvice {
                 .path(String.valueOf(request.getRequestId())).build();
         return Response.created(uri).build();
     }
+
+    @PATCH
+    @Path("/{id}")
+    @Consumes(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @PreAuthorize("@accessControlHelper.canAccessRequest(#id)")
+    public Response fulfillRequest(@PathParam("id") final long id) {
+        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/requests/{}", neighborhoodId, id);
+        rs.markRequestAsFulfilled(id);
+        final Request request = rs.findRequest(id, neighborhoodId)
+                .orElseThrow(() -> new NotFoundException("Request Not Found"));
+        final URI uri = uriInfo.getAbsolutePathBuilder()
+                .path(String.valueOf(request.getRequestId())).build();
+        return Response.created(uri).build();
+    }
 }

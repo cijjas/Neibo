@@ -27,7 +27,7 @@ public class DepartmentValidator implements ConstraintValidator<DepartmentConstr
         }
 
         constraintValidatorContext.disableDefaultConstraintViolation();
-        constraintValidatorContext.buildConstraintViolationWithTemplate("Invalid profession")
+        constraintValidatorContext.buildConstraintViolationWithTemplate("Invalid Department Id")
                 .addConstraintViolation();
         return false;
     }

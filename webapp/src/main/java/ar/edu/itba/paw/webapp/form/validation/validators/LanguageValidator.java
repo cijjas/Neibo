@@ -20,6 +20,10 @@ public class LanguageValidator implements ConstraintValidator<LanguageConstraint
 
     @Override
     public boolean isValid(String language, ConstraintValidatorContext constraintValidatorContext) {
+        if(language == null) {
+            //returns true so the invalid language message isn't displayed, the null will be caught by another validation
+            return true;
+        }
 
         if(Objects.equals(language, "Spanish") || Objects.equals(language, "English")) {
             return true;

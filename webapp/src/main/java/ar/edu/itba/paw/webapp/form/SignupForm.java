@@ -6,39 +6,42 @@ import ar.edu.itba.paw.webapp.form.validation.constraints.NeighborhoodConstraint
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class SignupForm {
-    @NotBlank
-    @Size(min = 0, max = 64)
+    @NotNull
+    @Size(min = 1, max = 64)
     @Pattern(regexp = "^[a-zA-Z ]*")
     private String name;
 
-    @NotBlank
+    @NotNull
     @Pattern(regexp = "^[a-zA-Z ]*")
-    @Size(min = 0, max = 64)
+    @Size(min = 1, max = 64)
     private String surname;
 
+    @NotNull
     @NeighborhoodConstraint
-    private long neighborhoodId;
+    private Long neighborhoodId;
 
-    @NotBlank
-    @Size(min = 0, max = 128)
+    @NotNull
+    @Size(min = 1, max = 128)
     @Email
     @EmailConstraint
     private String mail;
 
-    @NotBlank
-    @Size(min = 0, max = 50)
+    @NotNull
+    @Size(min = 1, max = 50)
     @Pattern(regexp = "^[a-zA-Z0-9]*")
     private String password;
 
-    @NotBlank
-    @Size(min = 0, max = 9)
+    @NotNull
+    @Size(min = 1, max = 9)
     @Pattern(regexp = "^[0-9]*")
     private String identification;
 
+    @NotNull
     @LanguageConstraint
     private String language;
 

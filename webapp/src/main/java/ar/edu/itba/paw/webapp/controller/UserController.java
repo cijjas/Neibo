@@ -6,6 +6,7 @@ import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.webapp.dto.UserDto;
+import ar.edu.itba.paw.webapp.dto.UserWorkerDto;
 import ar.edu.itba.paw.webapp.form.UserUpdateForm;
 import ar.edu.itba.paw.webapp.form.SignupForm;
 import org.slf4j.Logger;
@@ -51,13 +52,21 @@ public class UserController {
         final List<User> users = us.getUsers(userRole, neighborhoodId, page, size);
         if (users.isEmpty())
             return Response.noContent().build();
-        final List<UserDto> usersDto = users.stream()
-                .map(u -> UserDto.fromUser(u, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/users";
         int totalAmenityPages = us.calculateUserPages(userRole, neighborhoodId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalAmenityPages);
 
+        if(neighborhoodId == 0) {
+            final List<UserWorkerDto> usersDto = users.stream()
+                    .map(u -> UserWorkerDto.fromUserWorker(u, uriInfo)).collect(Collectors.toList());
+            return Response.ok(new GenericEntity<List<UserWorkerDto>>(usersDto){})
+                    .links(links)
+                    .build();
+        }
+
+        final List<UserDto> usersDto = users.stream()
+                .map(u -> UserDto.fromUser(u, uriInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<UserDto>>(usersDto){})
                 .links(links)
                 .build();
@@ -69,8 +78,12 @@ public class UserController {
     @PreAuthorize("@accessControlHelper.hasAccessToUserDetail(#neighborhoodId, #id)")
     public Response findUser(@PathParam("id") final long id, @PathParam("neighborhoodId") final long neighborhoodId) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
-        return Response.ok(UserDto.fromUser(us.findUser(id, neighborhoodId)
-                .orElseThrow(() -> new NotFoundException("User Not Found")), uriInfo)).build();
+        if(neighborhoodId != 0 )
+            return Response.ok(UserDto.fromUser(us.findUser(id, neighborhoodId)
+                    .orElseThrow(() -> new NotFoundException("User Not Found")), uriInfo)).build();
+        else
+            return Response.ok(UserWorkerDto.fromUserWorker(us.findUser(id, neighborhoodId)
+                    .orElseThrow(() -> new NotFoundException("User Not Found")), uriInfo)).build();
     }
 
     @POST

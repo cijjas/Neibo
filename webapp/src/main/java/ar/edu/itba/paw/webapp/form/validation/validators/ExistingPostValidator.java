@@ -19,6 +19,8 @@ public class ExistingPostValidator implements ConstraintValidator<ExistingPostCo
 
     @Override
     public boolean isValid(Long id, ConstraintValidatorContext constraintValidatorContext) {
+        if(id == null || id <= 0)
+            return false;
         return postService.findPost(id).isPresent();
     }
 
