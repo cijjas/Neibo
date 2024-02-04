@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.ReservationDateConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ValidTimeRangeConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Date;
 
@@ -16,7 +18,9 @@ public class EventForm {
     @Size(min = 0, max = 2000)
     private String description;
 
-    private Date date;
+    @NotNull
+    @ReservationDateConstraint
+    private String date;
 
     @NotBlank
     private String startTime;
@@ -40,11 +44,11 @@ public class EventForm {
         this.description = description;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

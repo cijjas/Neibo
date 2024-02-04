@@ -52,11 +52,21 @@ public class EventServiceImpl implements EventService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Event createEvent(String name, String description, Date date, String startTime, String endTime, long neighborhoodId) {
+    public Event createEvent(String name, String description, String date, String startTime, String endTime, long neighborhoodId) {
         LOGGER.info("Creating Event {} for Neighborhood {}", name, neighborhoodId);
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(true);
+        Date parsedDate;
+        try {
+            parsedDate = dateFormat.parse(date);
+        } catch (ParseException e) {
+            LOGGER.error("Error whilst creating the Event");
+            throw new UnexpectedException("Unexpected error while creating the Event");
+        }
+        java.sql.Date parsedSqlDate = new java.sql.Date(parsedDate.getTime());
         Long[] times = stringToTime(startTime, endTime);
-        Event createdEvent = eventDao.createEvent(name, description, date, times[0], times[1], neighborhoodId);
+        Event createdEvent = eventDao.createEvent(name, description, parsedSqlDate, times[0], times[1], neighborhoodId);
         emailService.sendEventMail(createdEvent, "event.custom.message2", userService.getNeighbors(neighborhoodId));
         return createdEvent;
     }
@@ -185,10 +195,21 @@ public class EventServiceImpl implements EventService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Event updateEventPartially(long eventId, String name, String description, Date date, String startTime, String endTime){
+    public Event updateEventPartially(long eventId, String name, String description, String date, String startTime, String endTime){
         LOGGER.info("Updating Event {}", eventId);
 
         ValidationUtils.checkEventId(eventId);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(true);
+        Date parsedDate;
+        try {
+            parsedDate = dateFormat.parse(date);
+        } catch (ParseException e) {
+            LOGGER.error("Error whilst creating the Event");
+            throw new UnexpectedException("Unexpected error while creating the Event");
+        }
+        java.sql.Date parsedSqlDate = new java.sql.Date(parsedDate.getTime());
 
         Event event = eventDao.findEvent(eventId).orElseThrow(()-> new NotFoundException("Event Not Found"));
         if(name != null && !name.isEmpty())
@@ -196,7 +217,7 @@ public class EventServiceImpl implements EventService {
         if(description != null && !description.isEmpty())
             event.setDescription(description);
         if(date != null)
-            event.setDate(date);
+            event.setDate(parsedSqlDate);
         if(startTime != null && endTime != null){
             Long[] times = stringToTime(startTime, endTime);
             event.setStartTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, times[0]));

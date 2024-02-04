@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface EventService {
 
-    Event createEvent(String name, String description, Date date, String startTime, String endTime, long neighborhoodId);
+    Event createEvent(String name, String description, String date, String startTime, String endTime, long neighborhoodId);
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -39,7 +39,7 @@ public interface EventService {
 
     Event updateEvent(long eventId, String name, String description, Date date, String startTime, String endTime);
 
-    Event updateEventPartially(long eventId, String name, String description, Date date, String startTime, String endTime);
+    Event updateEventPartially(long eventId, String name, String description, String date, String startTime, String endTime);
 
     // -----------------------------------------------------------------------------------------------------------------
 

@@ -31,12 +31,23 @@ public class ExistingAmenityValidator implements ConstraintValidator<ExistingAme
 
     @Override
     public boolean isValid(Long id, ConstraintValidatorContext constraintValidatorContext) {
+        if(id == null) {
+            //null handled by another validator
+            return true;
+        }
         if(id <= 0) {
-            throw new ConstraintViolationException("Invalid value (" + id + ") for the Amenity ID. Please use a positive integer greater than 0.", null);
+            constraintValidatorContext.disableDefaultConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("Invalid value (" + id + ") for the Amenity ID. Please use a positive integer greater than 0.")
+                    .addConstraintViolation();
+            return false;
         }
         Optional<Amenity> amenity = amenityService.findAmenity(id);
-        if(!amenity.isPresent())
-            throw new ConstraintViolationException("Amenity does not exist", null);
+        if(!amenity.isPresent()) {
+            constraintValidatorContext.disableDefaultConstraintViolation();
+            constraintValidatorContext.buildConstraintViolationWithTemplate("Amenity does not exist")
+                    .addConstraintViolation();
+            return false;
+        }
 
         String mail = (((UserAuth)SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUsername();
         User user = userService.findUser(mail).orElseThrow(() -> new NotFoundException("User not found"));

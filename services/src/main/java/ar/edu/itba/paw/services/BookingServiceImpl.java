@@ -12,10 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static org.hibernate.type.descriptor.java.JdbcDateTypeDescriptor.DATE_FORMAT;
 
 @Service
 @Transactional
@@ -35,16 +40,26 @@ public class BookingServiceImpl implements BookingService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public long[] createBooking(long userId, long amenityId, List<Long> shiftIds, Date reservationDate) {
+    public long[] createBooking(long userId, long amenityId, List<Long> shiftIds, String reservationDate) {
         LOGGER.info("Creating a Booking for Amenity {} on Date {} for User {}", amenityId, reservationDate, userId);
 
         List<Long> bookingIds = new ArrayList<>();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        Date parsedDate;
+        try {
+            parsedDate = dateFormat.parse(reservationDate);
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Invalid Date Format. Please use YYYY-MM-DD.");
+        }
+        java.sql.Date parsedSqlDate = new java.sql.Date(parsedDate.getTime());
 
         for (Long shiftId : shiftIds) {
             long availabilityId = availabilityDao.findId(amenityId, shiftId)
                     .orElseThrow(() -> new NotFoundException("Availability not found.")); // DB guarantees the combination is unique
 
-            Long bookingId = bookingDao.createBooking(userId, availabilityId, reservationDate).getBookingId();
+            Long bookingId = bookingDao.createBooking(userId, availabilityId, parsedSqlDate).getBookingId();
             bookingIds.add(bookingId);
         }
 
