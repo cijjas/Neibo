@@ -61,13 +61,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationTokenFilter(authenticationManagerBean(), authenticationEntryPoint);
     }
 
-    @Bean
-    public HttpMethodFilter httpMethodFilter() {
-        return new HttpMethodFilter();
-    }
-
-
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetails).passwordEncoder(passwordEncoder());
@@ -88,7 +81,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and()
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(httpMethodFilter(), FilterSecurityInterceptor.class)
                 .authorizeRequests()
                 // UNRESTRICTED
                 .antMatchers(
