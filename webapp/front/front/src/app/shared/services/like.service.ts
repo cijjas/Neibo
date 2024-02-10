@@ -24,7 +24,7 @@ export class LikeService {
         const params = new HttpParams()
           .set('postId', postId.toString())
           .set('userId', userId.toString());
-    
+
         // Assuming your API response is of type 'Like' or an empty object '{}'
         return this.http.get<{} | Like>(`${this.apiServerUrl}/likes/isLikedByUser`, { params }).pipe(
           map((likeResponse: {} | Like) => {

@@ -23,7 +23,6 @@ export class PostService {
 
         return postDto$.pipe(
             mergeMap((postDto: PostDto) => {
-                console.log(postDto)
                 return forkJoin([
                     this.http.get<UserDto>(postDto.user),
                     this.http.get<ChannelDto>(postDto.channel),
@@ -63,10 +62,10 @@ export class PostService {
         if (userId) params = params.set('user', userId.toString());
         if (page) params = params.set('page', page.toString());
         if (size) params = params.set('size', size.toString());
-    
+
         return this.http.get<PostDto[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/posts`, { params }).pipe(
           mergeMap((postsDto: PostDto[]) => {
-            
+
             const postsObservable = postsDto.map((postDto) =>
               forkJoin([
                 this.http.get<UserDto>(postDto.user),
@@ -99,7 +98,7 @@ export class PostService {
             );
 
             return forkJoin(postsObservable);
-            
+
           })
         );
     }
@@ -108,7 +107,7 @@ export class PostService {
       // Assuming the postId is the last part of the URL, extract it using a regular expression
       const regex = /\/(\d+)$/;
       const match = selfUrl.match(regex);
-    
+
       // Return the extracted postId or handle it based on your requirements
       return match ? +match[1] : -1; // Convert to number or handle the case where postId extraction fails
     }

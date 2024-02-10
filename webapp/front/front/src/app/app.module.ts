@@ -10,38 +10,55 @@ import { BlogpostComponent } from "./components/blogpost/blogpost.component";
 import { LeftColumnComponent } from "./components/left-column/left-column.component";
 import { UpperFeedButtonsComponent } from "./components/upper-feed-buttons/upper-feed-buttons.component";
 import { WaveFooterComponent } from "./components/wave-footer/wave-footer.component";
-import { FeedComponent } from "./components/feed/feed.component"
+import { FeedComponent } from "./modules/feed/feed.component"
 import { PostComponent } from "./components/post/post.component"
 import { RouterModule } from "@angular/router"
 import { routes } from "./app.routes"
-import { MarketplaceComponent } from "./components/marketplace/marketplace.component"
-import { ServicesComponent } from "./components/services/services.component"
-import { InformationComponent } from "./components/information/information.component"
-import { ReservationsComponent } from "./components/reservations/reservations.component"
+import {BackgroundCloudsComponent} from "./components/background-clouds/background-clouds.component";
+import { MarketplaceComponent } from "./modules/marketplace/marketplace.component"
+import { ServicesComponent } from "./modules/services/services.component"
+import { InformationComponent } from "./modules/information/information.component"
+import { ReservationsComponent } from "./modules/reservations/reservations.component"
+import {NgOptimizedImage} from "@angular/common";
+import {TimeAgoPipe} from "./pipes/time-ago/time-ago.pipe";
+import {LoginComponent} from "./modules/auth/login/login.component";
+import { LandingPageNavbarComponent } from './components/landing-page-navbar/landing-page-navbar.component';
+import { NotFoundComponent } from './modules/not-found/not-found.component';
+import {BackgroundDrawingComponent} from "./components/background-drawing/background-drawing.component";
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        NavbarComponent,
-        UserProfileWidgetComponent,
-        BlogpostComponent,
-        FeedComponent,
-        PostComponent,
-        LeftColumnComponent,
-        UpperFeedButtonsComponent,
-        WaveFooterComponent,
-        MarketplaceComponent,
-        ServicesComponent, 
-        InformationComponent,
-        ReservationsComponent
-    ],
+  declarations: [
+    AppComponent,
+    NavbarComponent,
+    UserProfileWidgetComponent,
+    BlogpostComponent,
+    FeedComponent,
+    PostComponent,
+    LeftColumnComponent,
+    UpperFeedButtonsComponent,
+    WaveFooterComponent,
+    MarketplaceComponent,
+    ServicesComponent,
+    InformationComponent,
+    ReservationsComponent,
+    LandingPageNavbarComponent,
+    NotFoundComponent
+  ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    BackgroundCloudsComponent,
+    NgOptimizedImage,
+    TimeAgoPipe,
+    LoginComponent,
+    BackgroundDrawingComponent
   ],
-    providers: [AmenityService],
-    bootstrap: [AppComponent]
+  providers: [AmenityService],
+  exports: [
+    LandingPageNavbarComponent
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}
