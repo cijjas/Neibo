@@ -16,29 +16,32 @@
               <div class="f-r-sb-c ">
                 <div>
             <span style="font-size: 14px" class="font-weight-bold" i18n>
-                {{post.channel}}
+                {{post.channel}} -
             </span>
                   <span style="font-size: 12px; font-weight: normal" class="ml-1 placeholder-glow">
-                        -
-                        <span i18n>Posted by</span>
-                    <!--TODO IMAGENES
+
+                        <span i18n>Posted by </span>
+                    <!--TODO plaeholder sacar? ,o hacerlo bine?-->
                       <img
-                      id="poster-image"
-                      src=""
-                      class="small-profile-picture placeholder mb-1"
-                      alt="poster_profile_picture_img"
-                    />
-                    <script src="${pageContext.request.contextPath}/resources/js/fetchLibrary.js"></script>
-                    <script>
-                        getImageInto("poster-image", ${empty post.user.profilePicture.imageId ? 0 : post.user.profilePicture.imageId}, "${pageContext.request.contextPath}");
-                    </script>-->
-              <span>{{post.user.name}}</span>
+                        *ngIf="post.user.profilePicture; else defaultImage"
+                        [src]="post.user.profilePicture"
+                        class="small-profile-picture placeholder mb-1"
+                        alt="poster profile picture img"
+                      />
+                    <ng-template #defaultImage>
+                      <img
+                        src="./assets/images/roundedPlaceholder.png"
+                        class="small-profile-picture mb-1"
+                        alt="default profile picture img"
+                      />
+                    </ng-template>
+              <span> {{post.user.name}} </span>
             </span>
               </div>
 
 
               <div style="font-size: 12px; font-weight: normal">
-                <span class="post-date" >{{post.date  |  date:'dd MMM yyyy HH:mm' }}</span>
+                <span class="post-date" >{{post.date  | timeAgo }}</span>
               </div>
               </div>
               <p style="font-size: 20px;" class="mt-2 font-weight-bolder c-text">{{post.title}}</p>
@@ -70,16 +73,16 @@
             <div class="col-6">
               <div class="ml-2 d-flex flex-column justify-content-start align-items-start">
                 <div class="f-r-c-c">
-
-                    <span id="post-like-button" class="post-like-button pl-3 pr-3 pt-2 pb-2"
-                          data-post-id="${post.postId}">
-                       <span class=" mr-1 " id="like-count" data-like-count="${post.likedByUsers.size()}">
-                            {{post.likes.length}}
-                        </span>
-                        <i class="fa-solid fa-thumbs-up"></i>
-                    </span>
+                  <span
+                    id="post-like-button"
+                    class="post-like-button"
+                    [ngClass]="{'liked': isLikedByUser}"
+                    (click)="toggleLike()"
+                  >
+                    <span class="mr-1" id="like-count">{{ likeCount }}</span>
+                    <i class="fa-solid fa-thumbs-up"></i>
+                  </span>
                 </div>
-
               </div>
             </div>
             <div class="col-6">
