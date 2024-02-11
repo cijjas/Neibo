@@ -1,3 +1,5 @@
+
+
 <div class="dialog" id="loginDialog" style="display: flex"  [ngClass]="{'show-dialog': showLoginDialog}">
   <div class="dialog-content">
     <div class="close-button" (click)="closeLoginDialog()">
@@ -8,43 +10,28 @@
       <span class=" font-weight-normal">Log in to continue </span>
     </div>
 
-    <form method="post" class="login-form" id="loginForm">
-
+    <form (ngSubmit)="tryLogin()" method="post" class="login-form" id="loginForm">
       <div class="centered-column">
         <label>
-          <!--TODO i18n placeholder y agregar el email si ya intento loggear-->
-          <input type="email" placeholder="Email" name="mail" class="input" value="">
+          <!-- TODO: reinsertar mail al fallo -->
+          <input type="email" placeholder="Email" i18n-placeholder name="mail" class="input" [(ngModel)]="email">
         </label>
-
         <label>
-          <!--TODO i18n placeholder-->
-          <input type="password" placeholder="Password" autocomplete="true" name="password" class="input">
+          <input type="password" placeholder="Password" i18n-placeholder autocomplete="true" name="password" class="input" [(ngModel)]="password">
         </label>
-
       </div>
-
       <label class="centered-row light-text">
-        <input name="rememberMe" type="checkbox">
+        <input name="rememberMe" type="checkbox" [(ngModel)]="rememberMe">
         Remember me
       </label>
-
       <div class="centered-column">
-
-        <button class="action-button font-weight-bolder" onclick="tryLogin()">
+        <button type="submit" class="action-button font-weight-bolder">
           Login
         </button>
         <span style="color:var(--lighttext); font-size: 14px;">Not a member yet?
-                        <a (click)="openSignupDialog()" class="a-link">Sign up now</a>
-                </span>
-        <script>
-          /*function tryLogin() {
-            if (document.getElementById("loginForm").checkValidity()) {
-              document.getElementById("loginForm").submit();
-            }
-          }*/
-        </script>
+        <a (click)="openSignupDialog()" class="a-link">Sign up now</a>
+      </span>
       </div>
-
     </form>
   </div>
 </div>

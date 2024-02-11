@@ -27,6 +27,7 @@ import {BackgroundDrawingComponent} from "./components/background-drawing/backgr
 import { LoginComponent } from './modules/auth/login/login.component';
 import { LoginDialogComponent } from './components/auth-dialogs/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from './components/auth-dialogs/signup-dialog/signup-dialog.component';
+import {AuthService} from "./shared/services/auth.service";
 
 @NgModule({
   declarations: [
@@ -59,7 +60,10 @@ import { SignupDialogComponent } from './components/auth-dialogs/signup-dialog/s
     TimeAgoPipe,
     BackgroundDrawingComponent
   ],
-  providers: [AmenityService],
+  providers: [
+    AmenityService,
+    AuthService,
+  ],
   exports: [
     LandingPageNavbarComponent
   ],

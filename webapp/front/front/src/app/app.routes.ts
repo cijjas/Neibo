@@ -9,10 +9,12 @@ import { InformationComponent } from './modules/information/information.componen
 
 import {NotFoundComponent} from "./modules/not-found/not-found.component";
 import {LoginComponent} from "./modules/auth/login/login.component";
+import {authGuard} from "./shared/guards/auth.guard";
 
 export const routes: Routes = [
+  { path: '', component: LoginComponent, canActivate: [authGuard] }, /*Chequea condicion authGuard y si no cumple va a /login*/
   { path: 'auth', component: LoginComponent},
-  { path: '', component: FeedComponent },
+  { path: 'feed', component: FeedComponent },
   { path: 'post/:postId', component: PostComponent },
   { path: 'services', component: ServicesComponent },
   { path: 'marketplace', component: MarketplaceComponent },

@@ -75,8 +75,14 @@
             </a>
     </span>
 
-    <login-dialog [(showLoginDialog)]="showLoginDialog" [(showSignupDialog)]="showSignupDialog"></login-dialog>
-    <signup-dialog [(showSignupDialog)]="showSignupDialog"></signup-dialog>
+    <login-dialog
+      [(showLoginDialog)]="showLoginDialog"
+      [(showSignupDialog)]="showSignupDialog"
+    ></login-dialog>
+
+    <signup-dialog
+      [(showSignupDialog)]="showSignupDialog"
+    ></signup-dialog>
 
     <!--
     <%&#45;&#45; Login dialog&#45;&#45;%>
