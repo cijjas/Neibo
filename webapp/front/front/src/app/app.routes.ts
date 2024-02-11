@@ -13,7 +13,7 @@ import {authGuard} from "./shared/guards/auth.guard";
 
 export const routes: Routes = [
   { path: '', component: LoginComponent, canActivate: [authGuard] }, /*Chequea condicion authGuard y si no cumple va a /login*/
-  { path: 'auth', component: LoginComponent},
+  { path: 'login', component: LoginComponent},
   { path: 'feed', component: FeedComponent },
   { path: 'post/:postId', component: PostComponent },
   { path: 'services', component: ServicesComponent },

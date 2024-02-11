@@ -1,24 +1,47 @@
-import {inject, Injectable} from "@angular/core";
-import {UserService} from "./user.service";
+import {Injectable} from "@angular/core";
+import {environment} from "../../../environments/environment";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private apiServerUrl = environment.apiBaseUrl;
   private authToken: string = '';
   private userData: any = {};
 
-  login(username: string, password: string): void {
-    // Perform authentication logic and obtain a JWT from the server
-    // Simulating a successful login with a dummy JWT
-    const dummyJwt = 'your-dummy-jwt-here';
-    this.authToken = dummyJwt;
+  constructor(private http: HttpClient) { }
 
-    // Fetch user data using the obtained JWT (decode if necessary)
-    this.userData = {
-      username: username,
-      // Other user attributes
+  login(mail: string, password: string): void {
+    // Formulate the request body with user credentials
+    const requestBody = {
+      mail: mail,
+      password: password
     };
+    console.log('Trying to login with username: ' + mail + ' and password: ' + password);
+
+    // Make an HTTP POST request to the authentication endpoint
+    this.http.post<any>(`${this.apiServerUrl}/auth`, requestBody)
+      .subscribe(
+      (response) => {
+        this.userData = this.decodeJwt(response.token);
+        console.log('User data:', this.userData); /*TODO fijarse el payload */
+      },
+      (error) => {
+        // Handle authentication error (e.g., display an error message)
+        console.error('Authentication error:', error);
+      }
+    );
+  }
+
+  private decodeJwt(token: string): any {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map((c: string) => {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
   }
 
   logout(): void {
@@ -39,5 +62,4 @@ export class AuthService {
     // Check if the user is logged in based on the presence of the JWT
     return !!this.authToken;
   }
-
 }
