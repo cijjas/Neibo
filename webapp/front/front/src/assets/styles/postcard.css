@@ -1,63 +1,63 @@
 .card-container {
-    width: 100%;
-    padding: 20px;
-    transform: translateY(-4px);
-    box-shadow: -3px 5px 0 0 var(--primary);
-    background-color: var(--onbackground);
-    color: var(--text);
-    border: var(--border);
-    border-radius: var(--border-radius);
+  width: 100%;
+  padding: 20px;
+  transform: translateY(-4px);
+  box-shadow: -3px 5px 0 0 var(--primary);
+  background-color: var(--onbackground);
+  color: var(--text);
+  border: var(--border);
+  border-radius: var(--border-radius);
 }
 
 /* Style for the post information */
 
 /* Style for comments */
 .comments-section {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
 /* Individual comment style */
 
 .comment {
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 5px;
-    background-color: var(--darkonbackground);
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 5px;
+  background-color: var(--darkonbackground);
 }
 
 .comment .comment-header {
-    font-weight: bold;
-    color: var(--lighttext);
+  font-weight: bold;
+  color: var(--lighttext);
 
 }
 
 .comment .comment-body {
-    color: var(--text);
+  color: var(--text);
 }
 
 .postcard-description {
-    font-weight: normal;
-    font-size: 12px;
-    overflow: hidden;
-    position: relative;
-    color: var(--text);
-    white-space: normal; /* Allow text to wrap within the container */
-    &.grey{
-        background-color: var(--lightertext);
-    }
+  font-weight: normal;
+  font-size: 12px;
+  overflow: hidden;
+  position: relative;
+  color: var(--text);
+  white-space: normal; /* Allow text to wrap within the container */
+  &.grey{
+    background-color: var(--lightertext);
+  }
 }
 
 
 
 .cool-comment {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    font-size: 12px;
-    font-weight: normal;
-    border-radius: var(--border-radius);
-    background-color: var(--darkonbackground);
-    color: var(--text);
-    width: 100%;
-    padding: 5px 10px;
-    outline: none;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 12px;
+  font-weight: normal;
+  border-radius: var(--border-radius);
+  background-color: var(--darkonbackground);
+  color: var(--text);
+  width: 100%;
+  padding: 5px 10px;
+  outline: none;
 }

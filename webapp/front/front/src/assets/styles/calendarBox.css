@@ -1,182 +1,180 @@
 
 .wrapper {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-    gap: 1rem;
-    width: 100%;
-    background-color: var(--onbackground);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  background-color: var(--onbackground);
+  color: var(--primary);
+  border: 1px solid var(--lighttext);
+  border-radius: var(--border-radius);
+  transform: translateY(-4px);
+  box-shadow: -3px 5px 0 0 var(--lighttext);
+
+  & span {
+    height: 50px;
+    width: 50px;
+    margin: 1px;
+    cursor: pointer;
     color: var(--primary);
-    border: 1px solid var(--lighttext);
-    border-radius: var(--border-radius);
-    transform: translateY(-4px);
-    box-shadow: -3px 5px 0 0 var(--lighttext);
+    text-align: center;
+    font-size: 2rem;
+    user-select: none;
+    border-radius: 50%;
+    display: flex; /* Center the content horizontally and vertically */
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
 
-    & span {
-        height: 50px;
-        width: 50px;
-        margin: 1px;
-        cursor: pointer;
-        color: var(--primary);
-        text-align: center;
-        font-size: 2rem;
-        user-select: none;
-        border-radius: 50%;
-        display: flex; /* Center the content horizontally and vertically */
-        justify-content: center;
-        align-items: center;
-        transition: all 0.3s ease-in-out;
-
-        &:hover {
-            background: var(--secondary);
-        }
+    &:hover {
+      background: var(--secondary);
     }
+  }
 
-    & .current-date {
-        font-size: 2rem;
-        font-weight: 500;
-        color: var(--text);
-        cursor: default;
-    }
+  & .current-date {
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--text);
+    cursor: default;
+  }
 
 }
 
 
 .calendar {
-    padding: 0;
+  padding: 0;
 
-    & ul {
-        display: flex;
-        flex-wrap: wrap;
-        list-style: none;
-        justify-content: center; /* Center the weeks and days horizontally */
-        align-items: center; /* Center the weeks and days vertically */
-        padding: 0; /* Remove any padding */
+  & ul {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    justify-content: center; /* Center the weeks and days horizontally */
+    align-items: center; /* Center the weeks and days vertically */
+    padding: 0; /* Remove any padding */
 
-        &.weeks {
-            margin-bottom: -5px;
-            width: 100%; /* Make the weeks take up the full width of the container */
+    &.weeks {
+      margin-bottom: -5px;
+      width: 100%; /* Make the weeks take up the full width of the container */
 
-            & li {
-                font-weight: 550;
-                cursor: default;
-                color: var(--primary);
-            }
-        }
-
-
-        &.days {
-            margin-bottom: 15px;
-            width: 100%; /* Make the days take up the full width of the container */
-
-            & li {
-                z-index: 1;
-                cursor: pointer;
-                position: relative;
-                margin-top: 15px;
-                margin-bottom: 15px;
-                transition: all 0.3s ease-in-out;
-
-                &.inactive {
-                    &:hover {
-                        transform: translateY(0px) !important;
-
-                    }
-
-                    cursor: default;
-                    color: var(--lighttext);
-                }
-
-                &.active {
-                    color: var(--always-background);
-
-                    &::before {
-                        background: var(--primary);
-                    }
-                }
-
-                &::before {
-                    position: absolute;
-                    content: "";
-                    left: 50%;
-                    top: 50%;
-                    height: 35px; /* Reduce the height and width to make the circle smaller */
-                    width: 35px; /* Reduce the height and width to make the circle smaller */
-                    z-index: -1;
-                    border-radius: 50%;
-                    transform: translate(-50%, -50%);
-                    transition: all 0.3s ease-in-out;
-                }
-
-                &:not(.active):hover::before {
-                    color: var(--text);
-                    background: var(--secondary);
-                }
-
-                &.event {
-                    z-index: 1;
-                    cursor: pointer;
-                    position: relative;
-                    margin-top: 15px;
-                    color: var(--always-background); /* Set the text color to white */
-
-                    &::before {
-                        position: absolute;
-                        cursor: pointer;
-                        content: "";
-                        left: 50%;
-                        top: 50%;
-                        height: 35px;
-                        width: 35px;
-                        z-index: -1;
-                        border-radius: 50%;
-                        transform: translate(-50%, -50%);
-                        background: var(--old-primary); /* Use the --accent color for the circle */
-                    }
-
-                }
-
-                &.today {
-                    z-index: 1;
-                    cursor: pointer;
-                    position: relative;
-                    margin-top: 15px;
-                    color: var(--always-background); /* Set the text color to white */
-
-                    &::before {
-                        position: absolute;
-                        content: "";
-                        left: 50%;
-                        top: 50%;
-                        height: 35px;
-                        width: 35px;
-                        z-index: -1;
-                        border-radius: 50%;
-                        transform: translate(-50%, -50%);
-                        background: var(--error);
-                    }
-                }
-
-                &:hover {
-                    transform: translateY(-4px);
-                }
-
-            }
-        }
-
-        & li {
-            color: var(--text);
-            width: calc(100% / 7);
-            font-size: 1rem;
-            text-align: center; /* Center the text within each day */
-            padding: 5px; /* Add some padding to space out the days */
-        }
+      & li {
+        font-weight: 550;
+        cursor: default;
+        color: var(--primary);
+      }
     }
+
+
+    &.days {
+      margin-bottom: 15px;
+      width: 100%; /* Make the days take up the full width of the container */
+
+      & li {
+        z-index: 1;
+        cursor: pointer;
+        position: relative;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        transition: all 0.3s ease-in-out;
+
+        &.inactive {
+          &:hover {
+            transform: translateY(0px) !important;
+
+          }
+
+          cursor: default;
+          color: var(--lighttext);
+        }
+
+        &.active {
+          color: var(--always-background);
+
+          &::before {
+            background: var(--primary);
+          }
+        }
+
+        &::before {
+          position: absolute;
+          content: "";
+          left: 50%;
+          top: 50%;
+          height: 35px; /* Reduce the height and width to make the circle smaller */
+          width: 35px; /* Reduce the height and width to make the circle smaller */
+          z-index: -1;
+          border-radius: 50%;
+          transform: translate(-50%, -50%);
+          transition: all 0.3s ease-in-out;
+        }
+
+        &:not(.active):hover::before {
+          color: var(--text);
+          background: var(--secondary);
+        }
+
+        &.event {
+          z-index: 1;
+          cursor: pointer;
+          position: relative;
+          margin-top: 15px;
+          color: var(--always-background); /* Set the text color to white */
+
+          &::before {
+            position: absolute;
+            cursor: pointer;
+            content: "";
+            left: 50%;
+            top: 50%;
+            height: 35px;
+            width: 35px;
+            z-index: -1;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--old-primary); /* Use the --accent color for the circle */
+          }
+
+        }
+
+        &.today {
+          z-index: 1;
+          cursor: pointer;
+          position: relative;
+          margin-top: 15px;
+          color: var(--always-background); /* Set the text color to white */
+
+          &::before {
+            position: absolute;
+            content: "";
+            left: 50%;
+            top: 50%;
+            height: 35px;
+            width: 35px;
+            z-index: -1;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--error);
+          }
+        }
+
+        &:hover {
+          transform: translateY(-4px);
+        }
+
+      }
+    }
+
+    & li {
+      color: var(--text);
+      width: calc(100% / 7);
+      font-size: 1rem;
+      text-align: center; /* Center the text within each day */
+      padding: 5px; /* Add some padding to space out the days */
+    }
+  }
 }
-
-
 
 
 

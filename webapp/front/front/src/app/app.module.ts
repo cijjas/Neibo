@@ -21,10 +21,12 @@ import { InformationComponent } from "./modules/information/information.componen
 import { ReservationsComponent } from "./modules/reservations/reservations.component"
 import {NgOptimizedImage} from "@angular/common";
 import {TimeAgoPipe} from "./pipes/time-ago/time-ago.pipe";
-import {LoginComponent} from "./modules/auth/login/login.component";
 import { LandingPageNavbarComponent } from './components/landing-page-navbar/landing-page-navbar.component';
 import { NotFoundComponent } from './modules/not-found/not-found.component';
 import {BackgroundDrawingComponent} from "./components/background-drawing/background-drawing.component";
+import { LoginComponent } from './modules/auth/login/login.component';
+import { LoginDialogComponent } from './components/auth-dialogs/login-dialog/login-dialog.component';
+import { SignupDialogComponent } from './components/auth-dialogs/signup-dialog/signup-dialog.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,10 @@ import {BackgroundDrawingComponent} from "./components/background-drawing/backgr
     InformationComponent,
     ReservationsComponent,
     LandingPageNavbarComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    LoginComponent,
+    LoginDialogComponent,
+    SignupDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,7 +57,6 @@ import {BackgroundDrawingComponent} from "./components/background-drawing/backgr
     BackgroundCloudsComponent,
     NgOptimizedImage,
     TimeAgoPipe,
-    LoginComponent,
     BackgroundDrawingComponent
   ],
   providers: [AmenityService],

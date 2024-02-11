@@ -1,122 +1,122 @@
 
 .error-body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 
 .error-card {
-    width: 500px;
-    height: 600px;
-    border: 3px solid var(--error);
-    padding: 10px;
-    margin: 10px auto;
-    background-color: var(--onbackground);
-    border-radius: 10px;
-    position: relative;
-    overflow: hidden;
+  width: 500px;
+  height: 600px;
+  border: 3px solid var(--error);
+  padding: 10px;
+  margin: 10px auto;
+  background-color: var(--onbackground);
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
 }
 
 
 .error-card-title {
-    color: var(--error);
-    font-size: 100px;
+  color: var(--error);
+  font-size: 100px;
 }
 
 .flex-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 
 }
 
 
 .error-wave {
-    position: absolute;
-    bottom: -8rem;
-    width: 200%;
-    overflow: hidden;
-    left: 0;
-    animation: error-wave linear 7s infinite;
-    z-index: 0;
+  position: absolute;
+  bottom: -8rem;
+  width: 200%;
+  overflow: hidden;
+  left: 0;
+  animation: error-wave linear 7s infinite;
+  z-index: 0;
 }
 
 @keyframes error-wave {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%);
-    }
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 
 .drawings {
-    position: absolute;
-    width: 100%;
-    overflow: hidden;
-    z-index: 0;
-    bottom: 0;
+  position: absolute;
+  width: 100%;
+  overflow: hidden;
+  z-index: 0;
+  bottom: 0;
 }
 
 
 .error-content-container {
-    position: absolute;
-    left: 0;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
 }
 
 
 .goback-button {
-    text-align: center;
-    font-weight: normal;
-    overflow: hidden;
-    background-color: var(--background);
-    color: var(--primary);
-    border: 1px solid var(--primary);
-    border-radius: 50px;
+  text-align: center;
+  font-weight: normal;
+  overflow: hidden;
+  background-color: var(--background);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 50px;
 
-    padding: 1em 2em;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-    box-shadow: 0 0 0 0 var(--primary);
+  padding: 1em 2em;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 0 0 0 var(--primary);
 
 }
 
 .goback-button:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 0 0 var(--primary);
-    color: var(--primary);
+  transform: translateY(-5px);
+  box-shadow: 0 5px 0 0 var(--primary);
+  color: var(--primary);
 }
 
 .goback-button:active {
-    transform: translateY(2px) translateX(1px);
-    box-shadow: 0 0 0 0 var(--primary);
+  transform: translateY(2px) translateX(1px);
+  box-shadow: 0 0 0 0 var(--primary);
 }
 
 
 .error-code {
-    font-size: 80px;
-    font-weight: bold;
-    color: var(--primary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: center;
+  font-size: 80px;
+  font-weight: bold;
+  color: var(--primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
 }
 
 .error-message {
-    color: var(--lighttext);
-    max-width: 400px;
-    text-align: center;
-    text-overflow: clip;
+  color: var(--lighttext);
+  max-width: 400px;
+  text-align: center;
+  text-overflow: clip;
 }

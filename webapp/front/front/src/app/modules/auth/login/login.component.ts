@@ -1,18 +1,22 @@
-import { Component } from '@angular/core';
-import {
-  BackgroundDrawingComponent
-} from "../../../components/background-drawing/background-drawing.component";
-import {AppModule} from "../../../app.module";
+import {Component} from '@angular/core';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [
-    BackgroundDrawingComponent,
-    AppModule
-  ],
-  templateUrl: './login.component.html',
+  selector: 'login',
+  templateUrl: './login.component.html'
 })
 export class LoginComponent {
+  showLoginDialog: boolean = false;
+  showSignupDialog: boolean = false;
+
+  openLoginDialog(): void {
+    this.showLoginDialog = true;
+  }
+
+  openSignupDialog(): void {
+    this.showSignupDialog = true;
+  }
+  closeLoginDialog(): void {
+    this.showLoginDialog = false;
+  }
 
 }

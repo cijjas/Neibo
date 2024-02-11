@@ -6,8 +6,9 @@ import { ServicesComponent } from './modules/services/services.component'
 import { MarketplaceComponent } from './modules/marketplace/marketplace.component'
 import { ReservationsComponent } from './modules/reservations/reservations.component'
 import { InformationComponent } from './modules/information/information.component'
-import {LoginComponent} from "./modules/auth/login/login.component";
+
 import {NotFoundComponent} from "./modules/not-found/not-found.component";
+import {LoginComponent} from "./modules/auth/login/login.component";
 
 export const routes: Routes = [
   { path: 'auth', component: LoginComponent},
