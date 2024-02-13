@@ -11,8 +11,6 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (authService.isLoggedIn()) {
     return true;
   } else {
-    // Redirect unauthenticated users to the login page
-    // Note: You might want to use Router.navigate instead of window.location.href for Angular navigation
     window.location.href = '/login';
     return false;
   }

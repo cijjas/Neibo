@@ -1,6 +1,8 @@
 import {Injectable} from "@angular/core";
 import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
+import {catchError, Observable, of} from "rxjs";
+import {map} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -12,26 +14,26 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(mail: string, password: string): void {
-    // Formulate the request body with user credentials
+  login(mail: string, password: string, rememberMe: boolean): Observable<boolean> {
     const requestBody = {
       mail: mail,
       password: password
     };
-    console.log('Trying to login with username: ' + mail + ' and password: ' + password);
 
-    // Make an HTTP POST request to the authentication endpoint
-    this.http.post<any>(`${this.apiServerUrl}/auth`, requestBody)
-      .subscribe(
-      (response) => {
-        this.userData = this.decodeJwt(response.token);
-        console.log('User data:', this.userData); /*TODO fijarse el payload */
-      },
-      (error) => {
-        // Handle authentication error (e.g., display an error message)
-        console.error('Authentication error:', error);
-      }
-    );
+    return this.http.post<any>(`${this.apiServerUrl}/auth`, requestBody)
+      .pipe(
+        map((response) => {
+          this.authToken = response.token;
+          this.userData = this.decodeJwt(response.token);
+          /*TODO handle authorization */
+          console.log('User data:', this.userData);
+          return true;
+        }),
+        catchError((error) => {
+          console.error('Authentication error:', error);
+          return of(false);
+        })
+      );
   }
 
   private decodeJwt(token: string): any {
@@ -59,7 +61,6 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    // Check if the user is logged in based on the presence of the JWT
     return !!this.authToken;
   }
 }

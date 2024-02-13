@@ -3,7 +3,7 @@ import { AppComponent } from "./app.component"
 import { BrowserModule } from "@angular/platform-browser"
 import { NgModule } from "@angular/core"
 import { AmenityService } from "./shared/services/amenity.service"
-import { FormsModule } from '@angular/forms'
+import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 import { NavbarComponent} from "./components/navbar/navbar.component";
 import { UserProfileWidgetComponent } from "./components/user-profile-widget/user-profile-widget.component";
 import { BlogpostComponent } from "./components/blogpost/blogpost.component";
@@ -58,7 +58,8 @@ import {AuthService} from "./shared/services/auth.service";
     BackgroundCloudsComponent,
     NgOptimizedImage,
     TimeAgoPipe,
-    BackgroundDrawingComponent
+    BackgroundDrawingComponent,
+    ReactiveFormsModule
   ],
   providers: [
     AmenityService,

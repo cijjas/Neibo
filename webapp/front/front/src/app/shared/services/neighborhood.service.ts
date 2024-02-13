@@ -6,7 +6,7 @@ import { ResourceDto } from "../models/resource"
 import { Channel } from "../models/channel"
 import { WorkerDto } from "../models/worker"
 import { EventDto } from "../models/event"
-import { Observable, forkJoin } from 'rxjs'
+import {Observable, forkJoin, tap} from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../../../environments/environment'
 import { map, mergeMap } from 'rxjs/operators'
@@ -49,22 +49,26 @@ export class NeighborhoodService {
     }
 
     public getNeighborhoods(page: number, size: number): Observable<Neighborhood[]> {
-        const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+        const params = new HttpParams()
+          .set('page', page.toString())
+          .set('size', size.toString());
 
         return this.http.get<NeighborhoodDto[]>(`${this.apiServerUrl}/neighborhoods/`, { params }).pipe(
-            mergeMap((neighborhoods: NeighborhoodDto[]) => {
+          tap(responseData => console.log('Response Data:', responseData)),
+          mergeMap((neighborhoods: NeighborhoodDto[]) => {
                 const neighborhoodObservables = neighborhoods.map(neighborhoodDto =>
                     forkJoin([
                         this.http.get<UserDto[]>(neighborhoodDto.users),
-                    this.http.get<ContactDto[]>(neighborhoodDto.contacts),
-                    this.http.get<EventDto[]>(neighborhoodDto.events),
-                    this.http.get<ResourceDto[]>(neighborhoodDto.resources),
-                    this.http.get<Channel[]>(neighborhoodDto.channels),
-                    this.http.get<WorkerDto[]>(neighborhoodDto.workers),
+                        this.http.get<ContactDto[]>(neighborhoodDto.contacts),
+                        this.http.get<EventDto[]>(neighborhoodDto.events),
+                        this.http.get<ResourceDto[]>(neighborhoodDto.resources),
+                        this.http.get<Channel[]>(neighborhoodDto.channels),
+                        this.http.get<WorkerDto[]>(neighborhoodDto.workers),
                     ]).pipe(
                         map(([users, contacts, events, resources, channels, workers]) => {
-                            return {
-                                neighborhoodId: neighborhoodDto.neighborhoodId,
+                          const neighborhoodId = this.extractIdFromSelf(neighborhoodDto.self)
+                          return {
+                                neighborhoodId: neighborhoodId,
                                 name: neighborhoodDto.name,
                                 users: users,
                                 contacts: contacts,
@@ -81,7 +85,19 @@ export class NeighborhoodService {
                  return forkJoin(neighborhoodObservables);
             })
         );
+
     }
+
+
+  private extractIdFromSelf(selfUrl: string): number {
+    // Assuming the postId is the last part of the URL, extract it using a regular expression
+    const regex = /\/(\d+)$/;
+    const match = selfUrl.match(regex);
+
+    // Return the extracted postId or handle it based on your requirements
+    return match ? +match[1] : -1; // Convert to number or handle the case where postId extraction fails
+  }
+
 
     public addNeighborhood(neighborhood: NeighborhoodForm): Observable<NeighborhoodForm> {
         return this.http.post<NeighborhoodForm>(`${this.apiServerUrl}/neighborhoods`, neighborhood)

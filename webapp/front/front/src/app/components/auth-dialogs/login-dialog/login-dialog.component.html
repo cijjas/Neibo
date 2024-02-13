@@ -1,37 +1,61 @@
 
 
 <div class="dialog" id="loginDialog" style="display: flex"  [ngClass]="{'show-dialog': showLoginDialog}">
-  <div class="dialog-content">
-    <div class="close-button" (click)="closeLoginDialog()">
-      <i class="fas fa-close"></i>
+  <div *ngIf="loading; else notLoading">
+    <div  class="dialog-content f-c-c-c">
+      <div style="font-weight: bold; font-size: 16px">Logging you in. Please wait...</div>
+      <div class="loader" style="margin-top: 20px"></div>
     </div>
-    <div class="title mb-2 mt-5 f-c-c-c" style="gap:5px">
-      Welcome to neibo
-      <span class=" font-weight-normal">Log in to continue </span>
-    </div>
-
-    <form (ngSubmit)="tryLogin()" method="post" class="login-form" id="loginForm">
-      <div class="centered-column">
-        <label>
-          <!-- TODO: reinsertar mail al fallo -->
-          <input type="email" placeholder="Email" i18n-placeholder name="mail" class="input" [(ngModel)]="email">
-        </label>
-        <label>
-          <input type="password" placeholder="Password" i18n-placeholder autocomplete="true" name="password" class="input" [(ngModel)]="password">
-        </label>
-      </div>
-      <label class="centered-row light-text">
-        <input name="rememberMe" type="checkbox" [(ngModel)]="rememberMe">
-        Remember me
-      </label>
-      <div class="centered-column">
-        <button type="submit" class="action-button font-weight-bolder">
-          Login
-        </button>
-        <span style="color:var(--lighttext); font-size: 14px;">Not a member yet?
-        <a (click)="openSignupDialog()" class="a-link">Sign up now</a>
-      </span>
-      </div>
-    </form>
   </div>
+  <ng-template #notLoading>
+    <div  class="dialog-content">
+      <div class="close-button" (click)="closeLoginDialog()">
+        <i class="fas fa-close"></i>
+      </div>
+      <div class="title mb-2 mt-5 f-c-c-c" style="gap:5px">
+        Welcome to neibo
+        <span class=" font-weight-normal">Log in to continue </span>
+      </div>
+
+      <form (ngSubmit)="tryLogin()" [formGroup]="loginForm" class="login-form" id="loginForm">
+        <div class="centered-column">
+          <label>
+            <input
+              id="login-email"
+              type="email"
+              placeholder="Email" i18n-placeholder
+              class="input"
+              formControlName="email"
+            >
+            <small class="form-error" *ngIf="loginForm.get('email').invalid && loginForm.get('email').touched ">
+              *Entered email is not valid
+            </small>
+          </label>
+          <label>
+            <input id="login-password" type="password" placeholder="Password" i18n-placeholder autocomplete="true" class="input" formControlName="password">
+            <small  class="form-error" *ngIf="loginForm.get('password').invalid && loginForm.get('password').touched ">
+              *Password is required
+            </small>
+          </label>
+        </div>
+        <label class="centered-row light-text">
+          <input type="checkbox" formControlName="rememberMe">
+          Remember me
+        </label>
+
+        <div class="centered-column">
+          <small class="form-error centered " *ngIf="loginFailed && loginForm.pristine">
+            *Invalid email or password
+          </small>
+          <button type="submit" class="action-button font-weight-bolder" [disabled]="loginForm.invalid">
+            <span>Login</span>
+          </button>
+          <span style="color:var(--lighttext); font-size: 14px;">Not a member yet?
+      <a (click)="openSignupDialog()" class="a-link" >Sign up now</a>
+    </span>
+        </div>
+      </form>
+
+    </div>
+  </ng-template>
 </div>
