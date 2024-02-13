@@ -1,7 +1,8 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ContactDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.services.ContactService;
 import ar.edu.itba.paw.models.Entities.Contact;
 import org.slf4j.Logger;
@@ -11,16 +12,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
 public class ContactServiceImpl implements ContactService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactServiceImpl.class);
     private final ContactDao contactDao;
+    private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public ContactServiceImpl(final ContactDao contactDao) {
+    public ContactServiceImpl(final ContactDao contactDao, final NeighborhoodDao neighborhoodDao) {
         this.contactDao = contactDao;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -28,6 +32,7 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public Contact createContact(long neighborhoodId, String contactName, String contactAddress, String contactPhone) {
         LOGGER.info("Creating Contact {} for Neighborhood {}", contactName, neighborhoodId);
+
         return contactDao.createContact(neighborhoodId, contactName, contactAddress, contactPhone);
     }
 
@@ -36,27 +41,40 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public List<Contact> getContacts(final long neighborhoodId) {
         LOGGER.info("Getting Contacts for Neighborhood {}", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+
         return contactDao.getContacts(neighborhoodId);
+    }
+
+    @Override
+    public Optional<Contact> findContact(long contactId) {
+        LOGGER.info("Finding Contact {}", contactId);
+
+        ValidationUtils.checkContactId(contactId);
+
+        return contactDao.findContact(contactId);
+    }
+
+    @Override
+    public Optional<Contact> findContact(long contactId, long neighborhoodId) {
+        LOGGER.info("Finding Contact {} from Neighborhood {}", contactId, neighborhoodId);
+
+        ValidationUtils.checkContactId(contactId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return contactDao.findContact(contactId, neighborhoodId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteContact(long contactId) {
-        LOGGER.info("Deleting Contact {}", contactId);
-        return contactDao.deleteContact(contactId);
-    }
-
-    private Contact getContact(long contactId) {
-        LOGGER.info("Getting Contact {}", contactId);
-        return contactDao.findContactById(contactId).orElseThrow(() -> new NotFoundException("Contact not found"));
-    }
-
-    @Override
     public Contact updateContact(long contactId, String contactName, String contactAddress, String contactPhone) {
         LOGGER.info("Updating Contact {}", contactId);
 
-        Contact contact = getContact(contactId);
+        Contact contact = findContact(contactId).orElseThrow(()-> new NotFoundException("Contact Not Found"));
 
         if (contactName != null && !contactName.isEmpty())
             contact.setContactName(contactName);
@@ -66,5 +84,16 @@ public class ContactServiceImpl implements ContactService {
             contact.setContactPhone(contactPhone);
 
         return contact;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean deleteContact(long contactId) {
+        LOGGER.info("Deleting Contact {}", contactId);
+
+        ValidationUtils.checkContactId(contactId);
+
+        return contactDao.deleteContact(contactId);
     }
 }

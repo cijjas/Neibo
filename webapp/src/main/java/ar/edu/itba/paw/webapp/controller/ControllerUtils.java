@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.webapp.auth.UserAuth;
@@ -49,7 +49,7 @@ public class ControllerUtils {
 
     public long getLoggedUser() {
         String email = (((UserAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUsername();
-        User user = us.findUserByMail(email).orElseThrow(() -> new NotFoundException("UserForm not found"));
+        User user = us.findUser(email).orElseThrow(() -> new NotFoundException("User not found"));
         return user.getUserId();
     }
 }

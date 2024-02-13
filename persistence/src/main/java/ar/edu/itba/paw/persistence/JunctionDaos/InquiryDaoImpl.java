@@ -24,6 +24,7 @@ public class InquiryDaoImpl implements InquiryDao {
     @Override
     public Inquiry createInquiry(long userId, long productId, String message) {
         LOGGER.debug("Inserting Inquiry for product with id {}", productId);
+
         Inquiry inquiry = new Inquiry.Builder()
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
@@ -38,14 +39,31 @@ public class InquiryDaoImpl implements InquiryDao {
     // ------------------------------------------ INQUIRIES INSERT -----------------------------------------------------
 
     @Override
-    public Optional<Inquiry> findInquiryById(long inquiryId) {
+    public Optional<Inquiry> findInquiry(long inquiryId) {
         LOGGER.debug("Selecting Inquiry with id {}", inquiryId);
+
         return Optional.ofNullable(em.find(Inquiry.class, inquiryId));
     }
 
+    @Override
+    public Optional<Inquiry> findInquiry(long inquiryId, long productId, long neighborhoodId) {
+        LOGGER.debug("Selecting Inquiry with inquiryId {}, productId {} and neighborhoodId {}", inquiryId, productId, neighborhoodId);
+
+        TypedQuery<Inquiry> query = em.createQuery(
+                "SELECT i FROM Inquiry i WHERE i.id = :inquiryId AND i.product.id = :productId AND i.product.seller.neighborhood.id = :neighborhoodId",
+                Inquiry.class
+        );
+
+        query.setParameter("inquiryId", inquiryId);
+        query.setParameter("productId", productId);
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Inquiry> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
 
     @Override
-    public List<Inquiry> getInquiriesByProductAndCriteria(long productId, int page, int size) {
+    public List<Inquiry> getInquiries(long productId, int page, int size) {
         LOGGER.debug("Selecting Inquiries from Product with id {}", productId);
 
         TypedQuery<Long> idQuery = em.createQuery("SELECT i.inquiryId FROM Inquiry i " +
@@ -66,9 +84,12 @@ public class InquiryDaoImpl implements InquiryDao {
         return Collections.emptyList();
     }
 
+    // ---------------------------------------------------
+
     @Override
-    public int getInquiriesCountByProduct(long productId) {
+    public int countInquiries(long productId) {
         LOGGER.debug("Selecting Inquiries Count from Product {}", productId);
+
         Long count = (Long) em.createQuery("SELECT COUNT(i) FROM Inquiry i " +
                         "WHERE i.product.productId = :productId")
                 .setParameter("productId", productId)

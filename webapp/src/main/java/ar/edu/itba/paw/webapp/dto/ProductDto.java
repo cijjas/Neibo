@@ -75,9 +75,8 @@ public class ProductDto {
         dto.requests = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(product.getSeller().getNeighborhood().getNeighborhoodId()))
-                .path("products")
-                .path(String.valueOf(product.getProductId()))
                 .path("requests")
+                .queryParam("forProduct", product.getProductId())
                 .build();
 
         return dto;

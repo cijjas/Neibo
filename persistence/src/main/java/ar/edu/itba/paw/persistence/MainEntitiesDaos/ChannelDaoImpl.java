@@ -32,14 +32,26 @@ public class ChannelDaoImpl implements ChannelDao {
 
     // -------------------------------------------- CHANNELS SELECT ----------------------------------------------------
 
-    public Optional<Channel> findChannelById(long channelId) {
-        LOGGER.debug("Selecting Channel with channelId {}", channelId);
-        return Optional.ofNullable(em.find(Channel.class, channelId));
+    public Optional<Channel> findChannel(long channelId, long neighborhoodId) {
+        LOGGER.debug("Selecting Channel with channelId {} in Neighborhood {}", channelId, neighborhoodId);
+
+        TypedQuery<Channel> query = em.createQuery(
+                "SELECT c FROM Channel c JOIN c.neighborhoods n WHERE c.channelId = :channelId AND n.neighborhoodId = :neighborhoodId",
+                Channel.class
+        );
+
+        query.setParameter("channelId", channelId);
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Channel> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
+
     @Override
-    public Optional<Channel> findChannelByName(String channelName) {
+    public Optional<Channel> findChannel(String channelName) {
         LOGGER.debug("Selecting Channel with name {}", channelName);
+
         TypedQuery<Channel> query = em.createQuery("FROM Channel WHERE channel = :channel", Channel.class);
         query.setParameter("channel", channelName);
         return query.getResultList().stream().findFirst();
@@ -48,6 +60,7 @@ public class ChannelDaoImpl implements ChannelDao {
     @Override
     public List<Channel> getChannels(final long neighborhoodId) {
         LOGGER.debug("Selecting Channels from Neighborhood {}", neighborhoodId);
+
         TypedQuery<Channel> query = em.createQuery("SELECT c FROM Channel c JOIN c.neighborhoods n WHERE n.neighborhoodId = :neighborhoodId", Channel.class);
         query.setParameter("neighborhoodId", neighborhoodId);
         return query.getResultList();

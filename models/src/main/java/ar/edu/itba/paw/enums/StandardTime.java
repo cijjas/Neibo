@@ -2,6 +2,7 @@ package ar.edu.itba.paw.enums;
 
 
 import ar.edu.itba.paw.Pair;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 
 import java.sql.Time;
 import java.util.Arrays;
@@ -59,11 +60,13 @@ public enum StandardTime {
         return ordinal() + 1;
     }
 
-    public static StandardTime fromId(int id) {
+    public static StandardTime fromId(long id) {
+        if(id <= 0)
+            throw new IllegalArgumentException("Invalid value (" + id + ") for the Time ID. Please use a positive integer greater than 0.");
         return Arrays.stream(values())
                 .filter(time -> time.getId() == id)
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(()-> new NotFoundException("Time Not Found"));
     }
 
     @Override

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.models.Entities.Day;
+import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.Shift;
 import ar.edu.itba.paw.models.Entities.Time;
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ public class ShiftDaoImpl implements ShiftDao {
     @Override
     public Shift createShift(long dayId, long startTimeId) {
         LOGGER.debug("Inserting Shift");
+
         Shift shift = new Shift.Builder()
                 .day(em.find(Day.class, dayId))
                 .startTime(em.find(Time.class, startTimeId))
@@ -38,14 +40,16 @@ public class ShiftDaoImpl implements ShiftDao {
     // ----------------------------------------------- SHIFTS SELECT ---------------------------------------------------
 
     @Override
-    public Optional<Shift> findShiftById(long shiftId) {
+    public Optional<Shift> findShift(long shiftId) {
         LOGGER.debug("Selecting Shift with shiftId {}", shiftId);
+
         return Optional.ofNullable(em.find(Shift.class, shiftId));
     }
 
     @Override
-    public Optional<Shift> findShiftId(long startTime, long dayId) {
+    public Optional<Shift> findShift(long startTime, long dayId) {
         LOGGER.debug("Selecting Shift with startTime {} and dayId {}", startTime, dayId);
+
         String jpql = "SELECT s FROM Shift s " +
                 "JOIN s.day d " +
                 "WHERE s.startTime.timeId = :startTime AND d.dayId = :dayId";
@@ -57,7 +61,19 @@ public class ShiftDaoImpl implements ShiftDao {
     }
 
     @Override
+    public List<Shift> getShifts() {
+        LOGGER.debug("Selecting All Shifts");
+
+        String jpql = "SELECT s FROM Shift s";
+        TypedQuery<Shift> query = em.createQuery(jpql, Shift.class);
+        return query.getResultList();
+    }
+
+    /*@Override
     public List<Shift> getShifts(long amenityId, long dayId, Date date) {
+        // el dayId puede ser obviado
+
+
         List<Object[]> results = em.createNativeQuery(
                         "SELECT s.shiftid, s.dayid, s.starttime, " +
                                 "CASE " +
@@ -91,10 +107,10 @@ public class ShiftDaoImpl implements ShiftDao {
         }
 
         return shifts;
-    }
+    }*/
 
     @Override
-    public List<Shift> getAmenityShifts(long amenityId) {
+    public List<Shift> getShifts(long amenityId) {
         LOGGER.debug("Selecting Weekly Available Shifts for Amenity {}", amenityId);
 
         String hql = "SELECT s FROM Shift s " +

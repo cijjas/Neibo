@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -94,7 +93,7 @@ public class ProductDaoImplTest {
         long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey, null, dKey1);
 
         // Exercise
-        Optional<Product> maybeProduct = productDao.findProductById(pKey);
+        Optional<Product> maybeProduct = productDao.findProduct(pKey);
 
         // Validations & Post Conditions
         assertTrue(maybeProduct.isPresent());
@@ -105,7 +104,7 @@ public class ProductDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<Product> maybeProduct = productDao.findProductById(1);
+        Optional<Product> maybeProduct = productDao.findProduct(1);
 
         // Validations & Post Conditions
         assertFalse(maybeProduct.isPresent());
@@ -123,7 +122,7 @@ public class ProductDaoImplTest {
 //        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, uKey1, dKey1);
 //
 //        // Exercise
-//        List<Product> products = productDao.getProductsByCriteria(nhKey, Department.NONE, 1, 10);
+//        List<Product> products = productDao.getProducts(nhKey, Department.NONE, 1, 10);
 //
 //        // Validations & Post Conditions
 //        assertFalse(products.isEmpty());
@@ -135,7 +134,7 @@ public class ProductDaoImplTest {
 //        // Pre Conditions
 //
 //        // Exercise
-//        List<Product> products = productDao.getProductsByCriteria(1, Department.NONE, 1, 10);
+//        List<Product> products = productDao.getProducts(1, Department.NONE, 1, 10);
 //
 //        // Validations & Post Conditions
 //        assertTrue(products.isEmpty());
@@ -150,7 +149,7 @@ public class ProductDaoImplTest {
 //        long uKey2 = testInserter.createUser(MAIL2, nhKey);
 //
 //        // Exercise
-//        List<Product> products = productDao.getProductsByCriteria(nhKey, ar.edu.itba.paw.enums.Department.APPLIANCES, 1, 10);
+//        List<Product> products = productDao.getProducts(nhKey, ar.edu.itba.paw.enums.Department.APPLIANCES, 1, 10);
 //
 //        // Validations & Post Conditions
 //        assertTrue(products.isEmpty());
@@ -168,7 +167,7 @@ public class ProductDaoImplTest {
 //        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, uKey1, dKey2);
 //
 //        // Exercise
-//        List<Product> products = productDao.getProductsByCriteria(nhKey, Department.TRAVEL_LUGGAGE, 1, 10);
+//        List<Product> products = productDao.getProducts(nhKey, Department.TRAVEL_LUGGAGE, 1, 10);
 //
 //        // Validations & Post Conditions
 //        assertTrue(products.isEmpty());

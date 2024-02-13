@@ -2,9 +2,10 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.Month;
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
-import ar.edu.itba.paw.interfaces.exceptions.UnexpectedException;
+import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.exceptions.UnexpectedException;
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.EventService;
@@ -30,6 +31,7 @@ public class EventServiceImpl implements EventService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
     private final EventDao eventDao;
     private final TimeDao timeDao;
+    private final NeighborhoodDao neighborhoodDao;
     private final EmailService emailService;
 
     private final UserService userService;
@@ -38,27 +40,196 @@ public class EventServiceImpl implements EventService {
     private EntityManager em;
 
     @Autowired
-    public EventServiceImpl(final EventDao eventDao, final TimeDao timeDao, final EmailService emailService, UserService userService) {
+    public EventServiceImpl(final EventDao eventDao, final TimeDao timeDao, final EmailService emailService,
+                            final UserService userService, NeighborhoodDao neighborhoodDao) {
         this.eventDao = eventDao;
         this.timeDao = timeDao;
         this.emailService = emailService;
         this.userService = userService;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Event createEvent(String name, String description, Date date, String startTime, String endTime, long neighborhoodId) {
+    public Event createEvent(String name, String description, String date, String startTime, String endTime, long neighborhoodId) {
         LOGGER.info("Creating Event {} for Neighborhood {}", name, neighborhoodId);
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(true);
+        Date parsedDate;
+        try {
+            parsedDate = dateFormat.parse(date);
+        } catch (ParseException e) {
+            LOGGER.error("Error whilst creating the Event");
+            throw new UnexpectedException("Unexpected error while creating the Event");
+        }
+        java.sql.Date parsedSqlDate = new java.sql.Date(parsedDate.getTime());
         Long[] times = stringToTime(startTime, endTime);
-        Event createdEvent = eventDao.createEvent(name, description, date, times[0], times[1], neighborhoodId);
+        Event createdEvent = eventDao.createEvent(name, description, parsedSqlDate, times[0], times[1], neighborhoodId);
         emailService.sendEventMail(createdEvent, "event.custom.message2", userService.getNeighbors(neighborhoodId));
         return createdEvent;
     }
 
+
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Event> findEvent(long eventId) {
+        LOGGER.info("Finding Event {}", eventId);
+
+        ValidationUtils.checkEventId(eventId);
+
+        return eventDao.findEvent(eventId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Event> findEvent(long eventId, long neighborhoodId) {
+        LOGGER.info("Finding Event {} from Neighborhood {}", eventId, neighborhoodId);
+
+        ValidationUtils.checkEventId(eventId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return eventDao.findEvent(eventId, neighborhoodId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Event> getEvents(String date, long neighborhoodId, int page, int size) {
+        LOGGER.info("Getting Events for Neighborhood {} on Date {}", neighborhoodId, date);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkOptionalDateString(date);
+        ValidationUtils.checkPageAndSize(page, size);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return eventDao.getEvents(date, neighborhoodId, page, size);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Event> getEvents(long neighborhoodId) {
+        LOGGER.info("Getting Events for Neighborhood {}", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return eventDao.getEvents(neighborhoodId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Date> getEventDates(long neighborhoodId) {
+        LOGGER.info("Getting Event Dates for Neighborhood {}", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return eventDao.getEventDates(neighborhoodId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Long> getEventTimestamps(long neighborhoodId) {
+        LOGGER.info("Getting Event Timestamps for Neighborhood {}", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        List<Date> eventDates = getEventDates(neighborhoodId);
+
+        return eventDates.stream()
+                .map(Date::getTime)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String getEventTimestampsString(long neighborhoodId) {
+        LOGGER.info("Getting Event Timestamps as String for Neighborhood {}", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return getEventTimestamps(neighborhoodId).stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(","));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public String getSelectedMonth(int month, Language language) {
+        LOGGER.info("Getting Selected Month {}", month);
+
+        return Month.values()[month].getName(language);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public int getSelectedYear(int year) {
+        LOGGER.info("Getting selected Years {}", year);
+
+        return year + 1900;
+    }
+
+    @Override
+    public int calculateEventPages(String date, long neighborhoodId, int size) {
+        LOGGER.info("Calculating Event Pages for Neighborhood {}", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkSize(size);
+
+        return PaginationUtils.calculatePages(eventDao.countEvents(date, neighborhoodId), size) ;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean hasEvents(String date, long neighborhoodId) {
+        LOGGER.info("Checking if Neighborhood {} has Events on {}", neighborhoodId, date);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return !eventDao.getEvents(date, neighborhoodId, 1, 10).isEmpty();
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public Event updateEventPartially(long eventId, String name, String description, String date, String startTime, String endTime){
+        LOGGER.info("Updating Event {}", eventId);
+
+        ValidationUtils.checkEventId(eventId);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(true);
+        Date parsedDate;
+        try {
+            parsedDate = dateFormat.parse(date);
+        } catch (ParseException e) {
+            LOGGER.error("Error whilst creating the Event");
+            throw new UnexpectedException("Unexpected error while creating the Event");
+        }
+        java.sql.Date parsedSqlDate = new java.sql.Date(parsedDate.getTime());
+
+        Event event = eventDao.findEvent(eventId).orElseThrow(()-> new NotFoundException("Event Not Found"));
+        if(name != null && !name.isEmpty())
+            event.setName(name);
+        if(description != null && !description.isEmpty())
+            event.setDescription(description);
+        if(date != null)
+            event.setDate(parsedSqlDate);
+        if(startTime != null && endTime != null){
+            Long[] times = stringToTime(startTime, endTime);
+            event.setStartTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, times[0]));
+            event.setEndTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, times[1]));
+        }
+        return event;
+    }
+    
     @Override
     public Event updateEvent(long eventId, String name, String description, Date date, String startTime, String endTime) {
+        LOGGER.info("Updating Event {}", eventId);
+
         Long[] times = stringToTime(startTime, endTime);
         Event event = em.find(Event.class, eventId);
         event.setName(name);
@@ -70,25 +241,18 @@ public class EventServiceImpl implements EventService {
         return event;
     }
 
-    private Event getEvent(long eventId){
-        return eventDao.findEventById(eventId).orElseThrow(() -> new NotFoundException("Event not found"));
-    }
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
-    public Event updateEventPartially(long eventId, String name, String description, Date date, String startTime, String endTime){
-        Event event = getEvent(eventId);
-        if(name != null && !name.isEmpty())
-            event.setName(name);
-        if(description != null && !description.isEmpty())
-            event.setDescription(description);
-        if(date != null)
-            event.setDate(date);
-        if(startTime != null && endTime != null){
-            Long[] times = stringToTime(startTime, endTime);
-            event.setStartTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, times[0]));
-            event.setEndTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, times[1]));
-        }
-        return event;
+    public boolean deleteEvent(long eventId) {
+        LOGGER.info("Delete Event {}", eventId);
+
+        ValidationUtils.checkEventId(eventId);
+
+        return eventDao.deleteEvent(eventId);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     private Long[] stringToTime(String startTime, String endTime) {
         Time startTimeInTime = null;
@@ -125,100 +289,10 @@ public class EventServiceImpl implements EventService {
         return timeArray;
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     private OptionalLong getTimeId(Time time) {
-        return timeDao.findIdByTime(time);
-    }
-
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Event> findEventById(long eventId) {
-        LOGGER.info("Finding Event {}", eventId);
-        if (eventId <= 0)
-            throw new IllegalArgumentException("Event ID must be a positive integer");
-        return eventDao.findEventById(eventId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public boolean hasEvents(Date date, long neighborhoodId) {
-        LOGGER.info("Checking if Neighborhood {} has Events on {}", neighborhoodId, date);
-        return !eventDao.getEventsByDate(date, neighborhoodId).isEmpty();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Event> getEventsByDate(String date, long neighborhoodId) {
-        LOGGER.info("Getting Events for Neighborhood {} on Date {}", neighborhoodId, date);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            return eventDao.getEventsByDate(dateFormat.parse(date), neighborhoodId);
-        } catch (ParseException e) {
-            return Collections.emptyList();
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Event> getEventsByNeighborhoodId(long neighborhoodId) {
-        LOGGER.info("Getting Events for Neighborhood {}", neighborhoodId);
-        return eventDao.getEventsByNeighborhoodId(neighborhoodId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Date> getEventDates(long neighborhoodId) {
-        LOGGER.info("Getting Event Dates for Neighborhood {}", neighborhoodId);
-        return eventDao.getEventDates(neighborhoodId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Long> getEventTimestamps(long neighborhoodId) {
-        LOGGER.info("Getting Event Timestamps for Neighborhood {}", neighborhoodId);
-        List<Date> eventDates = getEventDates(neighborhoodId);
-
-        return eventDates.stream()
-                .map(Date::getTime)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public String getEventTimestampsString(long neighborhoodId) {
-        LOGGER.info("Getting Event Timestamps as String for Neighborhood {}", neighborhoodId);
-        return getEventTimestamps(neighborhoodId).stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(","));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public String getSelectedMonth(int month, Language language) {
-        LOGGER.info("Getting Selected Month {}", month);
-
-        if (month < 0 || month >= Month.values().length) {
-            throw new IllegalArgumentException("Invalid month index");
-        }
-
-        return Month.values()[month].getName(language);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public int getSelectedYear(int year) {
-        LOGGER.info("Getting selected Years {}", year);
-        return year + 1900;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean deleteEvent(long eventId) {
-        LOGGER.info("Delete Event {}", eventId);
-        return eventDao.deleteEvent(eventId);
+        return timeDao.findId(time);
     }
 
 }

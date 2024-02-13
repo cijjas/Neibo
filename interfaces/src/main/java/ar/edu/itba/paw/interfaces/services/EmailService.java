@@ -30,5 +30,4 @@ public interface EmailService {
     void sendNewRequestMail(Product product, User sender, String message);
 
     void sendVerifiedNeighborMail(User user, String neighborhoodName);
-
-    }
+}

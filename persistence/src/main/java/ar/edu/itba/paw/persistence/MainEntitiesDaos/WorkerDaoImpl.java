@@ -13,6 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.appendCommonWorkerConditions;
 import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.appendPaginationClause;
@@ -27,6 +28,7 @@ public class WorkerDaoImpl implements WorkerDao {
     @Override
     public Worker createWorker(long workerId, String phoneNumber, String address, String businessName) {
         LOGGER.debug("Inserting Worker");
+
         Worker worker = new Worker.Builder()
                 .workerId(workerId)
                 .user(em.find(User.class, workerId))
@@ -41,73 +43,140 @@ public class WorkerDaoImpl implements WorkerDao {
     // ---------------------------------------------- WORKERS SELECT -----------------------------------------------------
 
     @Override
-    public Optional<Worker> findWorkerById(long workerId) {
+    public Optional<Worker> findWorker(long workerId) {
         LOGGER.debug("Selecting Worker with workerId {}", workerId);
+
         return Optional.ofNullable(em.find(Worker.class, workerId));
     }
 
     private final String USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
-            "SELECT w.*, wn.*, wi.* " +
-                    "FROM users w " +
-                    "JOIN workers_neighborhoods wn ON w.userid = wn.workerId " +
-                    "JOIN workers_info wi ON w.userid = wi.workerid " +
-                    "WHERE w.userid IN ( " +
-                    "SELECT DISTINCT w.userid " +
-                    "FROM users w " +
-                    "JOIN workers_neighborhoods wn ON w.userid = wn.workerid ";
+            "SELECT wi.workerid, userid, wi.phonenumber, businessname, address, bio, backgroundpictureid\n" +
+                    "FROM users w\n" +
+                    "LEFT JOIN workers_neighborhoods wn ON w.userid = wn.workerId\n" +
+                    "JOIN workers_info wi ON w.userid = wi.workerid\n" +
+                    "WHERE w.userid IN (\n" +
+                    "    SELECT DISTINCT w.userid\n" +
+                    "    FROM users w\n" +
+                    "    LEFT JOIN workers_neighborhoods wn ON w.userid = wn.workerid \n";
 
     private final String COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
-            "SELECT COUNT(distinct w.userid)\n" +
-                    "FROM users w " +
-                    "JOIN workers_professions wp ON w.userid = wp.workerid " +
-                    "JOIN professions p ON wp.professionid = p.professionid " +
-                    "JOIN workers_neighborhoods wn ON w.userid = wn.workerId " +
-                    "JOIN workers_info wi ON w.userid = wi.workerid ";
+            "SELECT COUNT(DISTINCT w.userid)\n" +
+                    "FROM users w\n" +
+                    "LEFT JOIN workers_professions wp ON w.userid = wp.workerid\n" +
+                    "LEFT JOIN professions p ON wp.professionid = p.professionid\n" +
+                    "LEFT JOIN workers_neighborhoods wn ON w.userid = wn.workerId\n" +
+                    "LEFT JOIN workers_info wi ON w.userid = wi.workerid\n" +
+                    "WHERE w.userid IN (\n" +
+                    "    SELECT DISTINCT w.userid\n" +
+                    "    FROM users w\n" +
+                    "    LEFT JOIN workers_neighborhoods wn ON w.userid = wn.workerid ";
 
 
-    @Override
-    public Set<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus) {
-        LOGGER.debug("Selecting Workers from Neighborhoods {} with professions {}", neighborhoodIds, professions);
-        StringBuilder query = new StringBuilder(USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
-        List<Object> queryParams = new ArrayList<>();
-        if(neighborhoodIds.length == 0) {
-            return new HashSet<>();
+    public Set<Worker> getWorkers(int page, int size, List<String> professions, List<Long> neighborhoodIds, String workerRole, String workerStatus) {
+        StringBuilder queryStringBuilder = new StringBuilder();
+        queryStringBuilder.append("SELECT DISTINCT w.*, wi.* FROM users w ");
+
+        // Join with workers_neighborhoods, workers_info, and other necessary tables
+        queryStringBuilder.append("LEFT JOIN workers_neighborhoods wn ON w.userid = wn.workerId ");
+        queryStringBuilder.append("JOIN workers_info wi ON w.userid = wi.workerid ");
+        queryStringBuilder.append("WHERE 1=1 ");
+
+        // Additional conditions based on optional parameters
+        if (workerStatus != null && !workerStatus.toUpperCase().equals(WorkerStatus.NONE.name())) {
+            queryStringBuilder.append("AND (SELECT AVG(rating) FROM reviews r WHERE r.workerid = w.userid) > 4 ");
         }
 
-        appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions, workerRole, workerStatus);
-        query.append(") ");
-
-        if (page != 0)
-            appendPaginationClause(query, queryParams, page, size);
-
-        Query sqlQuery = em.createNativeQuery(query.toString(), Worker.class);
-
-        // Set query parameters
-        for (int i = 0; i < queryParams.size(); i++) {
-            sqlQuery.setParameter(i + 1, queryParams.get(i));
+        if (workerRole != null) {
+            queryStringBuilder.append("AND wn.role = :workerRole ");
         }
 
-        return new HashSet<>(sqlQuery.getResultList());
+        if (professions != null && !professions.isEmpty()) {
+            queryStringBuilder.append("AND EXISTS (SELECT 1 FROM workers_professions wp, professions p ");
+            queryStringBuilder.append("WHERE w.userid = wp.workerid AND wp.professionid = p.professionid ");
+            queryStringBuilder.append("AND p.profession IN :professions) ");
+        }
+
+        if (neighborhoodIds != null && !neighborhoodIds.isEmpty()) {
+            queryStringBuilder.append("AND wn.neighborhoodid IN :neighborhoodIds ");
+        }
+
+        // Create and execute the native query
+        Query nativeQuery = em.createNativeQuery(queryStringBuilder.toString(), Worker.class);
+        nativeQuery.setFirstResult((page - 1) * size);
+        nativeQuery.setMaxResults(size);
+
+        // Set parameters
+        if (workerRole != null) {
+            nativeQuery.setParameter("workerRole", workerRole.toUpperCase());
+        }
+
+        if (professions != null && !professions.isEmpty()) {
+            List<String> uppercaseProfessions = professions.stream()
+                    .map(String::toUpperCase)
+                    .collect(Collectors.toList());
+
+            nativeQuery.setParameter("professions", uppercaseProfessions);
+        }
+
+
+        if (neighborhoodIds != null && !neighborhoodIds.isEmpty()) {
+            nativeQuery.setParameter("neighborhoodIds", neighborhoodIds);
+        }
+
+        List<Worker> workers = nativeQuery.getResultList();
+
+        return new HashSet<>(workers);
     }
 
-    @Override
-    public int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus){
-        LOGGER.debug("Selecting Workers Count from Neighborhood {} with professions {}", neighborhoodIds, professions);
-        StringBuilder query = new StringBuilder(COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI);
-        List<Object> queryParams = new ArrayList<>();
-        if(neighborhoodIds.length == 0) {
-            return 0;
+    public int countWorkers(List<String> professions, List<Long> neighborhoodIds, String workerRole, String workerStatus) {
+        StringBuilder queryStringBuilder = new StringBuilder();
+        queryStringBuilder.append("SELECT COUNT(DISTINCT w.userid) FROM users w ");
+
+        // Join with workers_neighborhoods, workers_info, and other necessary tables
+        queryStringBuilder.append("LEFT JOIN workers_neighborhoods wn ON w.userid = wn.workerId ");
+        queryStringBuilder.append("JOIN workers_info wi ON w.userid = wi.workerid ");
+        queryStringBuilder.append("WHERE 1=1 ");
+
+        // Additional conditions based on optional parameters
+        if (workerStatus != null && !workerStatus.toUpperCase().equals(WorkerStatus.NONE.name())) {
+            queryStringBuilder.append("AND (SELECT AVG(rating) FROM reviews r WHERE r.workerid = w.userid) > 4 ");
         }
 
-        appendCommonWorkerConditions(query, queryParams, neighborhoodIds, professions, workerRole, workerStatus);
-
-        Query sqlQuery = em.createNativeQuery(query.toString());
-
-        for (int i = 0; i < queryParams.size(); i++) {
-            sqlQuery.setParameter(i + 1, queryParams.get(i));
+        if (workerRole != null) {
+            queryStringBuilder.append("AND wn.role = :workerRole ");
         }
 
-        Object result = sqlQuery.getSingleResult();
-        return Integer.parseInt(result.toString());
+        if (professions != null && !professions.isEmpty()) {
+            queryStringBuilder.append("AND EXISTS (SELECT 1 FROM workers_professions wp, professions p ");
+            queryStringBuilder.append("WHERE w.userid = wp.workerid AND wp.professionid = p.professionid ");
+            queryStringBuilder.append("AND p.profession IN :professions) ");
+        }
+
+        if (neighborhoodIds != null && !neighborhoodIds.isEmpty()) {
+            queryStringBuilder.append("AND wn.neighborhoodid IN :neighborhoodIds ");
+        }
+
+        // Create and execute the native query for counting
+        Query countQuery = em.createNativeQuery(queryStringBuilder.toString());
+
+        // Set parameters
+        if (workerRole != null) {
+            countQuery.setParameter("workerRole", workerRole.toUpperCase());
+        }
+
+        if (professions != null && !professions.isEmpty()) {
+            List<String> uppercaseProfessions = professions.stream()
+                    .map(String::toUpperCase)
+                    .collect(Collectors.toList());
+
+            countQuery.setParameter("professions", uppercaseProfessions);
+        }
+
+        if (neighborhoodIds != null && !neighborhoodIds.isEmpty()) {
+            countQuery.setParameter("neighborhoodIds", neighborhoodIds);
+        }
+
+        return ((Number) countQuery.getSingleResult()).intValue();
     }
+
 }

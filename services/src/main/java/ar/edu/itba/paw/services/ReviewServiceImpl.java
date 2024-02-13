@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.ReviewDao;
+import ar.edu.itba.paw.interfaces.persistence.WorkerDao;
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.models.Entities.Review;
 import org.slf4j.Logger;
@@ -17,17 +19,20 @@ import java.util.Optional;
 public class ReviewServiceImpl implements ReviewService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewServiceImpl.class);
     private final ReviewDao reviewDao;
+    private final WorkerDao workerDao;
 
     @Autowired
-    public ReviewServiceImpl(ReviewDao reviewDao) {
+    public ReviewServiceImpl(ReviewDao reviewDao, WorkerDao workerDao) {
         this.reviewDao = reviewDao;
+        this.workerDao = workerDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public Review createReview(long workerId, long userId, float rating, String review) {
-        LOGGER.info("Creating Review for Worker {} from User {}", workerId, userId);
+        LOGGER.info("Creating a Review for Worker {} made by User {}", workerId, userId);
+
         return reviewDao.createReview(workerId, userId, rating, review);
     }
 
@@ -35,24 +40,46 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Review> findReviewById(long reviewId) {
-        LOGGER.info("Finding Review with id {}", reviewId);
-        if (reviewId <= 0)
-            throw new IllegalArgumentException("Review ID must be a positive integer");
-        return reviewDao.findReviewById(reviewId);
+    public Optional<Review> findReview(long reviewId) {
+        LOGGER.info("Finding Review {}", reviewId);
+
+        ValidationUtils.checkReviewId(reviewId);
+
+        return reviewDao.findReview(reviewId);
+    }
+
+    @Override
+    public Optional<Review> findReview(long reviewId, long workerId) {
+        LOGGER.info("Finding Review {} from Worker {}", reviewId, workerId);
+
+        ValidationUtils.checkReviewId(reviewId);
+        ValidationUtils.checkWorkerId(workerId);
+
+        workerDao.findWorker(workerId).orElseThrow(NotFoundException::new);
+
+        return reviewDao.findReview(reviewId, workerId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Review> getReviews(long workerId) {
-        LOGGER.info("Getting reviews for Worker {}", workerId);
+        LOGGER.info("Getting Reviews for Worker {}", workerId);
+
+        ValidationUtils.checkWorkerId(workerId);
+
         return reviewDao.getReviews(workerId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Review> getReviews(long workerId, int page, int size) {
-        LOGGER.info("Getting reviews for Worker {}", workerId);
+        LOGGER.info("Getting Reviews for Worker {}", workerId);
+
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkPageAndSize(page, size);
+
+        workerDao.findWorker(workerId).orElseThrow(NotFoundException::new);
+
         return reviewDao.getReviews(workerId, page, size);
     }
 
@@ -60,24 +87,42 @@ public class ReviewServiceImpl implements ReviewService {
     @Transactional(readOnly = true)
     public Optional<Float> getAvgRating(long workerId) {
         LOGGER.info("Getting Average Rating for Worker {}", workerId);
+
+        ValidationUtils.checkWorkerId(workerId);
+
         return reviewDao.getAvgRating(workerId);
     }
 
+    // ---------------------------------------------------
+
     @Override
     @Transactional(readOnly = true)
-    public int getReviewsCount(long workerId) {
-        return reviewDao.getReviewsCount(workerId);
+    public int countReviews(long workerId) {
+        LOGGER.info("Counting Reviews for Worker {}", workerId);
+
+        ValidationUtils.checkWorkerId(workerId);
+
+        return reviewDao.countReviews(workerId);
     }
 
     @Override
-    public int getReviewsTotalPages(long workerId, int size) {
-        return (int) Math.ceil((double) getReviewsCount(workerId) / size);
+    public int calculateReviewPages(long workerId, int size) {
+        LOGGER.info("Calculating Review Pages for Worker {}", workerId);
+
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkSize(size);
+
+        return PaginationUtils.calculatePages(reviewDao.countReviews(workerId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public void deleteReview(long reviewId) {
+        LOGGER.info("Deleting Review {}", reviewId);
+
+        ValidationUtils.checkReviewId(reviewId);
+
         reviewDao.deleteReview(reviewId);
     }
 }

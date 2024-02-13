@@ -25,6 +25,7 @@ public class ResourceDaoImpl implements ResourceDao {
     @Override
     public Resource createResource(long neighborhoodId, String title, String description, long imageId) {
         LOGGER.debug("Inserting Resource {}", title);
+
         Resource resource = new Resource.Builder()
                 .title(title)
                 .description(description)
@@ -39,6 +40,7 @@ public class ResourceDaoImpl implements ResourceDao {
 
     public List<Resource> getResources(long neighborhoodId) {
         LOGGER.debug("Selecting Resources from Neighborhood {}", neighborhoodId);
+
         TypedQuery<Resource> query = em.createQuery("SELECT r FROM Resource r WHERE r.neighborhood.neighborhoodId = :neighborhoodId", Resource.class);
         query.setParameter("neighborhoodId", neighborhoodId);
         return query.getResultList();
@@ -48,6 +50,7 @@ public class ResourceDaoImpl implements ResourceDao {
 
     public boolean deleteResource(long resourceId) {
         LOGGER.debug("Deleting Resource with resourceId {}", resourceId);
+
         Resource resource = em.find(Resource.class, resourceId);
         if (resource != null) {
             em.remove(resource);
@@ -57,8 +60,9 @@ public class ResourceDaoImpl implements ResourceDao {
     }
 
     @Override
-    public Optional<Resource> findResourceById(final long resourceId) {
+    public Optional<Resource> findResource(final long resourceId) {
         LOGGER.debug("Selecting Resource with resourceId {}", resourceId);
+
         return Optional.ofNullable(em.find(Resource.class, resourceId));
     }
 }

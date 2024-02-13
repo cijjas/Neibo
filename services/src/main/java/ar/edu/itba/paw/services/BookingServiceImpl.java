@@ -1,22 +1,26 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.services.BookingService;
 import ar.edu.itba.paw.models.Entities.Booking;
-import ar.edu.itba.paw.models.GroupedBooking;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+
+import static org.hibernate.type.descriptor.java.JdbcDateTypeDescriptor.DATE_FORMAT;
 
 @Service
 @Transactional
@@ -25,25 +29,37 @@ public class BookingServiceImpl implements BookingService {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingServiceImpl.class);
     private final BookingDao bookingDao;
     private final AvailabilityDao availabilityDao;
+    private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public BookingServiceImpl(final BookingDao bookingDao, final AvailabilityDao availabilityDao) {
+    public BookingServiceImpl(final BookingDao bookingDao, final AvailabilityDao availabilityDao, final NeighborhoodDao neighborhoodDao) {
         this.availabilityDao = availabilityDao;
         this.bookingDao = bookingDao;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    public long[] createBooking(long userId, long amenityId, List<Long> shiftIds, Date reservationDate) {
-        LOGGER.info("Creating a Booking for Amenity {} on {} for User {}", amenityId, reservationDate, userId);
+    public long[] createBooking(long userId, long amenityId, List<Long> shiftIds, String reservationDate) {
+        LOGGER.info("Creating a Booking for Amenity {} on Date {} for User {}", amenityId, reservationDate, userId);
 
         List<Long> bookingIds = new ArrayList<>();
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        Date parsedDate;
+        try {
+            parsedDate = dateFormat.parse(reservationDate);
+        } catch (ParseException e) {
+            throw new IllegalArgumentException("Invalid Date Format. Please use YYYY-MM-DD.");
+        }
+        java.sql.Date parsedSqlDate = new java.sql.Date(parsedDate.getTime());
+
         for (Long shiftId : shiftIds) {
-            long availabilityId = availabilityDao.findAvailabilityId(amenityId, shiftId)
+            long availabilityId = availabilityDao.findId(amenityId, shiftId)
                     .orElseThrow(() -> new NotFoundException("Availability not found.")); // DB guarantees the combination is unique
 
-            Long bookingId = bookingDao.createBooking(userId, availabilityId, reservationDate).getBookingId();
+            Long bookingId = bookingDao.createBooking(userId, availabilityId, parsedSqlDate).getBookingId();
             bookingIds.add(bookingId);
         }
 
@@ -56,18 +72,30 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Booking> findBooking(long bookingId){
-        if (bookingId <= 0)
-            throw new IllegalArgumentException("Booking ID must be a positive integer");
-        return bookingDao.findBookingById(bookingId);
+    public Optional<Booking> findBooking(long bookingId, long neighborhoodId){
+        LOGGER.info("Finding Booking {}", bookingId);
+
+        ValidationUtils.checkBookingId(bookingId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return bookingDao.findBooking(bookingId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Booking> getUserBookings(long userId) {
-        LOGGER.info("Getting Bookings for User {}", userId);
-        List<Booking> userBookings = bookingDao.getUserBookings(userId);
-        return userBookings;
+    public List<Booking> getBookings(Long userId, Long amenityId, long neighborhoodId, int page, int size) {
+        LOGGER.info("Getting Bookings for User {} on Amenity {} from Neighborhood {}", userId, amenityId, neighborhoodId);
+
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkAmenityId(amenityId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkPageAndSize(page, size);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return bookingDao.getBookings(userId, amenityId, page, size);
 //        List<GroupedBooking> groupedBookings = new ArrayList<>();
 //        GroupedBooking currentGroupedBooking = null;
 //
@@ -95,12 +123,18 @@ public class BookingServiceImpl implements BookingService {
 //        return groupedBookings;
     }
 
+    @Override
+    public int calculateBookingPages(Long userId, Long amenityId, long neighborhoodId, int size) {
+        LOGGER.info("Calculating Booking Pages for User {} on Amenity {} from Neighborhood {}", userId, amenityId, neighborhoodId);
 
-    private Time calculateEndTime(Time startTime) {
-        // Calculate end time by adding an hour to the start time
-        long startTimeMillis = startTime.getTime();
-        long endTimeMillis = startTimeMillis + 60 * 60 * 1000; // 60 minutes * 60 seconds * 1000 milliseconds
-        return new Time(endTimeMillis);
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkAmenityId(amenityId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkSize(size);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return PaginationUtils.calculatePages(bookingDao.countBookings(userId, amenityId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -108,14 +142,22 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public boolean deleteBooking(long bookingId) {
         LOGGER.info("Deleting Booking {}", bookingId);
+
+        ValidationUtils.checkBookingId(bookingId);
+
         return bookingDao.deleteBooking(bookingId);
     }
 
     @Override
     public boolean deleteBookings(List<Long> bookingIds) {
         LOGGER.info("Deleting Bookings {}", bookingIds);
-        for (long booking : bookingIds)
-            bookingDao.deleteBooking(booking);
-        return true;
+
+        boolean result = true;
+        for (long bookingId : bookingIds) {
+            ValidationUtils.checkBookingId(bookingId);
+            if (!deleteBooking(bookingId))
+                result = false;
+        }
+        return result;
     }
 }

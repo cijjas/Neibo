@@ -23,7 +23,7 @@ public class ChannelDto {
                 .build();
         dto.posts = uriInfo.getBaseUriBuilder()
                 .path("posts")
-                .queryParam("postedIn", String.valueOf(channel.getChannelId()))
+                .queryParam("inChannel", String.valueOf(channel.getChannelId()))
                 .build();
 
         return dto;

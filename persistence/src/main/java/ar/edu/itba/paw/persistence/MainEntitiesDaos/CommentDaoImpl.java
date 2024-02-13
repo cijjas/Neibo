@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.CommentDao;
 import ar.edu.itba.paw.models.Entities.Comment;
+import ar.edu.itba.paw.models.Entities.Event;
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public Comment createComment(String commentText, long userId, long postId) {
         LOGGER.debug("Inserting Comment {}", commentText);
+
         Comment comment = new Comment.Builder()
                 .comment(commentText)
                 .user(em.find(User.class, userId))
@@ -38,14 +40,32 @@ public class CommentDaoImpl implements CommentDao {
     // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
 
     @Override
-    public Optional<Comment> findCommentById(long commentId) {
-        LOGGER.debug("Selecting Comments with commentId {}", commentId);
-        Comment comment = em.find(Comment.class, commentId);
-        return Optional.ofNullable(comment);
+    public Optional<Comment> findComment(long commentId) {
+        LOGGER.debug("Selecting Comment with id {}", commentId);
+
+        return Optional.ofNullable(em.find(Comment.class, commentId));
     }
 
     @Override
-    public List<Comment> getCommentsByPostId(long postId, int page, int size) {
+    public Optional<Comment> findComment(long commentId, long postId, long neighborhoodId) {
+        LOGGER.debug("Selecting Comment with commentId {} and postId {}", commentId, postId);
+
+        TypedQuery<Comment> query = em.createQuery(
+                "SELECT c FROM Comment c WHERE c.commentId = :commentId AND c.post.postId = :postId AND c.post.user.neighborhood.id = :neighborhoodId",
+                Comment.class
+        );
+
+        query.setParameter("commentId", commentId);
+        query.setParameter("postId", postId);
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Comment> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
+
+    @Override
+    public List<Comment> getComments(long postId, int page, int size) {
         LOGGER.debug("Selecting Comments from Post {}", postId);
 
         TypedQuery<Long> idQuery = em.createQuery("SELECT c.commentId FROM Comment c " +
@@ -66,9 +86,12 @@ public class CommentDaoImpl implements CommentDao {
         return Collections.emptyList();
     }
 
+    // ---------------------------------------------------
+
     @Override
-    public int getCommentsCountByPostId(long id) {
+    public int countComments(long id) {
         LOGGER.debug("Selecting Comments Count from Post {}", id);
+
         Long count = (Long) em.createQuery("SELECT COUNT(c) FROM Comment c " +
                         "WHERE c.post.postId = :postId")
                 .setParameter("postId", id)

@@ -13,6 +13,10 @@ public class TimeRangeValidator implements ConstraintValidator<ValidTimeRangeCon
 
     @Override
     public boolean isValid(EventForm eventForm, ConstraintValidatorContext context) {
+        if(eventForm.getStartTime() == null || eventForm.getEndTime() == null)
+            // @Null validation checks for null
+            return true;
+
         // Check if startTime is before endTime
         return eventForm.getStartTime().compareTo(eventForm.getEndTime()) < 0;
     }

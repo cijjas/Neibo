@@ -24,6 +24,7 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
     @Override
     public Specialization createSpecialization(long workerId, long professionId) {
         LOGGER.debug("Inserting Worker Profession");
+
         Specialization specialization = new Specialization(em.find(Worker.class, workerId), em.find(Profession.class, professionId));
         em.persist(specialization);
         return specialization;
@@ -32,10 +33,21 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
     // --------------------------------------- WORKERS PROFESSIONS SELECT ----------------------------------------------
 
     @Override
-    public List<Profession> getWorkerProfessions(long workerId) {
+    public List<Profession> getWorkerProfessions(Long workerId) {
         LOGGER.debug("Selecting Professions of Worker {}", workerId);
-        TypedQuery<Profession> query = em.createQuery("SELECT p FROM Worker w JOIN w.professions p WHERE w.user.id = :workerId", Profession.class);
-        query.setParameter("workerId", workerId);
+
+        StringBuilder queryString = new StringBuilder("SELECT p FROM Profession p");
+
+        if (workerId != null) {
+            queryString.append(" JOIN p.workers w WHERE w.user.id = :workerId");
+        }
+
+        TypedQuery<Profession> query = em.createQuery(queryString.toString(), Profession.class);
+
+        if (workerId != null) {
+            query.setParameter("workerId", workerId);
+        }
+
         return query.getResultList();
     }
 }

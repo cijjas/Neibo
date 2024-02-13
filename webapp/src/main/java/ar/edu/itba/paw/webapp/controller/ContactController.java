@@ -7,6 +7,7 @@ import ar.edu.itba.paw.webapp.form.ContactForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -33,8 +34,12 @@ public class ContactController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listContacts() {
-        LOGGER.info("GET request arrived at neighborhoods/{}/contacts", neighborhoodId);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
         final List<Contact> contacts = cs.getContacts(neighborhoodId);
+
+        if (contacts.isEmpty())
+            return Response.noContent().build();
+
         final List<ContactDto> contactsDto = contacts.stream()
                 .map(c -> ContactDto.fromContact(c, uriInfo)).collect(Collectors.toList());
 
@@ -42,10 +47,20 @@ public class ContactController {
                 .build();
     }
 
+    @GET
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response findContact(@PathParam("id") long contactId) {
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, contactId);
+        return Response.ok(ContactDto.fromContact(cs.findContact(contactId, neighborhoodId)
+                .orElseThrow(NotFoundException::new), uriInfo)).build();
+    }
+
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured("ROLE_ADMINISTRATOR")
     public Response createContact(@Valid final ContactForm form) {
-        LOGGER.info("POST request arrived at neighborhoods/{}/contacts", neighborhoodId);
+        LOGGER.info("POST request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
         final Contact contact = cs.createContact(neighborhoodId, form.getContactName(), form.getContactAddress(), form.getContactPhone());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(contact.getContactId())).build();
@@ -56,10 +71,11 @@ public class ContactController {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured("ROLE_ADMINISTRATOR")
     public Response updateContactPartially(
             @PathParam("id") final long id,
             @Valid final ContactForm partialUpdate) {
-        LOGGER.info("PATCH request arrived at neighborhoods/{}/contacts/{}", neighborhoodId, id);
+        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
         final Contact contact = cs.updateContact(id, partialUpdate.getContactName(), partialUpdate.getContactAddress(), partialUpdate.getContactPhone());
         return Response.ok(ContactDto.fromContact(contact, uriInfo)).build();
     }
@@ -67,10 +83,13 @@ public class ContactController {
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured("ROLE_ADMINISTRATOR")
     public Response deleteById(@PathParam("id") final long id) {
-        LOGGER.info("DELETE request arrived at neighborhoods/{}/contacts/{}", neighborhoodId, id);
-        cs.deleteContact(id);
-        return Response.noContent().build();
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
+        if(cs.deleteContact(id)) {
+            return Response.noContent().build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 
 }

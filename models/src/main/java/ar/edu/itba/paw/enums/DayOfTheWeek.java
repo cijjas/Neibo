@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.enums;
 
 import ar.edu.itba.paw.Pair;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -9,13 +10,13 @@ import java.util.stream.Collectors;
 
 // DayOfTheWeek.java
 public enum DayOfTheWeek {
-    Monday,
-    Tuesday,
-    Wednesday,
-    Thursday,
-    Friday,
-    Saturday,
-    Sunday;
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY,
+    SUNDAY;
 
     public static final List<Pair<Integer, String>> DAY_PAIRS = Arrays.stream(values())
             .map(day -> new Pair<>(day.getId(), day.name()))
@@ -23,7 +24,7 @@ public enum DayOfTheWeek {
 
     public static long convertToCustomDayId(int calendarDayId) {
         if (calendarDayId == Calendar.SUNDAY) {
-            return DayOfTheWeek.Sunday.getId();
+            return DayOfTheWeek.SUNDAY.getId();
         }
 
         return calendarDayId - 1;
@@ -33,11 +34,13 @@ public enum DayOfTheWeek {
         return ordinal() + 1;
     }
 
-    public static DayOfTheWeek fromId(int id) {
+    public static DayOfTheWeek fromId(long id) {
+        if(id <= 0)
+            throw new IllegalArgumentException("Invalid value (" + id + ") for the Day ID. Please use a positive integer greater than 0.");
         return Arrays.stream(values())
-                .filter(day -> day.getId() == id)
+                .filter(d -> d.getId() == id)
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(()-> new NotFoundException("Day Not Found"));
     }
 
 }

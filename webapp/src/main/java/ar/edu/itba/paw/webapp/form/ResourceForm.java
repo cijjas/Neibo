@@ -4,19 +4,18 @@ import ar.edu.itba.paw.webapp.form.validation.constraints.ImageConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class ResourceForm {
-
-    @NotBlank
     @Size(max = 1000)
     private String description;
 
     @ImageConstraint
     private MultipartFile imageFile;
 
-    @NotBlank
-    @Size(min = 0, max = 64)
+    @NotNull
+    @Size(min=1, max = 64)
     private String title;
 
     public String getDescription() {

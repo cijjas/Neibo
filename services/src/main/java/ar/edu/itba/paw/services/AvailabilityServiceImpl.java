@@ -1,8 +1,12 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.services.AvailabilityService;
+import ar.edu.itba.paw.models.Entities.Availability;
 import ar.edu.itba.paw.models.Entities.Shift;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,18 +24,77 @@ public class AvailabilityServiceImpl implements AvailabilityService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AvailabilityServiceImpl.class);
     private final ShiftDao shiftDao;
     private final AvailabilityDao availabilityDao;
+    private final NeighborhoodDao neighborhoodDao;
+    private final AmenityDao amenityDao;
 
     @Autowired
-    public AvailabilityServiceImpl(final ShiftDao shiftDao, final AvailabilityDao availabilityDao) {
+    public AvailabilityServiceImpl(final ShiftDao shiftDao, final AvailabilityDao availabilityDao, final NeighborhoodDao neighborhoodDao, final AmenityDao amenityDao) {
         this.availabilityDao = availabilityDao;
         this.shiftDao = shiftDao;
+        this.neighborhoodDao = neighborhoodDao;
+        this.amenityDao = amenityDao;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public Availability createAvailability(long amenityId, long shiftId) {
+        LOGGER.info("Getting Availability for Amenity {} on Shift {}", amenityId, shiftId);
+
+        return availabilityDao.createAvailability(amenityId, shiftId);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public Optional<Availability> findAvailability(long availabilityId) {
+        LOGGER.info("Finding Availability {}", availabilityId);
+
+        ValidationUtils.checkAvailabilityId(availabilityId);
+
+        return availabilityDao.findAvailability(availabilityId);
+    }
+
+    @Override
+    public Optional<Availability> findAvailability(long amenityId, long availabilityId, long neighborhoodId) {
+        LOGGER.info("Finding Availability {} for Amenity {} from Neighborhood {}", availabilityId, amenityId, neighborhoodId);
+
+        ValidationUtils.checkAvailabilityId(availabilityId);
+        ValidationUtils.checkAmenityId(amenityId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return availabilityDao.findAvailability(amenityId, availabilityId, neighborhoodId);
+    }
+
+
+    @Override
+    public List<Availability> getAvailability(long amenityId) {
+        LOGGER.info("Getting Availability for Amenity {}", amenityId);
+
+        ValidationUtils.checkAmenityId(amenityId);
+
+        return availabilityDao.getAvailability(amenityId);
+    }
+
+    @Override
+    public List<Availability> getAvailability(long amenityId, String status, String date, long neighborhoodId) {
+        LOGGER.info("Getting Availabilities with status {} for Amenity {} from Neighborhood {} on Date {}", status, amenityId, neighborhoodId, date);
+
+        ValidationUtils.checkAmenityId(amenityId);
+        ValidationUtils.checkOptionalShiftStatusString(status);
+        ValidationUtils.checkOptionalDateString(date);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        amenityDao.findAmenity(amenityId, neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return availabilityDao.getAvailability(amenityId, status, date);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public boolean updateAvailability(long amenityId, List<String> newShiftDescriptions) {
-        LOGGER.info("Updating the Availability for Amenity");
+        LOGGER.info("Updating Availability for Amenity {}", amenityId);
 
         // Convert the List of Shift descriptions to a List of shift IDs
         List<Long> newShiftIds = newShiftDescriptions.stream()
@@ -39,7 +102,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
                     String[] shiftParts = shiftDescription.split("-");
                     long dayId = Long.parseLong(shiftParts[0]);
                     long timeId = Long.parseLong(shiftParts[1]);
-                    Optional<Shift> existingShift = shiftDao.findShiftId(timeId, dayId);
+                    Optional<Shift> existingShift = shiftDao.findShift(timeId, dayId);
                     if (existingShift.isPresent()) {
                         return existingShift.get().getShiftId();
                     } else {
@@ -50,7 +113,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
                 .collect(Collectors.toList());
 
         // Get the old shift IDs
-        List<Long> oldShiftIds = shiftDao.getAmenityShifts(amenityId).stream()
+        List<Long> oldShiftIds = shiftDao.getShifts(amenityId).stream()
                 .map(Shift::getShiftId)
                 .collect(Collectors.toList());
 

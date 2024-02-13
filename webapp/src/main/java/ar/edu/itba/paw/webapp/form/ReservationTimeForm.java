@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.ExistingAmenityConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ReservationTimeConstraint;
 
 import java.sql.Date;
@@ -8,9 +9,9 @@ import java.sql.Time;
 
 @ReservationTimeConstraint
 public class ReservationTimeForm {
-
     private Date date;
 
+    @ExistingAmenityConstraint
     private long amenityId;
 
     private Time startTime;

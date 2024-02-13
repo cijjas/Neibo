@@ -13,5 +13,5 @@ public interface ProfessionWorkerDao {
 
     // --------------------------------------- WORKERS PROFESSIONS SELECT ----------------------------------------------
 
-    List<Profession> getWorkerProfessions(long workerId);
+    List<Profession> getWorkerProfessions(Long workerId);
 }

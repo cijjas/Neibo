@@ -26,6 +26,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
     @Override
     public Set<Attendance> getAttendance(long eventId, int page, int size) {
         LOGGER.info("Getting Attendance for Event {}", eventId);
+
         // Initialize Query Builder
         CriteriaBuilder cb = em.getCriteriaBuilder();
         // We retrieve a list of attendance ids which are Longs, from the Attendance Entity
@@ -56,8 +57,12 @@ public class AttendanceDaoImpl implements AttendanceDao {
         return new HashSet<>(dataTypedQuery.getResultList());
     }
 
+    // ---------------------------------------------------
+
     @Override
-    public int getAttendanceCount(long eventId) {
+    public int countAttendance(long eventId) {
+        LOGGER.info("Counting Attendance for Event {}", eventId);
+
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Long> criteriaQuery = cb.createQuery(Long.class);
         Root<Attendance> root = criteriaQuery.from(Attendance.class);
@@ -69,8 +74,26 @@ public class AttendanceDaoImpl implements AttendanceDao {
     }
 
     @Override
-    public Optional<Attendance> findAttendanceById(long attendanceId) {
+    public Optional<Attendance> findAttendance(long userId, long eventId, long neighborhoodId) {
+        LOGGER.debug("Selecting Attendance with id {} and neighborhoodId {}", userId, neighborhoodId);
+
+        TypedQuery<Attendance> query = em.createQuery(
+                "SELECT a FROM Attendance a WHERE a.id = :attendanceId " + " AND a.event.neighborhood.neighborhoodId = :neighborhoodId",
+                Attendance.class
+        );
+
+        query.setParameter("attendanceId", new AttendanceKey(userId, eventId));
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Attendance> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
+
+    @Override
+    public Optional<Attendance> findAttendance(long attendanceId) {
         LOGGER.debug("Selecting Attendance with id {}", attendanceId);
+
         return Optional.ofNullable(em.find(Attendance.class, attendanceId));
     }
 
@@ -78,7 +101,8 @@ public class AttendanceDaoImpl implements AttendanceDao {
 
     @Override
     public Attendance createAttendee(long userId, long eventId) {
-        LOGGER.debug("Inserting Attendance");
+        LOGGER.debug("Inserting Attendance with userId {} and eventId {}", userId, eventId);
+
         Attendance attendance = new Attendance(em.find(User.class, userId), em.find(Event.class, eventId));
         em.persist(attendance);
         return attendance;
@@ -89,6 +113,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
     @Override
     public boolean deleteAttendee(long userId, long eventId) {
         LOGGER.debug("Deleting Attendance with userId {} and eventId {}", userId, eventId);
+
         Attendance attendance = em.find(Attendance.class, new AttendanceKey(userId, eventId));
         if (attendance != null) {
             em.remove(attendance);

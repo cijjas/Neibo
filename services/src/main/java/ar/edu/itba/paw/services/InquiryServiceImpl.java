@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.InquiryDao;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
@@ -23,13 +24,11 @@ public class InquiryServiceImpl implements InquiryService {
     private static final Logger LOGGER = LoggerFactory.getLogger(InquiryServiceImpl.class);
     private final InquiryDao inquiryDao;
     private final EmailService emailService;
-    private final UserDao userDao;
     private final ProductDao productDao;
 
     @Autowired
-    public InquiryServiceImpl(final InquiryDao inquiryDao, final UserDao userDao, final ProductDao productDao, final EmailService emailService) {
+    public InquiryServiceImpl(final InquiryDao inquiryDao, final ProductDao productDao, final EmailService emailService) {
         this.inquiryDao = inquiryDao;
-        this.userDao = userDao;
         this.productDao = productDao;
         this.emailService = emailService;
     }
@@ -38,9 +37,10 @@ public class InquiryServiceImpl implements InquiryService {
 
     @Override
     public Inquiry createInquiry(long userId, long productId, String message) {
-        LOGGER.info("User {} Inquiring on Product {}", userId, productId);
+        LOGGER.info("Creating Inquiry for Product {} from User {}", productId, userId);
+
         //Send email to seller
-        Product product = productDao.findProductById(productId).orElseThrow(() -> new IllegalStateException("Product not found"));
+        Product product = productDao.findProduct(productId).orElseThrow(() -> new NotFoundException("Product not found"));
         User receiver = product.getSeller();
         emailService.sendInquiryMail(receiver, product, message, false);
 
@@ -50,28 +50,68 @@ public class InquiryServiceImpl implements InquiryService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Optional<Inquiry> findInquiryById(long inquiryId) {
-        return inquiryDao.findInquiryById(inquiryId);
+    public Optional<Inquiry> findInquiry(long inquiryId) {
+        LOGGER.info("Finding Inquiry {}", inquiryId);
+
+        ValidationUtils.checkInquiryId(inquiryId);
+
+        return inquiryDao.findInquiry(inquiryId);
+    }
+
+    @Override
+    public Optional<Inquiry> findInquiry(long inquiryId, long productId, long neighborhoodId) {
+        LOGGER.info("Finding Inquiry {} for Product {} from Neighborhood {}", inquiryId, productId, neighborhoodId);
+
+        ValidationUtils.checkInquiryId(inquiryId);
+        ValidationUtils.checkProductId(productId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return inquiryDao.findInquiry(inquiryId, productId, neighborhoodId);
     }
 
 
     @Override
-    public List<Inquiry> getInquiriesByProductAndCriteria(long productId, int page, int size) {
-        return inquiryDao.getInquiriesByProductAndCriteria(productId, page, size);
+    public List<Inquiry> getInquiries(long productId, int page, int size, long neighborhoodId) {
+        LOGGER.info("Getting Inquiries for Product {} from Neighborhood {}", productId, neighborhoodId);
+
+        ValidationUtils.checkProductId(productId);
+        ValidationUtils.checkPageAndSize(page, size);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        productDao.findProduct(productId, neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return inquiryDao.getInquiries(productId, page, size);
+    }
+
+    // ---------------------------------------------------
+
+    @Override
+    public int countInquiries(long productId) {
+        LOGGER.info("Counting Inquiries for Product {}", productId);
+
+        ValidationUtils.checkProductId(productId);
+
+        return inquiryDao.countInquiries(productId);
     }
 
     @Override
-    public int getTotalInquiryPages(long productId, int size) {
-        return (int) Math.ceil((double) inquiryDao.getInquiriesCountByProduct(productId) / size);
+    public int calculateInquiryPages(long productId, int size) {
+        LOGGER.info("Calculating Inquiry Pages for Product {}", productId);
+
+        ValidationUtils.checkProductId(productId);
+        ValidationUtils.checkSize(size);
+
+        return PaginationUtils.calculatePages(inquiryDao.countInquiries(productId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public Inquiry replyInquiry(long inquiryId, String reply) {
-        LOGGER.info("Replying to Inquiry with id {}", inquiryId);
+        LOGGER.info("Creating a reply for Inquiry {}", inquiryId);
+
         //Send email to inquirer
-        Inquiry inquiry = inquiryDao.findInquiryById(inquiryId).orElseThrow(() -> new IllegalStateException("Inquiry not found"));
+        Inquiry inquiry = inquiryDao.findInquiry(inquiryId).orElseThrow(() -> new NotFoundException("Inquiry not found"));
         inquiry.setReply(reply);
 
         Product product = inquiry.getProduct();

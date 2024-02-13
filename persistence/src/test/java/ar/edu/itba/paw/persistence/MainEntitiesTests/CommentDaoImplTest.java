@@ -77,7 +77,7 @@ public class CommentDaoImplTest {
         long cKey = testInserter.createComment(uKey, pKey);
 
         // Exercise
-        Optional<Comment> comment = commentDao.findCommentById(cKey);
+        Optional<Comment> comment = commentDao.findComment(cKey, pKey, nhKey);
 
         // Validations & Post Conditions
         assertTrue(comment.isPresent());
@@ -89,7 +89,7 @@ public class CommentDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<Comment> comment = commentDao.findCommentById(1);
+        Optional<Comment> comment = commentDao.findComment(1, 1, 1);
 
         // Validations & Post Conditions
         assertFalse(comment.isPresent());
@@ -106,7 +106,7 @@ public class CommentDaoImplTest {
         testInserter.createComment(uKey, pKey);
 
         // Exercise
-        List<Comment> comments = commentDao.getCommentsByPostId(pKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Comment> comments = commentDao.getComments(pKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertFalse(comments.isEmpty());
@@ -118,7 +118,7 @@ public class CommentDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Comment> comments = commentDao.getCommentsByPostId(1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Comment> comments = commentDao.getComments(1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(comments.isEmpty());
@@ -138,7 +138,7 @@ public class CommentDaoImplTest {
         testInserter.createComment(uKey, pKey1);
 
         // Exercise
-        List<Comment> comments = commentDao.getCommentsByPostId(pKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Comment> comments = commentDao.getComments(pKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertFalse(comments.isEmpty());
@@ -150,7 +150,7 @@ public class CommentDaoImplTest {
 
 
         // Exercise
-        List<Comment> comments = commentDao.getCommentsByPostId(1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Comment> comments = commentDao.getComments(1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(comments.isEmpty());
@@ -167,7 +167,7 @@ public class CommentDaoImplTest {
         testInserter.createComment(uKey, pKey);
 
         // Exercise
-        int comments = commentDao.getCommentsCountByPostId(pKey);
+        int comments = commentDao.countComments(pKey);
 
         // Validations & Post Conditions
         assertEquals(1, comments);
@@ -184,7 +184,7 @@ public class CommentDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
-        int comments = commentDao.getCommentsCountByPostId(pKey);
+        int comments = commentDao.countComments(pKey);
 
         // Validations & Post Conditions
         assertEquals(0, comments);

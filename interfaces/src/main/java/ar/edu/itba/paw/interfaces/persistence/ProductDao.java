@@ -15,11 +15,13 @@ public interface ProductDao {
 
     // --------------------------------------------- PRODUCTS SELECT ---------------------------------------------------
 
-    Optional<Product> findProductById(final long productId);
+    Optional<Product> findProduct(final long productId);
 
-    List<Product> getProductsByCriteria(long neighborhoodId, String department, long userId, String productStatus, int page, int size);
+    Optional<Product> findProduct(final long productId, long neighborhoodId);
 
-    int getProductsCountByCriteria(long neighborhoodId, String department, long userId, String productStatus);
+    List<Product> getProducts(long neighborhoodId, String department, Long userId, String productStatus, int page, int size);
+
+    int countProducts(long neighborhoodId, String department, Long userId, String productStatus);
 
     // --------------------------------------------- PRODUCTS DELETE ---------------------------------------------------
 

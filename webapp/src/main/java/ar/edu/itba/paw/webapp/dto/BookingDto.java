@@ -21,13 +21,16 @@ public class BookingDto {
         dto.bookingDate = booking.getBookingDate();
 
         dto.self = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(booking.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("bookings")
                 .path(String.valueOf(booking.getBookingId()))
                 .build();
         dto.user = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(booking.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(booking.getUser().getUserId()))
-//                .queryParam("bookedAmenity", String.valueOf(booking.getUser().getUserId()))
                 .build();
         dto.amenityAvailability = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")

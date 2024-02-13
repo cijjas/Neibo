@@ -9,37 +9,39 @@ import java.util.List;
 
 class DaoUtils {
 
-    static void appendCommonConditions(StringBuilder query, List<Object> queryParams, String channel, long userId, long neighborhoodId, List<String> tags, PostStatus postStatus) {
+    static void appendCommonConditions(StringBuilder query, List<Object> queryParams, String channel, Long userId, long neighborhoodId, List<String> tags, String postStatus) {
         appendInitialWhereClause(query);
         appendNeighborhoodIdCondition(query, queryParams, neighborhoodId);
 
         if (channel != null && !channel.isEmpty())
             appendChannelCondition(query, queryParams, channel);
 
-        if (userId != 0)
+        if (userId != null)
             appendUserIdCondition(query, queryParams, userId);
 
         if (tags != null && !tags.isEmpty())
             appendTagsCondition(query, queryParams, tags);
 
-        switch (postStatus) {
-            case hot:
-                appendHotClause(query);
-                break;
-            case trending:
-                appendTrendingClause(query);
-                break;
-            case none:
-                break;
+        if (postStatus != null ){
+            switch (PostStatus.valueOf(postStatus.toUpperCase())) {
+                case HOT:
+                    appendHotClause(query);
+                    break;
+                case TRENDING:
+                    appendTrendingClause(query);
+                    break;
+                case NONE:
+                    break;
+            }
         }
     }
 
-    static void appendCommonWorkerConditions(StringBuilder query, List<Object> queryParams, long[] neighborhoodIds, List<String> professions, WorkerRole workerRole, WorkerStatus workerStatus) {
+    static void appendCommonWorkerConditions(StringBuilder query, List<Object> queryParams, long[] neighborhoodIds, List<String> professions, String workerRole, String workerStatus) {
         appendInitialWhereClause(query);
         appendWorkerNeighborhoodIdCondition(query, queryParams, neighborhoodIds);
         appendWorkerNeighborhoodRoleCondition(query, queryParams, workerRole);
 
-        if (workerStatus == WorkerStatus.hot){
+        if (workerStatus != null && WorkerStatus.valueOf(workerStatus.toUpperCase()) == WorkerStatus.HOT){
             appendWorkerHotCondition(query);
         }
 
@@ -58,7 +60,7 @@ class DaoUtils {
 
     static void appendChannelCondition(StringBuilder query, List<Object> queryParams, String channel) {
         query.append(" AND channel LIKE ?");
-        queryParams.add(channel);
+        queryParams.add(channel.substring(0, 1).toUpperCase() + channel.substring(1).toLowerCase());
     }
 
     static void appendRoleCondition(StringBuilder query, List<Object> queryParams, UserRole role) {
@@ -91,10 +93,10 @@ class DaoUtils {
         }
     }
 
-    static void appendWorkerNeighborhoodRoleCondition(StringBuilder query, List<Object> queryParams, WorkerRole workerRole) {
+    static void appendWorkerNeighborhoodRoleCondition(StringBuilder query, List<Object> queryParams, String workerRole) {
         if (workerRole != null) {
             query.append(" AND wn.role = ?");
-            queryParams.add(workerRole.toString());
+            queryParams.add(workerRole);
         }
     }
 
@@ -123,15 +125,21 @@ class DaoUtils {
     }
 
     static void appendParams(StringBuilder query, List<Object> queryParams, List<String> tags) {
-        //third parameter will either be tags or professions
+        // Third parameter will either be tags or professions
         for (int i = 0; i < tags.size(); i++) {
+            String formattedTag = capitalizeFirstLetter(tags.get(i));
             query.append("?");
-            queryParams.add(tags.get(i)); // Use the tag/profession name as a string
+            queryParams.add(formattedTag); // Use the formatted tag/profession name
             if (i < tags.size() - 1) {
                 query.append(", ");
             }
         }
     }
+
+    static String capitalizeFirstLetter(String input) {
+        return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
+    }
+
 
     static void appendPaginationClause(StringBuilder query, List<Object> queryParams, int page, int size) {
         // Calculate the offset based on the page and size

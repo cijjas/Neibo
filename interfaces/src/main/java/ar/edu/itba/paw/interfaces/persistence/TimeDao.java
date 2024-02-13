@@ -13,7 +13,7 @@ public interface TimeDao {
 
     // ----------------------------------------------- TIMES SELECT ----------------------------------------------------
 
-    Optional<Time> findTimeById(long timeId);
+    Optional<Time> findTime(long timeId);
 
-    OptionalLong findIdByTime(java.sql.Time time);
+    OptionalLong findId(java.sql.Time time);
 }

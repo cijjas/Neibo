@@ -2,7 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodWorkerDao;
+import ar.edu.itba.paw.interfaces.persistence.AffiliationDao;
 import ar.edu.itba.paw.interfaces.persistence.ProfessionWorkerDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.persistence.WorkerDao;
@@ -52,7 +52,7 @@ public class WorkerServiceImplTest {
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
-    private NeighborhoodWorkerDao neighborhoodWorkerDao;
+    private AffiliationDao affiliationDao;
     @InjectMocks
     private WorkerServiceImpl ws;
 

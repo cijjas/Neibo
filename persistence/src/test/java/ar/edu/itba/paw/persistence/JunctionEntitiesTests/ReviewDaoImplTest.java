@@ -90,7 +90,7 @@ public class ReviewDaoImplTest {
         long rKey = testInserter.createReview(uKey, uKey2);
 
         // Exercise
-        Optional<Review> retrievedReview = reviewDao.findReviewById(rKey);
+        Optional<Review> retrievedReview = reviewDao.findReview(rKey);
 
         // Validations & Post Conditions
         assertTrue(retrievedReview.isPresent());
@@ -158,7 +158,7 @@ public class ReviewDaoImplTest {
         testInserter.createReview(uKey, uKey2, RATING_2, REVIEW_2);
 
         // Exercise
-        int count = reviewDao.getReviewsCount(uKey);
+        int count = reviewDao.countReviews(uKey);
 
         // Validations & Post Conditions
         assertEquals(2, count);
@@ -169,7 +169,7 @@ public class ReviewDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        int count = reviewDao.getReviewsCount(1);
+        int count = reviewDao.countReviews(1);
 
         // Validations & Post Conditions
         assertEquals(0, count);

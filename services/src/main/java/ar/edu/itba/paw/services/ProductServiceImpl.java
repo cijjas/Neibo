@@ -1,7 +1,8 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.DepartmentDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.interfaces.persistence.PurchaseDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
@@ -23,100 +24,102 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
     private final ProductDao productDao;
-    private final PurchaseDao purchaseDao;
+    private final NeighborhoodDao neighborhoodDao;
     private final ImageService imageService;
     private final DepartmentDao departmentDao;
 
     @Autowired
-    public ProductServiceImpl(final ProductDao productDao, final PurchaseDao purchaseDao, final ImageService imageService, DepartmentDao departmentDao) {
+    public ProductServiceImpl(final ProductDao productDao, final ImageService imageService,
+                              DepartmentDao departmentDao, NeighborhoodDao neighborhoodDao) {
         this.productDao = productDao;
-        this.purchaseDao = purchaseDao;
         this.imageService = imageService;
         this.departmentDao = departmentDao;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public Product createProduct(long userId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, long units) {
-        LOGGER.info("User {} Creating Product {}", userId, name);
+        LOGGER.info("Creating Product {} from User {}", name, userId);
+
         double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
         Long[] idArray = {0L, 0L, 0L};
         int pictureFilesLength = pictureFiles == null? 0 : pictureFiles.length;
-        for(int i = 0; i < pictureFilesLength; i++){
+        for(int i = 0; i < pictureFilesLength; i++)
             idArray[i] = getImageId(pictureFiles[i]);
-        }
+
         return productDao.createProduct(userId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2], units);
-    }
-
-    @Override
-    public Optional<Product> findProductById(long productId) {
-        LOGGER.info("Selecting Product with id {}", productId);
-        if (productId <= 0)
-            throw new IllegalArgumentException("Product ID must be a positive integer");
-        return productDao.findProductById(productId);
-    }
-
-    @Override
-    public List<Product> getProductsByCriteria(long neighborhoodId, String department, long userId, String productStatus, int page, int size) {
-        LOGGER.info("Selecting Products by neighborhood {} and departments {}", neighborhoodId, department);
-        return productDao.getProductsByCriteria(neighborhoodId, department, userId, productStatus, page, size);
-    }
-
-    @Override
-    public int getProductsCountByCriteria(long neighborhoodId, String department, long userId, String productStatus) {
-        LOGGER.info("Counting Products by neighborhood {} and departments {}", neighborhoodId, department);
-        return productDao.getProductsCountByCriteria(neighborhoodId, department, userId, productStatus);
-    }
-
-    @Override
-    public void markAsBought(long buyerId, long productId, long units) {
-        LOGGER.info("Marking Product {} as bought by user {}", productId, buyerId);
-        purchaseDao.createPurchase(productId, buyerId, units);
-        Product product = productDao.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
-        product.setRemainingUnits(product.getRemainingUnits()-units);
-    }
-
-    @Override
-    public int getProductsTotalPages(long neighborhoodId, int size, String department, long userId, String productStatus){
-        return (int) Math.ceil((double) getProductsCountByCriteria(neighborhoodId, department, userId, productStatus) / size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void restockProduct(long productId, long extraUnits) {
-        LOGGER.info("Restocking Product {}", productId);
-        Product product = productDao.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
-        product.setRemainingUnits(product.getRemainingUnits()+extraUnits);
+    public Optional<Product> findProduct(long productId) {
+        LOGGER.info("Finding Product {}", productId);
+
+        ValidationUtils.checkProductId(productId);
+
+        return productDao.findProduct(productId);
     }
 
     @Override
-    public void updateProduct(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, Long stock) {
-        LOGGER.info("Updating Product {}", productId);
-        double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
-        Long[] idArray = {0L, 0L, 0L};
-        for(int i = 0; i < pictureFiles.length; i++){
-            idArray[i] = getImageId(pictureFiles[i]);
-        }
-        Long updatedStock = stock;
-        if(stock == null){
-            updatedStock = productDao.findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found")).getRemainingUnits();
-        }
+    public Optional<Product> findProduct(long productId, long neighborhoodId) {
+        LOGGER.info("Finding Product {} from Neighborhood {}", productId, neighborhoodId);
 
-        Product product = findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
-        product.setName(name);
-        product.setDescription(description);
-        product.setPrice(priceDouble);
-        product.setUsed(used);
-        product.setDepartment(departmentDao.findDepartmentById(departmentId).orElseThrow(()-> new NotFoundException("Department Not Found")));
-        product.setRemainingUnits(updatedStock);
+        ValidationUtils.checkProductId(productId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return productDao.findProduct(productId, neighborhoodId);
     }
+
+    @Override
+    public List<Product> getProducts(long neighborhoodId, String department, Long userId, String productStatus, int page, int size) {
+        LOGGER.info("Getting Products with status {} from Department {} by User {} from Neighborhood {}", productStatus, department, userId, neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkOptionalDepartmentString(department);
+        ValidationUtils.checkProductStatusUserIdStrings(productStatus, userId);
+        ValidationUtils.checkPageAndSize(page, size);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return productDao.getProducts(neighborhoodId, department, userId, productStatus, page, size);
+    }
+
+    // ---------------------------------------------------
+
+    @Override
+    public int countProducts(long neighborhoodId, String department, Long userId, String productStatus) {
+        LOGGER.info("Counting Products with status {} from Department {} by User {} from Neighborhood {}", productStatus, department, userId, neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkOptionalDepartmentString(department);
+        ValidationUtils.checkProductStatusUserIdStrings(productStatus, userId);
+        ValidationUtils.checkOptionalDepartmentString(department);
+
+        return productDao.countProducts(neighborhoodId, department, userId, productStatus);
+    }
+
+    @Override
+    public int calculateProductPages(long neighborhoodId, int size, String department, Long userId, String productStatus){
+        LOGGER.info("Calculating Product Pages with status {} from Department {} by User {} from Neighborhood {}", productStatus, department, userId, neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkOptionalDepartmentString(department);
+        ValidationUtils.checkProductStatusUserIdStrings(productStatus, userId);
+        ValidationUtils.checkSize(size);
+
+        return PaginationUtils.calculatePages(productDao.countProducts(neighborhoodId, department, userId, productStatus), size);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public Product updateProductPartially(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, Long stock){
         LOGGER.info("Updating Product {}", productId);
-        Product product = findProductById(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+
+        Product product = findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
         if(name != null && !name.isEmpty())
             product.setName(name);
         if(description != null && !description.isEmpty())
@@ -128,7 +131,7 @@ public class ProductServiceImpl implements ProductService {
         if(used != product.isUsed())
             product.setUsed(used);
         if(departmentId != 0)
-            product.setDepartment(departmentDao.findDepartmentById(departmentId).orElseThrow(()-> new NotFoundException("Department Not Found")));
+            product.setDepartment(departmentDao.findDepartment(departmentId).orElseThrow(()-> new NotFoundException("Department Not Found")));
         if(stock != null)
             product.setRemainingUnits(stock);
 
@@ -149,9 +152,7 @@ public class ProductServiceImpl implements ProductService {
                 Image i = imageService.storeImage(pictureFiles[2]);
                 product.setTertiaryPicture(i);
             }
-
         }
-
         return product;
     }
 
@@ -160,6 +161,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean deleteProduct(long productId) {
         LOGGER.info("Deleting Product {}", productId);
+        ValidationUtils.checkProductId(productId);
         return productDao.deleteProduct(productId);
     }
 
@@ -172,5 +174,4 @@ public class ProductServiceImpl implements ProductService {
         }
         return i == null ? 0 : i.getImageId();
     }
-
 }

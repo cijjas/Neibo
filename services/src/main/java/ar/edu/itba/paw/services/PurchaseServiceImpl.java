@@ -1,6 +1,9 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.TransactionType;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.PurchaseDao;
+import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.PurchaseService;
 import ar.edu.itba.paw.models.Entities.Purchase;
 import org.slf4j.Logger;
@@ -8,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -17,68 +19,80 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PurchaseServiceImpl.class);
     private final PurchaseDao purchaseDao;
+    private final UserDao userDao;
 
     @Autowired
-    public PurchaseServiceImpl(PurchaseDao purchaseDao) {
+    public PurchaseServiceImpl(PurchaseDao purchaseDao, UserDao userDao) {
         this.purchaseDao = purchaseDao;
+        this.userDao = userDao;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public Purchase createPurchase(long productId, long userId, long unitsBought) {
+        LOGGER.info("Creating a Purchase for Product {} for {} Units from User {}", productId, unitsBought, userId);
+
         return purchaseDao.createPurchase(productId, userId, unitsBought);
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
+
     @Override
     public Optional<Purchase> findPurchase(long purchaseId) {
-        return  purchaseDao.findPurchase(purchaseId);
+        LOGGER.info("Finding Purchase {}", purchaseId);
+
+        ValidationUtils.checkPurchaseId(purchaseId);
+
+        return purchaseDao.findPurchase(purchaseId);
     }
 
     @Override
-    public Set<Purchase> getPurchasesBySellerId(long userId, int page, int size) {
-        return  purchaseDao.getPurchasesBySellerId(userId, page, size);
+    public Optional<Purchase> findPurchase(long purchaseId, long userId, long neighborhoodId) {
+        LOGGER.info("Finding Purchase {} made by User {} from Neighborhood {}", purchaseId, userId, neighborhoodId);
+
+        ValidationUtils.checkPurchaseId(purchaseId);
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return purchaseDao.findPurchase(purchaseId, userId, neighborhoodId);
     }
 
     @Override
-    public int getPurchasesCountBySellerId(long userId) {
-        return  purchaseDao.getPurchasesCountBySellerId(userId);
+    public Set<Purchase> getPurchases(long userId, String transactionType, int page, int size, long neighborhoodId) {
+        LOGGER.info("Getting Transactions of type {} made by User {} from Neighborhood {}", transactionType, userId, neighborhoodId);
+
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkPageAndSize(page, size);
+        ValidationUtils.checkOptionalTransactionTypeString(transactionType);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        userDao.findUser(userId, neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return purchaseDao.getPurchases(userId, transactionType, page, size);
     }
 
     @Override
-    public Set<Purchase> getPurchasesByBuyerId(long userId, int page, int size) {
-        return purchaseDao.getPurchasesByBuyerId(userId, page, size);
+    public int countPurchases(long userId, String transactionType) {
+        LOGGER.info("Counting Transactions of type {} made by User {}", transactionType, userId);
+
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkOptionalTransactionTypeString(transactionType);
+
+        return purchaseDao.countPurchases(userId, transactionType);
     }
 
     @Override
-    public int getPurchasesCountByBuyerId(long userId) {
-        return purchaseDao.getPurchasesCountByBuyerId(userId);
+    public int calculatePurchasePages(long userId, String transactionType, int size) {
+        LOGGER.info("Calculating Transaction Pages of type {} made by User {}", transactionType, userId);
+
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkOptionalTransactionTypeString(transactionType);
+        ValidationUtils.checkSize(size);
+
+        return PaginationUtils.calculatePages(purchaseDao.countPurchases(userId, transactionType), size);
     }
 
-    // In PurchaseService
+    // -----------------------------------------------------------------------------------------------------------------
 
-    @Override
-    public Set<Purchase> getPurchasesByType(long userId, String type, int page, int size) {
-        if ("purchase".equalsIgnoreCase(type)) {
-            return getPurchasesByBuyerId(userId, page, size);
-        } else if ("sale".equalsIgnoreCase(type)) {
-            return getPurchasesBySellerId(userId, page, size);
-        } else {
-            // You might throw an exception or return an empty set, depending on your requirements
-            throw new IllegalArgumentException("Invalid 'type' parameter");
-        }
-    }
-
-    @Override
-    public int getTotalPurchasesPages(long sellerId, long buyerId, int size) {
-        if (sellerId != 0) {
-            return calculatePages(getPurchasesCountBySellerId(sellerId), size);
-        } else if (buyerId != 0) {
-            return calculatePages(getPurchasesCountByBuyerId(buyerId), size);
-        } else {
-            //throw something
-            return 0;
-        }
-    }
-
-    private int calculatePages(int totalItems, int size) {
-        return (int) Math.ceil((double) totalItems / size);
-    }
 }

@@ -65,7 +65,7 @@ public class DayDaoImplTest {
         long dayKey = testInserter.createDay();
 
         // Exercise
-        Optional<Day> foundDay = dayDao.findDayById(dayKey);
+        Optional<Day> foundDay = dayDao.findDay(dayKey);
 
         // Validations & Post Conditions
         assertTrue(foundDay.isPresent());
@@ -76,7 +76,7 @@ public class DayDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<Day> foundDay = dayDao.findDayById(1);
+        Optional<Day> foundDay = dayDao.findDay(1);
 
         // Validations & Post Conditions
         assertFalse(foundDay.isPresent());

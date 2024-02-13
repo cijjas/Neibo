@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.util.Optional;
 
 @Service
@@ -28,17 +29,27 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public Image storeImage(MultipartFile image) {
         LOGGER.info("Storing Image {}", image.getName());
+
         return imageDao.storeImage(image);
     }
+
+    @Override
+    public Image storeImage(InputStream imageStream) {
+        LOGGER.info("Storing Image");
+
+        return imageDao.storeImage(imageStream);
+    }
+
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Image> getImage(long imageId) {
-        LOGGER.info("Retrieving Image {}", imageId);
-        if (imageId <= 0)
-            throw new IllegalArgumentException("Image ID must be a positive integer");
-        return imageDao.getImage(imageId);
+    public Optional<Image> findImage(long imageId) {
+        LOGGER.info("Finding Image {}", imageId);
+
+        ValidationUtils.checkImageId(imageId);
+
+        return imageDao.findImage(imageId);
     }
 }

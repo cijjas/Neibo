@@ -48,7 +48,7 @@ public class CommentServiceImplTest {
     public void setUp() {
         mockUser = mock(User.class);
         mockPost = mock(Post.class);
-        when(postService.findPostById(POST_ID)).thenReturn(Optional.of(mockPost));
+        when(postService.findPost(POST_ID)).thenReturn(Optional.of(mockPost));
     }
 
     @Test

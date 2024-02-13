@@ -12,6 +12,23 @@ public class ProfessionDto {
     private URI self;
     private URI workers;
 
+    public static ProfessionDto fromProfession(Profession profession, UriInfo uriInfo){
+        final ProfessionDto dto = new ProfessionDto();
+
+        dto.name = profession.getProfession().name();
+
+        dto.self = uriInfo.getBaseUriBuilder()
+                .path("professions")
+                .path(String.valueOf(profession.getProfessionId()))
+                .build();
+
+        dto.workers = uriInfo.getBaseUriBuilder()
+                .path("workers")
+                .queryParam("profession", String.valueOf(profession.getProfessionId()))
+                .build();
+
+        return dto;
+    }
     public static ProfessionDto fromProfession(Professions profession, UriInfo uriInfo){
         final ProfessionDto dto = new ProfessionDto();
 
@@ -24,11 +41,12 @@ public class ProfessionDto {
 
         dto.workers = uriInfo.getBaseUriBuilder()
                 .path("workers")
-                .queryParam("profession", String.valueOf(profession.getId()))
+                .queryParam("withProfessions", String.valueOf(profession.getId()))
                 .build();
 
         return dto;
     }
+
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }

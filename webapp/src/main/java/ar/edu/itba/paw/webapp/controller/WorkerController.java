@@ -6,13 +6,14 @@ import ar.edu.itba.paw.enums.WorkerStatus;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Worker;
-import ar.edu.itba.paw.webapp.dto.AmenityDto;
+import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
 import ar.edu.itba.paw.webapp.form.WorkerUpdateForm;
 import ar.edu.itba.paw.webapp.form.WorkerSignupForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -44,20 +45,24 @@ public class WorkerController extends GlobalControllerAdvice {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_WORKER"})
     public Response listWorkers(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("professions") final List<String> professions,
-            @QueryParam("neighborhoodId") @DefaultValue("0") final long neighborhoodId,
-            @QueryParam("workerRole") final WorkerRole workerRole,
-            @QueryParam("workerStatus") final WorkerStatus workerStatus
+            @QueryParam("withProfessions") final List<String> professions,
+            @QueryParam("inNeighborhoods") final List<String> neighborhoodIds,
+            @QueryParam("withRole") final String workerRole,
+            @QueryParam("withStatus") final String workerStatus
     ) {
-        LOGGER.info("GET request arrived at workers");
-        Set<Worker> workers = ws.getWorkersByCriteria(page, size, professions, getLoggedUser().getUserId(), workerRole, workerStatus);
+        LOGGER.info("GET request arrived at '/workers'");
+        Set<Worker> workers = ws.getWorkers(page, size, professions, neighborhoodIds, workerRole, workerStatus);
+
+        if (workers.isEmpty())
+            return Response.noContent().build();
 
         String baseUri = uriInfo.getBaseUri().toString() + "workers";
 
-        int totalWorkerPages = ws.getTotalWorkerPagesByCriteria(professions, new long[]{neighborhoodId}, size, workerRole, workerStatus);
+        int totalWorkerPages = ws.calculateWorkerPages(professions, neighborhoodIds, size, workerRole, workerStatus);
         Link[] links = createPaginationLinks(baseUri, page, size, totalWorkerPages);
 
         List<WorkerDto> workerDto = workers.stream()
@@ -72,22 +77,19 @@ public class WorkerController extends GlobalControllerAdvice {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findWorker(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived at workers/{}", id);
-        Optional<Worker> worker = ws.findWorkerById(id);
-        if (!worker.isPresent()) {
-            throw new NotFoundException("WorkerForm Not Found");
-        }
-        return Response.ok(WorkerDto.fromWorker(worker.get(), uriInfo)).build();
+    public Response findWorker(@PathParam("id") final long workerId) {
+        LOGGER.info("GET request arrived at '/workers/{}'", workerId);
+        return Response.ok(WorkerDto.fromWorker(ws.findWorker(workerId)
+                .orElseThrow(() -> new NotFoundException("Worker Not Found")), uriInfo)).build();
     }
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createWorker(@Valid final WorkerSignupForm form) {
-        LOGGER.info("POST request arrived at workers");
-        final Worker worker = ws.createWorker(form.getW_mail(), form.getW_name(), form.getW_surname(), form.getW_password(), form.getW_identification(), form.getPhoneNumber(), form.getAddress(), Language.ENGLISH, form.getProfessionIds(), form.getBusinessName());
+        LOGGER.info("POST request arrived at '/workers'");
+        final Worker worker = ws.createWorker(form.getWorker_mail(), form.getWorker_name(), form.getWorker_surname(), form.getWorker_password(), form.getWorker_identification(), form.getPhoneNumber(), form.getAddress(), Language.ENGLISH, form.getProfessionIds(), form.getBusinessName());
         final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(worker.getWorkerId())).build(); //esto esta bien o es el userId que necesita??
+                .path(String.valueOf(worker.getWorkerId())).build();
         return Response.created(uri).build();
     }
 
@@ -98,7 +100,7 @@ public class WorkerController extends GlobalControllerAdvice {
     public Response updateWorkerPartially(
             @PathParam("id") final long id,
             @Valid final WorkerUpdateForm partialUpdate) {
-        LOGGER.info("PATCH request arrived at workers/{}", id);
+        LOGGER.info("PATCH request arrived at '/workers/{}'", id);
         final Worker worker = ws.updateWorkerPartially(id, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio());
         return Response.ok(WorkerDto.fromWorker(worker, uriInfo)).build();
     }

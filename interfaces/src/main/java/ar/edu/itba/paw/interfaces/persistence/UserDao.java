@@ -16,19 +16,21 @@ public interface UserDao {
 
     // ---------------------------------------------- USERS SELECT -----------------------------------------------------
 
-    Optional<User> findUserById(final long neighborId);
+    Optional<User> findUser(final long userId);
 
-    Optional<User> findUserByMail(final String mail);
+    Optional<User> findUser(final long userId, long neighborhoodId);
 
-    List<User> getUsersByCriteria(UserRole role, long neighborhoodId, int page, int size);
+    Optional<User> findUser(final String mail);
 
-    List<User> getNeighborsSubscribedByPostId(long id);
+    List<User> getUsers(String role, long neighborhoodId, int page, int size);
 
-    int getTotalUsers(UserRole role, long neighborhoodId);
+    List<User> getNeighborsSubscribed(long postId);
+
+    int countTotalUsers(String role, long neighborhoodId);
 
     List<User> getEventUsers(long eventId);
 
-    List<User> getEventUsersByCriteria(long eventId, int page, int size);
+    List<User> getEventUsers(long eventId, int page, int size);
 
     boolean isAttending(long eventId, long userId);
 

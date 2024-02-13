@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.CategorizationDao;
+import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.TagDao;
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.interfaces.services.TagService;
@@ -11,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -21,14 +25,14 @@ import java.util.stream.Collectors;
 public class TagServiceImpl implements TagService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TagServiceImpl.class);
     private final TagDao tagDao;
-    private CategorizationDao categorizationDao;
-    private ChannelService channelService;
+    private final CategorizationDao categorizationDao;
+    private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public TagServiceImpl(TagDao tagDao, CategorizationDao categorizationDao, final ChannelService channelService) {
-        this.channelService = channelService;
+    public TagServiceImpl(TagDao tagDao, CategorizationDao categorizationDao, NeighborhoodDao neighborhoodDao) {
         this.tagDao = tagDao;
         this.categorizationDao = categorizationDao;
+        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -36,12 +40,16 @@ public class TagServiceImpl implements TagService {
     @Override
     public Tag createTag(String name) {
         LOGGER.info("Creating Tag {}", name);
+
         return tagDao.createTag(name);
     }
 
     @Override
     public void createTagsAndCategorizePost(long postId, String tagsString) {
-        LOGGER.info("Creating Tags in {} and Associating it with the Post {}", tagsString, postId);
+        LOGGER.info("Creating Tags in {} and associating it with Post {}", tagsString, postId);
+
+        ValidationUtils.checkPostId(postId);
+
         if (tagsString == null || tagsString.isEmpty()) {
             return;
         }
@@ -69,6 +77,9 @@ public class TagServiceImpl implements TagService {
 
     public String createURLForTagFilter(String tags, String currentUrl, long neighborhoodId) {
         LOGGER.info("Creating URL for Tag Filter");
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
         // Extract the base URL (path) without query parameters
         String baseUrl;
         int queryIndex = currentUrl.indexOf('?');
@@ -105,57 +116,48 @@ public class TagServiceImpl implements TagService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Tag> getTagsByPostId(long id) {
-        LOGGER.info("Finding Tags for Post {}", id);
-        return tagDao.getTagsByPostId(id);
+    public Optional<Tag> findTag(long tagId, long neighborhoodId) {
+        LOGGER.info("Finding Tag {} from Neighborhood {}", tagId, neighborhoodId);
+
+        ValidationUtils.checkTagId(tagId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return tagDao.findTag(tagId);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Tag> getTags(long neighborhoodId) {
-        LOGGER.info("Getting All Tags from Neighborhood", neighborhoodId);
-        return tagDao.getTags(neighborhoodId);
+    public List<Tag> getTags(Long postId, long neighborhoodId, int page, int size) {
+        LOGGER.info("Getting Tags in Post {} from Neighborhood {}", postId, neighborhoodId);
+
+        ValidationUtils.checkPostId(postId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkPageAndSize(page, size);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return tagDao.getTags(postId, neighborhoodId, page, size);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Tag> getTags(long neighborhoodId, int page, int size) {
-        LOGGER.info("Getting All Tags from Neighborhood", neighborhoodId);
-        return tagDao.getTags(neighborhoodId, page, size);
+    public int countTags(Long postId, Long neighborhoodId) {
+        LOGGER.info("Counting Tags in Post {} from Neighborhood {}", postId, neighborhoodId);
+
+        ValidationUtils.checkPostId(postId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return tagDao.countTags(postId, neighborhoodId);
     }
 
     @Override
-    public List<Tag> getTagsByCriteria(Long postId, Long neighborhoodId) {
-        if (postId != null) {
-            return tagDao.getTagsByPostId(postId);
-        } else {
-            return tagDao.getTags(neighborhoodId);
-        }
-    }
+    public int calculateTagPages(Long postId, Long neighborhoodId, int size) {
+        LOGGER.info("Calculating Tag Pages in Post {} from Neighborhood {}", postId, neighborhoodId);
 
-    @Override
-    public List<Tag> getTagsByCriteria(Long postId, Long neighborhoodId, int page, int size) {
-        if (postId != 0) {
-            return tagDao.getTagsByPostId(postId, page, size);
-        } else {
-            return tagDao.getTags(neighborhoodId, page, size);
-        }
-    }
+        ValidationUtils.checkPostId(postId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkSize(size);
 
-    @Override
-    public int getTotalTagPages(long neighborhoodId, int size) {
-        LOGGER.info("Getting Total Tag Pages from Neighborhood", neighborhoodId);
-        return (int) Math.ceil(tagDao.getTagsCount(neighborhoodId) / (double) size);
+        return PaginationUtils.calculatePages(tagDao.countTags(postId, neighborhoodId), size);
     }
-
-    @Override
-    public int getTotalTagPagesByCriteria(Long postId, Long neighborhoodId, int size) {
-        if (postId != 0) {
-            return (int) Math.ceil(tagDao.getTagsCountByPostId(postId) / (double) size);
-        } else {
-            return (int) Math.ceil(tagDao.getTagsCount(neighborhoodId) / (double) size);
-        }
-    }
-
 }

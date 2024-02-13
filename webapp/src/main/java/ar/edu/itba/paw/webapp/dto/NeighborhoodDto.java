@@ -31,7 +31,7 @@ public class NeighborhoodDto {
                 .build();
         dto.workers = uriInfo.getBaseUriBuilder()
                 .path("workers")
-                .queryParam("neighborhood", String.valueOf(neighborhood.getNeighborhoodId()))
+                .queryParam("inNeighborhoods", String.valueOf(neighborhood.getNeighborhoodId()))
                 .build();
         dto.contacts = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")

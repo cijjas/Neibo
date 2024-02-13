@@ -13,14 +13,16 @@ public interface NeighborhoodDao {
 
     // ----------------------------------------- NEIGHBORHOODS SELECT --------------------------------------------------
 
-    Optional<Neighborhood> findNeighborhoodById(long id);
+    Optional<Neighborhood> findNeighborhood(long neighborhoodId);
 
-    Optional<Neighborhood> findNeighborhoodByName(String name);
+    Optional<Neighborhood> findNeighborhood(String name);
 
     List<Neighborhood> getNeighborhoods();
 
-    List<Neighborhood> getNeighborhoodsByCriteria(int page, int size);
+    List<Neighborhood> getNeighborhoods(int page, int size, Long workerId);
 
-    int getNeighborhoodsCount();
+    // ---------------------------------------------------
+
+    int countNeighborhoods(Long workerId);
 
 }

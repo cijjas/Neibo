@@ -7,11 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import javax.ws.rs.PathParam;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +26,7 @@ public class TimeController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listTimes() {
-        LOGGER.info("GET request arrived at times");
+        LOGGER.info("GET request arrived at '/times'");
         List<TimeDto> timeDto = Arrays.stream(StandardTime.values())
                 .map(t -> TimeDto.fromTime(t, uriInfo))
                 .collect(Collectors.toList());
@@ -42,14 +39,7 @@ public class TimeController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findTime(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived at times/{}", id);
-        StandardTime time = StandardTime.fromId((int) id);
-
-        if (time != null) {
-            TimeDto timeDto = TimeDto.fromTime(time, uriInfo);
-            return Response.ok(timeDto).build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND).entity("Time not found").build();
-        }
+        LOGGER.info("GET request arrived at '/times/{}'", id);
+        return Response.ok(TimeDto.fromTime(StandardTime.fromId(id), uriInfo)).build();
     }
 }

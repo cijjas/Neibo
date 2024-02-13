@@ -16,22 +16,17 @@ public interface WorkerService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Worker> findWorkerById(long workerId);
+    Optional<Worker> findWorker(long workerId);
 
-    Optional<Worker> findWorkerByMail(String mail);
+    Optional<Worker> findWorker(String mail);
 
-    Set<Worker> getWorkersByCriteria(int page, int size, List<String> professions, long loggedUserId, WorkerRole workerRole, WorkerStatus workerStatus);
+    Set<Worker> getWorkers(int page, int size, List<String> professions, List<String> neighborhoodIds, String workerRole, String workerStatus);
 
-    int getWorkersCountByCriteria(List<String> professions, long[] neighborhoodIds, WorkerRole workerRole, WorkerStatus workerStatus);
+    int countWorkers(List<String> professions, List<String> neighborhoodIds, String workerRole, String workerStatus);
+
+    int calculateWorkerPages(List<String> professions, List<String> neighborhoodIds, int size, String workerRole, String workerStatus);
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    void updateWorker(long userId, String phoneNumber, String address, String businessName,
-                      MultipartFile backgroundPicture, String bio);
-
-    int getTotalWorkerPages(long neighborhoodId, int size);
-
-    int getTotalWorkerPagesByCriteria(List<String> professions, long[] neighborhoodIds, int size, WorkerRole workerRole, WorkerStatus workerStatus);
 
     Worker updateWorkerPartially(long userId, String phoneNumber, String address, String businessName, MultipartFile backgroundPicture, String bio);
 }

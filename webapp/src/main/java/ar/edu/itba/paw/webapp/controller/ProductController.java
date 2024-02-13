@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.form.ListingForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -43,17 +44,19 @@ public class ProductController extends GlobalControllerAdvice {
     public Response listProducts(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("department") @DefaultValue("NONE") final String department,
-            @QueryParam("userId") @DefaultValue("0") final long userId,
-            @QueryParam("productStatus") final String productStatus // BOUGHT/SOLD/SELLING
+            @QueryParam("inDepartment") final String department,
+            @QueryParam("listedBy") final Long userId,
+            @QueryParam("withStatus") final String productStatus
             ) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/products", neighborhoodId);
-        final List<Product> products = ps.getProductsByCriteria(neighborhoodId, department, userId, productStatus, page, size);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
+        final List<Product> products = ps.getProducts(neighborhoodId, department, userId, productStatus, page, size);
+        if (products.isEmpty())
+            return Response.noContent().build();
         final List<ProductDto> productsDto = products.stream()
                 .map(p -> ProductDto.fromProduct(p, uriInfo)).collect(Collectors.toList());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/products";
-        int totalProductPages = ps.getProductsTotalPages(neighborhoodId, size, department, userId, productStatus);
+        int totalProductPages = ps.calculateProductPages(neighborhoodId, size, department, userId, productStatus);
         Link[] links = createPaginationLinks(baseUri, page, size, totalProductPages);
 
         return Response.ok(new GenericEntity<List<ProductDto>>(productsDto){})
@@ -64,16 +67,16 @@ public class ProductController extends GlobalControllerAdvice {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findProduct(@PathParam("id") final long id) {
-        LOGGER.info("GET request arrived neighborhoods/{}/products/{}", neighborhoodId, id);
-        return Response.ok(ProductDto.fromProduct(ps.findProductById(id)
-                .orElseThrow(() -> new NotFoundException("ProductForm Not Found")), uriInfo)).build();
+    public Response findProduct(@PathParam("id") final long productId) {
+        LOGGER.info("GET request arrived '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
+        return Response.ok(ProductDto.fromProduct(ps.findProduct(productId, neighborhoodId)
+                .orElseThrow(() -> new NotFoundException("Product Not Found")), uriInfo)).build();
     }
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createProduct(@Valid final ListingForm form) {
-        LOGGER.info("POST request arrived at neighborhoods/{}/products", neighborhoodId);
+        LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
         final Product product = ps.createProduct(getLoggedUser().getUserId(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentId(), form.getImageFiles(), form.getQuantity());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(product.getProductId())).build();
@@ -87,7 +90,7 @@ public class ProductController extends GlobalControllerAdvice {
     public Response updateProductPartially(
             @PathParam("id") final long id,
             @Valid final ListingForm partialUpdate) {
-        LOGGER.info("UPDATE request arrived at neighborhoods/{}/products/{}", neighborhoodId, id);
+        LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);
         final Product product = ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartmentId(), partialUpdate.getImageFiles(), partialUpdate.getQuantity());
         return Response.ok(ProductDto.fromProduct(product, uriInfo)).build();
     }
@@ -95,9 +98,12 @@ public class ProductController extends GlobalControllerAdvice {
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response deleteById(@PathParam("id") final long id) {
-        LOGGER.info("DELETE request arrived at neighborhoods/{}/products/{}", neighborhoodId, id);
-        ps.deleteProduct(id);
-        return Response.noContent().build();
+    @PreAuthorize("@accessControlHelper.canDeleteProduct(#productId)")
+    public Response deleteById(@PathParam("id") final long productId) {
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
+        if(ps.deleteProduct(productId)) {
+            return Response.noContent().build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

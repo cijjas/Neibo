@@ -7,19 +7,23 @@ import java.util.Set;
 
 public interface AttendanceService {
 
-    // -----------------------------------------------------------------------------------------------------------------
-    Set<Attendance> getAttendance(long eventId, int page, int size);
-
-    Optional<Attendance> findAttendanceById(long attendanceId);
-
-    int getTotalAttendancePages(long eventId, int size);
-
-    Attendance createAttendee(long userId, long eventId);
+    Attendance createAttendance(long userId, long eventId);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    void deleteAttendee(long userId, long eventId);
+    Set<Attendance> getAttendance(long eventId, int page, int size, long neighborhoodId);
 
+    Optional<Attendance> findAttendance(long attendanceId, long eventId, long neighborhoodId);
 
+    Optional<Attendance> findAttendance(long attendanceId);
 
+    // ---------------------------------------------------
+
+    int countAttendance(long eventId);
+
+    int calculateAttendancePages(long eventId, int size);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    boolean deleteAttendance(long userId, long eventId);
 }

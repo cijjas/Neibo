@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,7 @@ public class PostDaoImpl implements PostDao {
     @Override
     public Post createPost(String title, String description, long userId, long channelId, long imageId) {
         LOGGER.debug("Inserting Post {}", title);
+
         Post post = new Post.Builder()
                 .title(title)
                 .description(description)
@@ -44,9 +46,26 @@ public class PostDaoImpl implements PostDao {
     // ------------------------------------------------ POSTS SELECT ---------------------------------------------------
 
     @Override
-    public Optional<Post> findPostById(long postId) {
+    public Optional<Post> findPost(long postId) {
         LOGGER.debug("Selecting Post with id {}", postId);
+
         return Optional.ofNullable(em.find(Post.class, postId));
+    }
+
+    @Override
+    public Optional<Post> findPost(long postId, long neighborhoodId) {
+        LOGGER.debug("Selecting Post with postId {}, neighborhoodId {}", postId, neighborhoodId);
+
+        TypedQuery<Post> query = em.createQuery(
+                "SELECT p FROM Post p WHERE p.postId = :postId AND p.user.neighborhood.neighborhoodId = :neighborhoodId",
+                Post.class
+        );
+
+        query.setParameter("postId", postId);
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Post> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
     // --------------------------------------------------- COMPLEX -----------------------------------------------------
@@ -71,8 +90,9 @@ public class PostDaoImpl implements PostDao {
                     "LEFT JOIN posts_users_likes pul on p.postid = pul.postId ";
 
     @Override
-    public List<Post> getPostsByCriteria(String channel, int page, int size, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
+    public List<Post> getPosts(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, Long userId) {
         LOGGER.debug("Selecting Post from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channel, userId, tags, postStatus);
+
         StringBuilder query = new StringBuilder(FROM_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
         List<Object> queryParams = new ArrayList<>();
         appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags, postStatus);
@@ -85,8 +105,10 @@ public class PostDaoImpl implements PostDao {
         return sqlQuery.getResultList();
     }
 
+    // ---------------------------------------------------
+
     @Override
-    public int getPostsCountByCriteria(String channel, List<String> tags, long neighborhoodId, PostStatus postStatus, long userId) {
+    public int countPosts(String channel, List<String> tags, long neighborhoodId, String postStatus, Long userId) {
         LOGGER.debug("Selecting Post Count from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channel, userId, tags, postStatus);
 
         StringBuilder query = new StringBuilder(COUNT_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.enums;
 
 import ar.edu.itba.paw.Pair;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,11 +24,13 @@ public enum Professions {
                 .collect(Collectors.toList());
     }
 
-    public static Professions fromId(int id) {
+    public static Professions fromId(long id) {
+        if(id <= 0)
+            throw new IllegalArgumentException("Invalid value (" + id + ") for the Profession ID. Please use a positive integer greater than 0.");
         return Arrays.stream(values())
-                .filter(profession -> profession.getId() == id)
+                .filter(p -> p.getId() == id)
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(()-> new NotFoundException("Profession Not Found"));
     }
 
     @Override

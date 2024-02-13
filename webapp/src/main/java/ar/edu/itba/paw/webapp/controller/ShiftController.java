@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ShiftService;
 import ar.edu.itba.paw.models.Entities.Shift;
+import ar.edu.itba.paw.webapp.dto.BookingDto;
 import ar.edu.itba.paw.webapp.dto.ShiftDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,17 +26,14 @@ public class ShiftController {
     @Context
     private UriInfo uriInfo;
 
-    // List Shifts
-    // Find ShiftById
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getShifts(
-            @QueryParam("amenityId") long amenityId,
-            @QueryParam("dayId") long dayId,
-            @QueryParam("date") Date date) {
-        LOGGER.info("GET request arrived at shifts");
-        List<Shift> shifts = ss.getShiftsByCriteria(amenityId, dayId, date);
+    public Response getShifts() {
+        LOGGER.info("GET request arrived at '/shifts'");
+        List<Shift> shifts = ss.getShifts();
+
+        if (shifts.isEmpty())
+            return Response.noContent().build();
 
         // Convert shifts to DTOs if needed
         List<ShiftDto> shiftDto = shifts.stream()
@@ -44,5 +42,14 @@ public class ShiftController {
 
         return Response.ok(new GenericEntity<List<ShiftDto>>(shiftDto) {})
                 .build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response findShift(@PathParam("id") final long id) {
+        LOGGER.info("GET request arrived at '/shifts/{}'", id);
+        return Response.ok(ShiftDto.fromShift(ss.findShift(id)
+                .orElseThrow(NotFoundException::new), uriInfo)).build();
     }
 }

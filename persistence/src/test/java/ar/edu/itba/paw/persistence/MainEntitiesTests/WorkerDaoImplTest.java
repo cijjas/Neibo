@@ -22,9 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -105,7 +103,7 @@ public class WorkerDaoImplTest {
         testInserter.createSpecialization(uKey, pKey);
 
         // Exercise
-        Optional<Worker> foundWorker = workerDao.findWorkerById(uKey);
+        Optional<Worker> foundWorker = workerDao.findWorker(uKey);
 
         // Validations & Post Conditions
         assertTrue(foundWorker.isPresent());
@@ -116,7 +114,7 @@ public class WorkerDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Optional<Worker> foundWorker = workerDao.findWorkerById(1);
+        Optional<Worker> foundWorker = workerDao.findWorker(1);
 
         // Validations & Post Conditions
         assertFalse(foundWorker.isPresent());
@@ -126,10 +124,10 @@ public class WorkerDaoImplTest {
     public void testGetWorkersByNeighborhood() {
         // Pre Conditions
         populateWorkers();
-        long[] neighborhoods = {nhKey1};
+        List<Long> neighborhoods = Collections.singletonList(nhKey1);
 
         // Exercise
-        Set<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, BASE_PAGE_SIZE, null, neighborhoods, WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
+        Set<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, BASE_PAGE_SIZE, null, neighborhoods, WorkerRole.VERIFIED_WORKER.name(), WorkerStatus.NONE.name());
 
         // Validations
         assertEquals(2, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
@@ -139,10 +137,10 @@ public class WorkerDaoImplTest {
     public void testGetWorkersByNeighborhoodAndProfessions() {
         // Pre Conditions
         populateWorkers();
-        long[] neighborhoods = {nhKey1};
+        List<Long> neighborhoods = Collections.singletonList(nhKey1);
 
         // Exercise
-        Set<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, BASE_PAGE_SIZE, Collections.singletonList(Professions.PLUMBER.name()), neighborhoods, WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
+        Set<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, BASE_PAGE_SIZE, Collections.singletonList(Professions.PLUMBER.name()), neighborhoods, WorkerRole.VERIFIED_WORKER.name(), WorkerStatus.NONE.name());
 
         // Validations
         assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
@@ -152,10 +150,10 @@ public class WorkerDaoImplTest {
     public void testGetWorkersByNeighborhoodAndSize() {
         // Pre Conditions
         populateWorkers();
-        long[] neighborhoods = {nhKey1};
+        List<Long> neighborhoods = Collections.singletonList(nhKey1);
 
         // Exercise
-        Set<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(BASE_PAGE, 1, null, neighborhoods, WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
+        Set<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, 1, null, neighborhoods, WorkerRole.VERIFIED_WORKER.name(), WorkerStatus.NONE.name());
 
         // Validations
         assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
@@ -165,10 +163,10 @@ public class WorkerDaoImplTest {
     public void testGetWorkersByNeighborhoodAndSizeAndPage() {
         // Pre Conditions
         populateWorkers();
-        long[] neighborhoods = {nhKey1};
+        List<Long> neighborhoods = Collections.singletonList(nhKey1);
 
         // Exercise
-        Set<Worker> retrievedWorkers = workerDao.getWorkersByCriteria(2, 1, null, neighborhoods, WorkerRole.VERIFIED_WORKER, WorkerStatus.none);
+        Set<Worker> retrievedWorkers = workerDao.getWorkers(2, 1, null, neighborhoods, WorkerRole.VERIFIED_WORKER.name(), WorkerStatus.NONE.name());
 
         // Validations
         assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
@@ -204,9 +202,9 @@ public class WorkerDaoImplTest {
         testInserter.createSpecialization(uKey4, pKey1);
         testInserter.createSpecialization(uKey4, pKey2);
 
-        testInserter.createWorkerArea(uKey1, nhKey1);
-        testInserter.createWorkerArea(uKey2, nhKey1);
-        testInserter.createWorkerArea(uKey3, nhKey2);
-        testInserter.createWorkerArea(uKey4, nhKey2);
+        testInserter.createAffiliation(uKey1, nhKey1);
+        testInserter.createAffiliation(uKey2, nhKey1);
+        testInserter.createAffiliation(uKey3, nhKey2);
+        testInserter.createAffiliation(uKey4, nhKey2);
     }
 }

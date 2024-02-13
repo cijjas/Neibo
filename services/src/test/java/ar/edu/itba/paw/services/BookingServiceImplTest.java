@@ -3,8 +3,6 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.models.Entities.Booking;
-import ar.edu.itba.paw.models.GroupedBooking;
-import ar.edu.itba.paw.models.Entities.Amenity;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +33,7 @@ public class BookingServiceImplTest {
     private static final String AMENITY_NAME = "Gym";
     private static final Time START_TIME = new Time(10, 0, 0);
     private static final Date BOOKING_DATE = new Date(2021, 9, 11);
+    private static final String BOOKING_DATE_STRING = "2021-09-11";
     private static final long AMENITY_AVAILABILITY_ID = 1;
     private static final long AMENITY_ID = 1;
     private static final long ID_2 = 2;
@@ -81,9 +80,9 @@ public class BookingServiceImplTest {
     @Test
     public void testCreate() {
         // 1. Preconditions
-        when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
-        when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_2)).thenReturn(OptionalLong.of(AVAILABILITY_ID_2));
-        when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_3)).thenReturn(OptionalLong.of(AVAILABILITY_ID_3));
+        when(availabilityDao.findId(AMENITY_ID, SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
+        when(availabilityDao.findId(AMENITY_ID, SHIFT_ID_2)).thenReturn(OptionalLong.of(AVAILABILITY_ID_2));
+        when(availabilityDao.findId(AMENITY_ID, SHIFT_ID_3)).thenReturn(OptionalLong.of(AVAILABILITY_ID_3));
 
         when(bookingDao.createBooking(eq(USER_ID), eq(AVAILABILITY_ID_1), eq(BOOKING_DATE))).thenReturn(mockBooking1);
         when(bookingDao.createBooking(eq(USER_ID), eq(AVAILABILITY_ID_2), eq(BOOKING_DATE))).thenReturn(mockBooking2);
@@ -95,7 +94,7 @@ public class BookingServiceImplTest {
         shiftIds.add(SHIFT_ID_3);
 
         // 2. Exercise
-        long[] bookingIds = bs.createBooking(USER_ID, AMENITY_ID, shiftIds, BOOKING_DATE);
+        long[] bookingIds = bs.createBooking(USER_ID, AMENITY_ID, shiftIds, BOOKING_DATE_STRING);
 
         // 3. Postconditions
         Assert.assertNotNull(bookingIds);
@@ -109,14 +108,14 @@ public class BookingServiceImplTest {
     @Test(expected = RuntimeException.class)
     public void testCreateAlreadyExists() {
         // 1. Preconditions
-        when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
+        when(availabilityDao.findId(AMENITY_ID, SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
         when(bookingDao.createBooking(eq(USER_ID), eq(AMENITY_AVAILABILITY_ID), eq(BOOKING_DATE))).thenThrow(RuntimeException.class);
 
         List<Long> shiftIds = new ArrayList<>();
         shiftIds.add(SHIFT_ID_1);
 
         // 2. Exercise
-        long[] bookingIds = bs.createBooking(USER_ID, AMENITY_ID, shiftIds, BOOKING_DATE);
+        long[] bookingIds = bs.createBooking(USER_ID, AMENITY_ID, shiftIds, BOOKING_DATE_STRING);
 
         // 3. Postconditions
     }

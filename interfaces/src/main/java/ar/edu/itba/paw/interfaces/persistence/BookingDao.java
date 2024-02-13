@@ -14,11 +14,13 @@ public interface BookingDao {
 
     // ------------------------------------------------- BOOKINGS SELECT -----------------------------------------------
 
-    Optional<Booking> findBookingById(long bookingId);
+    Optional<Booking> findBooking(long bookingId);
 
-    List<Booking> getUserBookings(long userId);
+    List<Booking> getBookings(Long userId, Long amenityId, int page, int size);
 
     // ------------------------------------------------- BOOKINGS DELETE -----------------------------------------------
+
+    int countBookings(Long userId, Long amenityId);
 
     boolean deleteBooking(long bookingId);
 }

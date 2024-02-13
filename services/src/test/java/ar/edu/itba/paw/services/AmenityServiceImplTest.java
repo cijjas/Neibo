@@ -6,7 +6,6 @@ import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.*;
-import ar.edu.itba.paw.services.email.EmailServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,7 +60,7 @@ public class AmenityServiceImplTest {
                 .build()
         );
 
-        when(shiftDao.findShiftId(anyLong(), anyLong())).thenReturn(Optional.empty());
+        when(shiftDao.findShift(anyLong(), anyLong())).thenReturn(Optional.empty());
 
         when(shiftDao.createShift(anyLong(), anyLong())).thenReturn(new Shift.Builder()
                 .shiftId(SHIFT_ID)

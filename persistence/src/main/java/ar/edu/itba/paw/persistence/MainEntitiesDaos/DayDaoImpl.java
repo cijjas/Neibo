@@ -21,6 +21,7 @@ public class DayDaoImpl implements DayDao {
     @Override
     public Day createDay(String dayName) {
         LOGGER.debug("Inserting Day {}", dayName);
+
         Day day = new Day.Builder()
                 .dayName(dayName)
                 .build();
@@ -31,8 +32,9 @@ public class DayDaoImpl implements DayDao {
     // ------------------------------------------------ DAYS SELECT ----------------------------------------------------
 
     @Override
-    public Optional<Day> findDayById(long dayId) {
+    public Optional<Day> findDay(long dayId) {
         LOGGER.debug("Selecting Day with id {}", dayId);
+
         return Optional.ofNullable(em.find(Day.class, dayId));
     }
 }

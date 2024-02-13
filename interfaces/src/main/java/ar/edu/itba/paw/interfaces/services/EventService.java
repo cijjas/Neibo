@@ -9,21 +9,19 @@ import java.util.Optional;
 
 public interface EventService {
 
-    Event createEvent(String name, String description, Date date, String startTime, String endTime, long neighborhoodId);
-
-    Event updateEvent(long eventId, String name, String description, Date date, String startTime, String endTime);
-
-    Event updateEventPartially(long eventId, String name, String description, Date date, String startTime, String endTime);
+    Event createEvent(String name, String description, String date, String startTime, String endTime, long neighborhoodId);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Event> findEventById(long eventId);
+    Optional<Event> findEvent(long eventId);
 
-    boolean hasEvents(Date date, long neighborhoodId);
+    Optional<Event> findEvent(long eventId, long neighborhoodId);
 
-    List<Event> getEventsByDate(String date, long neighborhoodId);
+    boolean hasEvents(String date, long neighborhoodId);
 
-    List<Event> getEventsByNeighborhoodId(long neighborhoodId);
+    List<Event> getEvents(String date, long neighborhoodId, int page, int size);
+
+    List<Event> getEvents(long neighborhoodId);
 
     List<Date> getEventDates(long neighborhoodId);
 
@@ -34,6 +32,14 @@ public interface EventService {
     String getSelectedMonth(int month, Language language);
 
     int getSelectedYear(int year);
+
+    int calculateEventPages(String date, long neighborhoodId, int size);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    Event updateEvent(long eventId, String name, String description, Date date, String startTime, String endTime);
+
+    Event updateEventPartially(long eventId, String name, String description, String date, String startTime, String endTime);
 
     // -----------------------------------------------------------------------------------------------------------------
 

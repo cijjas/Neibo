@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.ExistingRequestConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.ExistingUserConstraint;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
@@ -11,9 +13,11 @@ public class MarkAsSoldForm {
     private Integer quantity;
 
     @NotNull
+    @ExistingUserConstraint
     private Long buyerId;
 
     @NotNull
+    @ExistingRequestConstraint
     private Long requestId;
 
 

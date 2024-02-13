@@ -1,9 +1,8 @@
 package ar.edu.itba.paw.webapp.auth;
 
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.User;
-import ar.edu.itba.paw.webapp.security.service.impl.DefaultUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -33,7 +32,7 @@ public class UserDetailsService implements org.springframework.security.core.use
     public UserDetails loadUserByUsername(String mail) throws NotFoundException {
         LOGGER.info("Loading user with mail {}" , mail);
 
-        final User n = us.findUserByMail(mail).orElseThrow(() -> new NotFoundException("UserForm not found"));
+        final User n = us.findUser(mail).orElseThrow(() -> new NotFoundException("User not found"));
         final Set<GrantedAuthority> authorities = new HashSet<>();
 
         // Add roles based on user data from the database
@@ -57,7 +56,7 @@ public class UserDetailsService implements org.springframework.security.core.use
                 break;
         }
 
-        return new UserAuth(n.getMail(), n.getPassword(), authorities);
+        return new UserAuth(n.getMail(), n.getPassword(), authorities, n.getUserId(), n.getNeighborhood().getNeighborhoodId());
     }
 
 }

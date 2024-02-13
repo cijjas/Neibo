@@ -2,10 +2,12 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.PurchaseService;
 import ar.edu.itba.paw.models.Entities.Purchase;
+import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.PurchaseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -27,33 +29,46 @@ public class PurchaseController {
     private UriInfo uriInfo;
 
     @PathParam("neighborhoodId")
-    private Long neighborhoodId;
+    private long neighborhoodId;
 
     @PathParam("userId")
-    private Long userId;
+    private long userId;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTransactions(
-            @QueryParam("type") String type,
+    @PreAuthorize("@accessControlHelper.canAccessTransactions(#userId)")
+    public Response listTransactions(
+            @QueryParam("withType") String type,
             @QueryParam("page") @DefaultValue("1") int page,
-            @QueryParam("size") @DefaultValue("10") int size
+            @QueryParam("size") @DefaultValue("10") int size,
+            @PathParam("userId") final long userId
     ) {
-        LOGGER.info("GET request arrived at neighborhoods/{}/users/{}/transactions", neighborhoodId, userId);
-        Set<Purchase> transactions;
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}/transactions'", neighborhoodId, userId);
 
-        transactions = ps.getPurchasesByType(userId, type, page, size);
+        Set<Purchase> transactions = ps.getPurchases(userId, type, page, size, neighborhoodId);
+        if (transactions.isEmpty())
+            return Response.noContent().build();
 
-        // Convert transactions to DTOs if needed
         Set<PurchaseDto> transactionDto = transactions.stream()
                 .map(p -> PurchaseDto.fromPurchase(p, uriInfo))
                 .collect(Collectors.toSet());
 
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/users/" + userId + "/transactions";
-        Link[] links = createPaginationLinks(baseUri, page, size, ps.getTotalPurchasesPages(userId, userId, size));
+        Link[] links = createPaginationLinks(baseUri, page, size, ps.calculatePurchasePages(userId, type, size));
 
         return Response.ok(new GenericEntity<Set<PurchaseDto>>(transactionDto){})
                 .links(links)
                 .build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @PreAuthorize("@accessControlHelper.canAccessTransactions(#userId)")
+    public Response findTransaction(@PathParam("id") final long transactionId,
+                                    @PathParam("userId") final long userId) {
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}/transactions/{}'", neighborhoodId, userId, transactionId);
+        return Response.ok(PurchaseDto.fromPurchase(ps.findPurchase(transactionId, userId, neighborhoodId)
+                .orElseThrow(() -> new NotFoundException("Purchase Not Found")), uriInfo)).build();
     }
 }

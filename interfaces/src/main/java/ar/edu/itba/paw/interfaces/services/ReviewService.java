@@ -11,7 +11,9 @@ public interface ReviewService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Optional<Review> findReviewById(long reviewId);
+    Optional<Review> findReview(long reviewId);
+
+    Optional<Review> findReview(long reviewId, long workerId);
 
     List<Review> getReviews(long workerId);
 
@@ -19,9 +21,11 @@ public interface ReviewService {
 
     Optional<Float> getAvgRating(long workerId);
 
-    int getReviewsCount(long workerId);
+    // ---------------------------------------------------
 
-    int getReviewsTotalPages(long workerId, int size);
+    int countReviews(long workerId);
+
+    int calculateReviewPages(long workerId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.webapp.mappers;
 
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.models.ApiErrorDetails;
 import ar.edu.itba.paw.webapp.dto.ValidationErrorDto;
 
 import javax.validation.ConstraintViolationException;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.*;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;

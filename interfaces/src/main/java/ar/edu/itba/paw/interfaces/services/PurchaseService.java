@@ -13,15 +13,11 @@ public interface PurchaseService {
 
     Optional<Purchase> findPurchase(long purchaseId);
 
-    Set<Purchase> getPurchasesBySellerId(long userId, int page, int size);
+    Optional<Purchase> findPurchase(long purchaseId, long userId, long neighborhoodId);
 
-    int getPurchasesCountBySellerId(long userId);
+    Set<Purchase> getPurchases(long userId, String type, int page, int size, long neighborhoodId);
 
-    Set<Purchase> getPurchasesByBuyerId(long userId, int page, int size);
+    int countPurchases(long userId, String type);
 
-    int getPurchasesCountByBuyerId(long userId);
-
-    Set<Purchase> getPurchasesByType(long userId, String type, int page, int size);
-
-    int getTotalPurchasesPages(long sellerId, long buyerId, int size);
+    int calculatePurchasePages(long userId, String type, int size);
 }

@@ -10,7 +10,7 @@ public interface ProfessionWorkerService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    List<Profession> getWorkerProfessions(long workerId);
+    List<Profession> getWorkerProfessions(Long workerId);
 
     String getWorkerProfessionsAsString(long workerId);
 

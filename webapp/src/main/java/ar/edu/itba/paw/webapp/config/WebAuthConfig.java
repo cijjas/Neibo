@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.webapp.auth.UserDetailsService;
 import ar.edu.itba.paw.webapp.security.api.filter.HttpMethodFilter;
-import ar.edu.itba.paw.webapp.security.api.filter.NeighborhoodAccessControlFilter;
 import ar.edu.itba.paw.webapp.security.api.jwt.JwtAuthenticationEntryPoint;
 import ar.edu.itba.paw.webapp.security.api.jwt.JwtAuthenticationProvider;
 import ar.edu.itba.paw.webapp.security.api.jwt.JwtAuthenticationTokenFilter;
@@ -12,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -20,28 +18,22 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.concurrent.TimeUnit;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 import static org.springframework.web.cors.CorsConfiguration.ALL;
@@ -70,59 +62,80 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationTokenFilter(authenticationManagerBean(), authenticationEntryPoint);
     }
 
-    @Bean
-    public NeighborhoodAccessControlFilter neighborhoodAccessControlFilter() {
-        return new NeighborhoodAccessControlFilter();
-    }
-
-    @Bean
-    public HttpMethodFilter httpMethodFilter() {
-        return new HttpMethodFilter();
-    }
-
-
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetails).passwordEncoder(passwordEncoder());
         auth.authenticationProvider(jwtAuthenticationProvider);
     }
 
-    /* THE REAL N
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.headers().referrerPolicy(ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER_WHEN_DOWNGRADE);
         http
-                .cors().and()
                 .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
+                .and()
+                .exceptionHandling().accessDeniedHandler(authenticationEntryPoint)
+                .and()
+                .cors()
                 .and()
                 .sessionManagement().sessionCreationPolicy(STATELESS)
                 .and()
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(neighborhoodAccessControlFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(httpMethodFilter(), FilterSecurityInterceptor.class)
                 .authorizeRequests()
-                .antMatchers("/auth").permitAll()
+                // UNRESTRICTED
                 .antMatchers(
+                        "/test/**",
                         "/",
-                        "/languages",       "/languages/{id:[1-9][0-9]*}",
-                        "/roles",           "/roles/{id:[1-9][0-9]*}",
-                        "/departments",     "/departments/{id:[1-9][0-9]*}",
-                        "/professions",     "/professions/{id:[1-9][0-9]*}",
-                        "/times",           "/times/{id:[1-9][0-9]*}",
-                        "/days",            "/days/{id:[1-9][0-9]*}",
-                        "/images/*",
-                        "/shifts",          "/shifts/{id:[1-9][0-9]*}",
-                        "/neighborhoods",   "/neighborhoods/{id:[1-9][0-9]*}",
+                        "/auth/**",
+                        "/professions/**",
+                        "/departments/**",
+                        "/shifts/**",
+                        "/times/**",
+                        "/days/**",
+                        "/base-channels/**",
+                        "/user-roles/**",
+                        "/worker-roles/**",
+                        "/transaction-types/**",
+                        "/post-statuses/**",
+                        "/product-statuses/**",
+                        "/shift-statuses/**",
+                        "/languages/**",
+                        "/images/**",
 
-                        "/test/**"
+                        "/neighborhoods",                           // needed for sign-up, restriction on QP
+                        "/neighborhoods/*/users",                   // needed for sign-up, restriction on GET
+                        "/workers"                                  // needed for sign-up, restriction on GET
                 ).permitAll()
+                // ANY USER WITH AN ACCOUNT CAN ACCESS HIS PROFILE
+                .antMatchers(
+                        "/neighborhoods/*/users/*"
+                ).hasAnyRole("UNVERIFIED_NEIGHBOR","WORKER", "NEIGHBOR", "ADMINISTRATOR", "REJECTED")
+                // BELONGING CONDITION
+                .antMatchers("/neighborhoods/**").access("@accessControlHelper.isNeighborhoodMember(request)")
+                // WORKERS, NEIGHBOR AND ADMINISTRATOR
+                .antMatchers(
+                        "/affiliations/*",
+                        "/workers/**",
+                        "/neighborhoods/*/posts/*"
+                ).hasAnyRole("WORKER", "NEIGHBOR", "ADMINISTRATOR")
+                // NEIGHBORS AND ADMINISTRATORS
+                .antMatchers(
+                        "/neighborhoods/*/products/*/comments/**",  // custom product restrictions
+                        "/neighborhoods/*/products/**",             // custom product restrictions
+                        "/neighborhoods/*/tags/**",
+                        "/neighborhoods/*/likes/**",
+                        "/neighborhoods/*/channels/**",             // only an Administrator can do more than GET
+                        "/neighborhoods/*/amenities/**",            // only an Administrator can do more than GET
+                        "/neighborhoods/*/bookings/**",
+                        "/neighborhoods/*/resources/**",            // only an Administrator can do more than GET
+                        "/neighborhoods/*/contacts/**",             // only an Administrator can do more than GET
+                        "/neighborhoods/*/events/**"                // only an Administrator can do more than GET
+                ).hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
                 .anyRequest().authenticated();
-    }*/
+    }
 
-    // 4TESTING
-    @Override
+   /* @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.headers().referrerPolicy(ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER_WHEN_DOWNGRADE);
         http
@@ -134,9 +147,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/**").permitAll();  // Allow access to all paths for testing purposes
-    }
-
-
+    }*/
     /*@Override
     protected void configure(HttpSecurity http) throws Exception {
         http.sessionManagement()

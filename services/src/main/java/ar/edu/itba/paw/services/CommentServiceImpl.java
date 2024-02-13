@@ -1,7 +1,8 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.interfaces.exceptions.NotFoundException;
+import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.CommentDao;
+import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.CommentService;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.PostService;
@@ -23,53 +24,85 @@ public class CommentServiceImpl implements CommentService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentServiceImpl.class);
     private final CommentDao commentDao;
     private final EmailService emailService;
-    private final PostService postService;
+    private final PostDao postDao;
     private final UserService userService;
 
     @Autowired
-    public CommentServiceImpl(final CommentDao commentDao, EmailService emailService, PostService postService, UserService userService) {
+    public CommentServiceImpl(final CommentDao commentDao, EmailService emailService, PostDao postDao, UserService userService) {
         this.commentDao = commentDao;
         this.emailService = emailService;
-        this.postService = postService;
+        this.postDao = postDao;
         this.userService = userService;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Comment createComment(String comment, long neighborId, long postId) {
-        LOGGER.info("Creating Comment {} from User {} for Post {}", comment, neighborId, postId);
-        Post post = postService.findPostById(postId).orElseThrow(()-> new NotFoundException("Post Not Found"));
-        emailService.sendNewCommentMail(post, userService.getNeighborsSubscribedByPostId(postId));
-        return commentDao.createComment(comment, neighborId, postId);
+    public Comment createComment(String comment, long userId, long postId) {
+        LOGGER.info("Creating Comment {} from User {} for Post {}", comment, userId, postId);
+
+        Post post = postDao.findPost(postId).orElseThrow(()-> new NotFoundException("Post Not Found"));
+        emailService.sendNewCommentMail(post, userService.getNeighborsSubscribed(postId));
+        return commentDao.createComment(comment, userId, postId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Comment> findCommentById(long id) {
-        LOGGER.info("Finding Comment {}", id);
-        return commentDao.findCommentById(id);
+    public Optional<Comment> findComment(long commentId) {
+        LOGGER.info("Finding Comment {}", commentId);
+
+        ValidationUtils.checkCommentId(commentId);
+
+        return commentDao.findComment(commentId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Comment> getCommentsByPostId(long id, int page, int size) {
-        LOGGER.info("Finding Comments for Post {}", id);
-        return commentDao.getCommentsByPostId(id, page, size);
+    public Optional<Comment> findComment(long commentId, long postId, long neighborhoodId) {
+        LOGGER.info("Finding Comment {} in Post {} from Neighborhood {}", commentId, postId, neighborhoodId);
+
+        ValidationUtils.checkCommentId(commentId);
+        ValidationUtils.checkPostId(postId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return commentDao.findComment(commentId, postId, neighborhoodId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int getCommentsCountByPostId(long id) {
-        LOGGER.info("Getting Quantity of Comments for Post {}", id);
-        return commentDao.getCommentsCountByPostId(id);
+    public List<Comment> getComments(long postId, int page, int size, long neighborhoodId) {
+        LOGGER.info("Getting Comments for Post {} from Neighborhood {}", postId, neighborhoodId);
+
+        ValidationUtils.checkPostId(postId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkPageAndSize(page, size);
+
+        postDao.findPost(postId, neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return commentDao.getComments(postId, page, size);
+    }
+
+    // ---------------------------------------------------
+
+    @Override
+    @Transactional(readOnly = true)
+    public int countComments(long postId) {
+        LOGGER.info("Counting Comments for Post {}", postId);
+
+        ValidationUtils.checkPostId(postId);
+
+        return commentDao.countComments(postId);
     }
 
     @Transactional(readOnly = true)
-    public int getTotalCommentPages(long id, int size) {
-        LOGGER.info("Getting Total Comment Pages for size {}", size);
-        return (int) Math.ceil((double) commentDao.getCommentsCountByPostId(id) / size);
+    public int calculateCommentPages(long postId, int size) {
+        LOGGER.info("Calculating Comment for Post {}", postId);
+
+        ValidationUtils.checkPostId(postId);
+        ValidationUtils.checkSize(size);
+
+        return PaginationUtils.calculatePages(commentDao.countComments(postId), size);
     }
 }

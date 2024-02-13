@@ -2,7 +2,9 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Entities.Tag;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 public interface TagService {
 
@@ -10,15 +12,9 @@ public interface TagService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    List<Tag> getTagsByPostId(long id);
+    List<Tag> getTags(Long postId, long neighborhoodId, int page, int size);
 
-    List<Tag> getTags(long neighborhoodId);
-
-    List<Tag> getTags(long neighborhoodId, int page, int size);
-
-    List<Tag> getTagsByCriteria(Long postId, Long neighborhoodId);
-
-    List<Tag> getTagsByCriteria(Long postId, Long neighborhoodId, int page, int size);
+    Optional<Tag> findTag(long tagId, long neighborhoodId);
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -26,6 +22,7 @@ public interface TagService {
 
     String createURLForTagFilter(String tags, String currentUrl, long neighborhoodId);
 
-    int getTotalTagPages(long neighborhoodId, int size);
-    int getTotalTagPagesByCriteria(Long postId, Long neighborhoodId, int size);
+    int calculateTagPages(Long postId, Long neighborhoodId, int size);
+
+    int countTags(Long postId, Long neighborhoodId);
 }
