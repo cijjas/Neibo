@@ -53,7 +53,7 @@ export class NeighborhoodService {
           .set('page', page.toString())
           .set('size', size.toString());
 
-        return this.http.get<NeighborhoodDto[]>(`${this.apiServerUrl}/neighborhoods/`, { params }).pipe(
+        return this.http.get<NeighborhoodDto[]>(`${this.apiServerUrl}/neighborhoods`, { params }).pipe(
           tap(responseData => console.log('Response Data:', responseData)),
           mergeMap((neighborhoods: NeighborhoodDto[]) => {
                 const neighborhoodObservables = neighborhoods.map(neighborhoodDto =>

@@ -1,4 +1,4 @@
-import { HttpClientModule } from "@angular/common/http"
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http"
 import { AppComponent } from "./app.component"
 import { BrowserModule } from "@angular/platform-browser"
 import { NgModule } from "@angular/core"
@@ -28,6 +28,7 @@ import { LoginComponent } from './modules/auth/login/login.component';
 import { LoginDialogComponent } from './components/auth-dialogs/login-dialog/login-dialog.component';
 import { SignupDialogComponent } from './components/auth-dialogs/signup-dialog/signup-dialog.component';
 import {AuthService} from "./shared/services/auth.service";
+import {JwtInterceptor} from "./shared/interceptors/jwt.interceptor";
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import {AuthService} from "./shared/services/auth.service";
   providers: [
     AmenityService,
     AuthService,
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
   exports: [
     LandingPageNavbarComponent

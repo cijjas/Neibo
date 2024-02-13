@@ -3,6 +3,7 @@ import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {catchError, Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
+import {User} from "../models/user";
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +11,7 @@ import {map} from "rxjs/operators";
 export class AuthService {
   private apiServerUrl = environment.apiBaseUrl;
   private authToken: string = '';
-  private userData: any = {};
-    private userUrl: string = '';
+  private userUrn: string = '';
 
   constructor(private http: HttpClient) { }
 
@@ -24,9 +24,8 @@ export class AuthService {
     return this.http.post<any>(`${this.apiServerUrl}/auth`, requestBody, { observe: 'response' })
       .pipe(
         map((response) => {
-          console.log(response)
-          console.log(response.headers)
-          console.log(response.body)
+          this.userUrn = response.headers.get('X-User-URN');
+          console.log('User URN:', this.userUrn);
           this.authToken = response.body.token;
           return true;
         }),
@@ -37,28 +36,31 @@ export class AuthService {
       );
   }
 
-  private decodeJwt(token: string): any {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map((c: string) => {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
 
-    return JSON.parse(jsonPayload);
-  }
+
 
   logout(): void {
     // Perform logout logic, clear token, and user data
     this.authToken = '';
-    this.userData = {};
   }
 
   getAuthToken(): string {
     return this.authToken;
   }
 
-  getUserData(): any {
-    return this.userData;
+  getLoggedUserData(): Observable<any> {
+    return this.http.get<any>(`${this.userUrn}`)
+      .pipe(
+        map((response) => {
+          console.log('1.User data:', response);
+          return response;
+        }),
+        catchError((error) => {
+          console.error('User data error:', error);
+          return of(null);
+        })
+      )
+
   }
 
   isLoggedIn(): boolean {

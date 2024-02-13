@@ -45,6 +45,13 @@ export class LoginDialogComponent implements OnInit {
         .subscribe((success) => {
           this.loading = false;
           if (success) {
+            this.authService.getLoggedUserData()
+              .subscribe((userData) => {
+                // Use the user data as needed
+                console.log('User data after login:', userData);
+                // Other actions if needed
+                this.closeLoginDialog();
+              });
             this.closeLoginDialog();
           } else {
             this.loginForm.setErrors(null);
@@ -53,6 +60,8 @@ export class LoginDialogComponent implements OnInit {
             this.loginFailed = true;
           }
         });
+
+
     } else { // caso de mala intención
       this.loginForm.markAllAsTouched();
       this.loading = false;
