@@ -16,10 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -87,8 +84,12 @@ public class AuthenticationResource {
         String urn = String.format("%sneighborhoods/%d/users/%d", uriInfo.getBaseUri().toString(),userAuth.getNeighborhoodId(), userAuth.getUserId());
 
         // Add URN to the response header
+
+        Link userLink = Link.fromUri(urn).rel("urn").build();
+
         return Response.ok(authenticationToken)
                 .header("X-User-URN", urn)
+                .links(userLink)
                 .build();
     }
 
@@ -114,10 +115,12 @@ public class AuthenticationResource {
         UserAuth userAuth = (UserAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String urn = String.format("%sneighborhoods/%d/users/%d", uriInfo.getBaseUri().toString(),userAuth.getNeighborhoodId(), userAuth.getUserId());
+        Link userLink = Link.fromUri(urn).rel("urn").build();
 
         // Add URN to the response header
         return Response.ok(authenticationToken)
                 .header("X-User-URN", urn)
+                .links(userLink)
                 .build();
     }
 }

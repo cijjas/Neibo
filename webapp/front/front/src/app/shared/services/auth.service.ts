@@ -11,6 +11,7 @@ export class AuthService {
   private apiServerUrl = environment.apiBaseUrl;
   private authToken: string = '';
   private userData: any = {};
+    private userUrl: string = '';
 
   constructor(private http: HttpClient) { }
 
@@ -20,13 +21,13 @@ export class AuthService {
       password: password
     };
 
-    return this.http.post<any>(`${this.apiServerUrl}/auth`, requestBody)
+    return this.http.post<any>(`${this.apiServerUrl}/auth`, requestBody, { observe: 'response' })
       .pipe(
         map((response) => {
-          this.authToken = response.token;
-          this.userData = this.decodeJwt(response.token);
-          /*TODO handle authorization */
-          console.log('User data:', this.userData);
+          console.log(response)
+          console.log(response.headers)
+          console.log(response.body)
+          this.authToken = response.body.token;
           return true;
         }),
         catchError((error) => {
