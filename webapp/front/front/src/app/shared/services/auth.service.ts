@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {catchError, Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
 import {User} from "../models/user";
+import {UserService} from "./user.service";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,10 @@ export class AuthService {
   private authToken: string = '';
   private userUrn: string = '';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private userService: UserService
+  ) { }
 
   login(mail: string, password: string, rememberMe: boolean): Observable<boolean> {
     const requestBody = {
@@ -25,7 +29,6 @@ export class AuthService {
       .pipe(
         map((response) => {
           this.userUrn = response.headers.get('X-User-URN');
-          console.log('User URN:', this.userUrn);
           this.authToken = response.body.token;
           return true;
         }),
@@ -48,19 +51,28 @@ export class AuthService {
     return this.authToken;
   }
 
-  getLoggedUserData(): Observable<any> {
-    return this.http.get<any>(`${this.userUrn}`)
-      .pipe(
-        map((response) => {
-          console.log('1.User data:', response);
-          return response;
-        }),
-        catchError((error) => {
-          console.error('User data error:', error);
-          return of(null);
-        })
-      )
+  getLoggedUserData(): Observable<User> {
+    // Assuming userUrn has the format "http://localhost:8080/neighborhoods/{neighborhoodId}/users/{userId}"
+    const match = this.userUrn.match(/\/neighborhoods\/(\d+)\/users\/(\d+)/);
+    if (match && match.length === 3) {
+      const neighborhoodId = +match[1]; // Convert to number
+      const userId = +match[2]; // Convert to number
 
+      return this.userService.getUser(neighborhoodId, userId)
+        .pipe(
+          map((user) => {
+            console.log('User data:', user);
+            return user;
+          }),
+          catchError((error) => {
+            console.error('User data error');
+            return of(null);
+          })
+        );
+    } else {
+      console.error('Invalid userUrn format');
+      return of(null);
+    }
   }
 
   isLoggedIn(): boolean {

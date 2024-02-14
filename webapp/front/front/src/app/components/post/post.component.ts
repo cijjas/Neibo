@@ -63,9 +63,6 @@ export class PostComponent implements OnInit {
       .subscribe(
         (isLikedByUser: boolean) => {
           this.isLikedByUser = isLikedByUser;
-        },
-        (error: HttpErrorResponse) => {
-          console.log(error);
         }
       );
     this.likeCount = this.post?.likes.length || 0;
@@ -74,10 +71,7 @@ export class PostComponent implements OnInit {
     this.commentService.getComments(1, this.postId, 1, 10)
       .subscribe(
         (comments: Comment[]) => {
-          this.comments =comments;
-        },
-        (error: HttpErrorResponse) => {
-          console.log(error);
+          this.comments = comments;
         }
       )
 
@@ -87,8 +81,6 @@ export class PostComponent implements OnInit {
       .subscribe(
       (post) => {
         this.post = post;
-      },
-      (error) => {
       }
     );
 

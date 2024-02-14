@@ -7,7 +7,7 @@ import { PostDto } from "../models/post"
 import { BookingDto } from "../models/booking"
 import { ProductDto } from "../models/product"
 import { EventDto } from "../models/event"
-import { Observable, forkJoin } from 'rxjs'
+import {Observable, forkJoin, tap} from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../../../environments/environment'
 import { map, mergeMap } from 'rxjs/operators'
@@ -22,7 +22,10 @@ export class UserService {
         const userDto$ = this.http.get<UserDto>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users/${userId}`);
 
         return userDto$.pipe(
-            mergeMap((userDto: UserDto) => {
+          tap(userDto => console.log('UserDto:', userDto)), // Log the received UserDto
+
+          mergeMap((userDto: UserDto) => {
+                console.log('1');
                 return forkJoin([
                     this.http.get<NeighborhoodDto>(userDto.neighborhood),
                     this.http.get<ImageDto>(userDto.profilePicture),
@@ -34,9 +37,23 @@ export class UserService {
                     this.http.get<ProductDto[]>(userDto.purchases),
                     this.http.get<ProductDto[]>(userDto.sales),
                     this.http.get<EventDto[]>(userDto.eventsSubscribed)
+
                 ]).pipe(
-                    map(([neighborhood, profilePicture, comments, posts, bookings, subscribedPosts, likedPosts,
-                            purchases, sales, eventsSubscribed]) => {
+
+                    map(([
+                        neighborhood,
+                       profilePicture,
+                       comments,
+                       posts,
+                       bookings,
+                       subscribedPosts,
+                       likedPosts,
+                      purchases,
+                       sales,
+                       eventsSubscribed
+                         ]) => {
+                      console.log('2');
+
                         return {
                             userId: userDto.userId,
                             mail: userDto.mail,

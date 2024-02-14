@@ -1,12 +1,14 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {  FormControl ,FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../shared/services/auth.service';
 
 @Component({
   selector: 'login-dialog',
-  templateUrl: './login-dialog.component.html'
+  templateUrl: './login-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginDialogComponent implements OnInit {
+export class LoginDialogComponent
+  implements OnInit{
   @Input() showLoginDialog: boolean = false;
   @Input() showSignupDialog: boolean = false;
   @Output() showLoginDialogChange = new EventEmitter<boolean>();
@@ -24,6 +26,8 @@ export class LoginDialogComponent implements OnInit {
       rememberMe: new FormControl(false)
     });
   }
+
+
 
   closeLoginDialog(): void {
     this.showLoginDialog = false;
@@ -47,9 +51,7 @@ export class LoginDialogComponent implements OnInit {
           if (success) {
             this.authService.getLoggedUserData()
               .subscribe((userData) => {
-                // Use the user data as needed
                 console.log('User data after login:', userData);
-                // Other actions if needed
                 this.closeLoginDialog();
               });
             this.closeLoginDialog();
@@ -67,6 +69,7 @@ export class LoginDialogComponent implements OnInit {
       this.loading = false;
     }
   }
+
 
 
 
