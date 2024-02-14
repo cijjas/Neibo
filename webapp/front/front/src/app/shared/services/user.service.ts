@@ -7,7 +7,7 @@ import { PostDto } from "../models/post"
 import { BookingDto } from "../models/booking"
 import { ProductDto } from "../models/product"
 import { EventDto } from "../models/event"
-import {Observable, forkJoin, tap} from 'rxjs'
+import { Observable, forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../../../environments/environment'
 import { map, mergeMap } from 'rxjs/operators'
@@ -20,12 +20,8 @@ export class UserService {
 
     public getUser(neighborhoodId: number, userId: number): Observable<User> {
         const userDto$ = this.http.get<UserDto>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users/${userId}`);
-
         return userDto$.pipe(
-          tap(userDto => console.log('UserDto:', userDto)), // Log the received UserDto
-
-          mergeMap((userDto: UserDto) => {
-                console.log('1');
+            mergeMap((userDto: UserDto) => {
                 return forkJoin([
                     this.http.get<NeighborhoodDto>(userDto.neighborhood),
                     this.http.get<ImageDto>(userDto.profilePicture),
@@ -37,23 +33,9 @@ export class UserService {
                     this.http.get<ProductDto[]>(userDto.purchases),
                     this.http.get<ProductDto[]>(userDto.sales),
                     this.http.get<EventDto[]>(userDto.eventsSubscribed)
-
                 ]).pipe(
-
-                    map(([
-                        neighborhood,
-                       profilePicture,
-                       comments,
-                       posts,
-                       bookings,
-                       subscribedPosts,
-                       likedPosts,
-                      purchases,
-                       sales,
-                       eventsSubscribed
-                         ]) => {
-                      console.log('2');
-
+                    map(([neighborhood, profilePicture, comments, posts, bookings, subscribedPosts, likedPosts,
+                            purchases, sales, eventsSubscribed]) => {
                         return {
                             userId: userDto.userId,
                             mail: userDto.mail,

@@ -49,11 +49,6 @@ export class LoginDialogComponent
         .subscribe((success) => {
           this.loading = false;
           if (success) {
-            this.authService.getLoggedUserData()
-              .subscribe((userData) => {
-                console.log('User data after login:', userData);
-                this.closeLoginDialog();
-              });
             this.closeLoginDialog();
           } else {
             this.loginForm.setErrors(null);

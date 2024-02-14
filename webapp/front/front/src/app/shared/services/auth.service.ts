@@ -30,6 +30,8 @@ export class AuthService {
         map((response) => {
           this.userUrn = response.headers.get('X-User-URN');
           this.authToken = response.body.token;
+
+          this.getLoggedUserData();
           return true;
         }),
         catchError((error) => {
@@ -51,27 +53,19 @@ export class AuthService {
     return this.authToken;
   }
 
-  getLoggedUserData(): Observable<User> {
-    // Assuming userUrn has the format "http://localhost:8080/neighborhoods/{neighborhoodId}/users/{userId}"
+  getLoggedUserData(): void {
     const match = this.userUrn.match(/\/neighborhoods\/(\d+)\/users\/(\d+)/);
     if (match && match.length === 3) {
-      const neighborhoodId = +match[1]; // Convert to number
-      const userId = +match[2]; // Convert to number
+      const neighborhoodId = +match[1];
+      const userId = +match[2];
 
-      return this.userService.getUser(neighborhoodId, userId)
-        .pipe(
-          map((user) => {
-            console.log('User data:', user);
-            return user;
-          }),
-          catchError((error) => {
-            console.error('User data error');
-            return of(null);
-          })
-        );
+      this.userService.getUser(neighborhoodId, userId)
+        .subscribe((user: User) => {
+          console.log('Logged user data:', user);
+        });
+
     } else {
       console.error('Invalid userUrn format');
-      return of(null);
     }
   }
 
