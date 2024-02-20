@@ -12,13 +12,14 @@ import {LoginComponent} from "./modules/auth/login/login.component";
 import {authGuard} from "./shared/guards/auth.guard";
 
 export const routes: Routes = [
-  { path: '', component: LoginComponent, canActivate: [authGuard] }, /*Chequea condicion authGuard y si no cumple va a /login*/
+  { path: '', component: LoginComponent},
   { path: 'login', component: LoginComponent},
-  { path: 'feed', component: FeedComponent },
-  { path: 'post/:postId', component: PostComponent },
-  { path: 'services', component: ServicesComponent },
-  { path: 'marketplace', component: MarketplaceComponent },
-  { path: 'reservations', component: ReservationsComponent },
-  { path: 'information', component: InformationComponent},
-  {path: '**', component: NotFoundComponent}
-]
+  { path: 'feed', component: FeedComponent, canActivate: [authGuard] },
+  { path: 'post/:postId', component: PostComponent, canActivate: [authGuard] },
+  { path: 'services', component: ServicesComponent, canActivate: [authGuard] },
+  { path: 'marketplace', component: MarketplaceComponent, canActivate: [authGuard] },
+  { path: 'reservations', component: ReservationsComponent, canActivate: [authGuard] },
+  { path: 'information', component: InformationComponent, canActivate: [authGuard] },
+  { path: '**', component: NotFoundComponent}
+];
+

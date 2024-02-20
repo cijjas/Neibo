@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {  FormControl ,FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../shared/services/auth.service';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'login-dialog',
@@ -18,7 +19,10 @@ export class LoginDialogComponent
   loginFailed: boolean = false;
   loading: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
   ngOnInit() {
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -49,6 +53,7 @@ export class LoginDialogComponent
         .subscribe((success) => {
           this.loading = false;
           if (success) {
+            this.router.navigate(['/feed']).then(r => r);
             this.closeLoginDialog();
           } else {
             this.loginForm.setErrors(null);

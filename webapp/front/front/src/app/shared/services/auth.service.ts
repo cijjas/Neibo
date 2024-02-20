@@ -3,20 +3,20 @@ import {environment} from "../../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {catchError, Observable, of} from "rxjs";
 import {map} from "rxjs/operators";
-import {User} from "../models/user";
-import {UserService} from "./user.service";
+import {UserDto} from "../models/user";
+import {LoggedInService} from "./loggedIn.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private apiServerUrl = environment.apiBaseUrl;
-  private authToken: string = '';
-  private userUrn: string = '';
+  private rememberMeKey = 'rememberMe';
+  private authTokenKey = 'authToken';
 
   constructor(
-    private http: HttpClient,
-    private userService: UserService
+      private http: HttpClient,
+      private loggedInService: LoggedInService
   ) { }
 
   login(mail: string, password: string, rememberMe: boolean): Observable<boolean> {
@@ -25,14 +25,33 @@ export class AuthService {
       password: password
     };
 
+    // Depending on the rememberMe value, we will use localStorage or sessionStorage
+    const storage = rememberMe ? localStorage : sessionStorage;
+    localStorage.setItem(this.rememberMeKey, JSON.stringify(rememberMe));
+
     return this.http.post<any>(`${this.apiServerUrl}/auth`, requestBody, { observe: 'response' })
       .pipe(
-        map((response) => {
-          this.userUrn = response.headers.get('X-User-URN');
-          this.authToken = response.body.token;
-
-          this.getLoggedUserData();
-          return true;
+        map(
+          (response) => {
+            // if there is a token in the response
+            if(response.body.token) {
+              // save the auth token in the storage
+              storage.setItem(this.authTokenKey, response.body.token);
+              this.loggedInService.setAuthToken(response.body.token);
+              // look for user with the auth token already in interceptor and urn in the header
+              this.http.get<UserDto>(`${response.headers.get('X-User-URN')}`)
+                .subscribe({
+                  next: (userDto) => {
+                    this.loggedInService.setLoggedUserInformation(userDto);
+                  },
+                  error: (error) => {
+                    console.error('Error getting user:', error);
+                  }
+              });
+              return true;
+            }
+            console.log('No token in the response');
+            return false;
         }),
         catchError((error) => {
           console.error('Authentication error:', error);
@@ -42,34 +61,24 @@ export class AuthService {
   }
 
 
-
-
   logout(): void {
-    // Perform logout logic, clear token, and user data
-    this.authToken = '';
+    sessionStorage.clear();
+    localStorage.clear();
   }
 
   getAuthToken(): string {
-    return this.authToken;
+    const storageType = this.getRememberMe() ? localStorage : sessionStorage;
+    return storageType.getItem('authToken') || '';
   }
 
-  getLoggedUserData(): void {
-    const match = this.userUrn.match(/\/neighborhoods\/(\d+)\/users\/(\d+)/);
-    if (match && match.length === 3) {
-      const neighborhoodId = +match[1];
-      const userId = +match[2];
-
-      this.userService.getUser(neighborhoodId, userId)
-        .subscribe((user: User) => {
-          console.log('Logged user data:', user);
-        });
-
-    } else {
-      console.error('Invalid userUrn format');
-    }
+  getRememberMe(): boolean {
+    return JSON.parse(localStorage.getItem('rememberMe') || sessionStorage.getItem('rememberMe') || 'false');
   }
+
 
   isLoggedIn(): boolean {
-    return !!this.authToken;
+    return !!localStorage.getItem('authToken') || !!sessionStorage.getItem('authToken');
   }
 }
+
+

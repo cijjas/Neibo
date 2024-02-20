@@ -1,36 +1,43 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-left-column',
   templateUrl: './left-column.component.html',
   styleUrls: ['../../app.component.css']
 })
-export class LeftColumnComponent {
+export class LeftColumnComponent implements OnInit {
   channelClass: string = '';
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+      private route: ActivatedRoute,
+      private router: Router
+  ) {}
 
   ngOnInit() {
-    this.route.url.subscribe(segments => {
-      const path = segments.length > 0 ? segments[0].path : '';
+    // Subscribe to changes in route parameters
+    this.route.queryParams.subscribe(queryParams => {
+      this.channelClass = this.determineChannelClass(this.route.snapshot.routeConfig?.path, queryParams);
+    });
 
-      this.route.queryParams.subscribe(queryParams => {
-        this.channelClass = this.determineChannelClass(path, queryParams);
-      });
+    this.router.events.pipe(
+        filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.channelClass = this.determineChannelClass(this.route.snapshot.routeConfig?.path, this.route.snapshot.queryParams);
     });
   }
 
   private determineChannelClass(path: string, queryParams: any): string {
     // Check path and queryParams to determine the channel class
-    if (path === '') {
+    if (path === 'feed') {
       const channel = queryParams['channel'];
       switch (channel) {
         case 'Announcements':
           return 'Announcements';
         case 'Complaints':
           return 'Complaints';
-        // Add more cases as needed
+          // Add more cases as needed
         default:
           return 'Feed';
       }

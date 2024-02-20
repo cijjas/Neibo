@@ -54,7 +54,6 @@ export class NeighborhoodService {
           .set('size', size.toString());
 
         return this.http.get<NeighborhoodDto[]>(`${this.apiServerUrl}/neighborhoods`, { params }).pipe(
-          tap(responseData => console.log('Response Data:', responseData)),
           mergeMap((neighborhoods: NeighborhoodDto[]) => {
                 const neighborhoodObservables = neighborhoods.map(neighborhoodDto =>
                     forkJoin([

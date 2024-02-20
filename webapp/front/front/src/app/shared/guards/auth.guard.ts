@@ -1,17 +1,14 @@
 // auth.guard.ts
-import { CanActivateFn } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import {CanActivateFn, Router} from '@angular/router';
+import {AuthService} from '../services/auth.service';
 import {inject} from "@angular/core";
 
-export const authGuard: CanActivateFn = (route, state) => {
-
-  // Inject HttpClient into AuthService
+export const authGuard: CanActivateFn = (state) => {
   const authService = inject(AuthService);
-
+  const router = inject(Router);
   if (authService.isLoggedIn()) {
     return true;
   } else {
-    window.location.href = '/login';
-    return false;
+    return router.createUrlTree(['/login']);
   }
 };
