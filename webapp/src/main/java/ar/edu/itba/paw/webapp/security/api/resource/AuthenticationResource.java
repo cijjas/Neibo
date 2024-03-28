@@ -58,6 +58,7 @@ public class AuthenticationResource {
     public Response authenticate(LoginForm credentials) {
         LOGGER.info("Client accessing '/auth'");
 
+        /*
         // Saving the request
         Authentication authenticationRequest = new UsernamePasswordAuthenticationToken(credentials.getMail(), credentials.getPassword());
         // Call the Authentication Manager that calls the Provider which then calls LoadByUsername()
@@ -91,6 +92,9 @@ public class AuthenticationResource {
                 .header("X-User-URN", urn)
                 .links(userLink)
                 .build();
+        */
+        return Response.ok("This endpoint was deprecated, authentication is now through BASIC AUTH and targeted at any endpoint").build();
+
     }
 
     /**

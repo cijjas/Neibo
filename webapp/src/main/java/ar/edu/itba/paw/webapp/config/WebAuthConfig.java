@@ -5,6 +5,8 @@ import ar.edu.itba.paw.webapp.security.api.filter.HttpMethodFilter;
 import ar.edu.itba.paw.webapp.security.api.jwt.JwtAuthenticationEntryPoint;
 import ar.edu.itba.paw.webapp.security.api.jwt.JwtAuthenticationProvider;
 import ar.edu.itba.paw.webapp.security.api.jwt.JwtAuthenticationTokenFilter;
+import ar.edu.itba.paw.webapp.security.service.AuthenticationTokenService;
+import ar.edu.itba.paw.webapp.security.service.impl.JwtTokenIssuer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +33,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,6 +56,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationProvider jwtAuthenticationProvider;
     @Autowired
     private JwtAuthenticationEntryPoint authenticationEntryPoint;
+    @Autowired
+    private AuthenticationTokenService authenticationTokenService;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -59,7 +66,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtAuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
-        return new JwtAuthenticationTokenFilter(authenticationManagerBean(), authenticationEntryPoint);
+        return new JwtAuthenticationTokenFilter(authenticationManagerBean(), authenticationEntryPoint, authenticationTokenService);
     }
 
     @Override
