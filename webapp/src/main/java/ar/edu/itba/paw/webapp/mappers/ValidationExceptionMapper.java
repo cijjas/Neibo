@@ -27,6 +27,8 @@ public class ValidationExceptionMapper  implements ExceptionMapper<ValidationExc
         errorDetails.setMessage(exception.getMessage());
         errorDetails.setPath(uriInfo.getAbsolutePath().getPath());
 
+        exception.printStackTrace();
+
         return Response.status(status).entity(errorDetails).type(MediaType.APPLICATION_JSON).build();
     }
 }

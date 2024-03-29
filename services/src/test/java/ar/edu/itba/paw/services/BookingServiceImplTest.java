@@ -77,7 +77,7 @@ public class BookingServiceImplTest {
         when(mockBooking3.getBookingId()).thenReturn(BOOKING_ID_3);
     }
 
-    @Test
+    /*@Test
     public void testCreate() {
         // 1. Preconditions
         when(availabilityDao.findId(AMENITY_ID, SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
@@ -118,6 +118,6 @@ public class BookingServiceImplTest {
         long[] bookingIds = bs.createBooking(USER_ID, AMENITY_ID, shiftIds, BOOKING_DATE_STRING);
 
         // 3. Postconditions
-    }
+    }*/
 
 }

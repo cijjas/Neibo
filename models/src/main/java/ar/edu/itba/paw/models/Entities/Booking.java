@@ -10,7 +10,6 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_availability_bookingid_seq")
     @SequenceGenerator(sequenceName = "users_availability_bookingid_seq", name = "users_availability_bookingid_seq", allocationSize = 1)
-    @Column(name = "bookingid")
     private Long bookingId;
 
     @ManyToOne(fetch = FetchType.EAGER)

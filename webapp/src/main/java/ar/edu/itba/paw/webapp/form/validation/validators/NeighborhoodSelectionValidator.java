@@ -16,9 +16,7 @@ public class NeighborhoodSelectionValidator implements ConstraintValidator<Neigh
     NeighborhoodService neighborhoodService;
 
     @Override
-    public void initialize(NeighborhoodConstraint neighborhoodConstraint) {
-
-    }
+    public void initialize(NeighborhoodConstraint neighborhoodConstraint) {}
 
     @Override
     public boolean isValid(Long id, ConstraintValidatorContext constraintValidatorContext) {

@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.ExistingAmenityConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.ReservationDateConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.ReservationTimeConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.ShiftsConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -12,31 +9,31 @@ import java.util.List;
 
 public class BookingForm {
     @NotNull
-    @ExistingAmenityConstraint
-    private long amenityId;
+    @AmenityURNConstraint
+    private String amenityURN; // http://localhost:8080/neighborhoods/{neighborhoodId}/amenities/{amenityId}
 
     @NotNull
-    @ShiftsConstraint
-    private List<Long> shiftIds;
+    @ShiftsURNConstraint
+    private List<String> shiftURNs; // http://localhost:8080/shifts/{shiftId}
 
     @NotNull
     @ReservationDateConstraint
     private String reservationDate;
 
-    public long getAmenityId() {
-        return amenityId;
+    public String getAmenityURN() {
+        return amenityURN;
     }
 
-    public void setAmenityId(long amenityId) {
-        this.amenityId = amenityId;
+    public void setAmenityURN(String amenityURN) {
+        this.amenityURN = amenityURN;
     }
 
-    public List<Long> getShiftIds() {
-        return shiftIds;
+    public List<String> getShiftURNs() {
+        return shiftURNs;
     }
 
-    public void setShiftIds(List<Long> shiftIds) {
-        this.shiftIds = shiftIds;
+    public void setShiftURNs(List<String> shiftURNs) {
+        this.shiftURNs = shiftURNs;
     }
 
     public void setReservationDate(String reservationDate) {
@@ -50,8 +47,6 @@ public class BookingForm {
     @Override
     public String toString() {
         return "BookingForm{" +
-                "amenityId=" + amenityId +
-                ", shiftIds=" + shiftIds +
                 ", reservationDate=" + reservationDate +
                 '}';
     }
