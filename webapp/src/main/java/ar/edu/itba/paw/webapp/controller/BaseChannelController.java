@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import javax.swing.text.html.parser.Entity;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.Arrays;
@@ -24,7 +25,7 @@ public class BaseChannelController {
     @Context
     private UriInfo uriInfo;
 
-    private final String storedETag = ETagUtility.generateETag();
+    private final EntityTag storedETag = ETagUtility.generateETag();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -36,11 +37,10 @@ public class BaseChannelController {
                 .map(tt -> BaseChannelDto.fromBaseChannel(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        EntityTag entityTag = new EntityTag(storedETag);
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null) {
             LOGGER.info("Cached");
             return builder.cacheControl(cacheControl).build();
@@ -49,7 +49,7 @@ public class BaseChannelController {
         LOGGER.info("New");
         return Response.ok(new GenericEntity<List<BaseChannelDto>>(baseChannelDto){})
                 .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(storedETag)
                 .build();
     }
 
@@ -66,11 +66,10 @@ public class BaseChannelController {
         // Assuming BaseChannelDto.fromBaseChannel generates the content for the DTO
         BaseChannelDto baseChannelDto = BaseChannelDto.fromBaseChannel(baseChannel, uriInfo);
 
-        EntityTag entityTag = new EntityTag(storedETag);
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null) {
             LOGGER.info("Cached");
             return builder.cacheControl(cacheControl).build();
@@ -79,7 +78,7 @@ public class BaseChannelController {
         LOGGER.info("New");
         return Response.ok(baseChannelDto)
                 .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(storedETag)
                 .build();
     }
 

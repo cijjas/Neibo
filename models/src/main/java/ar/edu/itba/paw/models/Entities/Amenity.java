@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -17,6 +19,10 @@ public class Amenity {
 
     @Column(name = "description", length = 512, unique = true, nullable = false)
     private String description;
+
+    @Version
+    @ColumnDefault("1")
+    private Long version;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "neighborhoodid")
@@ -79,6 +85,14 @@ public class Amenity {
         this.availableShifts = availableShifts;
     }
 
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     @Override
     public String toString() {
         return "Amenity{" +
@@ -89,6 +103,20 @@ public class Amenity {
                 ", availableShifts=" + availableShifts +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Builder)) return false;
+        Builder builder = (Builder) o;
+        return Objects.equals(amenityId, builder.amenityId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(amenityId);
+    }
+
 
     public static class Builder {
         private Long amenityId;
@@ -125,19 +153,5 @@ public class Amenity {
         public Amenity build() {
             return new Amenity(this);
         }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof Builder)) return false;
-            Builder builder = (Builder) o;
-            return Objects.equals(amenityId, builder.amenityId);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(amenityId);
-        }
     }
-
 }
