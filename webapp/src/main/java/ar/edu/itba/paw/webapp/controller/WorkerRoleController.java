@@ -23,7 +23,7 @@ public class WorkerRoleController {
     @Context
     private UriInfo uriInfo;
 
-    private final String storedETag = ETagUtility.generateETag();
+    private final EntityTag storedETag = ETagUtility.generateETag();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -34,11 +34,10 @@ public class WorkerRoleController {
                 .map(tt -> WorkerRoleDto.fromWorkerRole(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        EntityTag entityTag = new EntityTag(storedETag);
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null) {
             LOGGER.info("Cached");
             return builder.cacheControl(cacheControl).build();
@@ -48,7 +47,7 @@ public class WorkerRoleController {
 
         return Response.ok(new GenericEntity<List<WorkerRoleDto>>(workerRoleDto){})
                 .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(storedETag)
                 .build();
     }
 
@@ -61,11 +60,10 @@ public class WorkerRoleController {
         LOGGER.info("GET request arrived at '/worker-roles/{}'", id);
         WorkerRoleDto workerRoleDto = WorkerRoleDto.fromWorkerRole(WorkerRole.fromId(id), uriInfo);
 
-        EntityTag entityTag = new EntityTag(storedETag);
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null) {
             LOGGER.info("Cached");
             return builder.cacheControl(cacheControl).build();
@@ -74,7 +72,7 @@ public class WorkerRoleController {
         LOGGER.info("New");
         return Response.ok(workerRoleDto)
                 .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(storedETag)
                 .build();
     }
 }

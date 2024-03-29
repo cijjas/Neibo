@@ -22,7 +22,7 @@ public class DayController {
     @Context
     private UriInfo uriInfo;
 
-    private final String storedETag = ETagUtility.generateETag();
+    private final EntityTag storedETag = ETagUtility.generateETag();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -33,11 +33,10 @@ public class DayController {
                 .map(d -> DayDto.fromDay(d, uriInfo))
                 .collect(Collectors.toList());
 
-        EntityTag entityTag = new EntityTag(storedETag);
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null) {
             LOGGER.info("Cached");
             return builder.cacheControl(cacheControl).build();
@@ -47,7 +46,7 @@ public class DayController {
 
         return Response.ok(new GenericEntity<List<DayDto>>(dayDto){})
                 .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(storedETag)
                 .build();
     }
 
@@ -61,20 +60,17 @@ public class DayController {
 
         DayDto dayDto = DayDto.fromDay(DayOfTheWeek.fromId(id), uriInfo);
 
-        EntityTag entityTag = new EntityTag(storedETag);
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null) {
-            LOGGER.info("Cached");
             return builder.cacheControl(cacheControl).build();
         }
 
-        LOGGER.info("New");
         return Response.ok(dayDto)
                 .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(storedETag)
                 .build();
     }
 }

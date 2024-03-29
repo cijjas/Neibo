@@ -22,7 +22,7 @@ public class ProductStatusController {
     @Context
     private UriInfo uriInfo;
 
-    private final String storedETag = ETagUtility.generateETag();
+    private final EntityTag storedETag = ETagUtility.generateETag();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -33,11 +33,10 @@ public class ProductStatusController {
                 .map(tt -> ProductStatusDto.fromProductStatus(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        EntityTag entityTag = new EntityTag(storedETag);
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null) {
             LOGGER.info("Cached");
             return builder.cacheControl(cacheControl).build();
@@ -47,7 +46,7 @@ public class ProductStatusController {
 
         return Response.ok(new GenericEntity<List<ProductStatusDto>>(productStatusDto){})
                 .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(storedETag)
                 .build();
     }
 
@@ -60,11 +59,10 @@ public class ProductStatusController {
         LOGGER.info("GET request arrived at '/product-statuses/{}'", id);
         ProductStatusDto productStatusDto = ProductStatusDto.fromProductStatus(ProductStatus.fromId(id), uriInfo);
 
-        EntityTag entityTag = new EntityTag(storedETag);
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null) {
             LOGGER.info("Cached");
             return builder.cacheControl(cacheControl).build();
@@ -73,7 +71,7 @@ public class ProductStatusController {
         LOGGER.info("New");
         return Response.ok(productStatusDto)
                 .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(storedETag)
                 .build();
     }
 }

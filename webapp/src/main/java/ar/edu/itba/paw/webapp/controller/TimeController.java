@@ -21,7 +21,7 @@ public class TimeController {
     @Context
     private UriInfo uriInfo;
 
-    private final String storedETag = ETagUtility.generateETag();
+    private final EntityTag storedETag = ETagUtility.generateETag();
 
     // Find time by id
 
@@ -34,11 +34,10 @@ public class TimeController {
                 .map(t -> TimeDto.fromTime(t, uriInfo))
                 .collect(Collectors.toList());
 
-        EntityTag entityTag = new EntityTag(storedETag);
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null) {
             LOGGER.info("Cached");
             return builder.cacheControl(cacheControl).build();
@@ -48,7 +47,7 @@ public class TimeController {
 
         return Response.ok(new GenericEntity<List<TimeDto>>(timeDto){})
                 .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(storedETag)
                 .build();
     }
 
@@ -62,11 +61,10 @@ public class TimeController {
 
         TimeDto timeDto = TimeDto.fromTime(StandardTime.fromId(id), uriInfo);
 
-        EntityTag entityTag = new EntityTag(storedETag);
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null) {
             LOGGER.info("Cached");
             return builder.cacheControl(cacheControl).build();
@@ -75,7 +73,7 @@ public class TimeController {
         LOGGER.info("New");
         return Response.ok(timeDto)
                 .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(storedETag)
                 .build();
     }
 }

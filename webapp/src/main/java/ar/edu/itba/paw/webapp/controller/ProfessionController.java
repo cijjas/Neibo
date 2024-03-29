@@ -24,7 +24,7 @@ public class ProfessionController {
     @Context
     private UriInfo uriInfo;
 
-    private final String storedETag = ETagUtility.generateETag();
+    private final EntityTag storedETag = ETagUtility.generateETag();
 
     @Autowired
     public ProfessionController(final ProfessionWorkerService professionWorkerService) {
@@ -46,11 +46,10 @@ public class ProfessionController {
         List<ProfessionDto> professionDto = professions.stream()
                 .map(p -> ProfessionDto.fromProfession(p, uriInfo)).collect(Collectors.toList());
 
-        EntityTag entityTag = new EntityTag(storedETag);
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null) {
             LOGGER.info("Cached");
             return builder.cacheControl(cacheControl).build();
@@ -60,7 +59,7 @@ public class ProfessionController {
 
         return Response.ok(new GenericEntity<List<ProfessionDto>>(professionDto){})
                 .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(storedETag)
                 .build();
     }
 
@@ -73,11 +72,10 @@ public class ProfessionController {
         LOGGER.info("GET request arrived at '/professions/{}'", id);
         ProfessionDto professionDto = ProfessionDto.fromProfession(Professions.fromId(id), uriInfo);
 
-        EntityTag entityTag = new EntityTag(storedETag);
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null) {
             LOGGER.info("Cached");
             return builder.cacheControl(cacheControl).build();
@@ -86,7 +84,7 @@ public class ProfessionController {
         LOGGER.info("New");
         return Response.ok(professionDto)
                 .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(storedETag)
                 .build();
     }
 

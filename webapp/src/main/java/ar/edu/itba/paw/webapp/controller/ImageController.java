@@ -28,7 +28,7 @@ public class ImageController {
     @Context
     private UriInfo uriInfo;
 
-    private final String storedETag = ETagUtility.generateETag();
+    private final EntityTag storedETag = ETagUtility.generateETag();
 
     @GET
     @Path("/{id}")
@@ -38,11 +38,10 @@ public class ImageController {
                              @Context Request request) {
         LOGGER.info("GET request arrived at '/images/{}'", id);
 
-        EntityTag entityTag = new EntityTag(storedETag);
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
 
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null) {
             LOGGER.info("Cached");
             return builder.cacheControl(cacheControl).build();
@@ -52,7 +51,7 @@ public class ImageController {
 
         return Response.ok(ImageDto.fromImage(is.findImage(id).orElseThrow(NotFoundException::new), uriInfo))
                 .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(storedETag)
                 .build();
     }
 
