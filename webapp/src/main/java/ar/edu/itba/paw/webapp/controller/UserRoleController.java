@@ -23,22 +23,59 @@ public class UserRoleController {
     @Context
     private UriInfo uriInfo;
 
+    private final String storedETag = ETagUtility.generateETag();
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listUserRoles() {
+    public Response listUserRoles(@HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                                  @Context Request request) {
         LOGGER.info("GET request arrived at '/user-roles'");
         List<UserRoleDto> userRoleDto = Arrays.stream(UserRole.values())
                 .map(tt -> UserRoleDto.fromUserRole(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<UserRoleDto>>(userRoleDto){}).build();
+        EntityTag entityTag = new EntityTag(storedETag);
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        if (builder != null) {
+            LOGGER.info("Cached");
+            return builder.cacheControl(cacheControl).build();
+        }
+
+        LOGGER.info("New");
+
+        return Response.ok(new GenericEntity<List<UserRoleDto>>(userRoleDto){})
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response findUserRole(@PathParam("id") final int id) {
+    public Response findUserRole(@PathParam("id") final int id,
+                                 @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                                 @Context Request request) {
         LOGGER.info("GET request arrived at '/user-roles/{}'", id);
-        return Response.ok(UserRoleDto.fromUserRole(UserRole.fromId(id), uriInfo)).build();
+
+        UserRoleDto userRoleDto = UserRoleDto.fromUserRole(UserRole.fromId(id), uriInfo);
+
+        EntityTag entityTag = new EntityTag(storedETag);
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        if (builder != null) {
+            LOGGER.info("Cached");
+            return builder.cacheControl(cacheControl).build();
+        }
+
+        LOGGER.info("New");
+        return Response.ok(userRoleDto)
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 }

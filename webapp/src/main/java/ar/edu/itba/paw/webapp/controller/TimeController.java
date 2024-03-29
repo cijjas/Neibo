@@ -21,25 +21,61 @@ public class TimeController {
     @Context
     private UriInfo uriInfo;
 
+    private final String storedETag = ETagUtility.generateETag();
+
     // Find time by id
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listTimes() {
+    public Response listTimes(@HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                              @Context Request request) {
         LOGGER.info("GET request arrived at '/times'");
         List<TimeDto> timeDto = Arrays.stream(StandardTime.values())
                 .map(t -> TimeDto.fromTime(t, uriInfo))
                 .collect(Collectors.toList());
 
+        EntityTag entityTag = new EntityTag(storedETag);
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        if (builder != null) {
+            LOGGER.info("Cached");
+            return builder.cacheControl(cacheControl).build();
+        }
+
+        LOGGER.info("New");
+
         return Response.ok(new GenericEntity<List<TimeDto>>(timeDto){})
+                .cacheControl(cacheControl)
+                .tag(entityTag)
                 .build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findTime(@PathParam("id") final long id) {
+    public Response findTime(@PathParam("id") final long id,
+                             @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                             @Context Request request) {
         LOGGER.info("GET request arrived at '/times/{}'", id);
-        return Response.ok(TimeDto.fromTime(StandardTime.fromId(id), uriInfo)).build();
+
+        TimeDto timeDto = TimeDto.fromTime(StandardTime.fromId(id), uriInfo);
+
+        EntityTag entityTag = new EntityTag(storedETag);
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        if (builder != null) {
+            LOGGER.info("Cached");
+            return builder.cacheControl(cacheControl).build();
+        }
+
+        LOGGER.info("New");
+        return Response.ok(timeDto)
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 }
