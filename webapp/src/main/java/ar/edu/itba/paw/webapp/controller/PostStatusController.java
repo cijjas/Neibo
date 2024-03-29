@@ -23,22 +23,58 @@ public class PostStatusController {
     @Context
     private UriInfo uriInfo;
 
+    private final String storedETag = ETagUtility.generateETag();
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listPostStatuses() {
+    public Response listPostStatuses(@HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                                     @Context Request request) {
         LOGGER.info("GET request arrived at '/post-statuses'");
         List<PostStatusDto> postStatusDto = Arrays.stream(PostStatus.values())
                 .map(tt -> PostStatusDto.fromPostStatus(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<PostStatusDto>>(postStatusDto){}).build();
+        EntityTag entityTag = new EntityTag(storedETag);
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        if (builder != null) {
+            LOGGER.info("Cached");
+            return builder.cacheControl(cacheControl).build();
+        }
+
+        LOGGER.info("New");
+
+        return Response.ok(new GenericEntity<List<PostStatusDto>>(postStatusDto){})
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response findPostStatus(@PathParam("id") final int id) {
+    public Response findPostStatus(@PathParam("id") final int id,
+                                   @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                                   @Context Request request) {
         LOGGER.info("GET request arrived at '/post-statuses/{}'", id);
-        return Response.ok(PostStatusDto.fromPostStatus(PostStatus.fromId(id), uriInfo)).build();
+        PostStatusDto postStatusDto = PostStatusDto.fromPostStatus(PostStatus.fromId(id), uriInfo);
+
+        EntityTag entityTag = new EntityTag(storedETag);
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        if (builder != null) {
+            LOGGER.info("Cached");
+            return builder.cacheControl(cacheControl).build();
+        }
+
+        LOGGER.info("New");
+        return Response.ok(postStatusDto)
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 }
