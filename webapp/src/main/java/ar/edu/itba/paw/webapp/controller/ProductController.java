@@ -77,7 +77,7 @@ public class ProductController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createProduct(@Valid final ListingForm form) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
-        final Product product = ps.createProduct(getLoggedUser().getUserId(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentId(), form.getImageFiles(), form.getQuantity());
+        final Product product = ps.createProduct(getLoggedUser().getUserId(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentURN(), form.getImageFiles(), form.getQuantity());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(product.getProductId())).build();
         return Response.created(uri).build();
@@ -91,7 +91,7 @@ public class ProductController extends GlobalControllerAdvice {
             @PathParam("id") final long id,
             @Valid final ListingForm partialUpdate) {
         LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);
-        final Product product = ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartmentId(), partialUpdate.getImageFiles(), partialUpdate.getQuantity());
+        final Product product = ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartmentURN(), partialUpdate.getImageFiles(), partialUpdate.getQuantity());
         return Response.ok(ProductDto.fromProduct(product, uriInfo)).build();
     }
 

@@ -10,9 +10,9 @@ import java.util.Optional;
 
 public interface PostService {
 
-    Post createPost(final String title, final String description, final long neighborId, final long channelId, String tags, final InputStream imageFile);
+    Post createPost(final String title, final String description, final long neighborId, final String channelURN, String tags, final InputStream imageFile);
 
-    Post createAdminPost(final long neighborhoodId, final String title, final String description, final long neighborId, final int channelId, String tags, final InputStream imageFile);
+//    Post createAdminPost(final long neighborhoodId, final String title, final String description, final long neighborId, final int channelId, String tags, final InputStream imageFile);
 
     // -----------------------------------------------------------------------------------------------------------------
 

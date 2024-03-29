@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.ChannelURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ImageConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.TagsConstraint;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -27,14 +28,15 @@ public class PublishForm {
     @ImageConstraint
     private InputStream postImage;
 
-    private Integer channel;
+    @ChannelURNConstraint
+    private String channelURN;
 
-    public Integer getChannel() {
-        return channel;
+    public String getChannelURN() {
+        return channelURN;
     }
 
-    public void setChannel(Integer channel) {
-        this.channel = channel;
+    public void setChannelURN(String channelURN) {
+        this.channelURN = channelURN;
     }
 
     public String getTags() {

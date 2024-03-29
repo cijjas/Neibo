@@ -3,6 +3,8 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.exceptions.InvalidEnumValueException;
 import ar.edu.itba.paw.models.LinkEntry;
+import ar.edu.itba.paw.models.ThreeIds;
+import ar.edu.itba.paw.models.TwoIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -330,4 +332,42 @@ public class ValidationUtils {
             throw new IllegalArgumentException("Invalid value (" + date + ") for the 'date' parameter. Please use a date in YYYY-(M)M-(D)D format.");
         }
     }
+
+    // --------------------------------------------------------------------------------------------------------------
+
+    public static long extractURNId(String URN) {
+        String[] URNParts = URN.split("/");
+        if (URNParts.length < 5) { // Check if there are enough parts for an ID
+            throw new IllegalArgumentException("Invalid URN format.");
+        }
+
+        return Long.parseLong(URNParts[4]);
+    }
+
+    public static TwoIds extractTwoURNIds(String URN) {
+        String[] URNParts = URN.split("/");
+        if (URNParts.length < 7) { // Check if there are enough parts for two IDs
+            throw new IllegalArgumentException("Invalid URN format.");
+        }
+
+        long firstId = Long.parseLong(URNParts[4]);
+        long secondId = Long.parseLong(URNParts[6]);
+
+        return new TwoIds(firstId, secondId);
+    }
+
+    public static ThreeIds extractThreeURNIds(String URN) {
+        String[] URNParts = URN.split("/");
+        if (URNParts.length < 9) { // Check if there are enough parts for three IDs
+            throw new IllegalArgumentException("Invalid URN format.");
+        }
+
+        long firstId = Long.parseLong(URNParts[4]);
+        long secondId = Long.parseLong(URNParts[6]);
+        long thirdId = Long.parseLong(URNParts[8]);
+
+        return new ThreeIds(firstId, secondId, thirdId);
+    }
+
+
 }

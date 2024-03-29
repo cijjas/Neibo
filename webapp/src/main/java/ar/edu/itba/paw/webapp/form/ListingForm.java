@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.DepartmentConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.DepartmentURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.MultipleImagesConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
@@ -25,8 +26,8 @@ public class ListingForm {
     private String description;
 
     @NotNull
-    @DepartmentConstraint
-    private Integer departmentId;
+    @DepartmentURNConstraint
+    private String departmentURN;
 
     @NotNull
     @Range(min = 1, max = 100)
@@ -64,10 +65,6 @@ public class ListingForm {
         return description;
     }
 
-    public Integer getDepartmentId() {
-        return departmentId;
-    }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -81,8 +78,12 @@ public class ListingForm {
         this.description = description;
     }
 
-    public void setDepartmentId(Integer department) {
-        this.departmentId = department;
+    public String getDepartmentURN() {
+        return departmentURN;
+    }
+
+    public void setDepartmentURN(String departmentURN) {
+        this.departmentURN = departmentURN;
     }
 
     public MultipartFile[] getImageFiles() {
@@ -99,7 +100,7 @@ public class ListingForm {
                 "title='" + title + '\'' +
                 ", price='" + price + '\'' +
                 ", description='" + description + '\'' +
-                ", department=" + departmentId +
+                ", department=" + departmentURN +
                 '}';
     }
 }

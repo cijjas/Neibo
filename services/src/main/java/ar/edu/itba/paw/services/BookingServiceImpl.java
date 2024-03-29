@@ -4,6 +4,7 @@ import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.interfaces.services.BookingService;
 import ar.edu.itba.paw.models.Entities.Booking;
+import ar.edu.itba.paw.models.TwoIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,12 +56,9 @@ public class BookingServiceImpl implements BookingService {
         // ValidationUtils.checkValidShiftId(shiftId)
         // cycle that makes ShiftDao.findShift(shiftId)
 
-        String[] amenityParts = amenityURN.split("/");
-        if (amenityParts.length < 6) {
-            throw new IllegalArgumentException("Invalid amenity URN format.");
-        }
-        long neighborhoodId = Long.parseLong(amenityParts[4]);
-        long amenityId = Long.parseLong(amenityParts[6]);
+        TwoIds twoIds = ValidationUtils.extractTwoURNIds(amenityURN);
+        long neighborhoodId = twoIds.getFirstId();
+        long amenityId = twoIds.getSecondId();
 
         // Validating neighborhoodId and amenityId
         ValidationUtils.checkNeighborhoodId(neighborhoodId);

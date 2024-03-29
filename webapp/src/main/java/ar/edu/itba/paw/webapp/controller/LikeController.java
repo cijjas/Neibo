@@ -85,7 +85,7 @@ public class LikeController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createLike(@Valid LikeForm form) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
-        final Like like = ls.createLike(form.getPostId(), getLoggedUser().getUserId());
+        final Like like = ls.createLike(form.getPostURN(), getLoggedUser().getUserId());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(like.getId())).build();
         return Response.created(uri).build();

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
-    Product createProduct(long userId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, long units);
+    Product createProduct(long userId, String name, String description, String price, boolean used, String departmentURN, MultipartFile[] pictureFiles, long units);
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ public interface ProductService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Product updateProductPartially(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, Long stock);
+    Product updateProductPartially(long productId, String name, String description, String price, boolean used, String departmentURN, MultipartFile[] pictureFiles, Long stock);
 
     // -----------------------------------------------------------------------------------------------------------------
 

@@ -5,6 +5,7 @@ import ar.edu.itba.paw.interfaces.persistence.LikeDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.services.LikeService;
 import ar.edu.itba.paw.models.Entities.Like;
+import ar.edu.itba.paw.models.TwoIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,15 @@ public class LikeServiceImpl implements LikeService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Like createLike(long postId, long userId) {
-        LOGGER.info("Creating Like for Post {} by User {}", postId, userId);
+    public Like createLike(String postURN, long userId) {
+        LOGGER.info("Creating Like for Post {} by User {}", postURN, userId);
+
+        TwoIds twoIds = ValidationUtils.extractTwoURNIds(postURN);
+        long neighborhoodId = twoIds.getFirstId();
+        long postId = twoIds.getSecondId();
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkPostId(postId);
 
         return likeDao.createLike(postId, userId);
     }

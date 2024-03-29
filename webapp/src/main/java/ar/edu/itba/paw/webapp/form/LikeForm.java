@@ -1,26 +1,27 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.ExistingPostConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.PostURNConstraint;
 
 import javax.validation.constraints.NotNull;
 
 public class LikeForm {
     @NotNull
-    @ExistingPostConstraint
-    private Long postId;
+    @PostURNConstraint
+    private String postURN;
 
-    public Long getPostId() {
-        return postId;
+    public String getPostURN() {
+        return postURN;
     }
 
-    public void setPostId(Long postId) {
-        this.postId = postId;
+    public void setPostURN(String postURN) {
+        this.postURN = postURN;
     }
 
     @Override
     public String toString() {
         return "LikeForm{" +
-                "postId='" + postId + '\'' +
+                "postURN='" + postURN + '\'' +
                 '}';
     }
 }

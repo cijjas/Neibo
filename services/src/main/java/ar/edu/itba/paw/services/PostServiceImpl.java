@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.models.TwoIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +43,15 @@ public class PostServiceImpl implements PostService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Post createPost(String title, String description, long userId, long channelId, String tags, InputStream imageFile) {
+    public Post createPost(String title, String description, long userId, String channelURN, String tags, InputStream imageFile) {
         LOGGER.info("Creating Post with Title {} by User {}", title, userId);
+
+        TwoIds twoIds = ValidationUtils.extractTwoURNIds(channelURN);
+        long neighborhoodId = twoIds.getFirstId();
+        long channelId = twoIds.getSecondId();
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkChannelId(channelId);
 
         Image i = null;
         if (imageFile != null) {
@@ -54,15 +62,15 @@ public class PostServiceImpl implements PostService {
         return p;
     }
 
-    @Override
-    public Post createAdminPost(final long neighborhoodId, final String title, final String description, final long userId, final int channelId, final String tags, final InputStream imageFile) {
-        LOGGER.info("Creating Admin Post with Title {} by User {}", title, userId);
-
-        Post post = createPost(title, description, userId, channelId, tags, imageFile);
-        assert post != null;
-        emailService.sendAnnouncementMail(post, userService.getNeighbors(neighborhoodId));
-        return post;
-    }
+//    @Override
+//    public Post createAdminPost(final long neighborhoodId, final String title, final String description, final long userId, final int channelId, final String tags, final InputStream imageFile) {
+//        LOGGER.info("Creating Admin Post with Title {} by User {}", title, userId);
+//
+//        Post post = createPost(title, description, userId, channelId, tags, imageFile);
+//        assert post != null;
+//        emailService.sendAnnouncementMail(post, userService.getNeighbors(neighborhoodId));
+//        return post;
+//    }
 
     // -----------------------------------------------------------------------------------------------------------------
 

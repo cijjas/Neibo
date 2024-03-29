@@ -82,11 +82,17 @@ public class PostController extends GlobalControllerAdvice{
             @FormDataParam("subject") String subject,
             @FormDataParam("message") String message,
             @FormDataParam("tags") String tags,
+            @FormDataParam("channelURN") String channelURN,
             @FormDataParam("postImage") InputStream postImage
     )  {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
-
-        final Post post = ps.createPost(subject, message, 1, 1, tags, postImage); // get logged user
+        PublishForm publishForm = new PublishForm();
+        publishForm.setTags(tags);
+        publishForm.setChannelURN(channelURN);
+        publishForm.setMessage(message);
+        publishForm.setSubject(subject);
+        publishForm.setPostImage(postImage);
+        final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedUser().getUserId(), publishForm.getChannelURN(), publishForm.getTags(), publishForm.getPostImage());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(post.getPostId())).build();
         return Response.created(uri).build();

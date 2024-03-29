@@ -40,8 +40,12 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Product createProduct(long userId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, long units) {
+    public Product createProduct(long userId, String name, String description, String price, boolean used, String departmentURN, MultipartFile[] pictureFiles, long units) {
         LOGGER.info("Creating Product {} from User {}", name, userId);
+
+        long departmentId = ValidationUtils.extractURNId(departmentURN);
+        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkDepartmentId(departmentId);
 
         double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
         Long[] idArray = {0L, 0L, 0L};
@@ -116,8 +120,11 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Product updateProductPartially(long productId, String name, String description, String price, boolean used, long departmentId, MultipartFile[] pictureFiles, Long stock){
+    public Product updateProductPartially(long productId, String name, String description, String price, boolean used, String departmentURN, MultipartFile[] pictureFiles, Long stock){
         LOGGER.info("Updating Product {}", productId);
+
+        long departmentId = ValidationUtils.extractURNId(departmentURN);
+        ValidationUtils.checkDepartmentId(departmentId);
 
         Product product = findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
         if(name != null && !name.isEmpty())

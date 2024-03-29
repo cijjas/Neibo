@@ -2,6 +2,8 @@ package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.ExistingRequestConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ExistingUserConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.RequestURNConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNConstraint;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
@@ -13,28 +15,28 @@ public class MarkAsSoldForm {
     private Integer quantity;
 
     @NotNull
-    @ExistingUserConstraint
-    private Long buyerId;
+    @UserURNConstraint
+    private String buyerURN;
 
     @NotNull
-    @ExistingRequestConstraint
-    private Long requestId;
+    @RequestURNConstraint
+    private String requestURN;
 
 
-    public Long getRequestId() {
-        return requestId;
+    public String getBuyerURN() {
+        return buyerURN;
     }
 
-    public void setRequestId(Long requestId) {
-        this.requestId = requestId;
+    public void setBuyerURN(String buyerURN) {
+        this.buyerURN = buyerURN;
     }
 
-    public Long getBuyerId() {
-        return buyerId;
+    public String getRequestURN() {
+        return requestURN;
     }
 
-    public void setBuyerId(Long buyerId) {
-        this.buyerId = buyerId;
+    public void setRequestURN(String requestURN) {
+        this.requestURN = requestURN;
     }
 
     public Integer getQuantity() {
@@ -49,8 +51,8 @@ public class MarkAsSoldForm {
     public String toString() {
         return "MarkAsSoldForm{" +
                 "quantity=" + quantity +
-                ", buyerId=" + buyerId +
-                ", requestId=" + requestId +
+                ", buyerId=" + buyerURN +
+                ", requestId=" + requestURN +
                 '}';
     }
 
