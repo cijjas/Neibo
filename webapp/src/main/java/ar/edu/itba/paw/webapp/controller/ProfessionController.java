@@ -1,16 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.enums.Professions;
-import ar.edu.itba.paw.enums.StandardTime;
-import ar.edu.itba.paw.interfaces.persistence.DepartmentDao;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
-import ar.edu.itba.paw.interfaces.persistence.ProductDao;
-import ar.edu.itba.paw.interfaces.services.AmenityService;
-import ar.edu.itba.paw.interfaces.services.ImageService;
-import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.interfaces.services.ProfessionWorkerService;
-import ar.edu.itba.paw.models.Entities.Channel;
 import ar.edu.itba.paw.models.Entities.Profession;
 import ar.edu.itba.paw.webapp.dto.*;
 import org.slf4j.Logger;
@@ -20,7 +11,6 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,6 +24,8 @@ public class ProfessionController {
     @Context
     private UriInfo uriInfo;
 
+    private final EntityTag storedETag = ETagUtility.generateETag();
+
     @Autowired
     public ProfessionController(final ProfessionWorkerService professionWorkerService) {
         this.ps = professionWorkerService;
@@ -42,7 +34,9 @@ public class ProfessionController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listProfessions(
-            @QueryParam("workerId") final Long workerId
+            @QueryParam("workerId") final Long workerId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
     ) {
         LOGGER.info("GET request arrived at '/professions'");
         List<Profession> professions = ps.getWorkerProfessions(workerId);
@@ -52,16 +46,46 @@ public class ProfessionController {
         List<ProfessionDto> professionDto = professions.stream()
                 .map(p -> ProfessionDto.fromProfession(p, uriInfo)).collect(Collectors.toList());
 
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
+        if (builder != null) {
+            LOGGER.info("Cached");
+            return builder.cacheControl(cacheControl).build();
+        }
+
+        LOGGER.info("New");
+
         return Response.ok(new GenericEntity<List<ProfessionDto>>(professionDto){})
+                .cacheControl(cacheControl)
+                .tag(storedETag)
                 .build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response findProfession(@PathParam("id") final long id) {
+    public Response findProfession(@PathParam("id") final long id,
+                                   @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                                   @Context Request request) {
         LOGGER.info("GET request arrived at '/professions/{}'", id);
-        return Response.ok(ProfessionDto.fromProfession(Professions.fromId(id), uriInfo)).build();
+        ProfessionDto professionDto = ProfessionDto.fromProfession(Professions.fromId(id), uriInfo);
+
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
+        if (builder != null) {
+            LOGGER.info("Cached");
+            return builder.cacheControl(cacheControl).build();
+        }
+
+        LOGGER.info("New");
+        return Response.ok(professionDto)
+                .cacheControl(cacheControl)
+                .tag(storedETag)
+                .build();
     }
 
 }
