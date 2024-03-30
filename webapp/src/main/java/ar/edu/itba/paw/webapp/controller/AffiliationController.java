@@ -93,7 +93,10 @@ public class AffiliationController {
         Affiliation a = nws.createAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRole());
         entityLevelETag = ETagUtility.generateETag();
 
-        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(a.getWorker().getWorkerId())).build())
+        // Resource URN
+        URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(a.getWorker().getWorkerId())).build();
+
+        return Response.created(uri)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();
     }

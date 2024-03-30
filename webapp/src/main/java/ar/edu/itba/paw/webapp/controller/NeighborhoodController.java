@@ -105,17 +105,20 @@ public class NeighborhoodController {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/'");
 
+        // Cache Control
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .entity("Your cached version of the resource is outdated.")
                     .header(HttpHeaders.ETAG, entityLevelETag)
                     .build();
 
+        // Creation & ETag Generation
         final Neighborhood neighborhood = ns.createNeighborhood(form.getName());
         entityLevelETag = ETagUtility.generateETag();
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(neighborhood.getNeighborhoodId())).build();
+
+        // Resource URN
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(neighborhood.getNeighborhoodId())).build();
+
         return Response.created(uri)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();

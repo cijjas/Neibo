@@ -71,14 +71,12 @@ public class ImageController {
             return Response.ok().build();
         }
 
-        // Save the image using your service
+        // Creation
         final Image image = is.storeImage(fileInputStream);
 
-        // Build URI for the newly created resource
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(image.getImageId())).build();
+        // Resource URN
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(image.getImageId())).build();
 
-        // Return response with created status and URI of the new resource
         return Response.created(uri).build();
     }
 

@@ -113,18 +113,20 @@ public class BookingController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
-        // Check If-Match Header
+        // Cache Control
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
                     .header(HttpHeaders.ETAG, entityLevelETag)
                     .build();
 
-        // Usual Flow
+        // Creation & ETag Generation
         final long[] bookingIds = bs.createBooking(getLoggedUser().getUserId(), form.getAmenityURN(), form.getShiftURNs(), form.getReservationDate());
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(Arrays.toString(bookingIds)).build();
         entityLevelETag = ETagUtility.generateETag();
+
+        // Resource URN
+        URI uri = uriInfo.getAbsolutePathBuilder().path(Arrays.toString(bookingIds)).build();
+
         return Response.created(uri)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();

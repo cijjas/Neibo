@@ -115,17 +115,20 @@ public class ProductController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
+        // Cache Control
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .entity("Your cached version of the resource is outdated.")
                     .header(HttpHeaders.ETAG, entityLevelETag)
                     .build();
 
+        // Creation & ETag Generation
         final Product product = ps.createProduct(getLoggedUser().getUserId(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentURN(), form.getImageFiles(), form.getQuantity());
         entityLevelETag = ETagUtility.generateETag();
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(product.getProductId())).build();
+
+        // Resource  URN
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(product.getProductId())).build();
+
         return Response.created(uri)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();

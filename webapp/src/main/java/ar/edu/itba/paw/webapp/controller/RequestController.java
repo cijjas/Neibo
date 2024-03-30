@@ -119,18 +119,20 @@ public class RequestController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 
-        // Check If-Match Header
+        // Cache Control
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
                     .header(HttpHeaders.ETAG, entityLevelETag)
                     .build();
 
-        // Usual Flow
+        // Creation & Etag Generation
         final Request request = rs.createRequest(getLoggedUser().getUserId(), productId, form.getRequestMessage());
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(request.getRequestId())).build();
         entityLevelETag = ETagUtility.generateETag();
+
+        // Resource URN
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(request.getRequestId())).build();
+
         return Response.created(uri).build();
     }
 

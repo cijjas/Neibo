@@ -109,17 +109,20 @@ public class EventController {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events'", neighborhoodId);
 
+        // Cache Control
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .entity("Your cached version of the resource is outdated.")
                     .header(HttpHeaders.ETAG, entityLevelETag)
                     .build();
 
+        // Creation & ETag Generation
         final Event event = es.createEvent(form.getName(), form.getDescription(), form.getDate(), form.getStartTime(), form.getEndTime() , neighborhoodId);
         entityLevelETag = ETagUtility.generateETag();
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(event.getEventId())).build();
+
+        // Resource URN
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(event.getEventId())).build();
+
         return Response.created(uri)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();

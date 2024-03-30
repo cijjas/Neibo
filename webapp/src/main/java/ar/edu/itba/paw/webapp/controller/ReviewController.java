@@ -112,18 +112,20 @@ public class ReviewController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("POST request arrived at '/workers/{}/reviews'", workerId);
 
-        // Check If-Match Header
+        // Cache Control
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
                     .header(HttpHeaders.ETAG, entityLevelETag)
                     .build();
 
-        // Usual Flow
+        // Creation & ETag Generation
         final Review review = rs.createReview(workerId, getLoggedUser().getUserId(), form.getRating(), form.getReview());
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(review.getReviewId())).build();
         entityLevelETag = ETagUtility.generateETag();
+
+        // Resource URN
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(review.getReviewId())).build();
+
         return Response.created(uri)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();

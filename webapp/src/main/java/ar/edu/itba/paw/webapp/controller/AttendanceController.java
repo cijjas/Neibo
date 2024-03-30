@@ -120,7 +120,10 @@ public class AttendanceController extends GlobalControllerAdvice {
         final Attendance attendance = as.createAttendance(getLoggedUser().getUserId(), eventId);
         entityLevelETag = ETagUtility.generateETag();
 
-        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(attendance.getId())).build())
+        // Resource URN
+        URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(attendance.getId())).build();
+
+        return Response.created(uri)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();
     }

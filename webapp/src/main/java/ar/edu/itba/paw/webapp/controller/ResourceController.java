@@ -94,17 +94,20 @@ public class ResourceController {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
 
+        // Cache Control
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .entity("Your cached version of the resource is outdated.")
                     .header(HttpHeaders.ETAG, entityLevelETag)
                     .build();
 
+        // Creation & ETag Generation
         final Resource resource = rs.createResource(neighborhoodId, form.getTitle(), form.getDescription(), form.getImageFile());
         entityLevelETag = ETagUtility.generateETag();
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(resource.getResourceId())).build();
+
+        // Resource URN
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(resource.getResourceId())).build();
+
         return Response.created(uri)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();

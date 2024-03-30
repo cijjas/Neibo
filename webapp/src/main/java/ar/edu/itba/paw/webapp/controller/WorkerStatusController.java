@@ -69,7 +69,7 @@ public class WorkerStatusController {
 
         // Content
         WorkerStatusDto workerStatusDto = WorkerStatusDto.fromWorkerStatus(WorkerStatus.fromId(id), uriInfo);
-        
+
         return Response.ok(workerStatusDto)
                 .cacheControl(cacheControl)
                 .tag(storedETag)

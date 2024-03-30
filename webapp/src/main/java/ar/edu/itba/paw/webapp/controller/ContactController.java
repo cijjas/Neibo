@@ -96,18 +96,20 @@ public class ContactController {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
 
-        // Check If-Match Header
+        // Cache Control
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
                     .header(HttpHeaders.ETAG, entityLevelETag)
                     .build();
 
-        // Usual Flow
+        // Creation & ETag Generation
         final Contact contact = cs.createContact(neighborhoodId, form.getContactName(), form.getContactAddress(), form.getContactPhone());
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(contact.getContactId())).build();
         entityLevelETag = ETagUtility.generateETag();
+
+        // Resource URN
+        URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(contact.getContactId())).build();
+
         return Response.created(uri)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();

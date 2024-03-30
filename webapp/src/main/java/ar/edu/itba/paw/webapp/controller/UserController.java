@@ -131,17 +131,20 @@ public class UserController {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
+        // Cache Control
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .entity("Your cached version of the resource is outdated.")
                     .header(HttpHeaders.ETAG, entityLevelETag)
                     .build();
 
+        // Creation & ETag Generation
         final User user = us.createNeighbor(form.getMail(), form.getPassword(), form.getName(), form.getSurname(), neighborhoodId, Language.ENGLISH, form.getIdentification());
         entityLevelETag = ETagUtility.generateETag();
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(user.getUserId())).build();
+
+        // Resource URN
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUserId())).build();
+
         return Response.created(uri)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();

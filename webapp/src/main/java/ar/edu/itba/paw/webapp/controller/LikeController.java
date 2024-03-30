@@ -111,18 +111,20 @@ public class LikeController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
 
-        // Check If-Match Header
+        // Cache Control
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
                     .header(HttpHeaders.ETAG, entityLevelETag)
                     .build();
 
-        // Usual Flow
+        // Creation & ETag Generation
         final Like like = ls.createLike(form.getPostURN(), getLoggedUser().getUserId());
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(like.getId())).build();
         entityLevelETag = ETagUtility.generateETag();
+
+        // Resource URN
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(like.getId())).build();
+
         return Response.created(uri)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();

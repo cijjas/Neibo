@@ -118,18 +118,21 @@ public class InquiryController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
 
-        // Check If-Match Header
+        // Cache Control
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
                     .header(HttpHeaders.ETAG, entityLevelETag)
                     .build();
 
-        // Usual Flow
+        // Creation & ETag Generation
         final Inquiry inquiry = is.createInquiry(getLoggedUser().getUserId(), productId, form.getQuestionMessage());
+        entityLevelETag = ETagUtility.generateETag();
+
+        // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(inquiry.getInquiryId())).build();
-        entityLevelETag = ETagUtility.generateETag();
+
         return Response.created(uri)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();

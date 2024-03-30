@@ -122,18 +122,20 @@ public class WorkerController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("POST request arrived at '/workers'");
 
-        // Check If-Match Header
+        // Cache Control
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
                     .header(HttpHeaders.ETAG, entityLevelETag)
                     .build();
 
-        // Usual Flow
+        // Creation & Etag Generation
         final Worker worker = ws.createWorker(form.getWorker_mail(), form.getWorker_name(), form.getWorker_surname(), form.getWorker_password(), form.getWorker_identification(), form.getPhoneNumber(), form.getAddress(), form.getWorker_languageURN(), form.getProfessionURNs(), form.getBusinessName());
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(worker.getWorkerId())).build();
         entityLevelETag = ETagUtility.generateETag();
+
+        // Resource URN
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(worker.getWorkerId())).build();
+
         return Response.created(uri)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();

@@ -118,7 +118,10 @@ public class AmenityController {
         Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, form.getSelectedShifts());
         entityLevelETag = ETagUtility.generateETag();
 
-        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(amenity.getAmenityId())).build())
+        // Resource URN
+        URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(amenity.getAmenityId())).build();
+
+        return Response.created(uri)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();
     }
