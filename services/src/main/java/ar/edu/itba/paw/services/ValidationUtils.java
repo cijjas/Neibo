@@ -86,6 +86,9 @@ public class ValidationUtils {
     public static void checkProductId(Long productId) {
         ValidationUtils.checkId(productId, "Product");
     }
+    public static void checkProfessionId(Long professionId) {
+        ValidationUtils.checkId(professionId, "Profession");
+    }
 
     public static void checkWorkerId(Long workerId) {
         ValidationUtils.checkId(workerId, "Worker");
@@ -134,6 +137,9 @@ public class ValidationUtils {
     public static void checkChannelId(Long channelId) {
         ValidationUtils.checkId(channelId, "Channel");
     }
+    public static void checkLanguageId(Long languageId) {
+        ValidationUtils.checkId(languageId, "Language");
+    }
 
     public static void checkCommentId(Long commentId) {
         ValidationUtils.checkId(commentId, "Comment");
@@ -173,6 +179,9 @@ public class ValidationUtils {
 
     public static void checkShiftId(Long likeId) {
         ValidationUtils.checkId(likeId, "Shift");
+    }
+    public static void checkUserRoleId(Long userRoleId) {
+        ValidationUtils.checkId(userRoleId, "User-Role");
     }
 
     public static void checkLikeIds(Long postId, Long userId) {

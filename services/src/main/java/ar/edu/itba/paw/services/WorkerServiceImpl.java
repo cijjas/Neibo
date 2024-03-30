@@ -49,7 +49,7 @@ public class WorkerServiceImpl implements WorkerService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Worker createWorker(String mail, String name, String surname, String password, String identification, String phoneNumber, String address, Language language, Long[] professionIds, String businessName) {
+    public Worker createWorker(String mail, String name, String surname, String password, String identification, String phoneNumber, String address, String languageURN, String[] professionURNs, String businessName) {
         LOGGER.info("Creating Worker with mail {}", mail);
 
         int id = 0;
@@ -59,10 +59,18 @@ public class WorkerServiceImpl implements WorkerService {
             LOGGER.error("Error whilst formatting Identification");
             throw new UnexpectedException("Unexpected Error while creating Worker");
         }
+        Language language = Language.ENGLISH;
+        if(languageURN != null) {
+            long languageId = ValidationUtils.extractURNId(languageURN);
+            ValidationUtils.checkLanguageId(languageId);
+            language = Language.fromId(languageId);
+        }
 
         User user = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), language, false, UserRole.WORKER, id);
         Worker worker = workerDao.createWorker(user.getUserId(), phoneNumber, address, businessName);
-        for (long professionId : professionIds) {
+        for(String urn : professionURNs){
+            long professionId = ValidationUtils.extractURNId(urn);
+            ValidationUtils.checkProfessionId(professionId);
             professionWorkerDao.createSpecialization(user.getUserId(), professionId);
         }
         return worker;

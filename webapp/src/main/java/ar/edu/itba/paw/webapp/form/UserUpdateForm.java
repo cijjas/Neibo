@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.LanguageURNConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.UserRoleURNConstraint;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,9 +23,11 @@ public class UserUpdateForm {
     @Size(min = 8, max = 128)
     private String password;
 
-    private Integer languageId;
+    @LanguageURNConstraint
+    private String languageURN;
 
-    private Integer userRoleId;
+    @UserRoleURNConstraint
+    private String userRoleURN;
 
     private Boolean darkMode;
 
@@ -74,20 +78,20 @@ public class UserUpdateForm {
 
     public void setIdentification(Integer identification) { this.identification = identification; }
 
-    public Integer getLanguageId() {
-        return languageId;
+    public String getLanguageURN() {
+        return languageURN;
     }
 
-    public void setLanguageId(Integer languageId) {
-        this.languageId = languageId;
+    public void setLanguageURN(String languageURN) {
+        this.languageURN = languageURN;
     }
 
-    public Integer getUserRoleId() {
-        return userRoleId;
+    public String getUserRoleURN() {
+        return userRoleURN;
     }
 
-    public void setUserRoleId(Integer userRoleId) {
-        this.userRoleId = userRoleId;
+    public void setUserRoleURN(String userRoleURN) {
+        this.userRoleURN = userRoleURN;
     }
 
     @Override
@@ -97,8 +101,8 @@ public class UserUpdateForm {
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", password='" + password + '\'' +
-                ", languageId=" + languageId +
-                ", userRoleId=" + userRoleId +
+                ", languageURN=" + languageURN +
+                ", userRoleId=" + userRoleURN +
                 ", darkMode=" + darkMode +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", profilePicture=" + profilePicture +

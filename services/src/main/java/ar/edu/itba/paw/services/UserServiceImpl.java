@@ -12,6 +12,7 @@ import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.User;
+import ar.edu.itba.paw.models.TwoIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -221,7 +222,7 @@ public class UserServiceImpl implements UserService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public User updateUser(long userId, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification, Integer languageId, Integer userRoleId) {
+    public User updateUser(long userId, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification, String languageURN, String userRoleURN) {
         LOGGER.info("Updating User {}", userId);
 
         User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User not found"));
@@ -244,10 +245,16 @@ public class UserServiceImpl implements UserService {
         }
         if (identification != null)
             user.setIdentification(identification);
-        if(languageId != null)
+        if(languageURN != null) {
+            long languageId = ValidationUtils.extractURNId(languageURN);
+            ValidationUtils.checkLanguageId(languageId);
             user.setLanguage(Language.fromId(languageId));
-        if(userRoleId != null)
+        }
+        if(userRoleURN != null) {
+            long userRoleId = ValidationUtils.extractURNId(userRoleURN);
+            ValidationUtils.checkUserRoleId(userRoleId);
             user.setRole(UserRole.fromId(userRoleId));
+        }
 
         return user;
     }

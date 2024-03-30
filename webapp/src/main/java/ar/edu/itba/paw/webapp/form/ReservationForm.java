@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.AmenityURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.DateAfterConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ExistingAmenityConstraint;
 
@@ -10,8 +11,8 @@ public class ReservationForm {
     @DateAfterConstraint
     private Date date;
 
-    @ExistingAmenityConstraint
-    private long amenityId;
+    @AmenityURNConstraint
+    private String amenityURN;
 
     public Date getDate() {
         return date;
@@ -21,19 +22,19 @@ public class ReservationForm {
         this.date = date;
     }
 
-    public long getAmenityId() {
-        return amenityId;
+    public String getAmenityURN() {
+        return amenityURN;
     }
 
-    public void setAmenityId(long amenityId) {
-        this.amenityId = amenityId;
+    public void setAmenityURN(String amenityURN) {
+        this.amenityURN = amenityURN;
     }
 
     @Override
     public String toString() {
         return "ReservationForm{" +
                 ", date=" + date +
-                ", amenityId=" + amenityId +
+                ", amenityURN=" + amenityURN +
                 '}';
     }
 }

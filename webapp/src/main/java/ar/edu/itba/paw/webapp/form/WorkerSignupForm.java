@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.EmailConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.LanguageConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.ProfessionsConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.*;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -21,9 +19,8 @@ public class WorkerSignupForm {
     @Size(min = 1, max = 64)
     private String worker_surname;
 
-    @NotNull
-    @ProfessionsConstraint
-    private Long[] professionIds;
+    @ProfessionsURNConstraint
+    private String[] professionURNs;
 
     @NotNull
     @Size(min = 1, max = 64)
@@ -56,9 +53,8 @@ public class WorkerSignupForm {
     @Pattern(regexp = "^[0-9]*")
     private String worker_identification;
 
-    @NotNull
-    @LanguageConstraint
-    private String worker_language;
+    @LanguageURNConstraint
+    private String worker_languageURN;
 
     public String getWorker_name() {
         return worker_name;
@@ -76,12 +72,12 @@ public class WorkerSignupForm {
         this.worker_surname = worker_surname;
     }
 
-    public Long[] getProfessionIds() {
-        return professionIds;
+    public String[] getProfessionURNs() {
+        return professionURNs;
     }
 
-    public void setProfessionIds(Long[] professionIds) {
-        this.professionIds = professionIds;
+    public void setProfessionURNs(String[] professionURNs) {
+        this.professionURNs = professionURNs;
     }
 
     public String getPhoneNumber() {
@@ -132,12 +128,12 @@ public class WorkerSignupForm {
         this.worker_identification = worker_identification;
     }
 
-    public String getWorker_language() {
-        return worker_language;
+    public String getWorker_languageURN() {
+        return worker_languageURN;
     }
 
-    public void setWorker_language(String worker_language) {
-        this.worker_language = worker_language;
+    public void setWorker_languageURN(String worker_languageURN) {
+        this.worker_languageURN = worker_languageURN;
     }
 
     @Override
@@ -148,7 +144,7 @@ public class WorkerSignupForm {
                 ", password='" + worker_password + '\'' +
                 ", mail='" + worker_mail + '\'' +
                 ", identification='" + worker_identification + '\'' +
-                ", language='" + worker_language + '\'' +
+                ", language='" + worker_languageURN + '\'' +
                 "phoneNumber='" + phoneNumber + '\'' +
                 ", businessName='" + businessName + '\'' +
                 ", address='" + address + '\'' +
