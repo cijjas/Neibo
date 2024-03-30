@@ -10,14 +10,15 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_availability_bookingid_seq")
     @SequenceGenerator(sequenceName = "users_availability_bookingid_seq", name = "users_availability_bookingid_seq", allocationSize = 1)
+    @Column(name = "bookingid")
     private Long bookingId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "userid", referencedColumnName = "userid")
+    @JoinColumn(name = "userid")
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "amenityavailabilityid", referencedColumnName = "amenityavailabilityid")
+    @JoinColumn(name = "amenityavailabilityid")
     private Availability amenityAvailability;
 
     @Column(name = "date")

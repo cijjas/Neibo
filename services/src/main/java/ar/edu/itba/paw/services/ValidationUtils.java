@@ -298,6 +298,16 @@ public class ValidationUtils {
         }
     }
 
+    public static void checkWorkerRoleString(String workerRole){
+        try {
+            WorkerRole.valueOf(workerRole.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            Set<LinkEntry> links = new HashSet<>();
+            links.add(new LinkEntry("Valid Worker Roles", "worker-roles"));
+            throw new InvalidEnumValueException("Invalid worker role: '" + workerRole + "'. ", links);
+        }
+    }
+
     public static void checkOptionalWorkerStatusString(String workerStatus){
         if (workerStatus == null)
             return;

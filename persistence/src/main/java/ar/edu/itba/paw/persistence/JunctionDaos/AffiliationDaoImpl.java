@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
 import ar.edu.itba.paw.enums.WorkerRole;
+import ar.edu.itba.paw.enums.WorkerStatus;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.AffiliationDao;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
@@ -19,23 +20,25 @@ import java.util.*;
 @Repository
 public class AffiliationDaoImpl implements AffiliationDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(AffiliationDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
     // ----------------------------------------- NEIGHBORHOOD WORKERS INSERT -------------------------------------------
 
     @Override
-    public Affiliation createAffiliation(long workerId, long neighborhoodId) {
+    public Affiliation createAffiliation(long workerId, long neighborhoodId, String workerStatus) {
         LOGGER.debug("Inserting Worker {} to Neighborhood {}", workerId, neighborhoodId);
 
         Worker worker = em.find(Worker.class, workerId);
         Neighborhood neighborhood = em.find(Neighborhood.class, neighborhoodId);
-        if(worker == null)
-            throw new NotFoundException("Worker Not Found");
-        if(neighborhood == null)
-            throw new NotFoundException("Neighborhood Not Found");
-        Affiliation affiliation = new Affiliation(worker, neighborhood);
-        affiliation.setRole(WorkerRole.UNVERIFIED_WORKER);
+
+        Affiliation affiliation;
+        if (workerStatus == null )
+            affiliation = new Affiliation(worker, neighborhood, WorkerRole.UNVERIFIED_WORKER);
+        else
+            affiliation = new Affiliation(worker, neighborhood, WorkerRole.valueOf(workerStatus));
+
         em.persist(affiliation);
         return affiliation;
     }

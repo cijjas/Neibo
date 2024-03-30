@@ -63,11 +63,14 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Post> posts;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Booking> bookings;
+
+    /*@ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "users_availability",
             joinColumns = @JoinColumn(name = "userid"),
             inverseJoinColumns = @JoinColumn(name = "amenityavailabilityid"))
-    private Set<Booking> bookings;
+    private Set<Availability> availabilitiesTaken;*/
 
     @ManyToMany
     @JoinTable(name = "posts_users_subscriptions", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "postid"))
@@ -94,7 +97,7 @@ public class User {
 
     @ManyToMany
     @JoinTable(name = "products_users_purchases", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "productid"))
-    private Set<Product> purchasedProducts; 
+    private Set<Product> purchasedProducts;
 
     @ManyToMany
     @JoinTable(name = "events_users", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "eventid"))
@@ -103,67 +106,43 @@ public class User {
     User() {
     }
 
-    private User(Long userId, String mail, String name, String surname, String password, Neighborhood neighborhood, Boolean darkMode, Language language, UserRole role, Date creationDate, Image profilePicture, Integer identification) {
-        this.userId = userId;
-        this.mail = mail;
-        this.name = name;
-        this.surname = surname;
-        this.password = password;
-        this.neighborhood = neighborhood;
-        this.darkMode = darkMode;
-        this.language = language;
-        this.role = role;
-        this.creationDate = new Date(System.currentTimeMillis());
-        this.profilePicture = profilePicture;
-        this.identification = identification;
+    private User(Builder builder) {
+        this.userId = builder.userId;
+        this.mail = builder.mail;
+        this.name = builder.name;
+        this.surname = builder.surname;
+        this.password = builder.password;
+        this.neighborhood = builder.neighborhood;
+        this.darkMode = builder.darkMode;
+        this.language = builder.language;
+        this.role = builder.role;
+        this.creationDate = builder.creationDate;
+        this.profilePicture = builder.profilePicture;
+        this.identification = builder.identification;
     }
 
     public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
     public String getMail() {
         return mail;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getSurname() {
         return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public Neighborhood getNeighborhood() {
         return neighborhood;
-    }
-
-    public void setNeighborhood(Neighborhood neighborhood) {
-        this.neighborhood = neighborhood;
     }
 
     public Boolean isDarkMode() {
@@ -174,56 +153,176 @@ public class User {
         return language;
     }
 
-    public void setLanguage(Language language) {
-        this.language = language;
-    }
-
     public UserRole getRole() {
         return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
     }
 
     public Date getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
     public Image getProfilePicture() {
         return profilePicture;
-    }
-
-    public void setProfilePicture(Image profilePicture) {
-        this.profilePicture = profilePicture;
     }
 
     public Integer getIdentification() {
         return identification;
     }
 
-    public void setIdentification(Integer identification) {
-        this.identification = identification;
+    public Boolean getDarkMode() {
+        return darkMode;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+ /*   public Set<Availability> getAvailabilitiesTaken() {
+        return availabilitiesTaken;
+    }*/
+
+    public Set<Post> getSubscribedPosts() {
+        return subscribedPosts;
+    }
+
+    public Set<Post> getLikedPosts() {
+        return likedPosts;
+    }
+
+    public Set<Worker> getReviewsGiven() {
+        return reviewsGiven;
+    }
+
+    public List<Product> getProductsSelling() {
+        return productsSelling;
+    }
+
+    public Set<Product> getRequestedProducts() {
+        return requestedProducts;
+    }
+
+    public Set<Product> getInquiredProducts() {
+        return inquiredProducts;
     }
 
     public Set<Product> getPurchasedProducts() {
         return purchasedProducts;
     }
 
-    public void setPurchasedProducts(Set<Product> purchasedProducts) {
-        this.purchasedProducts = purchasedProducts;
+    public Set<Event> getEventsSubscribed() {
+        return eventsSubscribed;
     }
 
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setNeighborhood(Neighborhood neighborhood) {
+        this.neighborhood = neighborhood;
+    }
+
+    public void setDarkMode(Boolean darkMode) {
+        this.darkMode = darkMode;
+    }
+
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public void setProfilePicture(Image profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public void setIdentification(Integer identification) {
+        this.identification = identification;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
+    }
+
+/*    public void setAvailabilitiesTaken(Set<Availability> availabilitiesTaken) {
+        this.availabilitiesTaken = availabilitiesTaken;
+    }*/
+
+    public void setSubscribedPosts(Set<Post> subscribedPosts) {
+        this.subscribedPosts = subscribedPosts;
+    }
+
+    public void setLikedPosts(Set<Post> likedPosts) {
+        this.likedPosts = likedPosts;
+    }
+
+    public void setReviewsGiven(Set<Worker> reviewsGiven) {
+        this.reviewsGiven = reviewsGiven;
+    }
+
+    public void setProductsSelling(List<Product> productsSelling) {
+        this.productsSelling = productsSelling;
+    }
+
+    public void setRequestedProducts(Set<Product> requestedProducts) {
+        this.requestedProducts = requestedProducts;
+    }
+
+    public void setInquiredProducts(Set<Product> inquiredProducts) {
+        this.inquiredProducts = inquiredProducts;
+    }
+
+    public void setPurchasedProducts(Set<Product> purchasedProducts) {
+        this.purchasedProducts = purchasedProducts;
+    }
+
+    public void setEventsSubscribed(Set<Event> eventsSubscribed) {
+        this.eventsSubscribed = eventsSubscribed;
     }
 
     @Override
@@ -241,102 +340,6 @@ public class User {
                 ", creationDate=" + creationDate +
                 ", identification=" + identification +
                 '}';
-    }
-
-    public Boolean getDarkMode() {
-        return darkMode;
-    }
-
-    public void setDarkMode(Boolean darkMode) {
-        this.darkMode = darkMode;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
-    }
-
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
-
-    public Set<Booking> getBookings() {
-        return bookings;
-    }
-
-    public void setBookings(Set<Booking> bookings) {
-        this.bookings = bookings;
-    }
-
-    public Set<Post> getSubscribedPosts() {
-        return subscribedPosts;
-    }
-
-    public void setSubscribedPosts(Set<Post> subscribedPosts) {
-        this.subscribedPosts = subscribedPosts;
-    }
-
-    public Set<Post> getLikedPosts() {
-        return likedPosts;
-    }
-
-    public void setLikedPosts(Set<Post> likedPosts) {
-        this.likedPosts = likedPosts;
-    }
-
-    public Set<Worker> getReviews() {
-        return reviewsGiven;
-    }
-
-    public void setReviews(Set<Worker> reviewsGiven) {
-        this.reviewsGiven = reviewsGiven;
-    }
-
-    public Set<Worker> getReviewsGiven() {
-        return reviewsGiven;
-    }
-
-    public void setReviewsGiven(Set<Worker> reviewsGiven) {
-        this.reviewsGiven = reviewsGiven;
-    }
-
-    public List<Product> getProductsSelling() {
-        return productsSelling;
-    }
-
-    public void setProductsSelling(List<Product> productsSelling) {
-        this.productsSelling = productsSelling;
-    }
-
-    public Set<Product> getRequestedProducts() {
-        return requestedProducts;
-    }
-
-    public void setRequestedProducts(Set<Product> requestedProducts) {
-        this.requestedProducts = requestedProducts;
-    }
-
-    public Set<Product> getInquiredProducts() {
-        return inquiredProducts;
-    }
-
-    public void setInquiredProducts(Set<Product> inquiredProducts) {
-        this.inquiredProducts = inquiredProducts;
-    }
-
-    public Set<Event> getEventsSubscribed() {
-        return eventsSubscribed;
-    }
-
-    public void setEventsSubscribed(Set<Event> events) {
-        this.eventsSubscribed = events;
     }
 
     @Override
@@ -427,7 +430,7 @@ public class User {
         }
 
         public User build() {
-            return new User(this.userId, this.mail, this.name, this.surname, this.password, this.neighborhood, this.darkMode, this.language, this.role, this.creationDate, this.profilePicture, this.identification);
+            return new User(this);
         }
     }
 }
