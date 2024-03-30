@@ -91,7 +91,7 @@ public class InquiryController extends GlobalControllerAdvice{
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.canAnswerInquiry(#inquiryId)")
-    public Response answerInquiry(@PathParam("id") final long inquiryId,
+    public Response updateInquiry(@PathParam("id") final long inquiryId,
                                   @Valid final QuestionForm form) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
         final Inquiry inquiry = is.replyInquiry(inquiryId, form.getQuestionMessage());

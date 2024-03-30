@@ -568,17 +568,26 @@ INSERT INTO days (dayId, dayName) VALUES (6, 'Saturday') ON CONFLICT (dayid) DO 
 INSERT INTO days (dayId, dayName) VALUES (7, 'Sunday') ON CONFLICT (dayid) DO NOTHING;
 
 -- Populate Users
+-- admin@test.com || admin
 INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode, language, role)  VALUES
     (1, 'admin@test.com', 'Administrator', 'Tester', CURRENT_TIMESTAMP, 1, 1, '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'ADMINISTRATOR') ON CONFLICT DO NOTHING;
-
+-- admin2@test.com || admin
 INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode, language, role)  VALUES
     (2, 'admin2@test.com', 'Administrator', 'Tester', CURRENT_TIMESTAMP, 2, 2, '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'ADMINISTRATOR') ON CONFLICT DO NOTHING;
-
+-- admin3@test.com || admin
 INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode, language, role)  VALUES
     (3, 'admin3@test.com', 'Administrator', 'Tester', CURRENT_TIMESTAMP, 3, 3, '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'ADMINISTRATOR') ON CONFLICT DO NOTHING;
 
+-- verified@test.com || verified
 INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode, language, role)  VALUES
     (4, 'verified@test.com', 'Verified', 'Tester', CURRENT_TIMESTAMP, 4, 1, '$2a$10$AUfasTu1ntiaxPHNNMzIx.mF9.pzyvLR1QduRJPl723cgTk5gI9KO', false, 'ENGLISH', 'NEIGHBOR') ON CONFLICT DO NOTHING;
+
+-- worker@test.com || admin
+INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode, language, role)  VALUES
+    (5, 'worker@test.com', 'Worker', 'Tester', CURRENT_TIMESTAMP, 5, 0, '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'WORKER') ON CONFLICT DO NOTHING;
+INSERT INTO workers_info (workerid, address, backgroundpictureid, bio, businessname, phonenumber) VALUES
+    (5, 'Wherever', null, 'Best in Town', 'Fix it All', '1231231') ON CONFLICT DO NOTHING;
+
 
 -- Adjusting sequences for neighborhoods
 SELECT setval('neighborhoods_neighborhoodid_seq', (SELECT MAX(neighborhoodid) FROM neighborhoods));

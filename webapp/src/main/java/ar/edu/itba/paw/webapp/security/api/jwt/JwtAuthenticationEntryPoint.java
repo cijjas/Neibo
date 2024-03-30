@@ -23,7 +23,7 @@ import java.io.IOException;
  */
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, AccessDeniedHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AccessControlHelper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationEntryPoint.class);
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {

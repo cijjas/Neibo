@@ -91,7 +91,7 @@ public class AffiliationController {
                         .build();
         }
 
-        Affiliation a = nws.createAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerStatus());
+        Affiliation a = nws.createAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRole());
         entityLevelETag = ETagUtility.generateETag();
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(a.getWorker().getWorkerId())).build();
@@ -119,7 +119,7 @@ public class AffiliationController {
                         .build();
         }
 
-        Affiliation affiliation = nws.updateAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerStatus());
+        Affiliation affiliation = nws.updateAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRole());
         entityLevelETag = ETagUtility.generateETag();
         return Response.ok(AffiliationDto.fromAffiliation(affiliation, uriInfo))
                 .header(HttpHeaders.ETAG, entityLevelETag)
