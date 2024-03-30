@@ -32,37 +32,79 @@ public class ResourceController {
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
+    private EntityTag entityLevelETag = ETagUtility.generateETag();
+
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response listResources() {
+    public Response listResources(@HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                                  @Context Request request) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
+
+        // Check Caching
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
         final List<Resource> resources = rs.getResources(neighborhoodId);
         if (resources.isEmpty())
             return Response.noContent().build();
         final List<ResourceDto> resourcesDto = resources.stream()
                 .map(r -> ResourceDto.fromResource(r, uriInfo)).collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<ResourceDto>>(resourcesDto){}).build();
+        return Response.ok(new GenericEntity<List<ResourceDto>>(resourcesDto){})
+                .cacheControl(cacheControl)
+                .tag(entityLevelETag)
+                .build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findResource(@PathParam("id") final long resourceId) {
+    public Response findResource(@PathParam("id") final long resourceId,
+                                 @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                                 @Context Request request) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
-        return Response.ok(ResourceDto.fromResource(rs.findResource(resourceId, neighborhoodId)
-                .orElseThrow(NotFoundException::new), uriInfo)).build();
+        Resource resource = rs.findResource(resourceId, neighborhoodId).orElseThrow(NotFoundException::new);
+        // Use stored ETag value
+        EntityTag entityTag = new EntityTag(resource.getVersion().toString());
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        // Client has a valid version
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+        // Client has an invalid version
+        return Response.ok(ResourceDto.fromResource(resource, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Secured("ROLE_ADMINISTRATOR")
-    public Response createResource(@Valid final ResourceForm form) {
+    public Response createResource(@Valid final ResourceForm form,
+                                   @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+                                   @Context Request request) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
+
+        if (ifMatch != null) {
+            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .entity("Your cached version of the resource is outdated.")
+                        .header(HttpHeaders.ETAG, entityLevelETag)
+                        .build();
+        }
+
         final Resource resource = rs.createResource(neighborhoodId, form.getTitle(), form.getDescription(), form.getImageFile());
+        entityLevelETag = ETagUtility.generateETag();
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(resource.getResourceId())).build();
-        return Response.created(uri).build();
+        return Response.created(uri)
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 
     @PATCH
@@ -72,19 +114,51 @@ public class ResourceController {
     @Secured("ROLE_ADMINISTRATOR")
     public Response updateResourcePartially(
             @PathParam("id") final long id,
-            @Valid final ResourceForm partialUpdate) {
+            @Valid final ResourceForm partialUpdate,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+            @Context Request request) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
+
+        // Check If-Match header
+        if (ifMatch != null) {
+            String version = rs.findResource(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
+            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
+
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .header(HttpHeaders.ETAG, version)
+                        .build();
+        }
+
         final Resource resource = rs.updateResource(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getImageFile());
-        return Response.ok(ResourceDto.fromResource(resource, uriInfo)).build();
+        entityLevelETag = ETagUtility.generateETag();
+        return Response.ok(ResourceDto.fromResource(resource, uriInfo))
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Secured("ROLE_ADMINISTRATOR")
-    public Response deleteById(@PathParam("id") final long id) {
+    public Response deleteById(
+            @PathParam("id") final long id,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+            @Context Request request) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
+
+        if (ifMatch != null) {
+            String version = rs.findResource(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
+            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
+
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .header(HttpHeaders.ETAG, version)
+                        .build();
+        }
+
         if(rs.deleteResource(id)) {
+            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();

@@ -31,14 +31,25 @@ public class NeighborhoodController {
     @Context
     private UriInfo uriInfo;
 
+    private EntityTag entityLevelETag = ETagUtility.generateETag();
+
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.hasAccessNeighborhoodQP(#workerId)")
     public Response listNeighborhoods(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("withWorker") final Long workerId) {
+            @QueryParam("withWorker") final Long workerId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request) {
         LOGGER.info("GET request arrived at '/neighborhoods/'");
+
+        // Check Caching
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
         final List<Neighborhood> neighborhoods = ns.getNeighborhoods(page, size, workerId);
         if (neighborhoods.isEmpty())
             return Response.noContent().build();
@@ -51,6 +62,8 @@ public class NeighborhoodController {
         Link[] links = createPaginationLinks(baseUri, page, size, totalNeighborhoodPages);
 
         return Response.ok(new GenericEntity<List<NeighborhoodDto>>(neighborhoodsDto){})
+                .cacheControl(cacheControl)
+                .tag(entityLevelETag)
                 .links(links)
                 .build();
     }
@@ -58,19 +71,48 @@ public class NeighborhoodController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findNeighborhood(@PathParam("id") final long id) {
+    public Response findNeighborhood(@PathParam("id") final long id,
+                                     @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                                     @Context Request request) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}'", id);
-        return Response.ok(NeighborhoodDto.fromNeighborhood(ns.findNeighborhood(id)
-                .orElseThrow(NotFoundException::new), uriInfo)).build();
+        Neighborhood neighborhood = ns.findNeighborhood(id).orElseThrow(NotFoundException::new);
+        // Use stored ETag value
+        EntityTag entityTag = new EntityTag(neighborhood.getVersion().toString());
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        // Client has a valid version
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+        // Client has an invalid version
+        return Response.ok(NeighborhoodDto.fromNeighborhood(neighborhood, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createNeighborhood(@Valid final NewNeighborhoodForm form) {
+    public Response createNeighborhood(@Valid final NewNeighborhoodForm form,
+                                       @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+                                       @Context Request request) {
         LOGGER.info("POST request arrived at '/neighborhoods/'");
+
+        if (ifMatch != null) {
+            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .entity("Your cached version of the resource is outdated.")
+                        .header(HttpHeaders.ETAG, entityLevelETag)
+                        .build();
+        }
+
         final Neighborhood neighborhood = ns.createNeighborhood(form.getName());
+        entityLevelETag = ETagUtility.generateETag();
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(neighborhood.getNeighborhoodId())).build();
-        return Response.created(uri).build();
+        return Response.created(uri)
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 }

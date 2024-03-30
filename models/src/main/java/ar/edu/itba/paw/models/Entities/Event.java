@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -42,6 +44,14 @@ public class Event {
             inverseJoinColumns = @JoinColumn(name = "userid")
     )
     private Set<User> attendees;
+
+    @Version
+    @ColumnDefault("1")
+    private Long version;
+
+    public Long getVersion() {
+        return version;
+    }
 
     // Constructor
     Event() {

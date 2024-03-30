@@ -39,6 +39,8 @@ public class UserController {
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
+    private EntityTag entityLevelETag = ETagUtility.generateETag();
+
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON})
     @PreAuthorize("@accessControlHelper.hasAccessToUserList(#neighborhoodId)")
@@ -46,9 +48,18 @@ public class UserController {
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("withRole") final String userRole,
-            @PathParam("neighborhoodId") final long neighborhoodId
+            @PathParam("neighborhoodId") final long neighborhoodId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users'", neighborhoodId);
+
+        // Check Caching
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
         final List<User> users = us.getUsers(userRole, neighborhoodId, page, size);
         if (users.isEmpty())
             return Response.noContent().build();
@@ -68,6 +79,8 @@ public class UserController {
         final List<UserDto> usersDto = users.stream()
                 .map(u -> UserDto.fromUser(u, uriInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<UserDto>>(usersDto){})
+                .cacheControl(cacheControl)
+                .tag(entityLevelETag)
                 .links(links)
                 .build();
     }
@@ -76,24 +89,59 @@ public class UserController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.hasAccessToUserDetail(#neighborhoodId, #id)")
-    public Response findUser(@PathParam("id") final long id, @PathParam("neighborhoodId") final long neighborhoodId) {
+    public Response findUser(@PathParam("id") final long id,
+                             @PathParam("neighborhoodId") final long neighborhoodId,
+                             @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                             @Context Request request) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
-        if(neighborhoodId != 0 )
-            return Response.ok(UserDto.fromUser(us.findUser(id, neighborhoodId)
-                    .orElseThrow(() -> new NotFoundException("User Not Found")), uriInfo)).build();
-        else
-            return Response.ok(UserWorkerDto.fromUserWorker(us.findUser(id, neighborhoodId)
-                    .orElseThrow(() -> new NotFoundException("User Not Found")), uriInfo)).build();
+
+        User user = us.findUser(id, neighborhoodId).orElseThrow(() -> new NotFoundException("User Not Found"));
+
+        // Use stored ETag value
+        EntityTag entityTag = new EntityTag(user.getVersion().toString());
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        // Client has a valid version
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+        // Client has an invalid version
+        if(neighborhoodId != 0 ){
+            return Response.ok(UserDto.fromUser(user, uriInfo))
+                    .cacheControl(cacheControl)
+                    .tag(entityTag)
+                    .build();
+        } else {
+            return Response.ok(UserWorkerDto.fromUserWorker(user, uriInfo))
+                    .cacheControl(cacheControl)
+                    .tag(entityTag)
+                    .build();
+        }
     }
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createUser(@Valid final SignupForm form) {
+    public Response createUser(@Valid final SignupForm form,
+                               @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+                               @Context Request request) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/users'", neighborhoodId);
+
+        if (ifMatch != null) {
+            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .entity("Your cached version of the resource is outdated.")
+                        .header(HttpHeaders.ETAG, entityLevelETag)
+                        .build();
+        }
+
         final User user = us.createNeighbor(form.getMail(), form.getPassword(), form.getName(), form.getSurname(), neighborhoodId, Language.ENGLISH, form.getIdentification());
+        entityLevelETag = ETagUtility.generateETag();
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(user.getUserId())).build();
-        return Response.created(uri).build();
+        return Response.created(uri)
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 
     @PATCH
@@ -104,10 +152,27 @@ public class UserController {
     public Response updateUserPartially(
             @PathParam("id") final long id,
             @PathParam("neighborhoodId") final long neighborhoodId,
-            @Valid final UserUpdateForm partialUpdate) {
+            @Valid final UserUpdateForm partialUpdate,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+            @Context Request request) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
+
+        // Check If-Match header
+        if (ifMatch != null) {
+            String version = us.findUser(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
+            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
+
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .header(HttpHeaders.ETAG, version)
+                        .build();
+        }
+
         final User user = us.updateUser(id, partialUpdate.getEmail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), partialUpdate.getProfilePicture(), partialUpdate.getIdentification(), partialUpdate.getLanguageURN(), partialUpdate.getUserRoleURN());
-        return Response.ok(UserDto.fromUser(user, uriInfo)).build();
+        entityLevelETag = ETagUtility.generateETag();
+        return Response.ok(UserDto.fromUser(user, uriInfo))
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 
     /*

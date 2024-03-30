@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -25,6 +27,14 @@ public class Resource {
     @ManyToOne
     @JoinColumn(name = "neighborhoodid", nullable = false)
     private Neighborhood neighborhood;
+
+    @Version
+    @ColumnDefault("1")
+    private Long version;
+
+    public Long getVersion() {
+        return version;
+    }
 
     Resource() {
     }

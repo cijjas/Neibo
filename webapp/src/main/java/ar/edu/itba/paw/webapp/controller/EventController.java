@@ -35,14 +35,25 @@ public class EventController {
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
+    private EntityTag entityLevelETag = ETagUtility.generateETag();
+
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listEventsByDate(
             @QueryParam("forDate") final String date,
             @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size
+            @QueryParam("size") @DefaultValue("10") final int size,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events'", neighborhoodId);
+
+        // Check Caching
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
         final List<Event> events = es.getEvents(date, neighborhoodId, page, size);
         if(events.isEmpty())
             return Response.noContent().build();
@@ -54,6 +65,8 @@ public class EventController {
         Link[] links = createPaginationLinks(baseUri, page, size, totalEventPages);
 
         return Response.ok(new GenericEntity<List<EventDto>>(eventsDto){})
+                .cacheControl(cacheControl)
+                .tag(entityLevelETag)
                 .links(links)
                 .build();
     }
@@ -61,21 +74,50 @@ public class EventController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findEvent(@PathParam("id") final long eventId) {
+    public Response findEvent(@PathParam("id") final long eventId,
+                              @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                              @Context Request request) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, eventId);
-        return Response.ok(EventDto.fromEvent(es.findEvent(eventId, neighborhoodId)
-                .orElseThrow(() -> new NotFoundException("Event Not Found")), uriInfo)).build();
+        Event event = es.findEvent(eventId, neighborhoodId).orElseThrow(() -> new NotFoundException("Event Not Found"));
+        // Use stored ETag value
+        EntityTag entityTag = new EntityTag(event.getVersion().toString());
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        // Client has a valid version
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+        // Client has an invalid version
+        return Response.ok(EventDto.fromEvent(event, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Secured("ROLE_ADMINISTRATOR")
-    public Response createEvent(@Valid final EventForm form) {
+    public Response createEvent(@Valid final EventForm form,
+                                @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+                                @Context Request request) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events'", neighborhoodId);
+
+        if (ifMatch != null) {
+            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .entity("Your cached version of the resource is outdated.")
+                        .header(HttpHeaders.ETAG, entityLevelETag)
+                        .build();
+        }
+
         final Event event = es.createEvent(form.getName(), form.getDescription(), form.getDate(), form.getStartTime(), form.getEndTime() , neighborhoodId);
+        entityLevelETag = ETagUtility.generateETag();
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(event.getEventId())).build();
-        return Response.created(uri).build();
+        return Response.created(uri)
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 
     @PATCH
@@ -85,19 +127,51 @@ public class EventController {
     @Secured("ROLE_ADMINISTRATOR")
     public Response updateEventPartially(
             @PathParam("id") final long id,
-            @Valid final EventForm partialUpdate) {
+            @Valid final EventForm partialUpdate,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+            @Context Request request) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
+
+        // Check If-Match header
+        if (ifMatch != null) {
+            String version = es.findEvent(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
+            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
+
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .header(HttpHeaders.ETAG, version)
+                        .build();
+        }
+
         final Event event = es.updateEventPartially(id, partialUpdate.getName(), partialUpdate.getDescription(), partialUpdate.getDate(), partialUpdate.getStartTime(), partialUpdate.getEndTime());
-        return Response.ok(EventDto.fromEvent(event, uriInfo)).build();
+        entityLevelETag = ETagUtility.generateETag();
+        return Response.ok(EventDto.fromEvent(event, uriInfo))
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Secured("ROLE_ADMINISTRATOR")
-    public Response deleteById(@PathParam("id") final long id) {
+    public Response deleteById(
+            @PathParam("id") final long id,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+            @Context Request request) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
+
+        if (ifMatch != null) {
+            String version = es.findEvent(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
+            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
+
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .header(HttpHeaders.ETAG, version)
+                        .build();
+        }
+
         if(es.deleteEvent(id)) {
+            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();

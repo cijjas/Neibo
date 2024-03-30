@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models.Entities;
 
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.UserRole;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -102,6 +103,14 @@ public class User {
     @ManyToMany
     @JoinTable(name = "events_users", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "eventid"))
     private Set<Event> eventsSubscribed;
+
+    @Version
+    @ColumnDefault("1")
+    private Long version;
+
+    public Long getVersion() {
+        return version;
+    }
 
     User() {
     }

@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -32,6 +34,14 @@ public class Availability {
 
     @OneToMany(mappedBy = "amenityAvailability", cascade = CascadeType.ALL)
     private List<Booking> bookings;
+
+    @Version
+    @ColumnDefault("1")
+    private Long version;
+
+    public Long getVersion() {
+        return version;
+    }
 
     Availability() {
     }

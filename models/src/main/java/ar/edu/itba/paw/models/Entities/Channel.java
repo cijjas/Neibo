@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
@@ -26,6 +28,13 @@ public class Channel {
     )
     private Set<Neighborhood> neighborhoods;
 
+    @Version
+    @ColumnDefault("1")
+    private Long version;
+
+    public Long getVersion() {
+        return version;
+    }
 
     Channel() {
     }

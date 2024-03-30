@@ -2,6 +2,7 @@ package ar.edu.itba.paw.models.Entities;
 
 import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.models.compositeKeys.AffiliationKey;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -26,6 +27,14 @@ public class Affiliation implements Serializable {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private WorkerRole role;
+
+    @Version
+    @ColumnDefault("1")
+    private Long version;
+
+    public Long getVersion() {
+        return version;
+    }
 
     Affiliation() {
         this.id = new AffiliationKey();

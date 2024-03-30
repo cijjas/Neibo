@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -72,6 +73,16 @@ public class AffiliationServiceImpl implements AffiliationService {
         ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(affiliationDao.countAffiliations(workerId, neighborhoodId), size);
+    }
+
+    @Override
+    public Optional<Affiliation> findAffiliation(String workerURN, String neighborhoodURN) {
+        long workerId = ValidationUtils.extractURNId(workerURN);
+        long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
+
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        return affiliationDao.findAffiliation(workerId, neighborhoodId);
     }
 
 
