@@ -213,8 +213,7 @@ public class TestInserter {
     }
 
     public void createAffiliation(long workerId, long neighborhoodId) {
-        Affiliation affiliation = new Affiliation(em.find(Worker.class, workerId), em.find(Neighborhood.class, neighborhoodId));
-        affiliation.setRole(WorkerRole.VERIFIED_WORKER);
+        Affiliation affiliation = new Affiliation(em.find(Worker.class, workerId), em.find(Neighborhood.class, neighborhoodId), WorkerRole.VERIFIED_WORKER);
         em.persist(affiliation);
         em.flush();
     }

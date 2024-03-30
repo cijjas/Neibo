@@ -2,14 +2,16 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AffiliationService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
-import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.models.Entities.Affiliation;
 import ar.edu.itba.paw.webapp.dto.AffiliationDto;
+import ar.edu.itba.paw.webapp.dto.AmenityDto;
+import ar.edu.itba.paw.webapp.form.AffiliationForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -58,29 +60,38 @@ public class AffiliationController {
                 .build();
     }
 
-    @PATCH
+    @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response addWorkerToNeighborhood(
-            @QueryParam("neighborhoodId") Long neighborhoodId,
-            @QueryParam("workerId") Long workerId
+    public Response addAffiliation(
+            @Valid final AffiliationForm form
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
-        nws.addWorkerToNeighborhood(workerId, neighborhoodId);
-        Worker worker = ws.findWorker(workerId).orElseThrow(() -> new NotFoundException("Worker Not Found"));
+        Affiliation a = nws.createAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerStatus());
         final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(worker.getWorkerId())).build();
+                .path(String.valueOf(a.getWorker().getWorkerId())).build();
         return Response.created(uri).build();
+    }
+
+    @PATCH
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response updateAffiliation(
+            @Valid final AffiliationForm form
+    ) {
+        LOGGER.info("PATCH request arrived at '/affiliations'");
+
+        Affiliation affiliation = nws.updateAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerStatus());
+        return Response.ok(AffiliationDto.fromAffiliation(affiliation, uriInfo))
+                .build();
     }
 
     @DELETE
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response removeWorkerFromNeighborhood(
-            @QueryParam("neighborhoodId") Long neighborhoodId,
-            @QueryParam("workerId") Long workerId
+            @Valid final AffiliationForm form
     ) {
-        LOGGER.info("DELETE request arrived at '/workers/{}/neighborhoods'", neighborhoodId);
+        LOGGER.info("DELETE request arrived at '/affiliations'");
 
-        if(nws.removeWorkerFromNeighborhood(workerId, neighborhoodId)) {
+        if(nws.deleteAffiliation(form.getWorkerURN(), form.getNeighborhoodURN())) {
             return Response.noContent().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();

@@ -44,40 +44,6 @@ public class AffiliationServiceImpl implements AffiliationService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void addWorkerToNeighborhood(long workerId, long neighborhoodId) {
-        LOGGER.info("Adding Worker {} to Neighborhood {}", workerId, neighborhoodId);
-
-        ValidationUtils.checkWorkerId(workerId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        affiliationDao.createAffiliation(workerId, neighborhoodId);
-        //send admin email notifying new worker
-        User worker = userDao.findUser(workerId).orElse(null);
-        assert worker != null;
-        emailService.sendNewUserMail(neighborhoodId, worker.getName(), UserRole.WORKER);
-    }
-
-
-    @Override
-    public void addWorkerToNeighborhoods(long workerId, String neighborhoodIds) {
-        LOGGER.info("Adding Worker {} to Neighborhoods {}", workerId, neighborhoodIds);
-
-        //convert the id's string into a List<Long>, where the values are comma separated in the string
-        String[] idsString = neighborhoodIds.split(",");
-        Long[] idsLong = new Long[idsString.length];
-        for(int i = 0; i < idsString.length; i++) {
-            idsLong[i] = Long.parseLong(idsString[i]);
-        }
-
-        for (long neighborhoodId : idsLong) {
-            addWorkerToNeighborhood(workerId, neighborhoodId);
-            setNeighborhoodRole(workerId, WorkerRole.UNVERIFIED_WORKER, neighborhoodId);
-        }
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
     public Set<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Affiliations between Worker {} and Neighborhood {}", workerId, neighborhoodId);
 
@@ -108,6 +74,64 @@ public class AffiliationServiceImpl implements AffiliationService {
         return PaginationUtils.calculatePages(affiliationDao.countAffiliations(workerId, neighborhoodId), size);
     }
 
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public Affiliation createAffiliation(String workerURN, String neighborhoodURN, String workerRole) {
+        LOGGER.info("Creating Affiliation between Worker {} and Neighborhood {}", workerURN, neighborhoodURN);
+
+        long workerId = ValidationUtils.extractURNId(workerURN);
+        long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
+
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkOptionalWorkerRoleString(workerRole);
+
+        workerDao.findWorker(workerId).orElseThrow(()-> new NotFoundException("Worker Not Found"));
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(()-> new NotFoundException("Neighborhood Not Found"));
+
+        return affiliationDao.createAffiliation(workerId, neighborhoodId, workerRole);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public Affiliation updateAffiliation(String workerURN, String neighborhoodURN, String workerRole) {
+        LOGGER.info("Creating Affiliation between Worker {} and Neighborhood {} to Role {}", workerURN, neighborhoodURN, workerRole);
+
+        long workerId = ValidationUtils.extractURNId(workerURN);
+        long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
+
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkWorkerRoleString(workerRole);
+
+        Affiliation affiliation = affiliationDao.findAffiliation(workerId, neighborhoodId).orElseThrow(()-> new NotFoundException("Affiliation Not Found"));
+        affiliation.setRole(WorkerRole.valueOf(workerRole));
+
+        return affiliation;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean deleteAffiliation(String workerURN, String neighborhoodURN) {
+        LOGGER.info("Deleting Affiliation between Worker {} from Neighborhood {}", workerURN, neighborhoodURN);
+
+        long workerId = ValidationUtils.extractURNId(workerURN);
+        long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
+
+        ValidationUtils.checkWorkerId(workerId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return affiliationDao.deleteAffiliation(workerId, neighborhoodId);
+    }
+
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // will deprecate
+
     @Override
     @Transactional(readOnly = true)
     public Set<Neighborhood> getNeighborhoods(long workerId) {
@@ -136,60 +160,6 @@ public class AffiliationServiceImpl implements AffiliationService {
         allNeighborhoods.removeIf(neighborhood -> neighborhood.getName().equals("Worker Neighborhood"));
         allNeighborhoods.removeIf(neighborhood -> neighborhood.getName().equals("Rejected"));
         return allNeighborhoods;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void verifyWorkerInNeighborhood(long workerId, long neighborhoodId) {
-        LOGGER.info("Verifying Worker {} in Neighborhood {}", workerId, neighborhoodId);
-
-        ValidationUtils.checkWorkerId(workerId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        setNeighborhoodRole(workerId, WorkerRole.VERIFIED_WORKER, neighborhoodId);
-        User worker = userDao.findUser(workerId).orElseThrow(()->  new NotFoundException("User Not Found"));
-        String neighborhoodName = neighborhoodDao.findNeighborhood(worker.getNeighborhood().getNeighborhoodId()).orElseThrow(() -> new NotFoundException("Neighborhood not found")).getName();
-        emailService.sendVerifiedNeighborMail(worker, neighborhoodName);
-    }
-
-    @Override
-    public void rejectWorkerFromNeighborhood(long workerId, long neighborhoodId) {
-        LOGGER.info("Rejecting Worker {} from Neighborhood {}", workerId, neighborhoodId);
-
-        ValidationUtils.checkWorkerId(workerId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        setNeighborhoodRole(workerId, WorkerRole.REJECTED, neighborhoodId);
-    }
-
-    @Override
-    public void unverifyWorkerFromNeighborhood(long workerId, long neighborhoodId) {
-        LOGGER.info("Un-verifying Worker {} from Neighborhood {}", workerId, neighborhoodId);
-
-        ValidationUtils.checkWorkerId(workerId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        setNeighborhoodRole(workerId, WorkerRole.UNVERIFIED_WORKER, neighborhoodId);
-    }
-
-    private void setNeighborhoodRole(long workerId, WorkerRole role, long neighborhoodId) {
-        LOGGER.debug("Setting Worker {} role to {} in Neighborhood {}", workerId, role, neighborhoodId);
-
-        Affiliation affiliation = affiliationDao.findAffiliation(workerId, neighborhoodId).orElseThrow(()-> new NotFoundException("Worker Area Not Found"));
-        affiliation.setRole(role);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean removeWorkerFromNeighborhood(long workerId, long neighborhoodId) {
-        LOGGER.info("Removing Worker {} from Neighborhood {}", workerId, neighborhoodId);
-
-        ValidationUtils.checkAffiliationIds(workerId, neighborhoodId);
-        ValidationUtils.checkWorkerId(workerId);
-
-        return affiliationDao.deleteAffiliation(workerId, neighborhoodId);
     }
 }
 

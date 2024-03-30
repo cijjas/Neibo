@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.interfaces.services;
 
+import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.Affiliation;
 
@@ -8,30 +9,30 @@ import java.util.Set;
 
 public interface AffiliationService {
 
-    void addWorkerToNeighborhood(long workerId, long neighborhoodId);
-
-    void addWorkerToNeighborhoods(long workerId, String neighborhoodIds);
-
-    // -----------------------------------------------------------------------------------------------------------------
-
     Set<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size);
 
     int countAffiliations(Long workerId, Long neighborhoodId);
 
     int calculateAffiliationPages(Long workerId, Long neighborhoodId, int size);
 
-    Set<Neighborhood> getNeighborhoods(long workerId);
+    // -----------------------------------------------------------------------------------------------------------------
 
-    List<Neighborhood> getOtherNeighborhoods(long workerId);
+    Affiliation createAffiliation(String workerURN, String neighborhoodURNs, String workerStatus);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean removeWorkerFromNeighborhood(long workerId, long neighborhoodId);
+    Affiliation updateAffiliation(String workerURN, String neighborhoodURNs, String workerRole);
 
-    void verifyWorkerInNeighborhood(long workerId, long neighborhoodId);
+    // -----------------------------------------------------------------------------------------------------------------
 
-    void rejectWorkerFromNeighborhood(long workerId, long neighborhoodId);
+    boolean deleteAffiliation(String workerURN, String neighborhoodURNs);
 
-    void unverifyWorkerFromNeighborhood(long workerId, long neighborhoodId);
+    // -----------------------------------------------------------------------------------------------------------------
+
+    // deprecate this shit
+
+    Set<Neighborhood> getNeighborhoods(long workerId);
+
+    List<Neighborhood> getOtherNeighborhoods(long workerId);
 
 }

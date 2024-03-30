@@ -31,10 +31,11 @@ public class Affiliation implements Serializable {
         this.id = new AffiliationKey();
     }
 
-    public Affiliation(Worker worker, Neighborhood neighborhood) {
+    public Affiliation(Worker worker, Neighborhood neighborhood, WorkerRole workerRole) {
         this.id = new AffiliationKey(worker.getUser().getUserId(), neighborhood.getNeighborhoodId());
         this.worker = worker;
         this.neighborhood = neighborhood;
+        this.role = workerRole;
     }
 
     public AffiliationKey getId() {

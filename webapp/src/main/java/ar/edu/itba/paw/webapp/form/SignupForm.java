@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.webapp.form.validation.constraints.EmailConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.LanguageConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.NeighborhoodConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.NeighborhoodURNConstraint;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -22,8 +23,8 @@ public class SignupForm {
     private String surname;
 
     @NotNull
-    @NeighborhoodConstraint
-    private Long neighborhoodId;
+    @NeighborhoodURNConstraint
+    private String neighborhoodId;
 
     @NotNull
     @Size(min = 1, max = 128)
@@ -77,11 +78,11 @@ public class SignupForm {
         this.surname = surname;
     }
 
-    public long getNeighborhoodId() {
+    public String getNeighborhoodId() {
         return neighborhoodId;
     }
 
-    public void setNeighborhoodId(long neighborhoodId) {
+    public void setNeighborhoodId(String neighborhoodId) {
         this.neighborhoodId = neighborhoodId;
     }
 

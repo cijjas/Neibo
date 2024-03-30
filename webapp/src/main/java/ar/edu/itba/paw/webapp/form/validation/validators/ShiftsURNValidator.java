@@ -13,6 +13,8 @@ public class ShiftsURNValidator implements ConstraintValidator<ShiftsURNConstrai
 
     @Override
     public boolean isValid(List<String> shiftsURN, ConstraintValidatorContext constraintValidatorContext) {
+        if (shiftsURN == null)
+            return false;
         for (String urn : shiftsURN)
             if (!URNValidator.validateURN(urn, "shifts")) return false;
         return true;

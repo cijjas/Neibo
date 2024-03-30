@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -21,11 +22,16 @@ public class Availability {
     @JoinColumn(name = "shiftid")
     private Shift shift;
 
+    /*
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "users_availability",
             joinColumns = @JoinColumn(name = "amenityavailabilityid"),
             inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> bookedByUsers;
+    */
+
+    @OneToMany(mappedBy = "amenityAvailability", cascade = CascadeType.ALL)
+    private List<Booking> bookings;
 
     Availability() {
     }
@@ -48,9 +54,11 @@ public class Availability {
         return shift;
     }
 
+/*
     public Set<User> getBookedByUsers() {
         return bookedByUsers;
     }
+*/
 
     @Override
     public String toString() {
