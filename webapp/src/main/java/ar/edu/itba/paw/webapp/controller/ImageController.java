@@ -33,23 +33,24 @@ public class ImageController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response findById(@PathParam("id") long id,
-                             @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                             @Context Request request) {
+    public Response findById(
+            @PathParam("id") long id,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/images/{}'", id);
 
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
-
         Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        if (builder != null) {
-            LOGGER.info("Cached");
+        if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        }
 
-        LOGGER.info("New");
+        // Content
+        ImageDto imageDto = ImageDto.fromImage(is.findImage(id).orElseThrow(NotFoundException::new), uriInfo);
 
-        return Response.ok(ImageDto.fromImage(is.findImage(id).orElseThrow(NotFoundException::new), uriInfo))
+        return Response.ok(imageDto)
                 .cacheControl(cacheControl)
                 .tag(storedETag)
                 .build();
@@ -58,8 +59,10 @@ public class ImageController {
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response storeImage(@FormDataParam("imageFile") InputStream fileInputStream,
-                               @FormDataParam("imageFile") FormDataContentDisposition fileDetail) {
+    public Response storeImage(
+            @FormDataParam("imageFile") InputStream fileInputStream,
+            @FormDataParam("imageFile") FormDataContentDisposition fileDetail
+    ) {
         LOGGER.info("POST request arrived at '/images/'");
 
         if (fileInputStream == null) {

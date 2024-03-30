@@ -54,20 +54,26 @@ public class UserController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
+        // Content
         final List<User> users = us.getUsers(userRole, neighborhoodId, page, size);
         if (users.isEmpty())
             return Response.noContent().build();
 
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/users";
-        int totalAmenityPages = us.calculateUserPages(userRole, neighborhoodId, size);
-        Link[] links = createPaginationLinks(baseUri, page, size, totalAmenityPages);
+        // Pagination Links
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/users",
+                us.calculateUserPages(userRole, neighborhoodId, size),
+                page,
+                size
+        );
 
+        // Alt-Content? Should be in Service
         if(neighborhoodId == 0) {
             final List<UserWorkerDto> usersDto = users.stream()
                     .map(u -> UserWorkerDto.fromUserWorker(u, uriInfo)).collect(Collectors.toList());
@@ -75,7 +81,6 @@ public class UserController {
                     .links(links)
                     .build();
         }
-
         final List<UserDto> usersDto = users.stream()
                 .map(u -> UserDto.fromUser(u, uriInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<UserDto>>(usersDto){})
@@ -89,10 +94,12 @@ public class UserController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.hasAccessToUserDetail(#neighborhoodId, #id)")
-    public Response findUser(@PathParam("id") final long id,
-                             @PathParam("neighborhoodId") final long neighborhoodId,
-                             @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                             @Context Request request) {
+    public Response findUser(
+            @PathParam("id") final long id,
+            @PathParam("neighborhoodId") final long neighborhoodId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
 
         User user = us.findUser(id, neighborhoodId).orElseThrow(() -> new NotFoundException("User Not Found"));
@@ -120,9 +127,11 @@ public class UserController {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createUser(@Valid final SignupForm form,
-                               @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-                               @Context Request request) {
+    public Response createUser(
+            @Valid final SignupForm form,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+            @Context Request request
+    ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
         if (ifMatch != null) {
@@ -154,7 +163,8 @@ public class UserController {
             @PathParam("neighborhoodId") final long neighborhoodId,
             @Valid final UserUpdateForm partialUpdate,
             @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request) {
+            @Context Request request
+    ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
 
         // Check If-Match header

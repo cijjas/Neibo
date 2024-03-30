@@ -47,26 +47,30 @@ public class AttendanceController extends GlobalControllerAdvice {
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
             @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request) {
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
+        // Content
         final Set<Attendance> attendance = as.getAttendance(eventId, page, size, neighborhoodId);
-
         if (attendance.isEmpty())
             return Response.noContent().build();
-
         final Set<AttendanceDto> attendanceDto = attendance.stream()
                 .map(a -> AttendanceDto.fromAttendance(a, uriInfo)).collect(Collectors.toSet());
 
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/events/" + eventId + "/attendance";
-        int totalAttendancePages = as.calculateAttendancePages(neighborhoodId, size);
-        Link[] links = createPaginationLinks(baseUri, page, size, totalAttendancePages);
+        // Pagination Links
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/events/" + eventId + "/attendance",
+                as.calculateAttendancePages(neighborhoodId, size),
+                page,
+                size
+        );
 
         return Response.ok(new GenericEntity<Set<AttendanceDto>>(attendanceDto){})
                 .cacheControl(cacheControl)
@@ -78,9 +82,11 @@ public class AttendanceController extends GlobalControllerAdvice {
     @GET
     @Path("/{userId}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findAttendance(@PathParam("userId") final long userId,
-                                   @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                   @Context Request request) {
+    public Response findAttendance(
+            @PathParam("userId") final long userId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
 
         //Fetch Attendance
@@ -101,8 +107,10 @@ public class AttendanceController extends GlobalControllerAdvice {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createAttendance(@HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-                                     @Context Request request) {
+    public Response createAttendance(
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+            @Context Request request
+    ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
         if (ifMatch != null) {
@@ -128,7 +136,8 @@ public class AttendanceController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteByUser(
             @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request) {
+            @Context Request request
+    ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
         if (ifMatch != null) {

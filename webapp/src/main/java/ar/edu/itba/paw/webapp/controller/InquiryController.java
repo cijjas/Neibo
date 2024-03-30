@@ -58,21 +58,27 @@ public class InquiryController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
+        // Content
         final List<Inquiry> inquiries = is.getInquiries(productId, page, size, neighborhoodId);
         if (inquiries.isEmpty())
             return Response.noContent().build();
         final List<InquiryDto> inquiriesDto = inquiries.stream()
                 .map(i -> InquiryDto.fromInquiry(i, uriInfo)).collect(Collectors.toList());
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/products" + productId + "inquiries";
-        int totalInquiryPages = is.calculateInquiryPages(productId, size);
-        Link[] links = createPaginationLinks(baseUri, page, size, totalInquiryPages);
+
+        // Pagination Link
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/products" + productId + "inquiries",
+                is.calculateInquiryPages(productId, size),
+                page,
+                size
+        );
+
         return Response.ok(new GenericEntity<List<InquiryDto>>(inquiriesDto){})
                 .links(links)
                 .cacheControl(cacheControl)
@@ -109,9 +115,10 @@ public class InquiryController extends GlobalControllerAdvice{
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.canCreateInquiry(#productId)")
-    public Response createInquiry(@Valid final QuestionForm form,
-                                  @PathParam("productId") final long productId
-                                  ) {
+    public Response createInquiry(
+            @Valid final QuestionForm form,
+            @PathParam("productId") final long productId
+    ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
 
         // Check If-Match Header

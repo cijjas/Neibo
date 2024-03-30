@@ -30,21 +30,22 @@ public class ChannelController {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response listChannels(@HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                 @Context Request request) {
+    public Response listChannels(
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
+        // Content
         List<Channel> channels = cs.getChannels(neighborhoodId);
-
         if (channels.isEmpty())
             return Response.noContent().build();
-
         List<ChannelDto> channelDto = channels.stream()
                 .map(c -> ChannelDto.fromChannel(c, uriInfo, neighborhoodId)).collect(Collectors.toList());
 
@@ -57,9 +58,11 @@ public class ChannelController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findChannel(@PathParam("id") long channelId,
-                                @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                @Context Request request) {
+    public Response findChannel(
+            @PathParam("id") long channelId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
         Channel channel = cs.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new);
         // Use stored ETag value

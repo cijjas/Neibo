@@ -27,23 +27,23 @@ public class PostStatusController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listPostStatuses(@HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                     @Context Request request) {
+    public Response listPostStatuses(
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/post-statuses'");
+
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
+        cacheControl.setMaxAge(3600);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Content
         List<PostStatusDto> postStatusDto = Arrays.stream(PostStatus.values())
                 .map(tt -> PostStatusDto.fromPostStatus(tt, uriInfo))
                 .collect(Collectors.toList());
-
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(3600);
-
-        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        if (builder != null) {
-            LOGGER.info("Cached");
-            return builder.cacheControl(cacheControl).build();
-        }
-
-        LOGGER.info("New");
 
         return Response.ok(new GenericEntity<List<PostStatusDto>>(postStatusDto){})
                 .cacheControl(cacheControl)
@@ -54,9 +54,11 @@ public class PostStatusController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response findPostStatus(@PathParam("id") final int id,
-                                   @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                   @Context Request request) {
+    public Response findPostStatus(
+            @PathParam("id") final int id,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/post-statuses/{}'", id);
         PostStatusDto postStatusDto = PostStatusDto.fromPostStatus(PostStatus.fromId(id), uriInfo);
 

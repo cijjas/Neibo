@@ -44,18 +44,19 @@ public class ContactController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
+        // Content
         final List<Contact> contacts = cs.getContacts(neighborhoodId);
         if (contacts.isEmpty())
             return Response.noContent().build();
         final List<ContactDto> contactsDto = contacts.stream()
                 .map(c -> ContactDto.fromContact(c, uriInfo)).collect(Collectors.toList());
+
         return Response.ok(new GenericEntity<List<ContactDto>>(contactsDto){})
                 .cacheControl(cacheControl)
                 .tag(entityLevelETag)
@@ -122,7 +123,7 @@ public class ContactController {
             @PathParam("id") final long id,
             @Valid final ContactForm partialUpdate,
             @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
-            ) {
+    ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
 
         // Check If-Match header

@@ -25,23 +25,23 @@ public class TimeController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listTimes(@HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                              @Context Request request) {
+    public Response listTimes(
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/times'");
+
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Content
         List<TimeDto> timeDto = Arrays.stream(StandardTime.values())
                 .map(t -> TimeDto.fromTime(t, uriInfo))
                 .collect(Collectors.toList());
-
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(3600);
-
-        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        if (builder != null) {
-            LOGGER.info("Cached");
-            return builder.cacheControl(cacheControl).build();
-        }
-
-        LOGGER.info("New");
 
         return Response.ok(new GenericEntity<List<TimeDto>>(timeDto){})
                 .cacheControl(cacheControl)
@@ -52,9 +52,11 @@ public class TimeController {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response findTime(@PathParam("id") final long id,
-                             @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                             @Context Request request) {
+    public Response findTime(
+            @PathParam("id") final long id,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/times/{}'", id);
 
         TimeDto timeDto = TimeDto.fromTime(StandardTime.fromId(id), uriInfo);

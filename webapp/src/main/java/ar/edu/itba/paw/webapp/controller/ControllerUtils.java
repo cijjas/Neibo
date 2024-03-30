@@ -17,7 +17,7 @@ public class ControllerUtils {
     @Autowired
     private UserService us;
 
-    public static Link[] createPaginationLinks(String baseUri, int page, int size, int totalPages) {
+    public static Link[] createPaginationLinks(String baseUri, int totalPages, int page, int size) {
         List<Link> links = new ArrayList<>();
 
         // Self link

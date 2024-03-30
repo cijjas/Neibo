@@ -18,6 +18,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+
 @Path("neighborhoods/{neighborhoodId}/amenities")
 @Component
 public class AmenityController {
@@ -46,18 +48,28 @@ public class AmenityController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
+        // Content
         List<Amenity> amenities = as.getAmenities(neighborhoodId, page, size);
         if (amenities.isEmpty())
             return Response.noContent().build();
         List<AmenityDto> amenitiesDto = amenities.stream().map(a -> AmenityDto.fromAmenity(a, uriInfo)).collect(Collectors.toList());
+
+        // Pagination Links
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/amenities",
+                as.calculateAmenityPages(neighborhoodId, size),
+                page,
+                size
+        );
+
         return Response.ok(new GenericEntity<List<AmenityDto>>(amenitiesDto) {})
+                .links(links)
                 .cacheControl(cacheControl)
                 .tag(entityLevelETag)
                 .build();

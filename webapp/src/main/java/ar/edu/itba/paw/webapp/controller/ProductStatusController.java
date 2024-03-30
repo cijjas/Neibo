@@ -26,23 +26,23 @@ public class ProductStatusController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listProductStatuses(@HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                        @Context Request request) {
+    public Response listProductStatuses(
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/product-statuses'");
+
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Content
         List<ProductStatusDto> productStatusDto = Arrays.stream(ProductStatus.values())
                 .map(tt -> ProductStatusDto.fromProductStatus(tt, uriInfo))
                 .collect(Collectors.toList());
-
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(3600);
-
-        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        if (builder != null) {
-            LOGGER.info("Cached");
-            return builder.cacheControl(cacheControl).build();
-        }
-
-        LOGGER.info("New");
 
         return Response.ok(new GenericEntity<List<ProductStatusDto>>(productStatusDto){})
                 .cacheControl(cacheControl)
@@ -53,9 +53,11 @@ public class ProductStatusController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response findProductStatus(@PathParam("id") final int id,
-                                      @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                      @Context Request request) {
+    public Response findProductStatus(
+            @PathParam("id") final int id,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/product-statuses/{}'", id);
         ProductStatusDto productStatusDto = ProductStatusDto.fromProductStatus(ProductStatus.fromId(id), uriInfo);
 

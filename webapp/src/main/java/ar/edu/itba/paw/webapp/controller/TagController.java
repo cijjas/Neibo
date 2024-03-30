@@ -41,21 +41,26 @@ public class TagController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags'", neighborhoodId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
+        // Content
         List<Tag> tags = ts.getTags(postId, neighborhoodId, page, size);
         if (tags.isEmpty())
             return Response.noContent().build();
         List<TagDto> tagsDto = tags.stream()
                 .map(t -> TagDto.fromTag(t, neighborhoodId, uriInfo)).collect(Collectors.toList());
 
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/tags";
-        int totalTagPages = ts.calculateTagPages(postId, neighborhoodId, size);
-        Link[] links = ControllerUtils.createPaginationLinks(baseUri, page, size, totalTagPages);
+        // Pagination Links
+        Link[] links = ControllerUtils.createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/tags",
+                ts.calculateTagPages(postId, neighborhoodId, size),
+                page,
+                size
+        );
 
         return Response.ok(new GenericEntity<List<TagDto>>(tagsDto){})
                 .cacheControl(cacheControl)
@@ -67,9 +72,11 @@ public class TagController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findTags(@PathParam("id") final long tagId,
-                             @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                             @Context Request request) {
+    public Response findTags(
+            @PathParam("id") final long tagId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
 
         Tag tag = ts.findTag(tagId, neighborhoodId).orElseThrow(NotFoundException::new);

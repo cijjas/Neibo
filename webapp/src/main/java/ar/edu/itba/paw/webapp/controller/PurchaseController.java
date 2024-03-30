@@ -52,22 +52,28 @@ public class PurchaseController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}/transactions'", neighborhoodId, userId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
+        // Content
         Set<Purchase> transactions = ps.getPurchases(userId, type, page, size, neighborhoodId);
         if (transactions.isEmpty())
             return Response.noContent().build();
         Set<PurchaseDto> transactionDto = transactions.stream()
                 .map(p -> PurchaseDto.fromPurchase(p, uriInfo))
                 .collect(Collectors.toSet());
-        // aca falta la asignacion alguien la hizo ahi adentro
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/users/" + userId + "/transactions";
-        Link[] links = createPaginationLinks(baseUri, page, size, ps.calculatePurchasePages(userId, type, size));
+
+        // Pagination Links
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/users/" + userId + "/transactions",
+                ps.calculatePurchasePages(userId, type, size),
+                page,
+                size
+        );
+
         return Response.ok(new GenericEntity<Set<PurchaseDto>>(transactionDto){})
                 .links(links)
                 .cacheControl(cacheControl)

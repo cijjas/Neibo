@@ -53,23 +53,25 @@ public class CommentController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
+        // Content
         final List<Comment> comments = cs.getComments(postId, page, size, neighborhoodId);
-
         if (comments.isEmpty())
             return Response.noContent().build();
-
         final List<CommentDto> commentsDto = comments.stream()
                 .map(c -> CommentDto.fromComment(c, uriInfo)).collect(Collectors.toList());
 
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts" + postId + "/comment";
-        int totalProductPages = cs.calculateCommentPages(postId, size);
-        Link[] links = createPaginationLinks(baseUri, page, size, totalProductPages);
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts" + postId + "/comment",
+                cs.calculateCommentPages(postId, size),
+                page,
+                size
+        );
 
         return Response.ok(new GenericEntity<List<CommentDto>>(commentsDto){})
                 .cacheControl(cacheControl)
@@ -81,9 +83,11 @@ public class CommentController extends GlobalControllerAdvice{
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findComment(@PathParam("id") long commentId,
-                                @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                @Context Request request) {
+    public Response findComment(
+            @PathParam("id") long commentId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
         Comment comment = cs.findComment(commentId, postId, neighborhoodId).orElseThrow(NotFoundException::new);
         // Use stored ETag value
@@ -102,9 +106,11 @@ public class CommentController extends GlobalControllerAdvice{
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createComment(@Valid final CommentForm form,
-                                  @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-                                  @Context Request request) {
+    public Response createComment(
+            @Valid final CommentForm form,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+            @Context Request request
+    ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
 
         if (ifMatch != null) {

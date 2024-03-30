@@ -41,25 +41,30 @@ public class NeighborhoodController {
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("withWorker") final Long workerId,
             @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request) {
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/'");
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
+        // Content
         final List<Neighborhood> neighborhoods = ns.getNeighborhoods(page, size, workerId);
         if (neighborhoods.isEmpty())
             return Response.noContent().build();
         final List<NeighborhoodDto> neighborhoodsDto = neighborhoods.stream()
                 .map(n -> NeighborhoodDto.fromNeighborhood(n, uriInfo)).collect(Collectors.toList());
 
-        // Add pagination links to the response header
-        String baseUri = uriInfo.getBaseUri().toString();
-        int totalNeighborhoodPages = ns.calculateNeighborhoodPages(workerId, size);
-        Link[] links = createPaginationLinks(baseUri, page, size, totalNeighborhoodPages);
+        // Pagination Links
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString(),
+                ns.calculateNeighborhoodPages(workerId, size),
+                page,
+                size
+        );
 
         return Response.ok(new GenericEntity<List<NeighborhoodDto>>(neighborhoodsDto){})
                 .cacheControl(cacheControl)
@@ -71,9 +76,11 @@ public class NeighborhoodController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findNeighborhood(@PathParam("id") final long id,
-                                     @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                     @Context Request request) {
+    public Response findNeighborhood(
+            @PathParam("id") final long id,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}'", id);
         Neighborhood neighborhood = ns.findNeighborhood(id).orElseThrow(NotFoundException::new);
         // Use stored ETag value
@@ -92,9 +99,11 @@ public class NeighborhoodController {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createNeighborhood(@Valid final NewNeighborhoodForm form,
-                                       @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-                                       @Context Request request) {
+    public Response createNeighborhood(
+            @Valid final NewNeighborhoodForm form,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+            @Context Request request
+    ) {
         LOGGER.info("POST request arrived at '/neighborhoods/'");
 
         if (ifMatch != null) {

@@ -49,19 +49,19 @@ public class AvailabilityController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}/availability'", neighborhoodId, amenityId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
+        // Content
         final List<Availability> availabilities = as.getAvailability(amenityId, status, date, neighborhoodId);
-
         if (availabilities.isEmpty())
             return Response.noContent().build();
-
         final List<AvailabilityDto> availabilityDto = availabilities.stream()
                 .map(a -> AvailabilityDto.fromAvailability(a, uriInfo)).collect(Collectors.toList());
+
         return Response.ok(new GenericEntity<List<AvailabilityDto>>(availabilityDto){})
                 .cacheControl(cacheControl)
                 .tag(entityLevelETag)
@@ -71,9 +71,11 @@ public class AvailabilityController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findAvailability(@PathParam("id") final long availabilityId,
-                                     @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                     @Context Request request) {
+    public Response findAvailability(
+            @PathParam("id") final long availabilityId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}/availability/{}'", neighborhoodId, amenityId, availabilityId);
 
         Availability availability = as.findAvailability(amenityId, availabilityId, neighborhoodId).orElseThrow(NotFoundException::new);

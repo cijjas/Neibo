@@ -53,21 +53,27 @@ public class ReviewController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("GET request arrived at '/workers/{}/reviews'", workerId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
+        // Content
         final List<Review> reviews = rs.getReviews(workerId, page, size);
         if (reviews.isEmpty())
             return Response.noContent().build();
         final List<ReviewDto> reviewsDto = reviews.stream()
                 .map(r -> ReviewDto.fromReview(r, uriInfo)).collect(Collectors.toList());
-        String baseUri = uriInfo.getBaseUri().toString() + "workers/" + workerId + "/reviews";
-        int totalReviewPages = rs.calculateReviewPages(workerId, size);
-        Link[] links = createPaginationLinks(baseUri, page, size, totalReviewPages);
+
+        // Pagination Links
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "workers/" + workerId + "/reviews",
+                rs.calculateReviewPages(workerId, size),
+                page,
+                size
+        );
+
         return Response.ok(new GenericEntity<List<ReviewDto>>(reviewsDto){})
                 .links(links)
                 .cacheControl(cacheControl)
@@ -104,7 +110,9 @@ public class ReviewController extends GlobalControllerAdvice {
     @POST
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR"})
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createReview(@Valid final ReviewForm form) {
+    public Response createReview(
+            @Valid final ReviewForm form
+    ) {
         LOGGER.info("POST request arrived at '/workers/{}/reviews'", workerId);
 
         // Check If-Match Header

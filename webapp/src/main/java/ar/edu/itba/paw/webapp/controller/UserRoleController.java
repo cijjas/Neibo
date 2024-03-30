@@ -27,23 +27,23 @@ public class UserRoleController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listUserRoles(@HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                  @Context Request request) {
+    public Response listUserRoles(
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/user-roles'");
+
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Content
         List<UserRoleDto> userRoleDto = Arrays.stream(UserRole.values())
                 .map(tt -> UserRoleDto.fromUserRole(tt, uriInfo))
                 .collect(Collectors.toList());
-
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(3600);
-
-        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        if (builder != null) {
-            LOGGER.info("Cached");
-            return builder.cacheControl(cacheControl).build();
-        }
-
-        LOGGER.info("New");
 
         return Response.ok(new GenericEntity<List<UserRoleDto>>(userRoleDto){})
                 .cacheControl(cacheControl)
@@ -54,9 +54,11 @@ public class UserRoleController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response findUserRole(@PathParam("id") final int id,
-                                 @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                 @Context Request request) {
+    public Response findUserRole(
+            @PathParam("id") final int id,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/user-roles/{}'", id);
 
         UserRoleDto userRoleDto = UserRoleDto.fromUserRole(UserRole.fromId(id), uriInfo);

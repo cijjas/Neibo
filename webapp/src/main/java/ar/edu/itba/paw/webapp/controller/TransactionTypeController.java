@@ -24,23 +24,23 @@ public class TransactionTypeController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listTransactionTypes(@HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                         @Context Request request) {
+    public Response listTransactionTypes(
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/transaction-type'");
+
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Content
         List<TransactionTypeDto> transactionDto = Arrays.stream(TransactionType.values())
                 .map(tt -> TransactionTypeDto.fromTransactionType(tt, uriInfo))
                 .collect(Collectors.toList());
-
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(3600);
-
-        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        if (builder != null) {
-            LOGGER.info("Cached");
-            return builder.cacheControl(cacheControl).build();
-        }
-
-        LOGGER.info("New");
 
         return Response.ok(new GenericEntity<List<TransactionTypeDto>>(transactionDto){})
                 .cacheControl(cacheControl)
@@ -51,9 +51,11 @@ public class TransactionTypeController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response findTransactionType(@PathParam("id") final int id,
-                                        @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                        @Context Request request) {
+    public Response findTransactionType(
+            @PathParam("id") final int id,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/transaction-type/{}'", id);
         TransactionTypeDto transactionTypeDto = TransactionTypeDto.fromTransactionType(TransactionType.fromId(id), uriInfo);
 

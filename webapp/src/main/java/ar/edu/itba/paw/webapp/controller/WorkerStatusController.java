@@ -22,21 +22,40 @@ public class WorkerStatusController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
+    private final EntityTag storedETag = ETagUtility.generateETag();
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listWorkerStatuses() {
         LOGGER.info("GET request arrived at '/worker-statuses'");
+
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Content
         List<WorkerStatusDto> workerStatusDto = Arrays.stream(WorkerStatus.values())
                 .map(tt -> WorkerStatusDto.fromWorkerStatus(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        return Response.ok(new GenericEntity<List<WorkerStatusDto>>(workerStatusDto){}).build();
+        return Response.ok(new GenericEntity<List<WorkerStatusDto>>(workerStatusDto){})
+                .cacheControl(cacheControl)
+                .tag(storedETag)
+                .build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response findWorkerStatus(@PathParam("id") final int id) {
+    public Response findWorkerStatus(
+            @PathParam("id") final int id
+    ) {
         LOGGER.info("GET request arrived at '/worker-statuses/{}'", id);
         return Response.ok(WorkerStatusDto.fromWorkerStatus(WorkerStatus.fromId(id), uriInfo)).build();
     }

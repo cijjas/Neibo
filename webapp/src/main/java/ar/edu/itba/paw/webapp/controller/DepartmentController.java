@@ -29,23 +29,24 @@ public class DepartmentController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listDepartments(@HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                    @Context Request request) {
+    public Response listDepartments(
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/departments'");
-        List<DepartmentDto> departmentDto = Arrays.stream(Department.values())
-                .map(d -> DepartmentDto.fromDepartment(d, uriInfo))
-                .collect(Collectors.toList());
 
+        //Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
-
         Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null) {
-            LOGGER.info("Cached");
             return builder.cacheControl(cacheControl).build();
         }
 
-        LOGGER.info("New");
+        // Content
+        List<DepartmentDto> departmentDto = Arrays.stream(Department.values())
+                .map(d -> DepartmentDto.fromDepartment(d, uriInfo))
+                .collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<DepartmentDto>>(departmentDto){})
                 .cacheControl(cacheControl)
@@ -56,9 +57,11 @@ public class DepartmentController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response findDepartment(@PathParam("id") final int id,
-                                   @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                   @Context Request request) {
+    public Response findDepartment(
+            @PathParam("id") final int id,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/departments/{}'", id);
 
         DepartmentDto departmentDto = DepartmentDto.fromDepartment(Department.fromId(id), uriInfo);

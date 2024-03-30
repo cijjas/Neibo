@@ -54,21 +54,27 @@ public class BookingController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
+        // Content
         final List<Booking> bookings = bs.getBookings(userId, amenityId, neighborhoodId, page, size);
         if (bookings.isEmpty())
             return Response.noContent().build();
         final List<BookingDto> bookingsDto = bookings.stream()
                 .map(b -> BookingDto.fromBooking(b, uriInfo)).collect(Collectors.toList());
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/amenities";
-        int totalBookingPages = bs.calculateBookingPages(userId, amenityId, neighborhoodId, size);
-        Link[] links = createPaginationLinks(baseUri, page, size, totalBookingPages);
+
+        // Pagination Links
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/amenities",
+                bs.calculateBookingPages(userId, amenityId, neighborhoodId, size),
+                page,
+                size
+        );
+
         return Response.ok(new GenericEntity<List<BookingDto>>(bookingsDto){})
                 .links(links)
                 .cacheControl(cacheControl)
@@ -104,7 +110,9 @@ public class BookingController extends GlobalControllerAdvice{
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createBooking(@Valid BookingForm form) {
+    public Response createBooking(
+            @Valid BookingForm form
+    ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
         // Check If-Match Header

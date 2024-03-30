@@ -48,21 +48,26 @@ public class EventController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events'", neighborhoodId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
+        // Content
         final List<Event> events = es.getEvents(date, neighborhoodId, page, size);
         if(events.isEmpty())
             return Response.noContent().build();
         final List<EventDto> eventsDto = events.stream()
                 .map(e -> EventDto.fromEvent(e, uriInfo)).collect(Collectors.toList());
 
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/events";
-        int totalEventPages = es.calculateEventPages(date, neighborhoodId, size);
-        Link[] links = createPaginationLinks(baseUri, page, size, totalEventPages);
+        // Pagination Links
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/events",
+                es.calculateEventPages(date, neighborhoodId, size),
+                page,
+                size
+        );
 
         return Response.ok(new GenericEntity<List<EventDto>>(eventsDto){})
                 .cacheControl(cacheControl)
@@ -74,9 +79,11 @@ public class EventController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findEvent(@PathParam("id") final long eventId,
-                              @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                              @Context Request request) {
+    public Response findEvent(
+            @PathParam("id") final long eventId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, eventId);
         Event event = es.findEvent(eventId, neighborhoodId).orElseThrow(() -> new NotFoundException("Event Not Found"));
         // Use stored ETag value
@@ -96,9 +103,11 @@ public class EventController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Secured("ROLE_ADMINISTRATOR")
-    public Response createEvent(@Valid final EventForm form,
-                                @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-                                @Context Request request) {
+    public Response createEvent(
+            @Valid final EventForm form,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+            @Context Request request
+    ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events'", neighborhoodId);
 
         if (ifMatch != null) {
@@ -129,7 +138,8 @@ public class EventController {
             @PathParam("id") final long id,
             @Valid final EventForm partialUpdate,
             @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request) {
+            @Context Request request
+    ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
 
         // Check If-Match header
@@ -157,7 +167,8 @@ public class EventController {
     public Response deleteById(
             @PathParam("id") final long id,
             @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request) {
+            @Context Request request
+    ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
 
         if (ifMatch != null) {

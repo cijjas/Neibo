@@ -60,21 +60,28 @@ public class PostController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
+        // Content
         final List<Post> posts = ps.getPosts(channel, page, size, tags, neighborhoodId, postStatus, userId);
         if (posts.isEmpty())
             return Response.noContent().build();
         final List<PostDto> postsDto = posts.stream()
                 .map(p -> PostDto.fromPost(p, uriInfo)).collect(Collectors.toList());
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts";
-        int totalPostsPages = ps.calculatePostPages(channel, size, tags, neighborhoodId, postStatus, userId);
-        Link[] links = createPaginationLinks(baseUri, page, size, totalPostsPages);
+
+        // Pagination Links
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts",
+                ps.calculatePostPages(channel, size, tags, neighborhoodId,
+                        postStatus, userId),
+                page,
+                size
+        );
+
         return Response.ok(new GenericEntity<List<PostDto>>(postsDto){})
                 .links(links)
                 .cacheControl(cacheControl)

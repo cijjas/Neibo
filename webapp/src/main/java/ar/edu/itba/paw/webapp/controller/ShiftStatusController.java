@@ -27,23 +27,23 @@ public class ShiftStatusController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listShiftStatuses(@HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                      @Context Request request) {
+    public Response listShiftStatuses(
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/shift-statuses'");
+
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Content
         List<ShiftStatusDto> shiftStatusDto = Arrays.stream(ShiftStatus.values())
                 .map(tt -> ShiftStatusDto.fromShiftStatus(tt, uriInfo))
                 .collect(Collectors.toList());
-
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(3600);
-
-        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        if (builder != null) {
-            LOGGER.info("Cached");
-            return builder.cacheControl(cacheControl).build();
-        }
-
-        LOGGER.info("New");
 
         return Response.ok(new GenericEntity<List<ShiftStatusDto>>(shiftStatusDto){})
                 .cacheControl(cacheControl)
@@ -54,9 +54,11 @@ public class ShiftStatusController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response findShiftStatus(@PathParam("id") final int id,
-                                    @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                    @Context Request request) {
+    public Response findShiftStatus(
+            @PathParam("id") final int id,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/shift-statuses/{}'", id);
         ShiftStatusDto shiftStatusDto = ShiftStatusDto.fromShiftStatus(ShiftStatus.fromId(id), uriInfo);
 

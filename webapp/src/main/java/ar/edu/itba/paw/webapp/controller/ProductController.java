@@ -51,24 +51,29 @@ public class ProductController extends GlobalControllerAdvice {
             @QueryParam("withStatus") final String productStatus,
             @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
             @Context Request request
-            ) {
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
+        // Content
         final List<Product> products = ps.getProducts(neighborhoodId, department, userId, productStatus, page, size);
         if (products.isEmpty())
             return Response.noContent().build();
         final List<ProductDto> productsDto = products.stream()
                 .map(p -> ProductDto.fromProduct(p, uriInfo)).collect(Collectors.toList());
 
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/products";
-        int totalProductPages = ps.calculateProductPages(neighborhoodId, size, department, userId, productStatus);
-        Link[] links = createPaginationLinks(baseUri, page, size, totalProductPages);
+        // Pagination Links
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/products",
+                ps.calculateProductPages(neighborhoodId, size, department, userId, productStatus),
+                page,
+                size
+        );
 
         return Response.ok(new GenericEntity<List<ProductDto>>(productsDto){})
                 .cacheControl(cacheControl)
@@ -80,9 +85,11 @@ public class ProductController extends GlobalControllerAdvice {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findProduct(@PathParam("id") final long productId,
-                                @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                @Context Request request) {
+    public Response findProduct(
+            @PathParam("id") final long productId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
         Product product = ps.findProduct(productId, neighborhoodId).orElseThrow(() -> new NotFoundException("Product Not Found"));
         // Use stored ETag value
@@ -101,9 +108,11 @@ public class ProductController extends GlobalControllerAdvice {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createProduct(@Valid final ListingForm form,
-                                  @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-                                  @Context Request request) {
+    public Response createProduct(
+            @Valid final ListingForm form,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+            @Context Request request
+    ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
         if (ifMatch != null) {
@@ -133,7 +142,8 @@ public class ProductController extends GlobalControllerAdvice {
             @PathParam("id") final long id,
             @Valid final ListingForm partialUpdate,
             @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request) {
+            @Context Request request
+    ) {
         LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);
 
         // Check If-Match header
@@ -161,7 +171,8 @@ public class ProductController extends GlobalControllerAdvice {
     public Response deleteById(
             @PathParam("id") final long productId,
             @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request) {
+            @Context Request request
+    ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 
         if (ifMatch != null) {

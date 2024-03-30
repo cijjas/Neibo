@@ -36,16 +36,19 @@ public class ResourceController {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response listResources(@HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                  @Context Request request) {
+    public Response listResources(
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
+        // Content
         final List<Resource> resources = rs.getResources(neighborhoodId);
         if (resources.isEmpty())
             return Response.noContent().build();
@@ -61,9 +64,11 @@ public class ResourceController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findResource(@PathParam("id") final long resourceId,
-                                 @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                 @Context Request request) {
+    public Response findResource(
+            @PathParam("id") final long resourceId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
         Resource resource = rs.findResource(resourceId, neighborhoodId).orElseThrow(NotFoundException::new);
         // Use stored ETag value
@@ -83,9 +88,11 @@ public class ResourceController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Secured("ROLE_ADMINISTRATOR")
-    public Response createResource(@Valid final ResourceForm form,
-                                   @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-                                   @Context Request request) {
+    public Response createResource(
+            @Valid final ResourceForm form,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+            @Context Request request
+    ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
 
         if (ifMatch != null) {
@@ -116,7 +123,8 @@ public class ResourceController {
             @PathParam("id") final long id,
             @Valid final ResourceForm partialUpdate,
             @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request) {
+            @Context Request request
+    ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
 
         // Check If-Match header
@@ -144,7 +152,8 @@ public class ResourceController {
     public Response deleteById(
             @PathParam("id") final long id,
             @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request) {
+            @Context Request request
+    ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
 
         if (ifMatch != null) {

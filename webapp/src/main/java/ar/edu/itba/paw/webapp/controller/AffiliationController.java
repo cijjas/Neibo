@@ -4,7 +4,6 @@ import ar.edu.itba.paw.interfaces.services.AffiliationService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Affiliation;
 import ar.edu.itba.paw.webapp.dto.AffiliationDto;
-import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.form.AffiliationForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +26,10 @@ public class AffiliationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AffiliationController.class);
 
     @Autowired
-    private AffiliationService nws;
+    private WorkerService ws;
 
-    @Autowired WorkerService ws;
+    @Autowired
+    private AffiliationService nws;
 
     @Context
     private UriInfo uriInfo;
@@ -37,7 +37,7 @@ public class AffiliationController {
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @GET
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listAffiliations(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
@@ -48,24 +48,29 @@ public class AffiliationController {
     ) {
         LOGGER.info("GET request arrived at '/affiliations'");
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
+        // Content
         Set<Affiliation> affiliations = nws.getAffiliations(workerId, neighborhoodId, page, size);
-
         if (affiliations.isEmpty())
             return Response.noContent().build();
-
         List<AffiliationDto> affiliationDto = affiliations.stream()
                 .map(wa -> AffiliationDto.fromAffiliation(wa, uriInfo)).collect(Collectors.toList());
 
-        String baseUri = uriInfo.getBaseUri().toString() + "affiliations/";
-        int totalAmenityPages = nws.calculateAffiliationPages(workerId, neighborhoodId, size);
-        Link[] links = createPaginationLinks(baseUri, page, size, totalAmenityPages);
-        return Response.ok(new GenericEntity<List<AffiliationDto>>(affiliationDto){})
+        // Pagination Links
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "affiliations/",
+                nws.calculateAffiliationPages(workerId, neighborhoodId, size),
+                page,
+                size
+        );
+
+        return Response.ok(new GenericEntity<List<AffiliationDto>>(affiliationDto) {
+                })
                 .cacheControl(cacheControl)
                 .tag(entityLevelETag)
                 .links(links)
@@ -73,7 +78,7 @@ public class AffiliationController {
     }
 
     @POST
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response addAffiliation(
             @Valid final AffiliationForm form,
             @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
@@ -101,7 +106,7 @@ public class AffiliationController {
     }
 
     @PATCH
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response updateAffiliation(
             @Valid final AffiliationForm form,
             @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
@@ -127,7 +132,7 @@ public class AffiliationController {
     }
 
     @DELETE
-    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response removeWorkerFromNeighborhood(
             @Valid final AffiliationForm form,
             @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
@@ -145,7 +150,7 @@ public class AffiliationController {
                         .build();
         }
 
-        if(nws.deleteAffiliation(form.getWorkerURN(), form.getNeighborhoodURN())) {
+        if (nws.deleteAffiliation(form.getWorkerURN(), form.getNeighborhoodURN())) {
             entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();
         }

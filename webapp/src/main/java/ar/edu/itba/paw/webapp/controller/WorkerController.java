@@ -63,21 +63,27 @@ public class WorkerController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("GET request arrived at '/workers'");
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
+        // Content
         Set<Worker> workers = ws.getWorkers(page, size, professions, neighborhoodIds, workerRole, workerStatus);
         if (workers.isEmpty())
             return Response.noContent().build();
-        String baseUri = uriInfo.getBaseUri().toString() + "workers";
-        int totalWorkerPages = ws.calculateWorkerPages(professions, neighborhoodIds, size, workerRole, workerStatus);
-        Link[] links = createPaginationLinks(baseUri, page, size, totalWorkerPages);
         List<WorkerDto> workerDto = workers.stream()
                 .map(w -> WorkerDto.fromWorker(w, uriInfo)).collect(Collectors.toList());
+
+        // Pagination Links
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "workers",
+                ws.calculateWorkerPages(professions, neighborhoodIds, size, workerRole, workerStatus),
+                page,
+                size
+        );
+
         return Response.ok(new GenericEntity<List<WorkerDto>>(workerDto){})
                 .links(links)
                 .cacheControl(cacheControl)

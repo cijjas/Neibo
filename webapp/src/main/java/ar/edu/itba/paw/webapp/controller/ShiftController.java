@@ -39,19 +39,20 @@ public class ShiftController {
     ) {
         LOGGER.info("GET request arrived at '/shifts'");
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
+        // Content
         List<Shift> shifts = ss.getShifts();
         if (shifts.isEmpty())
             return Response.noContent().build();
         List<ShiftDto> shiftDto = shifts.stream()
                 .map(s -> ShiftDto.fromShift(s, uriInfo))
                 .collect(Collectors.toList());
+
         return Response.ok(new GenericEntity<List<ShiftDto>>(shiftDto) {})
                 .cacheControl(cacheControl)
                 .tag(entityLevelETag)

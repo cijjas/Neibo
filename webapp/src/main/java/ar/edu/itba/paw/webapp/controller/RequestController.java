@@ -58,21 +58,27 @@ public class RequestController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
+        // Content
         List<Request> requests = rs.getRequests(productId, userId, page, size, neighborhoodId);
         if (requests.isEmpty())
             return Response.noContent().build();
         List<RequestDto> requestDto = requests.stream()
                 .map(r -> RequestDto.fromRequest(r, uriInfo)).collect(Collectors.toList());
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/requests";
-        int totalRequestPages = rs.calculateRequestPages(productId, userId, size);
-        Link[] links = createPaginationLinks(baseUri, page, size, totalRequestPages);
+
+        // Pagination Links
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/requests",
+                rs.calculateRequestPages(productId, userId, size),
+                page,
+                size
+        );
+
         return Response.ok(new GenericEntity<List<RequestDto>>(requestDto){})
                 .links(links)
                 .cacheControl(cacheControl)

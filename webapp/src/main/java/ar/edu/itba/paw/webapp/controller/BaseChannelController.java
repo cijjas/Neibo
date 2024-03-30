@@ -29,24 +29,24 @@ public class BaseChannelController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listBaseChannels(@HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                     @Context Request request) {
+    public Response listBaseChannels(
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/base-channels'");
 
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Content
         List<BaseChannelDto> baseChannelDto = Arrays.stream(BaseChannel.values())
                 .map(tt -> BaseChannelDto.fromBaseChannel(tt, uriInfo))
                 .collect(Collectors.toList());
 
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(3600);
-
-        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        if (builder != null) {
-            LOGGER.info("Cached");
-            return builder.cacheControl(cacheControl).build();
-        }
-
-        LOGGER.info("New");
         return Response.ok(new GenericEntity<List<BaseChannelDto>>(baseChannelDto){})
                 .cacheControl(cacheControl)
                 .tag(storedETag)
@@ -56,9 +56,11 @@ public class BaseChannelController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
-    public Response findBaseChannel(@PathParam("id") final int id,
-                                    @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-                                    @Context Request request) {
+    public Response findBaseChannel(
+            @PathParam("id") final int id,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
+    ) {
         LOGGER.info("GET request arrived at '/base-channels/{}'", id);
 
         BaseChannel baseChannel = BaseChannel.fromId(id);

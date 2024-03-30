@@ -55,21 +55,26 @@ public class LikeController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
 
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
+        // Content
         final List<Like> likes = ls.getLikes(neighborhoodId, postId, userId, page, size);
         if (likes.isEmpty())
             return Response.noContent().build();
         final List<LikeDto> likesDto = likes.stream()
                 .map(l -> LikeDto.fromLike(l, uriInfo)).collect(Collectors.toList());
-        String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "likes";
-        int totalLikePages = ls.calculateLikePages(neighborhoodId, postId, userId, size);
-        Link[] links = ControllerUtils.createPaginationLinks(baseUri, page, size, totalLikePages);
+
+        // Pagination Links
+        Link[] links = ControllerUtils.createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "likes",
+                ls.calculateLikePages(neighborhoodId, postId, userId, size),
+                page,
+                size);
+
         return Response.ok(new GenericEntity<List<LikeDto>>(likesDto) {})
                 .links(links)
                 .cacheControl(cacheControl)
@@ -126,8 +131,10 @@ public class LikeController extends GlobalControllerAdvice{
 
     @DELETE
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response deleteById(@QueryParam("userId") final long userId,
-                               @QueryParam("postId") final long postId) {
+    public Response deleteById(
+            @QueryParam("userId") final long userId,
+            @QueryParam("postId") final long postId
+    ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/likes/'", neighborhoodId);
         if(ls.deleteLike(postId, userId)) {
             entityLevelETag = ETagUtility.generateETag();
