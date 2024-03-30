@@ -25,6 +25,9 @@ public class TagController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
@@ -35,9 +38,7 @@ public class TagController {
     public Response listTags(
             @QueryParam("postId") final Long postId,
             @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags'", neighborhoodId);
 
@@ -73,9 +74,7 @@ public class TagController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findTags(
-            @PathParam("id") final long tagId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("id") final long tagId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
 

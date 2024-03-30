@@ -31,6 +31,9 @@ public class NeighborhoodController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @GET
@@ -39,9 +42,7 @@ public class NeighborhoodController {
     public Response listNeighborhoods(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("withWorker") final Long workerId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @QueryParam("withWorker") final Long workerId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/'");
 
@@ -77,9 +78,7 @@ public class NeighborhoodController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findNeighborhood(
-            @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("id") final long id
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}'", id);
         Neighborhood neighborhood = ns.findNeighborhood(id).orElseThrow(NotFoundException::new);
@@ -100,21 +99,16 @@ public class NeighborhoodController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createNeighborhood(
-            @Valid final NewNeighborhoodForm form,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request
+            @Valid final NewNeighborhoodForm form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/'");
 
-        if (ifMatch != null) {
-            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .entity("Your cached version of the resource is outdated.")
-                        .header(HttpHeaders.ETAG, entityLevelETag)
-                        .build();
-        }
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return Response.status(Response.Status.PRECONDITION_FAILED)
+                    .entity("Your cached version of the resource is outdated.")
+                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .build();
 
         final Neighborhood neighborhood = ns.createNeighborhood(form.getName());
         entityLevelETag = ETagUtility.generateETag();

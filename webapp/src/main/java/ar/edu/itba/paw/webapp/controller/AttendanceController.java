@@ -28,6 +28,9 @@ public class AttendanceController extends GlobalControllerAdvice {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
@@ -45,9 +48,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listAttendance(
             @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
@@ -83,9 +84,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     @Path("/{userId}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findAttendance(
-            @PathParam("userId") final long userId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("userId") final long userId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
 
@@ -107,21 +106,15 @@ public class AttendanceController extends GlobalControllerAdvice {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createAttendance(
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request
-    ) {
+    public Response createAttendance() {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
-        if (ifMatch != null) {
-            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .entity("Your cached version of the resource is outdated.")
-                        .header(HttpHeaders.ETAG, entityLevelETag)
-                        .build();
-        }
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return Response.status(Response.Status.PRECONDITION_FAILED)
+                    .entity("Your cached version of the resource is outdated.")
+                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .build();
 
         final Attendance attendance = as.createAttendance(getLoggedUser().getUserId(), eventId);
         entityLevelETag = ETagUtility.generateETag();
@@ -135,8 +128,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     @DELETE
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteByUser(
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 

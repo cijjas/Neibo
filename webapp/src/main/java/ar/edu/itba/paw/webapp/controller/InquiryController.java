@@ -53,8 +53,7 @@ public class InquiryController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listInquiries(
             @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
 
@@ -90,8 +89,7 @@ public class InquiryController extends GlobalControllerAdvice{
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findInquiry(
-            @PathParam("id") final long inquiryId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @PathParam("id") final long inquiryId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 

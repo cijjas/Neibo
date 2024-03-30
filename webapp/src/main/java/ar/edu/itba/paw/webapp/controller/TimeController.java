@@ -21,14 +21,14 @@ public class TimeController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     private final EntityTag storedETag = ETagUtility.generateETag();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listTimes(
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
-    ) {
+    public Response listTimes() {
         LOGGER.info("GET request arrived at '/times'");
 
         // Cache Control
@@ -53,9 +53,7 @@ public class TimeController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findTime(
-            @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("id") final long id
     ) {
         LOGGER.info("GET request arrived at '/times/{}'", id);
 

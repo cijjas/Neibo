@@ -23,6 +23,9 @@ public class ChannelController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     @PathParam("neighborhoodId")
     private long neighborhoodId;
 
@@ -30,10 +33,7 @@ public class ChannelController {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response listChannels(
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
-    ) {
+    public Response listChannels() {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
 
         // Cache Control
@@ -59,9 +59,7 @@ public class ChannelController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findChannel(
-            @PathParam("id") long channelId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("id") long channelId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
         Channel channel = cs.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new);

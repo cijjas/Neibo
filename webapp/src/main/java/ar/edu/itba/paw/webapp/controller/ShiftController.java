@@ -34,9 +34,7 @@ public class ShiftController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getShifts(
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
-    ) {
+    public Response getShifts() {
         LOGGER.info("GET request arrived at '/shifts'");
 
         // Cache Control
@@ -63,8 +61,7 @@ public class ShiftController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findShift(
-            @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @PathParam("id") final long id
     ) {
         LOGGER.info("GET request arrived at '/shifts/{}'", id);
 

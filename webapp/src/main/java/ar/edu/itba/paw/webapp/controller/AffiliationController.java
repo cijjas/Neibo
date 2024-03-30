@@ -31,6 +31,9 @@ public class AffiliationController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @GET
@@ -39,9 +42,7 @@ public class AffiliationController {
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("inNeighborhood") Long neighborhoodId,
-            @QueryParam("forWorker") Long workerId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @QueryParam("forWorker") Long workerId
     ) {
         LOGGER.info("GET request arrived at '/affiliations'");
 
@@ -77,21 +78,15 @@ public class AffiliationController {
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response addAffiliation(
-            @Valid final AffiliationForm form,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request
+            @Valid final AffiliationForm form
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
 
-        if (ifMatch != null) {
-            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .entity("Your cached version of the resource is outdated.")
-                        .header(HttpHeaders.ETAG, entityLevelETag)
-                        .build();
-        }
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return Response.status(Response.Status.PRECONDITION_FAILED)
+                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .build();
 
         Affiliation a = nws.createAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRole());
         entityLevelETag = ETagUtility.generateETag();
@@ -106,8 +101,7 @@ public class AffiliationController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response updateAffiliation(
             @Valid final AffiliationForm form,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
 
@@ -132,8 +126,7 @@ public class AffiliationController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response removeWorkerFromNeighborhood(
             @Valid final AffiliationForm form,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
     ) {
         LOGGER.info("DELETE request arrived at '/affiliations'");
 

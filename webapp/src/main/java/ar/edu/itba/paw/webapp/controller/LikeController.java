@@ -50,8 +50,7 @@ public class LikeController extends GlobalControllerAdvice{
             @QueryParam("onPost") final Long postId,
             @QueryParam("likedBy") final Long userId,
             @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
 
@@ -87,8 +86,7 @@ public class LikeController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response countLikes(
             @QueryParam("postId") final Long postId,
-            @QueryParam("userId") final Long userId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @QueryParam("userId") final Long userId
     ){
         // Check Caching
         CacheControl cacheControl = new CacheControl();
@@ -136,6 +134,9 @@ public class LikeController extends GlobalControllerAdvice{
             @QueryParam("postId") final long postId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/likes/'", neighborhoodId);
+
+        // No need for If-Match Management as the resource cant be altered
+
         if(ls.deleteLike(postId, userId)) {
             entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();

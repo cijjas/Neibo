@@ -47,8 +47,7 @@ public class PurchaseController {
             @QueryParam("withType") String type,
             @QueryParam("page") @DefaultValue("1") int page,
             @QueryParam("size") @DefaultValue("10") int size,
-            @PathParam("userId") final long userId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @PathParam("userId") final long userId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}/transactions'", neighborhoodId, userId);
 
@@ -87,8 +86,7 @@ public class PurchaseController {
     @PreAuthorize("@accessControlHelper.canAccessTransactions(#userId)")
     public Response findTransaction(
             @PathParam("id") final long transactionId,
-            @PathParam("userId") final long userId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @PathParam("userId") final long userId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}/transactions/{}'", neighborhoodId, userId, transactionId);
 

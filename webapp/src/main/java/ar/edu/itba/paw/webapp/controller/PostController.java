@@ -55,8 +55,7 @@ public class PostController extends GlobalControllerAdvice{
             @QueryParam("inChannel") final String channel,
             @QueryParam("withTags") final List<String> tags,
             @QueryParam("withStatus") @DefaultValue("none") final String postStatus,
-            @QueryParam("postedBy") final Long userId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @QueryParam("postedBy") final Long userId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
@@ -93,8 +92,7 @@ public class PostController extends GlobalControllerAdvice{
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findPostById(
-            @PathParam("id") final long postId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @PathParam("id") final long postId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
 

@@ -22,14 +22,15 @@ public class ProductStatusController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
+
     private final EntityTag storedETag = ETagUtility.generateETag();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listProductStatuses(
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
-    ) {
+    public Response listProductStatuses() {
         LOGGER.info("GET request arrived at '/product-statuses'");
 
         // Cache Control
@@ -54,9 +55,7 @@ public class ProductStatusController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findProductStatus(
-            @PathParam("id") final int id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("id") final int id
     ) {
         LOGGER.info("GET request arrived at '/product-statuses/{}'", id);
         ProductStatusDto productStatusDto = ProductStatusDto.fromProductStatus(ProductStatus.fromId(id), uriInfo);

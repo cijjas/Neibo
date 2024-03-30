@@ -25,14 +25,14 @@ public class BaseChannelController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     private final EntityTag storedETag = ETagUtility.generateETag();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listBaseChannels(
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
-    ) {
+    public Response listBaseChannels() {
         LOGGER.info("GET request arrived at '/base-channels'");
 
         // Cache Control
@@ -57,9 +57,7 @@ public class BaseChannelController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findBaseChannel(
-            @PathParam("id") final int id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("id") final int id
     ) {
         LOGGER.info("GET request arrived at '/base-channels/{}'", id);
 
@@ -83,5 +81,4 @@ public class BaseChannelController {
                 .tag(storedETag)
                 .build();
     }
-
 }

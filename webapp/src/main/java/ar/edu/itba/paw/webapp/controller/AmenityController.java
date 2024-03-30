@@ -43,8 +43,7 @@ public class AmenityController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listAmenities(
             @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
 
@@ -79,8 +78,7 @@ public class AmenityController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findAmenity(
-            @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @PathParam("id") final long id
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
@@ -106,8 +104,7 @@ public class AmenityController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @Secured("ROLE_ADMINISTRATOR")
     public Response createAmenity(
-            @Valid final AmenityForm form,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+            @Valid final AmenityForm form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
 

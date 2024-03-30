@@ -36,6 +36,9 @@ public class UserController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
@@ -48,9 +51,7 @@ public class UserController {
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("withRole") final String userRole,
-            @PathParam("neighborhoodId") final long neighborhoodId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("neighborhoodId") final long neighborhoodId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
@@ -96,9 +97,7 @@ public class UserController {
     @PreAuthorize("@accessControlHelper.hasAccessToUserDetail(#neighborhoodId, #id)")
     public Response findUser(
             @PathParam("id") final long id,
-            @PathParam("neighborhoodId") final long neighborhoodId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("neighborhoodId") final long neighborhoodId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
 
@@ -128,21 +127,16 @@ public class UserController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createUser(
-            @Valid final SignupForm form,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request
+            @Valid final SignupForm form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
-        if (ifMatch != null) {
-            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .entity("Your cached version of the resource is outdated.")
-                        .header(HttpHeaders.ETAG, entityLevelETag)
-                        .build();
-        }
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return Response.status(Response.Status.PRECONDITION_FAILED)
+                    .entity("Your cached version of the resource is outdated.")
+                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .build();
 
         final User user = us.createNeighbor(form.getMail(), form.getPassword(), form.getName(), form.getSurname(), neighborhoodId, Language.ENGLISH, form.getIdentification());
         entityLevelETag = ETagUtility.generateETag();
@@ -162,8 +156,7 @@ public class UserController {
             @PathParam("id") final long id,
             @PathParam("neighborhoodId") final long neighborhoodId,
             @Valid final UserUpdateForm partialUpdate,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
 

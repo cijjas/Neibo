@@ -20,14 +20,14 @@ public class TransactionTypeController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     private final EntityTag storedETag = ETagUtility.generateETag();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listTransactionTypes(
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
-    ) {
+    public Response listTransactionTypes() {
         LOGGER.info("GET request arrived at '/transaction-type'");
 
         // Cache Control
@@ -52,9 +52,7 @@ public class TransactionTypeController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findTransactionType(
-            @PathParam("id") final int id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("id") final int id
     ) {
         LOGGER.info("GET request arrived at '/transaction-type/{}'", id);
         TransactionTypeDto transactionTypeDto = TransactionTypeDto.fromTransactionType(TransactionType.fromId(id), uriInfo);

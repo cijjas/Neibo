@@ -31,6 +31,10 @@ public class ProductController extends GlobalControllerAdvice {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
+
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
@@ -48,9 +52,7 @@ public class ProductController extends GlobalControllerAdvice {
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("inDepartment") final String department,
             @QueryParam("listedBy") final Long userId,
-            @QueryParam("withStatus") final String productStatus,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @QueryParam("withStatus") final String productStatus
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
@@ -86,9 +88,7 @@ public class ProductController extends GlobalControllerAdvice {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findProduct(
-            @PathParam("id") final long productId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("id") final long productId
     ) {
         LOGGER.info("GET request arrived '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
         Product product = ps.findProduct(productId, neighborhoodId).orElseThrow(() -> new NotFoundException("Product Not Found"));
@@ -109,21 +109,16 @@ public class ProductController extends GlobalControllerAdvice {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createProduct(
-            @Valid final ListingForm form,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request
+            @Valid final ListingForm form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
-        if (ifMatch != null) {
-            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .entity("Your cached version of the resource is outdated.")
-                        .header(HttpHeaders.ETAG, entityLevelETag)
-                        .build();
-        }
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return Response.status(Response.Status.PRECONDITION_FAILED)
+                    .entity("Your cached version of the resource is outdated.")
+                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .build();
 
         final Product product = ps.createProduct(getLoggedUser().getUserId(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentURN(), form.getImageFiles(), form.getQuantity());
         entityLevelETag = ETagUtility.generateETag();
@@ -141,8 +136,7 @@ public class ProductController extends GlobalControllerAdvice {
     public Response updateProductPartially(
             @PathParam("id") final long id,
             @Valid final ListingForm partialUpdate,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
     ) {
         LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);
 
@@ -170,8 +164,7 @@ public class ProductController extends GlobalControllerAdvice {
     @PreAuthorize("@accessControlHelper.canDeleteProduct(#productId)")
     public Response deleteById(
             @PathParam("id") final long productId,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 

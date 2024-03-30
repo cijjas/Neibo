@@ -48,8 +48,7 @@ public class ReviewController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listReviews(
             @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at '/workers/{}/reviews'", workerId);
 
@@ -85,8 +84,7 @@ public class ReviewController extends GlobalControllerAdvice {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findReview(
-            @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @PathParam("id") final long id
     ) {
         LOGGER.info("GET request arrived at '/workers/{}/reviews/{}'", workerId, id);
 

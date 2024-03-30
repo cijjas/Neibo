@@ -31,6 +31,9 @@ public class AvailabilityController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
@@ -43,9 +46,7 @@ public class AvailabilityController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listAvailability(
             @QueryParam("withStatus") String status,
-            @QueryParam("forDate") String date,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @QueryParam("forDate") String date
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}/availability'", neighborhoodId, amenityId);
 
@@ -72,9 +73,7 @@ public class AvailabilityController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findAvailability(
-            @PathParam("id") final long availabilityId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("id") final long availabilityId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}/availability/{}'", neighborhoodId, amenityId, availabilityId);
 

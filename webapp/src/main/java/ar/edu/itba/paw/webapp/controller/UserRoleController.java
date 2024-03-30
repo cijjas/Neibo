@@ -23,14 +23,14 @@ public class UserRoleController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     private final EntityTag storedETag = ETagUtility.generateETag();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listUserRoles(
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
-    ) {
+    public Response listUserRoles() {
         LOGGER.info("GET request arrived at '/user-roles'");
 
         // Cache Control
@@ -55,9 +55,7 @@ public class UserRoleController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findUserRole(
-            @PathParam("id") final int id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("id") final int id
     ) {
         LOGGER.info("GET request arrived at '/user-roles/{}'", id);
 

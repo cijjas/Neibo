@@ -58,8 +58,7 @@ public class WorkerController extends GlobalControllerAdvice {
             @QueryParam("withProfessions") final List<String> professions,
             @QueryParam("inNeighborhoods") final List<String> neighborhoodIds,
             @QueryParam("withRole") final String workerRole,
-            @QueryParam("withStatus") final String workerStatus,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @QueryParam("withStatus") final String workerStatus
     ) {
         LOGGER.info("GET request arrived at '/workers'");
 
@@ -96,8 +95,7 @@ public class WorkerController extends GlobalControllerAdvice {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findWorker(
-            @PathParam("id") final long workerId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @PathParam("id") final long workerId
     ) {
         LOGGER.info("GET request arrived at '/workers/{}'", workerId);
 

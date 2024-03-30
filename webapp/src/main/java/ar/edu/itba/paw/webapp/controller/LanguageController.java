@@ -24,14 +24,14 @@ public class LanguageController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     private final EntityTag storedETag = ETagUtility.generateETag();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listLanguages(
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
-    ) {
+    public Response listLanguages() {
         LOGGER.info("GET request arrived at '/languages'");
 
         // Cache Control
@@ -56,9 +56,7 @@ public class LanguageController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findLanguage(
-            @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("id") final long id
     ) {
         LOGGER.info("GET request arrived at '/languages/{}'", id);
         LanguageDto languageDto = LanguageDto.fromLanguage(Language.fromId(id), uriInfo);

@@ -23,14 +23,14 @@ public class ShiftStatusController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     private final EntityTag storedETag = ETagUtility.generateETag();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listShiftStatuses(
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
-    ) {
+    public Response listShiftStatuses() {
         LOGGER.info("GET request arrived at '/shift-statuses'");
 
         // Cache Control
@@ -55,9 +55,7 @@ public class ShiftStatusController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findShiftStatus(
-            @PathParam("id") final int id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("id") final int id
     ) {
         LOGGER.info("GET request arrived at '/shift-statuses/{}'", id);
         ShiftStatusDto shiftStatusDto = ShiftStatusDto.fromShiftStatus(ShiftStatus.fromId(id), uriInfo);

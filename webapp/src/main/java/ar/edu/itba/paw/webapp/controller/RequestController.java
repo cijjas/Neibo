@@ -53,8 +53,7 @@ public class RequestController extends GlobalControllerAdvice {
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("requestedBy") final Long userId,
-            @QueryParam("forProduct") final Long productId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @QueryParam("forProduct") final Long productId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 
@@ -91,8 +90,7 @@ public class RequestController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.canAccessRequest(#requestId)")
     public Response findRequest(
-            @PathParam("id") final long requestId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @PathParam("id") final long requestId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
 

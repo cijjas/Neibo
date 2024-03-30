@@ -23,14 +23,14 @@ public class PostStatusController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     private final EntityTag storedETag = ETagUtility.generateETag();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listPostStatuses(
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
-    ) {
+    public Response listPostStatuses() {
         LOGGER.info("GET request arrived at '/post-statuses'");
 
         // Cache Control
@@ -55,9 +55,7 @@ public class PostStatusController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findPostStatus(
-            @PathParam("id") final int id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("id") final int id
     ) {
         LOGGER.info("GET request arrived at '/post-statuses/{}'", id);
         PostStatusDto postStatusDto = PostStatusDto.fromPostStatus(PostStatus.fromId(id), uriInfo);

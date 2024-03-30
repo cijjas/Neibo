@@ -25,14 +25,15 @@ public class ProfessionController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     private final EntityTag storedETag = ETagUtility.generateETag();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listProfessions(
-            @QueryParam("workerId") final Long workerId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @QueryParam("workerId") final Long workerId
     ) {
         LOGGER.info("GET request arrived at '/professions'");
 
@@ -60,9 +61,7 @@ public class ProfessionController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findProfession(
-            @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("id") final long id
     ) {
         LOGGER.info("GET request arrived at '/professions/{}'", id);
         ProfessionDto professionDto = ProfessionDto.fromProfession(Professions.fromId(id), uriInfo);
@@ -82,5 +81,4 @@ public class ProfessionController {
                 .tag(storedETag)
                 .build();
     }
-
 }

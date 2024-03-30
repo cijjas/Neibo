@@ -25,14 +25,14 @@ public class DepartmentController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     private final EntityTag storedETag = ETagUtility.generateETag();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listDepartments(
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
-    ) {
+    public Response listDepartments() {
         LOGGER.info("GET request arrived at '/departments'");
 
         //Cache Control
@@ -58,9 +58,7 @@ public class DepartmentController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findDepartment(
-            @PathParam("id") final int id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @PathParam("id") final int id
     ) {
         LOGGER.info("GET request arrived at '/departments/{}'", id);
 
@@ -81,5 +79,4 @@ public class DepartmentController {
                 .tag(storedETag)
                 .build();
     }
-
 }
