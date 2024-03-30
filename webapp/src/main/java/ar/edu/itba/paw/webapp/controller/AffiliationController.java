@@ -67,8 +67,7 @@ public class AffiliationController {
                 size
         );
 
-        return Response.ok(new GenericEntity<List<AffiliationDto>>(affiliationDto) {
-                })
+        return Response.ok(new GenericEntity<List<AffiliationDto>>(affiliationDto) {})
                 .cacheControl(cacheControl)
                 .tag(entityLevelETag)
                 .links(links)
@@ -109,19 +108,21 @@ public class AffiliationController {
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
 
+        // Cache Control
         if (ifMatch != null) {
             String version = nws.findAffiliation(form.getWorkerURN(), form.getNeighborhoodURN()).orElseThrow(NotFoundException::new).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
-
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
                         .header(HttpHeaders.ETAG, version)
                         .build();
         }
 
-        Affiliation affiliation = nws.updateAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRole());
+        // Modification & ETag Generation
+        AffiliationDto affiliationDto = AffiliationDto.fromAffiliation(nws.updateAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRole()), uriInfo);
         entityLevelETag = ETagUtility.generateETag();
-        return Response.ok(AffiliationDto.fromAffiliation(affiliation, uriInfo))
+
+        return Response.ok(affiliationDto)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();
     }

@@ -125,7 +125,7 @@ public class ResourceController {
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
 
-        // Check If-Match header
+        // Cache Control
         if (ifMatch != null) {
             String version = rs.findResource(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
@@ -136,9 +136,11 @@ public class ResourceController {
                         .build();
         }
 
-        final Resource resource = rs.updateResource(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getImageFile());
+        // Modification & ETag Generation
+        final ResourceDto resourceDto = ResourceDto.fromResource(rs.updateResource(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getImageFile()), uriInfo);
         entityLevelETag = ETagUtility.generateETag();
-        return Response.ok(ResourceDto.fromResource(resource, uriInfo))
+
+        return Response.ok(resourceDto)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();
     }

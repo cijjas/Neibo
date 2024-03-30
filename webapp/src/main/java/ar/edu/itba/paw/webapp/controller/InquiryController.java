@@ -150,7 +150,7 @@ public class InquiryController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
-        // Check If-Match header
+        // Cache Control
         if (ifMatch != null){
             String rowVersion = is.findInquiry(inquiryId, productId, neighborhoodId).orElseThrow(() -> new NotFoundException("Inquiry Not Found")).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
@@ -160,12 +160,11 @@ public class InquiryController extends GlobalControllerAdvice{
                         .build();
         }
 
-        // Usual Flow
-        final Inquiry inquiry = is.replyInquiry(inquiryId, form.getQuestionMessage());
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(inquiry.getInquiryId())).build();
+        // Modification & ETag Generation
+        final InquiryDto inquiryDto = InquiryDto.fromInquiry(is.replyInquiry(inquiryId, form.getQuestionMessage()), uriInfo);
         entityLevelETag = ETagUtility.generateETag();
-        return Response.created(uri)
+
+        return Response.ok(inquiryDto)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();
     }

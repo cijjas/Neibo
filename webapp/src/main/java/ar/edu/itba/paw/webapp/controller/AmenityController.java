@@ -138,7 +138,7 @@ public class AmenityController {
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
-        // Check If-Match header
+        // Cache Control
         if (ifMatch != null){
             String rowVersion = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
@@ -148,10 +148,11 @@ public class AmenityController {
                         .build();
         }
 
-        // Usual Flow
-        Amenity amenity = as.updateAmenityPartially(id, partialUpdate.getName(), partialUpdate.getDescription());
+        // Modification & ETag Generation
+        AmenityDto amenityDto = AmenityDto.fromAmenity(as.updateAmenityPartially(id, partialUpdate.getName(), partialUpdate.getDescription()), uriInfo);
         entityLevelETag = ETagUtility.generateETag();
-        return Response.ok(AmenityDto.fromAmenity(amenity, uriInfo))
+
+        return Response.ok(amenityDto)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();
     }

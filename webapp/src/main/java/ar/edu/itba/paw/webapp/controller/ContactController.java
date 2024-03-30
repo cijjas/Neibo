@@ -127,7 +127,7 @@ public class ContactController {
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
 
-        // Check If-Match header
+        // Cache Control
         if (ifMatch != null){
             String rowVersion = cs.findContact(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
@@ -137,10 +137,11 @@ public class ContactController {
                         .build();
         }
 
-        // Usual Flow
-        final Contact contact = cs.updateContact(id, partialUpdate.getContactName(), partialUpdate.getContactAddress(), partialUpdate.getContactPhone());
+        // Modification & ETag Generation
+        final ContactDto contactDto = ContactDto.fromContact(cs.updateContact(id, partialUpdate.getContactName(), partialUpdate.getContactAddress(), partialUpdate.getContactPhone()), uriInfo);
         entityLevelETag = ETagUtility.generateETag();
-        return Response.ok(ContactDto.fromContact(contact, uriInfo))
+
+        return Response.ok(contactDto)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();
     }

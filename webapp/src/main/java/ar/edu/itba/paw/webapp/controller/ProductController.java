@@ -145,7 +145,7 @@ public class ProductController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);
 
-        // Check If-Match header
+        // Cache Control
         if (ifMatch != null) {
             String version = ps.findProduct(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
@@ -156,9 +156,11 @@ public class ProductController extends GlobalControllerAdvice {
                         .build();
         }
 
-        final Product product = ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartmentURN(), partialUpdate.getImageFiles(), partialUpdate.getQuantity());
+        // Modification & ETag Generation
+        final ProductDto productDto = ProductDto.fromProduct(ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartmentURN(), partialUpdate.getImageFiles(), partialUpdate.getQuantity()), uriInfo);
         entityLevelETag = ETagUtility.generateETag();
-        return Response.ok(ProductDto.fromProduct(product, uriInfo))
+
+        return Response.ok(productDto)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();
     }

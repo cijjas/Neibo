@@ -140,20 +140,21 @@ public class EventController {
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
 
-        // Check If-Match header
+        // Cache Control
         if (ifMatch != null) {
             String version = es.findEvent(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
-
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
                         .header(HttpHeaders.ETAG, version)
                         .build();
         }
 
-        final Event event = es.updateEventPartially(id, partialUpdate.getName(), partialUpdate.getDescription(), partialUpdate.getDate(), partialUpdate.getStartTime(), partialUpdate.getEndTime());
+        // Modification & ETag Generation
+        final EventDto eventDto = EventDto.fromEvent(es.updateEventPartially(id, partialUpdate.getName(), partialUpdate.getDescription(), partialUpdate.getDate(), partialUpdate.getStartTime(), partialUpdate.getEndTime()), uriInfo);
         entityLevelETag = ETagUtility.generateETag();
-        return Response.ok(EventDto.fromEvent(event, uriInfo))
+
+        return Response.ok(eventDto)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();
     }

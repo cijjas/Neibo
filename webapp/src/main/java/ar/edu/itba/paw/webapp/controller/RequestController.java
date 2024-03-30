@@ -147,7 +147,7 @@ public class RequestController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/requests/{}", neighborhoodId, requestId);
 
-        // Check If-Match header
+        // Cache Control
         if (ifMatch != null){
             String rowVersion = rs.findRequest(requestId, neighborhoodId).orElseThrow(() -> new NotFoundException("Request Not Found")).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
@@ -157,14 +157,12 @@ public class RequestController extends GlobalControllerAdvice {
                         .build();
         }
 
-        // Usual Flow
+        // Modification & ETag Generation
         rs.markRequestAsFulfilled(requestId);
-        final Request request = rs.findRequest(requestId, neighborhoodId)
-                .orElseThrow(() -> new NotFoundException("Request Not Found"));
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(request.getRequestId())).build();
+        final RequestDto requestDto = RequestDto.fromRequest(rs.findRequest(requestId, neighborhoodId).orElseThrow(() -> new NotFoundException("Request Not Found")), uriInfo);
         entityLevelETag = ETagUtility.generateETag();
-        return Response.created(uri)
+
+        return Response.ok(requestDto)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();
     }

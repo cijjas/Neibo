@@ -163,7 +163,7 @@ public class UserController {
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
 
-        // Check If-Match header
+        // Cache Control
         if (ifMatch != null) {
             String version = us.findUser(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
@@ -174,9 +174,11 @@ public class UserController {
                         .build();
         }
 
-        final User user = us.updateUser(id, partialUpdate.getEmail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), partialUpdate.getProfilePicture(), partialUpdate.getIdentification(), partialUpdate.getLanguageURN(), partialUpdate.getUserRoleURN());
+        // Modification & ETag Generation
+        final UserDto userDto = UserDto.fromUser(us.updateUser(id, partialUpdate.getEmail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), partialUpdate.getProfilePicture(), partialUpdate.getIdentification(), partialUpdate.getLanguageURN(), partialUpdate.getUserRoleURN()), uriInfo);
         entityLevelETag = ETagUtility.generateETag();
-        return Response.ok(UserDto.fromUser(user, uriInfo))
+
+        return Response.ok(userDto)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();
     }

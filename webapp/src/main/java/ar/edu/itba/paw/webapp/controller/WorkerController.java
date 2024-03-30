@@ -152,7 +152,7 @@ public class WorkerController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("PATCH request arrived at '/workers/{}'", workerId);
 
-        // Check If-Match header
+        // Cache Control
         if (ifMatch != null){
             String rowVersion = ws.findWorker(workerId).orElseThrow(() -> new NotFoundException("Worker Not Found")).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
@@ -162,10 +162,11 @@ public class WorkerController extends GlobalControllerAdvice {
                         .build();
         }
 
-        // Usual Flow
-        final Worker worker = ws.updateWorkerPartially(workerId, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio());
+        // Modification & ETag Generation
+        final WorkerDto workerDto = WorkerDto.fromWorker(ws.updateWorkerPartially(workerId, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio()), uriInfo);
         entityLevelETag = ETagUtility.generateETag();
-        return Response.ok(WorkerDto.fromWorker(worker, uriInfo))
+        
+        return Response.ok(workerDto)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();
     }
