@@ -106,9 +106,21 @@ public class ReviewController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createReview(@Valid final ReviewForm form) {
         LOGGER.info("POST request arrived at '/workers/{}/reviews'", workerId);
+
+        // Check If-Match Header
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return Response.status(Response.Status.PRECONDITION_FAILED)
+                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .build();
+
+        // Usual Flow
         final Review review = rs.createReview(workerId, getLoggedUser().getUserId(), form.getRating(), form.getReview());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(review.getReviewId())).build();
-        return Response.created(uri).build();
+        entityLevelETag = ETagUtility.generateETag();
+        return Response.created(uri)
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 }

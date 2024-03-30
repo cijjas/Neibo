@@ -91,12 +91,26 @@ public class ContactController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Secured("ROLE_ADMINISTRATOR")
-    public Response createContact(@Valid final ContactForm form) {
+    public Response createContact(
+            @Valid final ContactForm form
+    ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
+
+        // Check If-Match Header
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return Response.status(Response.Status.PRECONDITION_FAILED)
+                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .build();
+
+        // Usual Flow
         final Contact contact = cs.createContact(neighborhoodId, form.getContactName(), form.getContactAddress(), form.getContactPhone());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(contact.getContactId())).build();
-        return Response.created(uri).build();
+        entityLevelETag = ETagUtility.generateETag();
+        return Response.created(uri)
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 
     @PATCH
@@ -106,19 +120,52 @@ public class ContactController {
     @Secured("ROLE_ADMINISTRATOR")
     public Response updateContactPartially(
             @PathParam("id") final long id,
-            @Valid final ContactForm partialUpdate) {
+            @Valid final ContactForm partialUpdate,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+            ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
+
+        // Check If-Match header
+        if (ifMatch != null){
+            String rowVersion = cs.findContact(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
+            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .header(HttpHeaders.ETAG, rowVersion)
+                        .build();
+        }
+
+        // Usual Flow
         final Contact contact = cs.updateContact(id, partialUpdate.getContactName(), partialUpdate.getContactAddress(), partialUpdate.getContactPhone());
-        return Response.ok(ContactDto.fromContact(contact, uriInfo)).build();
+        entityLevelETag = ETagUtility.generateETag();
+        return Response.ok(ContactDto.fromContact(contact, uriInfo))
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Secured("ROLE_ADMINISTRATOR")
-    public Response deleteById(@PathParam("id") final long id) {
+    public Response deleteById(
+            @PathParam("id") final long id,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+    ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
+
+        // Check If-Match header
+        if (ifMatch != null) {
+            String rowVersion = cs.findContact(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
+            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .header(HttpHeaders.ETAG, rowVersion)
+                        .build();
+        }
+
+        // Usual Flow
         if(cs.deleteContact(id)) {
+            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();

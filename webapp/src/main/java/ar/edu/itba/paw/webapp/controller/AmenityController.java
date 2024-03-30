@@ -121,8 +121,8 @@ public class AmenityController {
     @Secured("ROLE_ADMINISTRATOR")
     public Response updateAmenityPartially(
             @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Valid final AmenityUpdateForm partialUpdate
+            @Valid final AmenityUpdateForm partialUpdate,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 

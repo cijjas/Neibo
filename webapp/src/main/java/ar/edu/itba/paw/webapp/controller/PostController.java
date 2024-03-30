@@ -119,6 +119,15 @@ public class PostController extends GlobalControllerAdvice{
             @FormDataParam("postImage") InputStream postImage
     )  {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
+
+        // Check If-Match Header
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return Response.status(Response.Status.PRECONDITION_FAILED)
+                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .build();
+
+        // Usual Flow
         PublishForm publishForm = new PublishForm();
         publishForm.setTags(tags);
         publishForm.setChannelURN(channelURN);
@@ -128,6 +137,9 @@ public class PostController extends GlobalControllerAdvice{
         final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedUser().getUserId(), publishForm.getChannelURN(), publishForm.getTags(), publishForm.getPostImage());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(post.getPostId())).build();
-        return Response.created(uri).build();
+        entityLevelETag = ETagUtility.generateETag();
+        return Response.created(uri)
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 }

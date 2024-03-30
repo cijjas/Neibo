@@ -50,8 +50,7 @@ public class BookingController extends GlobalControllerAdvice{
             @QueryParam("bookedBy") final Long userId,
             @QueryParam("forAmenity") final Long amenityId,
             @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
@@ -107,18 +106,46 @@ public class BookingController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createBooking(@Valid BookingForm form) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
+
+        // Check If-Match Header
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return Response.status(Response.Status.PRECONDITION_FAILED)
+                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .build();
+
+        // Usual Flow
         final long[] bookingIds = bs.createBooking(getLoggedUser().getUserId(), form.getAmenityURN(), form.getShiftURNs(), form.getReservationDate());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(Arrays.toString(bookingIds)).build();
-        return Response.created(uri).build();
+        entityLevelETag = ETagUtility.generateETag();
+        return Response.created(uri)
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response deleteById(@PathParam("id") final long id) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, id);
-        if(bs.deleteBooking(id)) {
+    public Response deleteById(
+            @PathParam("id") final long bookingId,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+    ) {
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
+
+        // Check If-Match header
+        if (ifMatch != null) {
+            String rowVersion = bs.findBooking(bookingId, neighborhoodId).orElseThrow(() -> new NotFoundException("Booking Not Found")).getVersion().toString();
+            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .header(HttpHeaders.ETAG, rowVersion)
+                        .build();
+        }
+
+        // Usual Flow
+        if(bs.deleteBooking(bookingId)) {
+            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();

@@ -118,10 +118,22 @@ public class WorkerController extends GlobalControllerAdvice {
             @Valid final WorkerSignupForm form
     ) {
         LOGGER.info("POST request arrived at '/workers'");
+
+        // Check If-Match Header
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return Response.status(Response.Status.PRECONDITION_FAILED)
+                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .build();
+
+        // Usual Flow
         final Worker worker = ws.createWorker(form.getWorker_mail(), form.getWorker_name(), form.getWorker_surname(), form.getWorker_password(), form.getWorker_identification(), form.getPhoneNumber(), form.getAddress(), form.getWorker_languageURN(), form.getProfessionURNs(), form.getBusinessName());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(worker.getWorkerId())).build();
-        return Response.created(uri).build();
+        entityLevelETag = ETagUtility.generateETag();
+        return Response.created(uri)
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 
     @PATCH
@@ -129,11 +141,27 @@ public class WorkerController extends GlobalControllerAdvice {
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateWorkerPartially(
-            @PathParam("id") final long id,
-            @Valid final WorkerUpdateForm partialUpdate
+            @PathParam("id") final long workerId,
+            @Valid final WorkerUpdateForm partialUpdate,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
     ) {
-        LOGGER.info("PATCH request arrived at '/workers/{}'", id);
-        final Worker worker = ws.updateWorkerPartially(id, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio());
-        return Response.ok(WorkerDto.fromWorker(worker, uriInfo)).build();
+        LOGGER.info("PATCH request arrived at '/workers/{}'", workerId);
+
+        // Check If-Match header
+        if (ifMatch != null){
+            String rowVersion = ws.findWorker(workerId).orElseThrow(() -> new NotFoundException("Worker Not Found")).getVersion().toString();
+            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .header(HttpHeaders.ETAG, rowVersion)
+                        .build();
+        }
+
+        // Usual Flow
+        final Worker worker = ws.updateWorkerPartially(workerId, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio());
+        entityLevelETag = ETagUtility.generateETag();
+        return Response.ok(WorkerDto.fromWorker(worker, uriInfo))
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 }

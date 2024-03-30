@@ -115,9 +115,19 @@ public class RequestController extends GlobalControllerAdvice {
             @QueryParam("productId") @DefaultValue("0") final int productId
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
+
+        // Check If-Match Header
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return Response.status(Response.Status.PRECONDITION_FAILED)
+                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .build();
+
+        // Usual Flow
         final Request request = rs.createRequest(getLoggedUser().getUserId(), productId, form.getRequestMessage());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(request.getRequestId())).build();
+        entityLevelETag = ETagUtility.generateETag();
         return Response.created(uri).build();
     }
 
@@ -126,13 +136,31 @@ public class RequestController extends GlobalControllerAdvice {
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.canAccessRequest(#id)")
-    public Response updateRequest(@PathParam("id") final long id) {
-        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/requests/{}", neighborhoodId, id);
-        rs.markRequestAsFulfilled(id);
-        final Request request = rs.findRequest(id, neighborhoodId)
+    public Response updateRequest(
+            @PathParam("id") final long requestId,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+    ) {
+        LOGGER.info("PATCH request arrived at '/neighborhoods/{}/requests/{}", neighborhoodId, requestId);
+
+        // Check If-Match header
+        if (ifMatch != null){
+            String rowVersion = rs.findRequest(requestId, neighborhoodId).orElseThrow(() -> new NotFoundException("Request Not Found")).getVersion().toString();
+            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .header(HttpHeaders.ETAG, rowVersion)
+                        .build();
+        }
+
+        // Usual Flow
+        rs.markRequestAsFulfilled(requestId);
+        final Request request = rs.findRequest(requestId, neighborhoodId)
                 .orElseThrow(() -> new NotFoundException("Request Not Found"));
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(request.getRequestId())).build();
-        return Response.created(uri).build();
+        entityLevelETag = ETagUtility.generateETag();
+        return Response.created(uri)
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 }

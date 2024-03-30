@@ -60,6 +60,16 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
+    public Optional<Like> findLike(Long postId, Long userId) {
+        LOGGER.info("Finding Like for Post {} by User {}", postId, userId);
+
+        ValidationUtils.checkPostId(postId);
+        ValidationUtils.checkUserId(userId);
+
+        return likeDao.findLike(postId, userId);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public boolean isPostLiked(long postId, long userId) {
         LOGGER.info("Checking a Like from User {} to Post {} exists", userId, postId);

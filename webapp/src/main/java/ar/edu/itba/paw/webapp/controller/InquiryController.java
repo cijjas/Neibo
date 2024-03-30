@@ -113,10 +113,22 @@ public class InquiryController extends GlobalControllerAdvice{
                                   @PathParam("productId") final long productId
                                   ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
+
+        // Check If-Match Header
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return Response.status(Response.Status.PRECONDITION_FAILED)
+                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .build();
+
+        // Usual Flow
         final Inquiry inquiry = is.createInquiry(getLoggedUser().getUserId(), productId, form.getQuestionMessage());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(inquiry.getInquiryId())).build();
-        return Response.created(uri).build();
+        entityLevelETag = ETagUtility.generateETag();
+        return Response.created(uri)
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 
     @PATCH
@@ -124,13 +136,31 @@ public class InquiryController extends GlobalControllerAdvice{
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.canAnswerInquiry(#inquiryId)")
-    public Response updateInquiry(@PathParam("id") final long inquiryId,
-                                  @Valid final QuestionForm form) {
+    public Response updateInquiry(
+            @PathParam("id") final long inquiryId,
+            @Valid final QuestionForm form,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+    ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
+
+        // Check If-Match header
+        if (ifMatch != null){
+            String rowVersion = is.findInquiry(inquiryId, productId, neighborhoodId).orElseThrow(() -> new NotFoundException("Inquiry Not Found")).getVersion().toString();
+            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .header(HttpHeaders.ETAG, rowVersion)
+                        .build();
+        }
+
+        // Usual Flow
         final Inquiry inquiry = is.replyInquiry(inquiryId, form.getQuestionMessage());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(inquiry.getInquiryId())).build();
-        return Response.created(uri).build();
+        entityLevelETag = ETagUtility.generateETag();
+        return Response.created(uri)
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 
 }

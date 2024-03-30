@@ -102,12 +102,26 @@ public class LikeController extends GlobalControllerAdvice{
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createLike(@Valid LikeForm form) {
+    public Response createLike(
+            @Valid LikeForm form
+    ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
+
+        // Check If-Match Header
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return Response.status(Response.Status.PRECONDITION_FAILED)
+                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .build();
+
+        // Usual Flow
         final Like like = ls.createLike(form.getPostURN(), getLoggedUser().getUserId());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(like.getId())).build();
-        return Response.created(uri).build();
+        entityLevelETag = ETagUtility.generateETag();
+        return Response.created(uri)
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 
     @DELETE
@@ -116,6 +130,7 @@ public class LikeController extends GlobalControllerAdvice{
                                @QueryParam("postId") final long postId) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/likes/'", neighborhoodId);
         if(ls.deleteLike(postId, userId)) {
+            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();

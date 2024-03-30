@@ -16,6 +16,8 @@ public interface LikeDao {
 
     List<Like> getLikes(Long postId, Long userId, long neighborhoodId, int page, int size);
 
+    Optional<Like> findLike(Long postId, Long userId);
+
     int countLikes(Long postId, Long userId, long neighborhoodId);
 
     boolean isPostLiked(long postId, long userId);

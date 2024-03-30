@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.LikeDao;
-import ar.edu.itba.paw.models.Entities.Like;
-import ar.edu.itba.paw.models.Entities.Post;
-import ar.edu.itba.paw.models.Entities.Tag;
-import ar.edu.itba.paw.models.Entities.User;
+import ar.edu.itba.paw.models.Entities.*;
 import ar.edu.itba.paw.models.compositeKeys.AffiliationKey;
 import ar.edu.itba.paw.models.compositeKeys.LikeKey;
 import org.slf4j.Logger;
@@ -74,6 +71,22 @@ public class LikeDaoImpl implements LikeDao {
             return likeQuery.getResultList();
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public Optional<Like> findLike(Long postId, Long userId) {
+        LOGGER.debug("Selecting Like with postId {} and userId {}", postId, userId);
+
+        TypedQuery<Like> query = em.createQuery(
+                "SELECT l FROM Like l WHERE l.user.id = :userId AND l.post.id = :postId ",
+                Like.class
+        );
+
+        query.setParameter("userId", userId);
+        query.setParameter("postId", postId);
+
+        List<Like> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
 
