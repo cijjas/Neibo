@@ -141,7 +141,7 @@ public class BookingController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 
-        // Check If-Match header
+        // Cache Control
         if (ifMatch != null) {
             String rowVersion = bs.findBooking(bookingId, neighborhoodId).orElseThrow(() -> new NotFoundException("Booking Not Found")).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
@@ -151,7 +151,7 @@ public class BookingController extends GlobalControllerAdvice{
                         .build();
         }
 
-        // Usual Flow
+        // Deletion & ETag Generation Attempt
         if(bs.deleteBooking(bookingId)) {
             entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();

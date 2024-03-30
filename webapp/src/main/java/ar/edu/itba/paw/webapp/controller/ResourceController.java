@@ -155,20 +155,22 @@ public class ResourceController {
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
 
+        // Cache Control
         if (ifMatch != null) {
             String version = rs.findResource(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
-
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
                         .header(HttpHeaders.ETAG, version)
                         .build();
         }
 
+        // Deletion & ETag Generation Attempt
         if(rs.deleteResource(id)) {
             entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();
         }
+
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

@@ -169,20 +169,22 @@ public class EventController {
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
 
+        // Cache Control
         if (ifMatch != null) {
             String version = es.findEvent(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
-
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
                         .header(HttpHeaders.ETAG, version)
                         .build();
         }
 
+        // Deletion & ETag Generation Attempt
         if(es.deleteEvent(id)) {
             entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();
         }
+
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

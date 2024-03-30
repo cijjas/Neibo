@@ -135,20 +135,22 @@ public class AffiliationController {
     ) {
         LOGGER.info("DELETE request arrived at '/affiliations'");
 
+        // Cache Control
         if (ifMatch != null) {
             String version = nws.findAffiliation(form.getWorkerURN(), form.getNeighborhoodURN()).orElseThrow(NotFoundException::new).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
-
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
                         .header(HttpHeaders.ETAG, version)
                         .build();
         }
 
+        // Deletion & Etag Generation Attempt
         if (nws.deleteAffiliation(form.getWorkerURN(), form.getNeighborhoodURN())) {
             entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();
         }
+
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

@@ -156,7 +156,7 @@ public class ContactController {
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
 
-        // Check If-Match header
+        // Cache Control
         if (ifMatch != null) {
             String rowVersion = cs.findContact(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
@@ -166,11 +166,12 @@ public class ContactController {
                         .build();
         }
 
-        // Usual Flow
+        // Deletion & ETag Generation Attempt
         if(cs.deleteContact(id)) {
             entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();
         }
+
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 

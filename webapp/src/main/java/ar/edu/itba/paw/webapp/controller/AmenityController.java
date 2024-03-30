@@ -167,7 +167,7 @@ public class AmenityController {
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
-        // Check If-Match header
+        // Cache Control
         if (ifMatch != null) {
             String rowVersion = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
@@ -177,11 +177,12 @@ public class AmenityController {
                         .build();
         }
 
-        // Usual Flow
+        // Deletion & ETag Generation Attempt
         if (as.deleteAmenity(id)) {
             entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();
         }
+
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

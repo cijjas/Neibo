@@ -135,20 +135,21 @@ public class AttendanceController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
+        // Cache Control
         if (ifMatch != null) {
             Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .entity("Your cached version of the resource is outdated.")
                         .header(HttpHeaders.ETAG, entityLevelETag)
                         .build();
         }
 
+        // Deletion & ETag Generation Attempt
         if(as.deleteAttendance(getLoggedUser().getUserId(), eventId)) {
             entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();
         }
+
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

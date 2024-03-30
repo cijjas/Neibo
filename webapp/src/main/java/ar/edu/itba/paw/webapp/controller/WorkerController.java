@@ -165,7 +165,7 @@ public class WorkerController extends GlobalControllerAdvice {
         // Modification & ETag Generation
         final WorkerDto workerDto = WorkerDto.fromWorker(ws.updateWorkerPartially(workerId, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio()), uriInfo);
         entityLevelETag = ETagUtility.generateETag();
-        
+
         return Response.ok(workerDto)
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();
