@@ -22,7 +22,8 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 public class AttendanceController extends GlobalControllerAdvice {
     private static final Logger LOGGER = LoggerFactory.getLogger(AttendanceController.class);
 
-    private final AttendanceService as;
+    @Autowired
+    private AttendanceService as;
 
     @Context
     private UriInfo uriInfo;
@@ -36,9 +37,8 @@ public class AttendanceController extends GlobalControllerAdvice {
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @Autowired
-    public AttendanceController(final UserService us, final AttendanceService as) {
+    public AttendanceController(final UserService us) {
         super(us);
-        this.as = as;
     }
 
     @GET

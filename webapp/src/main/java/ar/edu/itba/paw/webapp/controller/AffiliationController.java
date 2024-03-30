@@ -26,9 +26,6 @@ public class AffiliationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(AffiliationController.class);
 
     @Autowired
-    private WorkerService ws;
-
-    @Autowired
     private AffiliationService nws;
 
     @Context

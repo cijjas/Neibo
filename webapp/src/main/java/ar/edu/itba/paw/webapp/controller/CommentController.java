@@ -24,7 +24,8 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 public class CommentController extends GlobalControllerAdvice{
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentController.class);
 
-    private final CommentService cs;
+    @Autowired
+    private CommentService cs;
 
     @Context
     private UriInfo uriInfo;
@@ -38,9 +39,8 @@ public class CommentController extends GlobalControllerAdvice{
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @Autowired
-    public CommentController(final UserService us, final CommentService cs) {
+    public CommentController(final UserService us) {
         super(us);
-        this.cs = cs;
     }
 
     @GET

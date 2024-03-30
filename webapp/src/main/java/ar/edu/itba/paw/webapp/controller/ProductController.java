@@ -25,7 +25,8 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 public class ProductController extends GlobalControllerAdvice {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
-    private final ProductService ps;
+    @Autowired
+    private ProductService ps;
 
     @Context
     private UriInfo uriInfo;
@@ -36,9 +37,8 @@ public class ProductController extends GlobalControllerAdvice {
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @Autowired
-    public ProductController(final UserService us, final ProductService ps) {
+    public ProductController(final UserService us) {
         super(us);
-        this.ps = ps;
     }
 
     @GET

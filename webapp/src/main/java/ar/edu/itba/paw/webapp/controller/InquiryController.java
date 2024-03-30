@@ -27,7 +27,8 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 public class InquiryController extends GlobalControllerAdvice{
     private static final Logger LOGGER = LoggerFactory.getLogger(InquiryController.class);
 
-    private final InquiryService is;
+    @Autowired
+    private InquiryService is;
 
     @Context
     private UriInfo uriInfo;
@@ -44,9 +45,8 @@ public class InquiryController extends GlobalControllerAdvice{
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @Autowired
-    public InquiryController(final UserService us, final InquiryService is) {
+    public InquiryController(final UserService us) {
         super(us);
-        this.is = is;
     }
 
     @GET

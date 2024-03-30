@@ -25,7 +25,8 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 public class ReviewController extends GlobalControllerAdvice {
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceController.class);
 
-    private final ReviewService rs;
+    @Autowired
+    private ReviewService rs;
 
     @Context
     private UriInfo uriInfo;
@@ -39,9 +40,8 @@ public class ReviewController extends GlobalControllerAdvice {
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @Autowired
-    public ReviewController(final UserService us, final ReviewService rs) {
+    public ReviewController(final UserService us) {
         super(us);
-        this.rs = rs;
     }
 
     @GET

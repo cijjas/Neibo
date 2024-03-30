@@ -19,17 +19,13 @@ import java.util.stream.Collectors;
 public class ProfessionController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProfessionController.class);
 
-    private final ProfessionWorkerService ps;
+    @Autowired
+    private ProfessionWorkerService ps;
 
     @Context
     private UriInfo uriInfo;
 
     private final EntityTag storedETag = ETagUtility.generateETag();
-
-    @Autowired
-    public ProfessionController(final ProfessionWorkerService professionWorkerService) {
-        this.ps = professionWorkerService;
-    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
