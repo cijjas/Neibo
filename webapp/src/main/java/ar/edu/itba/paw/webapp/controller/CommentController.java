@@ -88,15 +88,17 @@ public class CommentController extends GlobalControllerAdvice{
             @PathParam("id") long commentId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
+
+        // Content
         Comment comment = cs.findComment(commentId, postId, neighborhoodId).orElseThrow(NotFoundException::new);
-        // Use stored ETag value
-        EntityTag entityTag = new EntityTag(comment.getVersion().toString());
+
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
+        EntityTag entityTag = new EntityTag(comment.getVersion().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        // Client has a valid version
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        // Client has an invalid version
+
         return Response.ok(CommentDto.fromComment(comment, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(entityTag)

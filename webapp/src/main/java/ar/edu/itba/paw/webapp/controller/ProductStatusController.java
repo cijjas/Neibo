@@ -58,18 +58,17 @@ public class ProductStatusController {
             @PathParam("id") final int id
     ) {
         LOGGER.info("GET request arrived at '/product-statuses/{}'", id);
-        ProductStatusDto productStatusDto = ProductStatusDto.fromProductStatus(ProductStatus.fromId(id), uriInfo);
 
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
-
         Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        if (builder != null) {
-            LOGGER.info("Cached");
+        if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        }
 
-        LOGGER.info("New");
+        // Content
+        ProductStatusDto productStatusDto = ProductStatusDto.fromProductStatus(ProductStatus.fromId(id), uriInfo);
+
         return Response.ok(productStatusDto)
                 .cacheControl(cacheControl)
                 .tag(storedETag)

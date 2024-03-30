@@ -65,17 +65,16 @@ public class ShiftController {
     ) {
         LOGGER.info("GET request arrived at '/shifts/{}'", id);
 
-        // Fetch
+        // Content
         Shift shift = ss.findShift(id).orElseThrow(NotFoundException::new);
 
-        // Check Caching
-        EntityTag entityTag = new EntityTag(shift.getVersion().toString());
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
+        EntityTag entityTag = new EntityTag(shift.getVersion().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
         return Response.ok(ShiftDto.fromShift(shift, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(entityTag)

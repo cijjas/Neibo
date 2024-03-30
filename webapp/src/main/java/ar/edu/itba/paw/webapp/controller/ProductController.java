@@ -91,15 +91,17 @@ public class ProductController extends GlobalControllerAdvice {
             @PathParam("id") final long productId
     ) {
         LOGGER.info("GET request arrived '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
+
+        // Content
         Product product = ps.findProduct(productId, neighborhoodId).orElseThrow(() -> new NotFoundException("Product Not Found"));
-        // Use stored ETag value
-        EntityTag entityTag = new EntityTag(product.getVersion().toString());
+
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
+        EntityTag entityTag = new EntityTag(product.getVersion().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        // Client has a valid version
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        // Client has an invalid version
+
         return Response.ok(ProductDto.fromProduct(product, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(entityTag)

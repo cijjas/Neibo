@@ -88,15 +88,16 @@ public class LikeController extends GlobalControllerAdvice{
             @QueryParam("postId") final Long postId,
             @QueryParam("userId") final Long userId
     ){
-        // Check Caching
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
+        // Content
         int count = ls.countLikes(neighborhoodId, postId, userId);
         LikeCountDto dto = LikeCountDto.fromLikeCount(count, postId, userId, neighborhoodId,  uriInfo);
+
         return Response.ok(new GenericEntity<LikeCountDto>(dto) {})
                 .cacheControl(cacheControl)
                 .tag(entityLevelETag)

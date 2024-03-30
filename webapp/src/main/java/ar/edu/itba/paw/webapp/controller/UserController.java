@@ -101,16 +101,16 @@ public class UserController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
 
+        // Content
         User user = us.findUser(id, neighborhoodId).orElseThrow(() -> new NotFoundException("User Not Found"));
 
-        // Use stored ETag value
-        EntityTag entityTag = new EntityTag(user.getVersion().toString());
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
+        EntityTag entityTag = new EntityTag(user.getVersion().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        // Client has a valid version
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        // Client has an invalid version
+
         if(neighborhoodId != 0 ){
             return Response.ok(UserDto.fromUser(user, uriInfo))
                     .cacheControl(cacheControl)

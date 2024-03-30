@@ -99,17 +99,16 @@ public class WorkerController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("GET request arrived at '/workers/{}'", workerId);
 
-        // Fetch
+        // Content
         Worker worker = ws.findWorker(workerId).orElseThrow(() -> new NotFoundException("Worker Not Found"));
 
-        // Check Caching
+        // Cache Control
         EntityTag entityTag = new EntityTag(worker.getVersion().toString());
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
         return Response.ok(WorkerDto.fromWorker(worker, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(entityTag)

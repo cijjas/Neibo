@@ -82,17 +82,16 @@ public class AmenityController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
-        // Fetch
+        // Content
         Amenity amenity = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new);
 
-        // Check Caching
-        EntityTag entityTag = new EntityTag(amenity.getVersion().toString());
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
+        EntityTag entityTag = new EntityTag(amenity.getVersion().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
         return Response.ok(AmenityDto.fromAmenity(amenity, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(entityTag)
@@ -108,16 +107,17 @@ public class AmenityController {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
 
-        // Check If-Match Header
+        // Cache Control
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
                     .header(HttpHeaders.ETAG, entityLevelETag)
                     .build();
 
-        // Usual Flow
+        // Creation & ETag Generation
         Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, form.getSelectedShifts());
         entityLevelETag = ETagUtility.generateETag();
+
         return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(amenity.getAmenityId())).build())
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();

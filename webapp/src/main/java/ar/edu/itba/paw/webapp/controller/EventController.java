@@ -84,15 +84,17 @@ public class EventController {
             @PathParam("id") final long eventId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, eventId);
+
+        // Content
         Event event = es.findEvent(eventId, neighborhoodId).orElseThrow(() -> new NotFoundException("Event Not Found"));
-        // Use stored ETag value
-        EntityTag entityTag = new EntityTag(event.getVersion().toString());
+
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
+        EntityTag entityTag = new EntityTag(event.getVersion().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        // Client has a valid version
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        // Client has an invalid version
+
         return Response.ok(EventDto.fromEvent(event, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(entityTag)

@@ -82,17 +82,18 @@ public class AffiliationController {
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
 
+        // Cache Control
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
                     .header(HttpHeaders.ETAG, entityLevelETag)
                     .build();
 
+        // Creation & ETag Generation
         Affiliation a = nws.createAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRole());
         entityLevelETag = ETagUtility.generateETag();
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(a.getWorker().getWorkerId())).build();
-        return Response.created(uri)
+
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(a.getWorker().getWorkerId())).build())
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();
     }

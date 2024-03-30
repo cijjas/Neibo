@@ -94,17 +94,16 @@ public class RequestController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
 
-        // Fetch
+        // Content
         Request req = rs.findRequest(requestId, neighborhoodId).orElseThrow(() -> new NotFoundException("Request Not Found"));
 
-        // Check Caching
-        EntityTag entityTag = new EntityTag(req.getVersion().toString());
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
+        EntityTag entityTag = new EntityTag(req.getVersion().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
         return Response.ok(RequestDto.fromRequest(req, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(entityTag)

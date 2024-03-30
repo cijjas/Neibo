@@ -58,18 +58,17 @@ public class WorkerRoleController {
             @PathParam("id") final int id
     ) {
         LOGGER.info("GET request arrived at '/worker-roles/{}'", id);
-        WorkerRoleDto workerRoleDto = WorkerRoleDto.fromWorkerRole(WorkerRole.fromId(id), uriInfo);
 
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
-
         Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        if (builder != null) {
-            LOGGER.info("Cached");
+        if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        }
 
-        LOGGER.info("New");
+        // Content
+        WorkerRoleDto workerRoleDto = WorkerRoleDto.fromWorkerRole(WorkerRole.fromId(id), uriInfo);
+
         return Response.ok(workerRoleDto)
                 .cacheControl(cacheControl)
                 .tag(storedETag)

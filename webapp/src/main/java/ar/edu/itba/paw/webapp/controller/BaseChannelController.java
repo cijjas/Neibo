@@ -61,21 +61,16 @@ public class BaseChannelController {
     ) {
         LOGGER.info("GET request arrived at '/base-channels/{}'", id);
 
-        BaseChannel baseChannel = BaseChannel.fromId(id);
-
-        // Assuming BaseChannelDto.fromBaseChannel generates the content for the DTO
-        BaseChannelDto baseChannelDto = BaseChannelDto.fromBaseChannel(baseChannel, uriInfo);
-
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
-
         Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        if (builder != null) {
-            LOGGER.info("Cached");
+        if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        }
 
-        LOGGER.info("New");
+        // Content
+        BaseChannelDto baseChannelDto = BaseChannelDto.fromBaseChannel(BaseChannel.fromId(id), uriInfo);
+
         return Response.ok(baseChannelDto)
                 .cacheControl(cacheControl)
                 .tag(storedETag)

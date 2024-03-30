@@ -96,17 +96,16 @@ public class PostController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
 
-        // Fetch
+        // Content
         Post post = ps.findPost(postId, neighborhoodId).orElseThrow(() -> new NotFoundException("Post Not Found"));
 
-        // Check Caching
-        EntityTag entityTag = new EntityTag(post.getVersion().toString());
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
+        EntityTag entityTag = new EntityTag(post.getVersion().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
         return Response.ok(PostDto.fromPost(post, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(entityTag)

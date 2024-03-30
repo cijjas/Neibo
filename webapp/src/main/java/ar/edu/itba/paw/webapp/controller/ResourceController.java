@@ -69,15 +69,17 @@ public class ResourceController {
             @PathParam("id") final long resourceId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
+
+        // Content
         Resource resource = rs.findResource(resourceId, neighborhoodId).orElseThrow(NotFoundException::new);
-        // Use stored ETag value
-        EntityTag entityTag = new EntityTag(resource.getVersion().toString());
+
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
+        EntityTag entityTag = new EntityTag(resource.getVersion().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        // Client has a valid version
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        // Client has an invalid version
+
         return Response.ok(ResourceDto.fromResource(resource, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(entityTag)

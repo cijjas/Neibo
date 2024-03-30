@@ -62,18 +62,16 @@ public class DepartmentController {
     ) {
         LOGGER.info("GET request arrived at '/departments/{}'", id);
 
-        DepartmentDto departmentDto = DepartmentDto.fromDepartment(Department.fromId(id), uriInfo);
-
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
-
         Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        if (builder != null) {
-            LOGGER.info("Cached");
+        if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        }
 
-        LOGGER.info("New");
+        // Content
+        DepartmentDto departmentDto = DepartmentDto.fromDepartment(Department.fromId(id), uriInfo);
+
         return Response.ok(departmentDto)
                 .cacheControl(cacheControl)
                 .tag(storedETag)

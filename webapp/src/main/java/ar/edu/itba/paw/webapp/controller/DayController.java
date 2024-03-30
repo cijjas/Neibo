@@ -58,15 +58,15 @@ public class DayController {
     ) {
         LOGGER.info("GET request arrived at '/days/{}'", id);
 
-        DayDto dayDto = DayDto.fromDay(DayOfTheWeek.fromId(id), uriInfo);
-
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
-
         Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        if (builder != null) {
+        if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        }
+
+        // Content
+        DayDto dayDto = DayDto.fromDay(DayOfTheWeek.fromId(id), uriInfo);
 
         return Response.ok(dayDto)
                 .cacheControl(cacheControl)

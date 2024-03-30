@@ -72,17 +72,16 @@ public class ContactController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, contactId);
 
-        // Fetch
+        // Content
         Contact contact = cs.findContact(contactId, neighborhoodId).orElseThrow(NotFoundException::new);
 
-        // Check Caching
-        EntityTag entityTag = new EntityTag(contact.getVersion().toString());
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
+        EntityTag entityTag = new EntityTag(contact.getVersion().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
         return Response.ok(ContactDto.fromContact(contact, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(entityTag)

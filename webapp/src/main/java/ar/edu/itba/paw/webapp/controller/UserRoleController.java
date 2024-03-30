@@ -59,18 +59,16 @@ public class UserRoleController {
     ) {
         LOGGER.info("GET request arrived at '/user-roles/{}'", id);
 
-        UserRoleDto userRoleDto = UserRoleDto.fromUserRole(UserRole.fromId(id), uriInfo);
-
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
-
         Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        if (builder != null) {
-            LOGGER.info("Cached");
+        if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        }
 
-        LOGGER.info("New");
+        // Content
+        UserRoleDto userRoleDto = UserRoleDto.fromUserRole(UserRole.fromId(id), uriInfo);
+
         return Response.ok(userRoleDto)
                 .cacheControl(cacheControl)
                 .tag(storedETag)

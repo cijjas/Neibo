@@ -88,16 +88,16 @@ public class AttendanceController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
 
-        //Fetch Attendance
+        // Content
         Attendance attendance = as.findAttendance(userId, eventId, neighborhoodId).orElseThrow(NotFoundException::new);
-        // Use stored ETag value
-        EntityTag entityTag = new EntityTag(attendance.getVersion().toString());
+
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
+        EntityTag entityTag = new EntityTag(attendance.getVersion().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        // Client has a valid version
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        // Client has an invalid version
+
         return Response.ok(AttendanceDto.fromAttendance(attendance, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(entityTag)
@@ -109,18 +109,18 @@ public class AttendanceController extends GlobalControllerAdvice {
     public Response createAttendance() {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
+        // Cache Control
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .entity("Your cached version of the resource is outdated.")
                     .header(HttpHeaders.ETAG, entityLevelETag)
                     .build();
 
+        // Creation & ETag Generation
         final Attendance attendance = as.createAttendance(getLoggedUser().getUserId(), eventId);
         entityLevelETag = ETagUtility.generateETag();
-        final URI uri = uriInfo.getAbsolutePathBuilder()
-                .path(String.valueOf(attendance.getId())).build();
-        return Response.created(uri)
+
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(attendance.getId())).build())
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();
     }

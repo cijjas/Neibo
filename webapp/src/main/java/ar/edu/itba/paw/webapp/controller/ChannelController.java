@@ -62,15 +62,17 @@ public class ChannelController {
             @PathParam("id") long channelId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
+
+        // Content
         Channel channel = cs.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new);
-        // Use stored ETag value
-        EntityTag entityTag = new EntityTag(channel.getVersion().toString());
+
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
+        EntityTag entityTag = new EntityTag(channel.getVersion().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        // Client has a valid version
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        // Client has an invalid version
+
         return Response.ok(ChannelDto.fromChannel(channel, uriInfo, neighborhoodId))
                 .cacheControl(cacheControl)
                 .tag(entityTag)

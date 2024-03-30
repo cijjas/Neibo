@@ -77,15 +77,16 @@ public class AvailabilityController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}/availability/{}'", neighborhoodId, amenityId, availabilityId);
 
+        // Content
         Availability availability = as.findAvailability(amenityId, availabilityId, neighborhoodId).orElseThrow(NotFoundException::new);
-        // Use stored ETag value
-        EntityTag entityTag = new EntityTag(availability.getVersion().toString());
+
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
+        EntityTag entityTag = new EntityTag(availability.getVersion().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        // Client has a valid version
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        // Client has an invalid version
+
         return Response.ok(AvailabilityDto.fromAvailability(availability, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(entityTag)

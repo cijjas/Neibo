@@ -88,17 +88,16 @@ public class ReviewController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("GET request arrived at '/workers/{}/reviews/{}'", workerId, id);
 
-        // Fetch
+        // Content
         Review review = rs.findReview(id, workerId).orElseThrow(() -> new NotFoundException("Review Not Found"));
 
-        // Check Caching
-        EntityTag entityTag = new EntityTag(review.getVersion().toString());
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
+        EntityTag entityTag = new EntityTag(review.getVersion().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
         return Response.ok(ReviewDto.fromReview(review, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(entityTag)

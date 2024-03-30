@@ -90,17 +90,16 @@ public class BookingController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 
-        // Fetch
+        // Content
         Booking booking = bs.findBooking(bookingId, neighborhoodId).orElseThrow(() -> new NotFoundException("Booking Not Found"));
 
-        // Check Caching
-        EntityTag entityTag = new EntityTag(booking.getVersion().toString());
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
+        EntityTag entityTag = new EntityTag(booking.getVersion().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
         return Response.ok(BookingDto.fromBooking(booking, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(entityTag)

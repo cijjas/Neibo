@@ -1,8 +1,10 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.StandardTime;
+import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.enums.WorkerStatus;
 import ar.edu.itba.paw.webapp.dto.TimeDto;
+import ar.edu.itba.paw.webapp.dto.WorkerRoleDto;
 import ar.edu.itba.paw.webapp.dto.WorkerStatusDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +59,20 @@ public class WorkerStatusController {
             @PathParam("id") final int id
     ) {
         LOGGER.info("GET request arrived at '/worker-statuses/{}'", id);
-        return Response.ok(WorkerStatusDto.fromWorkerStatus(WorkerStatus.fromId(id), uriInfo)).build();
+
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(3600);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Content
+        WorkerStatusDto workerStatusDto = WorkerStatusDto.fromWorkerStatus(WorkerStatus.fromId(id), uriInfo);
+        
+        return Response.ok(workerStatusDto)
+                .cacheControl(cacheControl)
+                .tag(storedETag)
+                .build();
     }
 }

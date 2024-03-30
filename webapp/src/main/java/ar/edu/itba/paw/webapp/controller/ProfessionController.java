@@ -64,18 +64,17 @@ public class ProfessionController {
             @PathParam("id") final long id
     ) {
         LOGGER.info("GET request arrived at '/professions/{}'", id);
-        ProfessionDto professionDto = ProfessionDto.fromProfession(Professions.fromId(id), uriInfo);
 
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
-
         Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        if (builder != null) {
-            LOGGER.info("Cached");
+        if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        }
 
-        LOGGER.info("New");
+        // Content
+        ProfessionDto professionDto = ProfessionDto.fromProfession(Professions.fromId(id), uriInfo);
+
         return Response.ok(professionDto)
                 .cacheControl(cacheControl)
                 .tag(storedETag)

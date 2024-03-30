@@ -58,18 +58,17 @@ public class PostStatusController {
             @PathParam("id") final int id
     ) {
         LOGGER.info("GET request arrived at '/post-statuses/{}'", id);
-        PostStatusDto postStatusDto = PostStatusDto.fromPostStatus(PostStatus.fromId(id), uriInfo);
 
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(3600);
-
         Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        if (builder != null) {
-            LOGGER.info("Cached");
+        if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        }
 
-        LOGGER.info("New");
+        // Content
+        PostStatusDto postStatusDto = PostStatusDto.fromPostStatus(PostStatus.fromId(id), uriInfo);
+
         return Response.ok(postStatusDto)
                 .cacheControl(cacheControl)
                 .tag(storedETag)

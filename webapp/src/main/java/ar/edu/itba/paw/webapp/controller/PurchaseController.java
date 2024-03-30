@@ -90,17 +90,16 @@ public class PurchaseController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}/transactions/{}'", neighborhoodId, userId, transactionId);
 
-        // Fetch
+        // Content
         Purchase purchase = ps.findPurchase(transactionId, userId, neighborhoodId).orElseThrow(() -> new NotFoundException("Purchase Not Found"));
 
-        // Check Caching
-        EntityTag entityTag = new EntityTag(purchase.getVersion().toString());
+        // Cache Control
         CacheControl cacheControl = new CacheControl();
+        EntityTag entityTag = new EntityTag(purchase.getVersion().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Fresh Copy
         return Response.ok(PurchaseDto.fromPurchase(purchase, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(entityTag)
