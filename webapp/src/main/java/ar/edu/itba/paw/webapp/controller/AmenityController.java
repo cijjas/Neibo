@@ -29,6 +29,9 @@ public class AmenityController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    Request request;
+
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
@@ -39,8 +42,7 @@ public class AmenityController {
     public Response listAmenities(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
 
@@ -50,13 +52,12 @@ public class AmenityController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
+        // Fresh Copy
         List<Amenity> amenities = as.getAmenities(neighborhoodId, page, size);
         if (amenities.isEmpty())
             return Response.noContent().build();
         List<AmenityDto> amenitiesDto = amenities.stream().map(a -> AmenityDto.fromAmenity(a, uriInfo)).collect(Collectors.toList());
-
-        return Response.ok(new GenericEntity<List<AmenityDto>>(amenitiesDto) {
-                })
+        return Response.ok(new GenericEntity<List<AmenityDto>>(amenitiesDto) {})
                 .cacheControl(cacheControl)
                 .tag(entityLevelETag)
                 .build();
@@ -67,21 +68,21 @@ public class AmenityController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findAmenity(
             @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
-            @Context Request request
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
-        // Fetch Amenity
+        // Fetch
         Amenity amenity = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new);
-        // Use stored ETag value
+
+        // Check Caching
         EntityTag entityTag = new EntityTag(amenity.getVersion().toString());
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        // Client has a valid version
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        // Client has an invalid version
+
+        // Fresh Copy
         return Response.ok(AmenityDto.fromAmenity(amenity, uriInfo))
                 .cacheControl(cacheControl)
                 .tag(entityTag)
@@ -94,25 +95,21 @@ public class AmenityController {
     @Secured("ROLE_ADMINISTRATOR")
     public Response createAmenity(
             @Valid final AmenityForm form,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
 
-        if (ifMatch != null) {
-            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        // Check If-Match Header
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return Response.status(Response.Status.PRECONDITION_FAILED)
+                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .build();
 
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .entity("Your cached version of the resource is outdated.")
-                        .header(HttpHeaders.ETAG, entityLevelETag)
-                        .build();
-        }
-
+        // Usual Flow
         Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, form.getSelectedShifts());
         entityLevelETag = ETagUtility.generateETag();
-        URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(amenity.getAmenityId())).build();
-        return Response.created(uri)
+        return Response.created(uriInfo.getAbsolutePathBuilder().path(String.valueOf(amenity.getAmenityId())).build())
                 .header(HttpHeaders.ETAG, entityLevelETag)
                 .build();
     }
@@ -125,22 +122,21 @@ public class AmenityController {
     public Response updateAmenityPartially(
             @PathParam("id") final long id,
             @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Valid final AmenityUpdateForm partialUpdate,
-            @Context Request request
+            @Valid final AmenityUpdateForm partialUpdate
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
         // Check If-Match header
-        if (ifMatch != null) {
-            String version = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
-            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
-
+        if (ifMatch != null){
+            String rowVersion = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
+            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, version)
+                        .header(HttpHeaders.ETAG, rowVersion)
                         .build();
         }
 
+        // Usual Flow
         Amenity amenity = as.updateAmenityPartially(id, partialUpdate.getName(), partialUpdate.getDescription());
         entityLevelETag = ETagUtility.generateETag();
         return Response.ok(AmenityDto.fromAmenity(amenity, uriInfo))
@@ -154,26 +150,25 @@ public class AmenityController {
     @Secured("ROLE_ADMINISTRATOR")
     public Response deleteById(
             @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
-            @Context Request request
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
+        // Check If-Match header
         if (ifMatch != null) {
-            String version = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
-            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
-
+            String rowVersion = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
+            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, version)
+                        .header(HttpHeaders.ETAG, rowVersion)
                         .build();
         }
 
+        // Usual Flow
         if (as.deleteAmenity(id)) {
             entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();
         }
-
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 }

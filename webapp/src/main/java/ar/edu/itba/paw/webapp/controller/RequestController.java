@@ -96,7 +96,7 @@ public class RequestController extends GlobalControllerAdvice {
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.canAccessRequest(#id)")
-    public Response fulfillRequest(@PathParam("id") final long id) {
+    public Response updateRequest(@PathParam("id") final long id) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/requests/{}", neighborhoodId, id);
         rs.markRequestAsFulfilled(id);
         final Request request = rs.findRequest(id, neighborhoodId)

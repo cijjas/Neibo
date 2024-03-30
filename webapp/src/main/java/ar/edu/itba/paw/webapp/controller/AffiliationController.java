@@ -66,7 +66,7 @@ public class AffiliationController {
             @Valid final AffiliationForm form
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
-        Affiliation a = nws.createAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerStatus());
+        Affiliation a = nws.createAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRole());
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(a.getWorker().getWorkerId())).build();
         return Response.created(uri).build();
@@ -79,7 +79,7 @@ public class AffiliationController {
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
 
-        Affiliation affiliation = nws.updateAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerStatus());
+        Affiliation affiliation = nws.updateAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRole());
         return Response.ok(AffiliationDto.fromAffiliation(affiliation, uriInfo))
                 .build();
     }

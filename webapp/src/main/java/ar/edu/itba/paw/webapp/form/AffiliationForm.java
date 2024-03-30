@@ -13,14 +13,14 @@ public class AffiliationForm {
     @NeighborhoodURNConstraint
     private String neighborhoodURN;
 
-    private String workerStatus;
+    private String workerRole;
 
-    public String getWorkerStatus() {
-        return workerStatus;
+    public String getWorkerRole() {
+        return workerRole;
     }
 
-    public void setWorkerStatus(String workerStatus) {
-        this.workerStatus = workerStatus;
+    public void setWorkerRole(String workerRole) {
+        this.workerRole = workerRole;
     }
 
     public String getNeighborhoodURN() {

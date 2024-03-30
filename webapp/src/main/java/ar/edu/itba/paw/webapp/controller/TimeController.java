@@ -23,8 +23,6 @@ public class TimeController {
 
     private final EntityTag storedETag = ETagUtility.generateETag();
 
-    // Find time by id
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listTimes(@HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,

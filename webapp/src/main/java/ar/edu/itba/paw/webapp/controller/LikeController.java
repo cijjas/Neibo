@@ -75,7 +75,6 @@ public class LikeController extends GlobalControllerAdvice{
     ){
         int count = ls.countLikes(neighborhoodId, postId, userId);
 
-
         LikeCountDto dto = LikeCountDto.fromLikeCount(count, postId, userId, neighborhoodId,  uriInfo);
         return Response.ok(new GenericEntity<LikeCountDto>(dto) {})
                 .build();

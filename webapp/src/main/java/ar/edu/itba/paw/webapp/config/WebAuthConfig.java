@@ -90,6 +90,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
+
+
                 // UNRESTRICTED
                 .antMatchers(
                         "/test/**",
@@ -110,22 +112,30 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/languages/**",
                         "/images/**",
 
-                        "/neighborhoods",                           // needed for sign-up, restriction on QP
-                        "/neighborhoods/*/users",                   // needed for sign-up, restriction on GET
-                        "/workers"                                  // needed for sign-up, restriction on GET
+                        "/neighborhoods",                           // POST needed for sign-up, GET has restriction on QP
+                        "/neighborhoods/*/users",                   // POST needed for sign-up, GET is restricted
+                        "/workers"                                  // POST needed for worker sign-up, GET is restricted
                 ).permitAll()
+
+
                 // ANY USER WITH AN ACCOUNT CAN ACCESS HIS PROFILE
                 .antMatchers(
                         "/neighborhoods/*/users/*"
                 ).hasAnyRole("UNVERIFIED_NEIGHBOR","WORKER", "NEIGHBOR", "ADMINISTRATOR", "REJECTED")
+
+
                 // BELONGING CONDITION
                 .antMatchers("/neighborhoods/**").access("@accessControlHelper.isNeighborhoodMember(request)")
+
+
                 // WORKERS, NEIGHBOR AND ADMINISTRATOR
                 .antMatchers(
                         "/affiliations/*",
                         "/workers/**",
                         "/neighborhoods/*/posts/*"
                 ).hasAnyRole("WORKER", "NEIGHBOR", "ADMINISTRATOR")
+
+
                 // NEIGHBORS AND ADMINISTRATORS
                 .antMatchers(
                         "/neighborhoods/*/products/*/comments/**",  // custom product restrictions
