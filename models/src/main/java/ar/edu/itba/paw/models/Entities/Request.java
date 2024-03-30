@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -31,6 +33,11 @@ public class Request implements Serializable {
     @Column(name = "fulfilled")
     private Boolean fulfilled;
 
+
+    @Version
+    @ColumnDefault("1")
+    private Long version;
+
     public Request() {
     }
 
@@ -41,6 +48,14 @@ public class Request implements Serializable {
         this.user = builder.user;
         this.requestDate = builder.requestDate;
         this.fulfilled = builder.fulfilled;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public Long getRequestId() {

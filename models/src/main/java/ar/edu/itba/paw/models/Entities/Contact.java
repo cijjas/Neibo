@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -25,6 +27,10 @@ public class Contact {
     @JoinColumn(name = "neighborhoodid", referencedColumnName = "neighborhoodid")
     private Neighborhood neighborhood;
 
+    @Version
+    @ColumnDefault("1")
+    private Long version;
+
     Contact() {
     }
 
@@ -34,6 +40,22 @@ public class Contact {
         this.contactAddress = builder.contactAddress;
         this.contactPhone = builder.contactPhone;
         this.neighborhood = builder.neighborhood;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setContactId(Long contactId) {
+        this.contactId = contactId;
+    }
+
+    public void setNeighborhood(Neighborhood neighborhood) {
+        this.neighborhood = neighborhood;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public Long getContactId() {

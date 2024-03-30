@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
@@ -24,6 +26,10 @@ public class Booking {
     @Column(name = "date")
     private Date bookingDate;
 
+    @Version
+    @ColumnDefault("1")
+    private Long version;
+
     Booking() {
     }
 
@@ -32,6 +38,10 @@ public class Booking {
         this.user = builder.user;
         this.amenityAvailability = builder.amenityAvailability;
         this.bookingDate = builder.bookingDate;
+    }
+
+    public Long getVersion() {
+        return version;
     }
 
     public Long getBookingId() {

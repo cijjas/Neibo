@@ -1,5 +1,5 @@
 package ar.edu.itba.paw.models.Entities;// Post.java
-
+import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -52,6 +52,10 @@ public class Post {
     @JoinTable(name = "posts_users_subscriptions", joinColumns = @JoinColumn(name = "postid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> subscribers;
 
+    @Version
+    @ColumnDefault("1")
+    private Long version;
+
     Post() {
     }
 
@@ -68,6 +72,18 @@ public class Post {
         this.comments = builder.comments;
         this.date = new java.sql.Date(System.currentTimeMillis());
         this.subscribers = builder.subscribers;
+    }
+
+    public void setPostId(Long postId) {
+        this.postId = postId;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public Long getPostId() {

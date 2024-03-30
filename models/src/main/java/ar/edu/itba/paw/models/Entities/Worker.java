@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +46,10 @@ public class Worker {
     @JoinTable(name = "workers_neighborhoods", joinColumns = @JoinColumn(name = "workerid"), inverseJoinColumns = @JoinColumn(name = "neighborhoodid"))
     private Set<Neighborhood> workNeighborhoods;
 
+    @Version
+    @ColumnDefault("1")
+    private Long version;
+
     Worker() {
     }
 
@@ -55,6 +61,14 @@ public class Worker {
         this.address = builder.address;
         this.bio = builder.bio;
         this.backgroundPictureId = builder.backgroundPictureId;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public String getPhoneNumber() {

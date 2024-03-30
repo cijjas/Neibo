@@ -30,7 +30,7 @@ public class AmenityController {
     private UriInfo uriInfo;
 
     @Context
-    Request request;
+    private Request request;
 
     @PathParam("neighborhoodId")
     private Long neighborhoodId;

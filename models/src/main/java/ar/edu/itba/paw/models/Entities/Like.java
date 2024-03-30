@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
 import ar.edu.itba.paw.models.compositeKeys.LikeKey;
-
+import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -27,6 +27,10 @@ public class Like implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date likeDate;
 
+    @Version
+    @ColumnDefault("1")
+    private Long version;
+
     Like() {
         this.id = new LikeKey();
     }
@@ -36,6 +40,14 @@ public class Like implements Serializable {
         this.post = post;
         this.user = user;
         this.likeDate = likeDate;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public LikeKey getId() {

@@ -25,15 +25,20 @@ import java.util.stream.Collectors;
 public class LikeController extends GlobalControllerAdvice{
     private static final Logger LOGGER = LoggerFactory.getLogger(LikeController.class);
 
-    private final LikeService ls;
+    @Autowired
+    private LikeService ls;
 
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
+    private EntityTag entityLevelETag = ETagUtility.generateETag();
+
     @Autowired
-    public LikeController(final UserService us, final LikeService ls) {
+    public LikeController(final UserService us) {
         super(us);
-        this.ls = ls;
     }
 
     @PathParam("neighborhoodId")
@@ -45,23 +50,30 @@ public class LikeController extends GlobalControllerAdvice{
             @QueryParam("onPost") final Long postId,
             @QueryParam("likedBy") final Long userId,
             @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size) {
+            @QueryParam("size") @DefaultValue("10") final int size,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
 
-        final List<Like> likes = ls.getLikes(neighborhoodId, postId, userId, page, size);
+        // Check Caching
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
 
+        // Fresh Copy
+        final List<Like> likes = ls.getLikes(neighborhoodId, postId, userId, page, size);
         if (likes.isEmpty())
             return Response.noContent().build();
-
         final List<LikeDto> likesDto = likes.stream()
                 .map(l -> LikeDto.fromLike(l, uriInfo)).collect(Collectors.toList());
-
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "likes";
         int totalLikePages = ls.calculateLikePages(neighborhoodId, postId, userId, size);
         Link[] links = ControllerUtils.createPaginationLinks(baseUri, page, size, totalLikePages);
-
         return Response.ok(new GenericEntity<List<LikeDto>>(likesDto) {})
                 .links(links)
+                .cacheControl(cacheControl)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -70,13 +82,21 @@ public class LikeController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response countLikes(
             @QueryParam("postId") final Long postId,
-            @QueryParam("userId") final Long userId
-
+            @QueryParam("userId") final Long userId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
     ){
-        int count = ls.countLikes(neighborhoodId, postId, userId);
+        // Check Caching
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
 
+        // Fresh Copy
+        int count = ls.countLikes(neighborhoodId, postId, userId);
         LikeCountDto dto = LikeCountDto.fromLikeCount(count, postId, userId, neighborhoodId,  uriInfo);
         return Response.ok(new GenericEntity<LikeCountDto>(dto) {})
+                .cacheControl(cacheControl)
+                .tag(entityLevelETag)
                 .build();
     }
 

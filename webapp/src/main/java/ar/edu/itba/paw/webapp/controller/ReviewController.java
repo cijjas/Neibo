@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Review;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
@@ -29,8 +30,13 @@ public class ReviewController extends GlobalControllerAdvice {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     @PathParam("workerId")
     private Long workerId;
+
+    private EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @Autowired
     public ReviewController(final UserService us, final ReviewService rs) {
@@ -42,30 +48,57 @@ public class ReviewController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listReviews(
             @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size) {
+            @QueryParam("size") @DefaultValue("10") final int size,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+    ) {
         LOGGER.info("GET request arrived at '/workers/{}/reviews'", workerId);
+
+        // Check Caching
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Fresh Copy
         final List<Review> reviews = rs.getReviews(workerId, page, size);
         if (reviews.isEmpty())
             return Response.noContent().build();
         final List<ReviewDto> reviewsDto = reviews.stream()
                 .map(r -> ReviewDto.fromReview(r, uriInfo)).collect(Collectors.toList());
-
         String baseUri = uriInfo.getBaseUri().toString() + "workers/" + workerId + "/reviews";
         int totalReviewPages = rs.calculateReviewPages(workerId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalReviewPages);
-
         return Response.ok(new GenericEntity<List<ReviewDto>>(reviewsDto){})
                 .links(links)
+                .cacheControl(cacheControl)
+                .tag(entityLevelETag)
                 .build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findReview(@PathParam("id") final long id) {
+    public Response findReview(
+            @PathParam("id") final long id,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+    ) {
         LOGGER.info("GET request arrived at '/workers/{}/reviews/{}'", workerId, id);
-        return Response.ok(ReviewDto.fromReview(rs.findReview(id, workerId)
-                .orElseThrow(() -> new NotFoundException("Review Not Found")), uriInfo)).build();
+
+        // Fetch
+        Review review = rs.findReview(id, workerId).orElseThrow(() -> new NotFoundException("Review Not Found"));
+
+        // Check Caching
+        EntityTag entityTag = new EntityTag(review.getVersion().toString());
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Fresh Copy
+        return Response.ok(ReviewDto.fromReview(review, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 
     @POST

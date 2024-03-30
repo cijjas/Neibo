@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ShiftService;
+import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Shift;
 import ar.edu.itba.paw.webapp.dto.BookingDto;
 import ar.edu.itba.paw.webapp.dto.ShiftDto;
@@ -26,30 +27,60 @@ public class ShiftController {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
+    private EntityTag entityLevelETag = ETagUtility.generateETag();
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getShifts() {
+    public Response getShifts(
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+    ) {
         LOGGER.info("GET request arrived at '/shifts'");
-        List<Shift> shifts = ss.getShifts();
 
+        // Check Caching
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Fresh Copy
+        List<Shift> shifts = ss.getShifts();
         if (shifts.isEmpty())
             return Response.noContent().build();
-
-        // Convert shifts to DTOs if needed
         List<ShiftDto> shiftDto = shifts.stream()
                 .map(s -> ShiftDto.fromShift(s, uriInfo))
                 .collect(Collectors.toList());
-
         return Response.ok(new GenericEntity<List<ShiftDto>>(shiftDto) {})
+                .cacheControl(cacheControl)
+                .tag(entityLevelETag)
                 .build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findShift(@PathParam("id") final long id) {
+    public Response findShift(
+            @PathParam("id") final long id,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+    ) {
         LOGGER.info("GET request arrived at '/shifts/{}'", id);
-        return Response.ok(ShiftDto.fromShift(ss.findShift(id)
-                .orElseThrow(NotFoundException::new), uriInfo)).build();
+
+        // Fetch
+        Shift shift = ss.findShift(id).orElseThrow(NotFoundException::new);
+
+        // Check Caching
+        EntityTag entityTag = new EntityTag(shift.getVersion().toString());
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Fresh Copy
+        return Response.ok(ShiftDto.fromShift(shift, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 }

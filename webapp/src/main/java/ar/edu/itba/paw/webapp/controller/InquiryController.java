@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.InquiryService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Inquiry;
 import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.InquiryDto;
@@ -31,11 +32,16 @@ public class InquiryController extends GlobalControllerAdvice{
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
     @PathParam("productId")
     private Long productId;
+
+    private EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @Autowired
     public InquiryController(final UserService us, final InquiryService is) {
@@ -47,30 +53,57 @@ public class InquiryController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listInquiries(
             @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size) {
+            @QueryParam("size") @DefaultValue("10") final int size,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
+
+        // Check Caching
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Fresh Copy
         final List<Inquiry> inquiries = is.getInquiries(productId, page, size, neighborhoodId);
         if (inquiries.isEmpty())
             return Response.noContent().build();
         final List<InquiryDto> inquiriesDto = inquiries.stream()
                 .map(i -> InquiryDto.fromInquiry(i, uriInfo)).collect(Collectors.toList());
-
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/products" + productId + "inquiries";
         int totalInquiryPages = is.calculateInquiryPages(productId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalInquiryPages);
-
         return Response.ok(new GenericEntity<List<InquiryDto>>(inquiriesDto){})
                 .links(links)
+                .cacheControl(cacheControl)
+                .tag(entityLevelETag)
                 .build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findInquiry(@PathParam("id") final long inquiryId) {
+    public Response findInquiry(
+            @PathParam("id") final long inquiryId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
-        return Response.ok(InquiryDto.fromInquiry(is.findInquiry(inquiryId, productId, neighborhoodId)
-                .orElseThrow(() -> new NotFoundException("Inquiry Not Found")), uriInfo)).build();
+
+        // Fetch
+        Inquiry inquiry = is.findInquiry(inquiryId, productId, neighborhoodId).orElseThrow(() -> new NotFoundException("Inquiry Not Found"));
+
+        // Check Caching
+        EntityTag entityTag = new EntityTag(inquiry.getVersion().toString());
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Fresh Copy
+        return Response.ok(InquiryDto.fromInquiry(inquiry, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 
     @POST

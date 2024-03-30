@@ -5,6 +5,7 @@ import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.enums.WorkerStatus;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
+import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
@@ -32,15 +33,20 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 public class WorkerController extends GlobalControllerAdvice {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerController.class);
 
+    @Autowired
     private WorkerService ws;
 
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
+    private EntityTag entityLevelETag = ETagUtility.generateETag();
+
     @Autowired
-    public WorkerController(final UserService us, final WorkerService ws) {
+    public WorkerController(final UserService us) {
         super(us);
-        this.ws = ws;
     }
 
     @GET
@@ -52,24 +58,30 @@ public class WorkerController extends GlobalControllerAdvice {
             @QueryParam("withProfessions") final List<String> professions,
             @QueryParam("inNeighborhoods") final List<String> neighborhoodIds,
             @QueryParam("withRole") final String workerRole,
-            @QueryParam("withStatus") final String workerStatus
+            @QueryParam("withStatus") final String workerStatus,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
     ) {
         LOGGER.info("GET request arrived at '/workers'");
-        Set<Worker> workers = ws.getWorkers(page, size, professions, neighborhoodIds, workerRole, workerStatus);
 
+        // Check Caching
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Fresh Copy
+        Set<Worker> workers = ws.getWorkers(page, size, professions, neighborhoodIds, workerRole, workerStatus);
         if (workers.isEmpty())
             return Response.noContent().build();
-
         String baseUri = uriInfo.getBaseUri().toString() + "workers";
-
         int totalWorkerPages = ws.calculateWorkerPages(professions, neighborhoodIds, size, workerRole, workerStatus);
         Link[] links = createPaginationLinks(baseUri, page, size, totalWorkerPages);
-
         List<WorkerDto> workerDto = workers.stream()
                 .map(w -> WorkerDto.fromWorker(w, uriInfo)).collect(Collectors.toList());
-
         return Response.ok(new GenericEntity<List<WorkerDto>>(workerDto){})
                 .links(links)
+                .cacheControl(cacheControl)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -77,15 +89,34 @@ public class WorkerController extends GlobalControllerAdvice {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findWorker(@PathParam("id") final long workerId) {
+    public Response findWorker(
+            @PathParam("id") final long workerId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+    ) {
         LOGGER.info("GET request arrived at '/workers/{}'", workerId);
-        return Response.ok(WorkerDto.fromWorker(ws.findWorker(workerId)
-                .orElseThrow(() -> new NotFoundException("Worker Not Found")), uriInfo)).build();
+
+        // Fetch
+        Worker worker = ws.findWorker(workerId).orElseThrow(() -> new NotFoundException("Worker Not Found"));
+
+        // Check Caching
+        EntityTag entityTag = new EntityTag(worker.getVersion().toString());
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Fresh Copy
+        return Response.ok(WorkerDto.fromWorker(worker, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createWorker(@Valid final WorkerSignupForm form) {
+    public Response createWorker(
+            @Valid final WorkerSignupForm form
+    ) {
         LOGGER.info("POST request arrived at '/workers'");
         final Worker worker = ws.createWorker(form.getWorker_mail(), form.getWorker_name(), form.getWorker_surname(), form.getWorker_password(), form.getWorker_identification(), form.getPhoneNumber(), form.getAddress(), form.getWorker_languageURN(), form.getProfessionURNs(), form.getBusinessName());
         final URI uri = uriInfo.getAbsolutePathBuilder()
@@ -99,7 +130,8 @@ public class WorkerController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateWorkerPartially(
             @PathParam("id") final long id,
-            @Valid final WorkerUpdateForm partialUpdate) {
+            @Valid final WorkerUpdateForm partialUpdate
+    ) {
         LOGGER.info("PATCH request arrived at '/workers/{}'", id);
         final Worker worker = ws.updateWorkerPartially(id, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio());
         return Response.ok(WorkerDto.fromWorker(worker, uriInfo)).build();

@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +25,11 @@ public class Shift {
     @JoinColumn(name = "starttime")
     private Time startTime;
 
+
+    @Version
+    @ColumnDefault("1")
+    private Long version;
+
     @Transient
     private java.sql.Time endTime;
 
@@ -43,6 +50,34 @@ public class Shift {
         long startTimeMillis = startTime.getTimeInterval().getTime();
         long endTimeMillis = startTimeMillis + 60 * 60 * 1000; // 60 minutes * 60 seconds * 1000 milliseconds
         return new java.sql.Time(endTimeMillis);
+    }
+
+    public void setShiftId(Long shiftId) {
+        this.shiftId = shiftId;
+    }
+
+    public void setAmenities(List<Amenity> amenities) {
+        this.amenities = amenities;
+    }
+
+    public void setDay(Day day) {
+        this.day = day;
+    }
+
+    public void setStartTime(Time startTime) {
+        this.startTime = startTime;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public void setEndTime(java.sql.Time endTime) {
+        this.endTime = endTime;
     }
 
     public Long getShiftId() {

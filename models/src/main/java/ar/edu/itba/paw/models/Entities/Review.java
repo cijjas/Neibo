@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -29,6 +31,11 @@ public class Review {
     @Column(name = "date")
     private Date date;
 
+
+    @Version
+    @ColumnDefault("1")
+    private Long version;
+
     Review() {
     }
 
@@ -39,6 +46,38 @@ public class Review {
         this.rating = builder.rating;
         this.review = builder.review;
         this.date = new java.sql.Date(System.currentTimeMillis());
+    }
+
+    public void setReviewId(Long reviewId) {
+        this.reviewId = reviewId;
+    }
+
+    public void setWorker(Worker worker) {
+        this.worker = worker;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public Long getReviewId() {

@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.webapp.dto.PostDto;
 import ar.edu.itba.paw.webapp.form.PublishForm;
@@ -27,18 +28,23 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 public class PostController extends GlobalControllerAdvice{
     private static final Logger LOGGER = LoggerFactory.getLogger(PostController.class);
 
-    private final PostService ps;
+    @Autowired
+    private PostService ps;
 
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private Request request;
+
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
+    private EntityTag entityLevelETag = ETagUtility.generateETag();
+
     @Autowired
-    public PostController(final UserService us, final PostService ps) {
+    public PostController(final UserService us) {
         super(us);
-        this.ps = ps;
     }
 
     @GET
@@ -49,30 +55,57 @@ public class PostController extends GlobalControllerAdvice{
             @QueryParam("inChannel") final String channel,
             @QueryParam("withTags") final List<String> tags,
             @QueryParam("withStatus") @DefaultValue("none") final String postStatus,
-            @QueryParam("postedBy") final Long userId) {
+            @QueryParam("postedBy") final Long userId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
+
+        // Check Caching
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Fresh Copy
         final List<Post> posts = ps.getPosts(channel, page, size, tags, neighborhoodId, postStatus, userId);
         if (posts.isEmpty())
             return Response.noContent().build();
         final List<PostDto> postsDto = posts.stream()
                 .map(p -> PostDto.fromPost(p, uriInfo)).collect(Collectors.toList());
-
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts";
         int totalPostsPages = ps.calculatePostPages(channel, size, tags, neighborhoodId, postStatus, userId);
         Link[] links = createPaginationLinks(baseUri, page, size, totalPostsPages);
-
         return Response.ok(new GenericEntity<List<PostDto>>(postsDto){})
                 .links(links)
+                .cacheControl(cacheControl)
+                .tag(entityLevelETag)
                 .build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findPostById(@PathParam("id") final long postId) {
+    public Response findPostById(
+            @PathParam("id") final long postId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
-        return Response.ok(PostDto.fromPost(ps.findPost(postId, neighborhoodId)
-                .orElseThrow(() -> new NotFoundException("Post Not Found")), uriInfo)).build();
+
+        // Fetch
+        Post post = ps.findPost(postId, neighborhoodId).orElseThrow(() -> new NotFoundException("Post Not Found"));
+
+        // Check Caching
+        EntityTag entityTag = new EntityTag(post.getVersion().toString());
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Fresh Copy
+        return Response.ok(PostDto.fromPost(post, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 
     @POST

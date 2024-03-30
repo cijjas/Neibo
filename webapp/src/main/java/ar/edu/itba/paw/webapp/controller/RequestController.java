@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.RequestService;
 import ar.edu.itba.paw.interfaces.services.UserService;
+import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.dto.PurchaseDto;
 import ar.edu.itba.paw.webapp.dto.RequestDto;
@@ -31,8 +32,13 @@ public class RequestController extends GlobalControllerAdvice {
     @Context
     private UriInfo uriInfo;
 
+    @Context
+    private javax.ws.rs.core.Request request;
+
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
+
+    private EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @Autowired
     public RequestController(final UserService us, final RequestService rs) {
@@ -47,23 +53,30 @@ public class RequestController extends GlobalControllerAdvice {
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("requestedBy") final Long userId,
-            @QueryParam("forProduct") final Long productId
-            ) {
+            @QueryParam("forProduct") final Long productId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
-        List<Request> requests = rs.getRequests(productId, userId, page, size, neighborhoodId);
 
+        // Check Caching
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Fresh Copy
+        List<Request> requests = rs.getRequests(productId, userId, page, size, neighborhoodId);
         if (requests.isEmpty())
             return Response.noContent().build();
-
         List<RequestDto> requestDto = requests.stream()
                 .map(r -> RequestDto.fromRequest(r, uriInfo)).collect(Collectors.toList());
-
         String baseUri = uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/requests";
         int totalRequestPages = rs.calculateRequestPages(productId, userId, size);
         Link[] links = createPaginationLinks(baseUri, page, size, totalRequestPages);
-
         return Response.ok(new GenericEntity<List<RequestDto>>(requestDto){})
                 .links(links)
+                .cacheControl(cacheControl)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -71,10 +84,27 @@ public class RequestController extends GlobalControllerAdvice {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.canAccessRequest(#requestId)")
-    public Response findRequest(@PathParam("id") final long requestId) {
+    public Response findRequest(
+            @PathParam("id") final long requestId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
-        return Response.ok(RequestDto.fromRequest(rs.findRequest(requestId, neighborhoodId)
-                .orElseThrow(() -> new NotFoundException("Request Not Found")), uriInfo)).build();
+
+        // Fetch
+        Request req = rs.findRequest(requestId, neighborhoodId).orElseThrow(() -> new NotFoundException("Request Not Found"));
+
+        // Check Caching
+        EntityTag entityTag = new EntityTag(req.getVersion().toString());
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        // Fresh Copy
+        return Response.ok(RequestDto.fromRequest(req, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 
     @POST

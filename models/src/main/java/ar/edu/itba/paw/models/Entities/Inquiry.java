@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
@@ -30,6 +32,10 @@ public class Inquiry {
     @JoinColumn(name = "userid", referencedColumnName = "userid")
     private User user;
 
+    @Version
+    @ColumnDefault("1") // Set the default value for the version column
+    private Long version;
+
     Inquiry() {
     }
 
@@ -39,6 +45,14 @@ public class Inquiry {
         this.user = builder.user;
         this.message = builder.message;
         this.inquiryDate = builder.inquiryDate;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     public Long getInquiryId() {
