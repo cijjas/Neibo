@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
@@ -19,6 +21,14 @@ public class Tag {
     @ManyToMany
     @JoinTable(name = "posts_tags", joinColumns = @JoinColumn(name = "tagid"), inverseJoinColumns = @JoinColumn(name = "postid"))
     private List<Post> posts;
+
+    @Version
+    @ColumnDefault("1")
+    private Long version;
+
+    public Long getVersion() {
+        return version;
+    }
 
     Tag() {
     }

@@ -37,13 +37,24 @@ public class AvailabilityController {
     @PathParam("amenityId")
     private Long amenityId;
 
+    private EntityTag entityLevelETag = ETagUtility.generateETag();
+
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listAvailability(
             @QueryParam("withStatus") String status,
-            @QueryParam("forDate") String date
+            @QueryParam("forDate") String date,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}/availability'", neighborhoodId, amenityId);
+
+        // Check Caching
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
         final List<Availability> availabilities = as.getAvailability(amenityId, status, date, neighborhoodId);
 
         if (availabilities.isEmpty())
@@ -51,15 +62,32 @@ public class AvailabilityController {
 
         final List<AvailabilityDto> availabilityDto = availabilities.stream()
                 .map(a -> AvailabilityDto.fromAvailability(a, uriInfo)).collect(Collectors.toList());
-        return Response.ok(new GenericEntity<List<AvailabilityDto>>(availabilityDto){}).build();
+        return Response.ok(new GenericEntity<List<AvailabilityDto>>(availabilityDto){})
+                .cacheControl(cacheControl)
+                .tag(entityLevelETag)
+                .build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findAvailability(@PathParam("id") final long availabilityId) {
+    public Response findAvailability(@PathParam("id") final long availabilityId,
+                                     @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                                     @Context Request request) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}/availability/{}'", neighborhoodId, amenityId, availabilityId);
-        return Response.ok(AvailabilityDto.fromAvailability(as.findAvailability(amenityId, availabilityId, neighborhoodId)
-                .orElseThrow(NotFoundException::new), uriInfo)).build();
+
+        Availability availability = as.findAvailability(amenityId, availabilityId, neighborhoodId).orElseThrow(NotFoundException::new);
+        // Use stored ETag value
+        EntityTag entityTag = new EntityTag(availability.getVersion().toString());
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        // Client has a valid version
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+        // Client has an invalid version
+        return Response.ok(AvailabilityDto.fromAvailability(availability, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 }

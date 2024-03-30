@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.Affiliation;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public interface AffiliationService {
@@ -14,6 +15,8 @@ public interface AffiliationService {
     int countAffiliations(Long workerId, Long neighborhoodId);
 
     int calculateAffiliationPages(Long workerId, Long neighborhoodId, int size);
+
+    Optional<Affiliation> findAffiliation(String workerURN, String neighborhoodURN);
 
     // -----------------------------------------------------------------------------------------------------------------
 

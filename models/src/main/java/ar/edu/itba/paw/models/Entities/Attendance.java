@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
 import ar.edu.itba.paw.models.compositeKeys.AttendanceKey;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,6 +22,14 @@ public class Attendance implements Serializable {
     @MapsId("eventId")
     @JoinColumn(name = "eventid")
     private Event event;
+
+    @Version
+    @ColumnDefault("1")
+    private Long version;
+
+    public Long getVersion() {
+        return version;
+    }
 
     Attendance() {
         this.id = new AttendanceKey();

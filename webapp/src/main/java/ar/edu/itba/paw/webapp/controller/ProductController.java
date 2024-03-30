@@ -33,6 +33,8 @@ public class ProductController extends GlobalControllerAdvice {
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
+    private EntityTag entityLevelETag = ETagUtility.generateETag();
+
     @Autowired
     public ProductController(final UserService us, final ProductService ps) {
         super(us);
@@ -46,9 +48,18 @@ public class ProductController extends GlobalControllerAdvice {
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("inDepartment") final String department,
             @QueryParam("listedBy") final Long userId,
-            @QueryParam("withStatus") final String productStatus
+            @QueryParam("withStatus") final String productStatus,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
             ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
+
+        // Check Caching
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
         final List<Product> products = ps.getProducts(neighborhoodId, department, userId, productStatus, page, size);
         if (products.isEmpty())
             return Response.noContent().build();
@@ -60,6 +71,8 @@ public class ProductController extends GlobalControllerAdvice {
         Link[] links = createPaginationLinks(baseUri, page, size, totalProductPages);
 
         return Response.ok(new GenericEntity<List<ProductDto>>(productsDto){})
+                .cacheControl(cacheControl)
+                .tag(entityLevelETag)
                 .links(links)
                 .build();
     }
@@ -67,20 +80,49 @@ public class ProductController extends GlobalControllerAdvice {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findProduct(@PathParam("id") final long productId) {
+    public Response findProduct(@PathParam("id") final long productId,
+                                @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                                @Context Request request) {
         LOGGER.info("GET request arrived '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
-        return Response.ok(ProductDto.fromProduct(ps.findProduct(productId, neighborhoodId)
-                .orElseThrow(() -> new NotFoundException("Product Not Found")), uriInfo)).build();
+        Product product = ps.findProduct(productId, neighborhoodId).orElseThrow(() -> new NotFoundException("Product Not Found"));
+        // Use stored ETag value
+        EntityTag entityTag = new EntityTag(product.getVersion().toString());
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        // Client has a valid version
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+        // Client has an invalid version
+        return Response.ok(ProductDto.fromProduct(product, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createProduct(@Valid final ListingForm form) {
+    public Response createProduct(@Valid final ListingForm form,
+                                  @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+                                  @Context Request request) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
+
+        if (ifMatch != null) {
+            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .entity("Your cached version of the resource is outdated.")
+                        .header(HttpHeaders.ETAG, entityLevelETag)
+                        .build();
+        }
+
         final Product product = ps.createProduct(getLoggedUser().getUserId(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentURN(), form.getImageFiles(), form.getQuantity());
+        entityLevelETag = ETagUtility.generateETag();
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(product.getProductId())).build();
-        return Response.created(uri).build();
+        return Response.created(uri)
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 
     @PATCH
@@ -89,19 +131,51 @@ public class ProductController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateProductPartially(
             @PathParam("id") final long id,
-            @Valid final ListingForm partialUpdate) {
+            @Valid final ListingForm partialUpdate,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+            @Context Request request) {
         LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);
+
+        // Check If-Match header
+        if (ifMatch != null) {
+            String version = ps.findProduct(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
+            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
+
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .header(HttpHeaders.ETAG, version)
+                        .build();
+        }
+
         final Product product = ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartmentURN(), partialUpdate.getImageFiles(), partialUpdate.getQuantity());
-        return Response.ok(ProductDto.fromProduct(product, uriInfo)).build();
+        entityLevelETag = ETagUtility.generateETag();
+        return Response.ok(ProductDto.fromProduct(product, uriInfo))
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.canDeleteProduct(#productId)")
-    public Response deleteById(@PathParam("id") final long productId) {
+    public Response deleteById(
+            @PathParam("id") final long productId,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+            @Context Request request) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
+
+        if (ifMatch != null) {
+            String version = ps.findProduct(productId, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
+            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
+
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .header(HttpHeaders.ETAG, version)
+                        .build();
+        }
+
         if(ps.deleteProduct(productId)) {
+            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();

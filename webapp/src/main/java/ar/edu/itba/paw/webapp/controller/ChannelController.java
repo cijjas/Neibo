@@ -26,10 +26,20 @@ public class ChannelController {
     @PathParam("neighborhoodId")
     private long neighborhoodId;
 
+    private EntityTag entityLevelETag = ETagUtility.generateETag();
+
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response listChannels() {
+    public Response listChannels(@HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                                 @Context Request request) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
+
+        // Check Caching
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
         List<Channel> channels = cs.getChannels(neighborhoodId);
 
         if (channels.isEmpty())
@@ -39,16 +49,31 @@ public class ChannelController {
                 .map(c -> ChannelDto.fromChannel(c, uriInfo, neighborhoodId)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<ChannelDto>>(channelDto){})
+                .cacheControl(cacheControl)
+                .tag(entityLevelETag)
                 .build();
     }
 
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findChannel(@PathParam("id") long channelId) {
+    public Response findChannel(@PathParam("id") long channelId,
+                                @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                                @Context Request request) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
-        return Response.ok(ChannelDto.fromChannel(cs.findChannel(channelId, neighborhoodId)
-                .orElseThrow(NotFoundException::new), uriInfo, neighborhoodId)).build();
+        Channel channel = cs.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new);
+        // Use stored ETag value
+        EntityTag entityTag = new EntityTag(channel.getVersion().toString());
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        // Client has a valid version
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+        // Client has an invalid version
+        return Response.ok(ChannelDto.fromChannel(channel, uriInfo, neighborhoodId))
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 }
 

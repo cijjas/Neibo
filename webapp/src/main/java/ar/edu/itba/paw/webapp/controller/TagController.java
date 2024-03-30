@@ -28,14 +28,25 @@ public class TagController {
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
+    private EntityTag entityLevelETag = ETagUtility.generateETag();
+
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response listTags(
             @QueryParam("postId") final Long postId,
             @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size
+            @QueryParam("size") @DefaultValue("10") final int size,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags'", neighborhoodId);
+
+        // Check Caching
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
         List<Tag> tags = ts.getTags(postId, neighborhoodId, page, size);
         if (tags.isEmpty())
             return Response.noContent().build();
@@ -47,6 +58,8 @@ public class TagController {
         Link[] links = ControllerUtils.createPaginationLinks(baseUri, page, size, totalTagPages);
 
         return Response.ok(new GenericEntity<List<TagDto>>(tagsDto){})
+                .cacheControl(cacheControl)
+                .tag(entityLevelETag)
                 .links(links)
                 .build();
     }
@@ -54,9 +67,23 @@ public class TagController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findTags(@PathParam("id") final long tagId) {
+    public Response findTags(@PathParam("id") final long tagId,
+                             @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                             @Context Request request) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
-        return Response.ok(TagDto.fromTag(ts.findTag(tagId, neighborhoodId)
-                .orElseThrow(NotFoundException::new), neighborhoodId, uriInfo)).build();
+
+        Tag tag = ts.findTag(tagId, neighborhoodId).orElseThrow(NotFoundException::new);
+        // Use stored ETag value
+        EntityTag entityTag = new EntityTag(tag.getVersion().toString());
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        // Client has a valid version
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+        // Client has an invalid version
+        return Response.ok(TagDto.fromTag(tag, neighborhoodId, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 }

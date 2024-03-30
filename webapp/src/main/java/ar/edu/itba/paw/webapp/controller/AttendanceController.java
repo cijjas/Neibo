@@ -33,6 +33,8 @@ public class AttendanceController extends GlobalControllerAdvice {
     @PathParam("eventId")
     private Long eventId;
 
+    private EntityTag entityLevelETag = ETagUtility.generateETag();
+
     @Autowired
     public AttendanceController(final UserService us, final AttendanceService as) {
         super(us);
@@ -43,8 +45,17 @@ public class AttendanceController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listAttendance(
             @QueryParam("page") @DefaultValue("1") final int page,
-            @QueryParam("size") @DefaultValue("10") final int size) {
+            @QueryParam("size") @DefaultValue("10") final int size,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+            @Context Request request) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
+
+        // Check Caching
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
         final Set<Attendance> attendance = as.getAttendance(eventId, page, size, neighborhoodId);
 
         if (attendance.isEmpty())
@@ -58,6 +69,8 @@ public class AttendanceController extends GlobalControllerAdvice {
         Link[] links = createPaginationLinks(baseUri, page, size, totalAttendancePages);
 
         return Response.ok(new GenericEntity<Set<AttendanceDto>>(attendanceDto){})
+                .cacheControl(cacheControl)
+                .tag(entityLevelETag)
                 .links(links)
                 .build();
     }
@@ -65,27 +78,71 @@ public class AttendanceController extends GlobalControllerAdvice {
     @GET
     @Path("/{userId}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response findAttendance(@PathParam("userId") final long userId) {
+    public Response findAttendance(@PathParam("userId") final long userId,
+                                   @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch,
+                                   @Context Request request) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
-        return Response.ok(AttendanceDto.fromAttendance(as.findAttendance(userId, eventId, neighborhoodId)
-                .orElseThrow(NotFoundException::new), uriInfo)).build();
+
+        //Fetch Attendance
+        Attendance attendance = as.findAttendance(userId, eventId, neighborhoodId).orElseThrow(NotFoundException::new);
+        // Use stored ETag value
+        EntityTag entityTag = new EntityTag(attendance.getVersion().toString());
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        // Client has a valid version
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+        // Client has an invalid version
+        return Response.ok(AttendanceDto.fromAttendance(attendance, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createAttendance() {
+    public Response createAttendance(@HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+                                     @Context Request request) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
+
+        if (ifMatch != null) {
+            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .entity("Your cached version of the resource is outdated.")
+                        .header(HttpHeaders.ETAG, entityLevelETag)
+                        .build();
+        }
+
         final Attendance attendance = as.createAttendance(getLoggedUser().getUserId(), eventId);
+        entityLevelETag = ETagUtility.generateETag();
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(attendance.getId())).build();
-        return Response.created(uri).build();
+        return Response.created(uri)
+                .header(HttpHeaders.ETAG, entityLevelETag)
+                .build();
     }
 
     @DELETE
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response deleteByUser() {
+    public Response deleteByUser(
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch,
+            @Context Request request) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
+
+        if (ifMatch != null) {
+            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .entity("Your cached version of the resource is outdated.")
+                        .header(HttpHeaders.ETAG, entityLevelETag)
+                        .build();
+        }
+
         if(as.deleteAttendance(getLoggedUser().getUserId(), eventId)) {
+            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
