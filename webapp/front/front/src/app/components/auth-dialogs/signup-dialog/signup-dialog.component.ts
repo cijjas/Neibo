@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {Neighborhood} from "../../../shared/models/neighborhood";
+import {Neighborhood, NeighborhoodDto} from "../../../shared/models/neighborhood";
 import {NeighborhoodService} from "../../../shared/services/neighborhood.service";
+import { environment } from '../../../../environments/environment'
+import { HttpClient, HttpParams } from '@angular/common/http'
+
 import {HttpErrorResponse} from "@angular/common/http";
 import {tap} from "rxjs";
 
@@ -12,27 +15,33 @@ import {tap} from "rxjs";
 export class SignupDialogComponent implements OnInit {
   @Input() showSignupDialog: boolean = false;
   @Output() showSignupDialogChange = new EventEmitter<boolean>();
+  private apiServerUrl = environment.apiBaseUrl
 
   selectedOption: 'neighbor' | 'service' = 'neighbor';
 
   signupForm: FormGroup;
-  neighborhoodsList: Neighborhood[] = [];
+  neighborhoodsList: NeighborhoodDto[] = [];
   constructor(
     private fb: FormBuilder,
-    private neighborhoodService: NeighborhoodService
+    private neighborhoodService: NeighborhoodService,
+    private http: HttpClient
   ) {}
 
   getNeighborhoods(): void {
-    this.neighborhoodService.getNeighborhoods(1, 10)
+    const params = new HttpParams()
+          .set('page', '1')
+          .set('size', '10');
+
+    this.http.get<NeighborhoodDto[]>(`${this.apiServerUrl}/neighborhoods`, { params })
       .subscribe(
-        (neighborhoods: Neighborhood[]) => {
+        (neighborhoods: NeighborhoodDto[]) => {
           this.neighborhoodsList = neighborhoods;
         }
       )
   }
 
   ngOnInit() {
-    this.getNeighborhoods();
+    this.getNeighborhoods()
     this.signupForm = this.fb.group({
       neighborhoodId: [null, Validators.required],
       name: ['', Validators.required],

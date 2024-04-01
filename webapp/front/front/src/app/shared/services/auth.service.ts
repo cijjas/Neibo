@@ -1,10 +1,10 @@
-import {Injectable} from "@angular/core";
-import {environment} from "../../../environments/environment";
-import {HttpClient} from "@angular/common/http";
-import {catchError, Observable, of} from "rxjs";
-import {map} from "rxjs/operators";
-import {UserDto} from "../models/user";
-import {LoggedInService} from "./loggedIn.service";
+import { Injectable } from "@angular/core";
+import { environment } from "../../../environments/environment";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { catchError, Observable, of } from "rxjs";
+import { map } from "rxjs/operators";
+import { UserDto } from "../models/user";
+import { LoggedInService } from "./loggedIn.service";
 
 @Injectable({
   providedIn: 'root'
@@ -15,44 +15,33 @@ export class AuthService {
   private authTokenKey = 'authToken';
 
   constructor(
-      private http: HttpClient,
-      private loggedInService: LoggedInService
+    private http: HttpClient,
+    private loggedInService: LoggedInService
   ) { }
 
   login(mail: string, password: string, rememberMe: boolean): Observable<boolean> {
-    const requestBody = {
-      mail: mail,
-      password: password
-    };
+    // Construct Basic Authorization header
+    const authHeaderValue = 'Basic ' + btoa(`${mail}:${password}`);
+    const headers = new HttpHeaders({
+      'Authorization': authHeaderValue
+    });
 
     // Depending on the rememberMe value, we will use localStorage or sessionStorage
     const storage = rememberMe ? localStorage : sessionStorage;
     localStorage.setItem(this.rememberMeKey, JSON.stringify(rememberMe));
 
-    return this.http.post<any>(`${this.apiServerUrl}/auth`, requestBody, { observe: 'response' })
+    // Make a request to any protected endpoint to retrieve user information
+    return this.http.get<UserDto>(`${this.apiServerUrl}/`, { headers: headers })
       .pipe(
         map(
-          (response) => {
-            // if there is a token in the response
-            if(response.body.token) {
-              // save the auth token in the storage
-              storage.setItem(this.authTokenKey, response.body.token);
-              this.loggedInService.setAuthToken(response.body.token);
-              // look for user with the auth token already in interceptor and urn in the header
-              this.http.get<UserDto>(`${response.headers.get('X-User-URN')}`)
-                .subscribe({
-                  next: (userDto) => {
-                    this.loggedInService.setLoggedUserInformation(userDto);
-                  },
-                  error: (error) => {
-                    console.error('Error getting user:', error);
-                  }
-              });
-              return true;
-            }
-            console.log('No token in the response');
-            return false;
-        }),
+          (userDto) => {
+            // save the auth token in the storage (optional for Basic Auth)
+            const authToken = authHeaderValue; // Storing the auth header as the token
+            storage.setItem(this.authTokenKey, authToken);
+            this.loggedInService.setAuthToken(authToken);
+            this.loggedInService.setLoggedUserInformation(userDto);
+            return true;
+          }),
         catchError((error) => {
           console.error('Authentication error:', error);
           return of(false);
@@ -75,10 +64,7 @@ export class AuthService {
     return JSON.parse(localStorage.getItem('rememberMe') || sessionStorage.getItem('rememberMe') || 'false');
   }
 
-
   isLoggedIn(): boolean {
     return !!localStorage.getItem('authToken') || !!sessionStorage.getItem('authToken');
   }
 }
-
-
