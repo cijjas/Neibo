@@ -43,7 +43,7 @@ public class BaseChannelController {
         if (builder != null)
             return builder
                     .cacheControl(cacheControl)
-                    .header(HttpHeaders.ETAG, entityLevelETag.getValue())
+                    .tag(entityLevelETag)
                     .build();
 
         // Content
@@ -53,7 +53,7 @@ public class BaseChannelController {
 
         return Response.ok(new GenericEntity<List<BaseChannelDto>>(baseChannelDto){})
                 .cacheControl(cacheControl)
-                .header(HttpHeaders.ETAG, entityLevelETag.getValue())
+                .tag(entityLevelETag)
                 .build();
     }
 

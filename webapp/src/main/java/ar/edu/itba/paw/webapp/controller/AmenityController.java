@@ -81,7 +81,7 @@ public class AmenityController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findAmenity(
             @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String clientEtag
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
@@ -89,13 +89,13 @@ public class AmenityController {
         Amenity amenity = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new);
 
         // Cache Control
-        String rowLevelETag = amenity.getVersion().toString();
-        Response response = checkETagPreconditions(clientEtag, entityLevelETag.getValue(), rowLevelETag);
+        EntityTag rowLevelETag = new EntityTag(amenity.getVersion().toString());
+        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
         if (response != null)
             return response;
 
         return Response.ok(AmenityDto.fromAmenity(amenity, uriInfo))
-                .header(HttpHeaders.ETAG, entityLevelETag.getValue())
+                .tag(entityLevelETag)
                 .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }

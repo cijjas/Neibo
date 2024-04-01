@@ -61,13 +61,13 @@ public class DayController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response findDay(
             @PathParam("id") final long dayId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String clientEtag
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
     ) {
         LOGGER.info("GET request arrived at '/days/{}'", dayId);
 
         // Cache Control
-        String rowLevelETag = Long.toString(dayId);
-        Response response = checkETagPreconditions(clientEtag, entityLevelETag.getValue(), rowLevelETag);
+        EntityTag rowLevelETag = new EntityTag(Long.toString(dayId));
+        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
         if (response != null)
             return response;
 
@@ -75,8 +75,8 @@ public class DayController {
         DayDto dayDto = DayDto.fromDay(DayOfTheWeek.fromId(dayId), uriInfo);
 
         return Response.ok(dayDto)
-                .header(HttpHeaders.ETAG, entityLevelETag.getValue())
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, Long.toString(dayId))
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .build();
     }

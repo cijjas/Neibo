@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.swing.text.html.parser.Entity;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
@@ -47,6 +48,7 @@ public class TagController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -66,6 +68,7 @@ public class TagController {
                 size
         );
 
+        System.out.println("lala");
         return Response.ok(new GenericEntity<List<TagDto>>(tagsDto){})
                 .cacheControl(cacheControl)
                 .tag(entityLevelETag)
@@ -78,12 +81,13 @@ public class TagController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findTags(
             @PathParam("id") final long tagId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String etag
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
 
         // Cache Control
-        Response response = checkETagPreconditions(etag, entityLevelETag.getValue(), Long.toString(tagId));
+        EntityTag rowLevelETag = new EntityTag(Long.toString(tagId));
+        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
         if (response != null)
             return response;
 
@@ -91,8 +95,8 @@ public class TagController {
         TagDto tagDto = TagDto.fromTag(ts.findTag(tagId, neighborhoodId).orElseThrow(NotFoundException::new), neighborhoodId, uriInfo);
 
         return Response.ok(tagDto)
-                .header(HttpHeaders.ETAG, entityLevelETag.getValue())
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, Long.toString(tagId))
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .build();
     }

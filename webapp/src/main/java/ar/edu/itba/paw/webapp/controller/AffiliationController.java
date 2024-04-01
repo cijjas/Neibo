@@ -69,7 +69,7 @@ public class AffiliationController {
 
         return Response.ok(new GenericEntity<List<AffiliationDto>>(affiliationDto) {})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .header(HttpHeaders.ETAG, entityLevelETag.getValue())
                 .links(links)
                 .build();
     }

@@ -83,25 +83,23 @@ public class AttendanceController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findAttendance(
             @PathParam("userId") final long userId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String clientEtag
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
 
-
         // Cache Control
-        String rowLevelETag = neighborhoodId.toString() + userId;
-        Response response = checkETagPreconditions(clientEtag, entityLevelETag.getValue(), rowLevelETag);
+        EntityTag rowLevelETag = new EntityTag(neighborhoodId.toString() + userId);
+        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
         if (response != null)
             return response;
 
         // Content
         AttendanceDto attendanceDto = AttendanceDto.fromAttendance(as.findAttendance(userId, eventId, neighborhoodId).orElseThrow(NotFoundException::new), uriInfo);
 
-
         return Response.ok(attendanceDto)
-                .header(HttpHeaders.ETAG, entityLevelETag.getValue())
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(entityLevelETag)
                 .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 
