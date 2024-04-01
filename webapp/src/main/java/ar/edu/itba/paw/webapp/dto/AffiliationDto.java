@@ -10,6 +10,8 @@ public class AffiliationDto {
     private URI worker; // localhost:8080/amenities/{id}
     private URI neighborhood; // localhost:8080/shifts/{id}
 
+    // should have affiliation
+
     public static AffiliationDto fromAffiliation(Affiliation affiliation, UriInfo uriInfo){
         final AffiliationDto dto = new AffiliationDto();
 

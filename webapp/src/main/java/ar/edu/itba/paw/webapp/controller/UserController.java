@@ -74,14 +74,6 @@ public class UserController {
                 size
         );
 
-        // Alt-Content? Should be in Service
-        if(neighborhoodId == 0) {
-            final List<UserWorkerDto> usersDto = users.stream()
-                    .map(u -> UserWorkerDto.fromUserWorker(u, uriInfo)).collect(Collectors.toList());
-            return Response.ok(new GenericEntity<List<UserWorkerDto>>(usersDto){})
-                    .links(links)
-                    .build();
-        }
         final List<UserDto> usersDto = users.stream()
                 .map(u -> UserDto.fromUser(u, uriInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<UserDto>>(usersDto){})
@@ -111,17 +103,10 @@ public class UserController {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        if(neighborhoodId != 0 ){
-            return Response.ok(UserDto.fromUser(user, uriInfo))
-                    .cacheControl(cacheControl)
-                    .tag(entityTag)
-                    .build();
-        } else {
-            return Response.ok(UserWorkerDto.fromUserWorker(user, uriInfo))
-                    .cacheControl(cacheControl)
-                    .tag(entityTag)
-                    .build();
-        }
+        return Response.ok(UserDto.fromUser(user, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(entityTag)
+                .build();
     }
 
     @POST

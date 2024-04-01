@@ -82,7 +82,7 @@ public class AvailabilityController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        EntityTag entityTag = new EntityTag(availability.getVersion().toString());
+        EntityTag entityTag = new EntityTag(availability.getAmenityAvailabilityId().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();

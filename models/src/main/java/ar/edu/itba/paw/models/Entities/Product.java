@@ -99,6 +99,10 @@ public class Product {
         this.creationDate = builder.creationDate;
     }
 
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     public Long getProductId() {
         return productId;
     }

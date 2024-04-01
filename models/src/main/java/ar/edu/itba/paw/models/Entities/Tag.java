@@ -38,6 +38,18 @@ public class Tag {
         this.tag = builder.tag;
     }
 
+    public void setTagId(Long tagId) {
+        this.tagId = tagId;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     public Long getTagId() {
         return tagId;
     }

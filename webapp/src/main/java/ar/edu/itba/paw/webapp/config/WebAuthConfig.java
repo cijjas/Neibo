@@ -112,7 +112,8 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/languages/**",
                         "/images/**",
 
-                        "/neighborhoods",                           // POST needed for sign-up, GET has restriction on QP
+                        "/neighborhoods/*",                         // POST needed for sign-up, GET has restriction on QP
+                        "/neighborhoods",
                         "/neighborhoods/*/users",                   // POST needed for sign-up, GET is restricted
                         "/workers"                                  // POST needed for worker sign-up, GET is restricted
                 ).permitAll()

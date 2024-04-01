@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
 @Path("neighborhoods/{neighborhoodId}/amenities")
 @Component
@@ -87,14 +88,19 @@ public class AmenityController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        EntityTag entityTag = new EntityTag(amenity.getVersion().toString());
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
+        EntityTag rowLevelETag = new EntityTag(amenity.getVersion().toString());
+        Response.ResponseBuilder builder = request.evaluatePreconditions(rowLevelETag);
         if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+            return builder
+                    .cacheControl(cacheControl)
+                    .tag(entityLevelETag)
+                    .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                    .build();
 
         return Response.ok(AmenityDto.fromAmenity(amenity, uriInfo))
                 .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 
@@ -123,6 +129,7 @@ public class AmenityController {
 
         return Response.created(uri)
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, amenity.getVersion())
                 .build();
     }
 
@@ -138,22 +145,25 @@ public class AmenityController {
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
-        // Cache Control
-        if (ifMatch != null){
-            String rowVersion = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
-            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
-            if (builder != null)
+        String rowLevelETag;
+        if (ifMatch != null) {
+            rowLevelETag = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
+            if (!ifMatch.equals(rowLevelETag) && !ifMatch.equals(entityLevelETag.toString())) {
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(rowVersion)
+                        .tag(entityLevelETag)
+                        .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                         .build();
+            }
         }
 
-        // Modification & ETag Generation
-        AmenityDto amenityDto = AmenityDto.fromAmenity(as.updateAmenityPartially(id, partialUpdate.getName(), partialUpdate.getDescription()), uriInfo);
-        entityLevelETag = ETagUtility.generateETag();
+        // Perform the partial update
+        Amenity updatedAmenity = as.updateAmenityPartially(id, partialUpdate.getName(), partialUpdate.getDescription());
 
+        // Return the updated resource along with the EntityLevelETag
+        AmenityDto amenityDto = AmenityDto.fromAmenity(updatedAmenity, uriInfo);
         return Response.ok(amenityDto)
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, updatedAmenity.getVersion())
                 .build();
     }
 
@@ -169,11 +179,12 @@ public class AmenityController {
 
         // Cache Control
         if (ifMatch != null) {
-            String rowVersion = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
-            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
+            String rowLevelETag = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
+            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowLevelETag));
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(rowVersion)
+                        .tag(entityLevelETag)
+                        .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                         .build();
         }
 
@@ -183,6 +194,8 @@ public class AmenityController {
             return Response.noContent().build();
         }
 
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.status(Response.Status.NOT_FOUND)
+                .tag(entityLevelETag)
+                .build();
     }
 }

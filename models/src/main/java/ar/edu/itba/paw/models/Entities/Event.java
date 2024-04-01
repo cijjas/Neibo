@@ -87,6 +87,26 @@ public class Event {
         this.date = date;
     }
 
+    public DateTimeFormatter getFormatter() {
+        return formatter;
+    }
+
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
+    }
+
+    public Set<User> getAttendees() {
+        return attendees;
+    }
+
+    public void setAttendees(Set<User> attendees) {
+        this.attendees = attendees;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     public Neighborhood getNeighborhood() {
         return neighborhood;
     }

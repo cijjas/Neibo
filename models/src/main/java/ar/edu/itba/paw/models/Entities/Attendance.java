@@ -31,6 +31,10 @@ public class Attendance implements Serializable {
         return version;
     }
 
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     Attendance() {
         this.id = new AttendanceKey();
     }
@@ -44,6 +48,8 @@ public class Attendance implements Serializable {
     public AttendanceKey getId() {
         return id;
     }
+
+
 
     public void setId(AttendanceKey id) {
         this.id = id;
@@ -77,4 +83,6 @@ public class Attendance implements Serializable {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+
 }

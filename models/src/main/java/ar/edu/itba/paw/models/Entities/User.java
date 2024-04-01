@@ -130,6 +130,10 @@ public class User {
         this.identification = builder.identification;
     }
 
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     public Long getUserId() {
         return userId;
     }

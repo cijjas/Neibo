@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
 
 @Path("neighborhoods")
 @Component
@@ -87,7 +88,8 @@ public class NeighborhoodController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        EntityTag entityTag = new EntityTag(neighborhood.getVersion().toString());
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        EntityTag entityTag = new EntityTag(neighborhood.getNeighborhoodId().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();

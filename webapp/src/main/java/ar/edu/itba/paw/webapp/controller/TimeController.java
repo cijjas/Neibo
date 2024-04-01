@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+
 @Path("times")
 @Component
 public class TimeController {
@@ -24,7 +26,7 @@ public class TimeController {
     @Context
     private Request request;
 
-    private final EntityTag storedETag = ETagUtility.generateETag();
+    private final EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -33,8 +35,8 @@ public class TimeController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(3600);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
@@ -45,7 +47,7 @@ public class TimeController {
 
         return Response.ok(new GenericEntity<List<TimeDto>>(timeDto){})
                 .cacheControl(cacheControl)
-                .tag(storedETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -59,8 +61,8 @@ public class TimeController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(3600);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
@@ -69,7 +71,7 @@ public class TimeController {
 
         return Response.ok(timeDto)
                 .cacheControl(cacheControl)
-                .tag(storedETag)
+                .tag(entityLevelETag)
                 .build();
     }
 }

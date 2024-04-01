@@ -93,7 +93,7 @@ public class BookingController extends GlobalControllerAdvice{
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        EntityTag entityTag = new EntityTag(booking.getVersion().toString());
+        EntityTag entityTag = new EntityTag(booking.getBookingId().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();

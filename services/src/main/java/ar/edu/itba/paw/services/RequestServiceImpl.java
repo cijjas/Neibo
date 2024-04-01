@@ -112,12 +112,14 @@ public class RequestServiceImpl implements RequestService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void markRequestAsFulfilled(long requestId) {
+    public Request markRequestAsFulfilled(long requestId) {
         LOGGER.info("Marking Request {} as fulfilled", requestId);
 
         ValidationUtils.checkRequestId(requestId);
 
         Request request = requestDao.findRequest(requestId).orElseThrow(()-> new NotFoundException("Request Not Found"));
         request.setFulfilled(true);
+
+        return request;
     }
 }

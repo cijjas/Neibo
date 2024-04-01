@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
 
 @Path("neighborhoods/{neighborhoodId}/users/{userId}/transactions")
 @Component
@@ -96,7 +97,8 @@ public class PurchaseController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        EntityTag entityTag = new EntityTag(purchase.getVersion().toString());
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        EntityTag entityTag = new EntityTag(purchase.getPurchaseId().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();

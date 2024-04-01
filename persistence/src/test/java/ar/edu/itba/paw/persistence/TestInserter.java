@@ -53,6 +53,7 @@ public class TestInserter {
 
     public void createLike(long postId, long userId) {
         Like like = new Like(em.find(Post.class, postId), em.find(User.class, userId), new java.sql.Date(System.currentTimeMillis()));
+        like.setVersion(1L);
         em.persist(like);
         em.flush();
     }
@@ -66,6 +67,7 @@ public class TestInserter {
                 .endTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, endTimeId))
                 .neighborhood(em.find(Neighborhood.class, neighborhoodId))
                 .build();
+        event.setVersion(1L);
         em.persist(event);
         em.flush();
         return event.getEventId();
@@ -78,6 +80,7 @@ public class TestInserter {
                 .contactPhone(contactPhone)
                 .neighborhood(em.find(Neighborhood.class, neighborhoodId))
                 .build();
+        contact.setVersion(1L);
         em.persist(contact);
         em.flush();
         return contact.getContactId();
@@ -89,6 +92,7 @@ public class TestInserter {
                 .user(em.find(User.class, userId))
                 .post(em.find(Post.class, postId))
                 .build();
+        comment.setVersion(1L);
         em.persist(comment);
         em.flush();
         return comment.getCommentId();
@@ -102,6 +106,7 @@ public class TestInserter {
 
     public void createAttendance(long userId, long eventId) {
         Attendance attendance = new Attendance(em.find(User.class, userId), em.find(Event.class, eventId));
+        attendance.setVersion(1L);
         em.persist(attendance);
         em.flush();
     }
@@ -114,6 +119,7 @@ public class TestInserter {
                 .channel(em.find(Channel.class, channelId))
                 .postPicture(em.find(Image.class, imageId))
                 .build();
+        post.setVersion(1L);
         em.persist(post);
         em.flush();
         return post.getPostId();
@@ -131,6 +137,7 @@ public class TestInserter {
                 .role(role)
                 .identification(identification)
                 .build();
+        user.setVersion(1L);
         em.persist(user);
         em.flush();
         return user.getUserId();
@@ -140,6 +147,7 @@ public class TestInserter {
         Tag tag = new Tag.Builder()
                 .tag(name)
                 .build();
+        tag.setVersion(1L);
         em.persist(tag);
         em.flush();
         return tag.getTagId();
@@ -152,6 +160,7 @@ public class TestInserter {
                 .image(em.find(Image.class,imageId))
                 .neighborhood(em.find(Neighborhood.class, neighborhoodId))
                 .build();
+        resource.setVersion(1L);
         em.persist(resource);
         em.flush();
         return resource.getResourceId();
@@ -163,6 +172,7 @@ public class TestInserter {
                 .bookingDate(date)
                 .amenityAvailability(em.find(Availability.class, amenityId))
                 .build();
+        booking.setVersion(1L);
         em.persist(booking);
         return booking.getBookingId();
     }
@@ -178,6 +188,7 @@ public class TestInserter {
                 .amenity(em.find(Amenity.class, amenityId))
                 .shift(em.find(Shift.class, shiftId))
                 .build();
+        availability.setVersion(1L);
         em.persist(availability);
         em.flush();
         return availability.getAmenityAvailabilityId();
@@ -189,6 +200,7 @@ public class TestInserter {
                 .bookingDate(reservationDate)
                 .amenityAvailability(em.find(Availability.class, amenityAvailabilityId))
                 .build();
+        booking.setVersion(1L);
         em.persist(booking);
         em.flush();
         return booking.getBookingId();
@@ -214,6 +226,7 @@ public class TestInserter {
 
     public void createAffiliation(long workerId, long neighborhoodId) {
         Affiliation affiliation = new Affiliation(em.find(Worker.class, workerId), em.find(Neighborhood.class, neighborhoodId), WorkerRole.VERIFIED_WORKER);
+        affiliation.setVersion(1L);
         em.persist(affiliation);
         em.flush();
     }
@@ -225,6 +238,7 @@ public class TestInserter {
                 .rating(rating)
                 .review(reviewString)
                 .build();
+        review.setVersion(1L);
         em.persist(review);
         em.flush();
         return review.getReviewId();
@@ -238,6 +252,7 @@ public class TestInserter {
                 .address(address)
                 .businessName(businessName)
                 .build();
+        worker.setVersion(1L);
         em.persist(worker);
         em.flush();
         return worker.getWorkerId();
@@ -246,6 +261,7 @@ public class TestInserter {
 
     public void createSpecialization(long workerId, long professionId) {
         Specialization specialization = new Specialization(em.find(Worker.class, workerId), em.find(Profession.class, professionId));
+
         em.persist(specialization);
         em.flush();
     }
@@ -256,6 +272,7 @@ public class TestInserter {
                 .neighborhood(em.find(Neighborhood.class, neighborhoodId))
                 .description(description)
                 .build();
+        amenity.setVersion(1L);
         em.persist(amenity);
         em.flush();
         return amenity.getAmenityId();
@@ -311,7 +328,7 @@ public class TestInserter {
                 .tertiaryPicture(em.find(Image.class, tertiaryPictureId))
                 .remainingUnits(units)
                 .build();
-
+        product.setVersion(1L);
         em.persist(product);
         em.flush();
         return product.getProductId();
@@ -332,6 +349,7 @@ public class TestInserter {
                 .user(em.find(User.class, userId))
                 .message(message)
                 .build();
+        inquiry.setVersion(1L);
         em.persist(inquiry);
         em.flush();
         return inquiry.getInquiryId();
@@ -344,6 +362,7 @@ public class TestInserter {
                 .message(message)
                 .fulfilled(false)
                 .build();
+        request.setVersion(1L);
         em.persist(request);
         em.flush();
         return request.getRequestId();
@@ -355,6 +374,7 @@ public class TestInserter {
                 .user(em.find(User.class, userId))
                 .units(unitsBought)
                 .build();
+        purchase.setVersion(1L);
         em.persist(purchase);
         em.flush();
         return purchase.getPurchaseId();

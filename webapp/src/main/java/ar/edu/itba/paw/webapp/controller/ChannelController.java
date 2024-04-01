@@ -68,7 +68,7 @@ public class ChannelController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        EntityTag entityTag = new EntityTag(channel.getVersion().toString());
+        EntityTag entityTag = new EntityTag(channel.getChannelId().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -78,5 +78,9 @@ public class ChannelController {
                 .tag(entityTag)
                 .build();
     }
+
+    // Create
+
+    // Delete
 }
 

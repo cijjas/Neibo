@@ -64,7 +64,31 @@ public class Availability {
         return shift;
     }
 
-/*
+    public void setAmenityAvailabilityId(Long amenityAvailabilityId) {
+        this.amenityAvailabilityId = amenityAvailabilityId;
+    }
+
+    public void setAmenity(Amenity amenity) {
+        this.amenity = amenity;
+    }
+
+    public void setShift(Shift shift) {
+        this.shift = shift;
+    }
+
+    public List<Booking> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(List<Booking> bookings) {
+        this.bookings = bookings;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    /*
     public Set<User> getBookedByUsers() {
         return bookedByUsers;
     }

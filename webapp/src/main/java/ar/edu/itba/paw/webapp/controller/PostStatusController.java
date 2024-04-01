@@ -15,6 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+
 @Path("post-statuses")
 @Component
 public class PostStatusController {
@@ -26,7 +28,7 @@ public class PostStatusController {
     @Context
     private Request request;
 
-    private final EntityTag storedETag = ETagUtility.generateETag();
+    private final EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -35,8 +37,8 @@ public class PostStatusController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        cacheControl.setMaxAge(3600);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
@@ -47,7 +49,7 @@ public class PostStatusController {
 
         return Response.ok(new GenericEntity<List<PostStatusDto>>(postStatusDto){})
                 .cacheControl(cacheControl)
-                .tag(storedETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -61,8 +63,8 @@ public class PostStatusController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(3600);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
@@ -71,7 +73,7 @@ public class PostStatusController {
 
         return Response.ok(postStatusDto)
                 .cacheControl(cacheControl)
-                .tag(storedETag)
+                .tag(entityLevelETag)
                 .build();
     }
 }

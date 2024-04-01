@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+
 @Path("images")
 @Component
 public class ImageController {
@@ -31,7 +33,7 @@ public class ImageController {
     @Context
     private Request request;
 
-    private final EntityTag storedETag = ETagUtility.generateETag();
+    private final EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @GET
     @Path("/{id}")
@@ -41,19 +43,19 @@ public class ImageController {
     ) {
         LOGGER.info("GET request arrived at '/images/{}'", id);
 
+        // Content
+        Image image = is.findImage(id).orElseThrow(NotFoundException::new);
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(3600);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(image.getImageId().toString()));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        ImageDto imageDto = ImageDto.fromImage(is.findImage(id).orElseThrow(NotFoundException::new), uriInfo);
-
-        return Response.ok(imageDto)
+        return Response.ok(ImageDto.fromImage(image, uriInfo))
                 .cacheControl(cacheControl)
-                .tag(storedETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
