@@ -153,8 +153,7 @@ public class RequestController extends GlobalControllerAdvice {
         }
 
         // Modification & ETag Generation
-        rs.markRequestAsFulfilled(requestId);
-        final RequestDto requestDto = RequestDto.fromRequest(rs.findRequest(requestId, neighborhoodId).orElseThrow(NotFoundException::new), uriInfo);
+        RequestDto requestDto = RequestDto.fromRequest(rs.markRequestAsFulfilled(requestId), uriInfo);
         entityLevelETag = ETagUtility.generateETag();
 
         return Response.ok(requestDto)

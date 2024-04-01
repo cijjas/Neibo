@@ -39,6 +39,14 @@ public class Resource {
     Resource() {
     }
 
+    public void setResourceId(Long resourceId) {
+        this.resourceId = resourceId;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     private Resource(Builder builder) {
         this.resourceId = builder.resourceId;
         this.title = builder.title;

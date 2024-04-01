@@ -22,5 +22,5 @@ public interface RequestService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    void markRequestAsFulfilled(long requestId);
+    Request markRequestAsFulfilled(long requestId);
 }

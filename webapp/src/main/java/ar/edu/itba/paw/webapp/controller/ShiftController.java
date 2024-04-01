@@ -16,6 +16,8 @@ import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+
 @Path("shifts")
 @Component
 public class ShiftController {
@@ -70,7 +72,8 @@ public class ShiftController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        EntityTag entityTag = new EntityTag(shift.getVersion().toString());
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        EntityTag entityTag = new EntityTag(shift.getShiftId().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();

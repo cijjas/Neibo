@@ -47,6 +47,10 @@ public class Affiliation implements Serializable {
         this.role = workerRole;
     }
 
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     public AffiliationKey getId() {
         return id;
     }

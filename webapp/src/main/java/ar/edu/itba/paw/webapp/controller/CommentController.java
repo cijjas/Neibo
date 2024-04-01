@@ -89,7 +89,8 @@ public class CommentController extends GlobalControllerAdvice{
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        EntityTag entityTag = new EntityTag(comment.getVersion().toString());
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        EntityTag entityTag = new EntityTag(comment.getCommentId().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();

@@ -17,7 +17,7 @@ public class Post {
     @Column(name = "title", length = 128, nullable = false)
     private String title;
 
-    @Column(name = "description", columnDefinition = "text", nullable = false)
+    @Column(name = "description", length = 1064, nullable = false)
     private String description;
 
     @Column(name = "postdate", nullable = false)

@@ -90,7 +90,7 @@ public class AttendanceController extends GlobalControllerAdvice {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        EntityTag entityTag = new EntityTag(attendance.getVersion().toString());
+        EntityTag entityTag = new EntityTag(attendance.getId().toString());
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -150,4 +150,3 @@ public class AttendanceController extends GlobalControllerAdvice {
         return Response.status(Response.Status.NOT_FOUND).build();
     }
 }
-

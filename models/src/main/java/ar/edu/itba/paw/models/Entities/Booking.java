@@ -44,6 +44,26 @@ public class Booking {
         return version;
     }
 
+    public void setBookingId(Long bookingId) {
+        this.bookingId = bookingId;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setAmenityAvailability(Availability amenityAvailability) {
+        this.amenityAvailability = amenityAvailability;
+    }
+
+    public void setBookingDate(Date bookingDate) {
+        this.bookingDate = bookingDate;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
     public Long getBookingId() {
         return bookingId;
     }
