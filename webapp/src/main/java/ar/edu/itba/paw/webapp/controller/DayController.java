@@ -14,7 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
 @Path("days")
 @Component
@@ -36,10 +37,13 @@ public class DayController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+            return builder
+                    .cacheControl(cacheControl)
+                    .tag(entityLevelETag)
+                    .build();
 
         // Content
         List<DayDto> dayDto = Arrays.stream(DayOfTheWeek.values())
@@ -56,23 +60,24 @@ public class DayController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findDay(
-            @PathParam("id") final long id
+            @PathParam("id") final long dayId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String clientEtag
     ) {
-        LOGGER.info("GET request arrived at '/days/{}'", id);
+        LOGGER.info("GET request arrived at '/days/{}'", dayId);
 
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+        String rowLevelETag = Long.toString(dayId);
+        Response response = checkETagPreconditions(clientEtag, entityLevelETag.getValue(), rowLevelETag);
+        if (response != null)
+            return response;
 
         // Content
-        DayDto dayDto = DayDto.fromDay(DayOfTheWeek.fromId(id), uriInfo);
+        DayDto dayDto = DayDto.fromDay(DayOfTheWeek.fromId(dayId), uriInfo);
 
         return Response.ok(dayDto)
-                .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .header(HttpHeaders.ETAG, entityLevelETag.getValue())
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, Long.toString(dayId))
+                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .build();
     }
 }

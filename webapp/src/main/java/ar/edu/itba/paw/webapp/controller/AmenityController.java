@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
 @Path("neighborhoods/{neighborhoodId}/amenities")
@@ -79,7 +80,8 @@ public class AmenityController {
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response findAmenity(
-            @PathParam("id") final long id
+            @PathParam("id") final long id,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String clientEtag
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
@@ -87,19 +89,13 @@ public class AmenityController {
         Amenity amenity = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new);
 
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        EntityTag rowLevelETag = new EntityTag(amenity.getVersion().toString());
-        Response.ResponseBuilder builder = request.evaluatePreconditions(rowLevelETag);
-        if (builder != null)
-            return builder
-                    .cacheControl(cacheControl)
-                    .tag(entityLevelETag)
-                    .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                    .build();
+        String rowLevelETag = amenity.getVersion().toString();
+        Response response = checkETagPreconditions(clientEtag, entityLevelETag.getValue(), rowLevelETag);
+        if (response != null)
+            return response;
 
         return Response.ok(AmenityDto.fromAmenity(amenity, uriInfo))
-                .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .header(HttpHeaders.ETAG, entityLevelETag.getValue())
                 .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }

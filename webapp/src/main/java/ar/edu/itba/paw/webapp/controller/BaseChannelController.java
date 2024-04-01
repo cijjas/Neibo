@@ -41,7 +41,10 @@ public class BaseChannelController {
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+            return builder
+                    .cacheControl(cacheControl)
+                    .header(HttpHeaders.ETAG, entityLevelETag.getValue())
+                    .build();
 
         // Content
         List<BaseChannelDto> baseChannelDto = Arrays.stream(BaseChannel.values())
@@ -50,7 +53,7 @@ public class BaseChannelController {
 
         return Response.ok(new GenericEntity<List<BaseChannelDto>>(baseChannelDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .header(HttpHeaders.ETAG, entityLevelETag.getValue())
                 .build();
     }
 

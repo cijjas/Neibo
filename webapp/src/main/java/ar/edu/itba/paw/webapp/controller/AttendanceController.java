@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 
 @Path("neighborhoods/{neighborhoodId}/events/{eventId}/attendance")
 @Component
@@ -81,23 +82,26 @@ public class AttendanceController extends GlobalControllerAdvice {
     @Path("/{userId}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findAttendance(
-            @PathParam("userId") final long userId
+            @PathParam("userId") final long userId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String clientEtag
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
 
-        // Content
-        Attendance attendance = as.findAttendance(userId, eventId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        EntityTag entityTag = new EntityTag(attendance.getId().toString());
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+        String rowLevelETag = neighborhoodId.toString() + userId;
+        Response response = checkETagPreconditions(clientEtag, entityLevelETag.getValue(), rowLevelETag);
+        if (response != null)
+            return response;
 
-        return Response.ok(AttendanceDto.fromAttendance(attendance, uriInfo))
-                .cacheControl(cacheControl)
-                .tag(entityTag)
+        // Content
+        AttendanceDto attendanceDto = AttendanceDto.fromAttendance(as.findAttendance(userId, eventId, neighborhoodId).orElseThrow(NotFoundException::new), uriInfo);
+
+
+        return Response.ok(attendanceDto)
+                .header(HttpHeaders.ETAG, entityLevelETag.getValue())
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .build();
     }
 

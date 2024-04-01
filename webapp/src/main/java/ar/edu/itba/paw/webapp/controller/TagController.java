@@ -14,7 +14,8 @@ import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
 @Path("neighborhoods/{neighborhoodId}/tags")
 @Component
@@ -76,24 +77,23 @@ public class TagController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findTags(
-            @PathParam("id") final long tagId
+            @PathParam("id") final long tagId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String etag
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
 
-        // Content
-        Tag tag = ts.findTag(tagId, neighborhoodId).orElseThrow(NotFoundException::new);
-
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        EntityTag entityTag = new EntityTag(tag.getTagId().toString());
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+        Response response = checkETagPreconditions(etag, entityLevelETag.getValue(), Long.toString(tagId));
+        if (response != null)
+            return response;
 
-        return Response.ok(TagDto.fromTag(tag, neighborhoodId, uriInfo))
-                .cacheControl(cacheControl)
-                .tag(entityTag)
+        // Content
+        TagDto tagDto = TagDto.fromTag(ts.findTag(tagId, neighborhoodId).orElseThrow(NotFoundException::new), neighborhoodId, uriInfo);
+
+        return Response.ok(tagDto)
+                .header(HttpHeaders.ETAG, entityLevelETag.getValue())
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, Long.toString(tagId))
+                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .build();
     }
 }
