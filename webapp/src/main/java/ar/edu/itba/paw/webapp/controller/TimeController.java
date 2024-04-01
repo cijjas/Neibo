@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+
 @Path("times")
 @Component
 public class TimeController {
@@ -33,7 +35,7 @@ public class TimeController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(3600);
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -59,7 +61,7 @@ public class TimeController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(3600);
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();

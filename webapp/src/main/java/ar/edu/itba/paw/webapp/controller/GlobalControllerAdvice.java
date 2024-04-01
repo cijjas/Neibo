@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 @ControllerAdvice
 public class GlobalControllerAdvice {
+    public static final int MAX_AGE_SECONDS = 3600;
 
     public long getLoggedUserId() {
         return (((UserAuth)SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUserId();

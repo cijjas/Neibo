@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+
 @Path("images")
 @Component
 public class ImageController {
@@ -43,7 +45,7 @@ public class ImageController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(3600);
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();

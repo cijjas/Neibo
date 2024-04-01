@@ -15,6 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+
 @Path("shift-statuses")
 @Component
 public class ShiftStatusController {
@@ -35,7 +37,7 @@ public class ShiftStatusController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(3600);
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -61,7 +63,7 @@ public class ShiftStatusController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(3600);
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();

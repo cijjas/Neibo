@@ -55,33 +55,36 @@ public class UserDto {
                 .path("posts")
                 .queryParam("postedBy", String.valueOf(user.getUserId()))
                 .build();
-        dto.bookings = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
-                .path("bookings")
-                .queryParam("bookedBy", String.valueOf(user.getUserId()))
-                .build();
-        dto.likedPosts = uriInfo.getBaseUriBuilder()
-                .path("likes")
-                .queryParam("likedBy", String.valueOf(user.getUserId()))
-                .build();
-        dto.purchases = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
-                .path("users")
-                .path(String.valueOf(user.getUserId()))
-                .path("transactions")
-                .queryParam("withType", "PURCHASE")
-                .build();
-        dto.sales = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
-                .path("users")
-                .path(String.valueOf(user.getUserId()))
-                .path("transactions")
-                .queryParam("withType", "SALE")
-                .build();
 
+        //If not a worker, also add the following URIs:
+        if(user.getNeighborhood().getNeighborhoodId() != 0){
+            dto.bookings = uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
+                    .path("bookings")
+                    .queryParam("bookedBy", String.valueOf(user.getUserId()))
+                    .build();
+            dto.likedPosts = uriInfo.getBaseUriBuilder()
+                    .path("likes")
+                    .queryParam("likedBy", String.valueOf(user.getUserId()))
+                    .build();
+            dto.purchases = uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
+                    .path("users")
+                    .path(String.valueOf(user.getUserId()))
+                    .path("transactions")
+                    .queryParam("withType", "PURCHASE")
+                    .build();
+            dto.sales = uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
+                    .path("users")
+                    .path(String.valueOf(user.getUserId()))
+                    .path("transactions")
+                    .queryParam("withType", "SALE")
+                    .build();
+        }
         return dto;
     }
 

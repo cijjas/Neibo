@@ -14,6 +14,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+
 @Path("days")
 @Component
 public class DayController {
@@ -35,7 +37,7 @@ public class DayController {
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
-        cacheControl.setMaxAge(3600);
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
@@ -60,7 +62,7 @@ public class DayController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(3600);
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(storedETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
