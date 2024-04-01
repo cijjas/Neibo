@@ -33,7 +33,7 @@ public class ImageController {
     @Context
     private Request request;
 
-    private final EntityTag storedETag = ETagUtility.generateETag();
+    private final EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @GET
     @Path("/{id}")
@@ -55,7 +55,7 @@ public class ImageController {
 
         return Response.ok(ImageDto.fromImage(image, uriInfo))
                 .cacheControl(cacheControl)
-                .tag(storedETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
