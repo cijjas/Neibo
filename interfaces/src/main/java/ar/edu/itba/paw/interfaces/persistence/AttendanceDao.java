@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Entities.Attendance;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -13,7 +14,7 @@ public interface AttendanceDao {
 
     // ---------------------------------------------- ATTENDANCE SELECT ------------------------------------------------
 
-    Set<Attendance> getAttendance(long eventId, int page, int size);
+    List<Attendance> getAttendance(long eventId, int page, int size);
 
     Optional<Attendance> findAttendance(long userId, long eventId, long neighborhoodId);
 

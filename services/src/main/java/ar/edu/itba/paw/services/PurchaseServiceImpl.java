@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -59,7 +60,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public Set<Purchase> getPurchases(long userId, String transactionType, int page, int size, long neighborhoodId) {
+    public List<Purchase> getPurchases(long userId, String transactionType, int page, int size, long neighborhoodId) {
         LOGGER.info("Getting Transactions of type {} made by User {} from Neighborhood {}", transactionType, userId, neighborhoodId);
 
         ValidationUtils.checkUserId(userId);

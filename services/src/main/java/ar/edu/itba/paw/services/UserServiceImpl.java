@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createNeighbor(final String mail, final String password, final String name, final String surname,
-                               final long neighborhoodId, Language language, final String identification) {
+                               final long neighborhoodId, String languageURN, final String identification) {
         LOGGER.info("Creating Neighbor with mail {}", mail);
 
         int id = 0;
@@ -56,6 +56,13 @@ public class UserServiceImpl implements UserService {
         } catch (NumberFormatException e) {
             LOGGER.error("Error whilst formatting Identification");
             throw new UnexpectedException("Unexpected Error while creating Neighbor");
+        }
+
+        Language language = Language.ENGLISH;
+        if(languageURN != null) {
+            long languageId = ValidationUtils.extractURNId(languageURN);
+            ValidationUtils.checkLanguageId(languageId);
+            language = Language.fromId(languageId);
         }
 
         User n = findUser(mail).orElse(null);

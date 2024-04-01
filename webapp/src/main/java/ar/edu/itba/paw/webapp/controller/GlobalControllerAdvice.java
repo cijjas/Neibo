@@ -14,30 +14,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @ControllerAdvice
 public class GlobalControllerAdvice {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalControllerAdvice.class);
-
-    private final UserService us;
-
-    @Autowired
-    public GlobalControllerAdvice(final UserService us) {
-        this.us = us;
+    public long getLoggedUserId() {
+        return (((UserAuth)SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUserId();
     }
 
-    @ModelAttribute("loggedUser")
-    public User getLoggedUser() {
-        String mail = (((UserAuth)SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUsername();
-        if(mail == null) {
-            throw new NotFoundException("User Not Found");
-        }
-
-        return us.findUser(mail).orElseThrow(() -> new NotFoundException("User Not Found"));
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        if (!authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken)
-//            return null;
-//
-//        String email = authentication.getName();
-//
-//        return us.findUser(email).orElseThrow(()-> new NotFoundException("User Not Found"));
+    public long getLoggedNeighborhoodId() {
+        return (((UserAuth)SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getNeighborhoodId();
     }
 }

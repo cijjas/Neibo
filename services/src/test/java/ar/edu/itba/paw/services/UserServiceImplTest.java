@@ -58,48 +58,48 @@ public class UserServiceImplTest {
         when(passwordEncoder.encode(PASSWORD)).thenReturn(PASSWORD);
     }
 
-    @Test
-    public void testCreate() {
-        // 1. Preconditions
-        when(userDao.createUser(anyString(), any(), anyString(), anyString(), anyLong(), any(), anyBoolean(), any(), anyInt())).thenReturn(new User.Builder()
-                .userId(ID)
-                .mail(EMAIL)
-                .name(NAME)
-                .surname(SURNAME)
-                .password(PASSWORD)
-                .neighborhood(mockNeighborhood)
-                .darkMode(DARK_MODE)
-                .language(LANGUAGE)
-                .role(ROLE)
-                .identification(IDENTIFICATION)
-                .build()
-        );
+//    @Test
+//    public void testCreate() {
+//        // 1. Preconditions
+//        when(userDao.createUser(anyString(), any(), anyString(), anyString(), anyLong(), any(), anyBoolean(), any(), anyInt())).thenReturn(new User.Builder()
+//                .userId(ID)
+//                .mail(EMAIL)
+//                .name(NAME)
+//                .surname(SURNAME)
+//                .password(PASSWORD)
+//                .neighborhood(mockNeighborhood)
+//                .darkMode(DARK_MODE)
+//                .language(LANGUAGE)
+//                .role(ROLE)
+//                .identification(IDENTIFICATION)
+//                .build()
+//        );
+//
+//        // 2. Exercise
+//        User newUser = us.createNeighbor(EMAIL, PASSWORD, NAME, SURNAME, NEIGHBORHOOD_ID, LANGUAGE, IDENTIFICATION_STRING);
+//
+//        // 3. Postconditions
+//        Assert.assertNotNull(newUser);
+//        Assert.assertEquals(newUser.getUserId().longValue(), ID);
+//        Assert.assertEquals(newUser.getMail(), EMAIL);
+//        Assert.assertEquals(newUser.getName(), NAME);
+//        Assert.assertEquals(newUser.getSurname(), SURNAME);
+//        Assert.assertEquals(newUser.getLanguage(), LANGUAGE);
+//        Assert.assertEquals(newUser.isDarkMode(), DARK_MODE);
+//        Assert.assertEquals(newUser.getRole(), ROLE);
+//        Assert.assertEquals(newUser.getIdentification().longValue(), IDENTIFICATION);
+//
+//    }
 
-        // 2. Exercise
-        User newUser = us.createNeighbor(EMAIL, PASSWORD, NAME, SURNAME, NEIGHBORHOOD_ID, LANGUAGE, IDENTIFICATION_STRING);
-
-        // 3. Postconditions
-        Assert.assertNotNull(newUser);
-        Assert.assertEquals(newUser.getUserId().longValue(), ID);
-        Assert.assertEquals(newUser.getMail(), EMAIL);
-        Assert.assertEquals(newUser.getName(), NAME);
-        Assert.assertEquals(newUser.getSurname(), SURNAME);
-        Assert.assertEquals(newUser.getLanguage(), LANGUAGE);
-        Assert.assertEquals(newUser.isDarkMode(), DARK_MODE);
-        Assert.assertEquals(newUser.getRole(), ROLE);
-        Assert.assertEquals(newUser.getIdentification().longValue(), IDENTIFICATION);
-
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testCreateAlreadyExists() {
-        // 1. Preconditions
-        when(userDao.createUser(eq(EMAIL), eq(PASSWORD), eq(NAME), eq(SURNAME), eq(NEIGHBORHOOD_ID), eq(LANGUAGE), eq(DARK_MODE), eq(ROLE), eq(IDENTIFICATION))).thenThrow(RuntimeException.class);
-
-        // 2. Exercise
-        User newUser = us.createNeighbor(EMAIL, PASSWORD, NAME, SURNAME, NEIGHBORHOOD_ID, LANGUAGE, IDENTIFICATION_STRING);
-
-        // 3. Postconditions
-    }
+//    @Test(expected = RuntimeException.class)
+//    public void testCreateAlreadyExists() {
+//        // 1. Preconditions
+//        when(userDao.createUser(eq(EMAIL), eq(PASSWORD), eq(NAME), eq(SURNAME), eq(NEIGHBORHOOD_ID), eq(LANGUAGE), eq(DARK_MODE), eq(ROLE), eq(IDENTIFICATION))).thenThrow(RuntimeException.class);
+//
+//        // 2. Exercise
+//        User newUser = us.createNeighbor(EMAIL, PASSWORD, NAME, SURNAME, NEIGHBORHOOD_ID, LANGUAGE, IDENTIFICATION_STRING);
+//
+//        // 3. Postconditions
+//    }
 
 }

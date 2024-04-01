@@ -111,7 +111,7 @@ public class AmenityController {
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .tag(entityLevelETag)
                     .build();
 
         // Creation & ETag Generation
@@ -122,7 +122,7 @@ public class AmenityController {
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(amenity.getAmenityId())).build();
 
         return Response.created(uri)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -144,7 +144,7 @@ public class AmenityController {
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, rowVersion)
+                        .tag(rowVersion)
                         .build();
         }
 
@@ -153,7 +153,7 @@ public class AmenityController {
         entityLevelETag = ETagUtility.generateETag();
 
         return Response.ok(amenityDto)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -173,7 +173,7 @@ public class AmenityController {
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, rowVersion)
+                        .tag(rowVersion)
                         .build();
         }
 

@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.EmailConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.LanguageConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.NeighborhoodConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.NeighborhoodURNConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.*;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -24,7 +21,7 @@ public class SignupForm {
 
     @NotNull
     @NeighborhoodURNConstraint
-    private String neighborhoodId;
+    private String neighborhoodURN;
 
     @NotNull
     @Size(min = 1, max = 128)
@@ -43,8 +40,8 @@ public class SignupForm {
     private String identification;
 
     @NotNull
-    @LanguageConstraint
-    private String language;
+    @LanguageURNConstraint
+    private String languageURN;
 
     public String getIdentification() {
         return identification;
@@ -52,14 +49,6 @@ public class SignupForm {
 
     public void setIdentification(String identification) {
         this.identification = identification;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
     }
 
     public String getName() {
@@ -78,12 +67,20 @@ public class SignupForm {
         this.surname = surname;
     }
 
-    public String getNeighborhoodId() {
-        return neighborhoodId;
+    public String getNeighborhoodURN() {
+        return neighborhoodURN;
     }
 
-    public void setNeighborhoodId(String neighborhoodId) {
-        this.neighborhoodId = neighborhoodId;
+    public void setNeighborhoodURN(String neighborhoodURN) {
+        this.neighborhoodURN = neighborhoodURN;
+    }
+
+    public String getLanguageURN() {
+        return languageURN;
+    }
+
+    public void setLanguageURN(String languageURN) {
+        this.languageURN = languageURN;
     }
 
     public String getMail() {
@@ -107,7 +104,7 @@ public class SignupForm {
         return "PublishForm{" +
                 "name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", neighborhoodId='" + neighborhoodId + '\'' +
+                ", neighborhoodId='" + neighborhoodURN + '\'' +
                 ", password='" + password + '\'' +
                 ", mail='" + mail + '\'' +
                 '}';

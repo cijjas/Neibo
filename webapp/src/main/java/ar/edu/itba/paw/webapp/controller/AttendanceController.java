@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,10 +40,6 @@ public class AttendanceController extends GlobalControllerAdvice {
 
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
-    @Autowired
-    public AttendanceController(final UserService us) {
-        super(us);
-    }
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
@@ -59,11 +56,11 @@ public class AttendanceController extends GlobalControllerAdvice {
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        final Set<Attendance> attendance = as.getAttendance(eventId, page, size, neighborhoodId);
+        final List<Attendance> attendance = as.getAttendance(eventId, page, size, neighborhoodId);
         if (attendance.isEmpty())
             return Response.noContent().build();
-        final Set<AttendanceDto> attendanceDto = attendance.stream()
-                .map(a -> AttendanceDto.fromAttendance(a, uriInfo)).collect(Collectors.toSet());
+        final List<AttendanceDto> attendanceDto = attendance.stream()
+                .map(a -> AttendanceDto.fromAttendance(a, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
         Link[] links = createPaginationLinks(
@@ -73,7 +70,7 @@ public class AttendanceController extends GlobalControllerAdvice {
                 size
         );
 
-        return Response.ok(new GenericEntity<Set<AttendanceDto>>(attendanceDto){})
+        return Response.ok(new GenericEntity<List<AttendanceDto>>(attendanceDto){})
                 .cacheControl(cacheControl)
                 .tag(entityLevelETag)
                 .links(links)
@@ -113,18 +110,18 @@ public class AttendanceController extends GlobalControllerAdvice {
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .tag(entityLevelETag)
                     .build();
 
         // Creation & ETag Generation
-        final Attendance attendance = as.createAttendance(getLoggedUser().getUserId(), eventId);
+        final Attendance attendance = as.createAttendance(getLoggedUserId(), eventId);
         entityLevelETag = ETagUtility.generateETag();
 
         // Resource URN
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(attendance.getId())).build();
 
         return Response.created(uri)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -140,12 +137,12 @@ public class AttendanceController extends GlobalControllerAdvice {
             Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, entityLevelETag)
+                        .tag(entityLevelETag)
                         .build();
         }
 
         // Deletion & ETag Generation Attempt
-        if(as.deleteAttendance(getLoggedUser().getUserId(), eventId)) {
+        if(as.deleteAttendance(getLoggedUserId(), eventId)) {
             entityLevelETag = ETagUtility.generateETag();
             return Response.noContent().build();
         }

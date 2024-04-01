@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.Affiliation;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -14,7 +15,7 @@ public interface AffiliationDao {
 
     // --------------------------------------- NEIGHBORHOODS WORKERS SELECT ------------------------------------------
 
-    Set<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size);
+    List<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size);
 
     int countAffiliations(Long workerId, Long neighborhoodId);
 

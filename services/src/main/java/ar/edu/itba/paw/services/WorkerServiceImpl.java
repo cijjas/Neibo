@@ -98,7 +98,7 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
-    public Set<Worker> getWorkers(int page, int size, List<String> professions, List<String> neighborhoodIds, String workerRole, String workerStatus) {
+    public List<Worker> getWorkers(int page, int size, List<String> professions, List<String> neighborhoodIds, String workerRole, String workerStatus) {
         LOGGER.info("Getting Workers with Status {} Role {} Professions {} from Neighborhoods {}", workerStatus, workerRole, professions, neighborhoodIds);
 
         ValidationUtils.checkOptionalWorkerRoleString(workerRole);

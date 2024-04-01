@@ -45,7 +45,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Set<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size) {
+    public List<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Affiliations between Worker {} and Neighborhood {}", workerId, neighborhoodId);
 
         ValidationUtils.checkWorkerId(workerId);

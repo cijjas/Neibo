@@ -109,7 +109,7 @@ public class NeighborhoodController {
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .tag(entityLevelETag)
                     .build();
 
         // Creation & ETag Generation
@@ -120,7 +120,7 @@ public class NeighborhoodController {
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(neighborhood.getNeighborhoodId())).build();
 
         return Response.created(uri)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 }

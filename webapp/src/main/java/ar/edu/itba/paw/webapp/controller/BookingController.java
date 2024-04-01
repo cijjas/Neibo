@@ -41,8 +41,6 @@ public class BookingController extends GlobalControllerAdvice{
 
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
-    @Autowired
-    public BookingController(final UserService us) {super(us);}
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
@@ -91,7 +89,7 @@ public class BookingController extends GlobalControllerAdvice{
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 
         // Content
-        Booking booking = bs.findBooking(bookingId, neighborhoodId).orElseThrow(() -> new NotFoundException("Booking Not Found"));
+        Booking booking = bs.findBooking(bookingId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
@@ -117,18 +115,18 @@ public class BookingController extends GlobalControllerAdvice{
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .tag(entityLevelETag)
                     .build();
 
         // Creation & ETag Generation
-        final long[] bookingIds = bs.createBooking(getLoggedUser().getUserId(), form.getAmenityURN(), form.getShiftURNs(), form.getReservationDate());
+        final long[] bookingIds = bs.createBooking(getLoggedUserId(), form.getAmenityURN(), form.getShiftURNs(), form.getReservationDate());
         entityLevelETag = ETagUtility.generateETag();
 
         // Resource URN
         URI uri = uriInfo.getAbsolutePathBuilder().path(Arrays.toString(bookingIds)).build();
 
         return Response.created(uri)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -143,11 +141,11 @@ public class BookingController extends GlobalControllerAdvice{
 
         // Cache Control
         if (ifMatch != null) {
-            String rowVersion = bs.findBooking(bookingId, neighborhoodId).orElseThrow(() -> new NotFoundException("Booking Not Found")).getVersion().toString();
+            String rowVersion = bs.findBooking(bookingId, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, rowVersion)
+                        .tag(rowVersion)
                         .build();
         }
 

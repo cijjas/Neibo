@@ -16,6 +16,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("neighborhoods/{neighborhoodId}/resources")
@@ -98,7 +99,7 @@ public class ResourceController {
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .tag(entityLevelETag)
                     .build();
 
         // Creation & ETag Generation
@@ -109,7 +110,7 @@ public class ResourceController {
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(resource.getResourceId())).build();
 
         return Response.created(uri)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -132,7 +133,7 @@ public class ResourceController {
 
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, version)
+                        .tag(version)
                         .build();
         }
 
@@ -141,7 +142,7 @@ public class ResourceController {
         entityLevelETag = ETagUtility.generateETag();
 
         return Response.ok(resourceDto)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -161,7 +162,7 @@ public class ResourceController {
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, version)
+                        .tag(version)
                         .build();
         }
 

@@ -36,11 +36,6 @@ public class LikeController extends GlobalControllerAdvice{
 
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
-    @Autowired
-    public LikeController(final UserService us) {
-        super(us);
-    }
-
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
@@ -115,18 +110,18 @@ public class LikeController extends GlobalControllerAdvice{
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .tag(entityLevelETag)
                     .build();
 
         // Creation & ETag Generation
-        final Like like = ls.createLike(form.getPostURN(), getLoggedUser().getUserId());
+        final Like like = ls.createLike(form.getPostURN(), getLoggedUserId());
         entityLevelETag = ETagUtility.generateETag();
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(like.getId())).build();
 
         return Response.created(uri)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 

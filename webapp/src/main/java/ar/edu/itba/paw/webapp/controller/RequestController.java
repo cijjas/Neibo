@@ -41,11 +41,6 @@ public class RequestController extends GlobalControllerAdvice {
 
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
-    @Autowired
-    public RequestController(final UserService us) {
-        super(us);
-    }
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.canAccessRequests(#productId, #userId)")
@@ -95,7 +90,7 @@ public class RequestController extends GlobalControllerAdvice {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
 
         // Content
-        Request req = rs.findRequest(requestId, neighborhoodId).orElseThrow(() -> new NotFoundException("Request Not Found"));
+        Request req = rs.findRequest(requestId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
@@ -123,11 +118,11 @@ public class RequestController extends GlobalControllerAdvice {
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .tag(entityLevelETag)
                     .build();
 
         // Creation & Etag Generation
-        final Request request = rs.createRequest(getLoggedUser().getUserId(), productId, form.getRequestMessage());
+        final Request request = rs.createRequest(getLoggedUserId(), productId, form.getRequestMessage());
         entityLevelETag = ETagUtility.generateETag();
 
         // Resource URN
@@ -149,21 +144,21 @@ public class RequestController extends GlobalControllerAdvice {
 
         // Cache Control
         if (ifMatch != null){
-            String rowVersion = rs.findRequest(requestId, neighborhoodId).orElseThrow(() -> new NotFoundException("Request Not Found")).getVersion().toString();
+            String rowVersion = rs.findRequest(requestId, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, rowVersion)
+                        .tag(rowVersion)
                         .build();
         }
 
         // Modification & ETag Generation
         rs.markRequestAsFulfilled(requestId);
-        final RequestDto requestDto = RequestDto.fromRequest(rs.findRequest(requestId, neighborhoodId).orElseThrow(() -> new NotFoundException("Request Not Found")), uriInfo);
+        final RequestDto requestDto = RequestDto.fromRequest(rs.findRequest(requestId, neighborhoodId).orElseThrow(NotFoundException::new), uriInfo);
         entityLevelETag = ETagUtility.generateETag();
 
         return Response.ok(requestDto)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 }

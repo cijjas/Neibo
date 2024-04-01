@@ -41,11 +41,6 @@ public class CommentController extends GlobalControllerAdvice{
 
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
-    @Autowired
-    public CommentController(final UserService us) {
-        super(us);
-    }
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listComments(
@@ -116,18 +111,18 @@ public class CommentController extends GlobalControllerAdvice{
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .tag(entityLevelETag)
                     .build();
 
         // Creation & ETag Generation
-        final Comment comment = cs.createComment(form.getComment(), getLoggedUser().getUserId(), postId);
+        final Comment comment = cs.createComment(form.getComment(), getLoggedUserId(), postId);
         entityLevelETag = ETagUtility.generateETag();
 
         // Resource URN
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(comment.getCommentId())).build();
 
         return Response.created(uri)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 }

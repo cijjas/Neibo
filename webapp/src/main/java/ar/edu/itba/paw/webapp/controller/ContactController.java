@@ -100,7 +100,7 @@ public class ContactController {
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .tag(entityLevelETag)
                     .build();
 
         // Creation & ETag Generation
@@ -111,7 +111,7 @@ public class ContactController {
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(contact.getContactId())).build();
 
         return Response.created(uri)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -133,7 +133,7 @@ public class ContactController {
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, rowVersion)
+                        .tag(rowVersion)
                         .build();
         }
 
@@ -142,7 +142,7 @@ public class ContactController {
         entityLevelETag = ETagUtility.generateETag();
 
         return Response.ok(contactDto)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -162,7 +162,7 @@ public class ContactController {
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, rowVersion)
+                        .tag(rowVersion)
                         .build();
         }
 

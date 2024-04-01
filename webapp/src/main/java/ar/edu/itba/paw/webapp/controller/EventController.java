@@ -86,7 +86,7 @@ public class EventController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, eventId);
 
         // Content
-        Event event = es.findEvent(eventId, neighborhoodId).orElseThrow(() -> new NotFoundException("Event Not Found"));
+        Event event = es.findEvent(eventId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
@@ -113,7 +113,7 @@ public class EventController {
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .tag(entityLevelETag)
                     .build();
 
         // Creation & ETag Generation
@@ -124,7 +124,7 @@ public class EventController {
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(event.getEventId())).build();
 
         return Response.created(uri)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -146,7 +146,7 @@ public class EventController {
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, version)
+                        .tag(version)
                         .build();
         }
 
@@ -155,7 +155,7 @@ public class EventController {
         entityLevelETag = ETagUtility.generateETag();
 
         return Response.ok(eventDto)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -175,7 +175,7 @@ public class EventController {
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, version)
+                        .tag(version)
                         .build();
         }
 

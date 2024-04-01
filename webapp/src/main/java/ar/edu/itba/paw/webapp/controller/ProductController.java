@@ -40,11 +40,6 @@ public class ProductController extends GlobalControllerAdvice {
 
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
-    @Autowired
-    public ProductController(final UserService us) {
-        super(us);
-    }
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listProducts(
@@ -93,7 +88,7 @@ public class ProductController extends GlobalControllerAdvice {
         LOGGER.info("GET request arrived '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 
         // Content
-        Product product = ps.findProduct(productId, neighborhoodId).orElseThrow(() -> new NotFoundException("Product Not Found"));
+        Product product = ps.findProduct(productId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
@@ -119,18 +114,18 @@ public class ProductController extends GlobalControllerAdvice {
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .tag(entityLevelETag)
                     .build();
 
         // Creation & ETag Generation
-        final Product product = ps.createProduct(getLoggedUser().getUserId(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentURN(), form.getImageFiles(), form.getQuantity());
+        final Product product = ps.createProduct(getLoggedUserId(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentURN(), form.getImageFiles(), form.getQuantity());
         entityLevelETag = ETagUtility.generateETag();
 
         // Resource  URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(product.getProductId())).build();
 
         return Response.created(uri)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -152,7 +147,7 @@ public class ProductController extends GlobalControllerAdvice {
 
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, version)
+                        .tag(version)
                         .build();
         }
 
@@ -161,7 +156,7 @@ public class ProductController extends GlobalControllerAdvice {
         entityLevelETag = ETagUtility.generateETag();
 
         return Response.ok(productDto)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -181,7 +176,7 @@ public class ProductController extends GlobalControllerAdvice {
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, version)
+                        .tag(version)
                         .build();
         }
 

@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.webapp.auth.UserAuth;
@@ -8,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.Link;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class ControllerUtils {
 
     public long getLoggedUser() {
         String email = (((UserAuth) SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUsername();
-        User user = us.findUser(email).orElseThrow(() -> new NotFoundException("User not found"));
+        User user = us.findUser(email).orElseThrow(NotFoundException::new);
         return user.getUserId();
     }
 }

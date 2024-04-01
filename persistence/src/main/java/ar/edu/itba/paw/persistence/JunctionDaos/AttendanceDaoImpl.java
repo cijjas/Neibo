@@ -24,7 +24,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
 
     // ---------------------------------------------- ATTENDANCE SELECT ------------------------------------------------
     @Override
-    public Set<Attendance> getAttendance(long eventId, int page, int size) {
+    public List<Attendance> getAttendance(long eventId, int page, int size) {
         LOGGER.info("Getting Attendance for Event {}", eventId);
 
         // Initialize Query Builder
@@ -45,7 +45,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
         List<Long> attendanceIds = idTypedQuery.getResultList();
         // Check if amenityIds is empty, better performance
         if (attendanceIds.isEmpty())
-            return Collections.emptySet();
+            return Collections.emptyList();
         // Second Query is also focused on Amenities
         CriteriaQuery<Attendance> dataQuery = cb.createQuery(Attendance.class);
         Root<Attendance> dataRoot = dataQuery.from(Attendance.class);
@@ -54,7 +54,7 @@ public class AttendanceDaoImpl implements AttendanceDao {
         // Create!
         TypedQuery<Attendance> dataTypedQuery = em.createQuery(dataQuery);
         // Return Results
-        return new HashSet<>(dataTypedQuery.getResultList());
+        return dataTypedQuery.getResultList();
     }
 
     // ---------------------------------------------------

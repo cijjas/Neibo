@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -62,7 +63,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public Set<Attendance> getAttendance(long eventId, int page, int size, long neighborhoodId) {
+    public List<Attendance> getAttendance(long eventId, int page, int size, long neighborhoodId) {
         LOGGER.info("Getting Attendance for Event {}", eventId);
 
         ValidationUtils.checkEventId(eventId);

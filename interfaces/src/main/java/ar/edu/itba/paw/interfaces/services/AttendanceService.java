@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Entities.Attendance;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ public interface AttendanceService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Set<Attendance> getAttendance(long eventId, int page, int size, long neighborhoodId);
+    List<Attendance> getAttendance(long eventId, int page, int size, long neighborhoodId);
 
     Optional<Attendance> findAttendance(long attendanceId, long eventId, long neighborhoodId);
 

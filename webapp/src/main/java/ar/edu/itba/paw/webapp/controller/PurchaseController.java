@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -58,12 +59,12 @@ public class PurchaseController {
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        Set<Purchase> transactions = ps.getPurchases(userId, type, page, size, neighborhoodId);
+        List<Purchase> transactions = ps.getPurchases(userId, type, page, size, neighborhoodId);
         if (transactions.isEmpty())
             return Response.noContent().build();
-        Set<PurchaseDto> transactionDto = transactions.stream()
+        List<PurchaseDto> transactionDto = transactions.stream()
                 .map(p -> PurchaseDto.fromPurchase(p, uriInfo))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
 
         // Pagination Links
         Link[] links = createPaginationLinks(
@@ -73,7 +74,7 @@ public class PurchaseController {
                 size
         );
 
-        return Response.ok(new GenericEntity<Set<PurchaseDto>>(transactionDto){})
+        return Response.ok(new GenericEntity<List<PurchaseDto>>(transactionDto){})
                 .links(links)
                 .cacheControl(cacheControl)
                 .tag(entityLevelETag)
@@ -91,7 +92,7 @@ public class PurchaseController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}/transactions/{}'", neighborhoodId, userId, transactionId);
 
         // Content
-        Purchase purchase = ps.findPurchase(transactionId, userId, neighborhoodId).orElseThrow(() -> new NotFoundException("Purchase Not Found"));
+        Purchase purchase = ps.findPurchase(transactionId, userId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();

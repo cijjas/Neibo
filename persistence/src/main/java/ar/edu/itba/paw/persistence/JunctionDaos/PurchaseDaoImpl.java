@@ -63,7 +63,7 @@ public class PurchaseDaoImpl implements PurchaseDao {
     }
 
     @Override
-    public Set<Purchase> getPurchases(long userId, String type, int page, int size) {
+    public List<Purchase> getPurchases(long userId, String type, int page, int size) {
         LOGGER.debug("Selecting Purchases By Criteria For User {}", userId);
 
         StringBuilder queryStringBuilder = new StringBuilder();
@@ -97,9 +97,7 @@ public class PurchaseDaoImpl implements PurchaseDao {
         nativeQuery.setParameter("size", size);
         nativeQuery.setParameter("offset", (page - 1) * size);
 
-        List<Purchase> purchases = nativeQuery.getResultList();
-
-        return new HashSet<>(purchases);
+        return nativeQuery.getResultList();
     }
 
     @Override

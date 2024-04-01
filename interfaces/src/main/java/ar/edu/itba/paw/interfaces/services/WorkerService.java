@@ -20,7 +20,7 @@ public interface WorkerService {
 
     Optional<Worker> findWorker(String mail);
 
-    Set<Worker> getWorkers(int page, int size, List<String> professions, List<String> neighborhoodIds, String workerRole, String workerStatus);
+    List<Worker> getWorkers(int page, int size, List<String> professions, List<String> neighborhoodIds, String workerRole, String workerStatus);
 
     int countWorkers(List<String> professions, List<String> neighborhoodIds, String workerRole, String workerStatus);
 

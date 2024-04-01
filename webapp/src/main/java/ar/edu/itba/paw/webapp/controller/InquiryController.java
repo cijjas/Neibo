@@ -44,11 +44,6 @@ public class InquiryController extends GlobalControllerAdvice{
 
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
-    @Autowired
-    public InquiryController(final UserService us) {
-        super(us);
-    }
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listInquiries(
@@ -94,7 +89,7 @@ public class InquiryController extends GlobalControllerAdvice{
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
         // Content
-        Inquiry inquiry = is.findInquiry(inquiryId, productId, neighborhoodId).orElseThrow(() -> new NotFoundException("Inquiry Not Found"));
+        Inquiry inquiry = is.findInquiry(inquiryId, productId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
@@ -122,11 +117,11 @@ public class InquiryController extends GlobalControllerAdvice{
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .tag(entityLevelETag)
                     .build();
 
         // Creation & ETag Generation
-        final Inquiry inquiry = is.createInquiry(getLoggedUser().getUserId(), productId, form.getQuestionMessage());
+        final Inquiry inquiry = is.createInquiry(getLoggedUserId(), productId, form.getQuestionMessage());
         entityLevelETag = ETagUtility.generateETag();
 
         // Resource URN
@@ -134,7 +129,7 @@ public class InquiryController extends GlobalControllerAdvice{
                 .path(String.valueOf(inquiry.getInquiryId())).build();
 
         return Response.created(uri)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -152,11 +147,11 @@ public class InquiryController extends GlobalControllerAdvice{
 
         // Cache Control
         if (ifMatch != null){
-            String rowVersion = is.findInquiry(inquiryId, productId, neighborhoodId).orElseThrow(() -> new NotFoundException("Inquiry Not Found")).getVersion().toString();
+            String rowVersion = is.findInquiry(inquiryId, productId, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, rowVersion)
+                        .tag(rowVersion)
                         .build();
         }
 
@@ -165,7 +160,7 @@ public class InquiryController extends GlobalControllerAdvice{
         entityLevelETag = ETagUtility.generateETag();
 
         return Response.ok(inquiryDto)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 

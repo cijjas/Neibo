@@ -72,7 +72,7 @@ public class WorkerDaoImpl implements WorkerDao {
                     "    LEFT JOIN workers_neighborhoods wn ON w.userid = wn.workerid ";
 
 
-    public Set<Worker> getWorkers(int page, int size, List<String> professions, List<Long> neighborhoodIds, String workerRole, String workerStatus) {
+    public List<Worker> getWorkers(int page, int size, List<String> professions, List<Long> neighborhoodIds, String workerRole, String workerStatus) {
         StringBuilder queryStringBuilder = new StringBuilder();
         queryStringBuilder.append("SELECT DISTINCT w.*, wi.* FROM users w ");
 
@@ -123,9 +123,7 @@ public class WorkerDaoImpl implements WorkerDao {
             nativeQuery.setParameter("neighborhoodIds", neighborhoodIds);
         }
 
-        List<Worker> workers = nativeQuery.getResultList();
-
-        return new HashSet<>(workers);
+        return nativeQuery.getResultList();
     }
 
     public int countWorkers(List<String> professions, List<Long> neighborhoodIds, String workerRole, String workerStatus) {

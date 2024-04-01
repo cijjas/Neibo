@@ -44,7 +44,7 @@ public class AffiliationDaoImpl implements AffiliationDao {
     }
 
     @Override
-    public Set<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size) {
+    public List<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Worker Affiliations By Criteria");
 
         TypedQuery<AffiliationKey> idQuery = null;
@@ -74,9 +74,9 @@ public class AffiliationDaoImpl implements AffiliationDao {
             TypedQuery<Affiliation> affiliationQuery = em.createQuery(
                     "SELECT a FROM Affiliation a WHERE a.id IN :ids", Affiliation.class);
             affiliationQuery.setParameter("ids", ids);
-            return new HashSet<>(affiliationQuery.getResultList());
+            return affiliationQuery.getResultList();
         }
-        return Collections.emptySet();
+        return Collections.emptyList();
     }
 
     @Override

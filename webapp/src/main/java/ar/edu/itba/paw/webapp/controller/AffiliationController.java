@@ -53,7 +53,7 @@ public class AffiliationController {
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        Set<Affiliation> affiliations = nws.getAffiliations(workerId, neighborhoodId, page, size);
+        List<Affiliation> affiliations = nws.getAffiliations(workerId, neighborhoodId, page, size);
         if (affiliations.isEmpty())
             return Response.noContent().build();
         List<AffiliationDto> affiliationDto = affiliations.stream()
@@ -85,7 +85,7 @@ public class AffiliationController {
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .tag(entityLevelETag)
                     .build();
 
         // Creation & ETag Generation
@@ -96,7 +96,7 @@ public class AffiliationController {
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(a.getWorker().getWorkerId())).build();
 
         return Response.created(uri)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -114,7 +114,7 @@ public class AffiliationController {
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, version)
+                        .tag(version)
                         .build();
         }
 
@@ -123,7 +123,7 @@ public class AffiliationController {
         entityLevelETag = ETagUtility.generateETag();
 
         return Response.ok(affiliationDto)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -141,7 +141,7 @@ public class AffiliationController {
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, version)
+                        .tag(version)
                         .build();
         }
 

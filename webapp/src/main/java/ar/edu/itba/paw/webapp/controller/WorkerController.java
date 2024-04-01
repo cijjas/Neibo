@@ -44,11 +44,6 @@ public class WorkerController extends GlobalControllerAdvice {
 
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
-    @Autowired
-    public WorkerController(final UserService us) {
-        super(us);
-    }
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_WORKER"})
@@ -69,7 +64,7 @@ public class WorkerController extends GlobalControllerAdvice {
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        Set<Worker> workers = ws.getWorkers(page, size, professions, neighborhoodIds, workerRole, workerStatus);
+        List<Worker> workers = ws.getWorkers(page, size, professions, neighborhoodIds, workerRole, workerStatus);
         if (workers.isEmpty())
             return Response.noContent().build();
         List<WorkerDto> workerDto = workers.stream()
@@ -100,7 +95,7 @@ public class WorkerController extends GlobalControllerAdvice {
         LOGGER.info("GET request arrived at '/workers/{}'", workerId);
 
         // Content
-        Worker worker = ws.findWorker(workerId).orElseThrow(() -> new NotFoundException("Worker Not Found"));
+        Worker worker = ws.findWorker(workerId).orElseThrow(NotFoundException::new);
 
         // Cache Control
         EntityTag entityTag = new EntityTag(worker.getVersion().toString());
@@ -126,7 +121,7 @@ public class WorkerController extends GlobalControllerAdvice {
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .tag(entityLevelETag)
                     .build();
 
         // Creation & Etag Generation
@@ -137,7 +132,7 @@ public class WorkerController extends GlobalControllerAdvice {
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(worker.getWorkerId())).build();
 
         return Response.created(uri)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 
@@ -154,11 +149,11 @@ public class WorkerController extends GlobalControllerAdvice {
 
         // Cache Control
         if (ifMatch != null){
-            String rowVersion = ws.findWorker(workerId).orElseThrow(() -> new NotFoundException("Worker Not Found")).getVersion().toString();
+            String rowVersion = ws.findWorker(workerId).orElseThrow(NotFoundException::new).getVersion().toString();
             Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .header(HttpHeaders.ETAG, rowVersion)
+                        .tag(rowVersion)
                         .build();
         }
 
@@ -167,7 +162,7 @@ public class WorkerController extends GlobalControllerAdvice {
         entityLevelETag = ETagUtility.generateETag();
 
         return Response.ok(workerDto)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 }

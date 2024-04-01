@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.services;
 
 import ar.edu.itba.paw.models.Entities.Purchase;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -15,7 +16,7 @@ public interface PurchaseService {
 
     Optional<Purchase> findPurchase(long purchaseId, long userId, long neighborhoodId);
 
-    Set<Purchase> getPurchases(long userId, String type, int page, int size, long neighborhoodId);
+    List<Purchase> getPurchases(long userId, String type, int page, int size, long neighborhoodId);
 
     int countPurchases(long userId, String type);
 

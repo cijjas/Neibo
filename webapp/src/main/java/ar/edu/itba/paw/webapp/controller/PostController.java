@@ -42,11 +42,6 @@ public class PostController extends GlobalControllerAdvice{
 
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
-    @Autowired
-    public PostController(final UserService us) {
-        super(us);
-    }
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listPosts(
@@ -97,7 +92,7 @@ public class PostController extends GlobalControllerAdvice{
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
 
         // Content
-        Post post = ps.findPost(postId, neighborhoodId).orElseThrow(() -> new NotFoundException("Post Not Found"));
+        Post post = ps.findPost(postId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
@@ -128,7 +123,7 @@ public class PostController extends GlobalControllerAdvice{
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .tag(entityLevelETag)
                     .build();
 
         // Validation, Creation & ETag Generation
@@ -138,7 +133,7 @@ public class PostController extends GlobalControllerAdvice{
         publishForm.setMessage(message);
         publishForm.setSubject(subject);
         publishForm.setPostImage(postImage);
-        final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedUser().getUserId(), publishForm.getChannelURN(), publishForm.getTags(), publishForm.getPostImage());
+        final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedUserId(), publishForm.getChannelURN(), publishForm.getTags(), publishForm.getPostImage());
         entityLevelETag = ETagUtility.generateETag();
 
         // Resource URN
@@ -146,7 +141,7 @@ public class PostController extends GlobalControllerAdvice{
                 .path(String.valueOf(post.getPostId())).build();
 
         return Response.created(uri)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 }

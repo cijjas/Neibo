@@ -39,10 +39,6 @@ public class ReviewController extends GlobalControllerAdvice {
 
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
-    @Autowired
-    public ReviewController(final UserService us) {
-        super(us);
-    }
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
@@ -89,7 +85,7 @@ public class ReviewController extends GlobalControllerAdvice {
         LOGGER.info("GET request arrived at '/workers/{}/reviews/{}'", workerId, id);
 
         // Content
-        Review review = rs.findReview(id, workerId).orElseThrow(() -> new NotFoundException("Review Not Found"));
+        Review review = rs.findReview(id, workerId).orElseThrow(NotFoundException::new);
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
@@ -116,18 +112,18 @@ public class ReviewController extends GlobalControllerAdvice {
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .header(HttpHeaders.ETAG, entityLevelETag)
+                    .tag(entityLevelETag)
                     .build();
 
         // Creation & ETag Generation
-        final Review review = rs.createReview(workerId, getLoggedUser().getUserId(), form.getRating(), form.getReview());
+        final Review review = rs.createReview(workerId, getLoggedUserId(), form.getRating(), form.getReview());
         entityLevelETag = ETagUtility.generateETag();
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(review.getReviewId())).build();
 
         return Response.created(uri)
-                .header(HttpHeaders.ETAG, entityLevelETag)
+                .tag(entityLevelETag)
                 .build();
     }
 }
