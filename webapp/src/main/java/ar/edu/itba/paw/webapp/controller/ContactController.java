@@ -18,6 +18,9 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
+
 @Path("neighborhoods/{neighborhoodId}/contacts")
 @Component
 public class ContactController {
@@ -68,7 +71,7 @@ public class ContactController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findContact(
             @PathParam("id") long contactId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, contactId);
 
@@ -76,15 +79,14 @@ public class ContactController {
         Contact contact = cs.findContact(contactId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        EntityTag entityTag = new EntityTag(contact.getVersion().toString());
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+        EntityTag rowLevelETag = new EntityTag(contact.getVersion().toString());
+        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
         return Response.ok(ContactDto.fromContact(contact, uriInfo))
-                .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 

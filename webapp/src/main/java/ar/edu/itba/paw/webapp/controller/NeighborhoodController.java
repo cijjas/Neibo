@@ -19,7 +19,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
 @Path("neighborhoods")
 @Component
@@ -79,24 +80,24 @@ public class NeighborhoodController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findNeighborhood(
-            @PathParam("id") final long id
+            @PathParam("id") final long neighborhoodId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}'", id);
-
-        // Content
-        Neighborhood neighborhood = ns.findNeighborhood(id).orElseThrow(NotFoundException::new);
+        LOGGER.info("GET request arrived at '/neighborhoods/{}'", neighborhoodId);
 
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        EntityTag entityTag = new EntityTag(neighborhood.getNeighborhoodId().toString());
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+        EntityTag rowLevelETag = new EntityTag(Long.toString(neighborhoodId));
+        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
-        return Response.ok(NeighborhoodDto.fromNeighborhood(neighborhood, uriInfo))
-                .cacheControl(cacheControl)
-                .tag(entityTag)
+        // Content
+        NeighborhoodDto neighborhoodDto = NeighborhoodDto.fromNeighborhood(ns.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new), uriInfo);
+
+        return Response.ok(neighborhoodDto)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .build();
     }
 

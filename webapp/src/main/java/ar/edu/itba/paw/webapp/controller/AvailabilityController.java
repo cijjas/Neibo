@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_HEADER;
 
 @Path("neighborhoods/{neighborhoodId}/amenities/{amenityId}/availability")
 @Component
@@ -73,23 +76,24 @@ public class AvailabilityController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findAvailability(
-            @PathParam("id") final long availabilityId
+            @PathParam("id") final long availabilityId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities/{}/availability/{}'", neighborhoodId, amenityId, availabilityId);
 
-        // Content
-        Availability availability = as.findAvailability(amenityId, availabilityId, neighborhoodId).orElseThrow(NotFoundException::new);
-
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        EntityTag entityTag = new EntityTag(availability.getAmenityAvailabilityId().toString());
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+        EntityTag rowLevelETag = new EntityTag(String.valueOf(availabilityId));
+        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
-        return Response.ok(AvailabilityDto.fromAvailability(availability, uriInfo))
-                .cacheControl(cacheControl)
-                .tag(entityTag)
+        // Content
+        AvailabilityDto availabilityDto = AvailabilityDto.fromAvailability(as.findAvailability(amenityId, availabilityId, neighborhoodId).orElseThrow(NotFoundException::new), uriInfo);
+
+        return Response.ok(availabilityDto)
+                .tag(entityLevelETag)
+                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

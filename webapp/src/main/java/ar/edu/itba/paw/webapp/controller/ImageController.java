@@ -17,7 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
 @Path("images")
 @Component
@@ -39,23 +40,24 @@ public class ImageController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findById(
-            @PathParam("id") long id
+            @PathParam("id") long imageId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
     ) {
-        LOGGER.info("GET request arrived at '/images/{}'", id);
-
-        // Content
-        Image image = is.findImage(id).orElseThrow(NotFoundException::new);
+        LOGGER.info("GET request arrived at '/images/{}'", imageId);
 
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(image.getImageId().toString()));
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+        EntityTag rowLevelETag = new EntityTag(Long.toString(imageId));
+        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
-        return Response.ok(ImageDto.fromImage(image, uriInfo))
-                .cacheControl(cacheControl)
+        // Content
+        ImageDto imageDto = ImageDto.fromImage(is.findImage(imageId).orElseThrow(NotFoundException::new), uriInfo);
+
+        return Response.ok(imageDto)
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .build();
     }
 

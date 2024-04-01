@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 
 @Path("neighborhoods/{neighborhoodId}/posts/{postId}/comments")
 @Component
@@ -80,24 +81,24 @@ public class CommentController extends GlobalControllerAdvice{
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findComment(
-            @PathParam("id") long commentId
+            @PathParam("id") long commentId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
 
-        // Content
-        Comment comment = cs.findComment(commentId, postId, neighborhoodId).orElseThrow(NotFoundException::new);
-
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        EntityTag entityTag = new EntityTag(comment.getCommentId().toString());
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+        EntityTag rowLevelETag = new EntityTag(Long.toString(commentId));
+        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
-        return Response.ok(CommentDto.fromComment(comment, uriInfo))
-                .cacheControl(cacheControl)
-                .tag(entityTag)
+        // Content
+        CommentDto commentDto = CommentDto.fromComment(cs.findComment(commentId, postId, neighborhoodId).orElseThrow(NotFoundException::new), uriInfo);
+
+        return Response.ok(commentDto)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .build();
     }
 

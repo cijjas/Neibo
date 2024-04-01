@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
 @Path("departments")
 @Component
@@ -60,23 +61,24 @@ public class DepartmentController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findDepartment(
-            @PathParam("id") final int id
+            @PathParam("id") final int departmentId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
     ) {
-        LOGGER.info("GET request arrived at '/departments/{}'", id);
+        LOGGER.info("GET request arrived at '/departments/{}'", departmentId);
 
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+        EntityTag rowLevelETag = new EntityTag(Long.toString(departmentId));
+        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
         // Content
-        DepartmentDto departmentDto = DepartmentDto.fromDepartment(Department.fromId(id), uriInfo);
+        DepartmentDto departmentDto = DepartmentDto.fromDepartment(Department.fromId(departmentId), uriInfo);
 
         return Response.ok(departmentDto)
-                .cacheControl(cacheControl)
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .build();
     }
 }

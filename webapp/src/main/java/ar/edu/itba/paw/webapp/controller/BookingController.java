@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 
 @Path("neighborhoods/{neighborhoodId}/bookings")
 @Component
@@ -84,23 +85,24 @@ public class BookingController extends GlobalControllerAdvice{
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findBooking(
-            @PathParam("id") final long bookingId
+            @PathParam("id") final long bookingId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 
-        // Content
-        Booking booking = bs.findBooking(bookingId, neighborhoodId).orElseThrow(NotFoundException::new);
-
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        EntityTag entityTag = new EntityTag(booking.getBookingId().toString());
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+        EntityTag rowLevelETag = new EntityTag(String.valueOf(bookingId));
+        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
-        return Response.ok(BookingDto.fromBooking(booking, uriInfo))
-                .cacheControl(cacheControl)
-                .tag(entityTag)
+        // Content
+        BookingDto bookingDto = BookingDto.fromBooking(bs.findBooking(bookingId, neighborhoodId).orElseThrow(NotFoundException::new), uriInfo);
+
+        return Response.ok(bookingDto)
+                .tag(entityLevelETag)
+                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 

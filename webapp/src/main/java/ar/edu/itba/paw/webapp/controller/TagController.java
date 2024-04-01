@@ -68,7 +68,6 @@ public class TagController {
                 size
         );
 
-        System.out.println("lala");
         return Response.ok(new GenericEntity<List<TagDto>>(tagsDto){})
                 .cacheControl(cacheControl)
                 .tag(entityLevelETag)

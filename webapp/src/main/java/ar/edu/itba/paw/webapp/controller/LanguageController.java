@@ -16,7 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
 @Path("languages")
 @Component
@@ -58,23 +59,24 @@ public class LanguageController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findLanguage(
-            @PathParam("id") final long id
+            @PathParam("id") final long languageId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
     ) {
-        LOGGER.info("GET request arrived at '/languages/{}'", id);
+        LOGGER.info("GET request arrived at '/languages/{}'", languageId);
 
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
-
+        EntityTag rowLevelETag = new EntityTag(Long.toString(languageId));
+        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
+        
         // Content
-        LanguageDto languageDto = LanguageDto.fromLanguage(Language.fromId(id), uriInfo);
+        LanguageDto languageDto = LanguageDto.fromLanguage(Language.fromId(languageId), uriInfo);
 
         return Response.ok(languageDto)
-                .cacheControl(cacheControl)
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .build();
     }
 }

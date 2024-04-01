@@ -83,6 +83,8 @@ public class LikeController extends GlobalControllerAdvice{
             @QueryParam("postId") final Long postId,
             @QueryParam("userId") final Long userId
     ){
+        LOGGER.info("GET request arrived at '/neighborhoods/{}/likes/count'", neighborhoodId);
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);

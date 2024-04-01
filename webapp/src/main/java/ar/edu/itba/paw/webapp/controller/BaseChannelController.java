@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.generateETag;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
@@ -61,28 +62,24 @@ public class BaseChannelController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findBaseChannel(
-            @PathParam("id") final int id,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+            @PathParam("id") final int baseChannelId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
     ) {
-        LOGGER.info("GET request arrived at '/base-channels/{}'", id);
+        LOGGER.info("GET request arrived at '/base-channels/{}'", baseChannelId);
 
         // Cache Control
-        String rowLevelETag;
-        if (ifMatch != null) {
-            rowLevelETag = String.valueOf(id);
-            if (!ifMatch.equals(rowLevelETag) && !ifMatch.equals(entityLevelETag.toString()))
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(entityLevelETag)
-                        .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                        .build();
-        }
+        EntityTag rowLevelETag = new EntityTag(Long.toString(baseChannelId));
+        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
         // Content
-        BaseChannelDto baseChannelDto = BaseChannelDto.fromBaseChannel(BaseChannel.fromId(id), uriInfo);
+        BaseChannelDto baseChannelDto = BaseChannelDto.fromBaseChannel(BaseChannel.fromId(baseChannelId), uriInfo);
 
         return Response.ok(baseChannelDto)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .build();
     }
 }
