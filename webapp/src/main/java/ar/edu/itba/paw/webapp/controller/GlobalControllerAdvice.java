@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @ControllerAdvice
 public class GlobalControllerAdvice {
     public static final int MAX_AGE_SECONDS = 3600;
+    public static final String CUSTOM_ROW_LEVEL_ETAG_NAME = "X-Row-Level-ETag";
+    public static final String MAX_AGE_HEADER = "max-age=" + MAX_AGE_SECONDS;
 
     public long getLoggedUserId() {
         return (((UserAuth)SecurityContextHolder.getContext().getAuthentication().getPrincipal())).getUserId();

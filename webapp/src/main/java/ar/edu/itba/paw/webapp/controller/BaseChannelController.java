@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.generateETag;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
 @Path("base-channels")
 @Component
@@ -58,22 +58,27 @@ public class BaseChannelController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findBaseChannel(
-            @PathParam("id") final int id
+            @PathParam("id") final int id,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
     ) {
         LOGGER.info("GET request arrived at '/base-channels/{}'", id);
 
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+        String rowLevelETag;
+        if (ifMatch != null) {
+            rowLevelETag = String.valueOf(id);
+            if (!ifMatch.equals(rowLevelETag) && !ifMatch.equals(entityLevelETag.toString()))
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .tag(entityLevelETag)
+                        .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                        .build();
+        }
 
         // Content
         BaseChannelDto baseChannelDto = BaseChannelDto.fromBaseChannel(BaseChannel.fromId(id), uriInfo);
 
         return Response.ok(baseChannelDto)
-                .cacheControl(cacheControl)
+                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .tag(entityLevelETag)
                 .build();
     }
