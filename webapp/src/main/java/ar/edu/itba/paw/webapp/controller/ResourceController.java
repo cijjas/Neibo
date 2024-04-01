@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkMutableETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
+
 @Path("neighborhoods/{neighborhoodId}/resources")
 @Component
 public class ResourceController {
@@ -67,7 +70,8 @@ public class ResourceController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findResource(
-            @PathParam("id") final long resourceId
+            @PathParam("id") final long resourceId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
 
@@ -75,15 +79,14 @@ public class ResourceController {
         Resource resource = rs.findResource(resourceId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        EntityTag entityTag = new EntityTag(resource.getVersion().toString());
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+        EntityTag rowLevelETag = new EntityTag(resource.getVersion().toString());
+        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
         return Response.ok(ResourceDto.fromResource(resource, uriInfo))
-                .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 

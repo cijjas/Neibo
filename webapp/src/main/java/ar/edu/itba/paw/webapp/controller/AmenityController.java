@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkMutableETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
 @Path("neighborhoods/{neighborhoodId}/amenities")
@@ -90,7 +91,7 @@ public class AmenityController {
 
         // Cache Control
         EntityTag rowLevelETag = new EntityTag(amenity.getVersion().toString());
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
         if (response != null)
             return response;
 

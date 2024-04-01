@@ -16,7 +16,8 @@ import java.sql.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
 @Path("shifts")
 @Component
@@ -63,24 +64,25 @@ public class ShiftController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findShift(
-            @PathParam("id") final long id
+            @PathParam("id") final long id,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+
     ) {
         LOGGER.info("GET request arrived at '/shifts/{}'", id);
 
-        // Content
-        Shift shift = ss.findShift(id).orElseThrow(NotFoundException::new);
-
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        EntityTag entityTag = new EntityTag(shift.getShiftId().toString());
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+        EntityTag rowLevelETag = new EntityTag(Long.toString(id));
+        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
-        return Response.ok(ShiftDto.fromShift(shift, uriInfo))
-                .cacheControl(cacheControl)
-                .tag(entityTag)
+        // Content
+        ShiftDto shiftDto = ShiftDto.fromShift(ss.findShift(id).orElseThrow(NotFoundException::new), uriInfo);
+
+        return Response.ok(shiftDto)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .build();
     }
 }

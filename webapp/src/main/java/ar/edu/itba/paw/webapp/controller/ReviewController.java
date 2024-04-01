@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+
 @Path("workers/{workerId}/reviews")
 @Component
 public class ReviewController extends GlobalControllerAdvice {
@@ -80,24 +82,24 @@ public class ReviewController extends GlobalControllerAdvice {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findReview(
-            @PathParam("id") final long id
+            @PathParam("id") final long id,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
     ) {
         LOGGER.info("GET request arrived at '/workers/{}/reviews/{}'", workerId, id);
 
-        // Content
-        Review review = rs.findReview(id, workerId).orElseThrow(NotFoundException::new);
-
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        EntityTag entityTag = new EntityTag(review.getReviewId().toString());
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+        EntityTag rowLevelETag = new EntityTag(Long.toString(id));
+        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
-        return Response.ok(ReviewDto.fromReview(review, uriInfo))
-                .cacheControl(cacheControl)
-                .tag(entityTag)
+        // Content
+        ReviewDto reviewDto = ReviewDto.fromReview(rs.findReview(id, workerId).orElseThrow(NotFoundException::new), uriInfo);
+
+        return Response.ok(reviewDto)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .build();
     }
 

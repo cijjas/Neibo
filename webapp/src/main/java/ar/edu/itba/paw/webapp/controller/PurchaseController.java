@@ -18,7 +18,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_SECONDS;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
 @Path("neighborhoods/{neighborhoodId}/users/{userId}/transactions")
 @Component
@@ -88,24 +89,24 @@ public class PurchaseController {
     @PreAuthorize("@accessControlHelper.canAccessTransactions(#userId)")
     public Response findTransaction(
             @PathParam("id") final long transactionId,
-            @PathParam("userId") final long userId
+            @PathParam("userId") final long userId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}/transactions/{}'", neighborhoodId, userId, transactionId);
 
-        // Content
-        Purchase purchase = ps.findPurchase(transactionId, userId, neighborhoodId).orElseThrow(NotFoundException::new);
-
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        EntityTag entityTag = new EntityTag(purchase.getPurchaseId().toString());
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+        EntityTag rowLevelETag = new EntityTag(Long.toString(transactionId));
+        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
-        return Response.ok(PurchaseDto.fromPurchase(purchase, uriInfo))
-                .cacheControl(cacheControl)
-                .tag(entityTag)
+        // Content
+        PurchaseDto purchaseDto = PurchaseDto.fromPurchase(ps.findPurchase(transactionId, userId, neighborhoodId).orElseThrow(NotFoundException::new), uriInfo);
+
+        return Response.ok(purchaseDto)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .build();
     }
 }

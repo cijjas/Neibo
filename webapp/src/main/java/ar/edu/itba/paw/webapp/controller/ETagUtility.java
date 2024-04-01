@@ -27,4 +27,16 @@ public class ETagUtility {
         }
         return null;
     }
+
+    public static Response checkMutableETagPreconditions(EntityTag clientEtag, EntityTag entityLevelETag, EntityTag rowLevelETag) {
+        if (clientEtag != null) {
+            if (clientEtag.equals(rowLevelETag) || clientEtag.equals(entityLevelETag)) {
+                return Response.status(Response.Status.NOT_MODIFIED)
+                        .tag(entityLevelETag)
+                        .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                        .build();
+            }
+        }
+        return null;
+    }
 }

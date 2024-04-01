@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkMutableETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
 @Path("neighborhoods/{neighborhoodId}/users")
 @Component
@@ -89,7 +91,9 @@ public class UserController {
     @PreAuthorize("@accessControlHelper.hasAccessToUserDetail(#neighborhoodId, #id)")
     public Response findUser(
             @PathParam("id") final long id,
-            @PathParam("neighborhoodId") final long neighborhoodId
+            @PathParam("neighborhoodId") final long neighborhoodId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
 
@@ -97,15 +101,14 @@ public class UserController {
         User user = us.findUser(id, neighborhoodId).orElseThrow(NotFoundException::new);
 
         // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        EntityTag entityTag = new EntityTag(user.getVersion().toString());
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+        EntityTag rowLevelETag = new EntityTag(user.getVersion().toString());
+        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
         return Response.ok(UserDto.fromUser(user, uriInfo))
-                .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 

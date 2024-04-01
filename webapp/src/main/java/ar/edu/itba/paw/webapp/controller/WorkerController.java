@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkMutableETagPreconditions;
 
 @Path("/workers")
 @Component
@@ -90,7 +91,8 @@ public class WorkerController extends GlobalControllerAdvice {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findWorker(
-            @PathParam("id") final long workerId
+            @PathParam("id") final long workerId,
+            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
     ) {
         LOGGER.info("GET request arrived at '/workers/{}'", workerId);
 
@@ -98,15 +100,14 @@ public class WorkerController extends GlobalControllerAdvice {
         Worker worker = ws.findWorker(workerId).orElseThrow(NotFoundException::new);
 
         // Cache Control
-        EntityTag entityTag = new EntityTag(worker.getVersion().toString());
-        CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityTag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
+        EntityTag rowLevelETag = new EntityTag(worker.getVersion().toString());
+        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
         return Response.ok(WorkerDto.fromWorker(worker, uriInfo))
-                .cacheControl(cacheControl)
-                .tag(entityTag)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 
