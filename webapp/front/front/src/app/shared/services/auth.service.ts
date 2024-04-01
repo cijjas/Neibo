@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { environment } from "../../../environments/environment";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { catchError, Observable, of } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, switchMap } from "rxjs/operators";
 import { UserDto } from "../models/user";
 import { LoggedInService } from "./loggedIn.service";
 
@@ -30,25 +30,38 @@ export class AuthService {
     const storage = rememberMe ? localStorage : sessionStorage;
     localStorage.setItem(this.rememberMeKey, JSON.stringify(rememberMe));
 
-    // Make a request to any protected endpoint to retrieve user information
-    return this.http.get<UserDto>(`${this.apiServerUrl}/`, { headers: headers })
+    // Make a request to any protected endpoint to simulate user authentication
+    return this.http.get<any>(`${this.apiServerUrl}/`, { headers: headers })
       .pipe(
         map(
-          (userDto) => {
-            // save the auth token in the storage (optional for Basic Auth)
-            const authToken = authHeaderValue; // Storing the auth header as the token
-            storage.setItem(this.authTokenKey, authToken);
-            this.loggedInService.setAuthToken(authToken);
-            this.loggedInService.setLoggedUserInformation(userDto);
-            return true;
+          (response) => {
+            // Check if the response headers contain the Authorization header
+            if (response.headers.has('Authorization')) {
+              const authToken = response.headers.get('Authorization');
+              // Save the auth token in the storage
+              storage.setItem(this.authTokenKey, authToken);
+              this.loggedInService.setAuthToken(authToken);
+              // Look for user with the auth token already in interceptor and urn in the header
+              this.http.get<UserDto>(`${response.headers.get('X-User-URN')}`)
+                .subscribe({
+                  next: (userDto) => {
+                    this.loggedInService.setLoggedUserInformation(userDto);
+                  },
+                  error: (error) => {
+                    console.error('Error getting user:', error);
+                  }
+                });
+              return true;
+            }
+            console.log('No Authorization header in the response');
+            return false;
           }),
-        catchError((error) => {
+        catchError(error => {
           console.error('Authentication error:', error);
           return of(false);
         })
       );
   }
-
 
   logout(): void {
     sessionStorage.clear();
