@@ -111,11 +111,10 @@ public class AffiliationController {
 
         // Cache Control
         if (ifMatch != null) {
-            String version = nws.findAffiliation(form.getWorkerURN(), form.getNeighborhoodURN()).orElseThrow(NotFoundException::new).getVersion().toString();
-            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
+            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(version)
+                        .tag(entityLevelETag)
                         .build();
         }
 
@@ -138,20 +137,23 @@ public class AffiliationController {
 
         // Cache Control
         if (ifMatch != null) {
-            String version = nws.findAffiliation(form.getWorkerURN(), form.getNeighborhoodURN()).orElseThrow(NotFoundException::new).getVersion().toString();
-            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
+            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
             if (builder != null)
                 return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(version)
+                        .tag(entityLevelETag)
                         .build();
         }
 
         // Deletion & Etag Generation Attempt
         if (nws.deleteAffiliation(form.getWorkerURN(), form.getNeighborhoodURN())) {
             entityLevelETag = ETagUtility.generateETag();
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         }
 
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.status(Response.Status.NOT_FOUND)
+                .tag(entityLevelETag)
+                .build();
     }
 }

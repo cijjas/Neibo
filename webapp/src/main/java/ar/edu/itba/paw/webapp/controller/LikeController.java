@@ -131,17 +131,30 @@ public class LikeController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(
             @QueryParam("userId") final long userId,
-            @QueryParam("postId") final long postId
+            @QueryParam("postId") final long postId,
+            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/likes/'", neighborhoodId);
 
-        // No need for If-Match Management as the resource cant be altered
+        // Cache Control
+        if (ifMatch != null) {
+            String version = ls.findLike(postId, userId).orElseThrow(NotFoundException::new).getVersion().toString();
+            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
+            if (builder != null)
+                return Response.status(Response.Status.PRECONDITION_FAILED)
+                        .tag(version)
+                        .build();
+        }
 
         if(ls.deleteLike(postId, userId)) {
             entityLevelETag = ETagUtility.generateETag();
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         }
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.status(Response.Status.NOT_FOUND)
+                .tag(entityLevelETag)
+                .build();
     }
 }
 
