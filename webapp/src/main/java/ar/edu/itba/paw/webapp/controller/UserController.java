@@ -16,6 +16,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
+import javax.swing.text.html.parser.Entity;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkMutableETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
@@ -129,12 +131,14 @@ public class UserController {
         // Creation & ETag Generation
         final User user = us.createNeighbor(form.getMail(), form.getPassword(), form.getName(), form.getSurname(), neighborhoodId, form.getLanguageURN(), form.getIdentification());
         entityLevelETag = ETagUtility.generateETag();
+        EntityTag rowLevelETag = new EntityTag(user.getVersion().toString());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUserId())).build();
 
         return Response.created(uri)
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 
@@ -147,27 +151,24 @@ public class UserController {
             @PathParam("id") final long id,
             @PathParam("neighborhoodId") final long neighborhoodId,
             @Valid final UserUpdateForm partialUpdate,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
 
         // Cache Control
-        if (ifMatch != null) {
-            String version = us.findUser(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
-            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
-
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(version)
-                        .build();
-        }
+        EntityTag rowLevelETag = new EntityTag(us.findUser(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
+        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
         // Modification & ETag Generation
-        final UserDto userDto = UserDto.fromUser(us.updateUser(id, partialUpdate.getEmail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), partialUpdate.getProfilePicture(), partialUpdate.getIdentification(), partialUpdate.getLanguageURN(), partialUpdate.getUserRoleURN()), uriInfo);
+        final User updatedUser = us.updateUser(id, partialUpdate.getEmail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), partialUpdate.getProfilePicture(), partialUpdate.getIdentification(), partialUpdate.getLanguageURN(), partialUpdate.getUserRoleURN());
         entityLevelETag = ETagUtility.generateETag();
+        rowLevelETag = new EntityTag(updatedUser.getVersion().toString());
 
-        return Response.ok(userDto)
+        return Response.ok(UserDto.fromUser(updatedUser, uriInfo))
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 

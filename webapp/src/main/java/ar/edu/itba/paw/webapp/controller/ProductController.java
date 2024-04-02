@@ -19,8 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkMutableETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
 @Path("neighborhoods/{neighborhoodId}/products")
 @Component
@@ -122,12 +121,14 @@ public class ProductController extends GlobalControllerAdvice {
         // Creation & ETag Generation
         final Product product = ps.createProduct(getLoggedUserId(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentURN(), form.getImageFiles(), form.getQuantity());
         entityLevelETag = ETagUtility.generateETag();
+        EntityTag rowLevelETag = new EntityTag(product.getVersion().toString());
 
         // Resource  URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(product.getProductId())).build();
 
         return Response.created(uri)
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 
@@ -138,27 +139,24 @@ public class ProductController extends GlobalControllerAdvice {
     public Response updateProductPartially(
             @PathParam("id") final long id,
             @Valid final ListingForm partialUpdate,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
         LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);
 
         // Cache Control
-        if (ifMatch != null) {
-            String version = ps.findProduct(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
-            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
-
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(version)
-                        .build();
-        }
+        EntityTag rowLevelETag = new EntityTag(ps.findProduct(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
+        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
         // Modification & ETag Generation
-        final ProductDto productDto = ProductDto.fromProduct(ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartmentURN(), partialUpdate.getImageFiles(), partialUpdate.getQuantity()), uriInfo);
+        final Product updatedProduct = ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartmentURN(), partialUpdate.getImageFiles(), partialUpdate.getQuantity());
         entityLevelETag = ETagUtility.generateETag();
+        rowLevelETag = new EntityTag(updatedProduct.getVersion().toString());
 
-        return Response.ok(productDto)
+        return Response.ok(ProductDto.fromProduct(updatedProduct, uriInfo))
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 
@@ -168,26 +166,27 @@ public class ProductController extends GlobalControllerAdvice {
     @PreAuthorize("@accessControlHelper.canDeleteProduct(#productId)")
     public Response deleteById(
             @PathParam("id") final long productId,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 
         // Cache Control
-        if (ifMatch != null) {
-            String version = ps.findProduct(productId, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
-            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(version)
-                        .build();
-        }
+        EntityTag rowLevelETag = new EntityTag(ps.findProduct(productId, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
+        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
         // Deletion & ETag Generation Attempt
         if(ps.deleteProduct(productId)) {
             entityLevelETag = ETagUtility.generateETag();
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         }
 
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.status(Response.Status.NOT_FOUND)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .build();
     }
 }

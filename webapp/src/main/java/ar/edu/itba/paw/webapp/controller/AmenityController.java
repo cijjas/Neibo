@@ -19,8 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkMutableETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
 @Path("neighborhoods/{neighborhoodId}/amenities")
@@ -120,13 +119,14 @@ public class AmenityController {
         // Creation & ETag Generation
         Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, form.getSelectedShifts());
         entityLevelETag = ETagUtility.generateETag();
+        EntityTag rowLevelETag = new EntityTag(amenity.getVersion().toString());
 
         // Resource URN
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(amenity.getAmenityId())).build();
 
         return Response.created(uri)
                 .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, amenity.getVersion())
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 
@@ -138,29 +138,25 @@ public class AmenityController {
     public Response updateAmenityPartially(
             @PathParam("id") final long id,
             @Valid final AmenityUpdateForm partialUpdate,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
-        String rowLevelETag;
-        if (ifMatch != null) {
-            rowLevelETag = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
-            if (!ifMatch.equals(rowLevelETag) && !ifMatch.equals(entityLevelETag.toString())) {
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(entityLevelETag)
-                        .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                        .build();
-            }
-        }
+        // Cache Control
+        EntityTag rowLevelETag = new EntityTag(as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
+        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
-        // Perform the partial update
-        Amenity updatedAmenity = as.updateAmenityPartially(id, partialUpdate.getName(), partialUpdate.getDescription());
+        // Modification & ETag Generation
+        final Amenity updatedAmenity = as.updateAmenityPartially(id, partialUpdate.getName(), partialUpdate.getDescription());
+        entityLevelETag = ETagUtility.generateETag();
+        rowLevelETag = new EntityTag(updatedAmenity.getVersion().toString());
 
         // Return the updated resource along with the EntityLevelETag
-        AmenityDto amenityDto = AmenityDto.fromAmenity(updatedAmenity, uriInfo);
-        return Response.ok(amenityDto)
+        return Response.ok(AmenityDto.fromAmenity(updatedAmenity, uriInfo))
                 .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, updatedAmenity.getVersion())
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 
@@ -170,29 +166,27 @@ public class AmenityController {
     @Secured("ROLE_ADMINISTRATOR")
     public Response deleteById(
             @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
         // Cache Control
-        if (ifMatch != null) {
-            String rowLevelETag = as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
-            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowLevelETag));
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(entityLevelETag)
-                        .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                        .build();
-        }
+        EntityTag rowLevelETag = new EntityTag(as.findAmenity(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
+        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
         // Deletion & ETag Generation Attempt
         if (as.deleteAmenity(id)) {
             entityLevelETag = ETagUtility.generateETag();
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         }
 
         return Response.status(Response.Status.NOT_FOUND)
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

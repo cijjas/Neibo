@@ -21,8 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkMutableETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
 @Path("neighborhoods/{neighborhoodId}/requests")
 @Component
@@ -126,11 +125,15 @@ public class RequestController extends GlobalControllerAdvice {
         // Creation & Etag Generation
         final Request request = rs.createRequest(getLoggedUserId(), productId, form.getRequestMessage());
         entityLevelETag = ETagUtility.generateETag();
+        EntityTag rowLevelETag = new EntityTag(request.getVersion().toString());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(request.getRequestId())).build();
 
-        return Response.created(uri).build();
+        return Response.created(uri)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .build();
     }
 
     @PATCH
@@ -140,26 +143,24 @@ public class RequestController extends GlobalControllerAdvice {
     @PreAuthorize("@accessControlHelper.canAccessRequest(#id)")
     public Response updateRequest(
             @PathParam("id") final long requestId,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/requests/{}", neighborhoodId, requestId);
 
         // Cache Control
-        if (ifMatch != null){
-            String rowVersion = rs.findRequest(requestId, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
-            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(rowVersion)
-                        .build();
-        }
+        EntityTag rowLevelETag = new EntityTag(rs.findRequest(requestId, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
+        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
         // Modification & ETag Generation
-        RequestDto requestDto = RequestDto.fromRequest(rs.markRequestAsFulfilled(requestId), uriInfo);
+        final Request updatedRequest = rs.markRequestAsFulfilled(requestId);
         entityLevelETag = ETagUtility.generateETag();
+        rowLevelETag = new EntityTag(updatedRequest.getVersion().toString());
 
-        return Response.ok(requestDto)
+        return Response.ok(RequestDto.fromRequest(updatedRequest, uriInfo))
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

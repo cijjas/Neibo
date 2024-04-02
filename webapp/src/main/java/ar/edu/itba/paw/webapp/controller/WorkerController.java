@@ -27,6 +27,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkMutableETagPreconditions;
 
 @Path("/workers")
@@ -128,12 +129,14 @@ public class WorkerController extends GlobalControllerAdvice {
         // Creation & Etag Generation
         final Worker worker = ws.createWorker(form.getWorker_mail(), form.getWorker_name(), form.getWorker_surname(), form.getWorker_password(), form.getWorker_identification(), form.getPhoneNumber(), form.getAddress(), form.getWorker_languageURN(), form.getProfessionURNs(), form.getBusinessName());
         entityLevelETag = ETagUtility.generateETag();
+        EntityTag rowLevelETag = new EntityTag(worker.getVersion().toString());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(worker.getWorkerId())).build();
 
         return Response.created(uri)
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 
@@ -144,26 +147,24 @@ public class WorkerController extends GlobalControllerAdvice {
     public Response updateWorkerPartially(
             @PathParam("id") final long workerId,
             @Valid final WorkerUpdateForm partialUpdate,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
         LOGGER.info("PATCH request arrived at '/workers/{}'", workerId);
 
         // Cache Control
-        if (ifMatch != null){
-            String rowVersion = ws.findWorker(workerId).orElseThrow(NotFoundException::new).getVersion().toString();
-            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(rowVersion)
-                        .build();
-        }
+        EntityTag rowLevelETag = new EntityTag(ws.findWorker(workerId).orElseThrow(NotFoundException::new).getVersion().toString());
+        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
         // Modification & ETag Generation
-        final WorkerDto workerDto = WorkerDto.fromWorker(ws.updateWorkerPartially(workerId, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio()), uriInfo);
+        final Worker updatedWorker = ws.updateWorkerPartially(workerId, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio());
         entityLevelETag = ETagUtility.generateETag();
+        rowLevelETag = new EntityTag(updatedWorker.getVersion().toString());
 
-        return Response.ok(workerDto)
+        return Response.ok(WorkerDto.fromWorker(updatedWorker, uriInfo))
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

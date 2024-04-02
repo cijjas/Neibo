@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
 
 @Path("neighborhoods/{neighborhoodId}/products/{productId}/inquiries")
 @Component
@@ -124,6 +125,7 @@ public class InquiryController extends GlobalControllerAdvice{
         // Creation & ETag Generation
         final Inquiry inquiry = is.createInquiry(getLoggedUserId(), productId, form.getQuestionMessage());
         entityLevelETag = ETagUtility.generateETag();
+        EntityTag rowLevelETag = new EntityTag(inquiry.getVersion().toString());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder()
@@ -131,6 +133,7 @@ public class InquiryController extends GlobalControllerAdvice{
 
         return Response.created(uri)
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 
@@ -142,26 +145,24 @@ public class InquiryController extends GlobalControllerAdvice{
     public Response updateInquiry(
             @PathParam("id") final long inquiryId,
             @Valid final QuestionForm form,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
         // Cache Control
-        if (ifMatch != null){
-            String rowVersion = is.findInquiry(inquiryId, productId, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
-            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(rowVersion)
-                        .build();
-        }
+        EntityTag rowLevelETag = new EntityTag(is.findInquiry(inquiryId, productId, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
+        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
         // Modification & ETag Generation
-        final InquiryDto inquiryDto = InquiryDto.fromInquiry(is.replyInquiry(inquiryId, form.getQuestionMessage()), uriInfo);
+        final Inquiry updatedInquiry = is.replyInquiry(inquiryId, form.getQuestionMessage());
         entityLevelETag = ETagUtility.generateETag();
+        rowLevelETag = new EntityTag(updatedInquiry.getVersion().toString());
 
-        return Response.ok(inquiryDto)
+        return Response.ok(InquiryDto.fromInquiry(updatedInquiry, uriInfo))
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 
