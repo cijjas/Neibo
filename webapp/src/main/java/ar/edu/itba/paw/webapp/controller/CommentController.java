@@ -119,12 +119,14 @@ public class CommentController extends GlobalControllerAdvice{
         // Creation & ETag Generation
         final Comment comment = cs.createComment(form.getComment(), getLoggedUserId(), postId);
         entityLevelETag = ETagUtility.generateETag();
+        EntityTag rowLevelETag = new EntityTag(comment.getCommentId().toString());
 
         // Resource URN
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(comment.getCommentId())).build();
 
         return Response.created(uri)
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
 
 @Path("neighborhoods/{neighborhoodId}/bookings")
 @Component
@@ -129,6 +130,9 @@ public class BookingController extends GlobalControllerAdvice{
 
         return Response.created(uri)
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, Arrays.stream(bookingIds)
+                        .mapToObj(Long::toString)
+                        .collect(Collectors.joining(",")))
                 .build();
     }
 
@@ -137,25 +141,26 @@ public class BookingController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(
             @PathParam("id") final long bookingId,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 
         // Cache Control
-        if (ifMatch != null) {
-            String rowVersion = bs.findBooking(bookingId, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString();
-            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(rowVersion));
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(rowVersion)
-                        .build();
-        }
+        EntityTag rowLevelETag = new EntityTag(String.valueOf(bookingId));
+        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
         // Deletion & ETag Generation Attempt
         if(bs.deleteBooking(bookingId)) {
             entityLevelETag = ETagUtility.generateETag();
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         }
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.status(Response.Status.NOT_FOUND)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .build();
     }
 }

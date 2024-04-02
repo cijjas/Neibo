@@ -138,6 +138,7 @@ public class PostController extends GlobalControllerAdvice{
         publishForm.setPostImage(postImage);
         final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedUserId(), publishForm.getChannelURN(), publishForm.getTags(), publishForm.getPostImage());
         entityLevelETag = ETagUtility.generateETag();
+        EntityTag rowLevelETag = new EntityTag(post.getPostId().toString());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder()
@@ -145,6 +146,7 @@ public class PostController extends GlobalControllerAdvice{
 
         return Response.created(uri)
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

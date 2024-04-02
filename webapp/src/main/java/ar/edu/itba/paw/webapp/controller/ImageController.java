@@ -34,7 +34,7 @@ public class ImageController {
     @Context
     private Request request;
 
-    private final EntityTag entityLevelETag = ETagUtility.generateETag();
+    private EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @GET
     @Path("/{id}")
@@ -70,18 +70,31 @@ public class ImageController {
     ) {
         LOGGER.info("POST request arrived at '/images/'");
 
+        // ??
         if (fileInputStream == null) {
             LOGGER.warn("Null Image InputStream");
             return Response.ok().build();
         }
 
-        // Creation
+        // Cache Control
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return Response.status(Response.Status.PRECONDITION_FAILED)
+                    .tag(entityLevelETag)
+                    .build();
+
+        // Creation & ETag Generation
         final Image image = is.storeImage(fileInputStream);
+        entityLevelETag = ETagUtility.generateETag();
+        EntityTag rowLevelETag = new EntityTag(image.getImageId().toString());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(image.getImageId())).build();
 
-        return Response.created(uri).build();
+        return Response.created(uri)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .build();
     }
 
 }

@@ -118,12 +118,14 @@ public class NeighborhoodController {
         // Creation & ETag Generation
         final Neighborhood neighborhood = ns.createNeighborhood(form.getName());
         entityLevelETag = ETagUtility.generateETag();
+        EntityTag rowLevelETag = new EntityTag(neighborhood.getNeighborhoodId().toString());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(neighborhood.getNeighborhoodId())).build();
 
         return Response.created(uri)
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

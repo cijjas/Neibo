@@ -15,6 +15,7 @@ public class ETagUtility {
         return new EntityTag(Long.toString(System.currentTimeMillis()));
     }
 
+    // List y Find
     public static Response checkETagPreconditions(EntityTag clientEtag, EntityTag entityLevelETag, EntityTag rowLevelETag) {
         if (clientEtag != null) {
             if (clientEtag.equals(rowLevelETag) || clientEtag.equals(entityLevelETag)) {
@@ -32,6 +33,21 @@ public class ETagUtility {
         if (clientEtag != null) {
             if (clientEtag.equals(rowLevelETag) || clientEtag.equals(entityLevelETag)) {
                 return Response.status(Response.Status.NOT_MODIFIED)
+                        .tag(entityLevelETag)
+                        .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                        .build();
+            }
+        }
+        return null;
+    }
+
+    // Post puede usar directamente cache control
+
+    // Update y delete
+    public static Response checkModificationETagPreconditions(EntityTag clientEtag, EntityTag entityLevelETag, EntityTag rowLevelETag) {
+        if (clientEtag != null) {
+            if (!clientEtag.equals(rowLevelETag) && !clientEtag.equals(entityLevelETag)) {
+                return Response.status(Response.Status.PRECONDITION_FAILED)
                         .tag(entityLevelETag)
                         .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                         .build();

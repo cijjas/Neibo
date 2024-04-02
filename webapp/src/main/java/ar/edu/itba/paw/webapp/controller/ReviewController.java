@@ -121,12 +121,14 @@ public class ReviewController extends GlobalControllerAdvice {
         // Creation & ETag Generation
         final Review review = rs.createReview(workerId, getLoggedUserId(), form.getRating(), form.getReview());
         entityLevelETag = ETagUtility.generateETag();
+        EntityTag rowLevelETag = new EntityTag(review.getReviewId().toString());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(review.getReviewId())).build();
 
         return Response.created(uri)
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

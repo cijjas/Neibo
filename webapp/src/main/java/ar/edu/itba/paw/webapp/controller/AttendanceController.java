@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
 
 @Path("neighborhoods/{neighborhoodId}/events/{eventId}/attendance")
 @Component
@@ -118,37 +119,41 @@ public class AttendanceController extends GlobalControllerAdvice {
         // Creation & ETag Generation
         final Attendance attendance = as.createAttendance(getLoggedUserId(), eventId);
         entityLevelETag = ETagUtility.generateETag();
+        EntityTag rowLevelETag = new EntityTag(neighborhoodId.toString() + attendance.getUser().getUserId());
 
         // Resource URN
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(attendance.getId())).build();
 
         return Response.created(uri)
                 .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 
     @DELETE
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteByUser(
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
         // Cache Control
-        if (ifMatch != null) {
-            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(entityLevelETag)
-                        .build();
-        }
+        EntityTag rowLevelETag = new EntityTag(neighborhoodId.toString() + getLoggedUserId());
+        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
 
         // Deletion & ETag Generation Attempt
         if(as.deleteAttendance(getLoggedUserId(), eventId)) {
             entityLevelETag = ETagUtility.generateETag();
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         }
 
-        return Response.status(Response.Status.NOT_FOUND).build();
+        return Response.status(Response.Status.NOT_FOUND)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .build();
     }
 }

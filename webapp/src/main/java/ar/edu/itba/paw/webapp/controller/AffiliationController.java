@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
 @Path("/affiliations")
 @Component
@@ -89,11 +90,11 @@ public class AffiliationController {
                     .build();
 
         // Creation & ETag Generation
-        Affiliation a = nws.createAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRole());
+        Affiliation affiliation = nws.createAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRole());
         entityLevelETag = ETagUtility.generateETag();
 
         // Resource URN
-        URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(a.getWorker().getWorkerId())).build();
+        URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(affiliation.getWorker().getWorkerId())).build();
 
         return Response.created(uri)
                 .tag(entityLevelETag)
