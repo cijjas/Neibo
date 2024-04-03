@@ -10,6 +10,7 @@ import ar.edu.itba.paw.webapp.form.RequestForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -159,6 +160,36 @@ public class RequestController extends GlobalControllerAdvice {
         rowLevelETag = new EntityTag(updatedRequest.getVersion().toString());
 
         return Response.ok(RequestDto.fromRequest(updatedRequest, uriInfo))
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Produces(value = {MediaType.APPLICATION_JSON,})
+    @PreAuthorize("@accessControlHelper.canDeleteRequest(#requestId)")
+    public Response deleteById(
+            @PathParam("id") final long requestId,
+            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+    ) {
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
+
+        // Cache Control
+        EntityTag rowLevelETag = new EntityTag(rs.findRequest(requestId, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
+        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
+
+        // Deletion & ETag Generation Attempt
+        if (rs.deleteRequest(requestId)) {
+            entityLevelETag = ETagUtility.generateETag();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
+        }
+
+        return Response.status(Response.Status.NOT_FOUND)
                 .tag(entityLevelETag)
                 .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();

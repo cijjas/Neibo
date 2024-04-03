@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.models.Entities.Tag;
 import ar.edu.itba.paw.models.TwoIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -60,6 +60,27 @@ public class PostServiceImpl implements PostService {
         Post p = postDao.createPost(title, description, userId, channelId, i == null ? 0 : i.getImageId());
         tagService.createTagsAndCategorizePost(p.getPostId(), tags);
         return p;
+    }
+
+    @Override
+    public boolean deletePost(long postId, long neighborhoodId) {
+        LOGGER.info("Deleting Post {}", postId);
+
+        ValidationUtils.checkPostId(postId);
+
+        Post post = findPost(postId).orElseThrow(NotFoundException::new);
+        Set<Tag> tags = post.getTags();
+
+        if(postDao.deletePost(postId)) {
+            for(Tag t : tags) {
+                //if tag was only being used in this (deleted) post, delete the tag
+                if(countPosts(null, Collections.singletonList(t.getTag()), neighborhoodId, null, null) == 0)
+                    tagService.deleteTag(t.getTagId());
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
 //    @Override

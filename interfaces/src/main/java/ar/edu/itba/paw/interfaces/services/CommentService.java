@@ -9,6 +9,8 @@ public interface CommentService {
 
     Comment createComment(final String comment, final long neighborId, final long postId);
 
+    boolean deleteComment(final long commentId);
+
     // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Comment> findComment(long commentId);

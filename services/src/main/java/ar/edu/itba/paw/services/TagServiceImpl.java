@@ -45,6 +45,15 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public boolean deleteTag(long tagId) {
+        LOGGER.info("Deleting Tag {}", tagId);
+
+        ValidationUtils.checkTagId(tagId);
+
+        return tagDao.deleteTag(tagId);
+    }
+
+    @Override
     public void createTagsAndCategorizePost(long postId, String tagsString) {
         LOGGER.info("Creating Tags in {} and associating it with Post {}", tagsString, postId);
 

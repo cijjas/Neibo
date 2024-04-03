@@ -39,6 +39,18 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
+    public boolean deleteRequest(long requestId) {
+        LOGGER.debug("Deleting Request {}", requestId);
+
+        Request request = em.find(Request.class, requestId);
+        if (request != null) {
+            em.remove(request);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public Optional<Request> findRequest(long requestId) {
         LOGGER.debug("Selecting Request {}", requestId);
 

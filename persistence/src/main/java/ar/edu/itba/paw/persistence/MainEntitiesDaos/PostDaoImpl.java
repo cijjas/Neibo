@@ -43,6 +43,18 @@ public class PostDaoImpl implements PostDao {
         return post;
     }
 
+    // ------------------------------------------------ POSTS DELETE ---------------------------------------------------
+    @Override
+    public boolean deletePost(long postId) {
+        LOGGER.debug("Deleting Post with id {}", postId);
+        Post post = em.find(Post.class, postId);
+        if (post == null) {
+            return false;
+        }
+        em.remove(post);
+        return true;
+    }
+
     // ------------------------------------------------ POSTS SELECT ---------------------------------------------------
 
     @Override

@@ -3,16 +3,22 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.models.Entities.Channel;
 import ar.edu.itba.paw.webapp.dto.ChannelDto;
+import ar.edu.itba.paw.webapp.form.NewChannelForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
+
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_HEADER;
 
@@ -84,8 +90,62 @@ public class ChannelController {
                 .build();
     }
 
-    // Create
+    @POST
+    @Secured("ROLE_ADMINISTRATOR")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response createChannel(
+            @Valid NewChannelForm form
+    ) {
+        LOGGER.info("POST request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
 
-    // Delete
+        // Cache Control
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return Response.status(Response.Status.PRECONDITION_FAILED)
+                    .tag(entityLevelETag)
+                    .build();
+
+        // Content
+        final Channel channel = cs.createChannel(neighborhoodId, form.getName());
+        entityLevelETag = ETagUtility.generateETag();
+        EntityTag rowLevelETag = new EntityTag(String.valueOf(channel.getChannelId()));
+
+        // Resource URN
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(channel.getChannelId())).build();
+
+        return Response.ok(uri)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Secured("ROLE_ADMINISTRATOR")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response deleteById(
+            @PathParam("id") final long channelId,
+            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+    ) {
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
+
+        // Cache Control
+        EntityTag rowLevelETag = new EntityTag(String.valueOf(channelId));
+        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
+
+        // Deletion & ETag Generation Attempt
+        if(cs.deleteChannel(channelId)) {
+            entityLevelETag = ETagUtility.generateETag();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
+        }
+        return Response.status(Response.Status.NOT_FOUND)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .build();
+    }
 }
 

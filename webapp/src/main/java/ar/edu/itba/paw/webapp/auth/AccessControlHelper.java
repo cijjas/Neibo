@@ -1,14 +1,8 @@
 package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.exceptions.NotFoundException;
-import ar.edu.itba.paw.interfaces.services.InquiryService;
-import ar.edu.itba.paw.interfaces.services.ProductService;
-import ar.edu.itba.paw.interfaces.services.RequestService;
-import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Entities.Inquiry;
-import ar.edu.itba.paw.models.Entities.Product;
-import ar.edu.itba.paw.models.Entities.Request;
-import ar.edu.itba.paw.models.Entities.User;
+import ar.edu.itba.paw.interfaces.services.*;
+import ar.edu.itba.paw.models.Entities.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +22,9 @@ public class AccessControlHelper {
 
     @Autowired
     private ProductService ps;
+
+    @Autowired
+    private PostService postService;
 
     @Autowired
     private InquiryService is;
@@ -169,6 +166,49 @@ public class AccessControlHelper {
         Product p = ps.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
 
         return p.getSeller().getUserId() == userAuth.getUserId();
+    }
+
+    // Only the creator of the post and the Administrator can delete the post
+    public Boolean canDeletePost(long postId){
+        LOGGER.info("Verifying List Transactions Accessibility");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserAuth userAuth = (UserAuth) authentication.getPrincipal();
+
+        if (userAuth.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMINISTRATOR")))
+            return true;
+
+        Post p = postService.findPost(postId).orElseThrow(()-> new NotFoundException("Post Not Found"));
+
+        return p.getUser().getUserId() == userAuth.getUserId();
+    }
+
+    public Boolean canDeleteInquiry(long inquiryId){
+        LOGGER.info("Verifying List Transactions Accessibility");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserAuth userAuth = (UserAuth) authentication.getPrincipal();
+
+        if (userAuth.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMINISTRATOR")))
+            return true;
+
+        Inquiry i = is.findInquiry(inquiryId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+
+        return i.getUser().getUserId() == userAuth.getUserId();
+    }
+
+    public Boolean canDeleteRequest(long requestId){
+        LOGGER.info("Verifying List Transactions Accessibility");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserAuth userAuth = (UserAuth) authentication.getPrincipal();
+
+        if (userAuth.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMINISTRATOR")))
+            return true;
+
+        Request r = rs.findRequest(requestId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+
+        return r.getUser().getUserId() == userAuth.getUserId();
     }
 
     // The seller of the product cant create an Inquiry for it

@@ -11,6 +11,9 @@ public interface InquiryDao {
 
     Inquiry createInquiry(final long userId, final long productId, final String message);
 
+    // ---------------------------------------------- INQUIRY DELETE ---------------------------------------------------
+    boolean deleteInquiry(final long inquiryId);
+
     // ---------------------------------------------- INQUIRY INSERT ---------------------------------------------------
 
     Optional<Inquiry> findInquiry(final long inquiryId);

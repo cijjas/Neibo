@@ -36,6 +36,18 @@ public class InquiryDaoImpl implements InquiryDao {
         return inquiry;
     }
 
+    @Override
+    public boolean deleteInquiry(long inquiryId) {
+        LOGGER.debug("Deleting Inquiry with id {}", inquiryId);
+
+        Inquiry inquiry = em.find(Inquiry.class, inquiryId);
+        if (inquiry != null) {
+            em.remove(inquiry);
+            return true;
+        }
+        return false;
+    }
+
     // ------------------------------------------ INQUIRIES INSERT -----------------------------------------------------
 
     @Override

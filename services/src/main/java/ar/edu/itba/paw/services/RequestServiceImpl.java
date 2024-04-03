@@ -52,6 +52,15 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public boolean deleteRequest(long requestId) {
+        LOGGER.info("Deleting Request {}", requestId);
+
+        ValidationUtils.checkRequestId(requestId);
+
+        return requestDao.deleteRequest(requestId);
+    }
+
+    @Override
     public Optional<Request> findRequest(long requestId) {
         LOGGER.info("Finding Request {}", requestId);
 

@@ -42,6 +42,15 @@ public class ChannelServiceImpl implements ChannelService {
         return channel;
     }
 
+    @Override
+    public boolean deleteChannel(long channelId) {
+        LOGGER.info("Deleting Channel {}", channelId);
+
+        ValidationUtils.checkChannelId(channelId);
+
+        return channelDao.deleteChannel(channelId);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

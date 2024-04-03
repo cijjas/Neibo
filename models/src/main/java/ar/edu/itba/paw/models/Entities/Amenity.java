@@ -24,7 +24,7 @@ public class Amenity {
     @ColumnDefault("1")
     private Long version;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "neighborhoodid")
     private Neighborhood neighborhood;
 

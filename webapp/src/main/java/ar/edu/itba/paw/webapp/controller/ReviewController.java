@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
 
 @Path("workers/{workerId}/reviews")
 @Component
@@ -127,6 +128,34 @@ public class ReviewController extends GlobalControllerAdvice {
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(review.getReviewId())).build();
 
         return Response.created(uri)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response deleteById(
+            @PathParam("id") final long reviewId,
+            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+    ) {
+        LOGGER.info("DELETE request arrived at '/workers/{}/reviews/{}'", workerId, reviewId);
+
+        // Cache Control
+        EntityTag rowLevelETag = new EntityTag(String.valueOf(reviewId));
+        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
+
+        // Deletion & ETag Generation Attempt
+        if(rs.deleteReview(reviewId)) {
+            entityLevelETag = ETagUtility.generateETag();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
+        }
+        return Response.status(Response.Status.NOT_FOUND)
                 .tag(entityLevelETag)
                 .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();

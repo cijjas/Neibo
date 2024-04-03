@@ -47,6 +47,15 @@ public class InquiryServiceImpl implements InquiryService {
         return inquiryDao.createInquiry(userId, productId, message);
     }
 
+    @Override
+    public boolean deleteInquiry(long inquiryId) {
+        LOGGER.info("Deleting Inquiry {}", inquiryId);
+
+        ValidationUtils.checkInquiryId(inquiryId);
+
+        return inquiryDao.deleteInquiry(inquiryId);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

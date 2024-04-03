@@ -11,6 +11,9 @@ public interface RequestDao {
 
     Request createRequest(final long userId, final long productId, final String message);
 
+    // --------------------------------------------- REQUESTS DELETE ---------------------------------------------------
+    boolean deleteRequest(long requestId);
+
     // --------------------------------------------- REQUESTS SELECT ---------------------------------------------------
 
     Optional<Request> findRequest(long requestId);

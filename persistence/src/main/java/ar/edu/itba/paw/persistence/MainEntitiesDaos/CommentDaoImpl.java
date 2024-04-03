@@ -37,6 +37,18 @@ public class CommentDaoImpl implements CommentDao {
         return comment;
     }
 
+    @Override
+    public boolean deleteComment(long commentId) {
+        LOGGER.debug("Deleting Comment with id {}", commentId);
+
+        Comment comment = em.find(Comment.class, commentId);
+        if (comment != null) {
+            em.remove(comment);
+            return true;
+        }
+        return false;
+    }
+
     // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
 
     @Override

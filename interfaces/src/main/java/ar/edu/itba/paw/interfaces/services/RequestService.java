@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface RequestService {
     Request createRequest(final long userId, final long productId, final String message);
 
+    boolean deleteRequest(long requestId);
     // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Request> findRequest(long requestId);

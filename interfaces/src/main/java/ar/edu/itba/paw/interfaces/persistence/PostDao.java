@@ -12,6 +12,9 @@ public interface PostDao {
 
     Post createPost(final String title, final String description, final long neighborId, final long channelId, final long imageId);
 
+    // ------------------------------------------------ POSTS DELETE ---------------------------------------------------
+    boolean deletePost(final long postId);
+
     // ------------------------------------------------ POSTS SELECT ---------------------------------------------------
 
     Optional<Post> findPost(long postId);

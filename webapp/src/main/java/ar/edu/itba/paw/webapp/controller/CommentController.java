@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
 
 @Path("neighborhoods/{neighborhoodId}/posts/{postId}/comments")
 @Component
@@ -125,6 +126,34 @@ public class CommentController extends GlobalControllerAdvice{
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(comment.getCommentId())).build();
 
         return Response.created(uri)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response deleteById(
+            @PathParam("id") final long commentId,
+            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+    ) {
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
+
+        // Cache Control
+        EntityTag rowLevelETag = new EntityTag(String.valueOf(commentId));
+        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
+
+        // Deletion & ETag Generation Attempt
+        if(cs.deleteComment(commentId)) {
+            entityLevelETag = ETagUtility.generateETag();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
+        }
+        return Response.status(Response.Status.NOT_FOUND)
                 .tag(entityLevelETag)
                 .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();

@@ -11,6 +11,9 @@ public interface TagService {
     Tag createTag(String name);
 
     // -----------------------------------------------------------------------------------------------------------------
+    boolean deleteTag(long tagId);
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     List<Tag> getTags(Long postId, long neighborhoodId, int page, int size);
 

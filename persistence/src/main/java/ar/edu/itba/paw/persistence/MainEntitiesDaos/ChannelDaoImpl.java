@@ -30,6 +30,19 @@ public class ChannelDaoImpl implements ChannelDao {
         return channel;
     }
 
+    @Override
+    public boolean deleteChannel(long channelId) {
+        LOGGER.info("Deleting Channel {}", channelId);
+
+        Channel channel = em.find(Channel.class, channelId);
+        if (channel == null) {
+            return false;
+        }
+
+        em.remove(channel);
+        return true;
+    }
+
     // -------------------------------------------- CHANNELS SELECT ----------------------------------------------------
 
     public Optional<Channel> findChannel(long channelId, long neighborhoodId) {

@@ -11,6 +11,9 @@ public interface ChannelDao {
 
     Channel createChannel(final String name);
 
+    // -------------------------------------------- CHANNELS DELETE ----------------------------------------------------
+    boolean deleteChannel(final long channelId);
+
     // -------------------------------------------- CHANNELS SELECT ----------------------------------------------------
 
     List<Channel> getChannels(final long neighborhoodId);

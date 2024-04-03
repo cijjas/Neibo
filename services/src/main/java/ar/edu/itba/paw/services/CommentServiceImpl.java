@@ -46,6 +46,13 @@ public class CommentServiceImpl implements CommentService {
         return commentDao.createComment(comment, userId, postId);
     }
 
+    @Override
+    public boolean deleteComment(long commentId) {
+        LOGGER.info("Deleting Comment {}", commentId);
+
+        return commentDao.deleteComment(commentId);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override

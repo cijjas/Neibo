@@ -29,5 +29,5 @@ public interface ReviewService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    void deleteReview(long reviewId);
+    boolean deleteReview(long reviewId);
 }

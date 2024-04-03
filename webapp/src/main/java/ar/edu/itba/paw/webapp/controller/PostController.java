@@ -12,6 +12,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
 
 @Path("neighborhoods/{neighborhoodId}/posts")
 @Component
@@ -145,6 +147,35 @@ public class PostController extends GlobalControllerAdvice{
                 .path(String.valueOf(post.getPostId())).build();
 
         return Response.created(uri)
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @PreAuthorize("@accessControlHelper.canDeletePost(#postId)")
+    public Response deleteById(
+            @PathParam("id") final long postId,
+            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+    ) {
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
+
+        // Cache Control
+        EntityTag rowLevelETag = new EntityTag(String.valueOf(postId));
+        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
+
+        // Deletion & ETag Generation Attempt
+        if(ps.deletePost(postId, neighborhoodId)) {
+            entityLevelETag = ETagUtility.generateETag();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
+        }
+        return Response.status(Response.Status.NOT_FOUND)
                 .tag(entityLevelETag)
                 .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();

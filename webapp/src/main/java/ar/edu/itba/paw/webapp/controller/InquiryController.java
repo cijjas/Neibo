@@ -10,6 +10,7 @@ import ar.edu.itba.paw.webapp.form.QuestionForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -161,6 +162,36 @@ public class InquiryController extends GlobalControllerAdvice{
         rowLevelETag = new EntityTag(updatedInquiry.getVersion().toString());
 
         return Response.ok(InquiryDto.fromInquiry(updatedInquiry, uriInfo))
+                .tag(entityLevelETag)
+                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Produces(value = {MediaType.APPLICATION_JSON,})
+    @PreAuthorize("@accessControlHelper.canDeleteInquiry(#inquiryId)")
+    public Response deleteById(
+            @PathParam("id") final long inquiryId,
+            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+    ) {
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
+
+        // Cache Control
+        EntityTag rowLevelETag = new EntityTag(is.findInquiry(inquiryId).orElseThrow(NotFoundException::new).getVersion().toString());
+        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
+        if (response != null)
+            return response;
+
+        // Deletion & ETag Generation Attempt
+        if (is.deleteInquiry(inquiryId)) {
+            entityLevelETag = ETagUtility.generateETag();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
+        }
+
+        return Response.status(Response.Status.NOT_FOUND)
                 .tag(entityLevelETag)
                 .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();

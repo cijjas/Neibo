@@ -20,7 +20,7 @@ public class Channel {
     @OneToMany(mappedBy = "channel")
     private Set<Post> posts;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "neighborhoods_channels",
             joinColumns = @JoinColumn(name = "channelid"),

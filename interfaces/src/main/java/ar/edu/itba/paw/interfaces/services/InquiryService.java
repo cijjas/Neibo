@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface InquiryService {
     Inquiry createInquiry(final long userId, final long productId, final String message);
 
+    boolean deleteInquiry(final long inquiryId);
     // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Inquiry> findInquiry(final long inquiryId);

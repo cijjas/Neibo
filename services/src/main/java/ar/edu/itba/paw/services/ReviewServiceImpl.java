@@ -118,11 +118,11 @@ public class ReviewServiceImpl implements ReviewService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public void deleteReview(long reviewId) {
+    public boolean deleteReview(long reviewId) {
         LOGGER.info("Deleting Review {}", reviewId);
 
         ValidationUtils.checkReviewId(reviewId);
 
-        reviewDao.deleteReview(reviewId);
+        return reviewDao.deleteReview(reviewId);
     }
 }
