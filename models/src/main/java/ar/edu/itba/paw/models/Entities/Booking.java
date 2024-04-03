@@ -26,10 +26,6 @@ public class Booking {
     @Column(name = "date")
     private Date bookingDate;
 
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
     Booking() {
     }
 
@@ -38,10 +34,6 @@ public class Booking {
         this.user = builder.user;
         this.amenityAvailability = builder.amenityAvailability;
         this.bookingDate = builder.bookingDate;
-    }
-
-    public Long getVersion() {
-        return version;
     }
 
     public void setBookingId(Long bookingId) {
@@ -58,10 +50,6 @@ public class Booking {
 
     public void setBookingDate(Date bookingDate) {
         this.bookingDate = bookingDate;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 
     public Long getBookingId() {

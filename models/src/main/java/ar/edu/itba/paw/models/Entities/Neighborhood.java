@@ -33,14 +33,6 @@ public class Neighborhood {
     @JoinTable(name = "workers_neighborhoods", joinColumns = @JoinColumn(name = "neighborhoodid"), inverseJoinColumns = @JoinColumn(name = "workerid"))
     private Set<Worker> workers;
 
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
-    public Long getVersion() {
-        return version;
-    }
-
     Neighborhood() {
     }
 

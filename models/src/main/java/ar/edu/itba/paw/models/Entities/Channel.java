@@ -28,14 +28,6 @@ public class Channel {
     )
     private Set<Neighborhood> neighborhoods;
 
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
-    public Long getVersion() {
-        return version;
-    }
-
     Channel() {
     }
 

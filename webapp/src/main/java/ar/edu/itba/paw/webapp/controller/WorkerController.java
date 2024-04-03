@@ -1,13 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.enums.Language;
-import ar.edu.itba.paw.enums.WorkerRole;
-import ar.edu.itba.paw.enums.WorkerStatus;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
-import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Worker;
-import ar.edu.itba.paw.webapp.dto.UserDto;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
 import ar.edu.itba.paw.webapp.form.WorkerUpdateForm;
 import ar.edu.itba.paw.webapp.form.WorkerSignupForm;
@@ -22,8 +16,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
@@ -127,7 +119,7 @@ public class WorkerController extends GlobalControllerAdvice {
                     .build();
 
         // Creation & Etag Generation
-        final Worker worker = ws.createWorker(form.getWorker_mail(), form.getWorker_name(), form.getWorker_surname(), form.getWorker_password(), form.getWorker_identification(), form.getPhoneNumber(), form.getAddress(), form.getWorker_languageURN(), form.getProfessionURNs(), form.getBusinessName());
+        final Worker worker = ws.createWorker(form.getWorkerMail(), form.getWorkerName(), form.getWorkerSurname(), form.getWorkerPassword(), form.getWorkerIdentification(), form.getPhoneNumber(), form.getAddress(), form.getWorkerLanguageURN(), form.getProfessionURNs(), form.getBusinessName());
         entityLevelETag = ETagUtility.generateETag();
         EntityTag rowLevelETag = new EntityTag(worker.getVersion().toString());
 

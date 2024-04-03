@@ -53,7 +53,6 @@ public class TestInserter {
 
     public void createLike(long postId, long userId) {
         Like like = new Like(em.find(Post.class, postId), em.find(User.class, userId), new java.sql.Date(System.currentTimeMillis()));
-        like.setVersion(1L);
         em.persist(like);
         em.flush();
     }
@@ -92,7 +91,6 @@ public class TestInserter {
                 .user(em.find(User.class, userId))
                 .post(em.find(Post.class, postId))
                 .build();
-        comment.setVersion(1L);
         em.persist(comment);
         em.flush();
         return comment.getCommentId();
@@ -106,7 +104,6 @@ public class TestInserter {
 
     public void createAttendance(long userId, long eventId) {
         Attendance attendance = new Attendance(em.find(User.class, userId), em.find(Event.class, eventId));
-        attendance.setVersion(1L);
         em.persist(attendance);
         em.flush();
     }
@@ -119,7 +116,6 @@ public class TestInserter {
                 .channel(em.find(Channel.class, channelId))
                 .postPicture(em.find(Image.class, imageId))
                 .build();
-        post.setVersion(1L);
         em.persist(post);
         em.flush();
         return post.getPostId();
@@ -147,7 +143,6 @@ public class TestInserter {
         Tag tag = new Tag.Builder()
                 .tag(name)
                 .build();
-        tag.setVersion(1L);
         em.persist(tag);
         em.flush();
         return tag.getTagId();
@@ -172,7 +167,6 @@ public class TestInserter {
                 .bookingDate(date)
                 .amenityAvailability(em.find(Availability.class, amenityId))
                 .build();
-        booking.setVersion(1L);
         em.persist(booking);
         return booking.getBookingId();
     }
@@ -188,7 +182,6 @@ public class TestInserter {
                 .amenity(em.find(Amenity.class, amenityId))
                 .shift(em.find(Shift.class, shiftId))
                 .build();
-        availability.setVersion(1L);
         em.persist(availability);
         em.flush();
         return availability.getAmenityAvailabilityId();
@@ -200,7 +193,6 @@ public class TestInserter {
                 .bookingDate(reservationDate)
                 .amenityAvailability(em.find(Availability.class, amenityAvailabilityId))
                 .build();
-        booking.setVersion(1L);
         em.persist(booking);
         em.flush();
         return booking.getBookingId();
@@ -238,7 +230,6 @@ public class TestInserter {
                 .rating(rating)
                 .review(reviewString)
                 .build();
-        review.setVersion(1L);
         em.persist(review);
         em.flush();
         return review.getReviewId();
@@ -374,7 +365,6 @@ public class TestInserter {
                 .user(em.find(User.class, userId))
                 .units(unitsBought)
                 .build();
-        purchase.setVersion(1L);
         em.persist(purchase);
         em.flush();
         return purchase.getPurchaseId();

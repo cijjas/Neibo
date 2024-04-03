@@ -30,14 +30,6 @@ public class Comment {
     @JoinColumn(name = "postid", nullable = false)
     private Post post;
 
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
-    public Long getVersion() {
-        return version;
-    }
-
     Comment() {
     }
 
@@ -64,10 +56,6 @@ public class Comment {
 
     public void setCommentId(Long commentId) {
         this.commentId = commentId;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 
     public Date getDate() {

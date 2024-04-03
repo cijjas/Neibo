@@ -5,7 +5,7 @@ import ar.edu.itba.paw.enums.UserRole;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -49,6 +49,7 @@ public class User {
     private UserRole role;
 
     @Column(name = "creationdate", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -67,15 +68,11 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Booking> bookings;
 
-    /*@ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "users_availability",
             joinColumns = @JoinColumn(name = "userid"),
             inverseJoinColumns = @JoinColumn(name = "amenityavailabilityid"))
-    private Set<Availability> availabilitiesTaken;*/
-
-    @ManyToMany
-    @JoinTable(name = "posts_users_subscriptions", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "postid"))
-    private Set<Post> subscribedPosts;
+    private Set<Availability> availabilitiesTaken;
 
     @ManyToMany
     @JoinTable(name = "posts_users_likes", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "postid"))
@@ -198,12 +195,8 @@ public class User {
         return bookings;
     }
 
- /*   public Set<Availability> getAvailabilitiesTaken() {
+    public Set<Availability> getAvailabilitiesTaken() {
         return availabilitiesTaken;
-    }*/
-
-    public Set<Post> getSubscribedPosts() {
-        return subscribedPosts;
     }
 
     public Set<Post> getLikedPosts() {
@@ -302,12 +295,8 @@ public class User {
         this.bookings = bookings;
     }
 
-/*    public void setAvailabilitiesTaken(Set<Availability> availabilitiesTaken) {
+    public void setAvailabilitiesTaken(Set<Availability> availabilitiesTaken) {
         this.availabilitiesTaken = availabilitiesTaken;
-    }*/
-
-    public void setSubscribedPosts(Set<Post> subscribedPosts) {
-        this.subscribedPosts = subscribedPosts;
     }
 
     public void setLikedPosts(Set<Post> likedPosts) {

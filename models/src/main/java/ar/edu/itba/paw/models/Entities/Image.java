@@ -10,21 +10,28 @@ import java.util.Set;
 public class Image {
     @OneToMany(mappedBy = "image")
     private final Set<Resource> resources = new HashSet<>();
+
     @OneToMany(mappedBy = "profilePicture")
     private final Set<User> users = new HashSet<>();
+
     @OneToMany(mappedBy = "postPicture")
     private final Set<Post> posts = new HashSet<>();
+
     @OneToMany(mappedBy = "primaryPicture")
     private final Set<Product> productsWithThisImageAsPrimary = new HashSet<>();
+
     @OneToMany(mappedBy = "secondaryPicture")
     private final Set<Product> productsWithThisImageAsSecondary = new HashSet<>();
+
     @OneToMany(mappedBy = "tertiaryPicture")
     private final Set<Product> productsWithThisImageAsTertiary = new HashSet<>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "images_imageid_seq")
     @SequenceGenerator(name = "images_imageid_seq", sequenceName = "images_imageid_seq", allocationSize = 1)
     @Column(name = "imageid")
     private Long imageId;
+
     @Column(name = "image", columnDefinition = "bytea", nullable = false)
     private byte[] image;
 

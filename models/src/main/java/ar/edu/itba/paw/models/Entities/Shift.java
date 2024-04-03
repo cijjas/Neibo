@@ -25,11 +25,6 @@ public class Shift {
     @JoinColumn(name = "starttime")
     private Time startTime;
 
-
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
     @Transient
     private java.sql.Time endTime;
 
@@ -66,14 +61,6 @@ public class Shift {
 
     public void setStartTime(Time startTime) {
         this.startTime = startTime;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 
     public void setEndTime(java.sql.Time endTime) {

@@ -28,10 +28,6 @@ public class Purchase implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date purchaseDate;
 
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
     public Purchase() {
     }
 
@@ -41,14 +37,6 @@ public class Purchase implements Serializable {
         this.user = builder.user;
         this.units = builder.units;
         this.purchaseDate = builder.purchaseDate;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 
     public Long getPurchaseId() {

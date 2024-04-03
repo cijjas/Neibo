@@ -40,6 +40,7 @@ public class Contact {
         this.contactAddress = builder.contactAddress;
         this.contactPhone = builder.contactPhone;
         this.neighborhood = builder.neighborhood;
+        this.version = builder.version;
     }
 
     public Long getVersion() {
@@ -114,6 +115,7 @@ public class Contact {
         private String contactAddress;
         private String contactPhone;
         private Neighborhood neighborhood;
+        private Long version;
 
         public Builder contactId(Long contactId) {
             this.contactId = contactId;
@@ -137,6 +139,11 @@ public class Contact {
 
         public Builder neighborhood(Neighborhood neighborhood) {
             this.neighborhood = neighborhood;
+            return this;
+        }
+
+        public Builder version(Long version) {
+            this.version = version;
             return this;
         }
 

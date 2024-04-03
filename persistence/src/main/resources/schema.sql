@@ -1,592 +1,738 @@
 ------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------- GENERATION -------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
-/*
--- HIBERNATE TAKES CARE OF THIS NOW
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------- GENERATION -----------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+
+create sequence if not exists amenities_shifts_availability_amenityavailabilityid_seq;
+create sequence if not exists amenities_amenityid_seq;
+create sequence if not exists channels_channelid_seq;
+create sequence if not exists comments_commentid_seq;
+create sequence if not exists contacts_contactid_seq;
+create sequence if not exists days_dayid_seq;
+create sequence if not exists departments_departmentid_seq;
+create sequence if not exists events_eventid_seq;
+create sequence if not exists images_imageid_seq;
+create sequence if not exists neighborhoods_neighborhoodid_seq;
+create sequence if not exists posts_postid_seq;
+create sequence if not exists products_productid_seq;
+create sequence if not exists products_users_inquiries_inquiryid_seq;
+create sequence if not exists products_users_purchases_purchaseid_seq;
+create sequence if not exists products_users_requests_requestid_seq;
+create sequence if not exists professions_professionid_seq;
+create sequence if not exists reviews_reviewid_seq;
+create sequence if not exists resources_resourceid_seq;
+create sequence if not exists shifts_shiftid_seq;
+create sequence if not exists tags_tagid_seq;
+create sequence if not exists times_timeid_seq;
+create sequence if not exists users_availability_bookingid_seq;
+create sequence if not exists users_userid_seq;
 
 create table if not exists neighborhoods
 (
-    neighborhoodid   serial
-    primary key,
+    neighborhoodid   BIGINT DEFAULT NEXTVAL('neighborhoods_neighborhoodid_seq') PRIMARY KEY,
     neighborhoodname varchar(128)
-    );
+);
 
 create table if not exists tags
 (
-    tagid serial
-    primary key,
-    tag   varchar(64) not null
-    unique
-    );
+    tagid BIGINT DEFAULT NEXTVAL('tags_tagid_seq') PRIMARY KEY,
+    tag   varchar(64) not null unique
+);
 
 create table if not exists channels
 (
-    channelid serial
-    primary key,
-    channel   varchar(64) not null
-    unique
-    );
+    channelid BIGINT DEFAULT NEXTVAL('tags_tagid_seq') PRIMARY KEY,
+    channel   varchar(64) not null unique
+);
 
 create table if not exists images
 (
-    imageid serial
-    primary key,
+    imageid BIGINT DEFAULT NEXTVAL('images_imageid_seq') PRIMARY KEY,
     image   bytea not null
 );
 
 create table if not exists users
 (
-    userid           serial
-    primary key,
-    mail             varchar(128) not null
-    unique,
+    userid           BIGINT DEFAULT NEXTVAL('users_userid_seq') PRIMARY KEY,
+    mail             varchar(128) not null unique,
     name             varchar(64)  not null,
     surname          varchar(64)  not null,
     creationdate     timestamp    not null,
-    neighborhoodid   integer      not null
-    references neighborhoods
-    on delete cascade
-    constraint fkic88b519i3tqt5e0q3vkf3y5t
-    references neighborhoods,
+    version         BIGINT DEFAULT 1 NOT NULL,
+    neighborhoodid   BIGINT      not null
+        references neighborhoods
+            on delete cascade
+        constraint fkic88b519i3tqt5e0q3vkf3y5t
+            references neighborhoods,
     password         varchar(128),
     darkmode         boolean,
     language         varchar(32),
     role             varchar(64),
-    profilepictureid integer
-    constraint fk_users_images
-    references images
-    on delete set null
-    constraint fk1eepsnt7x3dn9bcluxeecrg34
-    references images,
+    profilepictureid BIGINT
+        constraint fk_users_images
+            references images
+            on delete set null
+        constraint fk1eepsnt7x3dn9bcluxeecrg34
+            references images,
     identification   integer,
     phonenumber      varchar(64)
-    );
+);
 
 create table if not exists posts
 (
-    postid        serial
-    primary key,
+    postid        BIGINT DEFAULT NEXTVAL('posts_postid_seq') PRIMARY KEY,
     title         varchar(128) not null,
     description   text         not null,
     postdate      timestamp    not null,
-    userid        integer      not null
-    constraint fk_posts_users
-    references users
-    on delete cascade
-    constraint fktc10cvjiaj3p7ldl526coc36a
-    references users,
-    channelid     integer      not null
-    references channels
-    on delete cascade
-    constraint fkqn2vwdbbedu2lmm3mi5n4vjnq
-    references channels,
-    postpictureid integer
-    constraint fk_posts_images
-    references images
-    on delete set null
-    constraint fk9oso7y3hmscxyahy12fspfvyx
-    references images
-    );
+    userid        BIGINT      not null
+        constraint fk_posts_users
+            references users
+            on delete cascade
+        constraint fktc10cvjiaj3p7ldl526coc36a
+            references users,
+    channelid     BIGINT      not null
+        references channels
+            on delete cascade
+        constraint fkqn2vwdbbedu2lmm3mi5n4vjnq
+            references channels,
+    postpictureid BIGINT
+        constraint fk_posts_images
+            references images
+            on delete set null
+        constraint fk9oso7y3hmscxyahy12fspfvyx
+            references images
+);
 
 create table if not exists comments
 (
-    commentid   serial
-    primary key,
+    commentid   BIGINT DEFAULT NEXTVAL('comments_commentid_seq') PRIMARY KEY,
     comment     varchar(512) not null,
     commentdate date         not null,
-    userid      integer      not null
-    constraint fk_comments_users
-    references users
-    on delete cascade
-    constraint fkjxggc60wwwlf4xl065fjrx68y
-    references users,
-    postid      integer      not null
-    references posts
-    on delete cascade
-    constraint fkqt8anaen7vlhry2a766wkvv41
-    references posts
-    );
+    userid      BIGINT      not null
+        constraint fk_comments_users
+            references users
+            on delete cascade
+        constraint fkjxggc60wwwlf4xl065fjrx68y
+            references users,
+    postid      BIGINT      not null
+        references posts
+            on delete cascade
+        constraint fkqt8anaen7vlhry2a766wkvv41
+            references posts
+);
 
 create table if not exists posts_tags
 (
-    postid integer not null
-    references posts
-    on delete cascade
-    constraint fk9d2rjjmbiureptqp0hn4wfd93
-    references posts,
-    tagid  integer not null
-    references tags
-    on delete cascade
-    constraint fkp7fqkfledrnb5vph2cumrgwg4
-    references tags,
+    postid BIGINT not null
+        references posts
+            on delete cascade
+        constraint fk9d2rjjmbiureptqp0hn4wfd93
+            references posts,
+    tagid  BIGINT not null
+        references tags
+            on delete cascade
+        constraint fkp7fqkfledrnb5vph2cumrgwg4
+            references tags,
     primary key (postid, tagid)
-    );
+);
 
 create table if not exists neighborhoods_channels
 (
-    neighborhoodid integer not null
-    references neighborhoods
-    on delete cascade
-    constraint fkhtu9bmy29n0d43wc59dt6jvr5
-    references neighborhoods,
-    channelid      integer not null
-    references channels
-    on delete cascade
-    constraint fk5v7ohayjrcs4l9xfvulc1id3g
-    references channels,
+    neighborhoodid BIGINT not null
+        references neighborhoods
+            on delete cascade
+        constraint fkhtu9bmy29n0d43wc59dt6jvr5
+            references neighborhoods,
+    channelid      BIGINT not null
+        references channels
+            on delete cascade
+        constraint fk5v7ohayjrcs4l9xfvulc1id3g
+            references channels,
     primary key (neighborhoodid, channelid)
-    );
+);
 
 create table if not exists resources
 (
-    resourceid          serial
-    primary key,
+    resourceid          BIGINT DEFAULT NEXTVAL('resources_resourceid_seq') PRIMARY KEY,
     resourcetitle       varchar(64),
+    version        BIGINT DEFAULT 1 NOT NULL,
     resourcedescription varchar(255),
-    resourceimageid     integer
-    references images
-    constraint fk8u7gju00jdbcp3ejyrab6uud5
-    references images,
-    neighborhoodid      integer not null
-    references neighborhoods
-    constraint fkm326w3rerctvghpu8yct39glk
-    references neighborhoods
-    );
+    resourceimageid     BIGINT
+        references images
+        constraint fk8u7gju00jdbcp3ejyrab6uud5
+            references images,
+    neighborhoodid      BIGINT not null
+        references neighborhoods
+        constraint fkm326w3rerctvghpu8yct39glk
+            references neighborhoods
+);
 
 create table if not exists contacts
 (
-    contactid      serial
-    primary key,
+    contactid      BIGINT DEFAULT NEXTVAL('contacts_contactid_seq') PRIMARY KEY,
     contactname    varchar(64) not null,
     contactaddress varchar(128),
     contactphone   varchar(32),
-    neighborhoodid integer     not null
-    references neighborhoods
-    constraint fklux0wry30t2vlbwyv6nwm4pv6
-    references neighborhoods
-    );
+    version        BIGINT DEFAULT 1 NOT NULL,
+    neighborhoodid BIGINT     not null
+        references neighborhoods
+        constraint fklux0wry30t2vlbwyv6nwm4pv6
+            references neighborhoods
+);
 
-create table if not exists amenities
-(
-    amenityid      serial
-    primary key,
-    name           varchar(512) not null,
-    description    varchar(512) not null,
-    neighborhoodid integer      not null
-    references neighborhoods
-    on delete cascade
-    constraint fks3gyc5psipkyoeidl506ypor
-    references neighborhoods
-    );
-
-create table if not exists reservations
-(
-    reservationid serial
-    primary key,
-    date          date    not null,
-    starttime     time    not null,
-    endtime       time    not null,
-    userid        integer not null
-    references users
-    on delete cascade,
-    amenityid     integer not null
-    references amenities
-    on delete cascade
+CREATE TABLE IF NOT EXISTS amenities (
+                                         amenityid      BIGINT DEFAULT NEXTVAL('amenities_amenityid_seq') PRIMARY KEY,
+                                         name           varchar(512) not null,
+                                         description    varchar(512) not null,
+                                         version        BIGINT DEFAULT 1 NOT NULL,
+                                         neighborhoodid BIGINT      not null
+                                             references neighborhoods
+                                                 on delete cascade
+                                             constraint fks3gyc5psipkyoeidl506ypor
+                                                 references neighborhoods
 );
 
 create table if not exists posts_users_likes
 (
-    postid   integer not null
-    references posts
-    on delete cascade
-    constraint fk2v3c2g4kqvmjbyva0y9n261ps
-    references posts,
-    userid   integer not null
-    references users
-    on delete cascade
-    constraint fk1phwqt3hh8wcip5hcoxct3ax5
-    references users,
+    postid   BIGINT not null
+        references posts
+            on delete cascade
+        constraint fk2v3c2g4kqvmjbyva0y9n261ps
+            references posts,
+    userid   BIGINT not null
+        references users
+            on delete cascade
+        constraint fk1phwqt3hh8wcip5hcoxct3ax5
+            references users,
     likedate timestamp default CURRENT_TIMESTAMP,
     primary key (postid, userid)
-    );
+);
 
 create table if not exists workers_info
 (
-    workerid            integer      not null
-    primary key
-    references users
-    on delete cascade,
+    workerid            BIGINT not null
+        primary key
+        references users
+            on delete cascade,
     phonenumber         varchar(64)  not null,
     businessname        varchar(128),
     address             varchar(128) not null,
-    backgroundpictureid integer,
+    backgroundpictureid BIGINT,
+    version        BIGINT DEFAULT 1 NOT NULL,
     bio                 varchar(255)
-    );
+);
 
 create table if not exists professions
 (
-    professionid serial
-    primary key,
+    professionid BIGINT DEFAULT NEXTVAL('professions_professionid_seq') PRIMARY KEY,
     profession   varchar(64) not null
-    unique
-    );
+        unique
+);
 
 create table if not exists workers_neighborhoods
 (
-    workerid       integer not null
-    references users
-    on delete cascade
-    constraint fkop2knb49048w039sru9wl7m4v
-    references workers_info,
-    neighborhoodid integer not null
-    references neighborhoods
-    on delete cascade
-    constraint fklyb81uy312pcm3bqlygtudqac
-    references neighborhoods,
-    role           text,
+    workerid       BIGINT not null
+        references users
+            on delete cascade
+        constraint fkop2knb49048w039sru9wl7m4v
+            references workers_info,
+    neighborhoodid BIGINT not null
+        references neighborhoods
+            on delete cascade
+        constraint fklyb81uy312pcm3bqlygtudqac
+            references neighborhoods,
+    role           varchar(255),
+    version        BIGINT DEFAULT 1 NOT NULL,
     primary key (workerid, neighborhoodid)
-    );
+);
 
 create table if not exists workers_professions
 (
-    workerid     integer not null
-    references users
-    on delete cascade
-    constraint fkf1a7cka14k4ty63gra57x2vwe
-    references workers_info,
-    professionid integer not null
-    references professions
-    on delete cascade
-    constraint fkhihhwwcf8km97mlf13r0vqn
-    references professions,
+    workerid     BIGINT not null
+        references users
+            on delete cascade
+        constraint fkf1a7cka14k4ty63gra57x2vwe
+            references workers_info,
+    professionid BIGINT not null
+        references professions
+            on delete cascade
+        constraint fkhihhwwcf8km97mlf13r0vqn
+            references professions,
     primary key (workerid, professionid)
-    );
+);
 
 create table if not exists reviews
 (
-    reviewid serial
-    primary key,
-    workerid integer
-    references users
-    on delete cascade
-    constraint fkd87kbnxrdtjriixleh5wxy3xi
-    references workers_info,
-    userid   integer
-    references users
-    on delete cascade
-    constraint fke0hlob2fbf7wug4lgi2boiyxf
-    references users,
-    rating   double precision,
+    reviewid BIGINT DEFAULT NEXTVAL('reviews_reviewid_seq') PRIMARY KEY,
+    workerid BIGINT
+        references users
+            on delete cascade
+        constraint fkd87kbnxrdtjriixleh5wxy3xi
+            references workers_info,
+    userid   BIGINT
+        references users
+            on delete cascade
+        constraint fke0hlob2fbf7wug4lgi2boiyxf
+            references users,
+    rating   float4,
     review   varchar(255),
     date     timestamp not null
-    );
+);
 
 create table if not exists times
 (
-    timeid       serial
-    primary key,
+    timeid       BIGINT DEFAULT NEXTVAL('times_timeid_seq') PRIMARY KEY,
     timeinterval time
-    unique
+        unique
 );
 
 create table if not exists events
 (
-    eventid        serial
-    primary key,
+    eventid        BIGINT DEFAULT NEXTVAL('events_eventid_seq') PRIMARY KEY,
     name           varchar(255) not null,
     description    text,
     date           date         not null,
-    neighborhoodid integer      not null
-    references neighborhoods
-    on delete cascade
-    constraint fk37hdki702o2bv4r3t41i7yk4o
-    references neighborhoods,
-    starttimeid    integer
-    constraint fk_starttime
-    references times
-    on delete cascade
-    constraint fkab8xrhqn8m4poq2xvqt6l5v72
-    references times,
-    endtimeid      integer
-    constraint fk_endtime
-    references times
-    on delete cascade
-    constraint fk4y7lfu97tj38vccdl00uwpn6t
-    references times
-    );
+    version        BIGINT DEFAULT 1 NOT NULL,
+    neighborhoodid BIGINT      not null
+        references neighborhoods
+            on delete cascade
+        constraint fk37hdki702o2bv4r3t41i7yk4o
+            references neighborhoods,
+    starttimeid    BIGINT
+        constraint fk_starttime
+            references times
+            on delete cascade
+        constraint fkab8xrhqn8m4poq2xvqt6l5v72
+            references times,
+    endtimeid      BIGINT
+        constraint fk_endtime
+            references times
+            on delete cascade
+        constraint fk4y7lfu97tj38vccdl00uwpn6t
+            references times
+);
 
 create table if not exists events_users
 (
-    userid  integer not null
-    references users
-    on delete cascade
-    constraint fk84k1rf46d33arjqggmbj0lyjy
-    references users,
-    eventid integer not null
-    references events
-    on delete cascade
-    constraint fkll2jkxq61gb2cn8c0wgw1lkfq
-    references events,
+    userid  BIGINT not null
+        references users
+            on delete cascade
+        constraint fk84k1rf46d33arjqggmbj0lyjy
+            references users,
+    eventid BIGINT not null
+        references events
+            on delete cascade
+        constraint fkll2jkxq61gb2cn8c0wgw1lkfq
+            references events,
     primary key (eventid, userid)
-    );
+);
 
 create table if not exists days
 (
-    dayid   serial
-    primary key,
+    dayid   BIGINT DEFAULT NEXTVAL('days_dayid_seq') PRIMARY KEY,
     dayname varchar(20)
-    unique
-    );
+        unique
+);
 
 create table if not exists shifts
 (
-    shiftid   serial
-    primary key,
-    dayid     integer
-    references days
-    constraint fkrgr216xwoagaxrpo0v757c881
-    references days,
-    starttime integer
-    references times
-    constraint fk5nflqno4eofi5n2onehgbu6tt
-    references times,
+    shiftid   BIGINT DEFAULT NEXTVAL('shifts_shiftid_seq') PRIMARY KEY,
+    dayid     BIGINT
+        references days
+        constraint fkrgr216xwoagaxrpo0v757c881
+            references days,
+    starttime BIGINT
+        references times
+        constraint fk5nflqno4eofi5n2onehgbu6tt
+            references times,
     unique (starttime, dayid)
-    );
+);
 
 create table if not exists amenities_shifts_availability
 (
-    amenityavailabilityid serial
-    primary key,
-    amenityid             integer
-    references amenities
-    on delete cascade
-    constraint fks3qffu9r6rxbo6ffxt3wy679l
-    references amenities,
-    shiftid               integer
-    references shifts
-    on delete cascade
-    constraint fk3mdnowlxv760ced06okgsy8rh
-    references shifts,
+    amenityavailabilityid BIGINT DEFAULT NEXTVAL('amenities_shifts_availability_amenityavailabilityid_seq') PRIMARY KEY,
+    amenityid             BIGINT
+        references amenities
+            on delete cascade
+        constraint fks3qffu9r6rxbo6ffxt3wy679l
+            references amenities,
+    shiftid               BIGINT
+        references shifts
+            on delete cascade
+        constraint fk3mdnowlxv760ced06okgsy8rh
+            references shifts,
     unique (amenityid, shiftid)
-    );
+);
 
 create table if not exists users_availability
 (
-    bookingid             serial
-    primary key,
-    amenityavailabilityid integer
-    references amenities_shifts_availability
-    on delete cascade
-    constraint fks9a957rfgy3db1dben7xnj0u1
-    references amenities_shifts_availability,
-    userid                integer
-    references users
-    on delete cascade
-    constraint fk2fygq11yidgx548rnvmb3kp9e
-    references users,
+    bookingid             BIGINT DEFAULT NEXTVAL('users_availability_bookingid_seq') PRIMARY KEY,
+    amenityavailabilityid BIGINT
+        references amenities_shifts_availability
+            on delete cascade
+        constraint fks9a957rfgy3db1dben7xnj0u1
+            references amenities_shifts_availability,
+    userid                BIGINT
+        references users
+            on delete cascade
+        constraint fk2fygq11yidgx548rnvmb3kp9e
+            references users,
     date                  date,
     unique (amenityavailabilityid, date)
-    );
+);
 
 create table if not exists departments
 (
-    departmentid integer default nextval('departments_departmentid_seq1'::regclass) not null
-    primary key,
-    department   varchar(64)                                                        not null
-    unique
-    );
+    departmentid BIGINT DEFAULT NEXTVAL('departments_departmentid_seq') PRIMARY KEY,
+    department   varchar(64) not null
+        unique
+);
 
 create table if not exists products
 (
-    productid          integer default nextval('products_productid_seq1'::regclass) not null
-    primary key,
-    name               varchar(128)                                                 not null,
-    description        varchar(1000)                                                not null,
-    price              double precision                                             not null,
-    used               boolean                                                      not null,
-    primarypictureid   integer
-    references images
-    on delete cascade
-    constraint fkes5pp3fnwoaewjtkpkh8mayxd
-    references images,
-    secondarypictureid integer
-    references images
-    on delete cascade
-    constraint fkjh0vklu17y1qmlifr3ckbnsn7
-    references images,
-    tertiarypictureid  integer
-    references images
-    on delete cascade
-    constraint fkcj69ibo77igk2yxx9yyarn609
-    references images,
-    sellerid           integer                                                      not null
-    references users
-    on delete cascade
-    constraint fk7ghqa830fextpfnt6qw4dvly1
-    references users,
-    departmentid       integer
-    references departments
-    on delete cascade
-    constraint fk8iyjjwe05ysnrnwemuwlk8nqr
-    references departments,
-    creationdate       date,
-    remainingunits     integer default 1
-    );
+    productid          BIGINT DEFAULT NEXTVAL('products_productid_seq') PRIMARY KEY,
+    name               varchar(128)     not null,
+    description        varchar(1000)    not null,
+    price              double precision not null,
+    version        BIGINT DEFAULT 1 NOT NULL,
+    used               boolean          not null,
+    primarypictureid   BIGINT
+        references images
+            on delete cascade
+        constraint fkes5pp3fnwoaewjtkpkh8mayxd
+            references images,
+    secondarypictureid BIGINT
+        references images
+            on delete cascade
+        constraint fkjh0vklu17y1qmlifr3ckbnsn7
+            references images,
+    tertiarypictureid  BIGINT
+        references images
+            on delete cascade
+        constraint fkcj69ibo77igk2yxx9yyarn609
+            references images,
+    sellerid           BIGINT          not null
+        references users
+            on delete cascade
+        constraint fk7ghqa830fextpfnt6qw4dvly1
+            references users,
+    departmentid       BIGINT
+        references departments
+            on delete cascade
+        constraint fk8iyjjwe05ysnrnwemuwlk8nqr
+            references departments,
+    creationdate       timestamp,
+    remainingunits     bigint default 1,
+    purchasedate       date
+);
 
 create table if not exists products_users_inquiries
 (
-    inquiryid integer default nextval('products_users_inquiries_inquiryid_seq1'::regclass) not null
-    primary key,
-    productid integer
-    references products
-    on delete cascade
-    constraint fkqxpb7oab9phj2hsbiw4trel5l
-    references products,
-    userid    integer
-    references users
-    on delete cascade
-    constraint fk6ptiod8ihfdhv07m04jhcvb3e
-    references users,
-    message   varchar(512)                                                                 not null,
-    reply     varchar(512),
-    inquiryDate timestamp default CURRENT_TIMESTAMP
-    );
+    inquiryid   BIGINT DEFAULT NEXTVAL('products_users_inquiries_inquiryid_seq') PRIMARY KEY,
+    productid   BIGINT
+        references products
+            on delete cascade
+        constraint fkqxpb7oab9phj2hsbiw4trel5l
+            references products,
+    userid      BIGINT
+        references users
+            on delete cascade
+        constraint fk6ptiod8ihfdhv07m04jhcvb3e
+            references users,
+    message     varchar(512) not null,
+    reply       varchar(512),
+    version        BIGINT DEFAULT 1 NOT NULL,
+    inquirydate timestamp
+);
 
 create table if not exists products_users_requests
 (
-    requestid   integer default nextval('products_users_requests_requestid_seq1'::regclass) not null
-    primary key,
-    productid   integer
-    references products
-    on delete cascade
-    constraint fk3rojkgclaljwd3vr0qa8qbsmc
-    references products,
-    userid      integer
-    references users
-    on delete cascade
-    constraint fkt3dd1mkdokg6anp41w64y397t
-    references users,
-    message     varchar(512)                                                                not null,
-    requestdate date
-    );
+    requestid   BIGINT DEFAULT NEXTVAL('products_users_requests_requestid_seq') PRIMARY KEY,
+    productid   BIGINT
+        references products
+            on delete cascade
+        constraint fk3rojkgclaljwd3vr0qa8qbsmc
+            references products,
+    userid      BIGINT
+        references users
+            on delete cascade
+        constraint fkt3dd1mkdokg6anp41w64y397t
+            references users,
+    message     varchar(512) not null,
+    requestdate timestamp,
+    version        BIGINT DEFAULT 1 NOT NULL,
+    fulfilled   boolean
+);
 
 create table if not exists products_users_purchases
 (
-    purchaseid   serial
-    primary key,
-    units        integer,
-    productid    integer
-    references products
-    constraint fkj6tu1b7jvw2sgsyqkym9rof52
-    references products,
-    userid       integer
-    references users
-    constraint fkecl9mfhyuqwevvryrohsti10a
-    references users,
+    purchaseid BIGINT DEFAULT NEXTVAL('products_users_purchases_purchaseid_seq') PRIMARY KEY,
+    units      BIGINT,
+    productid  BIGINT
+        references products
+        constraint fkj6tu1b7jvw2sgsyqkym9rof52
+            references products,
+    userid     BIGINT
+        references users
+        constraint fkecl9mfhyuqwevvryrohsti10a
+            references users,
     purchasedate timestamp
 );
-*/
+
+
 
 -- Insert neighborhoods
-INSERT INTO neighborhoods (neighborhoodid, neighborhoodname) VALUES (-1, 'Rejected') ON CONFLICT DO NOTHING;
-INSERT INTO neighborhoods (neighborhoodid, neighborhoodname) VALUES (0, 'WorkerForm NeighborhoodForm') ON CONFLICT DO NOTHING;
-INSERT INTO neighborhoods (neighborhoodid, neighborhoodname) VALUES (1, 'Olivos Golf Club') ON CONFLICT DO NOTHING;
-INSERT INTO neighborhoods (neighborhoodid, neighborhoodname) VALUES (2, 'Pacheco Golf') ON CONFLICT DO NOTHING;
-INSERT INTO neighborhoods (neighborhoodid, neighborhoodname) VALUES (3, 'Martindale') ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods (neighborhoodid, neighborhoodname)
+VALUES (-1, 'Rejected')
+ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods (neighborhoodid, neighborhoodname)
+VALUES (0, 'WorkerForm NeighborhoodForm')
+ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods (neighborhoodid, neighborhoodname)
+VALUES (1, 'Olivos Golf Club')
+ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods (neighborhoodid, neighborhoodname)
+VALUES (2, 'Pacheco Golf')
+ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods (neighborhoodid, neighborhoodname)
+VALUES (3, 'Martindale')
+ON CONFLICT DO NOTHING;
 
 -- Insert channels
-INSERT INTO channels (channelid, channel) VALUES (1, 'Announcements') ON CONFLICT DO NOTHING;
-INSERT INTO channels (channelid, channel) VALUES (2, 'Complaints') ON CONFLICT DO NOTHING;
-INSERT INTO channels (channelid, channel) VALUES (3, 'Feed') ON CONFLICT DO NOTHING;
-INSERT INTO channels (channelid, channel) VALUES (4, 'Workers') ON CONFLICT DO NOTHING;
+INSERT INTO channels (channelid, channel)
+VALUES (1, 'Announcements')
+ON CONFLICT DO NOTHING;
+INSERT INTO channels (channelid, channel)
+VALUES (2, 'Complaints')
+ON CONFLICT DO NOTHING;
+INSERT INTO channels (channelid, channel)
+VALUES (3, 'Feed')
+ON CONFLICT DO NOTHING;
+INSERT INTO channels (channelid, channel)
+VALUES (4, 'Workers')
+ON CONFLICT DO NOTHING;
 
 -- Inserting Departments if not exists
-INSERT INTO departments (departmentid, department) VALUES (1, 'ELECTRONICS') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (2, 'APPLIANCES') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (3, 'HOME_FURNITURE') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (4, 'CLOTHING_FASHION') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (5, 'HEALTH_BEAUTY') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (6, 'SPORTS_OUTDOORS') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (7, 'BOOKS_MEDIA') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (8, 'TOYS_GAMES') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (9, 'JEWELRY_ACCESSORIES') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (10, 'AUTOMOTIVE') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (11, 'GROCERIES_FOOD') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (12, 'PETS_SUPPLIES') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (13, 'HOME_IMPROVEMENT') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (14, 'GARDEN_OUTDOOR') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (15, 'OFFICE_SUPPLIES') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (16, 'BABY_KIDS') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (17, 'ARTS_CRAFTS') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (18, 'TRAVEL_LUGGAGE') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (19, 'MUSIC_INSTRUMENTS') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (20, 'TECHNOLOGY') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (21, 'OTHER') ON CONFLICT (departmentid) DO NOTHING;
-INSERT INTO departments (departmentid, department) VALUES (22, 'NONE') ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (1, 'ELECTRONICS')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (2, 'APPLIANCES')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (3, 'HOME_FURNITURE')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (4, 'CLOTHING_FASHION')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (5, 'HEALTH_BEAUTY')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (6, 'SPORTS_OUTDOORS')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (7, 'BOOKS_MEDIA')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (8, 'TOYS_GAMES')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (9, 'JEWELRY_ACCESSORIES')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (10, 'AUTOMOTIVE')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (11, 'GROCERIES_FOOD')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (12, 'PETS_SUPPLIES')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (13, 'HOME_IMPROVEMENT')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (14, 'GARDEN_OUTDOOR')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (15, 'OFFICE_SUPPLIES')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (16, 'BABY_KIDS')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (17, 'ARTS_CRAFTS')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (18, 'TRAVEL_LUGGAGE')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (19, 'MUSIC_INSTRUMENTS')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (20, 'TECHNOLOGY')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (21, 'OTHER')
+ON CONFLICT (departmentid) DO NOTHING;
+INSERT INTO departments (departmentid, department)
+VALUES (22, 'NONE')
+ON CONFLICT (departmentid) DO NOTHING;
 
 -- Inserting Professions if not exists
-INSERT INTO professions (professionid, profession) VALUES (1, 'PLUMBER') ON CONFLICT (professionid) DO NOTHING;
-INSERT INTO professions (professionid, profession) VALUES (2, 'ELECTRICIAN') ON CONFLICT (professionid) DO NOTHING;
-INSERT INTO professions (professionid, profession) VALUES (3, 'POOL_MAINTENANCE') ON CONFLICT (professionid) DO NOTHING;
-INSERT INTO professions (professionid, profession) VALUES (4, 'GARDENER') ON CONFLICT (professionid) DO NOTHING;
-INSERT INTO professions (professionid, profession) VALUES (5, 'CARPENTER') ON CONFLICT (professionid) DO NOTHING;
+INSERT INTO professions (professionid, profession)
+VALUES (1, 'PLUMBER')
+ON CONFLICT (professionid) DO NOTHING;
+INSERT INTO professions (professionid, profession)
+VALUES (2, 'ELECTRICIAN')
+ON CONFLICT (professionid) DO NOTHING;
+INSERT INTO professions (professionid, profession)
+VALUES (3, 'POOL_MAINTENANCE')
+ON CONFLICT (professionid) DO NOTHING;
+INSERT INTO professions (professionid, profession)
+VALUES (4, 'GARDENER')
+ON CONFLICT (professionid) DO NOTHING;
+INSERT INTO professions (professionid, profession)
+VALUES (5, 'CARPENTER')
+ON CONFLICT (professionid) DO NOTHING;
 
 -- Manually inserting 24 hours
-INSERT INTO times (timeid, timeinterval) VALUES (1, '00:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (2, '01:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (3, '02:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (4, '03:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (5, '04:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (6, '05:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (7, '06:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (8, '07:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (9, '08:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (10, '09:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (11, '10:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (12, '11:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (13, '12:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (14, '13:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (15, '14:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (16, '15:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (17, '16:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (18, '17:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (19, '18:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (20, '19:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (21, '20:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (22, '21:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (23, '22:00:00') ON CONFLICT (timeid) DO NOTHING;
-INSERT INTO times (timeid, timeinterval) VALUES (24, '23:00:00') ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (1, '00:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (2, '01:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (3, '02:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (4, '03:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (5, '04:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (6, '05:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (7, '06:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (8, '07:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (9, '08:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (10, '09:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (11, '10:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (12, '11:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (13, '12:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (14, '13:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (15, '14:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (16, '15:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (17, '16:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (18, '17:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (19, '18:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (20, '19:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (21, '20:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (22, '21:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (23, '22:00:00')
+ON CONFLICT (timeid) DO NOTHING;
+INSERT INTO times (timeid, timeinterval)
+VALUES (24, '23:00:00')
+ON CONFLICT (timeid) DO NOTHING;
 
 
 -- Populate the "days" table with the seven days of the week
-INSERT INTO days (dayId, dayName) VALUES (1,'Monday') ON CONFLICT (dayid) DO NOTHING;
-INSERT INTO days (dayId, dayName) VALUES (2, 'Tuesday') ON CONFLICT (dayid) DO NOTHING;
-INSERT INTO days (dayId, dayName) VALUES (3, 'Wednesday') ON CONFLICT (dayid) DO NOTHING;
-INSERT INTO days (dayId, dayName) VALUES (4, 'Thursday') ON CONFLICT (dayid) DO NOTHING;
-INSERT INTO days (dayId, dayName) VALUES (5, 'Friday') ON CONFLICT (dayid) DO NOTHING;
-INSERT INTO days (dayId, dayName) VALUES (6, 'Saturday') ON CONFLICT (dayid) DO NOTHING;
-INSERT INTO days (dayId, dayName) VALUES (7, 'Sunday') ON CONFLICT (dayid) DO NOTHING;
+INSERT INTO days (dayId, dayName)
+VALUES (1, 'Monday')
+ON CONFLICT (dayid) DO NOTHING;
+INSERT INTO days (dayId, dayName)
+VALUES (2, 'Tuesday')
+ON CONFLICT (dayid) DO NOTHING;
+INSERT INTO days (dayId, dayName)
+VALUES (3, 'Wednesday')
+ON CONFLICT (dayid) DO NOTHING;
+INSERT INTO days (dayId, dayName)
+VALUES (4, 'Thursday')
+ON CONFLICT (dayid) DO NOTHING;
+INSERT INTO days (dayId, dayName)
+VALUES (5, 'Friday')
+ON CONFLICT (dayid) DO NOTHING;
+INSERT INTO days (dayId, dayName)
+VALUES (6, 'Saturday')
+ON CONFLICT (dayid) DO NOTHING;
+INSERT INTO days (dayId, dayName)
+VALUES (7, 'Sunday')
+ON CONFLICT (dayid) DO NOTHING;
 
 -- Populate Users
 -- admin@test.com || admin
-INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode, language, role)  VALUES
-    (1, 'admin@test.com', 'Administrator', 'Tester', CURRENT_TIMESTAMP, 1, 1, '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'ADMINISTRATOR') ON CONFLICT DO NOTHING;
+INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode,
+                   language, role)
+VALUES (1, 'admin@test.com', 'Administrator', 'Tester', CURRENT_TIMESTAMP, 1, 1,
+        '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'ADMINISTRATOR')
+ON CONFLICT DO NOTHING;
 -- admin2@test.com || admin
-INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode, language, role)  VALUES
-    (2, 'admin2@test.com', 'Administrator', 'Tester', CURRENT_TIMESTAMP, 2, 2, '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'ADMINISTRATOR') ON CONFLICT DO NOTHING;
+INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode,
+                   language, role)
+VALUES (2, 'admin2@test.com', 'Administrator', 'Tester', CURRENT_TIMESTAMP, 2, 2,
+        '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'ADMINISTRATOR')
+ON CONFLICT DO NOTHING;
 -- admin3@test.com || admin
-INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode, language, role)  VALUES
-    (3, 'admin3@test.com', 'Administrator', 'Tester', CURRENT_TIMESTAMP, 3, 3, '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'ADMINISTRATOR') ON CONFLICT DO NOTHING;
+INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode,
+                   language, role)
+VALUES (3, 'admin3@test.com', 'Administrator', 'Tester', CURRENT_TIMESTAMP, 3, 3,
+        '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'ADMINISTRATOR')
+ON CONFLICT DO NOTHING;
 
 -- verified@test.com || verified
-INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode, language, role)  VALUES
-    (4, 'verified@test.com', 'Verified', 'Tester', CURRENT_TIMESTAMP, 4, 1, '$2a$10$AUfasTu1ntiaxPHNNMzIx.mF9.pzyvLR1QduRJPl723cgTk5gI9KO', false, 'ENGLISH', 'NEIGHBOR') ON CONFLICT DO NOTHING;
+INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode,
+                   language, role)
+VALUES (4, 'verified@test.com', 'Verified', 'Tester', CURRENT_TIMESTAMP, 4, 1,
+        '$2a$10$AUfasTu1ntiaxPHNNMzIx.mF9.pzyvLR1QduRJPl723cgTk5gI9KO', false, 'ENGLISH', 'NEIGHBOR')
+ON CONFLICT DO NOTHING;
 
 -- worker@test.com || admin
-INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode, language, role)  VALUES
-    (5, 'worker@test.com', 'Worker', 'Tester', CURRENT_TIMESTAMP, 5, 0, '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'WORKER') ON CONFLICT DO NOTHING;
-INSERT INTO workers_info (workerid, address, backgroundpictureid, bio, businessname, phonenumber) VALUES
-    (5, 'Wherever', null, 'Best in Town', 'Fix it All', '1231231') ON CONFLICT DO NOTHING;
+INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode,
+                   language, role)
+VALUES (5, 'worker@test.com', 'Worker', 'Tester', CURRENT_TIMESTAMP, 5, 0,
+        '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'WORKER')
+ON CONFLICT DO NOTHING;
+INSERT INTO workers_info (workerid, address, backgroundpictureid, bio, businessname, phonenumber)
+VALUES (5, 'Wherever', null, 'Best in Town', 'Fix it All', '1231231')
+ON CONFLICT DO NOTHING;
 
 
 -- Adjusting sequences for neighborhoods
