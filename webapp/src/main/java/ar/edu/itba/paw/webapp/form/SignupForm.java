@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.*;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -27,7 +26,7 @@ public class SignupForm {
     @Size(min = 1, max = 128)
     @Email
     @EmailConstraint
-    private String mail;
+    private String email;
 
     @NotNull
     @Size(min = 1, max = 50)
@@ -83,12 +82,12 @@ public class SignupForm {
         this.languageURN = languageURN;
     }
 
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -106,7 +105,7 @@ public class SignupForm {
                 ", surname='" + surname + '\'' +
                 ", neighborhoodId='" + neighborhoodURN + '\'' +
                 ", password='" + password + '\'' +
-                ", mail='" + mail + '\'' +
+                ", mail='" + email + '\'' +
                 '}';
     }
 }

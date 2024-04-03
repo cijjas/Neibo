@@ -1,47 +1,67 @@
 ------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------- GENERATION -------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------- GENERATION -----------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------
+
+create sequence if not exists amenities_shifts_availability_amenityavailabilityid_seq;
+create sequence if not exists amenities_amenityid_seq;
+create sequence if not exists channels_channelid_seq;
+create sequence if not exists comments_commentid_seq;
+create sequence if not exists contacts_contactid_seq;
+create sequence if not exists days_dayid_seq;
+create sequence if not exists departments_departmentid_seq;
+create sequence if not exists events_eventid_seq;
+create sequence if not exists images_imageid_seq;
+create sequence if not exists neighborhoods_neighborhoodid_seq;
+create sequence if not exists posts_postid_seq;
+create sequence if not exists products_productid_seq;
+create sequence if not exists products_users_inquiries_inquiryid_seq;
+create sequence if not exists products_users_purchases_purchaseid_seq;
+create sequence if not exists products_users_requests_requestid_seq;
+create sequence if not exists professions_professionid_seq;
+create sequence if not exists reviews_reviewid_seq;
+create sequence if not exists resources_resourceid_seq;
+create sequence if not exists shifts_shiftid_seq;
+create sequence if not exists tags_tagid_seq;
+create sequence if not exists times_timeid_seq;
+create sequence if not exists users_availability_bookingid_seq;
+create sequence if not exists users_userid_seq;
 
 create table if not exists neighborhoods
 (
-    neighborhoodid   serial
-        primary key,
+    neighborhoodid   BIGINT DEFAULT NEXTVAL('neighborhoods_neighborhoodid_seq') PRIMARY KEY,
     neighborhoodname varchar(128)
 );
 
 create table if not exists tags
 (
-    tagid serial
-        primary key,
-    tag   varchar(64) not null
-        unique
+    tagid BIGINT DEFAULT NEXTVAL('tags_tagid_seq') PRIMARY KEY,
+    tag   varchar(64) not null unique
 );
 
 create table if not exists channels
 (
-    channelid serial
-        primary key,
-    channel   varchar(64) not null
-        unique
+    channelid BIGINT DEFAULT NEXTVAL('tags_tagid_seq') PRIMARY KEY,
+    channel   varchar(64) not null unique
 );
 
 create table if not exists images
 (
-    imageid serial
-        primary key,
+    imageid BIGINT DEFAULT NEXTVAL('images_imageid_seq') PRIMARY KEY,
     image   bytea not null
 );
 
 create table if not exists users
 (
-    userid           serial
-        primary key,
-    mail             varchar(128) not null
-        unique,
+    userid           BIGINT DEFAULT NEXTVAL('users_userid_seq') PRIMARY KEY,
+    mail             varchar(128) not null unique,
     name             varchar(64)  not null,
     surname          varchar(64)  not null,
     creationdate     timestamp    not null,
-    neighborhoodid   integer      not null
+    version         BIGINT DEFAULT 1 NOT NULL,
+    neighborhoodid   BIGINT      not null
         references neighborhoods
             on delete cascade
         constraint fkic88b519i3tqt5e0q3vkf3y5t
@@ -50,7 +70,7 @@ create table if not exists users
     darkmode         boolean,
     language         varchar(32),
     role             varchar(64),
-    profilepictureid integer
+    profilepictureid BIGINT
         constraint fk_users_images
             references images
             on delete set null
@@ -62,23 +82,22 @@ create table if not exists users
 
 create table if not exists posts
 (
-    postid        serial
-        primary key,
+    postid        BIGINT DEFAULT NEXTVAL('posts_postid_seq') PRIMARY KEY,
     title         varchar(128) not null,
     description   text         not null,
     postdate      timestamp    not null,
-    userid        integer      not null
+    userid        BIGINT      not null
         constraint fk_posts_users
             references users
             on delete cascade
         constraint fktc10cvjiaj3p7ldl526coc36a
             references users,
-    channelid     integer      not null
+    channelid     BIGINT      not null
         references channels
             on delete cascade
         constraint fkqn2vwdbbedu2lmm3mi5n4vjnq
             references channels,
-    postpictureid integer
+    postpictureid BIGINT
         constraint fk_posts_images
             references images
             on delete set null
@@ -88,17 +107,16 @@ create table if not exists posts
 
 create table if not exists comments
 (
-    commentid   serial
-        primary key,
+    commentid   BIGINT DEFAULT NEXTVAL('comments_commentid_seq') PRIMARY KEY,
     comment     varchar(512) not null,
     commentdate date         not null,
-    userid      integer      not null
+    userid      BIGINT      not null
         constraint fk_comments_users
             references users
             on delete cascade
         constraint fkjxggc60wwwlf4xl065fjrx68y
             references users,
-    postid      integer      not null
+    postid      BIGINT      not null
         references posts
             on delete cascade
         constraint fkqt8anaen7vlhry2a766wkvv41
@@ -107,12 +125,12 @@ create table if not exists comments
 
 create table if not exists posts_tags
 (
-    postid integer not null
+    postid BIGINT not null
         references posts
             on delete cascade
         constraint fk9d2rjjmbiureptqp0hn4wfd93
             references posts,
-    tagid  integer not null
+    tagid  BIGINT not null
         references tags
             on delete cascade
         constraint fkp7fqkfledrnb5vph2cumrgwg4
@@ -122,12 +140,12 @@ create table if not exists posts_tags
 
 create table if not exists neighborhoods_channels
 (
-    neighborhoodid integer not null
+    neighborhoodid BIGINT not null
         references neighborhoods
             on delete cascade
         constraint fkhtu9bmy29n0d43wc59dt6jvr5
             references neighborhoods,
-    channelid      integer not null
+    channelid      BIGINT not null
         references channels
             on delete cascade
         constraint fk5v7ohayjrcs4l9xfvulc1id3g
@@ -137,15 +155,15 @@ create table if not exists neighborhoods_channels
 
 create table if not exists resources
 (
-    resourceid          serial
-        primary key,
+    resourceid          BIGINT DEFAULT NEXTVAL('resources_resourceid_seq') PRIMARY KEY,
     resourcetitle       varchar(64),
+    version        BIGINT DEFAULT 1 NOT NULL,
     resourcedescription varchar(255),
-    resourceimageid     integer
+    resourceimageid     BIGINT
         references images
         constraint fk8u7gju00jdbcp3ejyrab6uud5
             references images,
-    neighborhoodid      integer not null
+    neighborhoodid      BIGINT not null
         references neighborhoods
         constraint fkm326w3rerctvghpu8yct39glk
             references neighborhoods
@@ -153,38 +171,37 @@ create table if not exists resources
 
 create table if not exists contacts
 (
-    contactid      serial
-        primary key,
+    contactid      BIGINT DEFAULT NEXTVAL('contacts_contactid_seq') PRIMARY KEY,
     contactname    varchar(64) not null,
     contactaddress varchar(128),
     contactphone   varchar(32),
-    neighborhoodid integer     not null
+    version        BIGINT DEFAULT 1 NOT NULL,
+    neighborhoodid BIGINT     not null
         references neighborhoods
         constraint fklux0wry30t2vlbwyv6nwm4pv6
             references neighborhoods
 );
 
-create table if not exists amenities
-(
-    amenityid      serial
-        primary key,
-    name           varchar(512) not null,
-    description    varchar(512) not null,
-    neighborhoodid integer      not null
-        references neighborhoods
-            on delete cascade
-        constraint fks3gyc5psipkyoeidl506ypor
-            references neighborhoods
+CREATE TABLE IF NOT EXISTS amenities (
+                                         amenityid      BIGINT DEFAULT NEXTVAL('amenities_amenityid_seq') PRIMARY KEY,
+                                         name           varchar(512) not null,
+                                         description    varchar(512) not null,
+                                         version        BIGINT DEFAULT 1 NOT NULL,
+                                         neighborhoodid BIGINT      not null
+                                             references neighborhoods
+                                                 on delete cascade
+                                             constraint fks3gyc5psipkyoeidl506ypor
+                                                 references neighborhoods
 );
 
 create table if not exists posts_users_likes
 (
-    postid   integer not null
+    postid   BIGINT not null
         references posts
             on delete cascade
         constraint fk2v3c2g4kqvmjbyva0y9n261ps
             references posts,
-    userid   integer not null
+    userid   BIGINT not null
         references users
             on delete cascade
         constraint fk1phwqt3hh8wcip5hcoxct3ax5
@@ -195,49 +212,50 @@ create table if not exists posts_users_likes
 
 create table if not exists workers_info
 (
-    workerid            integer      not null
+    workerid            BIGINT not null
         primary key
         references users
             on delete cascade,
     phonenumber         varchar(64)  not null,
     businessname        varchar(128),
     address             varchar(128) not null,
-    backgroundpictureid integer,
+    backgroundpictureid BIGINT,
+    version        BIGINT DEFAULT 1 NOT NULL,
     bio                 varchar(255)
 );
 
 create table if not exists professions
 (
-    professionid serial
-        primary key,
+    professionid BIGINT DEFAULT NEXTVAL('professions_professionid_seq') PRIMARY KEY,
     profession   varchar(64) not null
         unique
 );
 
 create table if not exists workers_neighborhoods
 (
-    workerid       integer not null
+    workerid       BIGINT not null
         references users
             on delete cascade
         constraint fkop2knb49048w039sru9wl7m4v
             references workers_info,
-    neighborhoodid integer not null
+    neighborhoodid BIGINT not null
         references neighborhoods
             on delete cascade
         constraint fklyb81uy312pcm3bqlygtudqac
             references neighborhoods,
     role           varchar(255),
+    version        BIGINT DEFAULT 1 NOT NULL,
     primary key (workerid, neighborhoodid)
 );
 
 create table if not exists workers_professions
 (
-    workerid     integer not null
+    workerid     BIGINT not null
         references users
             on delete cascade
         constraint fkf1a7cka14k4ty63gra57x2vwe
             references workers_info,
-    professionid integer not null
+    professionid BIGINT not null
         references professions
             on delete cascade
         constraint fkhihhwwcf8km97mlf13r0vqn
@@ -247,50 +265,48 @@ create table if not exists workers_professions
 
 create table if not exists reviews
 (
-    reviewid serial
-        primary key,
-    workerid integer
+    reviewid BIGINT DEFAULT NEXTVAL('reviews_reviewid_seq') PRIMARY KEY,
+    workerid BIGINT
         references users
             on delete cascade
         constraint fkd87kbnxrdtjriixleh5wxy3xi
             references workers_info,
-    userid   integer
+    userid   BIGINT
         references users
             on delete cascade
         constraint fke0hlob2fbf7wug4lgi2boiyxf
             references users,
-    rating   double precision,
+    rating   float4,
     review   varchar(255),
     date     timestamp not null
 );
 
 create table if not exists times
 (
-    timeid       serial
-        primary key,
+    timeid       BIGINT DEFAULT NEXTVAL('times_timeid_seq') PRIMARY KEY,
     timeinterval time
         unique
 );
 
 create table if not exists events
 (
-    eventid        serial
-        primary key,
+    eventid        BIGINT DEFAULT NEXTVAL('events_eventid_seq') PRIMARY KEY,
     name           varchar(255) not null,
     description    text,
     date           date         not null,
-    neighborhoodid integer      not null
+    version        BIGINT DEFAULT 1 NOT NULL,
+    neighborhoodid BIGINT      not null
         references neighborhoods
             on delete cascade
         constraint fk37hdki702o2bv4r3t41i7yk4o
             references neighborhoods,
-    starttimeid    integer
+    starttimeid    BIGINT
         constraint fk_starttime
             references times
             on delete cascade
         constraint fkab8xrhqn8m4poq2xvqt6l5v72
             references times,
-    endtimeid      integer
+    endtimeid      BIGINT
         constraint fk_endtime
             references times
             on delete cascade
@@ -300,12 +316,12 @@ create table if not exists events
 
 create table if not exists events_users
 (
-    userid  integer not null
+    userid  BIGINT not null
         references users
             on delete cascade
         constraint fk84k1rf46d33arjqggmbj0lyjy
             references users,
-    eventid integer not null
+    eventid BIGINT not null
         references events
             on delete cascade
         constraint fkll2jkxq61gb2cn8c0wgw1lkfq
@@ -315,21 +331,19 @@ create table if not exists events_users
 
 create table if not exists days
 (
-    dayid   serial
-        primary key,
+    dayid   BIGINT DEFAULT NEXTVAL('days_dayid_seq') PRIMARY KEY,
     dayname varchar(20)
         unique
 );
 
 create table if not exists shifts
 (
-    shiftid   serial
-        primary key,
-    dayid     integer
+    shiftid   BIGINT DEFAULT NEXTVAL('shifts_shiftid_seq') PRIMARY KEY,
+    dayid     BIGINT
         references days
         constraint fkrgr216xwoagaxrpo0v757c881
             references days,
-    starttime integer
+    starttime BIGINT
         references times
         constraint fk5nflqno4eofi5n2onehgbu6tt
             references times,
@@ -338,14 +352,13 @@ create table if not exists shifts
 
 create table if not exists amenities_shifts_availability
 (
-    amenityavailabilityid serial
-        primary key,
-    amenityid             integer
+    amenityavailabilityid BIGINT DEFAULT NEXTVAL('amenities_shifts_availability_amenityavailabilityid_seq') PRIMARY KEY,
+    amenityid             BIGINT
         references amenities
             on delete cascade
         constraint fks3qffu9r6rxbo6ffxt3wy679l
             references amenities,
-    shiftid               integer
+    shiftid               BIGINT
         references shifts
             on delete cascade
         constraint fk3mdnowlxv760ced06okgsy8rh
@@ -355,14 +368,13 @@ create table if not exists amenities_shifts_availability
 
 create table if not exists users_availability
 (
-    bookingid             serial
-        primary key,
-    amenityavailabilityid integer
+    bookingid             BIGINT DEFAULT NEXTVAL('users_availability_bookingid_seq') PRIMARY KEY,
+    amenityavailabilityid BIGINT
         references amenities_shifts_availability
             on delete cascade
         constraint fks9a957rfgy3db1dben7xnj0u1
             references amenities_shifts_availability,
-    userid                integer
+    userid                BIGINT
         references users
             on delete cascade
         constraint fk2fygq11yidgx548rnvmb3kp9e
@@ -373,103 +385,102 @@ create table if not exists users_availability
 
 create table if not exists departments
 (
-    departmentid serial
-        primary key,
+    departmentid BIGINT DEFAULT NEXTVAL('departments_departmentid_seq') PRIMARY KEY,
     department   varchar(64) not null
         unique
 );
 
 create table if not exists products
 (
-    productid          serial
-        primary key,
+    productid          BIGINT DEFAULT NEXTVAL('products_productid_seq') PRIMARY KEY,
     name               varchar(128)     not null,
     description        varchar(1000)    not null,
     price              double precision not null,
+    version        BIGINT DEFAULT 1 NOT NULL,
     used               boolean          not null,
-    primarypictureid   integer
+    primarypictureid   BIGINT
         references images
             on delete cascade
         constraint fkes5pp3fnwoaewjtkpkh8mayxd
             references images,
-    secondarypictureid integer
+    secondarypictureid BIGINT
         references images
             on delete cascade
         constraint fkjh0vklu17y1qmlifr3ckbnsn7
             references images,
-    tertiarypictureid  integer
+    tertiarypictureid  BIGINT
         references images
             on delete cascade
         constraint fkcj69ibo77igk2yxx9yyarn609
             references images,
-    sellerid           integer          not null
+    sellerid           BIGINT          not null
         references users
             on delete cascade
         constraint fk7ghqa830fextpfnt6qw4dvly1
             references users,
-    departmentid       integer
+    departmentid       BIGINT
         references departments
             on delete cascade
         constraint fk8iyjjwe05ysnrnwemuwlk8nqr
             references departments,
     creationdate       timestamp,
-    remainingunits     integer default 1,
+    remainingunits     bigint default 1,
     purchasedate       date
 );
 
 create table if not exists products_users_inquiries
 (
-    inquiryid   serial
-        primary key,
-    productid   integer
+    inquiryid   BIGINT DEFAULT NEXTVAL('products_users_inquiries_inquiryid_seq') PRIMARY KEY,
+    productid   BIGINT
         references products
             on delete cascade
         constraint fkqxpb7oab9phj2hsbiw4trel5l
             references products,
-    userid      integer
+    userid      BIGINT
         references users
             on delete cascade
         constraint fk6ptiod8ihfdhv07m04jhcvb3e
             references users,
     message     varchar(512) not null,
     reply       varchar(512),
+    version        BIGINT DEFAULT 1 NOT NULL,
     inquirydate timestamp
 );
 
 create table if not exists products_users_requests
 (
-    requestid   serial
-        primary key,
-    productid   integer
+    requestid   BIGINT DEFAULT NEXTVAL('products_users_requests_requestid_seq') PRIMARY KEY,
+    productid   BIGINT
         references products
             on delete cascade
         constraint fk3rojkgclaljwd3vr0qa8qbsmc
             references products,
-    userid      integer
+    userid      BIGINT
         references users
             on delete cascade
         constraint fkt3dd1mkdokg6anp41w64y397t
             references users,
     message     varchar(512) not null,
     requestdate timestamp,
+    version        BIGINT DEFAULT 1 NOT NULL,
     fulfilled   boolean
 );
 
 create table if not exists products_users_purchases
 (
-    purchaseid   serial
-        primary key,
-    units        integer,
-    productid    integer
+    purchaseid BIGINT DEFAULT NEXTVAL('products_users_purchases_purchaseid_seq') PRIMARY KEY,
+    units      BIGINT,
+    productid  BIGINT
         references products
         constraint fkj6tu1b7jvw2sgsyqkym9rof52
             references products,
-    userid       integer
+    userid     BIGINT
         references users
         constraint fkecl9mfhyuqwevvryrohsti10a
             references users,
     purchasedate timestamp
 );
+
 
 
 -- Insert neighborhoods

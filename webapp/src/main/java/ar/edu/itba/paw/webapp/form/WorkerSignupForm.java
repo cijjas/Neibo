@@ -2,7 +2,6 @@ package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.*;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -12,12 +11,12 @@ public class WorkerSignupForm {
     @NotNull
     @Size(min = 1, max = 64)
     @Pattern(regexp = "^[a-zA-Z ]*")
-    private String worker_name;
+    private String workerName;
 
     @NotNull
     @Pattern(regexp = "^[a-zA-Z ]*")
     @Size(min = 1, max = 64)
-    private String worker_surname;
+    private String workerSurname;
 
     @ProfessionsURNConstraint
     private String[] professionURNs;
@@ -41,35 +40,35 @@ public class WorkerSignupForm {
     @Size(min = 1, max = 128)
     @Email
     @EmailConstraint
-    private String worker_mail;
+    private String workerMail;
 
     @NotNull
     @Size(min = 1, max = 50)
     @Pattern(regexp = "^[a-zA-Z0-9]*")
-    private String worker_password;
+    private String workerPassword;
 
     @NotNull
     @Size(min = 1, max = 9)
     @Pattern(regexp = "^[0-9]*")
-    private String worker_identification;
+    private String workerIdentification;
 
     @LanguageURNConstraint
-    private String worker_languageURN;
+    private String workerLanguageURN;
 
-    public String getWorker_name() {
-        return worker_name;
+    public String getWorkerName() {
+        return workerName;
     }
 
-    public void setWorker_name(String worker_name) {
-        this.worker_name = worker_name;
+    public void setWorkerName(String workerName) {
+        this.workerName = workerName;
     }
 
-    public String getWorker_surname() {
-        return worker_surname;
+    public String getWorkerSurname() {
+        return workerSurname;
     }
 
-    public void setWorker_surname(String worker_surname) {
-        this.worker_surname = worker_surname;
+    public void setWorkerSurname(String workerSurname) {
+        this.workerSurname = workerSurname;
     }
 
     public String[] getProfessionURNs() {
@@ -104,47 +103,47 @@ public class WorkerSignupForm {
         this.address = address;
     }
 
-    public String getWorker_mail() {
-        return worker_mail;
+    public String getWorkerMail() {
+        return workerMail;
     }
 
-    public void setWorker_mail(String worker_mail) {
-        this.worker_mail = worker_mail;
+    public void setWorkerMail(String workerMail) {
+        this.workerMail = workerMail;
     }
 
-    public String getWorker_password() {
-        return worker_password;
+    public String getWorkerPassword() {
+        return workerPassword;
     }
 
-    public void setWorker_password(String worker_password) {
-        this.worker_password = worker_password;
+    public void setWorkerPassword(String workerPassword) {
+        this.workerPassword = workerPassword;
     }
 
-    public String getWorker_identification() {
-        return worker_identification;
+    public String getWorkerIdentification() {
+        return workerIdentification;
     }
 
-    public void setWorker_identification(String worker_identification) {
-        this.worker_identification = worker_identification;
+    public void setWorkerIdentification(String workerIdentification) {
+        this.workerIdentification = workerIdentification;
     }
 
-    public String getWorker_languageURN() {
-        return worker_languageURN;
+    public String getWorkerLanguageURN() {
+        return workerLanguageURN;
     }
 
-    public void setWorker_languageURN(String worker_languageURN) {
-        this.worker_languageURN = worker_languageURN;
+    public void setWorkerLanguageURN(String workerLanguageURN) {
+        this.workerLanguageURN = workerLanguageURN;
     }
 
     @Override
     public String toString() {
         return "PublishForm{" +
-                "name='" + worker_name + '\'' +
-                ", surname='" + worker_surname + '\'' +
-                ", password='" + worker_password + '\'' +
-                ", mail='" + worker_mail + '\'' +
-                ", identification='" + worker_identification + '\'' +
-                ", language='" + worker_languageURN + '\'' +
+                "name='" + workerName + '\'' +
+                ", surname='" + workerSurname + '\'' +
+                ", password='" + workerPassword + '\'' +
+                ", mail='" + workerMail + '\'' +
+                ", identification='" + workerIdentification + '\'' +
+                ", language='" + workerLanguageURN + '\'' +
                 "phoneNumber='" + phoneNumber + '\'' +
                 ", businessName='" + businessName + '\'' +
                 ", address='" + address + '\'' +

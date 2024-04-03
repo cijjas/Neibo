@@ -5,7 +5,7 @@ import ar.edu.itba.paw.enums.UserRole;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -49,6 +49,7 @@ public class User {
     private UserRole role;
 
     @Column(name = "creationdate", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
