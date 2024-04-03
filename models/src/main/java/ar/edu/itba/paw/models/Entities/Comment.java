@@ -58,10 +58,6 @@ public class Comment {
         this.commentId = commentId;
     }
 
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
     public Date getDate() {
         return date;
     }

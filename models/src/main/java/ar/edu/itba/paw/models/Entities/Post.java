@@ -74,14 +74,6 @@ public class Post {
         this.postId = postId;
     }
 
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
     public Long getPostId() {
         return postId;
     }

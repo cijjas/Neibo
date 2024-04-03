@@ -31,7 +31,6 @@ public class ContactDaoImpl implements ContactDao {
                 .contactName(contactName)
                 .contactPhone(contactPhone)
                 .neighborhood(em.find(Neighborhood.class, neighborhoodId))
-                .version(1L)
                 .build();
         em.persist(contact);
         return contact;

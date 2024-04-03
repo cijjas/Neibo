@@ -74,10 +74,6 @@ public class Availability {
         this.bookings = bookings;
     }
 
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
     /*
     public Set<User> getBookedByUsers() {
         return bookedByUsers;

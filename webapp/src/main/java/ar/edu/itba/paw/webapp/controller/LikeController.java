@@ -137,14 +137,11 @@ public class LikeController extends GlobalControllerAdvice{
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/likes/'", neighborhoodId);
 
         // Cache Control
-        if (ifMatch != null) {
-            String version = ls.findLike(postId, userId).orElseThrow(NotFoundException::new).getVersion().toString();
-            Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(version));
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(version)
-                        .build();
-        }
+        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        if (builder != null)
+            return Response.status(Response.Status.PRECONDITION_FAILED)
+                    .tag(entityLevelETag)
+                    .build();
 
         if(ls.deleteLike(postId, userId)) {
             entityLevelETag = ETagUtility.generateETag();
