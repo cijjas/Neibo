@@ -52,10 +52,6 @@ public class Post {
     @JoinTable(name = "posts_users_subscriptions", joinColumns = @JoinColumn(name = "postid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> subscribers;
 
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
     Post() {
     }
 

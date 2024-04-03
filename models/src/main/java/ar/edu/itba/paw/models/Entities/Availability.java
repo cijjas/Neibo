@@ -24,24 +24,14 @@ public class Availability {
     @JoinColumn(name = "shiftid")
     private Shift shift;
 
-    /*
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "users_availability",
             joinColumns = @JoinColumn(name = "amenityavailabilityid"),
             inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> bookedByUsers;
-    */
 
     @OneToMany(mappedBy = "amenityAvailability", cascade = CascadeType.ALL)
     private List<Booking> bookings;
-
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
-    public Long getVersion() {
-        return version;
-    }
 
     Availability() {
     }

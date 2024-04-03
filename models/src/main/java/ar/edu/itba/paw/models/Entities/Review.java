@@ -31,11 +31,6 @@ public class Review {
     @Column(name = "date")
     private Date date;
 
-
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
     Review() {
     }
 
@@ -70,14 +65,6 @@ public class Review {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 
     public Long getReviewId() {

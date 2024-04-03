@@ -28,8 +28,6 @@ public class ThrowableExceptionMapper implements ExceptionMapper<Throwable> {
         LOGGER.error(exception.toString());
         LOGGER.error(Arrays.toString(exception.getStackTrace()));
 
-        exception.printStackTrace();
-
         Response.Status status = Response.Status.INTERNAL_SERVER_ERROR;
 
         ApiErrorDetails errorDetails = new ApiErrorDetails();

@@ -46,18 +46,15 @@ public class PostServiceImpl implements PostService {
     public Post createPost(String title, String description, long userId, String channelURN, String tags, InputStream imageFile) {
         LOGGER.info("Creating Post with Title {} by User {}", title, userId);
 
-        TwoIds twoIds = ValidationUtils.extractTwoURNIds(channelURN);
-        long neighborhoodId = twoIds.getFirstId();
-        long channelId = twoIds.getSecondId();
+        long baseChannelId = ValidationUtils.extractURNId(channelURN);
 
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkChannelId(channelId);
+        // TODO check valid baseChannelId, id > 0 && id < enum.size
 
         Image i = null;
         if (imageFile != null) {
             i = imageService.storeImage(imageFile);
         }
-        Post p = postDao.createPost(title, description, userId, channelId, i == null ? 0 : i.getImageId());
+        Post p = postDao.createPost(title, description, userId, baseChannelId, i == null ? 0 : i.getImageId());
         tagService.createTagsAndCategorizePost(p.getPostId(), tags);
         return p;
     }

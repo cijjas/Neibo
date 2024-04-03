@@ -22,14 +22,6 @@ public class Tag {
     @JoinTable(name = "posts_tags", joinColumns = @JoinColumn(name = "tagid"), inverseJoinColumns = @JoinColumn(name = "postid"))
     private List<Post> posts;
 
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
-    public Long getVersion() {
-        return version;
-    }
-
     Tag() {
     }
 
@@ -44,10 +36,6 @@ public class Tag {
 
     public void setTag(String tag) {
         this.tag = tag;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 
     public Long getTagId() {

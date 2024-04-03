@@ -178,5 +178,4 @@ public class ContactController {
                 .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
-
 }

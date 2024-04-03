@@ -23,18 +23,6 @@ public class Attendance implements Serializable {
     @JoinColumn(name = "eventid")
     private Event event;
 
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
     Attendance() {
         this.id = new AttendanceKey();
     }
