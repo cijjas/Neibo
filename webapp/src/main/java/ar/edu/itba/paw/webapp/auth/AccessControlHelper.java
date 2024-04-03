@@ -239,4 +239,28 @@ public class AccessControlHelper {
 
         return p.getSeller().getUserId() != userAuth.getUserId();
     }
+
+    //A worker's affiliation to a neighborhood can only be updated by an administrator from said neighborhood
+    public Boolean canUpdateAffiliation(String neighborhoodURN) {
+        LOGGER.info("Verifying Update Affiliation Accessibility");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserAuth userAuth = (UserAuth) authentication.getPrincipal();
+
+        long neighborhoodId = extractURNId(neighborhoodURN);
+
+        if (userAuth.getNeighborhoodId() == neighborhoodId && userAuth.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMINISTRATOR")))
+            return true;
+
+        return false;
+    }
+
+    private long extractURNId(String URN) {
+        String[] URNParts = URN.split("/");
+        if (URNParts.length < 5) { // Check if there are enough parts for an ID
+            throw new IllegalArgumentException("Invalid URN format.");
+        }
+
+        return Long.parseLong(URNParts[4]);
+    }
 }

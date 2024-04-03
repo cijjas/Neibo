@@ -10,6 +10,8 @@ public class AffiliationDto {
     private URI worker; // localhost:8080/amenities/{id}
     private URI neighborhood; // localhost:8080/shifts/{id}
 
+    private URI workerRole;
+
     // should have affiliation
 
     public static AffiliationDto fromAffiliation(Affiliation affiliation, UriInfo uriInfo){
@@ -27,6 +29,10 @@ public class AffiliationDto {
         dto.worker = uriInfo.getBaseUriBuilder()
                 .path("workers")
                 .path(String.valueOf(affiliation.getWorker().getWorkerId()))
+                .build();
+        dto.workerRole = uriInfo.getBaseUriBuilder()
+                .path("worker-roles")
+                .path(String.valueOf(affiliation.getRole().getId()))
                 .build();
 
         return dto;
@@ -54,5 +60,13 @@ public class AffiliationDto {
 
     public void setNeighborhood(URI neighborhood) {
         this.neighborhood = neighborhood;
+    }
+
+    public URI getWorkerRole() {
+        return workerRole;
+    }
+
+    public void setWorkerRole(URI workerRole) {
+        this.workerRole = workerRole;
     }
 }
