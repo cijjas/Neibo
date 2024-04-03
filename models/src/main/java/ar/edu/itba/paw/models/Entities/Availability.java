@@ -74,11 +74,9 @@ public class Availability {
         this.bookings = bookings;
     }
 
-    /*
     public Set<User> getBookedByUsers() {
         return bookedByUsers;
     }
-*/
 
     @Override
     public String toString() {

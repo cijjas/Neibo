@@ -48,10 +48,6 @@ public class Post {
     @JoinTable(name = "posts_users_likes", joinColumns = @JoinColumn(name = "postid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> likedByUsers;
 
-    @ManyToMany
-    @JoinTable(name = "posts_users_subscriptions", joinColumns = @JoinColumn(name = "postid"), inverseJoinColumns = @JoinColumn(name = "userid"))
-    private Set<User> subscribers;
-
     Post() {
     }
 
@@ -67,7 +63,6 @@ public class Post {
         this.likedByUsers = builder.likedByUsers;
         this.comments = builder.comments;
         this.date = new java.sql.Date(System.currentTimeMillis());
-        this.subscribers = builder.subscribers;
     }
 
     public void setPostId(Long postId) {
@@ -150,14 +145,6 @@ public class Post {
         this.comments = comments;
     }
 
-    public Set<User> getSubscribers() {
-        return subscribers;
-    }
-
-    public void setSubscribers(Set<User> subscribers) {
-        this.subscribers = subscribers;
-    }
-
     @Override
     public String toString() {
         return "Post{" +
@@ -170,7 +157,6 @@ public class Post {
                 ", tags=" + tags +
                 ", likedByUsers=" + likedByUsers +
                 ", comments=" + comments +
-                ", subscribers=" + subscribers +
                 '}';
     }
 

@@ -74,10 +74,6 @@ public class User {
     private Set<Availability> availabilitiesTaken;
 
     @ManyToMany
-    @JoinTable(name = "posts_users_subscriptions", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "postid"))
-    private Set<Post> subscribedPosts;
-
-    @ManyToMany
     @JoinTable(name = "posts_users_likes", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "postid"))
     private Set<Post> likedPosts;
 
@@ -198,12 +194,8 @@ public class User {
         return bookings;
     }
 
- /*   public Set<Availability> getAvailabilitiesTaken() {
+    public Set<Availability> getAvailabilitiesTaken() {
         return availabilitiesTaken;
-    }*/
-
-    public Set<Post> getSubscribedPosts() {
-        return subscribedPosts;
     }
 
     public Set<Post> getLikedPosts() {
@@ -302,12 +294,8 @@ public class User {
         this.bookings = bookings;
     }
 
-/*    public void setAvailabilitiesTaken(Set<Availability> availabilitiesTaken) {
+    public void setAvailabilitiesTaken(Set<Availability> availabilitiesTaken) {
         this.availabilitiesTaken = availabilitiesTaken;
-    }*/
-
-    public void setSubscribedPosts(Set<Post> subscribedPosts) {
-        this.subscribedPosts = subscribedPosts;
     }
 
     public void setLikedPosts(Set<Post> likedPosts) {
