@@ -33,26 +33,28 @@ public class NeighborhoodDto {
                 .path("workers")
                 .queryParam("inNeighborhoods", String.valueOf(neighborhood.getNeighborhoodId()))
                 .build();
-        dto.contacts = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(neighborhood.getNeighborhoodId()))
-                .path("contacts")
-                .build();
         dto.channels = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(neighborhood.getNeighborhoodId()))
                 .path("channels")
                 .build();
-        dto.events = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(neighborhood.getNeighborhoodId()))
-                .path("events")
-                .build();
-        dto.resources = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(neighborhood.getNeighborhoodId()))
-                .path("resources")
-                .build();
+        if(neighborhood.getNeighborhoodId() > 0) {
+            dto.contacts = uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                    .path("contacts")
+                    .build();
+            dto.events = uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                    .path("events")
+                    .build();
+            dto.resources = uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(neighborhood.getNeighborhoodId()))
+                    .path("resources")
+                    .build();
+        }
 
         return dto;
     }

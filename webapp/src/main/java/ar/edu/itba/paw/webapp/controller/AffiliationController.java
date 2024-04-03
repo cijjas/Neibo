@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.form.AffiliationForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -103,6 +104,7 @@ public class AffiliationController {
 
     @PATCH
     @Produces(value = {MediaType.APPLICATION_JSON,})
+    @PreAuthorize("@accessControlHelper.canUpdateAffiliation(#form.neighborhoodURN)")
     public Response updateAffiliation(
             @Valid final AffiliationForm form,
             @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
