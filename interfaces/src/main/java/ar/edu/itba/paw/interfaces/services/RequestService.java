@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RequestService {
-    Request createRequest(final long userId, final long productId, final String message);
+    Request createRequest(final long userId, final String productURN, final String message);
 
     boolean deleteRequest(long requestId);
     // -----------------------------------------------------------------------------------------------------------------
@@ -15,7 +15,7 @@ public interface RequestService {
 
     Optional<Request> findRequest(long requestId, long neighborhoodId);
 
-    List<Request> getRequests(Long productId, Long userId, int page, int size, long neighborhoodId);
+    List<Request> getRequests(Long userId, Long productId, int page, int size, long neighborhoodId);
 
     int countRequests(Long productId, Long userId);
 

@@ -25,5 +25,4 @@ public class PostURNValidator implements ConstraintValidator<PostURNConstraint, 
         return URNValidator.validateURN(postURN, "posts");
 
     }
-
 }

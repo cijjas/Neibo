@@ -40,7 +40,7 @@ public class WorkerSignupForm {
     @Size(min = 1, max = 128)
     @Email
     @EmailConstraint
-    private String workerMail;
+    private String workerEmail;
 
     @NotNull
     @Size(min = 1, max = 50)
@@ -103,12 +103,12 @@ public class WorkerSignupForm {
         this.address = address;
     }
 
-    public String getWorkerMail() {
-        return workerMail;
+    public String getWorkerEmail() {
+        return workerEmail;
     }
 
-    public void setWorkerMail(String workerMail) {
-        this.workerMail = workerMail;
+    public void setWorkerEmail(String workerEmail) {
+        this.workerEmail = workerEmail;
     }
 
     public String getWorkerPassword() {
@@ -141,7 +141,7 @@ public class WorkerSignupForm {
                 "name='" + workerName + '\'' +
                 ", surname='" + workerSurname + '\'' +
                 ", password='" + workerPassword + '\'' +
-                ", mail='" + workerMail + '\'' +
+                ", mail='" + workerEmail + '\'' +
                 ", identification='" + workerIdentification + '\'' +
                 ", language='" + workerLanguageURN + '\'' +
                 "phoneNumber='" + phoneNumber + '\'' +

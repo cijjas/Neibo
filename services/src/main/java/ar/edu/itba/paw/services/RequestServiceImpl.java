@@ -10,6 +10,7 @@ import ar.edu.itba.paw.interfaces.services.RequestService;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.models.Entities.User;
+import ar.edu.itba.paw.models.TwoIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +43,17 @@ public class RequestServiceImpl implements RequestService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Request createRequest(long userId, long productId, String message) {
-        LOGGER.info("Creating a Request for Product {} by User {}", productId, userId);
+    public Request createRequest(long userId, String productURN, String message) {
+        LOGGER.info("Creating a Request for Product {} by User {}", productURN, userId);
 
-        Product product = productDao.findProduct(productId).orElseThrow(() -> new NotFoundException("Product not found"));
+        TwoIds twoIds = ValidationUtils.extractTwoURNIds(productURN);
+        long neighborhoodId = twoIds.getFirstId();
+        long productId = twoIds.getSecondId();
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkProductId(productId);
+
+        Product product = productDao.findProduct(productId, neighborhoodId).orElseThrow(() -> new NotFoundException("Product not found"));
         User sender = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User not found"));
         emailService.sendNewRequestMail(product, sender, message);
         return requestDao.createRequest(userId, productId, message);
@@ -84,7 +92,7 @@ public class RequestServiceImpl implements RequestService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Request> getRequests(Long productId, Long userId, int page, int size, long neighborhoodId){
+    public List<Request> getRequests(Long userId, Long productId, int page, int size, long neighborhoodId){
         LOGGER.info("Getting Requests for Product {} made by User {} from Neighborhood {}", productId, userId, neighborhoodId);
 
         ValidationUtils.checkUserId(userId);
@@ -94,7 +102,7 @@ public class RequestServiceImpl implements RequestService {
 
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
-        return requestDao.getRequests(productId, userId, page, size);
+        return requestDao.getRequests(userId, productId, page, size);
     }
 
     @Override

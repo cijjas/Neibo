@@ -17,11 +17,12 @@ public class URNValidator {
     private static final String DEPARTMENT_URN_REGEX = "^(https?://[^/]+)?/departments/\\d+$";
     private static final String WORKERS_URN_REGEX = "^(https?://[^/]+)?/workers/\\d+$";
     private static final String INQUIRY_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+/products/\\d+/inquiries/\\d+$";
+    private static final String PRODUCT_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+/products/\\d+$";
     private static final String LANGUAGE_URN_REGEX = "^(https?://[^/]+)?/languages/\\d+$";
     private static final String PROFESSION_URN_REGEX = "^(https?://[^/]+)?/professions/\\d+$";
     private static final String USER_ROLE_URN_REGEX = "^(https?://[^/]+)?/user-roles/\\d+$";
 
-    // Compile regex patterns during application startup
+    // Compile regex patterns during application startup<
     static {
         patternMap.put("channel", Pattern.compile(CHANNEL_URN_REGEX));
         patternMap.put("neighborhood", Pattern.compile(NEIGHBORHOOD_URN_REGEX));
@@ -36,6 +37,7 @@ public class URNValidator {
         patternMap.put("language", Pattern.compile(LANGUAGE_URN_REGEX));
         patternMap.put("professions", Pattern.compile(PROFESSION_URN_REGEX));
         patternMap.put("userRole", Pattern.compile(USER_ROLE_URN_REGEX));
+        patternMap.put("product", Pattern.compile(PRODUCT_URN_REGEX));
     }
 
     // Method to validate a URN based on its type

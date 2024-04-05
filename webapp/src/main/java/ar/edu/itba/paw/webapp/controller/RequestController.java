@@ -45,7 +45,7 @@ public class RequestController extends GlobalControllerAdvice {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.canAccessRequests(#productId, #userId)")
+    @PreAuthorize("@accessControlHelper.canAccessRequests(#userId, #productId)")
     public Response listRequests(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
@@ -61,7 +61,7 @@ public class RequestController extends GlobalControllerAdvice {
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        List<Request> requests = rs.getRequests(productId, userId, page, size, neighborhoodId);
+        List<Request> requests = rs.getRequests(userId, productId, page, size, neighborhoodId);
         if (requests.isEmpty())
             return Response.noContent().build();
         List<RequestDto> requestDto = requests.stream()
@@ -109,10 +109,9 @@ public class RequestController extends GlobalControllerAdvice {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.canCreateRequest(#productId)")
+    @PreAuthorize("@accessControlHelper.canCreateRequest(#form.productURN)")
     public Response createRequest(
-            @Valid final RequestForm form,
-            @QueryParam("productId") @DefaultValue("0") final int productId
+            @Valid final RequestForm form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 
@@ -124,7 +123,7 @@ public class RequestController extends GlobalControllerAdvice {
                     .build();
 
         // Creation & Etag Generation
-        final Request request = rs.createRequest(getLoggedUserId(), productId, form.getRequestMessage());
+        final Request request = rs.createRequest(getLoggedUserId(), form.getProductURN(), form.getRequestMessage());
         entityLevelETag = ETagUtility.generateETag();
         EntityTag rowLevelETag = new EntityTag(request.getVersion().toString());
 

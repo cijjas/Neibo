@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.auth;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Entities.*;
+import ar.edu.itba.paw.models.TwoIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -236,10 +237,16 @@ public class AccessControlHelper {
     }
 
     // A Neighbor can access the Requests for their products and the Administrator can access all requests
-    public Boolean canAccessRequests(Long productId, Long userId){
+    public Boolean canAccessRequests(Long userId, Long productId){
         LOGGER.info("Verifying Requests Accessibility");
 
-        // null verification is missing
+        /*
+        if (productId == null)
+            throw new IllegalArgumentException("forProduct query parameter is missing");
+
+        if (userId == null)
+            throw new IllegalArgumentException("requestedBy query parameter is missing");
+        */
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -269,13 +276,17 @@ public class AccessControlHelper {
     }
 
     // The seller cant create a Request for his own Products
-    public Boolean canCreateRequest(long productId){
+    public Boolean canCreateRequest(String productURN){
         LOGGER.info("Verifying Request Creation Accessibility");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserAuth userAuth = (UserAuth) authentication.getPrincipal();
 
-        Product p = ps.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        TwoIds twoIds = extractTwoURNIds(productURN);
+        long neighborhoodId = twoIds.getFirstId();
+        long productId = twoIds.getSecondId();
+
+        Product p = ps.findProduct(productId, neighborhoodId).orElseThrow(()-> new NotFoundException("Product Not Found"));
 
         return p.getSeller().getUserId() != userAuth.getUserId();
     }
@@ -302,5 +313,17 @@ public class AccessControlHelper {
         }
 
         return Long.parseLong(URNParts[4]);
+    }
+
+    public static TwoIds extractTwoURNIds(String URN) {
+        String[] URNParts = URN.split("/");
+        if (URNParts.length < 7) { // Check if there are enough parts for two IDs
+            throw new IllegalArgumentException("Invalid URN format.");
+        }
+
+        long firstId = Long.parseLong(URNParts[4]);
+        long secondId = Long.parseLong(URNParts[6]);
+
+        return new TwoIds(firstId, secondId);
     }
 }

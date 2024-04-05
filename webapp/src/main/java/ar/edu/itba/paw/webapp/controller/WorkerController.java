@@ -119,7 +119,7 @@ public class WorkerController extends GlobalControllerAdvice {
                     .build();
 
         // Creation & Etag Generation
-        final Worker worker = ws.createWorker(form.getWorkerMail(), form.getWorkerName(), form.getWorkerSurname(), form.getWorkerPassword(), form.getWorkerIdentification(), form.getPhoneNumber(), form.getAddress(), form.getWorkerLanguageURN(), form.getProfessionURNs(), form.getBusinessName());
+        final Worker worker = ws.createWorker(form.getWorkerEmail(), form.getWorkerName(), form.getWorkerSurname(), form.getWorkerPassword(), form.getWorkerIdentification(), form.getPhoneNumber(), form.getAddress(), form.getWorkerLanguageURN(), form.getProfessionURNs(), form.getBusinessName());
         entityLevelETag = ETagUtility.generateETag();
         EntityTag rowLevelETag = new EntityTag(worker.getVersion().toString());
 

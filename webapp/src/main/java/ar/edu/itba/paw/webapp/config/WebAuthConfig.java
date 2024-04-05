@@ -105,6 +105,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/base-channels/**",
                         "/user-roles/**",
                         "/worker-roles/**",
+                        "/worker-statuses/**",
                         "/transaction-types/**",
                         "/post-statuses/**",
                         "/product-statuses/**",

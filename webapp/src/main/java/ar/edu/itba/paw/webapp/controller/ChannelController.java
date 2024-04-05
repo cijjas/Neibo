@@ -113,7 +113,7 @@ public class ChannelController {
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(channel.getChannelId())).build();
 
-        return Response.ok(uri)
+        return Response.created(uri)
                 .tag(entityLevelETag)
                 .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
