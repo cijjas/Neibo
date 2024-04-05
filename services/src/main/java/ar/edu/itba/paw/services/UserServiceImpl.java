@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -229,7 +230,7 @@ public class UserServiceImpl implements UserService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public User updateUser(long userId, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification, String languageURN, String userRoleURN) {
+    public User updateUser(long userId, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, String profilePictureURN, Integer identification, String languageURN, String userRoleURN) {
         LOGGER.info("Updating User {}", userId);
 
         User user = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User not found"));
@@ -246,8 +247,10 @@ public class UserServiceImpl implements UserService {
             user.setDarkMode(darkMode);
         if (phoneNumber != null && !phoneNumber.isEmpty())
             user.setPhoneNumber(phoneNumber);
-        if (profilePicture != null && !profilePicture.isEmpty()) {
-            Image i = imageService.storeImage(profilePicture);
+        if (profilePictureURN != null) {
+            long imageId = ValidationUtils.extractURNId(profilePictureURN);
+            ValidationUtils.checkImageId(imageId);
+            Image i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
             user.setProfilePicture(i);
         }
         if (identification != null)

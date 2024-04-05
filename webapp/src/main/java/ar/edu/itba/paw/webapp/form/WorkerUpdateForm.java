@@ -27,7 +27,7 @@ public class WorkerUpdateForm {
     @Size(min = 0, max = 128)
     private String address;
 
-    private MultipartFile backgroundPicture;
+    private String backgroundPictureURN;
 
     public String getPhoneNumber() { return phoneNumber; }
 
@@ -45,9 +45,13 @@ public class WorkerUpdateForm {
 
     public void setBio(String bio) { this.bio = bio; }
 
-    public MultipartFile getBackgroundPicture() { return backgroundPicture; }
+    public String getBackgroundPictureURN() {
+        return backgroundPictureURN;
+    }
 
-    public void setBackgroundPicture(MultipartFile backgroundPicture) { this.backgroundPicture = backgroundPicture; }
+    public void setBackgroundPictureURN(String backgroundPictureURN) {
+        this.backgroundPictureURN = backgroundPictureURN;
+    }
 
     @Override
     public String toString() {
@@ -56,7 +60,7 @@ public class WorkerUpdateForm {
                 ", businessName='" + businessName + '\'' +
                 ", address='" + address + '\'' +
                 ", bio='" + bio + '\'' +
-                ", backgroundPicture=" + backgroundPicture +
+                ", backgroundPicture=" + backgroundPictureURN +
                 '}';
     }
 }

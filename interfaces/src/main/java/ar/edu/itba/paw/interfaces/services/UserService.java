@@ -5,6 +5,7 @@ import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.models.Entities.User;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +44,6 @@ public interface UserService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    User updateUser(long userId, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, MultipartFile profilePicture, Integer identification, String languageURN, String userRoleURN);
+    User updateUser(long userId, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, String profilePictureURN, Integer identification, String languageURN, String userRoleURN);
 
 }

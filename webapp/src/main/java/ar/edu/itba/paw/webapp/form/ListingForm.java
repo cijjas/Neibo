@@ -19,7 +19,7 @@ public class ListingForm {
     private String price;
 
     @MultipleImagesConstraint
-    private MultipartFile[] imageFiles;
+    private String[] imageURNs;
 
     @NotBlank
     @Size(max = 2000)
@@ -86,12 +86,12 @@ public class ListingForm {
         this.departmentURN = departmentURN;
     }
 
-    public MultipartFile[] getImageFiles() {
-        return imageFiles;
+    public String[] getImageURNs() {
+        return imageURNs;
     }
 
-    public void setImageFiles(MultipartFile[] imageFiles) {
-        this.imageFiles = imageFiles;
+    public void setImageURNs(String[] imageURNs) {
+        this.imageURNs = imageURNs;
     }
 
     @Override

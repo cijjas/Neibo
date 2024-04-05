@@ -14,8 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestPart;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.InputStream;
@@ -116,11 +118,7 @@ public class PostController extends GlobalControllerAdvice{
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createPost(
-            @FormDataParam("subject") String subject,
-            @FormDataParam("message") String message,
-            @FormDataParam("tags") String tags,
-            @FormDataParam("channelURN") String channelURN,
-            @FormDataParam("postImage") InputStream postImage
+            @Valid @NotNull PublishForm publishForm
     )  {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
@@ -132,13 +130,7 @@ public class PostController extends GlobalControllerAdvice{
                     .build();
 
         // Validation, Creation & ETag Generation
-        PublishForm publishForm = new PublishForm();
-        publishForm.setTags(tags);
-        publishForm.setChannelURN(channelURN);
-        publishForm.setMessage(message);
-        publishForm.setSubject(subject);
-        publishForm.setPostImage(postImage);
-        final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedUserId(), publishForm.getChannelURN(), publishForm.getTags(), publishForm.getPostImage());
+        final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedUserId(), publishForm.getChannelURN(), publishForm.getTags(), publishForm.getPostImageURN());
         entityLevelETag = ETagUtility.generateETag();
         EntityTag rowLevelETag = new EntityTag(post.getPostId().toString());
 

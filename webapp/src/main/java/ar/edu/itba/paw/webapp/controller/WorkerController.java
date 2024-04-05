@@ -150,7 +150,7 @@ public class WorkerController extends GlobalControllerAdvice {
             return response;
 
         // Modification & ETag Generation
-        final Worker updatedWorker = ws.updateWorkerPartially(workerId, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio());
+        final Worker updatedWorker = ws.updateWorkerPartially(workerId, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPictureURN(), partialUpdate.getBio());
         entityLevelETag = ETagUtility.generateETag();
         rowLevelETag = new EntityTag(updatedWorker.getVersion().toString());
 

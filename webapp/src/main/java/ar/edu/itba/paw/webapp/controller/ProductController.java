@@ -119,7 +119,7 @@ public class ProductController extends GlobalControllerAdvice {
                     .build();
 
         // Creation & ETag Generation
-        final Product product = ps.createProduct(getLoggedUserId(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentURN(), form.getImageFiles(), form.getQuantity());
+        final Product product = ps.createProduct(getLoggedUserId(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentURN(), form.getImageURNs(), form.getQuantity());
         entityLevelETag = ETagUtility.generateETag();
         EntityTag rowLevelETag = new EntityTag(product.getVersion().toString());
 
@@ -150,7 +150,7 @@ public class ProductController extends GlobalControllerAdvice {
             return response;
 
         // Modification & ETag Generation
-        final Product updatedProduct = ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartmentURN(), partialUpdate.getImageFiles(), partialUpdate.getQuantity());
+        final Product updatedProduct = ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartmentURN(), partialUpdate.getImageURNs(), partialUpdate.getQuantity());
         entityLevelETag = ETagUtility.generateETag();
         rowLevelETag = new EntityTag(updatedProduct.getVersion().toString());
 

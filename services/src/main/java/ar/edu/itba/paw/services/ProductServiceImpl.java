@@ -40,7 +40,7 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Product createProduct(long userId, String name, String description, String price, boolean used, String departmentURN, MultipartFile[] pictureFiles, long units) {
+    public Product createProduct(long userId, String name, String description, String price, boolean used, String departmentURN, String[] imageURNs, long units) {
         LOGGER.info("Creating Product {} from User {}", name, userId);
 
         long departmentId = ValidationUtils.extractURNId(departmentURN);
@@ -49,9 +49,9 @@ public class ProductServiceImpl implements ProductService {
 
         double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
         Long[] idArray = {0L, 0L, 0L};
-        int pictureFilesLength = pictureFiles == null? 0 : pictureFiles.length;
-        for(int i = 0; i < pictureFilesLength; i++)
-            idArray[i] = getImageId(pictureFiles[i]);
+        int imageURNsLength = imageURNs == null? 0 : imageURNs.length;
+        for(int i = 0; i < imageURNsLength; i++)
+            idArray[i] = getImageId(imageURNs[i]);
 
         return productDao.createProduct(userId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2], units);
     }
@@ -120,7 +120,7 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Product updateProductPartially(long productId, String name, String description, String price, boolean used, String departmentURN, MultipartFile[] pictureFiles, Long stock){
+    public Product updateProductPartially(long productId, String name, String description, String price, boolean used, String departmentURN, String[] imageURNs, Long stock){
         LOGGER.info("Updating Product {}", productId);
 
         long departmentId = ValidationUtils.extractURNId(departmentURN);
@@ -142,21 +142,25 @@ public class ProductServiceImpl implements ProductService {
         if(stock != null)
             product.setRemainingUnits(stock);
 
-        if(pictureFiles != null && pictureFiles.length > 0 && !pictureFiles[0].isEmpty()) {
-            int pictureFilesLength = pictureFiles.length;
+        if(imageURNs != null && imageURNs.length > 0 && imageURNs[0] != null) {
+            int pictureFilesLength = imageURNs.length;
 
-            if(pictureFilesLength >= 1) {
-                Image i = imageService.storeImage(pictureFiles[0]);
-                product.setPrimaryPicture(i);
-            }
+            long imageId = ValidationUtils.extractURNId(imageURNs[0]);
+            ValidationUtils.checkImageId(imageId);
+            Image i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
+            product.setPrimaryPicture(i);
 
             if(pictureFilesLength >= 2) {
-                Image i = imageService.storeImage(pictureFiles[1]);
+                imageId = ValidationUtils.extractURNId(imageURNs[1]);
+                ValidationUtils.checkImageId(imageId);
+                i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
                 product.setSecondaryPicture(i);
             }
 
             if(pictureFilesLength == 3) {
-                Image i = imageService.storeImage(pictureFiles[2]);
+                imageId = ValidationUtils.extractURNId(imageURNs[2]);
+                ValidationUtils.checkImageId(imageId);
+                i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
                 product.setTertiaryPicture(i);
             }
         }
@@ -174,11 +178,12 @@ public class ProductServiceImpl implements ProductService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    private Long getImageId(MultipartFile imageFile) {
-        Image i = null;
-        if (imageFile != null && !imageFile.isEmpty()) {
-            i = imageService.storeImage(imageFile);
+    private Long getImageId(String imageURN) {
+        if (imageURN != null) {
+            long imageId = ValidationUtils.extractURNId(imageURN);
+            ValidationUtils.checkImageId(imageId);
+            return imageId;
         }
-        return i == null ? 0 : i.getImageId();
+        return 0L;
     }
 }

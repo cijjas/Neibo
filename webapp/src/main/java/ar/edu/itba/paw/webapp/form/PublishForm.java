@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.ChannelURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ImageConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.TagsConstraint;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.hibernate.validator.constraints.NotBlank;
@@ -10,23 +11,19 @@ import javax.validation.constraints.Size;
 import java.io.InputStream;
 
 public class PublishForm {
-    @FormDataParam("subject")
     @NotBlank
     @Size(min = 0, max = 100)
     private String subject;
 
-    @FormDataParam("message")
     @NotBlank
     @Size(min = 0, max = 2000)
     private String message;
 
-    @FormDataParam("tags")
     @TagsConstraint
     private String tags;
 
-    @FormDataParam("postImage")
-    @ImageConstraint
-    private InputStream postImage;
+    @ImageURNConstraint
+    private String postImageURN;
 
     @ChannelURNConstraint
     private String channelURN;
@@ -63,12 +60,12 @@ public class PublishForm {
         this.message = message;
     }
 
-    public InputStream getPostImage() {
-        return postImage;
+    public String getPostImageURN() {
+        return postImageURN;
     }
 
-    public void setPostImage(InputStream postImage) {
-        this.postImage = postImage;
+    public void setPostImageURN(String postImageURN) {
+        this.postImageURN = postImageURN;
     }
 
     @Override
@@ -76,7 +73,7 @@ public class PublishForm {
         return "PublishForm{" +
                 "subject='" + subject + '\'' +
                 ", message='" + message + '\'' +
-                ", imageInputStream='" + postImage + '\'' +
+                ", postImageURN='" + postImageURN + '\'' +
                 ", tags='" + tags + '\'' +
                 '}';
     }

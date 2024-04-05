@@ -12,6 +12,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -95,7 +96,7 @@ public class ResourceController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Secured("ROLE_ADMINISTRATOR")
     public Response createResource(
-            @Valid final ResourceForm form
+            @Valid @NotNull final ResourceForm form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
 
@@ -107,7 +108,7 @@ public class ResourceController {
                     .build();
 
         // Creation & ETag Generation
-        final Resource resource = rs.createResource(neighborhoodId, form.getTitle(), form.getDescription(), form.getImageFile());
+        final Resource resource = rs.createResource(neighborhoodId, form.getTitle(), form.getDescription(), form.getImageURN());
         entityLevelETag = ETagUtility.generateETag();
         EntityTag rowLevelETag = new EntityTag(resource.getVersion().toString());
 
@@ -139,7 +140,7 @@ public class ResourceController {
             return response;
 
         // Modification & ETag Generation
-        final Resource updatedResource = rs.updateResource(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getImageFile());
+        final Resource updatedResource = rs.updateResource(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getImageURN());
         entityLevelETag = ETagUtility.generateETag();
         rowLevelETag = new EntityTag(updatedResource.getVersion().toString());
 

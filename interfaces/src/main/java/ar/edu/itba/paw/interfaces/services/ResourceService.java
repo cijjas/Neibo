@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface ResourceService {
 
-    Resource createResource(long neighborhoodId, String title, String description, MultipartFile imageFile);
+    Resource createResource(long neighborhoodId, String title, String description, String imageURN);
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ public interface ResourceService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Resource updateResource(long resourceId, String title, String description, MultipartFile image);
+    Resource updateResource(long resourceId, String title, String description, String imageURN);
 
     // -----------------------------------------------------------------------------------------------------------------
 

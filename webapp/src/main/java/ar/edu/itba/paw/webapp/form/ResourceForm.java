@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.ImageConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.ImageURNConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,8 +11,8 @@ public class ResourceForm {
     @Size(max = 1000)
     private String description;
 
-    @ImageConstraint
-    private MultipartFile imageFile;
+    @ImageURNConstraint
+    private String imageURN;
 
     @NotNull
     @Size(min=1, max = 64)
@@ -26,12 +26,12 @@ public class ResourceForm {
         this.description = description;
     }
 
-    public MultipartFile getImageFile() {
-        return imageFile;
+    public String getImageURN() {
+        return imageURN;
     }
 
-    public void setImageFile(MultipartFile imageFile) {
-        this.imageFile = imageFile;
+    public void setImageURN(String imageURN) {
+        this.imageURN = imageURN;
     }
 
     public String getTitle() {

@@ -35,12 +35,14 @@ public class ResourceServiceImpl implements ResourceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Resource createResource(long neighborhoodId, String title, String description, MultipartFile imageFile) {
+    public Resource createResource(long neighborhoodId, String title, String description, String imageURN) {
         LOGGER.info("Creating Resource {} for Neighborhood {}", title, neighborhoodId);
 
         Image i = null;
-        if (imageFile != null && !imageFile.isEmpty()) {
-            i = imageService.storeImage(imageFile);
+        if (imageURN != null) {
+            long imageId = ValidationUtils.extractURNId(imageURN);
+            ValidationUtils.checkImageId(imageId);
+            i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
         }
         return resourceDao.createResource(neighborhoodId, title, description, i == null ? 0 : i.getImageId());
     }
@@ -82,7 +84,7 @@ public class ResourceServiceImpl implements ResourceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Resource updateResource(long resourceId, String title, String description, MultipartFile image) {
+    public Resource updateResource(long resourceId, String title, String description, String imageURN) {
         LOGGER.info("Updating Resource {}", resourceId);
 
         Resource resource = findResource(resourceId).orElseThrow(()-> new NotFoundException("Resource Not Found"));
@@ -91,9 +93,11 @@ public class ResourceServiceImpl implements ResourceService {
             resource.setTitle(title);
         if(description != null && !description.isEmpty())
             resource.setDescription(description);
-        Image i = null;
-        if (image != null && !image.isEmpty()) {
-            i = imageService.storeImage(image);
+
+        if (imageURN != null) {
+            long imageId = ValidationUtils.extractURNId(imageURN);
+            ValidationUtils.checkImageId(imageId);
+            Image i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
             resource.setImage(i);
         }
 

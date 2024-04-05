@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.LanguageURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.UserRoleURNConstraint;
 import org.hibernate.validator.constraints.Email;
@@ -33,7 +34,8 @@ public class UserUpdateForm {
 
     private String phoneNumber;
 
-    private MultipartFile profilePicture;
+    @ImageURNConstraint
+    private String profilePictureURN;
 
     private Integer identification;
 
@@ -70,9 +72,13 @@ public class UserUpdateForm {
 
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
-    public MultipartFile getProfilePicture() { return profilePicture; }
+    public String getProfilePictureURN() {
+        return profilePictureURN;
+    }
 
-    public void setProfilePicture(MultipartFile profilePicture) { this.profilePicture = profilePicture; }
+    public void setProfilePictureURN(String profilePictureURN) {
+        this.profilePictureURN = profilePictureURN;
+    }
 
     public Integer getIdentification() { return identification; }
 
@@ -105,7 +111,7 @@ public class UserUpdateForm {
                 ", userRoleId=" + userRoleURN +
                 ", darkMode=" + darkMode +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", profilePicture=" + profilePicture +
+                ", profilePicture=" + profilePictureURN +
                 ", identification=" + identification +
                 '}';
     }
