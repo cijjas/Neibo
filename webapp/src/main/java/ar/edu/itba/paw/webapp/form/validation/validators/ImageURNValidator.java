@@ -13,7 +13,7 @@ public class ImageURNValidator implements ConstraintValidator<ImageURNConstraint
     @Override
     public boolean isValid(String imageURN, ConstraintValidatorContext constraintValidatorContext) {
         if(imageURN==null)
-            return false;
+            return true;
 
         return URNValidator.validateURN(imageURN, "images");
 

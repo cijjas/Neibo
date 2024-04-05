@@ -115,7 +115,6 @@ public class PostController extends GlobalControllerAdvice{
     }
 
     @POST
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createPost(
             @Valid @NotNull PublishForm publishForm

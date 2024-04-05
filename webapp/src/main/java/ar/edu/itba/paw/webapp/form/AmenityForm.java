@@ -47,7 +47,7 @@ public class AmenityForm {
 
     @Override
     public String toString() {
-        return "PublishForm{" +
+        return "AmenityForm{" +
                 ", subject='" + name + '\'' +
                 ", message='" + description + '\'' +
                 '}';
