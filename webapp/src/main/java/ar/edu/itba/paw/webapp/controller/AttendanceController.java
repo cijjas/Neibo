@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.AttendanceService;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Attendance;
 import ar.edu.itba.paw.webapp.dto.AttendanceDto;
 import org.slf4j.Logger;
@@ -13,7 +12,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
@@ -60,7 +58,9 @@ public class AttendanceController extends GlobalControllerAdvice {
         // Content
         final List<Attendance> attendance = as.getAttendance(eventId, page, size, neighborhoodId);
         if (attendance.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         final List<AttendanceDto> attendanceDto = attendance.stream()
                 .map(a -> AttendanceDto.fromAttendance(a, uriInfo)).collect(Collectors.toList());
 
@@ -117,7 +117,7 @@ public class AttendanceController extends GlobalControllerAdvice {
                     .build();
 
         // Creation & ETag Generation
-        final Attendance attendance = as.createAttendance(getLoggedUserId(), eventId);
+        final Attendance attendance = as.createAttendance(getRequestingUserId(), eventId);
         entityLevelETag = ETagUtility.generateETag();
         EntityTag rowLevelETag = new EntityTag(neighborhoodId.toString() + attendance.getUser().getUserId());
 
@@ -138,13 +138,13 @@ public class AttendanceController extends GlobalControllerAdvice {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
         // Cache Control
-        EntityTag rowLevelETag = new EntityTag(neighborhoodId.toString() + getLoggedUserId());
+        EntityTag rowLevelETag = new EntityTag(neighborhoodId.toString() + getRequestingUserId());
         Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
         if (response != null)
             return response;
 
         // Deletion & ETag Generation Attempt
-        if(as.deleteAttendance(getLoggedUserId(), eventId)) {
+        if(as.deleteAttendance(getRequestingUserId(), eventId)) {
             entityLevelETag = ETagUtility.generateETag();
             return Response.noContent()
                     .tag(entityLevelETag)

@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.BookingService;
-import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Booking;
-import ar.edu.itba.paw.webapp.dto.AmenityDto;
 import ar.edu.itba.paw.webapp.dto.BookingDto;
 import ar.edu.itba.paw.webapp.form.BookingForm;
 import org.slf4j.Logger;
@@ -64,7 +61,9 @@ public class BookingController extends GlobalControllerAdvice{
         // Content
         final List<Booking> bookings = bs.getBookings(userId, amenityId, neighborhoodId, page, size);
         if (bookings.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         final List<BookingDto> bookingsDto = bookings.stream()
                 .map(b -> BookingDto.fromBooking(b, uriInfo)).collect(Collectors.toList());
 
@@ -123,7 +122,7 @@ public class BookingController extends GlobalControllerAdvice{
                     .build();
 
         // Creation & ETag Generation
-        final long[] bookingIds = bs.createBooking(getLoggedUserId(), form.getAmenityURN(), form.getShiftURNs(), form.getReservationDate());
+        final long[] bookingIds = bs.createBooking(getRequestingUserId(), form.getAmenityURN(), form.getShiftURNs(), form.getReservationDate());
         entityLevelETag = ETagUtility.generateETag();
 
         // Resource URN

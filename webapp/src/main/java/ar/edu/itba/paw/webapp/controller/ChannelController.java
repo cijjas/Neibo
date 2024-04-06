@@ -56,7 +56,9 @@ public class ChannelController {
         // Content
         List<Channel> channels = cs.getChannels(neighborhoodId);
         if (channels.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         List<ChannelDto> channelDto = channels.stream()
                 .map(c -> ChannelDto.fromChannel(c, uriInfo, neighborhoodId)).collect(Collectors.toList());
 

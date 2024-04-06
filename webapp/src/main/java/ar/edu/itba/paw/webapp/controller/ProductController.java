@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ProductService;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.webapp.dto.ProductDto;
 import ar.edu.itba.paw.webapp.form.ListingForm;
@@ -62,7 +61,9 @@ public class ProductController extends GlobalControllerAdvice {
         // Content
         final List<Product> products = ps.getProducts(neighborhoodId, department, userId, productStatus, page, size);
         if (products.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         final List<ProductDto> productsDto = products.stream()
                 .map(p -> ProductDto.fromProduct(p, uriInfo)).collect(Collectors.toList());
 
@@ -120,7 +121,7 @@ public class ProductController extends GlobalControllerAdvice {
                     .build();
 
         // Creation & ETag Generation
-        final Product product = ps.createProduct(getLoggedUserId(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentURN(), form.getImageURNs(), form.getQuantity());
+        final Product product = ps.createProduct(getRequestingUserId(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentURN(), form.getImageURNs(), form.getQuantity());
         entityLevelETag = ETagUtility.generateETag();
         EntityTag rowLevelETag = new EntityTag(product.getVersion().toString());
 

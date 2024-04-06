@@ -56,7 +56,9 @@ public class TagController {
         // Content
         List<Tag> tags = ts.getTags(postId, neighborhoodId, page, size);
         if (tags.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         List<TagDto> tagsDto = tags.stream()
                 .map(t -> TagDto.fromTag(t, neighborhoodId, uriInfo)).collect(Collectors.toList());
 

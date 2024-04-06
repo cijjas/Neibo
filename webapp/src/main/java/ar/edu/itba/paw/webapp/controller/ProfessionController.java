@@ -50,7 +50,9 @@ public class ProfessionController {
         // Content
         List<Profession> professions = ps.getWorkerProfessions(workerId);
         if (professions.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         List<ProfessionDto> professionDto = professions.stream()
                 .map(p -> ProfessionDto.fromProfession(p, uriInfo)).collect(Collectors.toList());
 

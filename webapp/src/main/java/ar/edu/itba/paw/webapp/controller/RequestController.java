@@ -1,16 +1,12 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.RequestService;
-import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Request;
-import ar.edu.itba.paw.webapp.dto.PurchaseDto;
 import ar.edu.itba.paw.webapp.dto.RequestDto;
 import ar.edu.itba.paw.webapp.form.RequestForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -64,7 +60,9 @@ public class RequestController extends GlobalControllerAdvice {
         // Content
         List<Request> requests = rs.getRequests(userId, productId, page, size, neighborhoodId);
         if (requests.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         List<RequestDto> requestDto = requests.stream()
                 .map(r -> RequestDto.fromRequest(r, uriInfo)).collect(Collectors.toList());
 
@@ -124,7 +122,7 @@ public class RequestController extends GlobalControllerAdvice {
                     .build();
 
         // Creation & Etag Generation
-        final Request request = rs.createRequest(getLoggedUserId(), form.getProductURN(), form.getRequestMessage());
+        final Request request = rs.createRequest(getRequestingUserId(), form.getProductURN(), form.getRequestMessage());
         entityLevelETag = ETagUtility.generateETag();
         EntityTag rowLevelETag = new EntityTag(request.getVersion().toString());
 

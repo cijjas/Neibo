@@ -59,7 +59,9 @@ public class AmenityController {
         // Content
         List<Amenity> amenities = as.getAmenities(neighborhoodId, page, size);
         if (amenities.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         List<AmenityDto> amenitiesDto = amenities.stream().map(a -> AmenityDto.fromAmenity(a, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links

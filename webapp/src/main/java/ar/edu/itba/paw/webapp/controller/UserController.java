@@ -64,7 +64,9 @@ public class UserController {
         // Content
         final List<User> users = us.getUsers(userRole, neighborhoodId, page, size);
         if (users.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
 
         // Pagination Links
         Link[] links = createPaginationLinks(

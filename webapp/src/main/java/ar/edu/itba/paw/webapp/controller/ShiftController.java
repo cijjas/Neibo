@@ -49,7 +49,9 @@ public class ShiftController {
         // Content
         List<Shift> shifts = ss.getShifts();
         if (shifts.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         List<ShiftDto> shiftDto = shifts.stream()
                 .map(s -> ShiftDto.fromShift(s, uriInfo))
                 .collect(Collectors.toList());

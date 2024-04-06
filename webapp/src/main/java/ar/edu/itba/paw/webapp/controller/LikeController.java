@@ -1,9 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.LikeService;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Like;
-import ar.edu.itba.paw.webapp.dto.InquiryDto;
 import ar.edu.itba.paw.webapp.dto.LikeCountDto;
 import ar.edu.itba.paw.webapp.dto.LikeDto;
 import ar.edu.itba.paw.webapp.form.LikeForm;
@@ -11,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.thymeleaf.spring4.processor.SpringOptionInSelectFieldTagProcessor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -59,7 +56,9 @@ public class LikeController extends GlobalControllerAdvice{
         // Content
         final List<Like> likes = ls.getLikes(neighborhoodId, postId, userId, page, size);
         if (likes.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         final List<LikeDto> likesDto = likes.stream()
                 .map(l -> LikeDto.fromLike(l, uriInfo)).collect(Collectors.toList());
 
@@ -117,7 +116,7 @@ public class LikeController extends GlobalControllerAdvice{
                     .build();
 
         // Creation & ETag Generation
-        final Like like = ls.createLike(form.getPostURN(), getLoggedUserId());
+        final Like like = ls.createLike(form.getPostURN(), getRequestingUserId());
         entityLevelETag = ETagUtility.generateETag();
 
         // Resource URN

@@ -62,7 +62,9 @@ public class AvailabilityController {
         // Content
         final List<Availability> availabilities = as.getAvailability(amenityId, status, date, neighborhoodId);
         if (availabilities.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         final List<AvailabilityDto> availabilityDto = availabilities.stream()
                 .map(a -> AvailabilityDto.fromAvailability(a, uriInfo)).collect(Collectors.toList());
 

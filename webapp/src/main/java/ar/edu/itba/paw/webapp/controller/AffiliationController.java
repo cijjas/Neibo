@@ -58,7 +58,9 @@ public class AffiliationController {
         // Content
         List<Affiliation> affiliations = nws.getAffiliations(workerId, neighborhoodId, page, size);
         if (affiliations.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         List<AffiliationDto> affiliationDto = affiliations.stream()
                 .map(wa -> AffiliationDto.fromAffiliation(wa, uriInfo)).collect(Collectors.toList());
 
