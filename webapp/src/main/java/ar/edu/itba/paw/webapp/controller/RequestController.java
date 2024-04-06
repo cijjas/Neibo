@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -111,7 +112,7 @@ public class RequestController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.canCreateRequest(#form.productURN)")
     public Response createRequest(
-            @Valid final RequestForm form
+            @Valid @NotNull final RequestForm form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 

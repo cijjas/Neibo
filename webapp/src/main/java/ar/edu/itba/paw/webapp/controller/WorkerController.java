@@ -12,6 +12,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -107,7 +108,7 @@ public class WorkerController extends GlobalControllerAdvice {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createWorker(
-            @Valid final WorkerSignupForm form
+            @Valid @NotNull final WorkerSignupForm form
     ) {
         LOGGER.info("POST request arrived at '/workers'");
 
@@ -134,11 +135,10 @@ public class WorkerController extends GlobalControllerAdvice {
 
     @PATCH
     @Path("/{id}")
-    @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateWorkerPartially(
             @PathParam("id") final long workerId,
-            @Valid final WorkerUpdateForm partialUpdate,
+            @Valid @NotNull final WorkerUpdateForm partialUpdate,
             @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
         LOGGER.info("PATCH request arrived at '/workers/{}'", workerId);

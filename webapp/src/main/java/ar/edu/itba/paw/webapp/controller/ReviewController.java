@@ -13,6 +13,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -108,7 +109,7 @@ public class ReviewController extends GlobalControllerAdvice {
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR"})
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createReview(
-            @Valid final ReviewForm form
+            @Valid @NotNull final ReviewForm form
     ) {
         LOGGER.info("POST request arrived at '/workers/{}/reviews'", workerId);
 

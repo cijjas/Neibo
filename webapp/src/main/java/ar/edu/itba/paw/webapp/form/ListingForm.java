@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.DepartmentConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.DepartmentURNConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.ImagesURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.MultipleImagesConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
@@ -18,7 +19,7 @@ public class ListingForm {
     @NotBlank
     private String price;
 
-    @MultipleImagesConstraint
+    @ImagesURNConstraint
     private String[] imageURNs;
 
     @NotBlank

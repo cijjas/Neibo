@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.swing.text.html.parser.Entity;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -108,7 +109,7 @@ public class EventController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Secured("ROLE_ADMINISTRATOR")
     public Response createEvent(
-            @Valid final EventForm form
+            @Valid @NotNull final EventForm form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events'", neighborhoodId);
 
@@ -140,7 +141,7 @@ public class EventController {
     @Secured("ROLE_ADMINISTRATOR")
     public Response updateEventPartially(
             @PathParam("id") final long id,
-            @Valid final EventForm partialUpdate,
+            @Valid @NotNull final EventForm partialUpdate,
             @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);

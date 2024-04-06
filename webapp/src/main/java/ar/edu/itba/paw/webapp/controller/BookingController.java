@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -110,7 +111,7 @@ public class BookingController extends GlobalControllerAdvice{
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createBooking(
-            @Valid BookingForm form
+            @Valid @NotNull BookingForm form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 

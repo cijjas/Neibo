@@ -123,12 +123,11 @@ public class ResourceController {
 
     @PATCH
     @Path("/{id}")
-    @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Secured("ROLE_ADMINISTRATOR")
     public Response updateResourcePartially(
             @PathParam("id") final long id,
-            @Valid final ResourceForm partialUpdate,
+            @Valid @NotNull final ResourceForm partialUpdate,
             @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
