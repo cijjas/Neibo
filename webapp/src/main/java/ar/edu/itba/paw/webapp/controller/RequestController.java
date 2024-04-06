@@ -140,7 +140,7 @@ public class RequestController extends GlobalControllerAdvice {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.canAccessRequest(#id)")
+    @PreAuthorize("@accessControlHelper.canAccessRequest(#requestId)")
     public Response updateRequest(
             @PathParam("id") final long requestId,
             @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch

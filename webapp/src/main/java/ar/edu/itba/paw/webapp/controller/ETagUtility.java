@@ -41,8 +41,6 @@ public class ETagUtility {
         return null;
     }
 
-    // Post puede usar directamente cache control
-
     // Update y delete
     public static Response checkModificationETagPreconditions(EntityTag clientEtag, EntityTag entityLevelETag, EntityTag rowLevelETag) {
         if (clientEtag != null) {

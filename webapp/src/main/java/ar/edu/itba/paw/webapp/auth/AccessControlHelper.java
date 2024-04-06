@@ -38,12 +38,11 @@ public class AccessControlHelper {
         LOGGER.info("Neighborhood Belonging Bind");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserAuth userAuth = (UserAuth) authentication.getPrincipal();
 
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             return false;
         }
-
-        UserAuth userAuth = (UserAuth) authentication.getPrincipal();
 
         if (userAuth.getAuthorities().stream()
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_UNVERIFIED_NEIGHBOR") || authority.getAuthority().equals("ROLE_REJECTED"))) {
@@ -240,24 +239,26 @@ public class AccessControlHelper {
     public Boolean canAccessRequests(Long userId, Long productId){
         LOGGER.info("Verifying Requests Accessibility");
 
-        /*
-        if (productId == null)
-            throw new IllegalArgumentException("forProduct query parameter is missing");
-
-        if (userId == null)
-            throw new IllegalArgumentException("requestedBy query parameter is missing");
-        */
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         UserAuth userAuth = (UserAuth) authentication.getPrincipal();
 
-        if (userAuth.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMINISTRATOR")))
-            return true;
+        // If both userId and productId are null, only administrators can access
+        if (userId == null && productId == null) {
+            if (userAuth.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMINISTRATOR"))) {
+                return true;
+            } else {
+                throw new IllegalArgumentException("requestedBy and productURN query params are missing.");
+            }
+        }
 
-        Product p = ps.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        // If userId is not null and productId is null, check if the user is the one making the request
+        if (userId != null && productId == null) {
+            return userId.equals(userAuth.getUserId());
+        }
 
-        return p.getSeller().getUserId() == userAuth.getUserId() || userId == userAuth.getUserId();
+        // If productId is not null, check if the seller is the logged-in user
+        Product product = ps.findProduct(productId).orElseThrow(() -> new NotFoundException("Product Not Found"));
+        return product.getSeller().getUserId().equals(userAuth.getUserId());
     }
 
     // The seller of the product and the requester can access the request
