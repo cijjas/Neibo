@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -79,7 +80,7 @@ public class AffiliationController {
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response addAffiliation(
-            @Valid final AffiliationForm form
+            @Valid @NotNull final AffiliationForm form
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
 
@@ -106,7 +107,7 @@ public class AffiliationController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canUpdateAffiliation(#form.neighborhoodURN)")
     public Response updateAffiliation(
-            @Valid final AffiliationForm form,
+            @Valid @NotNull final AffiliationForm form,
             @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
@@ -132,7 +133,7 @@ public class AffiliationController {
     @DELETE
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response removeWorkerFromNeighborhood(
-            @Valid final AffiliationForm form,
+            @Valid @NotNull final AffiliationForm form,
             @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
     ) {
         LOGGER.info("DELETE request arrived at '/affiliations'");

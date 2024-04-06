@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -112,7 +113,7 @@ public class UserController {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createUser(
-            @Valid final SignupForm form
+            @Valid @NotNull final SignupForm form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
@@ -139,13 +140,12 @@ public class UserController {
 
     @PATCH
     @Path("/{id}")
-    @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.canUpdateUser(#id, #neighborhoodId)")
     public Response updateUserPartially(
             @PathParam("id") final long id,
             @PathParam("neighborhoodId") final long neighborhoodId,
-            @Valid final UserUpdateForm partialUpdate,
+            @Valid @NotNull final UserUpdateForm partialUpdate,
             @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);

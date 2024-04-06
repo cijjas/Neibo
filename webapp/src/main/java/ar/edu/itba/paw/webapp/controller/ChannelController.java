@@ -11,6 +11,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -94,7 +95,7 @@ public class ChannelController {
     @Secured("ROLE_ADMINISTRATOR")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createChannel(
-            @Valid NewChannelForm form
+            @Valid @NotNull NewChannelForm form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
 

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.EmailConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.LanguageConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ProfessionsConstraint;
 import org.hibernate.validator.constraints.Email;
@@ -27,6 +28,7 @@ public class WorkerUpdateForm {
     @Size(min = 0, max = 128)
     private String address;
 
+    @ImageURNConstraint
     private String backgroundPictureURN;
 
     public String getPhoneNumber() { return phoneNumber; }

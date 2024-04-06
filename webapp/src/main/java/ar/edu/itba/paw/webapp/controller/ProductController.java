@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -107,7 +108,7 @@ public class ProductController extends GlobalControllerAdvice {
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createProduct(
-            @Valid final ListingForm form
+            @Valid @NotNull final ListingForm form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
@@ -138,7 +139,7 @@ public class ProductController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateProductPartially(
             @PathParam("id") final long id,
-            @Valid final ListingForm partialUpdate,
+            @Valid @NotNull final ListingForm partialUpdate,
             @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
         LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);

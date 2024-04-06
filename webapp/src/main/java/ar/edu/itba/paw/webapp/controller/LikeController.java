@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.thymeleaf.spring4.processor.SpringOptionInSelectFieldTagProcessor;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -104,7 +105,7 @@ public class LikeController extends GlobalControllerAdvice{
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createLike(
-            @Valid LikeForm form
+            @Valid @NotNull LikeForm form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
 

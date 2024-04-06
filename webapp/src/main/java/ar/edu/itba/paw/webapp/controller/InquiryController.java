@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -106,7 +107,7 @@ public class InquiryController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.canCreateInquiry(#productId)")
     public Response createInquiry(
-            @Valid final InquiryForm form,
+            @Valid @NotNull final InquiryForm form,
             @PathParam("productId") final long productId
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
@@ -140,7 +141,7 @@ public class InquiryController extends GlobalControllerAdvice{
     @PreAuthorize("@accessControlHelper.canAnswerInquiry(#inquiryId)")
     public Response updateInquiry(
             @PathParam("id") final long inquiryId,
-            @Valid final InquiryForm form,
+            @Valid @NotNull final InquiryForm form,
             @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
