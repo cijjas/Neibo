@@ -62,7 +62,9 @@ public class EventController {
         // Content
         final List<Event> events = es.getEvents(date, neighborhoodId, page, size);
         if(events.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         final List<EventDto> eventsDto = events.stream()
                 .map(e -> EventDto.fromEvent(e, uriInfo)).collect(Collectors.toList());
 

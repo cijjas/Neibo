@@ -61,7 +61,9 @@ public class WorkerController extends GlobalControllerAdvice {
         // Content
         List<Worker> workers = ws.getWorkers(page, size, professions, neighborhoodIds, workerRole, workerStatus);
         if (workers.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         List<WorkerDto> workerDto = workers.stream()
                 .map(w -> WorkerDto.fromWorker(w, uriInfo)).collect(Collectors.toList());
 

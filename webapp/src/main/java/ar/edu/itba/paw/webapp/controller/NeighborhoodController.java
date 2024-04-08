@@ -58,7 +58,9 @@ public class NeighborhoodController {
         // Content
         final List<Neighborhood> neighborhoods = ns.getNeighborhoods(page, size, workerId);
         if (neighborhoods.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         final List<NeighborhoodDto> neighborhoodsDto = neighborhoods.stream()
                 .map(n -> NeighborhoodDto.fromNeighborhood(n, uriInfo)).collect(Collectors.toList());
 

@@ -63,7 +63,9 @@ public class PurchaseController {
         // Content
         List<Purchase> transactions = ps.getPurchases(userId, type, page, size, neighborhoodId);
         if (transactions.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         List<PurchaseDto> transactionDto = transactions.stream()
                 .map(p -> PurchaseDto.fromPurchase(p, uriInfo))
                 .collect(Collectors.toList());

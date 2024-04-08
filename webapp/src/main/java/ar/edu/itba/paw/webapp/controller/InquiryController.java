@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.InquiryService;
 import ar.edu.itba.paw.models.Entities.Inquiry;
 import ar.edu.itba.paw.webapp.dto.InquiryDto;
 import ar.edu.itba.paw.webapp.form.InquiryForm;
+import ar.edu.itba.paw.webapp.form.ReplyForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,9 @@ public class InquiryController extends GlobalControllerAdvice{
         // Content
         final List<Inquiry> inquiries = is.getInquiries(productId, page, size, neighborhoodId);
         if (inquiries.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         final List<InquiryDto> inquiriesDto = inquiries.stream()
                 .map(i -> InquiryDto.fromInquiry(i, uriInfo)).collect(Collectors.toList());
 
@@ -120,7 +123,7 @@ public class InquiryController extends GlobalControllerAdvice{
                     .build();
 
         // Creation & ETag Generation
-        final Inquiry inquiry = is.createInquiry(getLoggedUserId(), productId, form.getQuestionMessage());
+        final Inquiry inquiry = is.createInquiry(getRequestingUserId(), productId, form.getQuestionMessage());
         entityLevelETag = ETagUtility.generateETag();
         EntityTag rowLevelETag = new EntityTag(inquiry.getVersion().toString());
 
@@ -141,7 +144,7 @@ public class InquiryController extends GlobalControllerAdvice{
     @PreAuthorize("@accessControlHelper.canAnswerInquiry(#inquiryId)")
     public Response updateInquiry(
             @PathParam("id") final long inquiryId,
-            @Valid @NotNull final InquiryForm form,
+            @Valid @NotNull final ReplyForm form,
             @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
@@ -153,7 +156,7 @@ public class InquiryController extends GlobalControllerAdvice{
             return response;
 
         // Modification & ETag Generation
-        final Inquiry updatedInquiry = is.replyInquiry(inquiryId, form.getQuestionMessage());
+        final Inquiry updatedInquiry = is.replyInquiry(inquiryId, form.getReplyMessage());
         entityLevelETag = ETagUtility.generateETag();
         rowLevelETag = new EntityTag(updatedInquiry.getVersion().toString());
 

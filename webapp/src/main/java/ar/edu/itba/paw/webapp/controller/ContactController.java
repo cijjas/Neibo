@@ -57,7 +57,9 @@ public class ContactController {
         // Content
         final List<Contact> contacts = cs.getContacts(neighborhoodId);
         if (contacts.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         final List<ContactDto> contactsDto = contacts.stream()
                 .map(c -> ContactDto.fromContact(c, uriInfo)).collect(Collectors.toList());
 

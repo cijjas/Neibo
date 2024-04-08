@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.CommentService;
-import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Comment;
 import ar.edu.itba.paw.webapp.dto.CommentDto;
 import ar.edu.itba.paw.webapp.form.CommentForm;
@@ -60,7 +59,9 @@ public class CommentController extends GlobalControllerAdvice{
         // Content
         final List<Comment> comments = cs.getComments(postId, page, size, neighborhoodId);
         if (comments.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         final List<CommentDto> commentsDto = comments.stream()
                 .map(c -> CommentDto.fromComment(c, uriInfo)).collect(Collectors.toList());
 
@@ -117,7 +118,7 @@ public class CommentController extends GlobalControllerAdvice{
                     .build();
 
         // Creation & ETag Generation
-        final Comment comment = cs.createComment(form.getComment(), getLoggedUserId(), postId);
+        final Comment comment = cs.createComment(form.getComment(), getRequestingUserId(), postId);
         entityLevelETag = ETagUtility.generateETag();
         EntityTag rowLevelETag = new EntityTag(comment.getCommentId().toString());
 

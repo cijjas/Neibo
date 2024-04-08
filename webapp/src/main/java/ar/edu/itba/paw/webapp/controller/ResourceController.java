@@ -58,7 +58,9 @@ public class ResourceController {
         // Content
         final List<Resource> resources = rs.getResources(neighborhoodId);
         if (resources.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         final List<ResourceDto> resourcesDto = resources.stream()
                 .map(r -> ResourceDto.fromResource(r, uriInfo)).collect(Collectors.toList());
 

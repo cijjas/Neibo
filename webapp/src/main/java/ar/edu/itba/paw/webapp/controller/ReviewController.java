@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.ReviewService;
-import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Review;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
 import ar.edu.itba.paw.webapp.form.ReviewForm;
@@ -60,7 +58,9 @@ public class ReviewController extends GlobalControllerAdvice {
         // Content
         final List<Review> reviews = rs.getReviews(workerId, page, size);
         if (reviews.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         final List<ReviewDto> reviewsDto = reviews.stream()
                 .map(r -> ReviewDto.fromReview(r, uriInfo)).collect(Collectors.toList());
 
@@ -119,7 +119,7 @@ public class ReviewController extends GlobalControllerAdvice {
                     .build();
 
         // Creation & ETag Generation
-        final Review review = rs.createReview(workerId, getLoggedUserId(), form.getRating(), form.getReview());
+        final Review review = rs.createReview(workerId, getRequestingUserId(), form.getRating(), form.getReview());
         entityLevelETag = ETagUtility.generateETag();
         EntityTag rowLevelETag = new EntityTag(review.getReviewId().toString());
 

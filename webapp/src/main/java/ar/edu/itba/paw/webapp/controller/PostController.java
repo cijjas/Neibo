@@ -1,26 +1,19 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.interfaces.services.PostService;
-import ar.edu.itba.paw.interfaces.services.UserService;
-import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.webapp.dto.PostDto;
-import ar.edu.itba.paw.webapp.dto.TagDto;
 import ar.edu.itba.paw.webapp.form.PublishForm;
-import ar.edu.itba.paw.webapp.form.UserForm;
-import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestPart;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,7 +61,9 @@ public class PostController extends GlobalControllerAdvice{
         // Content
         final List<Post> posts = ps.getPosts(channel, page, size, tags, neighborhoodId, postStatus, userId);
         if (posts.isEmpty())
-            return Response.noContent().build();
+            return Response.noContent()
+                    .tag(entityLevelETag)
+                    .build();
         final List<PostDto> postsDto = posts.stream()
                 .map(p -> PostDto.fromPost(p, uriInfo)).collect(Collectors.toList());
 
@@ -127,7 +122,7 @@ public class PostController extends GlobalControllerAdvice{
                     .build();
 
         // Validation, Creation & ETag Generation
-        final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getLoggedUserId(), publishForm.getChannelURN(), publishForm.getTags(), publishForm.getPostImageURN());
+        final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getRequestingUserId(), publishForm.getChannelURN(), publishForm.getTags(), publishForm.getPostImageURN());
         entityLevelETag = ETagUtility.generateETag();
         EntityTag rowLevelETag = new EntityTag(post.getPostId().toString());
 
