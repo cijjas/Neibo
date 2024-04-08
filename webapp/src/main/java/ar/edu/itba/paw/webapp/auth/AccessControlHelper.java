@@ -38,11 +38,12 @@ public class AccessControlHelper {
         LOGGER.info("Neighborhood Belonging Bind");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserAuth userAuth = (UserAuth) authentication.getPrincipal();
 
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             return false;
         }
+
+        UserAuth userAuth = (UserAuth) authentication.getPrincipal();
 
         if (userAuth.getAuthorities().stream()
                 .anyMatch(authority -> authority.getAuthority().equals("ROLE_UNVERIFIED_NEIGHBOR") || authority.getAuthority().equals("ROLE_REJECTED"))) {

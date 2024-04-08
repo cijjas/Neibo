@@ -18,8 +18,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_HEADER;
 
@@ -77,7 +76,7 @@ public class ChannelController {
 
         // Cache Control
         EntityTag rowLevelETag = new EntityTag(String.valueOf(channelId));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
         if (response != null)
             return response;
 
@@ -86,7 +85,6 @@ public class ChannelController {
 
         return Response.ok(channelDto)
                 .tag(entityLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }

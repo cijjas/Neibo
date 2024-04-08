@@ -26,8 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
 @Path("neighborhoods/{neighborhoodId}/posts")
 @Component
@@ -100,7 +99,7 @@ public class PostController extends GlobalControllerAdvice{
 
         // Cache Control
         EntityTag rowLevelETag = new EntityTag(Long.toString(postId));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
         if (response != null)
             return response;
 
@@ -110,7 +109,6 @@ public class PostController extends GlobalControllerAdvice{
         return Response.ok(postDto)
                 .tag(entityLevelETag)
                 .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .build();
     }
 

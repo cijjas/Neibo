@@ -17,8 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
 @Path("neighborhoods/{neighborhoodId}/events/{eventId}/attendance")
 @Component
@@ -90,7 +89,7 @@ public class AttendanceController extends GlobalControllerAdvice {
 
         // Cache Control
         EntityTag rowLevelETag = new EntityTag(neighborhoodId.toString() + userId);
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
         if (response != null)
             return response;
 
@@ -99,7 +98,6 @@ public class AttendanceController extends GlobalControllerAdvice {
 
         return Response.ok(attendanceDto)
                 .tag(entityLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
@@ -122,7 +120,7 @@ public class AttendanceController extends GlobalControllerAdvice {
         EntityTag rowLevelETag = new EntityTag(neighborhoodId.toString() + attendance.getUser().getUserId());
 
         // Resource URN
-        URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(attendance.getId())).build();
+        URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(attendance.getId().getUserId())).build();
 
         return Response.created(uri)
                 .tag(entityLevelETag)

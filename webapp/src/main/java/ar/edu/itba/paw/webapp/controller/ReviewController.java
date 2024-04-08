@@ -21,8 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
+import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
 @Path("workers/{workerId}/reviews")
 @Component
@@ -91,7 +90,7 @@ public class ReviewController extends GlobalControllerAdvice {
 
         // Cache Control
         EntityTag rowLevelETag = new EntityTag(Long.toString(id));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
+        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
         if (response != null)
             return response;
 
@@ -101,7 +100,6 @@ public class ReviewController extends GlobalControllerAdvice {
         return Response.ok(reviewDto)
                 .tag(entityLevelETag)
                 .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
                 .build();
     }
 
