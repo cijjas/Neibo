@@ -46,24 +46,16 @@ public class AmenityServiceImpl implements AmenityService {
 
     // Function has to create the shifts if they do not already exist and match them with the amenity through the junction table
     @Override
-    public Amenity createAmenity(String name, String description, long neighborhoodId, List<String> selectedShifts) {
+    public Amenity createAmenity(String name, String description, long neighborhoodId, List<String> selectedShiftsURNs) {
         LOGGER.info("Creating Amenity {}", name);
 
         Amenity amenity = amenityDao.createAmenity(name, description, neighborhoodId);
-        for (String shiftPair : selectedShifts) {
-            String[] shiftParts = shiftPair.split("-");
+        for (String shiftURN : selectedShiftsURNs) {
+            long shiftId = ValidationUtils.extractURNId(shiftURN);
+            ValidationUtils.checkShiftId(shiftId);
+            Optional<Shift> shift = shiftDao.findShift(shiftId);
 
-            long dayId = Long.parseLong(shiftParts[0]);
-            long timeId = Long.parseLong(shiftParts[1]);
-
-            Optional<Shift> existingShift = shiftDao.findShift(timeId, dayId);
-
-            if (existingShift.isPresent()) {
-                availabilityDao.createAvailability(amenity.getAmenityId(), existingShift.get().getShiftId());
-            } else {
-                Shift newShift = shiftDao.createShift(dayId, timeId);
-                availabilityDao.createAvailability(amenity.getAmenityId(), newShift.getShiftId());
-            }
+            shift.ifPresent(value -> availabilityDao.createAvailability(amenity.getAmenityId(), value.getShiftId()));
         }
 
         List<User> userlist = userService.getNeighbors(neighborhoodId);

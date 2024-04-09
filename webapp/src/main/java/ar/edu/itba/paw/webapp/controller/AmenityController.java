@@ -120,7 +120,7 @@ public class AmenityController {
                     .build();
 
         // Creation & ETag Generation
-        Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, form.getSelectedShifts());
+        Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, form.getSelectedShiftURNs());
         entityLevelETag = ETagUtility.generateETag();
         EntityTag rowLevelETag = new EntityTag(amenity.getVersion().toString());
 

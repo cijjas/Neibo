@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.ShiftsURNConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -18,8 +19,8 @@ public class AmenityForm {
     @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*")
     private String description;
 
-    @NotNull
-    private List<String> selectedShifts;
+    @ShiftsURNConstraint
+    private List<String> selectedShiftURNs;
 
     public String getName() {
         return name;
@@ -37,12 +38,12 @@ public class AmenityForm {
         this.description = description;
     }
 
-    public List<String> getSelectedShifts() {
-        return selectedShifts;
+    public List<String> getSelectedShiftURNs() {
+        return selectedShiftURNs;
     }
 
-    public void setSelectedShifts(List<String> selectedShifts) {
-        this.selectedShifts = selectedShifts;
+    public void setSelectedShiftURNs(List<String> selectedShiftURNs) {
+        this.selectedShiftURNs = selectedShiftURNs;
     }
 
     @Override

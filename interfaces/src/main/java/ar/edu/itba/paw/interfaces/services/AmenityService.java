@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface AmenityService {
 
-    Amenity createAmenity(String name, String description, long neighborhoodId, List<String> selectedShifts);
+    Amenity createAmenity(String name, String description, long neighborhoodId, List<String> selectedShiftsURNs);
 
     // -----------------------------------------------------------------------------------------------------------------
 
