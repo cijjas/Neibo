@@ -1,37 +1,34 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.models.Entities.Day;
 import ar.edu.itba.paw.models.Entities.Shift;
+import ar.edu.itba.paw.models.Entities.Time;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
-import java.sql.Time;
 
 public class ShiftDto {
-    private java.sql.Time endTime;
     private URI self;
-    private URI amenities;
-    private URI day;
-    private URI startTime;
+    private String day;
+    private String startTime;
+    private Links _links;
 
     public static ShiftDto fromShift(Shift shift, UriInfo uriInfo){
         final ShiftDto dto = new ShiftDto();
 
-        dto.endTime = shift.getEndTime();
+        dto.startTime = shift.getStartTime().getTimeInterval().toString();
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        dto.day = shift.getDay().getDayName();
+
+        Links links = new Links();
+        links.setSelf(uriInfo.getBaseUriBuilder()
                 .path("shifts")
                 .path(String.valueOf(shift.getShiftId()))
-                .build();
+                .build());
+
+        dto.set_links(links);
 
         return dto;
-    }
-
-    public Time getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Time endTime) {
-        this.endTime = endTime;
     }
 
     public URI getSelf() {
@@ -42,27 +39,27 @@ public class ShiftDto {
         this.self = self;
     }
 
-    public URI getAmenities() {
-        return amenities;
-    }
-
-    public void setAmenities(URI amenities) {
-        this.amenities = amenities;
-    }
-
-    public URI getDay() {
+    public String getDay() {
         return day;
     }
 
-    public void setDay(URI day) {
+    public void setDay(String day) {
         this.day = day;
     }
 
-    public URI getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(URI startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
+    }
+
+    public Links get_links() {
+        return _links;
+    }
+
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

@@ -47,6 +47,7 @@ public class ShiftController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getShifts() {
+        // Este metodo tiene que manejar el caso de /shifts?amenity=1
         LOGGER.info("GET request arrived at '/shifts'");
 
         // Cache Control

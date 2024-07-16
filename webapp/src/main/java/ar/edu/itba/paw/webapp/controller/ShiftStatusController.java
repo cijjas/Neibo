@@ -2,9 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 
 import ar.edu.itba.paw.enums.ShiftStatus;
-import ar.edu.itba.paw.enums.StandardTime;
 import ar.edu.itba.paw.webapp.dto.ShiftStatusDto;
-import ar.edu.itba.paw.webapp.dto.TimeDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

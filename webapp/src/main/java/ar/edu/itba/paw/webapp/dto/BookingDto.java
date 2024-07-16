@@ -11,9 +11,7 @@ public class BookingDto {
     private Date bookingDate;
     private URI self;
     private URI user; // localhost:8080/users/{id}
-    private URI amenityAvailability; // localhost:8080/neighborhoods/{id}/amenities/{id}/availabilityQUERYPARAM
-
-    // booking tiene un user y un availability (amenity y shift)
+    private URI shiftURN;
 
     public static BookingDto fromBooking(Booking booking, UriInfo uriInfo){
         final BookingDto dto = new BookingDto();
@@ -26,19 +24,17 @@ public class BookingDto {
                 .path("bookings")
                 .path(String.valueOf(booking.getBookingId()))
                 .build();
+
         dto.user = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(booking.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(booking.getUser().getUserId()))
                 .build();
-        dto.amenityAvailability = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(booking.getAmenityAvailability().getAmenity().getNeighborhood().getNeighborhoodId()))
-                .path("amenities")
-                .path(String.valueOf(booking.getAmenityAvailability().getAmenity().getAmenityId()))
-                .path("availability")
-                .path(String.valueOf(booking.getAmenityAvailability().getAmenityAvailabilityId()))
+
+        dto.shiftURN =  uriInfo.getBaseUriBuilder()
+                .path("shifts")
+                .path(String.valueOf(booking.getAmenityAvailability().getShift().getShiftId()))
                 .build();
 
         return dto;
@@ -68,11 +64,11 @@ public class BookingDto {
         this.user = user;
     }
 
-    public URI getAmenityAvailability() {
-        return amenityAvailability;
+    public URI getShiftURN() {
+        return shiftURN;
     }
 
-    public void setAmenityAvailability(URI amenityAvailability) {
-        this.amenityAvailability = amenityAvailability;
+    public void setShiftURN(URI shiftURN) {
+        this.shiftURN = shiftURN;
     }
 }

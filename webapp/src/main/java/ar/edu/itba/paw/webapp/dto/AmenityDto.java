@@ -11,7 +11,7 @@ public class AmenityDto {
     private String description;
     private URI self;
     private URI neighborhood; // localhost:8080/neighborhood/{id}
-    private URI availability; // localhost:8080/amenities/{id}/availability
+    private URI shifts; // localhost:8080/amenities/{id}/availability
 
     public static AmenityDto fromAmenity(Amenity amenity, UriInfo uriInfo){
         final AmenityDto dto = new AmenityDto();
@@ -29,12 +29,9 @@ public class AmenityDto {
                 .path("neighborhoods")
                 .path(String.valueOf(amenity.getNeighborhood().getNeighborhoodId()))
                 .build();
-        dto.availability = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(amenity.getNeighborhood().getNeighborhoodId()))
-                .path("amenities")
-                .path(String.valueOf(amenity.getAmenityId()))
-                .path("availability")
+        dto.shifts = uriInfo.getBaseUriBuilder()
+                .path("shifts")
+                .queryParam("amenity", String.valueOf(amenity.getAmenityId())) // deberia ser URN al AMENITY
                 .build();
 
         return dto;
@@ -72,11 +69,11 @@ public class AmenityDto {
         this.neighborhood = neighborhood;
     }
 
-    public URI getAvailability() {
-        return availability;
+    public URI getShifts() {
+        return shifts;
     }
 
-    public void setAvailability(URI availability) {
-        this.availability = availability;
+    public void setShifts(URI shifts) {
+        this.shifts = shifts;
     }
 }

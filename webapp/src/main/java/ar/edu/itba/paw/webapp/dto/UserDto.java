@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.models.Entities.Image;
+import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.models.Entities.User;
 
 import javax.ws.rs.core.UriInfo;
@@ -21,6 +21,7 @@ public class UserDto {
     private URI likedPosts;
     private URI purchases;
     private URI sales;
+    private UserRole role;
 
     public static UserDto fromUser(final User user, final UriInfo uriInfo){
         final UserDto dto = new UserDto();
@@ -31,6 +32,7 @@ public class UserDto {
         dto.darkMode = user.getDarkMode();
         dto.phoneNumber = user.getPhoneNumber();
         dto.identification = user.getIdentification();
+        dto.role = user.getRole();
 
         dto.self = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
@@ -181,5 +183,13 @@ public class UserDto {
 
     public void setSales(URI sales) {
         this.sales = sales;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
+    public UserRole getRole() {
+        return role;
     }
 }

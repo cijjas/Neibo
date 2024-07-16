@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.models.Entities.Worker;
 
 import javax.ws.rs.core.UriInfo;
@@ -17,6 +18,7 @@ public class WorkerDto {
     private URI reviews;
     private URI professions;
     private URI workerNeighborhoods;
+    private UserRole role;
 
     public static WorkerDto fromWorker(Worker worker, UriInfo uriInfo){
         final WorkerDto dto = new WorkerDto();
@@ -61,6 +63,7 @@ public class WorkerDto {
         dto.businessName = worker.getBusinessName();
         dto.address = worker.getAddress();
         dto.bio = worker.getBio();
+        dto.role = worker.getUser().getRole();
 
         return dto;
     }
@@ -120,5 +123,13 @@ public class WorkerDto {
 
     public void setWorkerNeighborhoods(URI workerNeighborhoods) {
         this.workerNeighborhoods = workerNeighborhoods;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 }
