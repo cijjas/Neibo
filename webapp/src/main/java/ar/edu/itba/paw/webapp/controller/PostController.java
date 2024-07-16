@@ -57,10 +57,10 @@ public class PostController extends GlobalControllerAdvice{
     public Response listPosts(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("inChannel") final String channel,
-            @QueryParam("withTags") final List<String> tags,
-            @QueryParam("withStatus") @DefaultValue("none") final String postStatus,
-            @QueryParam("postedBy") final Long userId
+            @QueryParam("inChannel") final String channelURN,
+            @QueryParam("withTags") final List<String> tagURNs,
+            @QueryParam("withStatus") @DefaultValue("none") final String postStatusURN,
+            @QueryParam("postedBy") final String userURN
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
@@ -71,7 +71,7 @@ public class PostController extends GlobalControllerAdvice{
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        final List<Post> posts = ps.getPosts(channel, page, size, tags, neighborhoodId, postStatus, userId);
+        final List<Post> posts = ps.getPosts(channelURN, page, size, tagURNs, neighborhoodId, postStatusURN, userURN);
         if (posts.isEmpty())
             return Response.noContent()
                     .tag(entityLevelETag)
@@ -82,8 +82,8 @@ public class PostController extends GlobalControllerAdvice{
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts",
-                ps.calculatePostPages(channel, size, tags, neighborhoodId,
-                        postStatus, userId),
+                ps.calculatePostPages(channelURN, size, tagURNs, neighborhoodId,
+                        postStatusURN, userURN),
                 page,
                 size
         );

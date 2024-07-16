@@ -45,8 +45,11 @@ public class AffiliationServiceImpl implements AffiliationService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size) {
-        LOGGER.info("Getting Affiliations between Worker {} and Neighborhood {}", workerId, neighborhoodId);
+    public List<Affiliation> getAffiliations(String workerURN, String neighborhoodURN, int page, int size) {
+        LOGGER.info("Getting Affiliations between Worker {} and Neighborhood {}", workerURN, neighborhoodURN);
+
+        long workerId = ValidationUtils.extractURNId(workerURN);
+        long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
 
         ValidationUtils.checkWorkerId(workerId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -65,8 +68,11 @@ public class AffiliationServiceImpl implements AffiliationService {
     }
 
     @Override
-    public int calculateAffiliationPages(Long workerId, Long neighborhoodId, int size) {
-        LOGGER.info("Calculating Affiliation Pages between Worker {} and Neighborhood {}", workerId, neighborhoodId);
+    public int calculateAffiliationPages(String workerURN, String neighborhoodURN, int size) {
+        LOGGER.info("Calculating Affiliation Pages between Worker {} and Neighborhood {}", workerURN, neighborhoodURN);
+
+        long workerId = ValidationUtils.extractURNId(workerURN);
+        long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
 
         ValidationUtils.checkWorkerId(workerId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);

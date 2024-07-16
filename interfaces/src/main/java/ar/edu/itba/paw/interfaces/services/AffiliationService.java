@@ -10,11 +10,11 @@ import java.util.Set;
 
 public interface AffiliationService {
 
-    List<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size);
+    List<Affiliation> getAffiliations(String workerURN, String neighborhoodURN, int page, int size);
 
     int countAffiliations(Long workerId, Long neighborhoodId);
 
-    int calculateAffiliationPages(Long workerId, Long neighborhoodId, int size);
+    int calculateAffiliationPages(String workerURN, String neighborhoodURN, int size);
 
     Optional<Affiliation> findAffiliation(String workerURN, String neighborhoodURN);
 

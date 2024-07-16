@@ -21,11 +21,11 @@ public interface PostService {
 
     Optional<Post> findPost(long postId, long neighborhoodId);
 
-    List<Post> getPosts(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, Long userId);
+    List<Post> getPosts(String channelURN, int page, int size, List<String> tagURNs, long neighborhoodId, String postStatusURN, String userURN);
 
     // ---------------------------------------------------
 
     int countPosts(String channel, List<String> tags, long neighborhoodId, String postStatus, Long userId);
 
-    int calculatePostPages(String channel, int size, List<String> tags, long neighborhoodId, String postStatus, Long userId);
+    int calculatePostPages(String channelURN, int size, List<String> tagURNs, long neighborhoodId, String postStatusURN, String userURN);
 }

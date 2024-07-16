@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Validation;
 import java.io.InputStream;
 import java.util.*;
 
@@ -118,18 +119,42 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Post> getPosts(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, Long userId) {
-        LOGGER.info("Getting Posts with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatus, channel, tags, userId, neighborhoodId);
+    public List<Post> getPosts(String channelURN, int page, int size, List<String> tagURNs, long neighborhoodId, String postStatusURN, String userURN) {
+        LOGGER.info("Getting Posts with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatusURN, channelURN, tagURNs, userURN, neighborhoodId);
 
-        ValidationUtils.checkOptionalChannelString(channel);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkOptionalPostStatusString(postStatus);
-        ValidationUtils.checkUserId(userId);
+        if (userURN != null){
+            TwoIds channelTwoIds = ValidationUtils.extractTwoURNIds(userURN);
+            ValidationUtils.checkNeighborhoodId(channelTwoIds.getFirstId());
+            ValidationUtils.checkUserId(channelTwoIds.getSecondId());
+        }
+
+        if (channelURN != null){
+            long channelId = ValidationUtils.extractURNId(channelURN);
+            ValidationUtils.checkChannelId(channelId);
+        }
+
+        if (tagURNs != null){
+            List<Long> tagIds = new ArrayList<>();
+            for (String tagURN : tagURNs){
+                TwoIds tagTwoIds = ValidationUtils.extractTwoURNIds(tagURN);
+                ValidationUtils.checkNeighborhoodId(tagTwoIds.getFirstId());
+                ValidationUtils.checkTagId(tagTwoIds.getSecondId());
+                tagIds.add(tagTwoIds.getSecondId());
+            }
+        }
+
+        if (postStatusURN != null){
+            long postStatusId = ValidationUtils.extractURNId(postStatusURN);
+            ValidationUtils.checkPostStatusId(postStatusId);
+        }
+
         ValidationUtils.checkPageAndSize(page, size);
 
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
-        return postDao.getPosts(channel, page, size, tags, neighborhoodId, postStatus, userId);
+        // fix this
+        return null;
+        // return postDao.getPosts(channelURN, page, size, tagURNs, neighborhoodId, postStatusURN, userURN);
     }
 
     // ---------------------------------------------------
@@ -149,15 +174,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public int calculatePostPages(String channel, int size, List<String> tags, long neighborhoodId, String postStatus, Long userId) {
-        LOGGER.info("Calculating Post pages with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatus, channel, tags, userId, neighborhoodId);
+    public int calculatePostPages(String channelURN, int size, List<String> tagURNs, long neighborhoodId, String postStatusURN, String userURN) {
+        LOGGER.info("Calculating Post pages with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatusURN, channelURN, tagURNs, userURN, neighborhoodId);
 
-        ValidationUtils.checkOptionalChannelString(channel);
+        ValidationUtils.checkOptionalChannelString(channelURN);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkOptionalPostStatusString(postStatus);
-        ValidationUtils.checkUserId(userId);
+        ValidationUtils.checkOptionalPostStatusString(postStatusURN);
+       //  ValidationUtils.checkUserId(userURN);
         ValidationUtils.checkSize(size);
 
-        return PaginationUtils.calculatePages(postDao.countPosts(channel, tags, neighborhoodId, postStatus, userId), size);
+        return 0;
+   //      return PaginationUtils.calculatePages(postDao.countPosts(channelURN, tagURNs, neighborhoodId, postStatusURN, userURN), size);
     }
 }

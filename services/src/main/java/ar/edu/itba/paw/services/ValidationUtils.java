@@ -54,6 +54,10 @@ public class ValidationUtils {
         ValidationUtils.checkId(amenityId, "Amenity");
     }
 
+    public static void checkPostStatusId(Long postStatusId){
+        ValidationUtils.checkId(postStatusId, "Post Status");
+    }
+
     public static void checkNeighborhoodId(Long neighborhoodId) {
         ValidationUtils.checkId(neighborhoodId, "Neighborhood");
     }
@@ -157,7 +161,7 @@ public class ValidationUtils {
         ValidationUtils.checkId(sellerId, "Seller");
     }
 
-    public static void checkAvailabilityId(Long availabilityId) {
+   public static void checkAvailabilityId(Long availabilityId) {
         ValidationUtils.checkId(availabilityId, "Availability");
     }
 

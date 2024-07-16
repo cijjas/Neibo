@@ -60,18 +60,21 @@ public class AmenityController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
 
+        // Content
+        List<Amenity> amenities = as.getAmenities(neighborhoodId, page, size);
+        String amenitiesHashCode = String.valueOf(amenities.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(amenitiesHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        List<Amenity> amenities = as.getAmenities(neighborhoodId, page, size);
         if (amenities.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(amenitiesHashCode)
                     .build();
+
         List<AmenityDto> amenitiesDto = amenities.stream().map(a -> AmenityDto.fromAmenity(a, uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
@@ -85,7 +88,7 @@ public class AmenityController {
         return Response.ok(new GenericEntity<List<AmenityDto>>(amenitiesDto) {})
                 .links(links)
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(amenitiesHashCode)
                 .build();
     }
 

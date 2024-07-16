@@ -69,8 +69,8 @@ public class AffiliationController {
     public Response listAffiliations(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("inNeighborhood") Long neighborhoodId,
-            @QueryParam("forWorker") Long workerId
+            @QueryParam("inNeighborhood") String neighborhoodURN,
+            @QueryParam("forWorker")String workerURN
     ) {
         LOGGER.info("GET request arrived at '/affiliations'");
 
@@ -81,7 +81,7 @@ public class AffiliationController {
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        List<Affiliation> affiliations = nws.getAffiliations(workerId, neighborhoodId, page, size);
+        List<Affiliation> affiliations = nws.getAffiliations(workerURN, neighborhoodURN, page, size);
         if (affiliations.isEmpty())
             return Response.noContent()
                     .tag(entityLevelETag)
@@ -92,7 +92,7 @@ public class AffiliationController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "affiliations/",
-                nws.calculateAffiliationPages(workerId, neighborhoodId, size),
+                nws.calculateAffiliationPages(workerURN, neighborhoodURN, size),
                 page,
                 size
         );
