@@ -18,6 +18,17 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/*
+ * # Summary
+ *   - Junction Table between Users and Posts, representing when a User likes the Post
+ *
+ * # Use cases
+ *   - A User/Admin can like and remove the like from a Post
+ *
+ * # Embeddable?
+ *   - No, it can be tempting but the whole creation plus filtering plus potentially showing liked posts or people that liked the post ruins the idea
+ */
+
 @Path("neighborhoods/{neighborhoodId}/likes")
 @Component
 public class LikeController extends GlobalControllerAdvice{

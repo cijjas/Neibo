@@ -18,6 +18,15 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
+/*
+ * # Summary
+ *   - Post Criteria, a Post can be Hot, Trending or none of those two
+ *   - This attribute is exclusively used for Posts
+ *
+ * # Use cases
+ *   - A User/Admin can filter the Posts over this criteria
+ */
+
 @Path("post-statuses")
 @Component
 public class PostStatusController {

@@ -17,6 +17,16 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
+/*
+ * # Summary
+ *   - Junction Table between Events and Users
+ *
+ * # Use cases
+ *   - A User/Admin can list the Events he plans to attend
+ *   - A User/Admin can list the Users that will attend a certain Event
+ *   - A User/Admin can confirm his attendance to a certain event
+ */
+
 @Path("neighborhoods/{neighborhoodId}/events/{eventId}/attendance")
 @Component
 public class AttendanceController extends GlobalControllerAdvice {

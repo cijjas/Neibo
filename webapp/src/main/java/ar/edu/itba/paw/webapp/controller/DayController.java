@@ -17,6 +17,19 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
+
+/*
+ * # Summary
+ *   - This entity is referenced across multiple sections of the applications, like Bookings, Events and Availabilities
+ *
+ * # Use cases
+ *   - Used as proxy in Bookings, Events, Availabilities
+ *
+ * # Embeddable? Hopefully yes
+ *   - Best case scenario this is nested in every entity that uses it, I think it is possible to achieve that
+ *   - It is also never used as a filter, if I recall correctly
+ */
+
 @Path("days")
 @Component
 public class DayController {

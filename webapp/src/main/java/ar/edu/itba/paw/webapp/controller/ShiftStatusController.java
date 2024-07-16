@@ -18,6 +18,15 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
+/*
+ * # Summary
+ *   - Maybe renaming to Availability Status would be more accurate
+ *   - Availability Criteria, that way you can get the FREE and the TAKEN Shifts for a certain Amenity on a certain date, for Booking
+ *
+ * # Use cases
+ *   - A User/Admin filter the Availabilities through a certain Shift Status usually to make a Booking
+ */
+
 @Path("shift-statuses")
 @Component
 public class ShiftStatusController {

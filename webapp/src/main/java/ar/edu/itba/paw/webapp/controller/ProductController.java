@@ -21,6 +21,16 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
+/*
+ * # Summary
+ *   - Main Entity of the Marketplace functionality
+ *   - Has many relationships, Inquiries, Requests, Purchases, Images
+ *
+ * # Use cases
+ *   - A User/Admin can create/update/delete a Product in their Neighborhood
+ *   - A User/Admin can list the Products in its Neighborhood
+ */
+
 @Path("neighborhoods/{neighborhoodId}/products")
 @Component
 public class ProductController extends GlobalControllerAdvice {

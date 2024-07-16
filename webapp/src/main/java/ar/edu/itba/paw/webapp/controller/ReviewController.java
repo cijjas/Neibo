@@ -21,6 +21,15 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
+/*
+ * # Summary
+ *   - A Worker has many Reviews
+ *
+ * # Use cases
+ *   - A User can leave a Review for a certain Worker
+ *   - A User/Admin/Worker can list the Reviews of the Workers and their overall score
+ */
+
 @Path("workers/{workerId}/reviews")
 @Component
 public class ReviewController extends GlobalControllerAdvice {

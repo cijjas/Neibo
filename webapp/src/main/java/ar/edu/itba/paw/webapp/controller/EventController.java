@@ -25,6 +25,19 @@ import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
 
+/*
+ * # Summary
+ *   - A Neighborhood has many Events
+ *   - A User can attend multiple Events, and the Events can have multiple Attendees
+ *   - An event has a relationship with a Shifts
+ *
+ * # Use cases
+ *   - An Admin can create Events for its Neighborhoods
+ *   - An Admin can update/delete an Event
+ *   - A User/Admin can list the future Events for their Neighborhood
+ *   - A User/Admin can attend an Event (maybe an Admin should not be able to, though it currently helps int testing)
+ */
+
 @Path("neighborhoods/{neighborhoodId}/events")
 @Component
 public class EventController {

@@ -18,6 +18,18 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
+/*
+ * # Summary
+ *   - A Worker Criteria, a Worker has a certain role in each Neighborhood he made a "request" to
+ *
+ * # Use cases
+ *   - A Worker can make a "request" for a Neighborhood (making him Unverified for that Neighborhood)
+ *   - An Admin can verify/unverify/ban a worker, effectively changing its Worker Role
+ *
+ * # Embeddable
+ *   - I think so
+ */
+
 @Path("worker-roles")
 @Component
 public class WorkerRoleController {

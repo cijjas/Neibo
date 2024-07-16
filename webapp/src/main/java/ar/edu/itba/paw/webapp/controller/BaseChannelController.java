@@ -19,6 +19,21 @@ import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditio
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.generateETag;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
+/*
+ * # Summary
+ *   - Post Criteria, the Base Channels are present in every neighborhood, these are ANNOUNCEMENTS, COMPLAINTS, FEED, WORKERS, RESERVATIONS, INFORMATION
+ *
+ * # Use cases
+ *   - Base Channels are listed
+ *   - Base Channels are used for filtering the posts
+ *
+ * # Issues
+ *   - The naming is totally wrong, it mixes base channels and main menu options, more information in the Notion
+ *
+ * # Embeddable? I don't think so
+ *   - It has to be listed and used in filtering (it has to have a URN)
+*/
+
 @Path("base-channels")
 @Component
 public class BaseChannelController {

@@ -19,6 +19,14 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
+/*
+ * # Summary
+ *   - A Worker Criteria, a Worker can be HOT if he received many positive reviews in the last couple of days
+ *
+ * # Use cases
+ *   - A User/Admin/Worker can filter the workers through this criteria
+ */
+
 @Path("worker-statuses")
 @Component
 public class WorkerStatusController {

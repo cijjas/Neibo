@@ -20,6 +20,19 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
+
+/*
+ * # Summary
+ *   - Product Criteria, many Products belong to the same Department
+ *
+ * # Use cases
+ *   - A User/Admin can filter the products according to their department
+ *
+ * # Embeddable?
+ *   - Not embeddable as it is used as a filter
+ */
+
+
 @Path("departments")
 @Component
 public class DepartmentController {

@@ -23,6 +23,16 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkMutableETagPreconditions;
 
+/*
+ * # Summary
+ *   - Main entity for the Workers functionality
+ *
+ * # Use Cases
+ *   - A client can register as a Worker
+ *   - A Worker can update his/her profile
+ *   - A User/Admin/Worker can list the Workers in a Neighborhood
+ */
+
 @Path("/workers")
 @Component
 public class WorkerController extends GlobalControllerAdvice {

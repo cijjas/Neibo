@@ -20,6 +20,14 @@ import java.net.URI;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
+/*
+ * # Summary
+ *   - Self-Descriptive, has relationships with many entities like Posts, Products, Users, Workers, Resources
+ *
+ * # Use Cases
+ *   - All Images are public and can be retrieved by any User
+ */
+
 @Path("images")
 @Component
 public class ImageController {

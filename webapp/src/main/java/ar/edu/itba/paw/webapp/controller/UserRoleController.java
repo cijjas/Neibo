@@ -18,6 +18,18 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
+/*
+ * # Summary
+ *   - User Criteria, a User has a certain User Role in the application
+ *
+ * # Use cases
+ *   - An Admin can verify/unverify/ban a user
+ *   - A User can make a "request" for a Neighborhood (making him Unverified for that Neighborhood)
+ *
+ * # Embeddable
+ *   - I think so
+ */
+
 @Path("user-roles")
 @Component
 public class UserRoleController {

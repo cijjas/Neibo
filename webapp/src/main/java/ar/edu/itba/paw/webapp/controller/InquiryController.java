@@ -22,6 +22,18 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
+/*
+ * # Summary
+ *   - A Product has many Inquiries
+ *   - When a User has a question about a certain products it creates an Inquiry for it
+ *   - The Product Seller is the only User that can respond the Inquiry
+ *
+ * # Use cases
+ *   - A User/Admin can create an Inquiry for a Product
+ *   - The Seller can respond an Inquiry
+ *   - A User/Admin can list the Inquiries that a certain Product has
+ */
+
 @Path("neighborhoods/{neighborhoodId}/products/{productId}/inquiries")
 @Component
 public class InquiryController extends GlobalControllerAdvice{

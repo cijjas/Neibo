@@ -22,6 +22,20 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETagPreconditions;
 
+/*
+ * # Summary
+ *   - A Booking is the relationship between a User and an Availability, it also adds a date attribute to the relationship
+ *
+ * # Use cases
+ *   - A User/Admin can create/delete a Booking
+ *   - A User/Admin can list his Bookings
+ *
+ * # Issues
+ *   - The form is taking Shifts URNs, I think it should be taking Availability URNs
+ *   - Before the Shifts had to be dynamically created, not anymore, so I think the logic is simplified
+ *   - Deletion Form could also take a list instead of unique values
+ */
+
 @Path("neighborhoods/{neighborhoodId}/bookings")
 @Component
 public class BookingController extends GlobalControllerAdvice{

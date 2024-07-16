@@ -15,6 +15,14 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
+/*
+ * # Summary
+ *   - A Purchase has a Transaction Type which can be used to filter the Purchases, this is kind of conflicting with the Product Status enum
+ *
+ * # Use cases
+ *   - A User/Admin filters the Purchases/Transactions through the Transaction Types
+ */
+
 @Path("transaction-types")
 @Component
 public class TransactionTypeController {

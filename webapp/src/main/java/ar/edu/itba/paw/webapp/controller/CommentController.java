@@ -20,6 +20,16 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
+/*
+ * # Summary
+ *   - A Post has many Comments and a User has many Comments
+ *
+ * # Use cases
+ *   - A User/Admin Comments on a Post
+ *   - A User/Admin can list the Comments for a specific Post
+ *   - An Admin deletes a Comment
+ */
+
 @Path("neighborhoods/{neighborhoodId}/posts/{postId}/comments")
 @Component
 public class CommentController extends GlobalControllerAdvice{

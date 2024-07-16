@@ -19,6 +19,15 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
+/*
+ * # Summary
+ *   - A Shift is the combination of a Time and a Day
+ *   - Shifts are utilized under the hood by Events, Availability, Bookings and more
+ *
+ * # Embeddable?
+ *   - I think we can embed it, it would heavily reduce the amount of requests at certain points, Availabilities makes it hard
+ */
+
 @Path("shifts")
 @Component
 public class ShiftController {
@@ -42,6 +51,7 @@ public class ShiftController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();

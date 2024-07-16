@@ -24,6 +24,15 @@ import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETa
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkMutableETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
+/*
+ * # Summary
+ *   - A Neighborhood has many Resources, like a map, the emblem, etc
+ *
+ * # Use cases
+ *   - An Admin can create Resources in their Neighborhood
+ *   - A User/Admin can list the Resources of their Neighborhood
+ */
+
 @Path("neighborhoods/{neighborhoodId}/resources")
 @Component
 public class ResourceController {

@@ -22,6 +22,18 @@ import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_HEADER;
 
+/*
+ * # Summary
+ *   - A Neighborhood can have many channels that are exclusive to their Neighborhood (ie Golf, Volley, Etc)
+ *
+ * # Use cases
+ *   - A User/Admin lists the Channels for its Neighborhood
+ *   - An Admin creates/deletes a Channel
+ *
+ * # Issues
+ *   - This part has to be restructured, there is more information in the notion, but basically there is a mix between the base channels, the channels and the menu options
+ */
+
 @Path("neighborhoods/{neighborhoodId}/channels")
 @Component
 public class ChannelController {

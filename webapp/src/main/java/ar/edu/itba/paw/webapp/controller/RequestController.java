@@ -21,6 +21,16 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
+/*
+ * # Summary
+ *   - A single Product can receive many Requests
+ *
+ * # Use cases
+ *   - A User makes one or more Requests for one or more Products, any of those can be fulfilled or negated
+ *   - The Seller can list the Requests he has received for a certain Product
+ *   - A User can list the Requests he has made for certain Products
+ */
+
 @Path("neighborhoods/{neighborhoodId}/requests")
 @Component
 public class RequestController extends GlobalControllerAdvice {

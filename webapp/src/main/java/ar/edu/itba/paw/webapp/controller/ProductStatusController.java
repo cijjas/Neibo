@@ -17,6 +17,14 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
+/*
+ * # Summary
+ *   - Product Criteria, a Product can be BOUGHT, SOLD, SELLING, these are used as a filter and require an extra User Query Param
+ *
+ * # Use cases
+ *   - A User can filter the Products over these criteria, useful for creating the "My Products Sold" "Products I Bought" views
+ */
+
 @Path("product-statuses")
 @Component
 public class ProductStatusController {

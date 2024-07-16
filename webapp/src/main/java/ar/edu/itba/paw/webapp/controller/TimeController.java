@@ -16,6 +16,14 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
+/*
+ * # Summary
+ *   - Utilized by Shifts
+ *
+ * # Embeddable?
+ *   - Definitely
+ */
+
 @Path("times")
 @Component
 public class TimeController {

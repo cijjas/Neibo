@@ -21,6 +21,18 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
+/*
+ * # Summary
+ *   - Main entity of the Forum Functionality
+ *   - Has many relationships, Comments, Users, Likes, Images...
+ *
+ * # Use cases
+ *   - A User can create Posts in the Base Channels allowed for Users
+ *   - An Admin can create Posts in the Channels allowed for Admins
+ *   - User/Admin can view the posts in all Channels
+ *   - An Admin can delete a Post
+ */
+
 @Path("neighborhoods/{neighborhoodId}/posts")
 @Component
 public class PostController extends GlobalControllerAdvice{

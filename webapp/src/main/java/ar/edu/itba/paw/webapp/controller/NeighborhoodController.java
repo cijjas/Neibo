@@ -23,6 +23,16 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
+/*
+ * # Summary
+ *   - Main entity in the Application
+ *   - Many Neighborhoods live under the same Database, so most entities have to have a reference to the Neighborhood they belong to
+ *   - Has relationships with Users, Posts, Channels, Products and many more
+ *
+ * # Use cases
+ *   - When registering all Neighborhoods have to be displayed
+ */
+
 @Path("neighborhoods")
 @Component
 public class NeighborhoodController {

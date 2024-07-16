@@ -23,6 +23,16 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
+/*
+* # Summary
+*   - A Neighborhood has many Amenities
+*   - An Amenity has many Availabilities
+*
+* # Use cases
+*   - A User/Admin can list the Amenities for their Neighborhood with the corresponding Shifts
+*   - An Admin can create, delete and update an Amenity for their Neighborhood
+*/
+
 @Path("neighborhoods/{neighborhoodId}/amenities")
 @Component
 public class AmenityController {

@@ -17,6 +17,16 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
+/*
+ * # Summary
+ *   - A Worker can have many Professions
+ *
+ * # Use cases
+ *   - The Workers can choose which Professions they have
+ *   - A User/Admin can filter the Workers through certain Profession
+ *
+ */
+
 @Path("professions")
 @Component
 public class ProfessionController {

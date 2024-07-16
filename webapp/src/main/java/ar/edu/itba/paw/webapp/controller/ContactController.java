@@ -22,6 +22,19 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
+
+/*
+ * # Summary
+ *   - A Neighborhood has many Contacts
+ *
+ * # Use cases
+ *   - An admin can create, update, delete a Contact
+ *   - A user/admin list all the Contacts
+ *
+ * # Issues
+ *   - Contacts may have to be paginated, they currently are not
+ */
+
 @Path("neighborhoods/{neighborhoodId}/contacts")
 @Component
 public class ContactController {

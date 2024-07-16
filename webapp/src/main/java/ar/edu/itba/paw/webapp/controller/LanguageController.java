@@ -19,6 +19,20 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
+
+/*
+ * # Summary
+ *   - A User has a certain Language selected
+ *
+ * # Use Cases
+ *   - A User/Admin/Worker can list the available languages
+ *   - A User/Admin/Worker can change his language preference
+ *
+ * # Embeddable?
+ *   - Cant be embedded as it has to be shown at some point, when selecting the language, that would mean to list the Languages
+ */
+
+
 @Path("languages")
 @Component
 public class LanguageController {

@@ -21,6 +21,15 @@ import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPagination
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
+/*
+ * # Summary
+ *   - A Purchase is the represents the Junction Table between Products and Users
+ *
+ * # Use cases
+ *   - A User can make a Purchase for a certain Product, the Seller has to specify that the Product was sold to that specific User
+ *   - A User can list his Transactions (SOLD, BOUGHT)
+ */
+
 @Path("neighborhoods/{neighborhoodId}/users/{userId}/transactions")
 @Component
 public class PurchaseController {

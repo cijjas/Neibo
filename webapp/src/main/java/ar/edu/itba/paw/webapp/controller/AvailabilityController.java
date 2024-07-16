@@ -23,6 +23,30 @@ import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditio
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_HEADER;
 
+/*
+ * # Summary
+ *   - Junction Table between Amenities and Shifts
+ *
+ * # Use cases
+ *   - An Admin can update the Availability of an Amenity
+ *   - A User/Admin can list the Availabilities for a certain Amenity
+ *
+ * # Embeddable? I don't know
+ *   - An amenity can have an attribute called availability that is an array of shifts
+ *   - The array has a fixed maximum size
+ *   - It is only accessed from the Amenity POV BUT the Events also use them, does that create some kind of conflict?
+ *   - Does being a pair create some kind of conflict?
+ *   - A Booking has to reference a unique Availability which pushes into a differentiated nested weak entity (how it currently is), or maybe the booking can also nest the entity
+ *   {
+        "availability": "http://localhost:8080/neighborhoods/1/amenities/1/availability",
+        "description": "Super Amenity",
+        "name": "Amenity",
+        "availability": [{day: tuesday, time:15:00}, {day: tuesday, time:18:00}, {day: tuesday, time:17:00}],
+        "neighborhood": "http://localhost:8080/neighborhoods/1",
+        "self": "http://localhost:8080/neighborhoods/1/amenities/1"
+    }
+ */
+
 @Path("neighborhoods/{neighborhoodId}/amenities/{amenityId}/availability")
 @Component
 public class AvailabilityController {

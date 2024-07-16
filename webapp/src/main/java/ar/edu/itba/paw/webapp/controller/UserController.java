@@ -25,6 +25,17 @@ import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkModificationETa
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkMutableETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
+/*
+ * # Summary
+ *   - Self descriptive
+ *
+ * # Use cases
+ *   - A Client can register as a User
+ *   - A User can update his profile
+ *   - An Admin can list the Users in his Neighborhood
+ *   - A User can see the profile of a particular User
+ */
+
 @Path("neighborhoods/{neighborhoodId}/users")
 @Component
 public class UserController {

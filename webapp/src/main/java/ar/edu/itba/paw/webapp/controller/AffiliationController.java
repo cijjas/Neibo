@@ -23,6 +23,31 @@ import java.util.stream.Collectors;
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
+/*
+* # Summary
+*   - An Affiliation is the Junction Table between Workers and Neighborhoods
+*   - The relationship has the attribute that defines the state of that relationship (WORKER ROLE : VERIFIED_WORKER, UNVERIFIED_WORKER, REJECTED)
+*
+* # Use cases
+*   - The Admin lists the Workers that have a relationship with his Neighborhood
+*   - The Admin rejects or verifies a Worker
+*   - The Worker creates an affiliation with UNVERIFIED status when it requests for a certain Neighborhood
+*   - The Worker lists the neighborhoods he has an affiliation with
+*
+* # Embeddable? Don't think so
+*   - No Embed :
+*       The Admin panel should list the paginated affiliations for his Worker, and resolve the reference to each Worker
+*   - Embed :
+*       An Affiliation is both used from the Neighborhood and the Worker POV, does not appear to be embeddable as an attribute in neither of them
+*       Also the affiliation itself has another attribute which makes the handling much harder
+*       Worker {
+*           name : Jorge,
+*           professions : [prof1, prof2, prof3],
+*           affiliations : [{neighborhood: nh1, status: verified}, {neighborhood: nh2, status: verified}, {neighborhood: nh3, status: verified}]
+*       }
+*       Use cases cant be satisfied!
+*/
+
 @Path("/affiliations")
 @Component
 public class AffiliationController {
@@ -84,7 +109,7 @@ public class AffiliationController {
     public Response addAffiliation(
             @Valid @NotNull final AffiliationForm form
     ) {
-        LOGGER.info("PATCH request arrived at '/affiliations'");
+        LOGGER.info("POST request arrived at '/affiliations'");
 
         // Cache Control
         Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
