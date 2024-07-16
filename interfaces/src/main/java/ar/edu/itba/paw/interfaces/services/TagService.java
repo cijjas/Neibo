@@ -3,6 +3,7 @@ package ar.edu.itba.paw.interfaces.services;
 import ar.edu.itba.paw.models.Entities.Tag;
 
 import javax.swing.text.html.Option;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +22,7 @@ public interface TagService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    void createTagsAndCategorizePost(long postId, String tagsString);
+    void createTagsAndCategorizePost(long postId, String[] tagURIs);
 
     String createURLForTagFilter(String tags, String currentUrl, long neighborhoodId);
 

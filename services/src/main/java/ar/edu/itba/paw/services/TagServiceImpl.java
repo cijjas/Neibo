@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -54,33 +55,21 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void createTagsAndCategorizePost(long postId, String tagsString) {
-        LOGGER.info("Creating Tags in {} and associating it with Post {}", tagsString, postId);
+    public void createTagsAndCategorizePost(long postId, String[] tagURIs) {
+        LOGGER.info("Creating Tags in {} and associating it with Post {}", tagURIs, postId);
 
         ValidationUtils.checkPostId(postId);
 
-        if (tagsString == null || tagsString.isEmpty()) {
+        if (tagURIs == null) {
             return;
         }
-        String[] tagNames = tagsString.split(",");
 
-        // Get the existing tags from the database
-        List<Tag> existingTags = tagDao.getAllTags();
-
-        // Create a mapping of tag names to their corresponding Tag objects
-        Map<String, Tag> tagMap = existingTags.stream()
-                .collect(Collectors.toMap(Tag::getTag, Function.identity()));
-
-        // Iterate through the tag names and associate the post with the tags
-        for (String tagName : tagNames) {
-            Tag tag = tagMap.get(tagName);
-            if (tag == null) {
-                // If the tag doesn't exist, create it and add it to the map
-                tag = tagDao.createTag(tagName);
-                tagMap.put(tagName, tag);
-            }
-            // Associate the post with the tag using the CategorizationDao
-            categorizationDao.createCategorization(tag.getTagId(), postId);
+        //cycle array of URI's extracting the id of each tag
+        for (String tagURI : tagURIs) {
+            long tagId = ValidationUtils.extractURNId(tagURI);
+            ValidationUtils.checkTagId(tagId);
+            Tag tag = tagDao.findTag(tagId).orElseThrow(() -> new NotFoundException("Tag Not Found"));
+            categorizationDao.createCategorization(tagId, postId);
         }
     }
 
