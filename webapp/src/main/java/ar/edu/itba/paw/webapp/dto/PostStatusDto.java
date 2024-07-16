@@ -1,27 +1,25 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.BaseChannel;
 import ar.edu.itba.paw.enums.PostStatus;
-import ar.edu.itba.paw.enums.ProductStatus;
 
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
+
 public class PostStatusDto {
 
     private PostStatus postStatus;
+    private Links _links;
 
-    private URI self;
-
-    public static PostStatusDto fromPostStatus(PostStatus postStatus, UriInfo uriInfo){
+    public static PostStatusDto fromPostStatus(PostStatus postStatus, UriInfo uriInfo) {
         final PostStatusDto dto = new PostStatusDto();
 
         dto.postStatus = postStatus;
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        Links links = new Links();
+        links.setSelf(uriInfo.getBaseUriBuilder()
                 .path("post-statuses")
                 .path(String.valueOf(postStatus.getId()))
-                .build();
-
+                .build());
+        dto.set_links(links);
         return dto;
     }
 
@@ -33,11 +31,11 @@ public class PostStatusDto {
         this.postStatus = postStatus;
     }
 
-    public URI getSelf() {
-        return self;
+    public Links get_links() {
+        return _links;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

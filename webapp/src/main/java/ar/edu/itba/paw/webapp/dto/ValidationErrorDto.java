@@ -1,13 +1,13 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import javax.validation.ConstraintViolation;
-import javax.validation.ValidationException;
 
 public class ValidationErrorDto {
+
     private String message;
     private String path;
 
-    public static ValidationErrorDto fromValidationException(final ConstraintViolation<?> ve){
+    public static ValidationErrorDto fromValidationException(final ConstraintViolation<?> ve) {
         final ValidationErrorDto errorDto = new ValidationErrorDto();
 
         errorDto.message = ve.getMessage();

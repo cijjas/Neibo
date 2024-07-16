@@ -4,6 +4,7 @@ import ar.edu.itba.paw.enums.DayOfTheWeek;
 import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
 import ar.edu.itba.paw.interfaces.services.ShiftService;
 import ar.edu.itba.paw.models.Entities.Shift;
+import ar.edu.itba.paw.models.TwoIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,10 +49,17 @@ public class ShiftServiceImpl implements ShiftService {
     }
 
     @Override
-    public List<Shift> getShifts() {
+    public List<Shift> getShifts(String amenityURN) {
         LOGGER.info("Getting Shifts");
 
-        return shiftDao.getShifts();
+        TwoIds twoIds = ValidationUtils.extractTwoURNIds(amenityURN);
+        long neighborhoodId = twoIds.getFirstId();
+        long amenityId = twoIds.getSecondId();
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkAmenityId(amenityId);
+
+        return shiftDao.getShifts(amenityId);
     }
 
     @Override

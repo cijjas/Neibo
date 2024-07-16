@@ -1,25 +1,25 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.enums.Language;
-import ar.edu.itba.paw.enums.UserRole;
 
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 
 public class LanguageDto {
-    private Language language;
-    private URI self;
 
-    public static LanguageDto fromLanguage(Language language, UriInfo uriInfo){
+    private Language language;
+    private Links _links;
+
+    public static LanguageDto fromLanguage(Language language, UriInfo uriInfo) {
         final LanguageDto dto = new LanguageDto();
 
         dto.language = language;
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        Links links = new Links();
+        links.setSelf(uriInfo.getBaseUriBuilder()
                 .path("languages")
                 .path(String.valueOf(language.getId()))
-                .build();
-
+                .build());
+        dto.set_links(links);
         return dto;
     }
 
@@ -31,11 +31,11 @@ public class LanguageDto {
         this.language = language;
     }
 
-    public URI getSelf() {
-        return self;
+    public Links get_links() {
+        return _links;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

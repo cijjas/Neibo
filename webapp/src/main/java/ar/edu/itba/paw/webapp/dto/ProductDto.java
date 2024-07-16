@@ -6,22 +6,15 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 public class ProductDto {
+
     private String name;
     private String description;
     private Double price;
     private boolean used;
     private Long remainingUnits;
-    private URI self;
-    private URI primaryPicture;
-    private URI secondaryPicture;
-    private URI tertiaryPicture;
-    private URI seller;
-    private URI department;
-    private URI inquiries;
-    private URI requests;
-    // private URI purchases; ?
+    private Links _links;
 
-    public static ProductDto fromProduct(Product product, UriInfo uriInfo){
+    public static ProductDto fromProduct(Product product, UriInfo uriInfo) {
         final ProductDto dto = new ProductDto();
 
         dto.name = product.getName();
@@ -30,130 +23,107 @@ public class ProductDto {
         dto.used = product.isUsed();
         dto.remainingUnits = product.getRemainingUnits();
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        Links links = new Links();
+        URI self = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(product.getSeller().getNeighborhood().getNeighborhoodId()))
                 .path("products")
                 .path(String.valueOf(product.getProductId()))
                 .build();
-        if ( product.getPrimaryPicture() != null ){
-            dto.primaryPicture = uriInfo.getBaseUriBuilder()
+
+        links.setSelf(self);
+        if (product.getPrimaryPicture() != null) {
+            links.setPrimaryPicture(uriInfo.getBaseUriBuilder()
                     .path("images")
                     .path(String.valueOf(product.getPrimaryPicture().getImageId()))
-                    .build();
+                    .build());
         }
-        if ( product.getSecondaryPicture() != null ) {
-            dto.secondaryPicture = uriInfo.getBaseUriBuilder()
+        if (product.getSecondaryPicture() != null) {
+            links.setSecondaryPicture(uriInfo.getBaseUriBuilder()
                     .path("images")
                     .path(String.valueOf(product.getSecondaryPicture().getImageId()))
-                    .build();
+                    .build());
         }
         if (product.getTertiaryPicture() != null) {
-            dto.tertiaryPicture = uriInfo.getBaseUriBuilder()
+            links.setTertiaryPicture(uriInfo.getBaseUriBuilder()
                     .path("images")
                     .path(String.valueOf(product.getTertiaryPicture().getImageId()))
-                    .build();
+                    .build());
         }
-        dto.seller = uriInfo.getBaseUriBuilder()
+
+
+        links.setSeller(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(product.getSeller().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(product.getSeller().getUserId()))
-                .build();
-
-        dto.department = uriInfo.getBaseUriBuilder()
+                .build());
+        links.setDepartment(uriInfo.getBaseUriBuilder()
                 .path("departments")
                 .path(String.valueOf(product.getDepartment().getDepartmentId()))
-                .build();
-        dto.inquiries = uriInfo.getBaseUriBuilder()
+                .build());
+        links.setInquiries(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(product.getSeller().getNeighborhood().getNeighborhoodId()))
                 .path("products")
                 .path(String.valueOf(product.getProductId()))
                 .path("inquiries")
-                .build();
-        dto.requests = uriInfo.getBaseUriBuilder()
+                .build());
+        links.setRequests(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(product.getSeller().getNeighborhood().getNeighborhoodId()))
                 .path("requests")
-                .queryParam("forProduct", product.getProductId())
-                .build();
-
+                .queryParam("forProduct", self)
+                .build());
+        dto.set_links(links);
         return dto;
     }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-    public Double getPrice() { return price; }
-    public void setPrice(Double price) { this.price = price; }
-    public boolean isUsed() { return used; }
-    public void setUsed(boolean used) { this.used = used; }
-    public Long getRemainingUnits() { return remainingUnits; }
-    public void setRemainingUnits(Long remainingUnits) { this.remainingUnits = remainingUnits; }
-
-    public URI getSelf() {
-        return self;
+    public String getName() {
+        return name;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public URI getPrimaryPicture() {
-        return primaryPicture;
+    public String getDescription() {
+        return description;
     }
 
-    public void setPrimaryPicture(URI primaryPicture) {
-        this.primaryPicture = primaryPicture;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public URI getSecondaryPicture() {
-        return secondaryPicture;
+    public Double getPrice() {
+        return price;
     }
 
-    public void setSecondaryPicture(URI secondaryPicture) {
-        this.secondaryPicture = secondaryPicture;
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
-    public URI getTertiaryPicture() {
-        return tertiaryPicture;
+    public boolean isUsed() {
+        return used;
     }
 
-    public void setTertiaryPicture(URI tertiaryPicture) {
-        this.tertiaryPicture = tertiaryPicture;
+    public void setUsed(boolean used) {
+        this.used = used;
     }
 
-    public URI getSeller() {
-        return seller;
+    public Long getRemainingUnits() {
+        return remainingUnits;
     }
 
-    public void setSeller(URI seller) {
-        this.seller = seller;
+    public void setRemainingUnits(Long remainingUnits) {
+        this.remainingUnits = remainingUnits;
     }
 
-    public URI getDepartment() {
-        return department;
+    public Links get_links() {
+        return _links;
     }
 
-    public void setDepartment(URI department) {
-        this.department = department;
-    }
-
-    public URI getInquiries() {
-        return inquiries;
-    }
-
-    public void setInquiries(URI inquiries) {
-        this.inquiries = inquiries;
-    }
-
-    public URI getRequests() {
-        return requests;
-    }
-
-    public void setRequests(URI requests) {
-        this.requests = requests;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

@@ -64,7 +64,7 @@ public class ProfessionController {
                     .tag(entityLevelETag)
                     .build();
         List<ProfessionDto> professionDto = professions.stream()
-                .map(p -> ProfessionDto.fromProfession(p, uriInfo)).collect(Collectors.toList());
+                .map(p -> ProfessionDto.fromProfession(Professions.valueOf(p.toString()), uriInfo)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<ProfessionDto>>(professionDto){})
                 .cacheControl(cacheControl)

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.models.Entities.User;
 
@@ -7,23 +8,17 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 public class UserDto {
+
     private String mail;
     private String name;
     private String surname;
     private Boolean darkMode;
     private String phoneNumber;
     private Integer identification;
-    private URI self;
-    private URI neighborhood;
-    private URI profilePicture;
-    private URI posts;
-    private URI bookings;
-    private URI likedPosts;
-    private URI purchases;
-    private URI sales;
     private UserRole role;
+    private Links _links;
 
-    public static UserDto fromUser(final User user, final UriInfo uriInfo){
+    public static UserDto fromUser(final User user, final UriInfo uriInfo) {
         final UserDto dto = new UserDto();
 
         dto.mail = user.getMail();
@@ -34,83 +29,109 @@ public class UserDto {
         dto.identification = user.getIdentification();
         dto.role = user.getRole();
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        Links links = new Links();
+        URI self = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(user.getUserId()))
                 .build();
-
-        dto.neighborhood = uriInfo.getBaseUriBuilder()
+        links.setSelf(self);
+        links.setNeighborhood(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
-                .build();
-        if ( user.getProfilePicture() != null ){
-            dto.profilePicture = uriInfo.getBaseUriBuilder()
+                .build());
+        if (user.getProfilePicture() != null) {
+            links.setProfilePicture(uriInfo.getBaseUriBuilder()
                     .path("images")
                     .path(String.valueOf(user.getProfilePicture().getImageId()))
-                    .build();
+                    .build());
         }
-        dto.posts = uriInfo.getBaseUriBuilder()
+        links.setPosts(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                 .path("posts")
-                .queryParam("postedBy", String.valueOf(user.getUserId()))
-                .build();
-
+                .queryParam("postedBy", self)
+                .build());
         //If not a worker, also add the following URIs:
-        if(user.getNeighborhood().getNeighborhoodId() != 0){
-            dto.bookings = uriInfo.getBaseUriBuilder()
+        if (user.getNeighborhood().getNeighborhoodId() != 0) {
+            links.setBookings(uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")
                     .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                     .path("bookings")
-                    .queryParam("bookedBy", String.valueOf(user.getUserId()))
-                    .build();
-            dto.likedPosts = uriInfo.getBaseUriBuilder()
+                    .queryParam("bookedBy", self)
+                    .build());
+            links.setLikedPosts(uriInfo.getBaseUriBuilder()
                     .path("likes")
-                    .queryParam("likedBy", String.valueOf(user.getUserId()))
-                    .build();
-            dto.purchases = uriInfo.getBaseUriBuilder()
+                    .queryParam("likedBy", self)
+                    .build());
+            links.setPurchases(uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")
                     .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                     .path("users")
                     .path(String.valueOf(user.getUserId()))
                     .path("transactions")
-                    .queryParam("withType", "PURCHASE")
-                    .build();
-            dto.sales = uriInfo.getBaseUriBuilder()
+                    .queryParam("withType", uriInfo.getBaseUriBuilder()
+                            .path("transaction-types")
+                            .path(String.valueOf(TransactionType.PURCHASE)))
+                    .build());
+            links.setSales(uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")
                     .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
                     .path("users")
                     .path(String.valueOf(user.getUserId()))
                     .path("transactions")
-                    .queryParam("withType", "SALE")
-                    .build();
+                    .queryParam("withType", uriInfo.getBaseUriBuilder()
+                            .path("transaction-types")
+                            .path(String.valueOf(TransactionType.SALE)))
+                    .build());
         }
+        dto.set_links(links);
         return dto;
     }
 
     public String getMail() {
         return mail;
     }
+
     public void setMail(String mail) {
         this.mail = mail;
     }
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
-    public String getSurname() { return surname; }
-    public void setSurname(String surname) { this.surname = surname; }
-    public Boolean isDarkMode() { return darkMode; }
-    public void setDarkMode(Boolean darkMode) { this.darkMode = darkMode; }
-    public String getPhoneNumber() { return phoneNumber; }
-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public Boolean isDarkMode() {
+        return darkMode;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public Boolean getDarkMode() {
         return darkMode;
+    }
+
+    public void setDarkMode(Boolean darkMode) {
+        this.darkMode = darkMode;
     }
 
     public Integer getIdentification() {
@@ -121,75 +142,19 @@ public class UserDto {
         this.identification = identification;
     }
 
-    public URI getSelf() {
-        return self;
-    }
-
-    public void setSelf(URI self) {
-        this.self = self;
-    }
-
-    public URI getNeighborhood() {
-        return neighborhood;
-    }
-
-    public void setNeighborhood(URI neighborhood) {
-        this.neighborhood = neighborhood;
-    }
-
-    public URI getProfilePicture() {
-        return profilePicture;
-    }
-
-    public void setProfilePicture(URI profilePicture) {
-        this.profilePicture = profilePicture;
-    }
-
-    public URI getPosts() {
-        return posts;
-    }
-
-    public void setPosts(URI posts) {
-        this.posts = posts;
-    }
-
-    public URI getBookings() {
-        return bookings;
-    }
-
-    public void setBookings(URI bookings) {
-        this.bookings = bookings;
-    }
-
-    public URI getLikedPosts() {
-        return likedPosts;
-    }
-
-    public void setLikedPosts(URI likedPosts) {
-        this.likedPosts = likedPosts;
-    }
-
-    public URI getPurchases() {
-        return purchases;
-    }
-
-    public void setPurchases(URI purchases) {
-        this.purchases = purchases;
-    }
-
-    public URI getSales() {
-        return sales;
-    }
-
-    public void setSales(URI sales) {
-        this.sales = sales;
+    public UserRole getRole() {
+        return role;
     }
 
     public void setRole(UserRole role) {
         this.role = role;
     }
 
-    public UserRole getRole() {
-        return role;
+    public Links get_links() {
+        return _links;
+    }
+
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.enums.Professions;
-import ar.edu.itba.paw.models.Entities.Profession;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -9,61 +8,43 @@ import java.net.URI;
 public class ProfessionDto {
 
     private String name;
-    private URI self;
-    private URI workers;
+    private Links _links;
 
-    public static ProfessionDto fromProfession(Profession profession, UriInfo uriInfo){
-        final ProfessionDto dto = new ProfessionDto();
-
-        dto.name = profession.getProfession().name();
-
-        dto.self = uriInfo.getBaseUriBuilder()
-                .path("professions")
-                .path(String.valueOf(profession.getProfessionId()))
-                .build();
-
-        dto.workers = uriInfo.getBaseUriBuilder()
-                .path("workers")
-                .queryParam("profession", String.valueOf(profession.getProfessionId()))
-                .build();
-
-        return dto;
-    }
-    public static ProfessionDto fromProfession(Professions profession, UriInfo uriInfo){
+    public static ProfessionDto fromProfession(Professions profession, UriInfo uriInfo) {
         final ProfessionDto dto = new ProfessionDto();
 
         dto.name = profession.name();
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        Links links = new Links();
+        URI self = uriInfo.getBaseUriBuilder()
                 .path("professions")
                 .path(String.valueOf(profession.getId()))
                 .build();
 
-        dto.workers = uriInfo.getBaseUriBuilder()
+        links.setSelf(self);
+        links.setWorkers(uriInfo.getBaseUriBuilder()
                 .path("workers")
-                .queryParam("withProfessions", String.valueOf(profession.getId()))
-                .build();
-
+                .queryParam("withProfessions", self)
+                .build());
+        dto.set_links(links);
         return dto;
     }
 
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public URI getSelf() {
-        return self;
+    public String getName() {
+        return name;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public URI getWorkers() {
-        return workers;
+
+    public Links get_links() {
+        return _links;
     }
 
-    public void setWorkers(URI workers) {
-        this.workers = workers;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

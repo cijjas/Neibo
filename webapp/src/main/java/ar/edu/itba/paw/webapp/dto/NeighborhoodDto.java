@@ -6,115 +6,71 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 public class NeighborhoodDto {
-    private String name;
-    private URI self;
-    private URI users;
-    private URI workers;
-    private URI contacts; // localhost:8080/neighborhood/{id}/contacts
-    private URI channels; // localhost:8080/neighborhood/{id}/channels
-    private URI events; // localhost:8080/neighborhood/{id}/events
-    private URI resources; // localhost:8080/neighborhood/{id}/resources
 
-    public static NeighborhoodDto fromNeighborhood(Neighborhood neighborhood, UriInfo uriInfo){
+    private String name;
+    private Links _links;
+
+    public static NeighborhoodDto fromNeighborhood(Neighborhood neighborhood, UriInfo uriInfo) {
         final NeighborhoodDto dto = new NeighborhoodDto();
 
         dto.name = neighborhood.getName();
 
-        dto.self = uriInfo.getBaseUriBuilder()
+
+        Links links = new Links();
+        URI self = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(neighborhood.getNeighborhoodId()))
                 .build();
-        dto.users = uriInfo.getBaseUriBuilder()
+        links.setSelf(self);
+        links.setUsers(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(neighborhood.getNeighborhoodId()))
                 .path("users")
-                .build();
-        dto.workers = uriInfo.getBaseUriBuilder()
+                .build());
+        links.setWorkers(uriInfo.getBaseUriBuilder()
                 .path("workers")
-                .queryParam("inNeighborhoods", String.valueOf(neighborhood.getNeighborhoodId()))
-                .build();
-        dto.channels = uriInfo.getBaseUriBuilder()
+                .queryParam("inNeighborhoods", self)
+                .build());
+        links.setChannels(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(neighborhood.getNeighborhoodId()))
                 .path("channels")
-                .build();
-        if(neighborhood.getNeighborhoodId() > 0) {
-            dto.contacts = uriInfo.getBaseUriBuilder()
+                .build());
+
+        if (neighborhood.getNeighborhoodId() > 0) {
+            links.setContacts(uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))
                     .path("contacts")
-                    .build();
-            dto.events = uriInfo.getBaseUriBuilder()
+                    .build());
+            links.setEvents(uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))
                     .path("events")
-                    .build();
-            dto.resources = uriInfo.getBaseUriBuilder()
+                    .build());
+            links.setResources(uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")
                     .path(String.valueOf(neighborhood.getNeighborhoodId()))
                     .path("resources")
-                    .build();
+                    .build());
         }
-
+        dto.set_links(links);
         return dto;
     }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
-    public URI getSelf() {
-        return self;
+    public String getName() {
+        return name;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public URI getUsers() {
-        return users;
+    public Links get_links() {
+        return _links;
     }
 
-    public void setUsers(URI users) {
-        this.users = users;
-    }
-
-    public URI getWorkers() {
-        return workers;
-    }
-
-    public void setWorkers(URI workers) {
-        this.workers = workers;
-    }
-
-    public URI getContacts() {
-        return contacts;
-    }
-
-    public void setContacts(URI contacts) {
-        this.contacts = contacts;
-    }
-
-    public URI getChannels() {
-        return channels;
-    }
-
-    public void setChannels(URI channels) {
-        this.channels = channels;
-    }
-
-    public URI getEvents() {
-        return events;
-    }
-
-    public void setEvents(URI events) {
-        this.events = events;
-    }
-
-    public URI getResources() {
-        return resources;
-    }
-
-    public void setResources(URI resources) {
-        this.resources = resources;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

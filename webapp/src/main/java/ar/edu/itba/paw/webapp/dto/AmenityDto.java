@@ -9,31 +9,31 @@ public class AmenityDto {
 
     private String name;
     private String description;
-    private URI self;
-    private URI neighborhood; // localhost:8080/neighborhood/{id}
-    private URI shifts; // localhost:8080/amenities/{id}/availability
+    private Links _links;
 
-    public static AmenityDto fromAmenity(Amenity amenity, UriInfo uriInfo){
+    public static AmenityDto fromAmenity(Amenity amenity, UriInfo uriInfo) {
         final AmenityDto dto = new AmenityDto();
 
         dto.name = amenity.getName();
         dto.description = amenity.getDescription();
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        Links links = new Links();
+        URI self = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(amenity.getNeighborhood().getNeighborhoodId()))
                 .path("amenities")
                 .path(String.valueOf(amenity.getAmenityId()))
                 .build();
-        dto.neighborhood = uriInfo.getBaseUriBuilder()
+        links.setSelf(self);
+        links.setNeighborhood(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(amenity.getNeighborhood().getNeighborhoodId()))
-                .build();
-        dto.shifts = uriInfo.getBaseUriBuilder()
+                .build());
+        links.setShifts(uriInfo.getBaseUriBuilder()
                 .path("shifts")
-                .queryParam("amenity", String.valueOf(amenity.getAmenityId())) // deberia ser URN al AMENITY
-                .build();
-
+                .queryParam("forAmenity", self)
+                .build());
+        dto.set_links(links);
         return dto;
     }
 
@@ -53,27 +53,11 @@ public class AmenityDto {
         this.description = description;
     }
 
-    public URI getSelf() {
-        return self;
+    public Links get_links() {
+        return _links;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
-    }
-
-    public URI getNeighborhood() {
-        return neighborhood;
-    }
-
-    public void setNeighborhood(URI neighborhood) {
-        this.neighborhood = neighborhood;
-    }
-
-    public URI getShifts() {
-        return shifts;
-    }
-
-    public void setShifts(URI shifts) {
-        this.shifts = shifts;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

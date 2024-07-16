@@ -46,8 +46,9 @@ public class ShiftController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getShifts() {
-        // Este metodo tiene que manejar el caso de /shifts?amenity=1
+    public Response getShifts(
+            @QueryParam("forAmenity") final String amenityURN
+    ) {
         LOGGER.info("GET request arrived at '/shifts'");
 
         // Cache Control
@@ -58,7 +59,7 @@ public class ShiftController {
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        List<Shift> shifts = ss.getShifts();
+        List<Shift> shifts = ss.getShifts(amenityURN);
         if (shifts.isEmpty())
             return Response.noContent()
                     .tag(entityLevelETag)

@@ -1,72 +1,57 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.models.Entities.Affiliation;
 
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 
 public class AffiliationDto {
-    private URI self;
-    private URI worker; // localhost:8080/amenities/{id}
-    private URI neighborhood; // localhost:8080/shifts/{id}
 
-    private URI workerRole;
+    private WorkerRole role;
+    private Links _links;
 
-    // should have affiliation
-
-    public static AffiliationDto fromAffiliation(Affiliation affiliation, UriInfo uriInfo){
+    public static AffiliationDto fromAffiliation(Affiliation affiliation, UriInfo uriInfo) {
         final AffiliationDto dto = new AffiliationDto();
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        dto.role = affiliation.getRole();
+
+        Links links = new Links();
+        links.setSelf(uriInfo.getBaseUriBuilder()
                 .path("affiliations")
-                .queryParam("inNeighborhood", affiliation.getNeighborhood().getNeighborhoodId())
-                .queryParam("forWorker", affiliation.getWorker().getWorkerId())
-                .build();
-        dto.neighborhood = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(affiliation.getNeighborhood().getNeighborhoodId()))
-                .build();
-        dto.worker = uriInfo.getBaseUriBuilder()
+                .queryParam("inNeighborhood", uriInfo.getBaseUriBuilder()
+                        .path("neighborhoods")
+                        .path(String.valueOf(affiliation.getNeighborhood().getNeighborhoodId()))
+                        .build())
+                .queryParam("forWorker", uriInfo.getBaseUriBuilder()
+                        .path("workers")
+                        .path(String.valueOf(affiliation.getWorker().getWorkerId()))
+                        .build())
+                .build());
+        links.setWorker(uriInfo.getBaseUriBuilder()
                 .path("workers")
                 .path(String.valueOf(affiliation.getWorker().getWorkerId()))
-                .build();
-        dto.workerRole = uriInfo.getBaseUriBuilder()
-                .path("worker-roles")
-                .path(String.valueOf(affiliation.getRole().getId()))
-                .build();
-
+                .build());
+        links.setNeighborhood(uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(affiliation.getNeighborhood().getNeighborhoodId()))
+                .build());
+        dto.set_links(links);
         return dto;
     }
 
-    public URI getSelf() {
-        return self;
+    public Links get_links() {
+        return _links;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 
-    public URI getWorker() {
-        return worker;
+    public WorkerRole getRole() {
+        return role;
     }
 
-    public void setWorker(URI worker) {
-        this.worker = worker;
-    }
-
-    public URI getNeighborhood() {
-        return neighborhood;
-    }
-
-    public void setNeighborhood(URI neighborhood) {
-        this.neighborhood = neighborhood;
-    }
-
-    public URI getWorkerRole() {
-        return workerRole;
-    }
-
-    public void setWorkerRole(URI workerRole) {
-        this.workerRole = workerRole;
+    public void setRole(WorkerRole role) {
+        this.role = role;
     }
 }

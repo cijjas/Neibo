@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.enums.UserRole;
 
 import javax.ws.rs.core.UriInfo;
@@ -9,19 +8,19 @@ import java.net.URI;
 public class UserRoleDto {
 
     private UserRole userRole;
+    private Links _links;
 
-    private URI self;
-
-    public static UserRoleDto fromUserRole(UserRole userRole, UriInfo uriInfo){
+    public static UserRoleDto fromUserRole(UserRole userRole, UriInfo uriInfo) {
         final UserRoleDto dto = new UserRoleDto();
 
         dto.userRole = userRole;
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        Links links = new Links();
+        links.setSelf(uriInfo.getBaseUriBuilder()
                 .path("user-roles")
                 .path(String.valueOf(userRole.getId()))
-                .build();
-
+                .build());
+        dto.set_links(links);
         return dto;
     }
 
@@ -33,11 +32,11 @@ public class UserRoleDto {
         this.userRole = userRole;
     }
 
-    public URI getSelf() {
-        return self;
+    public Links get_links() {
+        return _links;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

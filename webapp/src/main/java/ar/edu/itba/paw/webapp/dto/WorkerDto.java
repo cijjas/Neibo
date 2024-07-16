@@ -12,52 +12,11 @@ public class WorkerDto {
     private String businessName;
     private String address;
     private String bio;
-    private URI self;
-    private URI user;
-    private URI backgroundPicture;
-    private URI reviews;
-    private URI professions;
-    private URI workerNeighborhoods;
     private UserRole role;
+    private Links _links;
 
-    public static WorkerDto fromWorker(Worker worker, UriInfo uriInfo){
+    public static WorkerDto fromWorker(Worker worker, UriInfo uriInfo) {
         final WorkerDto dto = new WorkerDto();
-
-        dto.self = uriInfo.getBaseUriBuilder()
-                .path("workers")
-                .path(String.valueOf(worker.getWorkerId()))
-                .build();
-
-        dto.user = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("users")
-                .path(String.valueOf(worker.getUser().getUserId()))
-                .build();
-
-        if (worker.getBackgroundPictureId() != null){
-            dto.backgroundPicture = uriInfo.getBaseUriBuilder()
-                    .path("images")
-                    .path(String.valueOf(worker.getBackgroundPictureId()))
-                    .build();
-        }
-
-
-        dto.reviews = uriInfo.getBaseUriBuilder()
-                .path("workers")
-                .path(String.valueOf(worker.getWorkerId()))
-                .path("reviews")
-                .build();
-
-        dto.professions = uriInfo.getBaseUriBuilder()
-                .path("professions")
-                .queryParam("workerId", String.valueOf(worker.getWorkerId()))
-                .build();
-
-        dto.workerNeighborhoods = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .queryParam("withWorker", String.valueOf(worker.getWorkerId()))
-                .build();
 
         dto.phoneNumber = worker.getPhoneNumber();
         dto.businessName = worker.getBusinessName();
@@ -65,64 +24,77 @@ public class WorkerDto {
         dto.bio = worker.getBio();
         dto.role = worker.getUser().getRole();
 
+        Links links = new Links();
+        URI self = uriInfo.getBaseUriBuilder()
+                .path("workers")
+                .path(String.valueOf(worker.getWorkerId()))
+                .build();
+        links.setSelf(self);
+        links.setUser(uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
+                .path("users")
+                .path(String.valueOf(worker.getUser().getUserId()))
+                .build());
+        if (worker.getBackgroundPictureId() != null) {
+            links.setBackgroundPicture(uriInfo.getBaseUriBuilder()
+                    .path("images")
+                    .path(String.valueOf(worker.getBackgroundPictureId()))
+                    .build());
+        }
+        links.setReviews(
+                uriInfo.getBaseUriBuilder()
+                        .path("workers")
+                        .path(String.valueOf(worker.getWorkerId()))
+                        .path("reviews")
+                        .build()
+        );
+        links.setProfessions(
+                uriInfo.getBaseUriBuilder()
+                        .path("professions")
+                        .queryParam("workerId", self)
+                        .build()
+        );
+        links.setWorkerNeighborhoods(
+                uriInfo.getBaseUriBuilder()
+                        .path("neighborhoods")
+                        .queryParam("withWorker", self)
+                        .build()
+        );
+        dto.set_links(links);
         return dto;
     }
 
-    public String getPhoneNumber() { return phoneNumber; }
-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
-    public String getBusinessName() { return businessName; }
-    public void setBusinessName(String businessName) { this.businessName = businessName; }
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
-    public String getBio() { return bio; }
-    public void setBio(String bio) { this.bio = bio; }
-
-    public URI getSelf() {
-        return self;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public URI getUser() {
-        return user;
+    public String getBusinessName() {
+        return businessName;
     }
 
-    public void setUser(URI user) {
-        this.user = user;
+    public void setBusinessName(String businessName) {
+        this.businessName = businessName;
     }
 
-    public URI getBackgroundPicture() {
-        return backgroundPicture;
+    public String getAddress() {
+        return address;
     }
 
-    public void setBackgroundPicture(URI backgroundPicture) {
-        this.backgroundPicture = backgroundPicture;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public URI getReviews() {
-        return reviews;
+    public String getBio() {
+        return bio;
     }
 
-    public void setReviews(URI reviews) {
-        this.reviews = reviews;
-    }
-
-    public URI getProfessions() {
-        return professions;
-    }
-
-    public void setProfessions(URI professions) {
-        this.professions = professions;
-    }
-
-    public URI getWorkerNeighborhoods() {
-        return workerNeighborhoods;
-    }
-
-    public void setWorkerNeighborhoods(URI workerNeighborhoods) {
-        this.workerNeighborhoods = workerNeighborhoods;
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public UserRole getRole() {
@@ -131,5 +103,13 @@ public class WorkerDto {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public Links get_links() {
+        return _links;
+    }
+
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

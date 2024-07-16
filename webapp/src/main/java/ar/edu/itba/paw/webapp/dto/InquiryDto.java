@@ -1,59 +1,47 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.models.Entities.Amenity;
 import ar.edu.itba.paw.models.Entities.Inquiry;
 
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.util.Date;
-import java.util.List;
 
 public class InquiryDto {
 
     private String message;
     private String reply;
     private Date inquiryDate;
-    private URI self;
-    private URI product; // localhost:8080/neighborhood/{id}
-    private URI user; // localhost:8080/amenities/{id}/availability
+    private Links _links;
 
-    public static InquiryDto fromInquiry(Inquiry inquiry, UriInfo uriInfo){
+    public static InquiryDto fromInquiry(Inquiry inquiry, UriInfo uriInfo) {
         final InquiryDto dto = new InquiryDto();
 
         dto.message = inquiry.getMessage();
         dto.reply = inquiry.getMessage();
         dto.inquiryDate = inquiry.getInquiryDate();
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        Links links = new Links();
+        links.setSelf(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(inquiry.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("products")
                 .path(String.valueOf(inquiry.getProduct().getProductId()))
                 .path("inquiries")
                 .path(String.valueOf(inquiry.getInquiryId()))
-                .build();
-        dto.product = uriInfo.getBaseUriBuilder()
+                .build());
+        links.setProduct(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(inquiry.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("products")
                 .path(String.valueOf(inquiry.getProduct().getProductId()))
-                .build();
-        dto.user = uriInfo.getBaseUriBuilder()
+                .build());
+        links.setUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(inquiry.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(inquiry.getUser().getUserId()))
-                .build();
-
+                .build());
+        dto.set_links(links);
         return dto;
-    }
-
-    public URI getSelf() {
-        return self;
-    }
-
-    public void setSelf(URI self) {
-        this.self = self;
     }
 
     public String getMessage() {
@@ -80,19 +68,11 @@ public class InquiryDto {
         this.inquiryDate = inquiryDate;
     }
 
-    public URI getProduct() {
-        return product;
+    public Links get_links() {
+        return _links;
     }
 
-    public void setProduct(URI product) {
-        this.product = product;
-    }
-
-    public URI getUser() {
-        return user;
-    }
-
-    public void setUser(URI user) {
-        this.user = user;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

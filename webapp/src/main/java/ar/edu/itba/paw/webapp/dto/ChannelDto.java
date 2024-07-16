@@ -6,37 +6,31 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 public class ChannelDto {
-    private String channel;
-    private URI self; // localhost:8080/neighborhoods/{id}/channels/{id}
-    private URI posts; // localhost:8080/posts/{id}
 
-    public static ChannelDto fromChannel(Channel channel, UriInfo uriInfo, Long neighborhoodId){
+    private String channel;
+    private Links _links;
+
+    public static ChannelDto fromChannel(Channel channel, UriInfo uriInfo, Long neighborhoodId) {
         final ChannelDto dto = new ChannelDto();
 
         dto.channel = channel.getChannel();
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        Links links = new Links();
+        URI self = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(neighborhoodId))
                 .path("channels")
                 .path(String.valueOf(channel.getChannelId()))
                 .build();
-        dto.posts = uriInfo.getBaseUriBuilder()
+        links.setSelf(self);
+        links.setPosts(uriInfo.getBaseUriBuilder()
                 .path("posts")
-                .queryParam("inChannel", String.valueOf(channel.getChannelId()))
-                .build();
-
+                .queryParam("inChannel", self)
+                .build());
+        dto.set_links(links);
         return dto;
     }
 
-
-    public URI getSelf() {
-        return self;
-    }
-
-    public void setSelf(URI self) {
-        this.self = self;
-    }
 
     public String getChannel() {
         return channel;
@@ -46,11 +40,11 @@ public class ChannelDto {
         this.channel = channel;
     }
 
-    public URI getPosts() {
-        return posts;
+    public Links get_links() {
+        return _links;
     }
 
-    public void setPosts(URI posts) {
-        this.posts = posts;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

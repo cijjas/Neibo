@@ -3,60 +3,55 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Like;
 
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 
 public class LikeDto {
-    private URI self;
-    private URI post; // localhost:8080/posts/{id}
-    private URI user; // localhost:8080/users/{id}
 
-    public static LikeDto fromLike(Like like, UriInfo uriInfo){
+    private Links _links;
+
+    public static LikeDto fromLike(Like like, UriInfo uriInfo) {
         final LikeDto dto = new LikeDto();
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        Links links = new Links();
+        links.setSelf(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("likes")
-                .queryParam("likedBy", like.getId().getUserId())
-                .queryParam("onPost", like.getId().getPostId())
-                .build();
-        dto.post = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("posts")
-                .path(String.valueOf(like.getPost().getPostId()))
-                .build();
-        dto.user = uriInfo.getBaseUriBuilder()
+                .queryParam("likedBy", uriInfo.getBaseUriBuilder()
+                        .path("neighborhoods")
+                        .path(String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId()))
+                        .path("users")
+                        .path(String.valueOf(like.getUser().getUserId()))
+                        .build())
+                .queryParam("onPost", uriInfo.getBaseUriBuilder()
+                        .path("neighborhoods")
+                        .path(String.valueOf(like.getPost().getUser().getNeighborhood().getNeighborhoodId()))
+                        .path("posts")
+                        .path(String.valueOf(like.getPost().getPostId()))
+                        .build())
+                .build());
+        links.setPost(
+                uriInfo.getBaseUriBuilder()
+                        .path("neighborhoods")
+                        .path(String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId()))
+                        .path("posts")
+                        .path(String.valueOf(like.getPost().getPostId()))
+                        .build());
+        links.setUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(like.getUser().getUserId()))
-                .build();
-
+                .build()
+        );
+        dto.set_links(links);
         return dto;
     }
 
-    public URI getSelf() {
-        return self;
+    public Links get_links() {
+        return _links;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
-    }
-
-    public URI getPost() {
-        return post;
-    }
-
-    public void setPost(URI post) {
-        this.post = post;
-    }
-
-    public URI getUser() {
-        return user;
-    }
-
-    public void setUser(URI user) {
-        this.user = user;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

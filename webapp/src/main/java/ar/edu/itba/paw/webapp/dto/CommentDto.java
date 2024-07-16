@@ -3,44 +3,42 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Comment;
 
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.util.Date;
 
 public class CommentDto {
 
     private String comment;
     private Date date;
-    private URI self;
-    private URI user; // localhost:8080/users/{id}
-    private URI post; // localhost:8080/posts/{id}
+    private Links _links;
 
-    public static CommentDto fromComment(Comment comment, UriInfo uriInfo){
+    public static CommentDto fromComment(Comment comment, UriInfo uriInfo) {
         final CommentDto dto = new CommentDto();
 
         dto.comment = comment.getComment();
         dto.date = comment.getDate();
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        Links links = new Links();
+        links.setSelf(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(comment.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("posts")
                 .path(String.valueOf(comment.getPost().getPostId()))
                 .path("comments")
                 .path(String.valueOf(comment.getCommentId()))
-                .build();
-        dto.user = uriInfo.getBaseUriBuilder()
+                .build());
+        links.setUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(comment.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(comment.getUser().getUserId()))
-                .build();
-        dto.post = uriInfo.getBaseUriBuilder()
+                .build());
+        links.setPost(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(comment.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("posts")
                 .path(String.valueOf(comment.getPost().getPostId()))
-                .build();
-
+                .build());
+        dto.set_links(links);
         return dto;
     }
 
@@ -60,27 +58,11 @@ public class CommentDto {
         this.date = date;
     }
 
-    public URI getUser() {
-        return user;
+    public Links get_links() {
+        return _links;
     }
 
-    public void setUser(URI user) {
-        this.user = user;
-    }
-
-    public URI getPost() {
-        return post;
-    }
-
-    public void setPost(URI post) {
-        this.post = post;
-    }
-
-    public URI getSelf() {
-        return self;
-    }
-
-    public void setSelf(URI self) {
-        this.self = self;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

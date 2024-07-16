@@ -1,27 +1,25 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.enums.WorkerStatus;
 
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 
 public class WorkerStatusDto {
 
     private WorkerStatus workerStatus;
+    private Links _links;
 
-    private URI self;
-
-    public static WorkerStatusDto fromWorkerStatus(WorkerStatus workerStatus, UriInfo uriInfo){
+    public static WorkerStatusDto fromWorkerStatus(WorkerStatus workerStatus, UriInfo uriInfo) {
         final WorkerStatusDto dto = new WorkerStatusDto();
 
         dto.workerStatus = workerStatus;
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        Links links = new Links();
+        links.setSelf(uriInfo.getBaseUriBuilder()
                 .path("worker-statuses")
                 .path(String.valueOf(workerStatus.getId()))
-                .build();
-
+                .build());
+        dto.set_links(links);
         return dto;
     }
 
@@ -33,11 +31,11 @@ public class WorkerStatusDto {
         this.workerStatus = workerStatus;
     }
 
-    public URI getSelf() {
-        return self;
+    public Links get_links() {
+        return _links;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

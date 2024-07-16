@@ -1,27 +1,25 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.ProductStatus;
 import ar.edu.itba.paw.enums.ShiftStatus;
 
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 
 public class ShiftStatusDto {
 
     private ShiftStatus shiftStatus;
+    private Links _links;
 
-    private URI self;
-
-    public static ShiftStatusDto fromShiftStatus(ShiftStatus shiftStatus, UriInfo uriInfo){
+    public static ShiftStatusDto fromShiftStatus(ShiftStatus shiftStatus, UriInfo uriInfo) {
         final ShiftStatusDto dto = new ShiftStatusDto();
 
         dto.shiftStatus = shiftStatus;
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        Links links = new Links();
+        links.setSelf(uriInfo.getBaseUriBuilder()
                 .path("shift-statuses")
                 .path(String.valueOf(shiftStatus.getId()))
-                .build();
-
+                .build());
+        dto.set_links(links);
         return dto;
     }
 
@@ -33,11 +31,11 @@ public class ShiftStatusDto {
         this.shiftStatus = shiftStatus;
     }
 
-    public URI getSelf() {
-        return self;
+    public Links get_links() {
+        return _links;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

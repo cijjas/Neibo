@@ -2,18 +2,18 @@ package ar.edu.itba.paw.webapp.dto;
 
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 
 public class LikeCountDto {
 
     private int likeCount;
-
-    private URI self;
+    private Links _links;
 
     public static LikeCountDto fromLikeCount(int likeCount, Long postId, Long userId, long neighborhoodId, UriInfo uriInfo) {
         final LikeCountDto dto = new LikeCountDto();
 
         dto.likeCount = likeCount;
+
+        Links links = new Links();
 
         UriBuilder uriBuilder = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
@@ -22,16 +22,40 @@ public class LikeCountDto {
                 .path("count");
 
         if (postId != null && userId != null) {
-            ((UriBuilder) uriBuilder).queryParam("postId", postId)
-                    .queryParam("userId", userId);
+            uriBuilder
+                    .queryParam("postId", uriInfo.getBaseUriBuilder()
+                            .path("neighborhoods")
+                            .path(String.valueOf(neighborhoodId))
+                            .path("posts")
+                            .path(String.valueOf(postId))
+                            .build())
+                    .queryParam("userId", uriInfo.getBaseUriBuilder()
+                            .path("neighborhoods")
+                            .path(String.valueOf(neighborhoodId))
+                            .path("users")
+                            .path(String.valueOf(userId))
+                            .build());
         } else if (postId != null) {
-            uriBuilder.queryParam("postId", postId);
+            uriBuilder
+                    .queryParam("postId", uriInfo.getBaseUriBuilder()
+                            .path("neighborhoods")
+                            .path(String.valueOf(neighborhoodId))
+                            .path("posts")
+                            .path(String.valueOf(postId))
+                            .build());
         } else if (userId != null) {
-            uriBuilder.queryParam("userId", userId);
+            uriBuilder
+                    .queryParam("userId", "userId", uriInfo.getBaseUriBuilder()
+                            .path("neighborhoods")
+                            .path(String.valueOf(neighborhoodId))
+                            .path("users")
+                            .path(String.valueOf(userId))
+                            .build());
         }
 
-        dto.self = uriBuilder.build();
+        links.setSelf(uriBuilder.build());
 
+        dto.set_links(links);
         return dto;
     }
 
@@ -44,11 +68,11 @@ public class LikeCountDto {
         this.likeCount = likeCount;
     }
 
-    public URI getSelf() {
-        return self;
+    public Links get_links() {
+        return _links;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Tag;
-import ar.edu.itba.paw.models.Entities.Worker;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
@@ -9,47 +8,44 @@ import java.net.URI;
 public class TagDto {
 
     private String tag;
-    private URI self;
-    private URI posts;
+    private Links _links;
 
-    public static TagDto fromTag(final Tag tag, final long neighborhoodId, final UriInfo uriInfo){
+    public static TagDto fromTag(final Tag tag, final long neighborhoodId, final UriInfo uriInfo) {
         final TagDto dto = new TagDto();
 
         dto.tag = tag.getTag();
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        Links links = new Links();
+        URI self = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(neighborhoodId))
                 .path("tags")
                 .path(String.valueOf(tag.getTagId()))
                 .build();
-
-        dto.posts = uriInfo.getBaseUriBuilder()
+        links.setSelf(self);
+        links.setPosts(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(neighborhoodId))
                 .path("posts")
-                .queryParam("withTags", tag.getTag())
-                .build();
-
+                .queryParam("withTag", self)
+                .build());
+        dto.set_links(links);
         return dto;
     }
 
-    public String getTag() { return tag; }
-    public void setTag(String tag) { this.tag = tag; }
-
-    public URI getSelf() {
-        return self;
+    public String getTag() {
+        return tag;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
-    public URI getPosts() {
-        return posts;
+    public Links get_links() {
+        return _links;
     }
 
-    public void setPosts(URI posts) {
-        this.posts = posts;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

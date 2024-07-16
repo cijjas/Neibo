@@ -1,19 +1,16 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.models.Entities.Day;
 import ar.edu.itba.paw.models.Entities.Shift;
-import ar.edu.itba.paw.models.Entities.Time;
 
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 
 public class ShiftDto {
-    private URI self;
+
     private String day;
     private String startTime;
     private Links _links;
 
-    public static ShiftDto fromShift(Shift shift, UriInfo uriInfo){
+    public static ShiftDto fromShift(Shift shift, UriInfo uriInfo) {
         final ShiftDto dto = new ShiftDto();
 
         dto.startTime = shift.getStartTime().getTimeInterval().toString();
@@ -25,18 +22,8 @@ public class ShiftDto {
                 .path("shifts")
                 .path(String.valueOf(shift.getShiftId()))
                 .build());
-
         dto.set_links(links);
-
         return dto;
-    }
-
-    public URI getSelf() {
-        return self;
-    }
-
-    public void setSelf(URI self) {
-        this.self = self;
     }
 
     public String getDay() {

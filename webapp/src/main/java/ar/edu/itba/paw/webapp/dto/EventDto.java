@@ -1,53 +1,47 @@
 package ar.edu.itba.paw.webapp.dto;
 
 import ar.edu.itba.paw.models.Entities.Event;
+
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.util.Date;
 
 public class EventDto {
+
     private String name;
     private String description;
     private Date date;
-    private URI self;
-    private URI neighborhood; // localhost:8080/neighborhood/{id}
-    private URI startTime; // localhost:8080/neighborhood/{id}
-    private URI endTime; // localhost:8080/neighborhood/{id}
-    private URI attendees; // localhost:8080/amenities/{id}/availability
+    private String startTime; // localhost:8080/neighborhood/{id}
+    private String endTime; // localhost:8080/neighborhood/{id}
+    private Links _links;
 
-    public static EventDto fromEvent(Event event, UriInfo uriInfo){
+    public static EventDto fromEvent(Event event, UriInfo uriInfo) {
         final EventDto dto = new EventDto();
 
         dto.name = event.getName();
         dto.description = event.getDescription();
         dto.date = event.getDate();
+        dto.startTime = event.getStartTime().toString();
+        dto.endTime = event.getEndTime().toString();
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        Links links = new Links();
+        links.setSelf(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(event.getNeighborhood().getNeighborhoodId()))
                 .path("events")
                 .path(String.valueOf(event.getEventId()))
-                .build();
-        dto.neighborhood = uriInfo.getBaseUriBuilder()
+                .build());
+        links.setNeighborhood(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(event.getNeighborhood().getNeighborhoodId()))
-                .build();
-        dto.startTime = uriInfo.getBaseUriBuilder()
-                .path("times")
-                .path(String.valueOf(event.getStartTime().getTimeId()))
-                .build();
-        dto.endTime = uriInfo.getBaseUriBuilder()
-                .path("times")
-                .path(String.valueOf(event.getEndTime().getTimeId()))
-                .build();
-        dto.attendees = uriInfo.getBaseUriBuilder()
+                .build());
+        links.setAttendees(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(event.getNeighborhood().getNeighborhoodId()))
                 .path("events")
                 .path(String.valueOf(event.getEventId()))
                 .path("attendees")
-                .build();
-
+                .build());
+        dto.set_links(links);
         return dto;
     }
 
@@ -67,22 +61,6 @@ public class EventDto {
         this.description = description;
     }
 
-    public URI getSelf() {
-        return self;
-    }
-
-    public void setSelf(URI self) {
-        this.self = self;
-    }
-
-    public URI getNeighborhood() {
-        return neighborhood;
-    }
-
-    public void setNeighborhood(URI neighborhood) {
-        this.neighborhood = neighborhood;
-    }
-
     public Date getDate() {
         return date;
     }
@@ -91,27 +69,27 @@ public class EventDto {
         this.date = date;
     }
 
-    public URI getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(URI startTime) {
-        this.startTime = startTime;
-    }
-
-    public URI getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(URI endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
-    public URI getAttendees() {
-        return attendees;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setAttendees(URI attendees) {
-        this.attendees = attendees;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public Links get_links() {
+        return _links;
+    }
+
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

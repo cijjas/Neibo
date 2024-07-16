@@ -11,141 +11,97 @@ public class PostDto {
     private String title;
     private String description;
     private Date date;
-    private URI self;
-    private URI user;
-    private URI channel;
-    private URI postPicture;
-    private URI comments;
-    private URI tags;
-    private URI likes;
-    private URI subscribers;
+    private Links _links;
 
-    public static PostDto fromPost(Post post, UriInfo uriInfo){
+    public static PostDto fromPost(Post post, UriInfo uriInfo) {
         final PostDto dto = new PostDto();
 
         dto.title = post.getTitle();
         dto.description = post.getDescription();
         dto.date = post.getDate();
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        Links links = new Links();
+        URI self = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("posts")
                 .path(String.valueOf(post.getPostId()))
                 .build();
-        dto.user = uriInfo.getBaseUriBuilder()
+        links.setSelf(self);
+        links.setUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(post.getUser().getUserId()))
-                .build();
-        dto.channel = uriInfo.getBaseUriBuilder()
+                .build());
+        links.setChannel(uriInfo.getBaseUriBuilder()
                 .path("base-channels")
                 .path(String.valueOf(post.getChannel().getChannelId()))
-                .build();
-        if ( post.getPostPicture() != null ){
-            dto.postPicture = uriInfo.getBaseUriBuilder()
+                .build());
+        if (post.getPostPicture() != null) {
+            links.setPostPicture(uriInfo.getBaseUriBuilder()
                     .path("images")
                     .path(String.valueOf(post.getPostPicture().getImageId()))
-                    .build();
+                    .build());
         }
-        dto.comments = uriInfo.getBaseUriBuilder()
+        links.setComments(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("posts")
                 .path(String.valueOf(post.getPostId()))
                 .path("comments")
-                .build();
-        dto.tags = uriInfo.getBaseUriBuilder()
+                .build());
+        links.setTags(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("tags")
-                .queryParam("post", String.valueOf(post.getPostId()))
-                .build();
-        dto.likes = uriInfo.getBaseUriBuilder()
+                .queryParam("post", self)
+                .build());
+        links.setLikes(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("likes")
-                .queryParam("onPost", String.valueOf(post.getPostId()))
-                .build();
-        dto.subscribers = uriInfo.getBaseUriBuilder()
+                .queryParam("onPost", self)
+                .build());
+/*        links.setSubscribers(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .queryParam("subscribedTo", String.valueOf(post.getPostId()))
-                .build();
-
+                .build());*/
+        dto.set_links(links);
         return dto;
     }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
-    public Date getDate() { return date; }
-    public void setDate(Date date) { this.date = date; }
-
-    public URI getSelf() {
-        return self;
+    public String getTitle() {
+        return title;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public URI getUser() {
-        return user;
+    public String getDescription() {
+        return description;
     }
 
-    public void setUser(URI user) {
-        this.user = user;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public URI getChannel() {
-        return channel;
+    public Date getDate() {
+        return date;
     }
 
-    public void setChannel(URI channel) {
-        this.channel = channel;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public URI getPostPicture() {
-        return postPicture;
+    public Links get_links() {
+        return _links;
     }
 
-    public void setPostPicture(URI postPicture) {
-        this.postPicture = postPicture;
-    }
-
-    public URI getComments() {
-        return comments;
-    }
-
-    public void setComments(URI comments) {
-        this.comments = comments;
-    }
-
-    public URI getTags() {
-        return tags;
-    }
-
-    public void setTags(URI tags) {
-        this.tags = tags;
-    }
-
-    public URI getLikes() {
-        return likes;
-    }
-
-    public void setLikes(URI likes) {
-        this.likes = likes;
-    }
-
-    public URI getSubscribers() {
-        return subscribers;
-    }
-
-    public void setSubscribers(URI subscribers) {
-        this.subscribers = subscribers;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 }

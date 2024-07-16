@@ -3,49 +3,45 @@ package ar.edu.itba.paw.webapp.dto;
 import ar.edu.itba.paw.models.Entities.Booking;
 
 import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.util.Date;
 
 public class BookingDto {
 
     private Date bookingDate;
-    private URI self;
-    private URI user; // localhost:8080/users/{id}
-    private URI shiftURN;
+    private Links _links;
 
-    public static BookingDto fromBooking(Booking booking, UriInfo uriInfo){
+    public static BookingDto fromBooking(Booking booking, UriInfo uriInfo) {
         final BookingDto dto = new BookingDto();
 
         dto.bookingDate = booking.getBookingDate();
 
-        dto.self = uriInfo.getBaseUriBuilder()
+        Links links = new Links();
+        links.setSelf(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(booking.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("bookings")
                 .path(String.valueOf(booking.getBookingId()))
-                .build();
-
-        dto.user = uriInfo.getBaseUriBuilder()
+                .build());
+        links.setUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(booking.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("users")
                 .path(String.valueOf(booking.getUser().getUserId()))
-                .build();
-
-        dto.shiftURN =  uriInfo.getBaseUriBuilder()
+                .build());
+        links.setShift(uriInfo.getBaseUriBuilder()
                 .path("shifts")
                 .path(String.valueOf(booking.getAmenityAvailability().getShift().getShiftId()))
-                .build();
-
+                .build());
+        dto.set_links(links);
         return dto;
     }
 
-    public URI getSelf() {
-        return self;
+    public Links get_links() {
+        return _links;
     }
 
-    public void setSelf(URI self) {
-        this.self = self;
+    public void set_links(Links _links) {
+        this._links = _links;
     }
 
     public Date getBookingDate() {
@@ -54,21 +50,5 @@ public class BookingDto {
 
     public void setBookingDate(Date bookingDate) {
         this.bookingDate = bookingDate;
-    }
-
-    public URI getUser() {
-        return user;
-    }
-
-    public void setUser(URI user) {
-        this.user = user;
-    }
-
-    public URI getShiftURN() {
-        return shiftURN;
-    }
-
-    public void setShiftURN(URI shiftURN) {
-        this.shiftURN = shiftURN;
     }
 }
