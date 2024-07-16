@@ -43,7 +43,7 @@ public class PostServiceImpl implements PostService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Post createPost(String title, String description, long userId, String channelURN, String tags, String imageURN) {
+    public Post createPost(String title, String description, long userId, String channelURN, String[] tagURIs, String imageURN) {
         LOGGER.info("Creating Post with Title {} by User {}", title, userId);
 
         long baseChannelId = ValidationUtils.extractURNId(channelURN);
@@ -57,7 +57,7 @@ public class PostServiceImpl implements PostService {
             i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
         }
         Post p = postDao.createPost(title, description, userId, baseChannelId, i == null ? 0 : i.getImageId());
-        tagService.createTagsAndCategorizePost(p.getPostId(), tags);
+        tagService.createTagsAndCategorizePost(p.getPostId(), tagURIs);
         return p;
     }
 
