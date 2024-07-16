@@ -43,7 +43,7 @@ public class RequestServiceImpl implements RequestService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Request createRequest(long userId, String productURN, String message) {
+    public Request createRequest(long userId, String productURN, String message, int quantity) {
         LOGGER.info("Creating a Request for Product {} by User {}", productURN, userId);
 
         TwoIds twoIds = ValidationUtils.extractTwoURNIds(productURN);
@@ -52,11 +52,12 @@ public class RequestServiceImpl implements RequestService {
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkProductId(productId);
+        ValidationUtils.checkQuantity(quantity);
 
         Product product = productDao.findProduct(productId, neighborhoodId).orElseThrow(() -> new NotFoundException("Product not found"));
-        User sender = userDao.findUser(userId).orElseThrow(() -> new NotFoundException("User not found"));
-        emailService.sendNewRequestMail(product, sender, message);
-        return requestDao.createRequest(userId, productId, message);
+        User seller = userDao.findUser(product.getSeller().getUserId()).orElseThrow(() -> new NotFoundException("User not found"));
+        emailService.sendNewRequestMail(product, seller, message);
+        return requestDao.createRequest(userId, productId, message, quantity);
     }
 
     @Override
@@ -136,6 +137,7 @@ public class RequestServiceImpl implements RequestService {
 
         Request request = requestDao.findRequest(requestId).orElseThrow(()-> new NotFoundException("Request Not Found"));
         request.setFulfilled(true);
+        request.setPurchaseDate(new java.sql.Date(System.currentTimeMillis()));
 
         return request;
     }

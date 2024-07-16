@@ -24,7 +24,7 @@ public class RequestDaoImpl implements RequestDao {
     // --------------------------------------------- REQUESTS INSERT ---------------------------------------------------
 
     @Override
-    public Request createRequest(long userId, long productId, String message) {
+    public Request createRequest(long userId, long productId, String message, int quantity) {
         LOGGER.debug("Inserting Request for product with id {}", productId);
 
         Request request = new Request.Builder()
@@ -33,6 +33,7 @@ public class RequestDaoImpl implements RequestDao {
                 .message(message)
                 .requestDate(new java.sql.Date(System.currentTimeMillis()))
                 .fulfilled(false)
+                .units(quantity)
                 .build();
         em.persist(request);
         return request;

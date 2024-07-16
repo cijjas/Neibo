@@ -9,7 +9,7 @@ public interface RequestDao {
 
     // --------------------------------------------- REQUESTS INSERT ---------------------------------------------------
 
-    Request createRequest(final long userId, final long productId, final String message);
+    Request createRequest(final long userId, final long productId, final String message, final int quantity);
 
     // --------------------------------------------- REQUESTS DELETE ---------------------------------------------------
     boolean deleteRequest(long requestId);
