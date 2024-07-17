@@ -45,13 +45,6 @@ public class Event {
     )
     private Set<User> attendees;
 
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
-    public Long getVersion() {
-        return version;
-    }
 
     // Constructor
     Event() {
@@ -103,9 +96,6 @@ public class Event {
         this.attendees = attendees;
     }
 
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 
     public Neighborhood getNeighborhood() {
         return neighborhood;

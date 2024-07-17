@@ -11,7 +11,7 @@ public interface AffiliationDao {
 
     // --------------------------------------- NEIGHBORHOODS WORKERS SELECT ----------------------------------------
 
-    Affiliation createAffiliation(long workerId, long neighborhoodId, String workerRole);
+    Affiliation createAffiliation(long workerId, long neighborhoodId, Long workerRoleId);
 
     // --------------------------------------- NEIGHBORHOODS WORKERS SELECT ------------------------------------------
 

@@ -27,10 +27,6 @@ public class Contact {
     @JoinColumn(name = "neighborhoodid", referencedColumnName = "neighborhoodid")
     private Neighborhood neighborhood;
 
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
     Contact() {
     }
 
@@ -40,12 +36,8 @@ public class Contact {
         this.contactAddress = builder.contactAddress;
         this.contactPhone = builder.contactPhone;
         this.neighborhood = builder.neighborhood;
-        this.version = builder.version;
     }
 
-    public Long getVersion() {
-        return version;
-    }
 
     public void setContactId(Long contactId) {
         this.contactId = contactId;
@@ -55,9 +47,6 @@ public class Contact {
         this.neighborhood = neighborhood;
     }
 
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 
     public Long getContactId() {
         return contactId;

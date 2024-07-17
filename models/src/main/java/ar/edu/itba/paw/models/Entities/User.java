@@ -101,14 +101,6 @@ public class User {
     @JoinTable(name = "events_users", joinColumns = @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name = "eventid"))
     private Set<Event> eventsSubscribed;
 
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
-    public Long getVersion() {
-        return version;
-    }
-
     User() {
     }
 
@@ -125,10 +117,6 @@ public class User {
         this.creationDate = builder.creationDate;
         this.profilePicture = builder.profilePicture;
         this.identification = builder.identification;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 
     public Long getUserId() {

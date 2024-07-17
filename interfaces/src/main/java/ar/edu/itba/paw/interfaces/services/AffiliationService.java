@@ -20,7 +20,7 @@ public interface AffiliationService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Affiliation createAffiliation(String workerURN, String neighborhoodURNs, String workerStatus);
+    Affiliation createAffiliation(String workerURN, String neighborhoodURNs, String workerRoleURN);
 
     // -----------------------------------------------------------------------------------------------------------------
 

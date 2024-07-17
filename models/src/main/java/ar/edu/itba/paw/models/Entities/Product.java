@@ -73,14 +73,6 @@ public class Product {
     @Transient
     private String priceDecimalString;
 
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
-    public Long getVersion() {
-        return version;
-    }
-
     Product() {
     }
 
@@ -99,9 +91,6 @@ public class Product {
         this.creationDate = builder.creationDate;
     }
 
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 
     public Long getProductId() {
         return productId;

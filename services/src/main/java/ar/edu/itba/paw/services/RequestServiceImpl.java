@@ -117,7 +117,7 @@ public class RequestServiceImpl implements RequestService {
         if (typeURN != null){
             transactionTypeId = ValidationUtils.extractURNId(typeURN);
             ValidationUtils.checkTransactionTypeId(transactionTypeId);
-        }
+        } else throw new IllegalArgumentException("Transaction-Type is required");
 
         ValidationUtils.checkFulfilled(fulfilled);
         ValidationUtils.checkPageAndSize(page, size);

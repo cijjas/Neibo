@@ -46,10 +46,6 @@ public class Worker {
     @JoinTable(name = "workers_neighborhoods", joinColumns = @JoinColumn(name = "workerid"), inverseJoinColumns = @JoinColumn(name = "neighborhoodid"))
     private Set<Neighborhood> workNeighborhoods;
 
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
     Worker() {
     }
 
@@ -63,13 +59,6 @@ public class Worker {
         this.backgroundPictureId = builder.backgroundPictureId;
     }
 
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 
     public String getPhoneNumber() {
         return phoneNumber;

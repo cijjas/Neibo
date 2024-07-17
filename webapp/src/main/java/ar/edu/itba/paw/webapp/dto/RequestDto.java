@@ -9,7 +9,9 @@ public class RequestDto {
 
     private String message;
     private Date requestDate;
+    private Date purchaseDate;
     private Boolean fulfilled;
+    private Integer units;
     private Links _links;
 
     public static RequestDto fromRequest(Request request, UriInfo uriInfo) {
@@ -18,6 +20,8 @@ public class RequestDto {
         dto.message = request.getMessage();
         dto.requestDate = request.getRequestDate();
         dto.fulfilled = request.getFulfilled();
+        dto.units = request.getUnits();
+        dto.purchaseDate = request.getPurchaseDate();
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
@@ -76,5 +80,21 @@ public class RequestDto {
 
     public void set_links(Links _links) {
         this._links = _links;
+    }
+
+    public Date getPurchaseDate() {
+        return purchaseDate;
+    }
+
+    public void setPurchaseDate(Date purchaseDate) {
+        this.purchaseDate = purchaseDate;
+    }
+
+    public Integer getUnits() {
+        return units;
+    }
+
+    public void setUnits(Integer units) {
+        this.units = units;
     }
 }
