@@ -6,10 +6,11 @@ import org.springframework.context.MessageSource;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.List;
 import java.util.Locale;
 
 public class TagsValidator implements
-        ConstraintValidator<TagsConstraint, String> {
+        ConstraintValidator<TagsConstraint, List<String>> {
 
     private static final String TAG_PATTERN = "^[A-Za-z0-9_]+$";
     private static final int MAX_TAG_LENGTH = 20;
@@ -22,13 +23,12 @@ public class TagsValidator implements
     }
 
     @Override
-    public boolean isValid(String tags, ConstraintValidatorContext context) {
+    public boolean isValid(List<String> tags, ConstraintValidatorContext context) {
         if (tags == null || tags.isEmpty()) {
             return true; // Null values are considered valid
         }
 
-        String[] tagArray = tags.split(",");
-        for (String tag : tagArray) {
+        for (String tag : tags) {
             if (!tag.matches(TAG_PATTERN)) {
                 String tagError1 = messageSource.getMessage("TagError1", null, Locale.getDefault());
                 String tagError2 = messageSource.getMessage("TagError2", null, Locale.getDefault());
