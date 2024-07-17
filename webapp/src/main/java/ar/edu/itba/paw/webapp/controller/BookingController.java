@@ -133,17 +133,14 @@ public class BookingController extends GlobalControllerAdvice{
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final long[] bookingIds = bs.createBooking(getRequestingUserId(), form.getAmenityURN(), form.getShiftURNs(), form.getReservationDate());
-        entityLevelETag = ETagUtility.generateETag();
+        final Booking booking = bs.createBooking(getRequestingUserId(), form.getAmenityURN(), form.getShiftURN(), form.getReservationDate());
+        String bookingHashCode = String.valueOf(booking.hashCode());
 
         // Resource URN
-        URI uri = uriInfo.getAbsolutePathBuilder().path(Arrays.toString(bookingIds)).build();
+        URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(booking.getBookingId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, Arrays.stream(bookingIds)
-                        .mapToObj(Long::toString)
-                        .collect(Collectors.joining(",")))
+                .tag(bookingHashCode)
                 .build();
     }
 

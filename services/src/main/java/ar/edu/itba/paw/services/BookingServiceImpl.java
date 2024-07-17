@@ -41,20 +41,8 @@ public class BookingServiceImpl implements BookingService {
         this.shiftDao = shiftDao;
     }
 
-    public long[] createBooking(long userId, String amenityURN, List<String> shiftURNs, String reservationDate) {
+    public Booking createBooking(long userId, String amenityURN, String shiftURN, String reservationDate) {
         LOGGER.info("Creating a Booking for Amenity {} on Date {} for User {}", amenityURN, reservationDate, userId);
-
-        // amenityURN = http://localhost:8080/neighborhoods/{neighborhoodId}/amenities/{amenityId}
-        // extract neighborhoodId and amenityId from amenityURN
-        // ValidationUtils.checkValidNeighborhoodId(neighborhoodId)
-        // ValidationUtils.checkValidAmenityId(amenityId)
-        // amenityDao.findAmenity(neighborhoodId, amenityId)
-        // Extracting neighborhoodId and amenityId from amenityURN
-
-        // shiftsURN = { http://localhost:8080/shifts/{shiftId}, http://localhost:8080/shifts/{shiftId}, http://localhost:8080/shifts/{shiftId}}
-        // extract shiftsIds
-        // ValidationUtils.checkValidShiftId(shiftId)
-        // cycle that makes ShiftDao.findShift(shiftId)
 
         TwoIds twoIds = ValidationUtils.extractTwoURNIds(amenityURN);
         long neighborhoodId = twoIds.getFirstId();
@@ -64,8 +52,6 @@ public class BookingServiceImpl implements BookingService {
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkAmenityId(amenityId);
         amenityDao.findAmenity(amenityId, neighborhoodId).orElseThrow(NotFoundException::new);
-
-        List<Long> bookingIds = new ArrayList<>();
 
         // Check Date Format
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -78,30 +64,16 @@ public class BookingServiceImpl implements BookingService {
         }
         java.sql.Date parsedSqlDate = new java.sql.Date(parsedDate.getTime());
 
+        // Extracting shiftId from shiftURN
+        long shiftId = ValidationUtils.extractURNId(shiftURN);
+        ValidationUtils.checkShiftId(shiftId);
+        shiftDao.findShift(shiftId).orElseThrow(() -> new NotFoundException("Shift not found."));
 
-        for (String shiftURN : shiftURNs) {
-            // Extracting shiftId from shiftURN
-            String[] shiftParts = shiftURN.split("/");
-            if (shiftParts.length < 5 || !"shifts".equals(shiftParts[3])) {
-                throw new IllegalArgumentException("Invalid shift URN format.");
-            }
-            long shiftId = Long.parseLong(shiftParts[4]);
+        // Finding availabilityId using amenityId and shiftId
+        long availabilityId = availabilityDao.findId(amenityId, shiftId).orElseThrow(() -> new NotFoundException("Availability not found."));
 
-            // Validating shiftId and Shift existence
-            ValidationUtils.checkShiftId(shiftId);
-            shiftDao.findShift(shiftId).orElseThrow(NotFoundException::new);
-
-            // Finding availabilityId using amenityId and shiftId
-            long availabilityId = availabilityDao.findId(amenityId, shiftId).orElseThrow(() -> new NotFoundException("Availability not found."));
-
-            // Creating booking
-            Long bookingId = bookingDao.createBooking(userId, availabilityId, parsedSqlDate).getBookingId();
-            bookingIds.add(bookingId);
-        }
-
-        return bookingIds.stream()
-                .mapToLong(Long::longValue)
-                .toArray();
+        // Creating booking
+        return bookingDao.createBooking(userId, availabilityId, parsedSqlDate);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

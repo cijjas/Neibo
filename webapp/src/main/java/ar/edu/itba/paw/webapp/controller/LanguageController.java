@@ -80,6 +80,7 @@ public class LanguageController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(languageHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
