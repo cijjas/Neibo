@@ -83,25 +83,9 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getProducts(long neighborhoodId, String departmentURN, String userURN, String productStatusURN, int page, int size) {
         LOGGER.info("Getting Products with status {} from Department {} by User {} from Neighborhood {}", productStatusURN, departmentURN, userURN, neighborhoodId);
 
-        Long userId = null;
-        if (userURN != null){
-            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
-            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
-            ValidationUtils.checkUserRoleId(userTwoIds.getSecondId());
-            userId = userTwoIds.getFirstId();
-        }
-
-        Long departmentId = null;
-        if (departmentURN != null){
-            departmentId = ValidationUtils.extractURNId(departmentURN);
-            ValidationUtils.checkDepartmentId(departmentId);
-        }
-
-        Long productStatusId = null;
-        if (productStatusURN != null){
-            productStatusId = ValidationUtils.extractURNId(productStatusURN);
-            ValidationUtils.checkProductStatusId(productStatusId);
-        }
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
+        Long departmentId = ValidationUtils.checkURNAndExtractUserDepartmentId(departmentURN);
+        Long productStatusId = ValidationUtils.checkURNAndExtractUserProductStatusId(productStatusURN);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
@@ -117,25 +101,9 @@ public class ProductServiceImpl implements ProductService {
     public int countProducts(long neighborhoodId, String departmentURN, String userURN, String productStatusURN) {
         LOGGER.info("Counting Products with status {} from Department {} by User {} from Neighborhood {}", productStatusURN, departmentURN, userURN, neighborhoodId);
 
-        Long userId = null;
-        if (userURN != null){
-            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
-            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
-            ValidationUtils.checkUserRoleId(userTwoIds.getSecondId());
-            userId = userTwoIds.getFirstId();
-        }
-
-        Long departmentId = null;
-        if (departmentURN != null){
-            departmentId = ValidationUtils.extractURNId(departmentURN);
-            ValidationUtils.checkDepartmentId(departmentId);
-        }
-
-        Long productStatusId = null;
-        if (productStatusURN != null){
-            productStatusId = ValidationUtils.extractURNId(productStatusURN);
-            ValidationUtils.checkProductStatusId(productStatusId);
-        }
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
+        Long departmentId = ValidationUtils.checkURNAndExtractUserDepartmentId(departmentURN);
+        Long productStatusId = ValidationUtils.checkURNAndExtractUserProductStatusId(productStatusURN);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
@@ -146,25 +114,10 @@ public class ProductServiceImpl implements ProductService {
     public int calculateProductPages(long neighborhoodId, int size, String departmentURN, String userURN, String productStatusURN){
         LOGGER.info("Calculating Product Pages with status {} from Department {} by User {} from Neighborhood {}", productStatusURN, departmentURN, userURN, neighborhoodId);
 
-        Long userId = null;
-        if (userURN != null){
-            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
-            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
-            ValidationUtils.checkUserRoleId(userTwoIds.getSecondId());
-            userId = userTwoIds.getFirstId();
-        }
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
+        Long departmentId = ValidationUtils.checkURNAndExtractUserDepartmentId(departmentURN);
+        Long productStatusId = ValidationUtils.checkURNAndExtractUserProductStatusId(productStatusURN);
 
-        Long departmentId = null;
-        if (departmentURN != null){
-            departmentId = ValidationUtils.extractURNId(departmentURN);
-            ValidationUtils.checkDepartmentId(departmentId);
-        }
-
-        Long productStatusId = null;
-        if (productStatusURN != null){
-            productStatusId = ValidationUtils.extractURNId(productStatusURN);
-            ValidationUtils.checkProductStatusId(productStatusId);
-        }
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkSize(size);
 

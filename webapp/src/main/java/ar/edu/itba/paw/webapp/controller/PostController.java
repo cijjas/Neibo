@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
 /*
  * # Summary
@@ -130,7 +129,7 @@ public class PostController extends GlobalControllerAdvice{
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
         // Validation, Creation & ETag Generation
-        final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getRequestingUserId(), publishForm.getChannelURN(), publishForm.getTags(), publishForm.getPostImageURN());
+        final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getRequestingUserId(), publishForm.getChannelURN(), publishForm.getTagURNs(), publishForm.getPostImageURN());
         String postHashCode = String.valueOf(post.hashCode());
 
         // Resource URN

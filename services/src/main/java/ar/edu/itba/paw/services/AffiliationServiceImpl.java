@@ -48,17 +48,8 @@ public class AffiliationServiceImpl implements AffiliationService {
     public List<Affiliation> getAffiliations(String workerURN, String neighborhoodURN, int page, int size) {
         LOGGER.info("Getting Affiliations between Worker {} and Neighborhood {}", workerURN, neighborhoodURN);
 
-        Long workerId = null;
-        if (workerURN != null){
-            workerId = ValidationUtils.extractURNId(workerURN);
-            ValidationUtils.checkWorkerId(workerId);
-        }
-
-        Long neighborhoodId = null;
-        if (neighborhoodURN != null){
-            neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
-            ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        }
+        Long workerId = ValidationUtils.checkURNAndExtractWorkerId(workerURN);
+        Long neighborhoodId = ValidationUtils.checkURNAndExtractNeighborhoodId(neighborhoodURN);
 
         ValidationUtils.checkPageAndSize(page, size);
 
@@ -69,17 +60,8 @@ public class AffiliationServiceImpl implements AffiliationService {
     public int countAffiliations(String workerURN, String neighborhoodURN){
         LOGGER.info("Counting Affiliations between Worker {} and Neighborhood {}", workerURN, neighborhoodURN);
 
-        Long workerId = null;
-        if (workerURN != null){
-            workerId = ValidationUtils.extractURNId(workerURN);
-            ValidationUtils.checkWorkerId(workerId);
-        }
-
-        Long neighborhoodId = null;
-        if (neighborhoodURN != null){
-            neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
-            ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        }
+        Long workerId = ValidationUtils.checkURNAndExtractWorkerId(workerURN);
+        Long neighborhoodId = ValidationUtils.checkURNAndExtractNeighborhoodId(neighborhoodURN);
 
         return affiliationDao.countAffiliations(workerId, neighborhoodId);
     }
@@ -88,18 +70,8 @@ public class AffiliationServiceImpl implements AffiliationService {
     public int calculateAffiliationPages(String workerURN, String neighborhoodURN, int size) {
         LOGGER.info("Calculating Affiliation Pages between Worker {} and Neighborhood {}", workerURN, neighborhoodURN);
 
-        Long workerId = null;
-        if (workerURN != null){
-            workerId = ValidationUtils.extractURNId(workerURN);
-            ValidationUtils.checkWorkerId(workerId);
-        }
-
-        Long neighborhoodId = null;
-        if (neighborhoodURN != null){
-            neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
-            ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        }
-
+        Long workerId = ValidationUtils.checkURNAndExtractWorkerId(workerURN);
+        Long neighborhoodId = ValidationUtils.checkURNAndExtractNeighborhoodId(neighborhoodURN);
         ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(affiliationDao.countAffiliations(workerId, neighborhoodId), size);

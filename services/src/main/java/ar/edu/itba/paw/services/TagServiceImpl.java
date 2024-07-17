@@ -131,13 +131,7 @@ public class TagServiceImpl implements TagService {
     public List<Tag> getTags(String postURN, long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Tags in Post {} from Neighborhood {}", postURN, neighborhoodId);
 
-        Long postId = null;
-        if (postURN != null){
-            TwoIds twoIds = ValidationUtils.extractTwoURNIds(postURN);
-            ValidationUtils.checkNeighborhoodId(twoIds.getFirstId());
-            ValidationUtils.checkPostId(twoIds.getSecondId());
-            postId = twoIds.getSecondId();
-        }
+        Long postId = ValidationUtils.checkURNAndExtractPostId(postURN);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
@@ -151,13 +145,7 @@ public class TagServiceImpl implements TagService {
     public int countTags(String postURN, long neighborhoodId) {
         LOGGER.info("Counting Tags in Post {} from Neighborhood {}", postURN, neighborhoodId);
 
-        Long postId = null;
-        if (postURN != null){
-            TwoIds twoIds = ValidationUtils.extractTwoURNIds(postURN);
-            ValidationUtils.checkNeighborhoodId(twoIds.getFirstId());
-            ValidationUtils.checkPostId(twoIds.getSecondId());
-            postId = twoIds.getSecondId();
-        }
+        Long postId = ValidationUtils.checkURNAndExtractPostId(postURN);
 
         ValidationUtils.checkPostId(postId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -169,13 +157,7 @@ public class TagServiceImpl implements TagService {
     public int calculateTagPages(String postURN, long neighborhoodId, int size) {
         LOGGER.info("Calculating Tag Pages in Post {} from Neighborhood {}", postURN, neighborhoodId);
 
-        Long postId = null;
-        if (postURN != null){
-            TwoIds twoIds = ValidationUtils.extractTwoURNIds(postURN);
-            ValidationUtils.checkNeighborhoodId(twoIds.getFirstId());
-            ValidationUtils.checkPostId(twoIds.getSecondId());
-            postId = twoIds.getSecondId();
-        }
+        Long postId = ValidationUtils.checkURNAndExtractPostId(postURN);
 
         ValidationUtils.checkPostId(postId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);

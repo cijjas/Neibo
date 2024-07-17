@@ -102,35 +102,16 @@ public class WorkerServiceImpl implements WorkerService {
     public List<Worker> getWorkers(int page, int size, List<String> professionURNs, List<String> neighborhoodURNs, String workerRoleURN, String workerStatusURN) {
         LOGGER.info("Getting Workers with Status {} Role {} Professions {} from Neighborhoods {}", workerStatusURN, workerRoleURN, professionURNs, neighborhoodURNs);
 
+        Long workerRoleId = ValidationUtils.checkURNAndExtractWorkerRoleId(workerRoleURN);
+        Long workerStatusId = ValidationUtils.checkURNAndExtractWorkerStatusId(workerStatusURN);
         List<Long> professionIds = new ArrayList<>();
-        if (professionURNs != null){
-            for (String professionURN : professionURNs){
-                long professionId = ValidationUtils.extractURNId(professionURN);
-                ValidationUtils.checkProfessionId(professionId);
-                professionIds.add(professionId);
-            }
-        }
-
+        if (professionURNs != null)
+            for (String professionURN : professionURNs)
+                professionIds.add(ValidationUtils.checkURNAndExtractProfessionId(professionURN));
         List<Long> neighborhoodIds = new ArrayList<>();
-        if (neighborhoodURNs != null){
-            for (String neighborhoodURN : neighborhoodURNs){
-                long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
-                ValidationUtils.checkNeighborhoodId(neighborhoodId);
-                neighborhoodIds.add(neighborhoodId);
-            }
-        }
-
-        Long workerRoleId = null;
-        if (workerRoleURN != null){
-            workerRoleId = ValidationUtils.extractURNId(workerRoleURN);
-            ValidationUtils.checkWorkerRoleId(workerRoleId);
-        }
-
-        Long workerStatusId = null;
-        if (workerStatusURN != null){
-            workerStatusId = ValidationUtils.extractURNId(workerStatusURN);
-            ValidationUtils.checkWorkerStatusId(workerStatusId);
-        }
+        if (neighborhoodURNs != null)
+            for (String neighborhoodURN : neighborhoodURNs)
+                neighborhoodIds.add(ValidationUtils.checkURNAndExtractNeighborhoodId(neighborhoodURN));
 
         ValidationUtils.checkPageAndSize(page, size);
 
@@ -141,72 +122,34 @@ public class WorkerServiceImpl implements WorkerService {
     public int countWorkers(List<String> professionURNs, List<String> neighborhoodURNs, String workerRoleURN, String workerStatusURN) {
         LOGGER.info("Counting Workers with Status {} Role {} Professions {} from Neighborhoods {}", workerStatusURN, workerRoleURN, professionURNs, neighborhoodURNs);
 
+        Long workerRoleId = ValidationUtils.checkURNAndExtractWorkerRoleId(workerRoleURN);
+        Long workerStatusId = ValidationUtils.checkURNAndExtractWorkerStatusId(workerStatusURN);
         List<Long> professionIds = new ArrayList<>();
-        if (professionURNs != null){
-            for (String professionURN : professionURNs){
-                long professionId = ValidationUtils.extractURNId(professionURN);
-                ValidationUtils.checkProfessionId(professionId);
-                professionIds.add(professionId);
-            }
-        }
-
+        if (professionURNs != null)
+            for (String professionURN : professionURNs)
+                professionIds.add(ValidationUtils.checkURNAndExtractProfessionId(professionURN));
         List<Long> neighborhoodIds = new ArrayList<>();
-        if (neighborhoodURNs != null){
-            for (String neighborhoodURN : neighborhoodURNs){
-                long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
-                ValidationUtils.checkNeighborhoodId(neighborhoodId);
-                neighborhoodIds.add(neighborhoodId);
-            }
-        }
+        if (neighborhoodURNs != null)
+            for (String neighborhoodURN : neighborhoodURNs)
+                neighborhoodIds.add(ValidationUtils.checkURNAndExtractNeighborhoodId(neighborhoodURN));
 
-        Long workerRoleId = null;
-        if (workerRoleURN != null){
-            workerRoleId = ValidationUtils.extractURNId(workerRoleURN);
-            ValidationUtils.checkWorkerRoleId(workerRoleId);
-        }
-
-        Long workerStatusId = null;
-        if (workerStatusURN != null){
-            workerStatusId = ValidationUtils.extractURNId(workerStatusURN);
-            ValidationUtils.checkWorkerStatusId(workerStatusId);
-        }
-
-        return workerDao.countWorkers(professionIds, neighborhoodIds, workerRoleId, workerStatusId);
+       return workerDao.countWorkers(professionIds, neighborhoodIds, workerRoleId, workerStatusId);
     }
 
     @Override
     public int calculateWorkerPages(List<String> professionURNs, List<String> neighborhoodURNs, int size, String workerRoleURN, String workerStatusURN) {
         LOGGER.info("Calculating Worker Pages with Status {} Role {} Professions {} from Neighborhoods {}", workerStatusURN, workerRoleURN, professionURNs, neighborhoodURNs);
 
+        Long workerRoleId = ValidationUtils.checkURNAndExtractWorkerRoleId(workerRoleURN);
+        Long workerStatusId = ValidationUtils.checkURNAndExtractWorkerStatusId(workerStatusURN);
         List<Long> professionIds = new ArrayList<>();
-        if (professionURNs != null){
-            for (String professionURN : professionURNs){
-                long professionId = ValidationUtils.extractURNId(professionURN);
-                ValidationUtils.checkProfessionId(professionId);
-                professionIds.add(professionId);
-            }
-        }
-
+        if (professionURNs != null)
+            for (String professionURN : professionURNs)
+                professionIds.add(ValidationUtils.checkURNAndExtractProfessionId(professionURN));
         List<Long> neighborhoodIds = new ArrayList<>();
-        if (neighborhoodURNs != null){
-            for (String neighborhoodURN : neighborhoodURNs){
-                long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
-                ValidationUtils.checkNeighborhoodId(neighborhoodId);
-                neighborhoodIds.add(neighborhoodId);
-            }
-        }
-
-        Long workerRoleId = null;
-        if (workerRoleURN != null){
-            workerRoleId = ValidationUtils.extractURNId(workerRoleURN);
-            ValidationUtils.checkWorkerRoleId(workerRoleId);
-        }
-
-        Long workerStatusId = null;
-        if (workerStatusURN != null){
-            workerStatusId = ValidationUtils.extractURNId(workerStatusURN);
-            ValidationUtils.checkWorkerStatusId(workerStatusId);
-        }
+        if (neighborhoodURNs != null)
+            for (String neighborhoodURN : neighborhoodURNs)
+                neighborhoodIds.add(ValidationUtils.checkURNAndExtractNeighborhoodId(neighborhoodURN));
 
         ValidationUtils.checkSize(size);
 

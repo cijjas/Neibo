@@ -143,11 +143,8 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsers(String userRoleURN, long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Users with Role {} from Neighborhood {} ", userRoleURN, neighborhoodId);
 
-        Long userRoleId = null;
-        if (userRoleURN != null){
-            userRoleId = ValidationUtils.extractURNId(userRoleURN);
-            ValidationUtils.checkUserRoleId(userRoleId);
-        }
+        Long userRoleId = ValidationUtils.checkURNAndExtractUserRoleId(userRoleURN);
+
         ValidationUtils.checkPageAndSize(page, size);
 
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
@@ -159,11 +156,7 @@ public class UserServiceImpl implements UserService {
     public int countUsers(String userRoleURN, long neighborhoodId) {
         LOGGER.info("Counting Users with Role {} from Neighborhood {} ", userRoleURN, neighborhoodId);
 
-        Long userRoleId = null;
-        if (userRoleURN != null){
-            userRoleId = ValidationUtils.extractURNId(userRoleURN);
-            ValidationUtils.checkUserRoleId(userRoleId);
-        }
+        Long userRoleId = ValidationUtils.checkURNAndExtractUserRoleId(userRoleURN);
 
         ValidationUtils.checkNeighborhoodIdInUsers(neighborhoodId);
 
@@ -175,11 +168,7 @@ public class UserServiceImpl implements UserService {
     public int calculateUserPages(String userRoleURN, long neighborhoodId, int size) {
         LOGGER.info("Calculating User Pages with Role {} from Neighborhood {} ", userRoleURN, neighborhoodId);
 
-        Long userRoleId = null;
-        if (userRoleURN != null){
-            userRoleId = ValidationUtils.extractURNId(userRoleURN);
-            ValidationUtils.checkUserRoleId(userRoleId);
-        }
+        Long userRoleId = ValidationUtils.checkURNAndExtractUserRoleId(userRoleURN);
 
         ValidationUtils.checkNeighborhoodIdInUsers(neighborhoodId);
         ValidationUtils.checkSize(size);

@@ -50,21 +50,8 @@ public class LikeServiceImpl implements LikeService {
     public List<Like> getLikes(long neighborhoodId, String postURN, String userURN, int page, int size){
         LOGGER.info("Getting Likes for Post {} by User {} from Neighborhood {}", postURN, userURN, neighborhoodId);
 
-        Long postId = null;
-        if (postURN != null){
-            TwoIds postTwoIds = ValidationUtils.extractTwoURNIds(postURN);
-            ValidationUtils.checkNeighborhoodId(postTwoIds.getFirstId());
-            ValidationUtils.checkPostId(postTwoIds.getSecondId());
-            postId = postTwoIds.getSecondId();
-        }
-
-        Long userId = null;
-        if (userURN != null){
-            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
-            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
-            ValidationUtils.checkUserId(userTwoIds.getSecondId());
-            userId = userTwoIds.getSecondId();
-        }
+        Long postId = ValidationUtils.checkURNAndExtractPostId(postURN);
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
@@ -101,21 +88,9 @@ public class LikeServiceImpl implements LikeService {
     public int countLikes(long neighborhoodId, String postURN, String userURN) {
         LOGGER.info("Counting Likes for Post {} by User {} from Neighborhood {}", userURN, postURN, neighborhoodId);
 
-        Long postId = null;
-        if (postURN != null){
-            TwoIds postTwoIds = ValidationUtils.extractTwoURNIds(postURN);
-            ValidationUtils.checkNeighborhoodId(postTwoIds.getFirstId());
-            ValidationUtils.checkPostId(postTwoIds.getSecondId());
-            postId = postTwoIds.getSecondId();
-        }
 
-        Long userId = null;
-        if (userURN != null){
-            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
-            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
-            ValidationUtils.checkUserId(userTwoIds.getSecondId());
-            userId = userTwoIds.getSecondId();
-        }
+        Long postId = ValidationUtils.checkURNAndExtractPostId(postURN);
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
@@ -126,21 +101,9 @@ public class LikeServiceImpl implements LikeService {
     public int calculateLikePages(long neighborhoodId, String postURN, String userURN, int size) {
         LOGGER.info("Calculating Like Pages for Post {} by User {} from Neighborhood {}", userURN, postURN, neighborhoodId);
 
-        Long postId = null;
-        if (postURN != null){
-            TwoIds postTwoIds = ValidationUtils.extractTwoURNIds(postURN);
-            ValidationUtils.checkNeighborhoodId(postTwoIds.getFirstId());
-            ValidationUtils.checkPostId(postTwoIds.getSecondId());
-            postId = postTwoIds.getSecondId();
-        }
 
-        Long userId = null;
-        if (userURN != null){
-            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
-            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
-            ValidationUtils.checkUserId(userTwoIds.getSecondId());
-            userId = userTwoIds.getSecondId();
-        }
+        Long postId = ValidationUtils.checkURNAndExtractPostId(postURN);
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkSize(size);

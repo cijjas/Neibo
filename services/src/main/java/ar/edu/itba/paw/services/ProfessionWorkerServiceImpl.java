@@ -38,11 +38,7 @@ public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
     public List<Profession> getWorkerProfessions(String workerURN) {
         LOGGER.info("Getting Professions for Worker {}", workerURN);
 
-        Long workerId = null;
-        if (workerURN != null){
-            workerId = ValidationUtils.extractURNId(workerURN);
-            ValidationUtils.checkWorkerId(workerId);
-        }
+        Long workerId = ValidationUtils.checkURNAndExtractWorkerId(workerURN);
 
         return professionWorkerDao.getWorkerProfessions(workerId);
     }

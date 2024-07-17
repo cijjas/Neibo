@@ -68,11 +68,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     public List<Neighborhood> getNeighborhoods(int page, int size, String workerURN) {
         LOGGER.info("Getting Neighborhoods");
 
-        Long workerId = null;
-        if (workerURN != null){
-            workerId = ValidationUtils.extractURNId(workerURN);
-            ValidationUtils.checkWorkerId(workerId);
-        }
+        Long workerId = ValidationUtils.checkURNAndExtractWorkerId(workerURN);
 
         ValidationUtils.checkPageAndSize(page, size);
 
@@ -85,11 +81,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     public int countNeighborhoods(String workerURN) {
         LOGGER.info("Counting Neighborhoods");
 
-        Long workerId = null;
-        if (workerURN != null){
-            workerId = ValidationUtils.extractURNId(workerURN);
-            ValidationUtils.checkWorkerId(workerId);
-        }
+        Long workerId = ValidationUtils.checkURNAndExtractWorkerId(workerURN);
 
         return neighborhoodDao.countNeighborhoods(workerId);
     }
@@ -98,11 +90,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     public int calculateNeighborhoodPages(String workerURN, int size) {
         LOGGER.info("Calculating Neighborhood Pages");
 
-        Long workerId = null;
-        if (workerURN != null){
-            workerId = ValidationUtils.extractURNId(workerURN);
-            ValidationUtils.checkWorkerId(workerId);
-        }
+        Long workerId = ValidationUtils.checkURNAndExtractWorkerId(workerURN);
 
         ValidationUtils.checkSize(size);
 

@@ -4,14 +4,18 @@ import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.models.Entities.Tag;
 import ar.edu.itba.paw.webapp.dto.ResourceDto;
 import ar.edu.itba.paw.webapp.dto.TagDto;
+import ar.edu.itba.paw.webapp.form.TagForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.text.html.parser.Entity;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -109,6 +113,25 @@ public class TagController {
 
         return Response.ok(TagDto.fromTag(tag, neighborhoodId, uriInfo))
                 .cacheControl(cacheControl)
+                .tag(tagHashCode)
+                .build();
+    }
+
+    @POST
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response createTag(
+            @Valid @NotNull final TagForm form
+    ) {
+        LOGGER.info("POST request arrived at '/neighborhoods/'");
+
+        // Creation & HashCode Generation
+        final Tag tag = ts.createTag(form.getName());
+        String tagHashCode = String.valueOf(tag.hashCode());
+
+        // Resource URN
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(tag.getTagId())).build();
+
+        return Response.created(uri)
                 .tag(tagHashCode)
                 .build();
     }

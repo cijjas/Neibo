@@ -126,21 +126,8 @@ public class BookingServiceImpl implements BookingService {
     public List<Booking> getBookings(String userURN, String amenityURN, long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Bookings for User {} on Amenity {} from Neighborhood {}", userURN, amenityURN, neighborhoodId);
 
-        Long userId = null;
-        if (userURN != null){
-            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
-            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
-            ValidationUtils.checkUserRoleId(userTwoIds.getSecondId());
-            userId = userTwoIds.getSecondId();
-        }
-
-        Long amenityId = null;
-        if (amenityURN != null){
-           TwoIds amenityTwoIds = ValidationUtils.extractTwoURNIds(amenityURN);
-           ValidationUtils.checkNeighborhoodId(amenityTwoIds.getFirstId());
-           ValidationUtils.checkAmenityId(amenityTwoIds.getSecondId());
-           amenityId = amenityTwoIds.getSecondId();
-        }
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
+        Long amenityId = ValidationUtils.checkURNAndExtractAmenityId(amenityURN);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
@@ -154,21 +141,8 @@ public class BookingServiceImpl implements BookingService {
     public int calculateBookingPages(String userURN, String amenityURN, long neighborhoodId, int size) {
         LOGGER.info("Calculating Booking Pages for User {} on Amenity {} from Neighborhood {}", userURN, amenityURN, neighborhoodId);
 
-        Long userId = null;
-        if (userURN != null){
-            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
-            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
-            ValidationUtils.checkUserRoleId(userTwoIds.getSecondId());
-            userId = userTwoIds.getSecondId();
-        }
-
-        Long amenityId = null;
-        if (amenityURN != null){
-            TwoIds amenityTwoIds = ValidationUtils.extractTwoURNIds(amenityURN);
-            ValidationUtils.checkNeighborhoodId(amenityTwoIds.getFirstId());
-            ValidationUtils.checkAmenityId(amenityTwoIds.getSecondId());
-            amenityId = amenityTwoIds.getSecondId();
-        }
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
+        Long amenityId = ValidationUtils.checkURNAndExtractAmenityId(amenityURN);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkSize(size);

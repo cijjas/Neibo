@@ -122,35 +122,13 @@ public class PostServiceImpl implements PostService {
     public List<Post> getPosts(String channelURN, int page, int size, List<String> tagURNs, long neighborhoodId, String postStatusURN, String userURN) {
         LOGGER.info("Getting Posts with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatusURN, channelURN, tagURNs, userURN, neighborhoodId);
 
-        Long userId = null;
-        if (userURN != null){
-            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
-            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
-            ValidationUtils.checkUserId(userTwoIds.getSecondId());
-            userId = userTwoIds.getSecondId();
-        }
-
-        Long channelId = null;
-        if (channelURN != null){
-            channelId = ValidationUtils.extractURNId(channelURN);
-            ValidationUtils.checkChannelId(channelId);
-        }
-
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
+        Long channelId = ValidationUtils.checkURNAndExtractChannelId(channelURN);
+        Long postStatusId = ValidationUtils.checkURNAndExtractPostStatusId(postStatusURN);
         List<Long> tagIds = new ArrayList<>();
-        if (tagURNs != null && !tagURNs.isEmpty()){
-            for (String tagURN : tagURNs){
-                TwoIds tagTwoIds = ValidationUtils.extractTwoURNIds(tagURN);
-                ValidationUtils.checkNeighborhoodId(tagTwoIds.getFirstId());
-                ValidationUtils.checkTagId(tagTwoIds.getSecondId());
-                tagIds.add(tagTwoIds.getSecondId());
-            }
-        }
-
-        Long postStatusId = null;
-        if (postStatusURN != null){
-            postStatusId = ValidationUtils.extractURNId(postStatusURN);
-            ValidationUtils.checkPostStatusId(postStatusId);
-        }
+        if (tagURNs != null && !tagURNs.isEmpty())
+            for (String tagURN : tagURNs)
+                tagIds.add(ValidationUtils.checkURNAndExtractTagId(tagURN));
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
@@ -167,35 +145,13 @@ public class PostServiceImpl implements PostService {
     public int countPosts(String channelURN, List<String> tagURNs, long neighborhoodId, String postStatusURN, String userURN) {
         LOGGER.info("Counting Posts with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatusURN, channelURN, tagURNs, userURN, neighborhoodId);
 
-        Long userId = null;
-        if (userURN != null){
-            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
-            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
-            ValidationUtils.checkUserId(userTwoIds.getSecondId());
-            userId = userTwoIds.getSecondId();
-        }
-
-        Long channelId = null;
-        if (channelURN != null){
-            channelId = ValidationUtils.extractURNId(channelURN);
-            ValidationUtils.checkChannelId(channelId);
-        }
-
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
+        Long channelId = ValidationUtils.checkURNAndExtractChannelId(channelURN);
+        Long postStatusId = ValidationUtils.checkURNAndExtractPostStatusId(postStatusURN);
         List<Long> tagIds = new ArrayList<>();
-        if (tagURNs != null && !tagURNs.isEmpty()){
-            for (String tagURN : tagURNs){
-                TwoIds tagTwoIds = ValidationUtils.extractTwoURNIds(tagURN);
-                ValidationUtils.checkNeighborhoodId(tagTwoIds.getFirstId());
-                ValidationUtils.checkTagId(tagTwoIds.getSecondId());
-                tagIds.add(tagTwoIds.getSecondId());
-            }
-        }
-
-        Long postStatusId = null;
-        if (postStatusURN != null){
-            postStatusId = ValidationUtils.extractURNId(postStatusURN);
-            ValidationUtils.checkPostStatusId(postStatusId);
-        }
+        if (tagURNs != null && !tagURNs.isEmpty())
+            for (String tagURN : tagURNs)
+                tagIds.add(ValidationUtils.checkURNAndExtractTagId(tagURN));
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
@@ -207,35 +163,13 @@ public class PostServiceImpl implements PostService {
     public int calculatePostPages(String channelURN, int size, List<String> tagURNs, long neighborhoodId, String postStatusURN, String userURN) {
         LOGGER.info("Calculating Post pages with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatusURN, channelURN, tagURNs, userURN, neighborhoodId);
 
-        Long userId = null;
-        if (userURN != null){
-            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
-            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
-            ValidationUtils.checkUserId(userTwoIds.getSecondId());
-            userId = userTwoIds.getSecondId();
-        }
-
-        Long channelId = null;
-        if (channelURN != null){
-            channelId = ValidationUtils.extractURNId(channelURN);
-            ValidationUtils.checkChannelId(channelId);
-        }
-
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
+        Long channelId = ValidationUtils.checkURNAndExtractChannelId(channelURN);
+        Long postStatusId = ValidationUtils.checkURNAndExtractPostStatusId(postStatusURN);
         List<Long> tagIds = new ArrayList<>();
-        if (tagURNs != null && !tagURNs.isEmpty()){
-            for (String tagURN : tagURNs){
-                TwoIds tagTwoIds = ValidationUtils.extractTwoURNIds(tagURN);
-                ValidationUtils.checkNeighborhoodId(tagTwoIds.getFirstId());
-                ValidationUtils.checkTagId(tagTwoIds.getSecondId());
-                tagIds.add(tagTwoIds.getSecondId());
-            }
-        }
-
-        Long postStatusId = null;
-        if (postStatusURN != null){
-            postStatusId = ValidationUtils.extractURNId(postStatusURN);
-            ValidationUtils.checkPostStatusId(postStatusId);
-        }
+        if (tagURNs != null && !tagURNs.isEmpty())
+            for (String tagURN : tagURNs)
+                tagIds.add(ValidationUtils.checkURNAndExtractTagId(tagURN));
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkSize(size);

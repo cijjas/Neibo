@@ -1,15 +1,11 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.ChannelURNConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.ImageConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.TagsConstraint;
-import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
-import java.io.InputStream;
-import java.net.URI;
 import java.util.List;
 
 public class PublishForm {
@@ -22,7 +18,7 @@ public class PublishForm {
     private String message;
 
     @TagsConstraint
-    private List<String> tags;
+    private List<String> tagURNs;
 
     @ImageURNConstraint
     private String postImageURN;
@@ -38,12 +34,12 @@ public class PublishForm {
         this.channelURN = channelURN;
     }
 
-    public List<String> getTags() {
-        return tags;
+    public List<String> getTagURNs() {
+        return tagURNs;
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public void setTagURNs(List<String> tagURNs) {
+        this.tagURNs = tagURNs;
     }
 
     public String getSubject() {
@@ -76,7 +72,7 @@ public class PublishForm {
                 "subject='" + subject + '\'' +
                 ", message='" + message + '\'' +
                 ", postImageURN='" + postImageURN + '\'' +
-                ", tags='" + tags + '\'' +
+                ", tags='" + tagURNs + '\'' +
                 '}';
     }
 }
