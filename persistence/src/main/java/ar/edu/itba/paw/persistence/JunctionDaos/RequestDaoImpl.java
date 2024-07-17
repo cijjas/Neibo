@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
+import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.interfaces.persistence.RequestDao;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.models.Entities.Request;
@@ -75,28 +76,43 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
-    public List<Request> getRequests(Long userId, Long productId, int page, int size) {
+    public List<Request> getRequests(Long userId, Long productId, Long typeId, boolean fulfilled, int page, int size) {
         LOGGER.debug("Selecting Requests By Criteria");
 
-        TypedQuery<Long> idQuery = null;
-        if (userId != null && productId != null) {
-            idQuery = em.createQuery(
-                    "SELECT r.requestId FROM Request r WHERE r.product.productId = :productId AND r.user.userId = :userId AND r.fulfilled = false", Long.class);
-            idQuery.setParameter("productId", productId);
-            idQuery.setParameter("userId", userId);
-        } else if (userId != null) {
-            idQuery = em.createQuery("SELECT r.requestId FROM Request r " +
-                    "WHERE r.user.userId = :userId AND r.fulfilled = false", Long.class);
-            idQuery.setParameter("userId", userId);
-        } else if (productId != null) {
-            idQuery = em.createQuery(
-                    "SELECT r.requestId FROM Request r WHERE r.product.productId = :productId AND r.fulfilled = false", Long.class);
-            idQuery.setParameter("productId", productId);
-        } else {
-            // Both productId and userId are null, retrieve all requests
-            idQuery = em.createQuery("SELECT r.requestId FROM Request r WHERE r.fulfilled = false", Long.class);
+        StringBuilder queryBuilder = new StringBuilder("SELECT r.requestId FROM Request r WHERE ");
+
+        // Add fulfilled condition
+        queryBuilder.append("r.fulfilled = :fulfilled ");
+
+        // Add productId condition
+        if (productId != null) {
+            queryBuilder.append("AND r.product.productId = :productId ");
         }
 
+        if (typeId != null) {
+            TransactionType type = TransactionType.fromId(typeId);
+            switch(type) {
+                case PURCHASE:
+                    queryBuilder.append("AND r.user.userId = :userId ");
+                    break;
+                case SALE:
+                    queryBuilder.append("AND r.product.seller.userId = :userId ");
+                    break;
+            }
+        }
+
+        TypedQuery<Long> idQuery = em.createQuery(queryBuilder.toString(), Long.class);
+
+        // Set parameters for the query
+        idQuery.setParameter("fulfilled", fulfilled);
+        if (userId != null) {
+            idQuery.setParameter("userId", userId);
+        }
+        if (productId != null) {
+            idQuery.setParameter("productId", productId);
+        }
+
+        // Pagination
         idQuery.setFirstResult((page - 1) * size);
         idQuery.setMaxResults(size);
         List<Long> requestIds = idQuery.getResultList();
@@ -107,35 +123,59 @@ public class RequestDaoImpl implements RequestDao {
             requestQuery.setParameter("requestIds", requestIds);
             return requestQuery.getResultList();
         }
+
+        // Return an empty list if no request IDs are found
         return Collections.emptyList();
     }
 
     @Override
-    public int countRequests(Long userId, Long productId) {
+    public int countRequests(Long userId, Long productId, Long typeId, boolean fulfilled) {
         LOGGER.debug("Selecting Requests Count by Criteria");
 
-        Long count = null;
-        if (userId != null && productId != null) {
-            count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
-                            "WHERE r.product.productId = :productId AND r.user.userId = :userId AND r.fulfilled = false")
-                    .setParameter("productId", productId)
-                    .setParameter("userId", userId)
-                    .getSingleResult();
-        } else if (userId != null) {
-            count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
-                            "WHERE r.user.userId = :userId AND r.fulfilled = false")
-                    .setParameter("userId", userId)
-                    .getSingleResult();
-        } else if (productId != null) {
-            count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r " +
-                            "WHERE r.product.productId = :productId AND r.fulfilled = false")
-                    .setParameter("productId", productId)
-                    .getSingleResult();
-        } else {
-            // Both productId and userId are null, count all requests
-            count = (Long) em.createQuery("SELECT COUNT(r) FROM Request r WHERE r.fulfilled = false")
-                    .getSingleResult();
+        StringBuilder queryBuilder = new StringBuilder("SELECT r.requestId FROM Request r WHERE ");
+
+        // Add fulfilled condition
+        queryBuilder.append("r.fulfilled = :fulfilled ");
+
+        // Add productId condition
+        if (productId != null) {
+            queryBuilder.append("AND r.product.productId = :productId ");
         }
-        return count != null ? count.intValue() : 0;
+
+        if (typeId != null) {
+            TransactionType type = TransactionType.fromId(typeId);
+            switch(type) {
+                case PURCHASE:
+                    queryBuilder.append("AND r.user.userId = :userId ");
+                    break;
+                case SALE:
+                    queryBuilder.append("AND r.product.seller.userId = :userId ");
+                    break;
+            }
+        }
+
+        TypedQuery<Long> idQuery = em.createQuery(queryBuilder.toString(), Long.class);
+
+        // Set parameters for the query
+        idQuery.setParameter("fulfilled", fulfilled);
+        if (userId != null) {
+            idQuery.setParameter("userId", userId);
+        }
+        if (productId != null) {
+            idQuery.setParameter("productId", productId);
+        }
+
+        List<Long> requestIds = idQuery.getResultList();
+
+        int count = 0;
+        if (!requestIds.isEmpty()) {
+            TypedQuery<Request> requestQuery = em.createQuery(
+                    "SELECT r FROM Request r WHERE r.requestId IN :requestIds ORDER BY r.requestDate DESC", Request.class);
+            requestQuery.setParameter("requestIds", requestIds);
+            count = requestQuery.getResultList().size();
+        }
+
+        return count;
     }
+
 }

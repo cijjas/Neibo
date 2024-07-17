@@ -23,6 +23,13 @@ public class ValidationUtils {
         checkSize(size);
     }
 
+    public static void checkFulfilled(Boolean fulfilled) {
+        if (fulfilled == null) {
+            LOGGER.info("Invalid Boolean");
+            throw new IllegalArgumentException("Must specify request or purchase. Please use true/false for Query Param 'fulfilled'.");
+        }
+    }
+
     public static void checkQuantity(int quantity) {
         if (quantity <= 0) {
             LOGGER.info("Invalid Quantity");

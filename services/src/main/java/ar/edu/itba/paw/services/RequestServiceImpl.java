@@ -11,6 +11,7 @@ import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.models.TwoIds;
+import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +94,7 @@ public class RequestServiceImpl implements RequestService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Request> getRequests(String userURN, String productURN, int page, int size, long neighborhoodId){
+    public List<Request> getRequests(String userURN, String productURN, String typeURN, Boolean fulfilled, int page, int size, long neighborhoodId){
         LOGGER.info("Getting Requests for Product {} made by User {} from Neighborhood {}", productURN, userURN, neighborhoodId);
 
         Long userId = null;
@@ -112,16 +113,23 @@ public class RequestServiceImpl implements RequestService {
             productId = productTwoIds.getSecondId();
         }
 
+        Long transactionTypeId = null;
+        if (typeURN != null){
+            transactionTypeId = ValidationUtils.extractURNId(typeURN);
+            ValidationUtils.checkTransactionTypeId(transactionTypeId);
+        }
+
+        ValidationUtils.checkFulfilled(fulfilled);
         ValidationUtils.checkPageAndSize(page, size);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
-        return requestDao.getRequests(userId, productId, page, size);
+        return requestDao.getRequests(userId, productId, transactionTypeId, fulfilled, page, size);
     }
 
     @Override
-    public int countRequests(String productURN, String userURN) {
+    public int countRequests(String productURN, String userURN, String typeURN, Boolean fulfilled) {
         LOGGER.info("Counting Requests for Product {} made by User {}", productURN, userURN);
 
         Long userId = null;
@@ -140,11 +148,17 @@ public class RequestServiceImpl implements RequestService {
             productId = productTwoIds.getSecondId();
         }
 
-        return requestDao.countRequests(productId, userId);
+        Long transactionTypeId = null;
+        if (typeURN != null){
+            transactionTypeId = ValidationUtils.extractURNId(typeURN);
+            ValidationUtils.checkTransactionTypeId(transactionTypeId);
+        }
+
+        return requestDao.countRequests(productId, userId, transactionTypeId, fulfilled);
     }
 
     @Override
-    public int calculateRequestPages(String productURN, String userURN, int size) {
+    public int calculateRequestPages(String productURN, String userURN, String typeURN, Boolean fulfilled, int size) {
         LOGGER.info("Calculating Request Pages for Product {} made by User {}", productURN, userURN);
 
         Long userId = null;
@@ -163,9 +177,15 @@ public class RequestServiceImpl implements RequestService {
             productId = productTwoIds.getSecondId();
         }
 
+        Long typeId = null;
+        if (typeURN != null){
+            typeId = ValidationUtils.extractURNId(typeURN);
+            ValidationUtils.checkTransactionTypeId(typeId);
+        }
+
         ValidationUtils.checkSize(size);
 
-        return PaginationUtils.calculatePages(requestDao.countRequests(productId, userId), size);
+        return PaginationUtils.calculatePages(requestDao.countRequests(userId, productId, typeId, fulfilled), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
