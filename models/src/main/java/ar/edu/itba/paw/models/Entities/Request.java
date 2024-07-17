@@ -33,6 +33,12 @@ public class Request implements Serializable {
     @Column(name = "fulfilled")
     private Boolean fulfilled;
 
+    @Column(name = "purchaseDate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date purchaseDate;
+
+    @Column(name = "units")
+    private Integer units;
 
     @Version
     @ColumnDefault("1")
@@ -48,6 +54,8 @@ public class Request implements Serializable {
         this.user = builder.user;
         this.requestDate = builder.requestDate;
         this.fulfilled = builder.fulfilled;
+        this.units = builder.units;
+        this.purchaseDate = builder.purchaseDate;
     }
 
     public Long getVersion() {
@@ -106,6 +114,22 @@ public class Request implements Serializable {
         this.fulfilled = fulfilled;
     }
 
+    public Date getPurchaseDate() {
+        return purchaseDate;
+    }
+
+    public void setPurchaseDate(Date purchaseDate) {
+        this.purchaseDate = purchaseDate;
+    }
+
+    public Integer getUnits() {
+        return units;
+    }
+
+    public void setUnits(Integer units) {
+        this.units = units;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -126,6 +150,8 @@ public class Request implements Serializable {
         private String message;
         private Date requestDate;
         private Boolean fulfilled;
+        private Date purchaseDate;
+        private Integer units;
 
         public Request.Builder requestId(Long requestId) {
             this.requestId = requestId;
@@ -154,6 +180,16 @@ public class Request implements Serializable {
 
         public Request.Builder fulfilled(Boolean fulfilled) {
             this.fulfilled = fulfilled;
+            return this;
+        }
+
+        public Request.Builder purchaseDate(Date purchaseDate) {
+            this.purchaseDate = purchaseDate;
+            return this;
+        }
+
+        public Request.Builder units(Integer units) {
+            this.units = units;
             return this;
         }
 

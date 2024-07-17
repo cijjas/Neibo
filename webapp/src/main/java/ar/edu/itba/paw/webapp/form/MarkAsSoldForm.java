@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.ExistingRequestConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.ExistingUserConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.RequestURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNConstraint;
 import org.hibernate.validator.constraints.Range;
@@ -18,9 +16,9 @@ public class MarkAsSoldForm {
     @UserURNConstraint
     private String buyerURN;
 
-    @NotNull
-    @RequestURNConstraint
-    private String requestURN;
+//    @NotNull
+//    @RequestURNConstraint
+//    private String requestURN;
 
 
     public String getBuyerURN() {
@@ -31,13 +29,13 @@ public class MarkAsSoldForm {
         this.buyerURN = buyerURN;
     }
 
-    public String getRequestURN() {
-        return requestURN;
-    }
-
-    public void setRequestURN(String requestURN) {
-        this.requestURN = requestURN;
-    }
+//    public String getRequestURN() {
+//        return requestURN;
+//    }
+//
+//    public void setRequestURN(String requestURN) {
+//        this.requestURN = requestURN;
+//    }
 
     public Integer getQuantity() {
         return quantity;
@@ -52,7 +50,6 @@ public class MarkAsSoldForm {
         return "MarkAsSoldForm{" +
                 "quantity=" + quantity +
                 ", buyerId=" + buyerURN +
-                ", requestId=" + requestURN +
                 '}';
     }
 

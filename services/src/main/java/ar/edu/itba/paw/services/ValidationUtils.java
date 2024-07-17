@@ -23,6 +23,13 @@ public class ValidationUtils {
         checkSize(size);
     }
 
+    public static void checkQuantity(int quantity) {
+        if (quantity <= 0) {
+            LOGGER.info("Invalid Quantity");
+            throw new IllegalArgumentException("Invalid value (" + quantity + ") for the 'quantity' parameter. Please use a positive integer greater than 0.");
+        }
+    }
+
     public static void checkId(Long id, String entity) {
         if (id != null && id <= 0) {
             LOGGER.info("Invalid {} ID", entity);

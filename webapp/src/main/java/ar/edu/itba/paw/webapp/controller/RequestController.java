@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.RequestService;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.dto.RequestDto;
+import ar.edu.itba.paw.webapp.form.MarkAsSoldForm;
 import ar.edu.itba.paw.webapp.form.RequestForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,7 +133,7 @@ public class RequestController extends GlobalControllerAdvice {
                     .build();
 
         // Creation & Etag Generation
-        final Request request = rs.createRequest(getRequestingUserId(), form.getProductURN(), form.getRequestMessage());
+        final Request request = rs.createRequest(getRequestingUserId(), form.getProductURN(), form.getRequestMessage(), form.getQuantity());
         entityLevelETag = ETagUtility.generateETag();
         EntityTag rowLevelETag = new EntityTag(request.getVersion().toString());
 

@@ -5,7 +5,6 @@ import ar.edu.itba.paw.enums.DayOfTheWeek;
 import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.webapp.dto.*;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
