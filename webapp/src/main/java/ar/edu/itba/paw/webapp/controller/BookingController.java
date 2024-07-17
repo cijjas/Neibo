@@ -67,7 +67,7 @@ public class BookingController extends GlobalControllerAdvice{
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
         // Content
-        final List<Booking> bookings = bs.getBookings(userId, amenityId, neighborhoodId, page, size);
+        final List<Booking> bookings = bs.getBookings(userURN, amenityURN, neighborhoodId, page, size);
         String bookingsHashCode = String.valueOf(bookings.hashCode());
 
         // Cache Control
