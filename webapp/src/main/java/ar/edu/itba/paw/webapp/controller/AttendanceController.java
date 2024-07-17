@@ -131,14 +131,16 @@ public class AttendanceController extends GlobalControllerAdvice {
     }
 
     @DELETE
+    @Path("/{userId}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteByUser(
+            @PathParam("userId") final long userId,
             @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
 
         // Deletion Attempt
-        if(as.deleteAttendance(getRequestingUserId(), eventId)) {
+        if(as.deleteAttendance(userId, eventId)) {
             return Response.noContent()
                     .build();
         }

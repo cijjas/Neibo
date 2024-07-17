@@ -152,10 +152,21 @@ public class LikeServiceImpl implements LikeService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteLike(long postId, long userId) {
-        LOGGER.info("Removing Like from Post {} given by User {}", postId, userId);
+    public boolean deleteLike(String postURN, String userURN) {
+        LOGGER.info("Removing Like from Post {} given by User {}", postURN, userURN);
 
-        ValidationUtils.checkLikeIds(postId, userId);
+        if ( postURN == null || userURN == null )
+            throw new IllegalArgumentException("Both the Post and the User have to be specified when deleting");
+
+        TwoIds postTwoIds = ValidationUtils.extractTwoURNIds(postURN);
+        ValidationUtils.checkNeighborhoodId(postTwoIds.getFirstId());
+        ValidationUtils.checkPostId(postTwoIds.getSecondId());
+        long postId = postTwoIds.getSecondId();
+
+        TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
+        ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
+        ValidationUtils.checkUserId(userTwoIds.getSecondId());
+        long userId = userTwoIds.getSecondId();
 
         return likeDao.deleteLike(postId, userId);
     }

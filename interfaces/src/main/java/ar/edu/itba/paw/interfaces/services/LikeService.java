@@ -25,5 +25,5 @@ public interface LikeService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteLike(long postId, long userId);
+    boolean deleteLike(String postURN, String userURN);
 }
