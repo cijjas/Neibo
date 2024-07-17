@@ -66,17 +66,19 @@ public class UserController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
+        // Content
+        final List<User> users = us.getUsers(userRoleURN, neighborhoodId, page, size);
+        String usersHashCode = String.valueOf(users.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(usersHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        final List<User> users = us.getUsers(userRoleURN, neighborhoodId, page, size);
         if (users.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(usersHashCode)
                     .build();
 
         // Pagination Links
@@ -91,7 +93,7 @@ public class UserController {
                 .map(u -> UserDto.fromUser(u, uriInfo)).collect(Collectors.toList());
         return Response.ok(new GenericEntity<List<UserDto>>(usersDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(usersHashCode)
                 .links(links)
                 .build();
     }
@@ -102,24 +104,24 @@ public class UserController {
     @PreAuthorize("@accessControlHelper.hasAccessToUserDetail(#neighborhoodId, #id)")
     public Response findUser(
             @PathParam("id") final long id,
-            @PathParam("neighborhoodId") final long neighborhoodId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("neighborhoodId") final long neighborhoodId
 
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
 
         // Content
-        User user = us.findUser(id, neighborhoodId).orElseThrow(NotFoundException::new);
+        User user = us.findUser(id, neighborhoodId).orElseThrow(() -> new NotFoundException("User not found"));
+        String userHashCode = String.valueOf(user.hashCode());
 
         // Cache Control
-        EntityTag rowLevelETag = new EntityTag(user.getVersion().toString());
-        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(userHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
 
         return Response.ok(UserDto.fromUser(user, uriInfo))
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .cacheControl(cacheControl)
+                .tag(userHashCode)
                 .build();
     }
 
@@ -130,24 +132,15 @@ public class UserController {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
         // Creation & ETag Generation
         final User user = us.createNeighbor(form.getEmail(), form.getPassword(), form.getName(), form.getSurname(), neighborhoodId, form.getLanguageURN(), form.getIdentification());
-        entityLevelETag = ETagUtility.generateETag();
-        EntityTag rowLevelETag = new EntityTag(user.getVersion().toString());
+        String userHashCode = String.valueOf(user.hashCode());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(user.getUserId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(userHashCode)
                 .build();
     }
 
@@ -158,25 +151,17 @@ public class UserController {
     public Response updateUserPartially(
             @PathParam("id") final long id,
             @PathParam("neighborhoodId") final long neighborhoodId,
-            @Valid @NotNull final UserUpdateForm partialUpdate,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @Valid @NotNull final UserUpdateForm partialUpdate
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, id);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(us.findUser(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
 
-        // Modification & ETag Generation
+        // Modification & HashCode Generation
         final User updatedUser = us.updateUser(id, partialUpdate.getEmail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), partialUpdate.getProfilePictureURN(), partialUpdate.getIdentification(), partialUpdate.getLanguageURN(), partialUpdate.getUserRoleURN());
-        entityLevelETag = ETagUtility.generateETag();
-        rowLevelETag = new EntityTag(updatedUser.getVersion().toString());
+        String updatedUserHashCode = String.valueOf(updatedUser.hashCode());
 
         return Response.ok(UserDto.fromUser(updatedUser, uriInfo))
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(updatedUserHashCode)
                 .build();
     }
 

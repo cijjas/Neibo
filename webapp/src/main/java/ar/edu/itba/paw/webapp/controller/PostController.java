@@ -64,18 +64,21 @@ public class PostController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
+        // Content
+        final List<Post> posts = ps.getPosts(channelURN, page, size, tagURNs, neighborhoodId, postStatusURN, userURN);
+        String postsHashCode = String.valueOf(posts.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(postsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        final List<Post> posts = ps.getPosts(channelURN, page, size, tagURNs, neighborhoodId, postStatusURN, userURN);
         if (posts.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(postsHashCode)
                     .build();
+
         final List<PostDto> postsDto = posts.stream()
                 .map(p -> PostDto.fromPost(p, uriInfo)).collect(Collectors.toList());
 
@@ -91,7 +94,7 @@ public class PostController extends GlobalControllerAdvice{
         return Response.ok(new GenericEntity<List<PostDto>>(postsDto){})
                 .links(links)
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(postsHashCode)
                 .build();
     }
 
@@ -99,23 +102,23 @@ public class PostController extends GlobalControllerAdvice{
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findPostById(
-            @PathParam("id") final long postId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final long postId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(postId));
-        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
         // Content
-        PostDto postDto = PostDto.fromPost(ps.findPost(postId, neighborhoodId).orElseThrow(NotFoundException::new), uriInfo);
+        Post post = ps.findPost(postId, neighborhoodId).orElseThrow(() -> new NotFoundException("Post not found"));
+        String postHashCode = String.valueOf(post.hashCode());
 
-        return Response.ok(postDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(postHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        return Response.ok(PostDto.fromPost(post, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(postHashCode)
                 .build();
     }
 
@@ -126,25 +129,16 @@ public class PostController extends GlobalControllerAdvice{
     )  {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
         // Validation, Creation & ETag Generation
         final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getRequestingUserId(), publishForm.getChannelURN(), publishForm.getTags(), publishForm.getPostImageURN());
-        entityLevelETag = ETagUtility.generateETag();
-        EntityTag rowLevelETag = new EntityTag(post.getPostId().toString());
+        String postHashCode = String.valueOf(post.hashCode());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(post.getPostId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(postHashCode)
                 .build();
     }
 
@@ -153,27 +147,16 @@ public class PostController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.canDeletePost(#postId)")
     public Response deleteById(
-            @PathParam("id") final long postId,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @PathParam("id") final long postId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}'", neighborhoodId, postId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(String.valueOf(postId));
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Deletion & ETag Generation Attempt
+        // Attempt to delete the amenity
         if(ps.deletePost(postId, neighborhoodId)) {
-            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent()
-                    .tag(entityLevelETag)
                     .build();
         }
         return Response.status(Response.Status.NOT_FOUND)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

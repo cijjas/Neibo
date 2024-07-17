@@ -34,28 +34,30 @@ public class TransactionTypeController {
     @Context
     private Request request;
 
-    private final EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listTransactionTypes() {
         LOGGER.info("GET request arrived at '/transaction-type'");
 
+        // Content
+        TransactionType[] transactionTypes = TransactionType.values();
+        String transactionTypesHashCode = String.valueOf(Arrays.hashCode(transactionTypes));
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(transactionTypesHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        List<TransactionTypeDto> transactionDto = Arrays.stream(TransactionType.values())
+        List<TransactionTypeDto> transactionDto = Arrays.stream(transactionTypes)
                 .map(tt -> TransactionTypeDto.fromTransactionType(tt, uriInfo))
                 .collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<TransactionTypeDto>>(transactionDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(transactionTypesHashCode)
                 .build();
     }
 
@@ -63,24 +65,23 @@ public class TransactionTypeController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findTransactionType(
-            @PathParam("id") final int id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final int id
     ) {
         LOGGER.info("GET request arrived at '/transaction-type/{}'", id);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(id));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
         // Content
-        TransactionTypeDto transactionTypeDto = TransactionTypeDto.fromTransactionType(TransactionType.fromId(id), uriInfo);
+        TransactionType transactionType = TransactionType.fromId(id);
+        String transactionTypeHashCode = String.valueOf(transactionType.hashCode());
 
-        return Response.ok(transactionTypeDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(transactionTypeHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        return Response.ok(TransactionTypeDto.fromTransactionType(transactionType, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(transactionTypeHashCode)
                 .build();
     }
 }

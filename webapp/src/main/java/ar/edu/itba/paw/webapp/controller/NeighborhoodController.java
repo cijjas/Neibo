@@ -59,18 +59,21 @@ public class NeighborhoodController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/'");
 
+        // Content
+        final List<Neighborhood> neighborhoods = ns.getNeighborhoods(page, size, workerURN);
+        String neighborhoodsHashCode = String.valueOf(neighborhoods.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(neighborhoodsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        final List<Neighborhood> neighborhoods = ns.getNeighborhoods(page, size, workerURN);
         if (neighborhoods.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(neighborhoodsHashCode)
                     .build();
+
         final List<NeighborhoodDto> neighborhoodsDto = neighborhoods.stream()
                 .map(n -> NeighborhoodDto.fromNeighborhood(n, uriInfo)).collect(Collectors.toList());
 
@@ -84,7 +87,7 @@ public class NeighborhoodController {
 
         return Response.ok(new GenericEntity<List<NeighborhoodDto>>(neighborhoodsDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(neighborhoodsHashCode)
                 .links(links)
                 .build();
     }
@@ -93,24 +96,23 @@ public class NeighborhoodController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findNeighborhood(
-            @PathParam("id") final long neighborhoodId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final long neighborhoodId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}'", neighborhoodId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(neighborhoodId));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
         // Content
-        NeighborhoodDto neighborhoodDto = NeighborhoodDto.fromNeighborhood(ns.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new), uriInfo);
+        Neighborhood neighborhood = ns.findNeighborhood(neighborhoodId).orElseThrow(() -> new NotFoundException("Neighborhood not found"));
+        String neighborhoodHashCode = String.valueOf(neighborhood.hashCode());
 
-        return Response.ok(neighborhoodDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(neighborhoodHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        return Response.ok(NeighborhoodDto.fromNeighborhood(neighborhood, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(neighborhoodHashCode)
                 .build();
     }
 
@@ -121,24 +123,15 @@ public class NeighborhoodController {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/'");
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
-        // Creation & ETag Generation
+        // Creation & HashCode Generation
         final Neighborhood neighborhood = ns.createNeighborhood(form.getName());
-        entityLevelETag = ETagUtility.generateETag();
-        EntityTag rowLevelETag = new EntityTag(neighborhood.getNeighborhoodId().toString());
+        String neighborhoodHashCode = String.valueOf(neighborhood.hashCode());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(neighborhood.getNeighborhoodId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(neighborhoodHashCode)
                 .build();
     }
 }

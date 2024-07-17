@@ -74,18 +74,21 @@ public class AffiliationController {
     ) {
         LOGGER.info("GET request arrived at '/affiliations'");
 
+        // Content
+        List<Affiliation> affiliations = nws.getAffiliations(workerURN, neighborhoodURN, page, size);
+        String affiliationsHashCode = String.valueOf(affiliations.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(affiliationsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        List<Affiliation> affiliations = nws.getAffiliations(workerURN, neighborhoodURN, page, size);
         if (affiliations.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(affiliationsHashCode)
                     .build();
+
         List<AffiliationDto> affiliationDto = affiliations.stream()
                 .map(wa -> AffiliationDto.fromAffiliation(wa, uriInfo)).collect(Collectors.toList());
 
@@ -99,7 +102,7 @@ public class AffiliationController {
 
         return Response.ok(new GenericEntity<List<AffiliationDto>>(affiliationDto) {})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(affiliationsHashCode)
                 .links(links)
                 .build();
     }
@@ -111,22 +114,15 @@ public class AffiliationController {
     ) {
         LOGGER.info("POST request arrived at '/affiliations'");
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
-        // Creation & ETag Generation
+        // Creation & HashCode Generation
         Affiliation affiliation = nws.createAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRole());
-        entityLevelETag = ETagUtility.generateETag();
+        String affiliationHashCode = String.valueOf(affiliation.hashCode());
 
         // Resource URN
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(affiliation.getWorker().getWorkerId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
+                .tag(affiliationHashCode)
                 .build();
     }
 
@@ -134,56 +130,33 @@ public class AffiliationController {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canUpdateAffiliation(#form.neighborhoodURN)")
     public Response updateAffiliation(
-            @Valid @NotNull final AffiliationForm form,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+            @Valid @NotNull final AffiliationForm form
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
 
-        // Cache Control
-        if (ifMatch != null) {
-            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(entityLevelETag)
-                        .build();
-        }
+        // Modification & HashCode Generation
+        final Affiliation updatedAffiliation = nws.updateAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRole());
+        String updatedAffiliationHashCode = String.valueOf(updatedAffiliation.hashCode());
 
-        // Modification & ETag Generation
-        AffiliationDto affiliationDto = AffiliationDto.fromAffiliation(nws.updateAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRole()), uriInfo);
-        entityLevelETag = ETagUtility.generateETag();
-
-        return Response.ok(affiliationDto)
-                .tag(entityLevelETag)
+        return Response.ok(AffiliationDto.fromAffiliation(updatedAffiliation, uriInfo))
+                .tag(updatedAffiliationHashCode)
                 .build();
     }
 
     @DELETE
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response removeWorkerFromNeighborhood(
-            @Valid @NotNull final AffiliationForm form,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+            @Valid @NotNull final AffiliationForm form
     ) {
         LOGGER.info("DELETE request arrived at '/affiliations'");
 
-        // Cache Control
-        if (ifMatch != null) {
-            Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-            if (builder != null)
-                return Response.status(Response.Status.PRECONDITION_FAILED)
-                        .tag(entityLevelETag)
-                        .build();
-        }
-
-        // Deletion & Etag Generation Attempt
+        // Deletion Attempt
         if (nws.deleteAffiliation(form.getWorkerURN(), form.getNeighborhoodURN())) {
-            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent()
-                    .tag(entityLevelETag)
                     .build();
         }
 
         return Response.status(Response.Status.NOT_FOUND)
-                .tag(entityLevelETag)
                 .build();
     }
 }

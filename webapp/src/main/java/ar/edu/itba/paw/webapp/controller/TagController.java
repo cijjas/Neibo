@@ -55,19 +55,22 @@ public class TagController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags'", neighborhoodId);
 
+        // Content
+        List<Tag> tags = ts.getTags(postURN, neighborhoodId, page, size);
+        String tagsHashCode = String.valueOf(tags.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(tagsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        List<Tag> tags = ts.getTags(postURN, neighborhoodId, page, size);
         if (tags.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(tagsHashCode)
                     .build();
+
         List<TagDto> tagsDto = tags.stream()
                 .map(t -> TagDto.fromTag(t, neighborhoodId, uriInfo)).collect(Collectors.toList());
 
@@ -81,7 +84,7 @@ public class TagController {
 
         return Response.ok(new GenericEntity<List<TagDto>>(tagsDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(tagsHashCode)
                 .links(links)
                 .build();
     }
@@ -90,24 +93,23 @@ public class TagController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findTags(
-            @PathParam("id") final long tagId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final long tagId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(tagId));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
         // Content
-        TagDto tagDto = TagDto.fromTag(ts.findTag(tagId, neighborhoodId).orElseThrow(NotFoundException::new), neighborhoodId, uriInfo);
+        Tag tag = ts.findTag(tagId, neighborhoodId).orElseThrow(() -> new NotFoundException("Tag not found"));
+        String tagHashCode = String.valueOf(tag.hashCode());
 
-        return Response.ok(tagDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(tagHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        return Response.ok(TagDto.fromTag(tag, neighborhoodId, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(tagHashCode)
                 .build();
     }
 }

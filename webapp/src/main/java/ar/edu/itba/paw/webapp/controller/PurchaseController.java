@@ -63,18 +63,21 @@ public class PurchaseController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}/transactions'", neighborhoodId, userId);
 
+        // Content
+        List<Purchase> transactions = ps.getPurchases(userId, typeURN, page, size, neighborhoodId);
+        String transactionsHashCode = String.valueOf(transactions.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(transactionsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        List<Purchase> transactions = ps.getPurchases(userId, typeURN, page, size, neighborhoodId);
         if (transactions.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(transactionsHashCode)
                     .build();
+
         List<PurchaseDto> transactionDto = transactions.stream()
                 .map(p -> PurchaseDto.fromPurchase(p, uriInfo))
                 .collect(Collectors.toList());
@@ -90,7 +93,7 @@ public class PurchaseController {
         return Response.ok(new GenericEntity<List<PurchaseDto>>(transactionDto){})
                 .links(links)
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(transactionsHashCode)
                 .build();
     }
 
@@ -100,24 +103,23 @@ public class PurchaseController {
     @PreAuthorize("@accessControlHelper.canAccessTransactions(#userId)")
     public Response findTransaction(
             @PathParam("id") final long transactionId,
-            @PathParam("userId") final long userId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("userId") final long userId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}/transactions/{}'", neighborhoodId, userId, transactionId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(transactionId));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
         // Content
-        PurchaseDto purchaseDto = PurchaseDto.fromPurchase(ps.findPurchase(transactionId, userId, neighborhoodId).orElseThrow(NotFoundException::new), uriInfo);
+        Purchase purchase = ps.findPurchase(transactionId, userId, neighborhoodId).orElseThrow(() -> new NotFoundException("Purchase not found"));
+        String purchaseHashCode = String.valueOf(purchase.hashCode());
 
-        return Response.ok(purchaseDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(purchaseHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        return Response.ok(PurchaseDto.fromPurchase(purchase, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(purchaseHashCode)
                 .build();
     }
 }

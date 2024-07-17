@@ -50,8 +50,6 @@ public class CommentController extends GlobalControllerAdvice{
     @PathParam("postId")
     private Long postId;
 
-    private EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listComments(
@@ -60,18 +58,21 @@ public class CommentController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
 
+        // Content
+        final List<Comment> comments = cs.getComments(postId, page, size, neighborhoodId);
+        String commentsHashCode = String.valueOf(comments.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(commentsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        final List<Comment> comments = cs.getComments(postId, page, size, neighborhoodId);
         if (comments.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(commentsHashCode)
                     .build();
+
         final List<CommentDto> commentsDto = comments.stream()
                 .map(c -> CommentDto.fromComment(c, uriInfo)).collect(Collectors.toList());
 
@@ -84,7 +85,7 @@ public class CommentController extends GlobalControllerAdvice{
 
         return Response.ok(new GenericEntity<List<CommentDto>>(commentsDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(commentsHashCode)
                 .links(links)
                 .build();
     }
@@ -93,23 +94,23 @@ public class CommentController extends GlobalControllerAdvice{
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findComment(
-            @PathParam("id") long commentId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") long commentId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(commentId));
-        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
         // Content
-        CommentDto commentDto = CommentDto.fromComment(cs.findComment(commentId, postId, neighborhoodId).orElseThrow(NotFoundException::new), uriInfo);
+        Comment comment = cs.findComment(commentId, postId, neighborhoodId).orElseThrow(() -> new NotFoundException("Comment Not Found"));
+        String commentHashCode = String.valueOf(comment.hashCode());
 
-        return Response.ok(commentDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(commentHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        return Response.ok(CommentDto.fromComment(comment, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(commentHashCode)
                 .build();
     }
 
@@ -120,24 +121,15 @@ public class CommentController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
-        // Creation & ETag Generation
+        // Creation & HashCode Generation
         final Comment comment = cs.createComment(form.getComment(), getRequestingUserId(), postId);
-        entityLevelETag = ETagUtility.generateETag();
-        EntityTag rowLevelETag = new EntityTag(comment.getCommentId().toString());
+        String commentHashCode = String.valueOf(comment.hashCode());
 
         // Resource URN
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(comment.getCommentId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(commentHashCode)
                 .build();
     }
 
@@ -150,22 +142,12 @@ public class CommentController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(String.valueOf(commentId));
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Deletion & ETag Generation Attempt
+        // Deletion Attempt
         if(cs.deleteComment(commentId)) {
-            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent()
-                    .tag(entityLevelETag)
                     .build();
         }
         return Response.status(Response.Status.NOT_FOUND)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

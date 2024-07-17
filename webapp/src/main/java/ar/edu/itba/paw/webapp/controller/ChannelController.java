@@ -58,24 +58,27 @@ public class ChannelController {
     public Response listChannels() {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
 
+        // Content
+        List<Channel> channels = cs.getChannels(neighborhoodId);
+        String channelsHashCode = String.valueOf(channels.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(channelsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        List<Channel> channels = cs.getChannels(neighborhoodId);
         if (channels.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(channelsHashCode)
                     .build();
+
         List<ChannelDto> channelDto = channels.stream()
                 .map(c -> ChannelDto.fromChannel(c, uriInfo, neighborhoodId)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<ChannelDto>>(channelDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(channelsHashCode)
                 .build();
     }
 
@@ -83,23 +86,23 @@ public class ChannelController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findChannel(
-            @PathParam("id") long channelId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") long channelId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(String.valueOf(channelId));
-        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
         // Content
-        ChannelDto channelDto = ChannelDto.fromChannel(cs.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new), uriInfo, neighborhoodId);
+        Channel channel = cs.findChannel(channelId, neighborhoodId).orElseThrow(() -> new NotFoundException("Channel Not Found"));
+        String channelHashCode = String.valueOf(channel.hashCode());
 
-        return Response.ok(channelDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(channelHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        return Response.ok(ChannelDto.fromChannel(channel, uriInfo, neighborhoodId))
+                .tag(channelHashCode)
+                .cacheControl(cacheControl)
                 .build();
     }
 
@@ -111,24 +114,15 @@ public class ChannelController {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
         // Content
         final Channel channel = cs.createChannel(neighborhoodId, form.getName());
-        entityLevelETag = ETagUtility.generateETag();
-        EntityTag rowLevelETag = new EntityTag(String.valueOf(channel.getChannelId()));
+        String channelHashCode = String.valueOf(channel.hashCode());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(channel.getChannelId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(channelHashCode)
                 .build();
     }
 
@@ -142,22 +136,12 @@ public class ChannelController {
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(String.valueOf(channelId));
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Deletion & ETag Generation Attempt
+        // Deletion Attempt
         if(cs.deleteChannel(channelId)) {
-            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent()
-                    .tag(entityLevelETag)
                     .build();
         }
         return Response.status(Response.Status.NOT_FOUND)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

@@ -52,24 +52,25 @@ public class BaseChannelController {
     public Response listBaseChannels() {
         LOGGER.info("GET request arrived at '/base-channels'");
 
+        // Content
+        BaseChannel[] baseChannels = BaseChannel.values();
+        String baseChannelsHashCode = String.valueOf(Arrays.hashCode(baseChannels));
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(baseChannelsHashCode));
         if (builder != null)
-            return builder
-                    .cacheControl(cacheControl)
-                    .tag(entityLevelETag)
-                    .build();
+            return builder.cacheControl(cacheControl).build();
 
         // Content
-        List<BaseChannelDto> baseChannelDto = Arrays.stream(BaseChannel.values())
+        List<BaseChannelDto> baseChannelDto = Arrays.stream(baseChannels)
                 .map(tt -> BaseChannelDto.fromBaseChannel(tt, uriInfo))
                 .collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<BaseChannelDto>>(baseChannelDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(baseChannelsHashCode)
                 .build();
     }
 
@@ -82,19 +83,23 @@ public class BaseChannelController {
     ) {
         LOGGER.info("GET request arrived at '/base-channels/{}'", baseChannelId);
 
+        // Content
+        BaseChannel baseChannel = BaseChannel.fromId(baseChannelId);
+        String baseChannelHashCode = String.valueOf(baseChannel.hashCode());
+
         // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(baseChannelId));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(baseChannelHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
 
         // Content
-        BaseChannelDto baseChannelDto = BaseChannelDto.fromBaseChannel(BaseChannel.fromId(baseChannelId), uriInfo);
+        BaseChannelDto baseChannelDto = BaseChannelDto.fromBaseChannel(baseChannel, uriInfo);
 
         return Response.ok(baseChannelDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+                .tag(baseChannelHashCode)
+                .cacheControl(cacheControl)
                 .build();
     }
 }

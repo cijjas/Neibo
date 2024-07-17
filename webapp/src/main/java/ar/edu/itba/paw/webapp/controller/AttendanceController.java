@@ -47,9 +47,6 @@ public class AttendanceController extends GlobalControllerAdvice {
     @PathParam("eventId")
     private Long eventId;
 
-    private EntityTag entityLevelETag = ETagUtility.generateETag();
-
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listAttendance(
@@ -58,18 +55,21 @@ public class AttendanceController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
+        // Content
+        final List<Attendance> attendance = as.getAttendance(eventId, page, size, neighborhoodId);
+        String attendanceHashCode = String.valueOf(attendance.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(attendanceHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        final List<Attendance> attendance = as.getAttendance(eventId, page, size, neighborhoodId);
         if (attendance.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(attendanceHashCode)
                     .build();
+
         final List<AttendanceDto> attendanceDto = attendance.stream()
                 .map(a -> AttendanceDto.fromAttendance(a, uriInfo)).collect(Collectors.toList());
 
@@ -83,7 +83,7 @@ public class AttendanceController extends GlobalControllerAdvice {
 
         return Response.ok(new GenericEntity<List<AttendanceDto>>(attendanceDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(attendanceHashCode)
                 .links(links)
                 .build();
     }
@@ -97,18 +97,19 @@ public class AttendanceController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(neighborhoodId.toString() + userId);
-        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
         // Content
-        AttendanceDto attendanceDto = AttendanceDto.fromAttendance(as.findAttendance(userId, eventId, neighborhoodId).orElseThrow(NotFoundException::new), uriInfo);
+        Attendance attendance = as.findAttendance(userId, eventId, neighborhoodId).orElseThrow(() -> new NotFoundException("Attendance Not Found"));
+        String attendanceHashCode = String.valueOf(attendance.hashCode());
 
-        return Response.ok(attendanceDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(attendanceHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        return Response.ok(AttendanceDto.fromAttendance(attendance, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(attendanceHashCode)
                 .build();
     }
 
@@ -117,24 +118,15 @@ public class AttendanceController extends GlobalControllerAdvice {
     public Response createAttendance() {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
-        // Creation & ETag Generation
+        // Creation & HashCode Generation
         final Attendance attendance = as.createAttendance(getRequestingUserId(), eventId);
-        entityLevelETag = ETagUtility.generateETag();
-        EntityTag rowLevelETag = new EntityTag(neighborhoodId.toString() + attendance.getUser().getUserId());
+        String attendanceHashCode = String.valueOf(attendance.hashCode());
 
         // Resource URN
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(attendance.getId().getUserId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(attendanceHashCode)
                 .build();
     }
 
@@ -145,23 +137,13 @@ public class AttendanceController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(neighborhoodId.toString() + getRequestingUserId());
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Deletion & ETag Generation Attempt
+        // Deletion Attempt
         if(as.deleteAttendance(getRequestingUserId(), eventId)) {
-            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent()
-                    .tag(entityLevelETag)
                     .build();
         }
 
         return Response.status(Response.Status.NOT_FOUND)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

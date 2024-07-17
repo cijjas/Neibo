@@ -54,8 +54,6 @@ public class InquiryController extends GlobalControllerAdvice{
     @PathParam("productId")
     private Long productId;
 
-    private EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listInquiries(
@@ -64,18 +62,21 @@ public class InquiryController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
 
+        // Content
+        final List<Inquiry> inquiries = is.getInquiries(productId, page, size, neighborhoodId);
+        String inquiriesHashCode = String.valueOf(inquiries.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(inquiriesHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        final List<Inquiry> inquiries = is.getInquiries(productId, page, size, neighborhoodId);
         if (inquiries.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(inquiriesHashCode)
                     .build();
+
         final List<InquiryDto> inquiriesDto = inquiries.stream()
                 .map(i -> InquiryDto.fromInquiry(i, uriInfo)).collect(Collectors.toList());
 
@@ -90,7 +91,7 @@ public class InquiryController extends GlobalControllerAdvice{
         return Response.ok(new GenericEntity<List<InquiryDto>>(inquiriesDto){})
                 .links(links)
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(inquiriesHashCode)
                 .build();
     }
 
@@ -104,17 +105,18 @@ public class InquiryController extends GlobalControllerAdvice{
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
         // Content
-        Inquiry inquiry = is.findInquiry(inquiryId, productId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Inquiry inquiry = is.findInquiry(inquiryId, productId, neighborhoodId).orElseThrow(() -> new NotFoundException("Inquiry not found"));
+        String inquiryHashCode = String.valueOf(inquiry.hashCode());
 
         // Cache Control
-        EntityTag rowLevelETag = new EntityTag(inquiry.getVersion().toString());
-        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(inquiryHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
 
         return Response.ok(InquiryDto.fromInquiry(inquiry, uriInfo))
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(inquiryHashCode)
+                .cacheControl(cacheControl)
                 .build();
     }
 
@@ -127,25 +129,16 @@ public class InquiryController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
-        // Creation & ETag Generation
+        // Creation & HashCode Generation
         final Inquiry inquiry = is.createInquiry(getRequestingUserId(), productId, form.getQuestionMessage());
-        entityLevelETag = ETagUtility.generateETag();
-        EntityTag rowLevelETag = new EntityTag(inquiry.getVersion().toString());
+        String inquiryHashCode = String.valueOf(inquiry.hashCode());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(inquiry.getInquiryId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(inquiryHashCode)
                 .build();
     }
 
@@ -156,25 +149,16 @@ public class InquiryController extends GlobalControllerAdvice{
     @PreAuthorize("@accessControlHelper.canAnswerInquiry(#inquiryId)")
     public Response updateInquiry(
             @PathParam("id") final long inquiryId,
-            @Valid @NotNull final ReplyForm form,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @Valid @NotNull final ReplyForm form
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(is.findInquiry(inquiryId, productId, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Modification & ETag Generation
+        // Modification & HashCode Generation
         final Inquiry updatedInquiry = is.replyInquiry(inquiryId, form.getReplyMessage());
-        entityLevelETag = ETagUtility.generateETag();
-        rowLevelETag = new EntityTag(updatedInquiry.getVersion().toString());
+        String inquiryHashCode = String.valueOf(updatedInquiry.hashCode());
 
         return Response.ok(InquiryDto.fromInquiry(updatedInquiry, uriInfo))
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(inquiryHashCode)
                 .build();
     }
 
@@ -183,28 +167,17 @@ public class InquiryController extends GlobalControllerAdvice{
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteInquiry(#inquiryId)")
     public Response deleteById(
-            @PathParam("id") final long inquiryId,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @PathParam("id") final long inquiryId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}/inquiries/{}'", neighborhoodId, productId, inquiryId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(is.findInquiry(inquiryId).orElseThrow(NotFoundException::new).getVersion().toString());
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Deletion & ETag Generation Attempt
+        // Deletion Attempt
         if (is.deleteInquiry(inquiryId)) {
-            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent()
-                    .tag(entityLevelETag)
                     .build();
         }
 
         return Response.status(Response.Status.NOT_FOUND)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 

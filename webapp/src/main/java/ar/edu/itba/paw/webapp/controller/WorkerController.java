@@ -62,18 +62,21 @@ public class WorkerController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("GET request arrived at '/workers'");
 
+        // Content
+        List<Worker> workers = ws.getWorkers(page, size, professionURNs, neighborhoodURNs, workerRoleURN, workerStatusURN);
+        String workersHashCode = String.valueOf(workers.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(workersHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        List<Worker> workers = ws.getWorkers(page, size, professionURNs, neighborhoodURNs, workerRoleURN, workerStatusURN);
         if (workers.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(workersHashCode)
                     .build();
+
         List<WorkerDto> workerDto = workers.stream()
                 .map(w -> WorkerDto.fromWorker(w, uriInfo)).collect(Collectors.toList());
 
@@ -88,7 +91,7 @@ public class WorkerController extends GlobalControllerAdvice {
         return Response.ok(new GenericEntity<List<WorkerDto>>(workerDto){})
                 .links(links)
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(workersHashCode)
                 .build();
     }
 
@@ -103,17 +106,18 @@ public class WorkerController extends GlobalControllerAdvice {
         LOGGER.info("GET request arrived at '/workers/{}'", workerId);
 
         // Content
-        Worker worker = ws.findWorker(workerId).orElseThrow(NotFoundException::new);
+        Worker worker = ws.findWorker(workerId).orElseThrow(() -> new NotFoundException("Worker not found"));
+        String workerHashCode = String.valueOf(worker.hashCode());
 
         // Cache Control
-        EntityTag rowLevelETag = new EntityTag(worker.getVersion().toString());
-        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(workerHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
 
         return Response.ok(WorkerDto.fromWorker(worker, uriInfo))
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .cacheControl(cacheControl)
+                .tag(workerHashCode)
                 .build();
     }
 
@@ -124,24 +128,15 @@ public class WorkerController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("POST request arrived at '/workers'");
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
         // Creation & Etag Generation
         final Worker worker = ws.createWorker(form.getWorkerEmail(), form.getWorkerName(), form.getWorkerSurname(), form.getWorkerPassword(), form.getWorkerIdentification(), form.getPhoneNumber(), form.getAddress(), form.getWorkerLanguageURN(), form.getProfessionURNs(), form.getBusinessName());
-        entityLevelETag = ETagUtility.generateETag();
-        EntityTag rowLevelETag = new EntityTag(worker.getVersion().toString());
+        String workerHashCode = String.valueOf(worker.hashCode());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(worker.getWorkerId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(workerHashCode)
                 .build();
     }
 
@@ -150,25 +145,16 @@ public class WorkerController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateWorkerPartially(
             @PathParam("id") final long workerId,
-            @Valid @NotNull final WorkerUpdateForm partialUpdate,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @Valid @NotNull final WorkerUpdateForm partialUpdate
     ) {
         LOGGER.info("PATCH request arrived at '/workers/{}'", workerId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(ws.findWorker(workerId).orElseThrow(NotFoundException::new).getVersion().toString());
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Modification & ETag Generation
+        // Modification & HashCode Generation
         final Worker updatedWorker = ws.updateWorkerPartially(workerId, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPictureURN(), partialUpdate.getBio());
-        entityLevelETag = ETagUtility.generateETag();
-        rowLevelETag = new EntityTag(updatedWorker.getVersion().toString());
+        String workerHashCode = String.valueOf(updatedWorker.hashCode());
 
         return Response.ok(WorkerDto.fromWorker(updatedWorker, uriInfo))
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(workerHashCode)
                 .build();
     }
 }

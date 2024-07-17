@@ -52,33 +52,32 @@ public class ContactController {
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
-    private EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response listContacts(
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) String ifNoneMatch
-    ) {
+    public Response listContacts() {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
-
-        // Cache Control
-        CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return builder.cacheControl(cacheControl).build();
 
         // Content
         final List<Contact> contacts = cs.getContacts(neighborhoodId);
+        String contactsHashCode = String.valueOf(contacts.hashCode());
+
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(contactsHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
         if (contacts.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(contactsHashCode)
                     .build();
+
         final List<ContactDto> contactsDto = contacts.stream()
                 .map(c -> ContactDto.fromContact(c, uriInfo)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<ContactDto>>(contactsDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(contactsHashCode)
                 .build();
     }
 
@@ -86,23 +85,23 @@ public class ContactController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findContact(
-            @PathParam("id") long contactId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") long contactId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, contactId);
 
         // Content
         Contact contact = cs.findContact(contactId, neighborhoodId).orElseThrow(NotFoundException::new);
+        String contactHashCode = String.valueOf(contact.hashCode());
 
         // Cache Control
-        EntityTag rowLevelETag = new EntityTag(contact.getVersion().toString());
-        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(contactHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
 
         return Response.ok(ContactDto.fromContact(contact, uriInfo))
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(contactHashCode)
+                .cacheControl(cacheControl)
                 .build();
     }
 
@@ -114,24 +113,15 @@ public class ContactController {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
-        // Creation & ETag Generation
+        // Creation & HashCode Generation
         final Contact contact = cs.createContact(neighborhoodId, form.getContactName(), form.getContactAddress(), form.getContactPhone());
-        entityLevelETag = ETagUtility.generateETag();
-        EntityTag rowLevelETag = new EntityTag(contact.getVersion().toString());
+        String contactHashCode = String.valueOf(contact.hashCode());
 
         // Resource URN
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(contact.getContactId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(contactHashCode)
                 .build();
     }
 
@@ -147,20 +137,12 @@ public class ContactController {
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(cs.findContact(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Modification & ETag Generation
+        // Modification & HashCode Generation
         final Contact updatedContact = cs.updateContact(id, partialUpdate.getContactName(), partialUpdate.getContactAddress(), partialUpdate.getContactPhone());
-        entityLevelETag = ETagUtility.generateETag();
-        rowLevelETag = new EntityTag(updatedContact.getVersion().toString());
+        String updatedContactHashCode = String.valueOf(updatedContact.hashCode());
 
         return Response.ok(ContactDto.fromContact(updatedContact, uriInfo))
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(updatedContactHashCode)
                 .build();
     }
 
@@ -174,23 +156,13 @@ public class ContactController {
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(cs.findContact(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Deletion & ETag Generation Attempt
+        // Deletion Attempt
         if(cs.deleteContact(id)) {
-            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent()
-                    .tag(entityLevelETag)
                     .build();
         }
 
         return Response.status(Response.Status.NOT_FOUND)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }
