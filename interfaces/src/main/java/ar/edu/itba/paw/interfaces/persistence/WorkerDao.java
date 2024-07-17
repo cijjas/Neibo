@@ -18,7 +18,7 @@ public interface WorkerDao {
 
     Optional<Worker> findWorker(long workerId);
 
-    List<Worker> getWorkers(int page, int size, List<String> professions, List<Long> neighborhoodIds, String workerRole, String workerStatus);
+    List<Worker> getWorkers(int page, int size, List<Long> professionIds, List<Long> neighborhoodIds, Long workerRoleId, Long workerStatusId);
 
-    int countWorkers(List<String> professions, List<Long> neighborhoodIds, String workerRole, String workerStatus);
+    int countWorkers(List<Long> professionIds, List<Long> neighborhoodIds, Long workerRoleId, Long workerStatusId);
 }

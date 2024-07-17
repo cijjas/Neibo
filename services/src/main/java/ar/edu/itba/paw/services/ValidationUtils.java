@@ -65,6 +65,22 @@ public class ValidationUtils {
         ValidationUtils.checkId(postStatusId, "Post Status");
     }
 
+    public static void checkProductStatusId(Long productStatusId){
+        ValidationUtils.checkId(productStatusId, "Product Status");
+    }
+
+    public static void checkWorkerStatusId(Long workerStatusId){
+        ValidationUtils.checkId(workerStatusId, "Worker Status");
+    }
+
+    public static void checkWorkerRoleId(Long workerRoleId){
+        ValidationUtils.checkId(workerRoleId, "Worker Role");
+    }
+
+    public static void checkTransactionTypeId(Long transactionTypeId){
+        ValidationUtils.checkId(transactionTypeId, "Transaction Type");
+    }
+
     public static void checkNeighborhoodId(Long neighborhoodId) {
         ValidationUtils.checkId(neighborhoodId, "Neighborhood");
     }

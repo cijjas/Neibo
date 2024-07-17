@@ -49,14 +49,14 @@ public class TagController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response listTags(
-            @QueryParam("postId") final Long postId,
+            @QueryParam("postId") final String postURN,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/tags'", neighborhoodId);
 
         // Content
-        List<Tag> tags = ts.getTags(postId, neighborhoodId, page, size);
+        List<Tag> tags = ts.getTags(postURN, neighborhoodId, page, size);
         String tagsHashCode = String.valueOf(tags.hashCode());
 
         // Cache Control
@@ -77,7 +77,7 @@ public class TagController {
         // Pagination Links
         Link[] links = ControllerUtils.createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/tags",
-                ts.calculateTagPages(postId, neighborhoodId, size),
+                ts.calculateTagPages(postURN, neighborhoodId, size),
                 page,
                 size
         );

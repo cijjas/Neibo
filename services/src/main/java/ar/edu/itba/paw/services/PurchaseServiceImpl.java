@@ -60,38 +60,53 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     @Override
-    public List<Purchase> getPurchases(long userId, String transactionType, int page, int size, long neighborhoodId) {
-        LOGGER.info("Getting Transactions of type {} made by User {} from Neighborhood {}", transactionType, userId, neighborhoodId);
+    public List<Purchase> getPurchases(long userId, String transactionTypeURN, int page, int size, long neighborhoodId) {
+        LOGGER.info("Getting Transactions of type {} made by User {} from Neighborhood {}", transactionTypeURN, userId, neighborhoodId);
+
+        Long transactionTypeId = null;
+        if (transactionTypeURN != null){
+            transactionTypeId = ValidationUtils.extractURNId(transactionTypeURN);
+            ValidationUtils.checkTransactionTypeId(transactionTypeId);
+        }
 
         ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkPageAndSize(page, size);
-        ValidationUtils.checkOptionalTransactionTypeString(transactionType);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkPageAndSize(page, size);
 
         userDao.findUser(userId, neighborhoodId).orElseThrow(NotFoundException::new);
 
-        return purchaseDao.getPurchases(userId, transactionType, page, size);
+        return purchaseDao.getPurchases(userId, transactionTypeId, page, size);
     }
 
     @Override
-    public int countPurchases(long userId, String transactionType) {
-        LOGGER.info("Counting Transactions of type {} made by User {}", transactionType, userId);
+    public int countPurchases(long userId, String transactionTypeURN) {
+        LOGGER.info("Counting Transactions of type {} made by User {}", transactionTypeURN, userId);
+
+        Long transactionTypeId = null;
+        if (transactionTypeURN != null){
+            transactionTypeId = ValidationUtils.extractURNId(transactionTypeURN);
+            ValidationUtils.checkTransactionTypeId(transactionTypeId);
+        }
 
         ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkOptionalTransactionTypeString(transactionType);
 
-        return purchaseDao.countPurchases(userId, transactionType);
+        return purchaseDao.countPurchases(userId, transactionTypeId);
     }
 
     @Override
-    public int calculatePurchasePages(long userId, String transactionType, int size) {
-        LOGGER.info("Calculating Transaction Pages of type {} made by User {}", transactionType, userId);
+    public int calculatePurchasePages(long userId, String transactionTypeURN, int size) {
+        LOGGER.info("Calculating Transaction Pages of type {} made by User {}", transactionTypeURN, userId);
+
+        Long transactionTypeId = null;
+        if (transactionTypeURN != null){
+            transactionTypeId = ValidationUtils.extractURNId(transactionTypeURN);
+            ValidationUtils.checkTransactionTypeId(transactionTypeId);
+        }
 
         ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkOptionalTransactionTypeString(transactionType);
         ValidationUtils.checkSize(size);
 
-        return PaginationUtils.calculatePages(purchaseDao.countPurchases(userId, transactionType), size);
+        return PaginationUtils.calculatePages(purchaseDao.countPurchases(userId, transactionTypeId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

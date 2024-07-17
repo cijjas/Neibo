@@ -20,5 +20,5 @@ public interface ShiftDao {
 
     List<Shift> getShifts();
 
-    List<Shift> getShifts(long amenityId);
+    List<Shift> getShifts(Long amenityId);
 }

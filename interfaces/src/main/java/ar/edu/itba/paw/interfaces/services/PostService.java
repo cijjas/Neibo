@@ -25,7 +25,7 @@ public interface PostService {
 
     // ---------------------------------------------------
 
-    int countPosts(String channel, List<String> tags, long neighborhoodId, String postStatus, Long userId);
+    int countPosts(String channel, List<String> tags, long neighborhoodId, String postStatus, String userURN);
 
     int calculatePostPages(String channelURN, int size, List<String> tagURNs, long neighborhoodId, String postStatusURN, String userURN);
 }

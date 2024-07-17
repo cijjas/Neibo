@@ -9,12 +9,12 @@ import java.util.List;
 
 class DaoUtils {
 
-    static void appendCommonConditions(StringBuilder query, List<Object> queryParams, String channel, Long userId, long neighborhoodId, List<String> tags, String postStatus) {
+    static void appendCommonConditions(StringBuilder query, List<Object> queryParams, Long channelId, Long userId, long neighborhoodId, List<Long> tags, Long postStatusId) {
         appendInitialWhereClause(query);
         appendNeighborhoodIdCondition(query, queryParams, neighborhoodId);
 
-        if (channel != null && !channel.isEmpty())
-            appendChannelCondition(query, queryParams, channel);
+        if (channelId != null)
+            appendChannelCondition(query, queryParams, channelId);
 
         if (userId != null)
             appendUserIdCondition(query, queryParams, userId);
@@ -22,8 +22,8 @@ class DaoUtils {
         if (tags != null && !tags.isEmpty())
             appendTagsCondition(query, queryParams, tags);
 
-        if (postStatus != null ){
-            switch (PostStatus.valueOf(postStatus.toUpperCase())) {
+        if (postStatusId != null ){
+            switch (PostStatus.fromId(postStatusId)) {
                 case HOT:
                     appendHotClause(query);
                     break;
@@ -58,9 +58,9 @@ class DaoUtils {
         query.append(" WHERE 1 = 1");
     }
 
-    static void appendChannelCondition(StringBuilder query, List<Object> queryParams, String channel) {
-        query.append(" AND channel LIKE ?");
-        queryParams.add(channel.substring(0, 1).toUpperCase() + channel.substring(1).toLowerCase());
+    static void appendChannelCondition(StringBuilder query, List<Object> queryParams, Long channelId) {
+        query.append(" AND channel.channelid = ?");
+        queryParams.add(channelId);
     }
 
     static void appendRoleCondition(StringBuilder query, List<Object> queryParams, UserRole role) {
@@ -112,16 +112,16 @@ class DaoUtils {
     }
 
 
-    static void appendTagsCondition(StringBuilder query, List<Object> queryParams, List<String> tags) {
+    static void appendTagsCondition(StringBuilder query, List<Object> queryParams, List<Long> tagIds) {
         query.append(" AND EXISTS (");
         query.append("SELECT 1 FROM posts_tags pt JOIN tags t ON pt.tagid = t.tagid");
         query.append(" WHERE pt.postid = p.postid AND t.tag IN (");
 
-        appendParams(query, queryParams, tags);
+        appendLongParams(query, queryParams, tagIds);
 
         query.append(")");
         query.append(" HAVING COUNT(DISTINCT pt.tagid) = ?)"); // Ensure all specified tags exist
-        queryParams.add(tags.size());
+        queryParams.add(tagIds.size());
     }
 
     static void appendParams(StringBuilder query, List<Object> queryParams, List<String> tags) {
@@ -131,6 +131,16 @@ class DaoUtils {
             query.append("?");
             queryParams.add(formattedTag); // Use the formatted tag/profession name
             if (i < tags.size() - 1) {
+                query.append(", ");
+            }
+        }
+    }
+
+    static void appendLongParams(StringBuilder query, List<Object> queryParams, List<Long> tagIds) {
+        for (int i = 0; i < tagIds.size(); i++) {
+            query.append("?");
+            queryParams.add(tagIds.get(i));
+            if (i < tagIds.size() - 1) {
                 query.append(", ");
             }
         }
@@ -162,6 +172,7 @@ class DaoUtils {
         query.append(" ORDER BY postdate DESC");
     }
 
+    /*
     static void appendCommonProductConditions(StringBuilder query, List<Object> queryParams, long neighborhoodId, List<String> tags) {
         appendInitialWhereClause(query);
         appendProductNeighborhoodIdCondition(query, queryParams, neighborhoodId);
@@ -170,6 +181,7 @@ class DaoUtils {
             appendTagsCondition(query, queryParams, tags);
         }
     }
+     */
 
     static void appendProductNeighborhoodIdCondition(StringBuilder query, List<Object> queryParams, long neighborhoodId) {
         query.append(" AND u.neighborhoodid = ?");

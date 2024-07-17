@@ -59,8 +59,8 @@ public class BookingController extends GlobalControllerAdvice{
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listBookings(
-            @QueryParam("bookedBy") final Long userId,
-            @QueryParam("forAmenity") final Long amenityId,
+            @QueryParam("bookedBy") final String userURN,
+            @QueryParam("forAmenity") final String amenityURN,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
@@ -87,7 +87,7 @@ public class BookingController extends GlobalControllerAdvice{
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/amenities",
-                bs.calculateBookingPages(userId, amenityId, neighborhoodId, size),
+                bs.calculateBookingPages(userURN, amenityURN, neighborhoodId, size),
                 page,
                 size
         );

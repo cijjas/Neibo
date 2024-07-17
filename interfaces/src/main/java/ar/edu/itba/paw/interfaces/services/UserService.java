@@ -28,11 +28,11 @@ public interface UserService {
 
     List<User> getNeighborsSubscribed(long postId);
 
-    int countUsers(String role, long neighborhoodId);
+    int countUsers(String userRoleURN, long neighborhoodId);
 
-    List<User> getUsers(String role, long neighborhoodId, int page, int size);
+    List<User> getUsers(String userRoleURN, long neighborhoodId, int page, int size);
 
-    int calculateUserPages(String role, long neighborhoodId, int size);
+    int calculateUserPages(String userRoleURN, long neighborhoodId, int size);
 
     List<User> getEventUsers(long eventId);
 

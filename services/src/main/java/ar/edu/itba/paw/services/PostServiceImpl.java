@@ -74,7 +74,7 @@ public class PostServiceImpl implements PostService {
         if(postDao.deletePost(postId)) {
             for(Tag t : tags) {
                 //if tag was only being used in this (deleted) post, delete the tag
-                if(countPosts(null, Collections.singletonList(t.getTag()), neighborhoodId, null, null) == 0)
+                if(postDao.countPosts(null, Collections.singletonList(t.getTagId()), neighborhoodId, null, null) == 0)
                     tagService.deleteTag(t.getTagId());
             }
             return true;
@@ -122,19 +122,22 @@ public class PostServiceImpl implements PostService {
     public List<Post> getPosts(String channelURN, int page, int size, List<String> tagURNs, long neighborhoodId, String postStatusURN, String userURN) {
         LOGGER.info("Getting Posts with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatusURN, channelURN, tagURNs, userURN, neighborhoodId);
 
+        Long userId = null;
         if (userURN != null){
-            TwoIds channelTwoIds = ValidationUtils.extractTwoURNIds(userURN);
-            ValidationUtils.checkNeighborhoodId(channelTwoIds.getFirstId());
-            ValidationUtils.checkUserId(channelTwoIds.getSecondId());
+            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
+            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
+            ValidationUtils.checkUserId(userTwoIds.getSecondId());
+            userId = userTwoIds.getSecondId();
         }
 
+        Long channelId = null;
         if (channelURN != null){
-            long channelId = ValidationUtils.extractURNId(channelURN);
+            channelId = ValidationUtils.extractURNId(channelURN);
             ValidationUtils.checkChannelId(channelId);
         }
 
-        if (tagURNs != null){
-            List<Long> tagIds = new ArrayList<>();
+        List<Long> tagIds = new ArrayList<>();
+        if (tagURNs != null && !tagURNs.isEmpty()){
             for (String tagURN : tagURNs){
                 TwoIds tagTwoIds = ValidationUtils.extractTwoURNIds(tagURN);
                 ValidationUtils.checkNeighborhoodId(tagTwoIds.getFirstId());
@@ -143,33 +146,60 @@ public class PostServiceImpl implements PostService {
             }
         }
 
+        Long postStatusId = null;
         if (postStatusURN != null){
-            long postStatusId = ValidationUtils.extractURNId(postStatusURN);
+            postStatusId = ValidationUtils.extractURNId(postStatusURN);
             ValidationUtils.checkPostStatusId(postStatusId);
         }
 
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
 
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
-        // fix this
-        return null;
-        // return postDao.getPosts(channelURN, page, size, tagURNs, neighborhoodId, postStatusURN, userURN);
+        return postDao.getPosts(channelId, page, size, tagIds, neighborhoodId, postStatusId, userId);
     }
 
     // ---------------------------------------------------
 
     @Override
     @Transactional(readOnly = true)
-    public int countPosts(String channel, List<String> tags, long neighborhoodId, String postStatus, Long userId) {
-        LOGGER.info("Counting Posts with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatus, channel, tags, userId, neighborhoodId);
+    public int countPosts(String channelURN, List<String> tagURNs, long neighborhoodId, String postStatusURN, String userURN) {
+        LOGGER.info("Counting Posts with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatusURN, channelURN, tagURNs, userURN, neighborhoodId);
 
-        ValidationUtils.checkOptionalChannelString(channel);
+        Long userId = null;
+        if (userURN != null){
+            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
+            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
+            ValidationUtils.checkUserId(userTwoIds.getSecondId());
+            userId = userTwoIds.getSecondId();
+        }
+
+        Long channelId = null;
+        if (channelURN != null){
+            channelId = ValidationUtils.extractURNId(channelURN);
+            ValidationUtils.checkChannelId(channelId);
+        }
+
+        List<Long> tagIds = new ArrayList<>();
+        if (tagURNs != null && !tagURNs.isEmpty()){
+            for (String tagURN : tagURNs){
+                TwoIds tagTwoIds = ValidationUtils.extractTwoURNIds(tagURN);
+                ValidationUtils.checkNeighborhoodId(tagTwoIds.getFirstId());
+                ValidationUtils.checkTagId(tagTwoIds.getSecondId());
+                tagIds.add(tagTwoIds.getSecondId());
+            }
+        }
+
+        Long postStatusId = null;
+        if (postStatusURN != null){
+            postStatusId = ValidationUtils.extractURNId(postStatusURN);
+            ValidationUtils.checkPostStatusId(postStatusId);
+        }
+
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkOptionalPostStatusString(postStatus);
-        ValidationUtils.checkUserId(userId);
 
-        return postDao.countPosts(channel, tags, neighborhoodId, postStatus, userId);
+        return postDao.countPosts(channelId, tagIds, neighborhoodId, postStatusId, userId);
     }
 
     @Override
@@ -177,13 +207,39 @@ public class PostServiceImpl implements PostService {
     public int calculatePostPages(String channelURN, int size, List<String> tagURNs, long neighborhoodId, String postStatusURN, String userURN) {
         LOGGER.info("Calculating Post pages with status {} made on Channel {} with Tags {} by User {} from Neighborhood {} ", postStatusURN, channelURN, tagURNs, userURN, neighborhoodId);
 
-        ValidationUtils.checkOptionalChannelString(channelURN);
+        Long userId = null;
+        if (userURN != null){
+            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
+            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
+            ValidationUtils.checkUserId(userTwoIds.getSecondId());
+            userId = userTwoIds.getSecondId();
+        }
+
+        Long channelId = null;
+        if (channelURN != null){
+            channelId = ValidationUtils.extractURNId(channelURN);
+            ValidationUtils.checkChannelId(channelId);
+        }
+
+        List<Long> tagIds = new ArrayList<>();
+        if (tagURNs != null && !tagURNs.isEmpty()){
+            for (String tagURN : tagURNs){
+                TwoIds tagTwoIds = ValidationUtils.extractTwoURNIds(tagURN);
+                ValidationUtils.checkNeighborhoodId(tagTwoIds.getFirstId());
+                ValidationUtils.checkTagId(tagTwoIds.getSecondId());
+                tagIds.add(tagTwoIds.getSecondId());
+            }
+        }
+
+        Long postStatusId = null;
+        if (postStatusURN != null){
+            postStatusId = ValidationUtils.extractURNId(postStatusURN);
+            ValidationUtils.checkPostStatusId(postStatusId);
+        }
+
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkOptionalPostStatusString(postStatusURN);
-       //  ValidationUtils.checkUserId(userURN);
         ValidationUtils.checkSize(size);
 
-        return 0;
-   //      return PaginationUtils.calculatePages(postDao.countPosts(channelURN, tagURNs, neighborhoodId, postStatusURN, userURN), size);
+        return PaginationUtils.calculatePages(postDao.countPosts(channelId, tagIds, neighborhoodId, postStatusId, userId), size);
     }
 }

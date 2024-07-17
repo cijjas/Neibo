@@ -35,30 +35,16 @@ public class ProfessionWorkerServiceImpl implements ProfessionWorkerService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Profession> getWorkerProfessions(Long workerId) {
-        LOGGER.info("Getting Professions for Worker {}", workerId);
+    public List<Profession> getWorkerProfessions(String workerURN) {
+        LOGGER.info("Getting Professions for Worker {}", workerURN);
 
-        ValidationUtils.checkWorkerId(workerId);
+        Long workerId = null;
+        if (workerURN != null){
+            workerId = ValidationUtils.extractURNId(workerURN);
+            ValidationUtils.checkWorkerId(workerId);
+        }
 
         return professionWorkerDao.getWorkerProfessions(workerId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public String getWorkerProfessionsAsString(long workerId) {
-        LOGGER.info("Getting Worker Professions for Worker {} as String", workerId);
-
-        ValidationUtils.checkWorkerId(workerId);
-
-        List<Profession> professions = getWorkerProfessions(workerId);
-        StringBuilder professionsString = new StringBuilder();
-        for (Profession profession : professions) {
-            if (professionsString.length() > 0) {
-                professionsString.append(", ");
-            }
-            professionsString.append(profession.getProfession().name());
-        }
-        return professionsString.toString();
     }
 
     // -----------------------------------------------------------------------------------------------------------------

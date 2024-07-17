@@ -56,14 +56,14 @@ public class ProductController extends GlobalControllerAdvice {
     public Response listProducts(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("inDepartment") final String department,
-            @QueryParam("listedBy") final Long userId,
-            @QueryParam("withStatus") final String productStatus
+            @QueryParam("inDepartment") final String departmentURN,
+            @QueryParam("listedBy") final String userURN,
+            @QueryParam("withStatus") final String productStatusURN
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
         // Content
-        final List<Product> products = ps.getProducts(neighborhoodId, department, userId, productStatus, page, size);
+        final List<Product> products = ps.getProducts(neighborhoodId, departmentURN, userURN, productStatusURN, page, size);
         String productsHashCode = String.valueOf(products.hashCode());
 
         // Cache Control
@@ -83,7 +83,7 @@ public class ProductController extends GlobalControllerAdvice {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/products",
-                ps.calculateProductPages(neighborhoodId, size, department, userId, productStatus),
+                ps.calculateProductPages(neighborhoodId, size, departmentURN, userURN, productStatusURN),
                 page,
                 size
         );

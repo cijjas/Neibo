@@ -102,12 +102,12 @@ public class PostDaoImpl implements PostDao {
                     "LEFT JOIN posts_users_likes pul on p.postid = pul.postId ";
 
     @Override
-    public List<Post> getPosts(String channel, int page, int size, List<String> tags, long neighborhoodId, String postStatus, Long userId) {
-        LOGGER.debug("Selecting Post from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channel, userId, tags, postStatus);
+    public List<Post> getPosts(Long channelId, int page, int size, List<Long> tagIds, long neighborhoodId, Long postStatusId, Long userId) {
+        LOGGER.debug("Selecting Post from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channelId, userId, tagIds, postStatusId);
 
         StringBuilder query = new StringBuilder(FROM_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
         List<Object> queryParams = new ArrayList<>();
-        appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags, postStatus);
+        appendCommonConditions(query, queryParams, channelId, userId, neighborhoodId, tagIds, postStatusId);
         appendDateClause(query);
         if (page != 0)
             appendPaginationClause(query, queryParams, page, size);
@@ -120,13 +120,13 @@ public class PostDaoImpl implements PostDao {
     // ---------------------------------------------------
 
     @Override
-    public int countPosts(String channel, List<String> tags, long neighborhoodId, String postStatus, Long userId) {
-        LOGGER.debug("Selecting Post Count from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channel, userId, tags, postStatus);
+    public int countPosts(Long channelId, List<Long> tagIds, long neighborhoodId, Long postStatusId, Long userId) {
+        LOGGER.debug("Selecting Post Count from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channelId, userId, tagIds, postStatusId);
 
         StringBuilder query = new StringBuilder(COUNT_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES);
         List<Object> queryParams = new ArrayList<>();
 
-        appendCommonConditions(query, queryParams, channel, userId, neighborhoodId, tags, postStatus);
+        appendCommonConditions(query, queryParams, channelId, userId, neighborhoodId, tagIds, postStatusId);
 
         Query sqlQuery = em.createNativeQuery(query.toString());
 

@@ -52,12 +52,13 @@ public class ShiftServiceImpl implements ShiftService {
     public List<Shift> getShifts(String amenityURN) {
         LOGGER.info("Getting Shifts");
 
-        TwoIds twoIds = ValidationUtils.extractTwoURNIds(amenityURN);
-        long neighborhoodId = twoIds.getFirstId();
-        long amenityId = twoIds.getSecondId();
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkAmenityId(amenityId);
+        Long amenityId = null;
+        if (amenityURN != null){
+            TwoIds twoIds = ValidationUtils.extractTwoURNIds(amenityURN);
+            ValidationUtils.checkNeighborhoodId(twoIds.getFirstId());
+            ValidationUtils.checkAmenityId(twoIds.getSecondId());
+            amenityId = twoIds.getSecondId();
+        }
 
         return shiftDao.getShifts(amenityId);
     }

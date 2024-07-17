@@ -63,8 +63,8 @@ public class PurchaseDaoImpl implements PurchaseDao {
     }
 
     @Override
-    public List<Purchase> getPurchases(long userId, String type, int page, int size) {
-        LOGGER.debug("Selecting Purchases By Criteria For User {}", userId);
+    public List<Purchase> getPurchases(long userId, Long transactionTypeId, int page, int size) {
+        LOGGER.debug("Selecting Purchases By Criteria For User {} for Transaction Type {}", userId, transactionTypeId);
 
         StringBuilder queryStringBuilder = new StringBuilder();
         queryStringBuilder.append("SELECT p.* ")
@@ -72,8 +72,8 @@ public class PurchaseDaoImpl implements PurchaseDao {
                 .append("JOIN products pr ON p.productid = pr.productid ")
                 .append("JOIN users u ON p.userid = u.userid ");
 
-        if (type != null) {
-            TransactionType tType = TransactionType.valueOf(type.toUpperCase());
+        if (transactionTypeId != null) {
+            TransactionType tType = TransactionType.fromId(transactionTypeId);
 
             switch (tType) {
                 case PURCHASE:
@@ -101,8 +101,8 @@ public class PurchaseDaoImpl implements PurchaseDao {
     }
 
     @Override
-    public int countPurchases(long userId, String type) {
-        LOGGER.debug("Counting Purchases By Seller {}", userId);
+    public int countPurchases(long userId, Long transactionTypeId) {
+        LOGGER.debug("Counting Purchases By Seller {} for Transactions of Type {}", userId, transactionTypeId);
 
         StringBuilder queryStringBuilder = new StringBuilder();
         queryStringBuilder.append("SELECT COUNT(p.*) ")
@@ -110,8 +110,8 @@ public class PurchaseDaoImpl implements PurchaseDao {
                 .append("JOIN products pr ON p.productid = pr.productid ")
                 .append("JOIN users u ON p.userid = u.userid ");
 
-        if (type != null) {
-            TransactionType tType = TransactionType.valueOf(type.toUpperCase());
+        if (transactionTypeId != null) {
+            TransactionType tType = TransactionType.fromId(transactionTypeId);
 
             switch (tType) {
                 case PURCHASE:

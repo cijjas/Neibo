@@ -84,18 +84,18 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public List<Product> getProducts(long neighborhoodId, String department, Long userId, String productStatus, int page, int size) {
-        LOGGER.debug("Selecting Products from neighborhood {}, in department {}", neighborhoodId, department);
+    public List<Product> getProducts(long neighborhoodId, Long departmentId, Long userId, Long productStatusId, int page, int size) {
+        LOGGER.debug("Selecting Products from neighborhood {}, in department {}", neighborhoodId, departmentId);
 
         StringBuilder nativeQuery = new StringBuilder("SELECT p.* FROM products p " +
                 "JOIN users u ON p.sellerid = u.userid " +
                 "WHERE u.neighborhoodid = :neighborhoodId ");
 
-        if (department != null) {
+        if (departmentId != null) {
             nativeQuery.append("AND p.departmentid = :departmentId ");
         }
 
-        if (userId != null && productStatus == null) {
+        if (userId != null && productStatusId == null) {
             // Was bought by a user with this ID or is being sold by a user with this ID
             nativeQuery.append("AND (p.productid IN (" +
                     "SELECT DISTINCT p.productid FROM products_users_purchases p " +
@@ -105,8 +105,8 @@ public class ProductDaoImpl implements ProductDao {
 
         }
 
-        if (productStatus != null) {
-            switch (ProductStatus.valueOf(productStatus.toUpperCase())) {
+        if (productStatusId != null) {
+            switch (ProductStatus.fromId(productStatusId)) {
                 case BOUGHT:
                     nativeQuery.append("AND (p.productId IN (" +
                             "SELECT DISTINCT p.productid FROM products_users_purchases pc " +
@@ -133,8 +133,8 @@ public class ProductDaoImpl implements ProductDao {
 
         query.setParameter("neighborhoodId", neighborhoodId);
 
-        if (department != null) {
-            query.setParameter("departmentId", Department.valueOf(department.toUpperCase()).getId());
+        if (departmentId != null) {
+            query.setParameter("departmentId", departmentId);
         }
 
         if (userId != null) {
@@ -150,18 +150,18 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
-    public int countProducts(long neighborhoodId, String department, Long userId, String productStatus) {
-        LOGGER.debug("Selecting Products Count from neighborhood {}, in department {}", neighborhoodId, department);
+    public int countProducts(long neighborhoodId, Long departmentId, Long userId, Long productStatusId) {
+        LOGGER.debug("Selecting Products Count from neighborhood {}, in department {}", neighborhoodId, departmentId);
 
         StringBuilder nativeQuery = new StringBuilder("SELECT COUNT(DISTINCT p.productid) FROM products p " +
                 "JOIN users u ON p.sellerid = u.userid " +
                 "WHERE u.neighborhoodid = :neighborhoodId ");
 
-        if (department != null) {
+        if (departmentId != null) {
             nativeQuery.append("AND p.departmentid = :departmentId ");
         }
 
-        if (userId != null && productStatus == null) {
+        if (userId != null && productStatusId == null) {
             // Was bought by a user with this ID or is being sold by a user with this ID
             nativeQuery.append("AND (p.productid IN (" +
                     "SELECT DISTINCT p.productid FROM products_users_purchases p " +
@@ -171,8 +171,8 @@ public class ProductDaoImpl implements ProductDao {
 
         }
 
-        if (productStatus != null) {
-            switch (ProductStatus.valueOf(productStatus.toUpperCase())) {
+        if (productStatusId != null) {
+            switch (ProductStatus.fromId(productStatusId)) {
                 case BOUGHT:
                     nativeQuery.append("AND (p.productId IN (" +
                             "SELECT DISTINCT p.productid FROM products_users_purchases pc " +
@@ -196,8 +196,8 @@ public class ProductDaoImpl implements ProductDao {
 
         query.setParameter("neighborhoodId", neighborhoodId);
 
-        if (department != null) {
-            query.setParameter("departmentId", Department.valueOf(department.toUpperCase()).getId());
+        if (departmentId != null) {
+            query.setParameter("departmentId", departmentId);
         }
 
         if (userId != null) {

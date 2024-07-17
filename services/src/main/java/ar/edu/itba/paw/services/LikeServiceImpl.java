@@ -47,10 +47,25 @@ public class LikeServiceImpl implements LikeService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Like> getLikes(long neighborhoodId, Long postId, Long userId, int page, int size){
-        LOGGER.info("Getting Likes for Post {} by User {} from Neighborhood {}", postId, userId, neighborhoodId);
+    public List<Like> getLikes(long neighborhoodId, String postURN, String userURN, int page, int size){
+        LOGGER.info("Getting Likes for Post {} by User {} from Neighborhood {}", postURN, userURN, neighborhoodId);
 
-        ValidationUtils.checkLikeIds(postId, userId);
+        Long postId = null;
+        if (postURN != null){
+            TwoIds postTwoIds = ValidationUtils.extractTwoURNIds(postURN);
+            ValidationUtils.checkNeighborhoodId(postTwoIds.getFirstId());
+            ValidationUtils.checkPostId(postTwoIds.getSecondId());
+            postId = postTwoIds.getSecondId();
+        }
+
+        Long userId = null;
+        if (userURN != null){
+            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
+            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
+            ValidationUtils.checkUserId(userTwoIds.getSecondId());
+            userId = userTwoIds.getSecondId();
+        }
+
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
 
@@ -83,20 +98,50 @@ public class LikeServiceImpl implements LikeService {
 
 
     @Override
-    public int countLikes(long neighborhoodId, Long postId, Long userId) {
-        LOGGER.info("Counting Likes for Post {} by User {} from Neighborhood {}", userId, postId, neighborhoodId);
+    public int countLikes(long neighborhoodId, String postURN, String userURN) {
+        LOGGER.info("Counting Likes for Post {} by User {} from Neighborhood {}", userURN, postURN, neighborhoodId);
 
-        ValidationUtils.checkLikeIds(postId, userId);
+        Long postId = null;
+        if (postURN != null){
+            TwoIds postTwoIds = ValidationUtils.extractTwoURNIds(postURN);
+            ValidationUtils.checkNeighborhoodId(postTwoIds.getFirstId());
+            ValidationUtils.checkPostId(postTwoIds.getSecondId());
+            postId = postTwoIds.getSecondId();
+        }
+
+        Long userId = null;
+        if (userURN != null){
+            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
+            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
+            ValidationUtils.checkUserId(userTwoIds.getSecondId());
+            userId = userTwoIds.getSecondId();
+        }
+
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         return likeDao.countLikes(postId, userId, neighborhoodId);
     }
 
     @Override
-    public int calculateLikePages(long neighborhoodId, Long postId, Long userId, int size) {
-        LOGGER.info("Calculating Like Pages for Post {} by User {} from Neighborhood {}", userId, postId, neighborhoodId);
+    public int calculateLikePages(long neighborhoodId, String postURN, String userURN, int size) {
+        LOGGER.info("Calculating Like Pages for Post {} by User {} from Neighborhood {}", userURN, postURN, neighborhoodId);
 
-        ValidationUtils.checkLikeIds(postId, userId);
+        Long postId = null;
+        if (postURN != null){
+            TwoIds postTwoIds = ValidationUtils.extractTwoURNIds(postURN);
+            ValidationUtils.checkNeighborhoodId(postTwoIds.getFirstId());
+            ValidationUtils.checkPostId(postTwoIds.getSecondId());
+            postId = postTwoIds.getSecondId();
+        }
+
+        Long userId = null;
+        if (userURN != null){
+            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
+            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
+            ValidationUtils.checkUserId(userTwoIds.getSecondId());
+            userId = userTwoIds.getSecondId();
+        }
+
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkSize(size);
 

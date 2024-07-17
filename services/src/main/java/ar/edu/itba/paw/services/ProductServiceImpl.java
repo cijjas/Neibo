@@ -9,6 +9,7 @@ import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.models.TwoIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Validation;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,43 +80,95 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProducts(long neighborhoodId, String department, Long userId, String productStatus, int page, int size) {
-        LOGGER.info("Getting Products with status {} from Department {} by User {} from Neighborhood {}", productStatus, department, userId, neighborhoodId);
+    public List<Product> getProducts(long neighborhoodId, String departmentURN, String userURN, String productStatusURN, int page, int size) {
+        LOGGER.info("Getting Products with status {} from Department {} by User {} from Neighborhood {}", productStatusURN, departmentURN, userURN, neighborhoodId);
+
+        Long userId = null;
+        if (userURN != null){
+            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
+            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
+            ValidationUtils.checkUserRoleId(userTwoIds.getSecondId());
+            userId = userTwoIds.getFirstId();
+        }
+
+        Long departmentId = null;
+        if (departmentURN != null){
+            departmentId = ValidationUtils.extractURNId(departmentURN);
+            ValidationUtils.checkDepartmentId(departmentId);
+        }
+
+        Long productStatusId = null;
+        if (productStatusURN != null){
+            productStatusId = ValidationUtils.extractURNId(productStatusURN);
+            ValidationUtils.checkProductStatusId(productStatusId);
+        }
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkOptionalDepartmentString(department);
-        ValidationUtils.checkProductStatusUserIdStrings(productStatus, userId);
         ValidationUtils.checkPageAndSize(page, size);
 
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
-        return productDao.getProducts(neighborhoodId, department, userId, productStatus, page, size);
+        return productDao.getProducts(neighborhoodId, departmentId, userId, productStatusId, page, size);
     }
 
     // ---------------------------------------------------
 
     @Override
-    public int countProducts(long neighborhoodId, String department, Long userId, String productStatus) {
-        LOGGER.info("Counting Products with status {} from Department {} by User {} from Neighborhood {}", productStatus, department, userId, neighborhoodId);
+    public int countProducts(long neighborhoodId, String departmentURN, String userURN, String productStatusURN) {
+        LOGGER.info("Counting Products with status {} from Department {} by User {} from Neighborhood {}", productStatusURN, departmentURN, userURN, neighborhoodId);
+
+        Long userId = null;
+        if (userURN != null){
+            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
+            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
+            ValidationUtils.checkUserRoleId(userTwoIds.getSecondId());
+            userId = userTwoIds.getFirstId();
+        }
+
+        Long departmentId = null;
+        if (departmentURN != null){
+            departmentId = ValidationUtils.extractURNId(departmentURN);
+            ValidationUtils.checkDepartmentId(departmentId);
+        }
+
+        Long productStatusId = null;
+        if (productStatusURN != null){
+            productStatusId = ValidationUtils.extractURNId(productStatusURN);
+            ValidationUtils.checkProductStatusId(productStatusId);
+        }
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkOptionalDepartmentString(department);
-        ValidationUtils.checkProductStatusUserIdStrings(productStatus, userId);
-        ValidationUtils.checkOptionalDepartmentString(department);
 
-        return productDao.countProducts(neighborhoodId, department, userId, productStatus);
+        return productDao.countProducts(neighborhoodId, departmentId, userId, productStatusId);
     }
 
     @Override
-    public int calculateProductPages(long neighborhoodId, int size, String department, Long userId, String productStatus){
-        LOGGER.info("Calculating Product Pages with status {} from Department {} by User {} from Neighborhood {}", productStatus, department, userId, neighborhoodId);
+    public int calculateProductPages(long neighborhoodId, int size, String departmentURN, String userURN, String productStatusURN){
+        LOGGER.info("Calculating Product Pages with status {} from Department {} by User {} from Neighborhood {}", productStatusURN, departmentURN, userURN, neighborhoodId);
 
+        Long userId = null;
+        if (userURN != null){
+            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
+            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
+            ValidationUtils.checkUserRoleId(userTwoIds.getSecondId());
+            userId = userTwoIds.getFirstId();
+        }
+
+        Long departmentId = null;
+        if (departmentURN != null){
+            departmentId = ValidationUtils.extractURNId(departmentURN);
+            ValidationUtils.checkDepartmentId(departmentId);
+        }
+
+        Long productStatusId = null;
+        if (productStatusURN != null){
+            productStatusId = ValidationUtils.extractURNId(productStatusURN);
+            ValidationUtils.checkProductStatusId(productStatusId);
+        }
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkOptionalDepartmentString(department);
-        ValidationUtils.checkProductStatusUserIdStrings(productStatus, userId);
         ValidationUtils.checkSize(size);
 
-        return PaginationUtils.calculatePages(productDao.countProducts(neighborhoodId, department, userId, productStatus), size);
+        return PaginationUtils.calculatePages(productDao.countProducts(neighborhoodId, departmentId, userId, productStatusId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

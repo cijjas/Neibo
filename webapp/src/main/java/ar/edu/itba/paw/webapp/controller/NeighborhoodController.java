@@ -55,12 +55,12 @@ public class NeighborhoodController {
     public Response listNeighborhoods(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("withWorker") final Long workerId
+            @QueryParam("withWorker") final String workerURN
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/'");
 
         // Content
-        final List<Neighborhood> neighborhoods = ns.getNeighborhoods(page, size, workerId);
+        final List<Neighborhood> neighborhoods = ns.getNeighborhoods(page, size, workerURN);
         String neighborhoodsHashCode = String.valueOf(neighborhoods.hashCode());
 
         // Cache Control
@@ -80,7 +80,7 @@ public class NeighborhoodController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString(),
-                ns.calculateNeighborhoodPages(workerId, size),
+                ns.calculateNeighborhoodPages(workerURN, size),
                 page,
                 size
         );

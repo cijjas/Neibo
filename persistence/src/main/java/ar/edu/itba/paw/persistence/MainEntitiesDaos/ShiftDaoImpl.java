@@ -108,17 +108,19 @@ public class ShiftDaoImpl implements ShiftDao {
 
         return shifts;
     }*/
-
     @Override
-    public List<Shift> getShifts(long amenityId) {
-        LOGGER.debug("Selecting Weekly Available Shifts for Amenity {}", amenityId);
+    public List<Shift> getShifts(Long amenityId) {
+        LOGGER.debug("Selecting Weekly Available Shifts for Amenity {}", amenityId != null ? amenityId : "ALL");
 
-        String hql = "SELECT s FROM Shift s " +
-                "JOIN s.amenities a " +
-                "WHERE a.amenityId = :amenityId";
+        StringBuilder hql = new StringBuilder("SELECT s FROM Shift s JOIN s.amenities a");
+        if (amenityId != null) {
+            hql.append(" WHERE a.amenityId = :amenityId");
+        }
 
-        TypedQuery<Shift> query = em.createQuery(hql, Shift.class);
-        query.setParameter("amenityId", amenityId);
+        TypedQuery<Shift> query = em.createQuery(hql.toString(), Shift.class);
+        if (amenityId != null) {
+            query.setParameter("amenityId", amenityId);
+        }
 
         return query.getResultList();
     }

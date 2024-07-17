@@ -56,7 +56,7 @@ public class PurchaseController {
     @Produces(MediaType.APPLICATION_JSON)
     @PreAuthorize("@accessControlHelper.canAccessTransactions(#userId)")
     public Response listTransactions(
-            @QueryParam("withType") String type,
+            @QueryParam("withType") String typeURN,
             @QueryParam("page") @DefaultValue("1") int page,
             @QueryParam("size") @DefaultValue("10") int size,
             @PathParam("userId") final long userId
@@ -64,7 +64,7 @@ public class PurchaseController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users/{}/transactions'", neighborhoodId, userId);
 
         // Content
-        List<Purchase> transactions = ps.getPurchases(userId, type, page, size, neighborhoodId);
+        List<Purchase> transactions = ps.getPurchases(userId, typeURN, page, size, neighborhoodId);
         String transactionsHashCode = String.valueOf(transactions.hashCode());
 
         // Cache Control
@@ -85,7 +85,7 @@ public class PurchaseController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/users/" + userId + "/transactions",
-                ps.calculatePurchasePages(userId, type, size),
+                ps.calculatePurchasePages(userId, typeURN, size),
                 page,
                 size
         );

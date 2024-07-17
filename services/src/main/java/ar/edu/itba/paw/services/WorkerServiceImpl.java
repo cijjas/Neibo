@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Validation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -98,43 +99,118 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
-    public List<Worker> getWorkers(int page, int size, List<String> professions, List<String> neighborhoodIds, String workerRole, String workerStatus) {
-        LOGGER.info("Getting Workers with Status {} Role {} Professions {} from Neighborhoods {}", workerStatus, workerRole, professions, neighborhoodIds);
+    public List<Worker> getWorkers(int page, int size, List<String> professionURNs, List<String> neighborhoodURNs, String workerRoleURN, String workerStatusURN) {
+        LOGGER.info("Getting Workers with Status {} Role {} Professions {} from Neighborhoods {}", workerStatusURN, workerRoleURN, professionURNs, neighborhoodURNs);
 
-        ValidationUtils.checkOptionalWorkerRoleString(workerRole);
-        ValidationUtils.checkOptionalWorkerStatusString(workerStatus);
-        ValidationUtils.checkProfessionsArray(professions);
+        List<Long> professionIds = new ArrayList<>();
+        if (professionURNs != null){
+            for (String professionURN : professionURNs){
+                long professionId = ValidationUtils.extractURNId(professionURN);
+                ValidationUtils.checkProfessionId(professionId);
+                professionIds.add(professionId);
+            }
+        }
+
+        List<Long> neighborhoodIds = new ArrayList<>();
+        if (neighborhoodURNs != null){
+            for (String neighborhoodURN : neighborhoodURNs){
+                long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
+                ValidationUtils.checkNeighborhoodId(neighborhoodId);
+                neighborhoodIds.add(neighborhoodId);
+            }
+        }
+
+        Long workerRoleId = null;
+        if (workerRoleURN != null){
+            workerRoleId = ValidationUtils.extractURNId(workerRoleURN);
+            ValidationUtils.checkWorkerRoleId(workerRoleId);
+        }
+
+        Long workerStatusId = null;
+        if (workerStatusURN != null){
+            workerStatusId = ValidationUtils.extractURNId(workerStatusURN);
+            ValidationUtils.checkWorkerStatusId(workerStatusId);
+        }
+
         ValidationUtils.checkPageAndSize(page, size);
-        List<Long> parsedNeighborhoodIds = parseNeighborhoodIds(neighborhoodIds);
 
-        return workerDao.getWorkers(page, size, professions, parsedNeighborhoodIds, workerRole, workerStatus);
+        return workerDao.getWorkers(page, size, professionIds, neighborhoodIds, workerRoleId, workerStatusId);
     }
 
     @Override
-    public int countWorkers(List<String> professions, List<String> neighborhoodIds, String workerRole, String workerStatus) {
-        LOGGER.info("Counting Workers with Status {} Role {} Professions {} from Neighborhoods {}", workerStatus, workerRole, professions, neighborhoodIds);
+    public int countWorkers(List<String> professionURNs, List<String> neighborhoodURNs, String workerRoleURN, String workerStatusURN) {
+        LOGGER.info("Counting Workers with Status {} Role {} Professions {} from Neighborhoods {}", workerStatusURN, workerRoleURN, professionURNs, neighborhoodURNs);
 
-        ValidationUtils.checkOptionalWorkerRoleString(workerRole);
-        ValidationUtils.checkOptionalWorkerStatusString(workerStatus);
-        ValidationUtils.checkProfessionsArray(professions);
+        List<Long> professionIds = new ArrayList<>();
+        if (professionURNs != null){
+            for (String professionURN : professionURNs){
+                long professionId = ValidationUtils.extractURNId(professionURN);
+                ValidationUtils.checkProfessionId(professionId);
+                professionIds.add(professionId);
+            }
+        }
 
-        List<Long> parsedNeighborhoodIds = parseNeighborhoodIds(neighborhoodIds);
+        List<Long> neighborhoodIds = new ArrayList<>();
+        if (neighborhoodURNs != null){
+            for (String neighborhoodURN : neighborhoodURNs){
+                long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
+                ValidationUtils.checkNeighborhoodId(neighborhoodId);
+                neighborhoodIds.add(neighborhoodId);
+            }
+        }
 
-        return workerDao.countWorkers(professions, parsedNeighborhoodIds, workerRole, workerStatus);
+        Long workerRoleId = null;
+        if (workerRoleURN != null){
+            workerRoleId = ValidationUtils.extractURNId(workerRoleURN);
+            ValidationUtils.checkWorkerRoleId(workerRoleId);
+        }
+
+        Long workerStatusId = null;
+        if (workerStatusURN != null){
+            workerStatusId = ValidationUtils.extractURNId(workerStatusURN);
+            ValidationUtils.checkWorkerStatusId(workerStatusId);
+        }
+
+        return workerDao.countWorkers(professionIds, neighborhoodIds, workerRoleId, workerStatusId);
     }
 
     @Override
-    public int calculateWorkerPages(List<String> professions, List<String> neighborhoodIds, int size, String workerRole, String workerStatus) {
-        LOGGER.info("Calculating Worker Pages with Status {} Role {} Professions {} from Neighborhoods {}", workerStatus, workerRole, professions, neighborhoodIds);
+    public int calculateWorkerPages(List<String> professionURNs, List<String> neighborhoodURNs, int size, String workerRoleURN, String workerStatusURN) {
+        LOGGER.info("Calculating Worker Pages with Status {} Role {} Professions {} from Neighborhoods {}", workerStatusURN, workerRoleURN, professionURNs, neighborhoodURNs);
 
-        ValidationUtils.checkOptionalWorkerRoleString(workerRole);
-        ValidationUtils.checkOptionalWorkerStatusString(workerStatus);
-        ValidationUtils.checkProfessionsArray(professions);
+        List<Long> professionIds = new ArrayList<>();
+        if (professionURNs != null){
+            for (String professionURN : professionURNs){
+                long professionId = ValidationUtils.extractURNId(professionURN);
+                ValidationUtils.checkProfessionId(professionId);
+                professionIds.add(professionId);
+            }
+        }
+
+        List<Long> neighborhoodIds = new ArrayList<>();
+        if (neighborhoodURNs != null){
+            for (String neighborhoodURN : neighborhoodURNs){
+                long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
+                ValidationUtils.checkNeighborhoodId(neighborhoodId);
+                neighborhoodIds.add(neighborhoodId);
+            }
+        }
+
+        Long workerRoleId = null;
+        if (workerRoleURN != null){
+            workerRoleId = ValidationUtils.extractURNId(workerRoleURN);
+            ValidationUtils.checkWorkerRoleId(workerRoleId);
+        }
+
+        Long workerStatusId = null;
+        if (workerStatusURN != null){
+            workerStatusId = ValidationUtils.extractURNId(workerStatusURN);
+            ValidationUtils.checkWorkerStatusId(workerStatusId);
+        }
+
         ValidationUtils.checkSize(size);
 
-        List<Long> parsedNeighborhoodIds = parseNeighborhoodIds(neighborhoodIds);
-
-        return PaginationUtils.calculatePages(workerDao.countWorkers(professions, parsedNeighborhoodIds, workerRole, workerStatus), size);
+        return PaginationUtils.calculatePages(workerDao.countWorkers(professionIds, neighborhoodIds, workerRoleId, workerStatusId), size);
     }
 
     private List<Long> parseNeighborhoodIds(List<String> neighborhoodIds) {
