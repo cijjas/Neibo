@@ -27,17 +27,18 @@ public class AffiliationDaoImpl implements AffiliationDao {
     // ----------------------------------------- NEIGHBORHOOD WORKERS INSERT -------------------------------------------
 
     @Override
-    public Affiliation createAffiliation(long workerId, long neighborhoodId, String workerStatus) {
+    public Affiliation createAffiliation(long workerId, long neighborhoodId, Long workerRoleId) {
         LOGGER.debug("Inserting Worker {} to Neighborhood {}", workerId, neighborhoodId);
 
         Worker worker = em.find(Worker.class, workerId);
         Neighborhood neighborhood = em.find(Neighborhood.class, neighborhoodId);
+        WorkerRole workerRole = WorkerRole.fromId(workerRoleId);
 
         Affiliation affiliation;
-        if (workerStatus == null )
+        if (workerRole == null )
             affiliation = new Affiliation(worker, neighborhood, WorkerRole.UNVERIFIED_WORKER);
         else
-            affiliation = new Affiliation(worker, neighborhood, WorkerRole.valueOf(workerStatus));
+            affiliation = new Affiliation(worker, neighborhood, workerRole);
 
         em.persist(affiliation);
         return affiliation;

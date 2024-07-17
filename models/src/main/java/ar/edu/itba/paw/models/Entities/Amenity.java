@@ -20,10 +20,6 @@ public class Amenity {
     @Column(name = "description", length = 512, unique = true, nullable = false)
     private String description;
 
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
     @ManyToOne
     @JoinColumn(name = "neighborhoodid")
     private Neighborhood neighborhood;
@@ -83,14 +79,6 @@ public class Amenity {
 
     public void setAvailableShifts(List<Shift> availableShifts) {
         this.availableShifts = availableShifts;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 
     @Override

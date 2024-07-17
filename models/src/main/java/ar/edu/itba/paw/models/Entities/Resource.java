@@ -28,23 +28,11 @@ public class Resource {
     @JoinColumn(name = "neighborhoodid", nullable = false)
     private Neighborhood neighborhood;
 
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
-    public Long getVersion() {
-        return version;
-    }
-
     Resource() {
     }
 
     public void setResourceId(Long resourceId) {
         this.resourceId = resourceId;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 
     private Resource(Builder builder) {

@@ -58,7 +58,9 @@ public class RequestController extends GlobalControllerAdvice {
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("requestedBy") final String userURN,
-            @QueryParam("forProduct") final String productURN
+            @QueryParam("forProduct") final String productURN,
+            @QueryParam("withType") final String typeURN,
+            @QueryParam("fulfilled") final Boolean fulfilled
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 
@@ -69,7 +71,7 @@ public class RequestController extends GlobalControllerAdvice {
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        List<Request> requests = rs.getRequests(userURN, productURN, page, size, neighborhoodId);
+        List<Request> requests = rs.getRequests(userURN, productURN, typeURN, fulfilled, page, size, neighborhoodId);
         if (requests.isEmpty())
             return Response.noContent()
                     .tag(entityLevelETag)
@@ -80,7 +82,7 @@ public class RequestController extends GlobalControllerAdvice {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/requests",
-                rs.calculateRequestPages(productURN, userURN, size),
+                rs.calculateRequestPages(productURN, userURN, typeURN, fulfilled, size),
                 page,
                 size
         );

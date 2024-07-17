@@ -40,10 +40,6 @@ public class Request implements Serializable {
     @Column(name = "units")
     private Integer units;
 
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
     public Request() {
     }
 
@@ -58,13 +54,6 @@ public class Request implements Serializable {
         this.purchaseDate = builder.purchaseDate;
     }
 
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
 
     public Long getRequestId() {
         return requestId;

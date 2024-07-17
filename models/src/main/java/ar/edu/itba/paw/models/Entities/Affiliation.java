@@ -28,14 +28,6 @@ public class Affiliation implements Serializable {
     @Enumerated(EnumType.STRING)
     private WorkerRole role;
 
-    @Version
-    @ColumnDefault("1")
-    private Long version;
-
-    public Long getVersion() {
-        return version;
-    }
-
     Affiliation() {
         this.id = new AffiliationKey();
     }
@@ -45,10 +37,6 @@ public class Affiliation implements Serializable {
         this.worker = worker;
         this.neighborhood = neighborhood;
         this.role = workerRole;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 
     public AffiliationKey getId() {

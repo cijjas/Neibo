@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.enums.WorkerStatus;
 import ar.edu.itba.paw.webapp.form.validation.constraints.NeighborhoodURNConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.WorkerRoleURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.WorkerURNConstraint;
 
 import java.util.List;
@@ -13,14 +14,15 @@ public class AffiliationForm {
     @NeighborhoodURNConstraint
     private String neighborhoodURN;
 
-    private String workerRole;
+    @WorkerRoleURNConstraint
+    private String workerRoleURN;
 
-    public String getWorkerRole() {
-        return workerRole;
+    public String getWorkerRoleURN() {
+        return workerRoleURN;
     }
 
-    public void setWorkerRole(String workerRole) {
-        this.workerRole = workerRole;
+    public void setWorkerRoleURN(String workerRoleURN) {
+        this.workerRoleURN = workerRoleURN;
     }
 
     public String getNeighborhoodURN() {

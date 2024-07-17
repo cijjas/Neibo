@@ -115,7 +115,7 @@ public class AffiliationController {
         LOGGER.info("POST request arrived at '/affiliations'");
 
         // Creation & HashCode Generation
-        Affiliation affiliation = nws.createAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRole());
+        Affiliation affiliation = nws.createAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRoleURN());
         String affiliationHashCode = String.valueOf(affiliation.hashCode());
 
         // Resource URN
@@ -135,7 +135,7 @@ public class AffiliationController {
         LOGGER.info("PATCH request arrived at '/affiliations'");
 
         // Modification & HashCode Generation
-        final Affiliation updatedAffiliation = nws.updateAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRole());
+        final Affiliation updatedAffiliation = nws.updateAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRoleURN());
         String updatedAffiliationHashCode = String.valueOf(updatedAffiliation.hashCode());
 
         return Response.ok(AffiliationDto.fromAffiliation(updatedAffiliation, uriInfo))
