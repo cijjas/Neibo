@@ -57,7 +57,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void createTagsAndCategorizePost(long postId, String[] tagURIs) {
+    public void createTagsAndCategorizePost(long postId, List<String> tagURIs) {
         LOGGER.info("Creating Tags in {} and associating it with Post {}", tagURIs, postId);
 
         ValidationUtils.checkPostId(postId);

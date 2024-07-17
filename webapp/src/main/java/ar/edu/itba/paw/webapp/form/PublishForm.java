@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.List;
 
 public class PublishForm {
     @NotBlank
@@ -21,7 +22,7 @@ public class PublishForm {
     private String message;
 
     @TagsConstraint
-    private String[] tags;
+    private List<String> tags;
 
     @ImageURNConstraint
     private String postImageURN;
@@ -37,11 +38,11 @@ public class PublishForm {
         this.channelURN = channelURN;
     }
 
-    public String[] getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(String[] tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 

@@ -44,7 +44,7 @@ public class PostServiceImpl implements PostService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Post createPost(String title, String description, long userId, String channelURN, String[] tagURIs, String imageURN) {
+    public Post createPost(String title, String description, long userId, String channelURN, List<String> tagURIs, String imageURN) {
         LOGGER.info("Creating Post with Title {} by User {}", title, userId);
 
         long baseChannelId = ValidationUtils.extractURNId(channelURN);
