@@ -3,11 +3,16 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.AttendanceService;
 import ar.edu.itba.paw.models.Entities.Attendance;
 import ar.edu.itba.paw.webapp.dto.AttendanceDto;
+import ar.edu.itba.paw.webapp.form.AmenityUpdateForm;
+import ar.edu.itba.paw.webapp.form.AttendanceForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.net.URI;
@@ -92,8 +97,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     @Path("/{userId}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findAttendance(
-            @PathParam("userId") final long userId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("userId") final long userId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
 
@@ -115,11 +119,14 @@ public class AttendanceController extends GlobalControllerAdvice {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response createAttendance() {
+    @PreAuthorize("@accessControlHelper.canCreateAttendance(#form.userURN, #neighborhoodId)")
+    public Response createAttendance(
+            @Valid @NotNull final AttendanceForm form
+    ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
         // Creation & HashCode Generation
-        final Attendance attendance = as.createAttendance(getRequestingUserId(), eventId);
+        final Attendance attendance = as.createAttendance(form.getUserURN(), eventId);
         String attendanceHashCode = String.valueOf(attendance.hashCode());
 
         // Resource URN
@@ -134,8 +141,7 @@ public class AttendanceController extends GlobalControllerAdvice {
     @Path("/{userId}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteByUser(
-            @PathParam("userId") final long userId,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @PathParam("userId") final long userId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
 

@@ -137,8 +137,7 @@ public class CommentController extends GlobalControllerAdvice{
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(
-            @PathParam("id") final long commentId,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @PathParam("id") final long commentId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
 

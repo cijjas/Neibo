@@ -1,9 +1,11 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.ShiftsURNConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 public class AmenityUpdateForm {
     @NotBlank
@@ -15,6 +17,9 @@ public class AmenityUpdateForm {
     @Size(min = 0, max = 1000)
     @Pattern(regexp = "[a-zA-Z0-9 ?!@_]*")
     private String description;
+
+    @ShiftsURNConstraint
+    private List<String> shiftURNs;
 
 
     public String getName() {
@@ -33,6 +38,13 @@ public class AmenityUpdateForm {
         this.description = description;
     }
 
+    public List<String> getShiftURNs() {
+        return shiftURNs;
+    }
+
+    public void setShiftURNs(List<String> shiftURNs) {
+        this.shiftURNs = shiftURNs;
+    }
 
     @Override
     public String toString() {

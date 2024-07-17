@@ -132,8 +132,7 @@ public class ContactController {
     @Secured("ROLE_ADMINISTRATOR")
     public Response updateContactPartially(
             @PathParam("id") final long id,
-            @Valid @NotNull final ContactForm partialUpdate,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @Valid @NotNull final ContactForm partialUpdate
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
 
@@ -151,8 +150,7 @@ public class ContactController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Secured("ROLE_ADMINISTRATOR")
     public Response deleteById(
-            @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @PathParam("id") final long id
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/contacts/{}'", neighborhoodId, id);
 

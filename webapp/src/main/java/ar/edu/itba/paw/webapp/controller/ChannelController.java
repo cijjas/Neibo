@@ -129,8 +129,7 @@ public class ChannelController {
     @Secured("ROLE_ADMINISTRATOR")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(
-            @PathParam("id") final long channelId,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @PathParam("id") final long channelId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
 

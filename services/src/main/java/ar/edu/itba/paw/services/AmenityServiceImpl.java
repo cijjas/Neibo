@@ -124,7 +124,7 @@ public class AmenityServiceImpl implements AmenityService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Amenity updateAmenityPartially(long amenityId, String name, String description){
+    public Amenity updateAmenityPartially(long amenityId, String name, String description, List<String> shiftURNs){
         LOGGER.info("Updating Amenity {}", amenityId);
 
         Amenity amenity = amenityDao.findAmenity(amenityId).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
@@ -132,6 +132,14 @@ public class AmenityServiceImpl implements AmenityService {
             amenity.setName(name);
         if(description != null && !description.isEmpty())
             amenity.setDescription(description);
+        if(shiftURNs != null && !shiftURNs.isEmpty()){
+            for (String shiftURN : shiftURNs) {
+                long shiftId = ValidationUtils.extractURNId(shiftURN);
+                ValidationUtils.checkShiftId(shiftId);
+                Optional<Shift> shift = shiftDao.findShift(shiftId);
+                shift.ifPresent(value -> availabilityDao.createAvailability(amenityId, value.getShiftId()));
+            }
+        }
         return amenity;
     }
 

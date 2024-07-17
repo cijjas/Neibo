@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @Transactional
@@ -32,8 +31,9 @@ public class AttendanceServiceImpl implements AttendanceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Attendance createAttendance(long userId, long eventId) {
-        LOGGER.info("Adding User {} as Attendee for Event {}", userId, eventId);
+    public Attendance createAttendance(String userURN, long eventId) {
+        LOGGER.info("Adding User {} as Attendee for Event {}", userURN, eventId);
+        long userId = ValidationUtils.extractURNId(userURN);
         ValidationUtils.checkAttendanceId(userId, eventId);
 
         return attendanceDao.createAttendee(userId, eventId);

@@ -147,7 +147,7 @@ public class AmenityController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
         // Modification & HashCode Generation
-        final Amenity updatedAmenity = as.updateAmenityPartially(id, partialUpdate.getName(), partialUpdate.getDescription());
+        final Amenity updatedAmenity = as.updateAmenityPartially(id, partialUpdate.getName(), partialUpdate.getDescription(), partialUpdate.getShiftURNs());
         String updatedAmenityHashCode = String.valueOf(updatedAmenity.hashCode());
 
         // Return the updated resource along with the EntityLevelETag
