@@ -13,15 +13,15 @@ public interface LikeService {
 
     boolean isPostLiked(long postId, long userId);
 
-    List<Like> getLikes(long neighborhoodId, Long postId, Long userId, int page, int size);
+    List<Like> getLikes(long neighborhoodId, String postURN, String userURN, int page, int size);
 
     Optional<Like> findLike(Long postId, Long userId);
 
     // ---------------------------------------------------
 
-    int countLikes(long neighborhoodId, Long postId, Long userId);
+    int countLikes(long neighborhoodId, String postURN, String userURN);
 
-    int calculateLikePages(long neighborhoodId, Long postId, Long userId, int size);
+    int calculateLikePages(long neighborhoodId, String postURN, String userURN, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

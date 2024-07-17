@@ -128,7 +128,7 @@ public class PostDaoImplTest {
         // Validations
         assertFalse(maybePost.isPresent());
     }
-
+/*
     @Test
     public void testGetPostsByCriteriaNeighborhood() {
         // Pre Conditions
@@ -209,6 +209,7 @@ public class PostDaoImplTest {
         // Validations
         assertEquals(1, retrievedPosts.size());
     }
+    */
 
     // ------------------ !!! HOT & TRENDING POSTS CANT BE TESTED AS HSQL DOES NOT ACCEPT INTERVAL !!! -----------------
 

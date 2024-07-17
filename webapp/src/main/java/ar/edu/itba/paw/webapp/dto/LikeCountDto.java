@@ -8,7 +8,7 @@ public class LikeCountDto {
     private int likeCount;
     private Links _links;
 
-    public static LikeCountDto fromLikeCount(int likeCount, Long postId, Long userId, long neighborhoodId, UriInfo uriInfo) {
+    public static LikeCountDto fromLikeCount(int likeCount, String postURN, String userURN, long neighborhoodId, UriInfo uriInfo) {
         final LikeCountDto dto = new LikeCountDto();
 
         dto.likeCount = likeCount;
@@ -21,36 +21,16 @@ public class LikeCountDto {
                 .path("likes")
                 .path("count");
 
-        if (postId != null && userId != null) {
+        if (postURN != null && userURN != null) {
             uriBuilder
-                    .queryParam("postId", uriInfo.getBaseUriBuilder()
-                            .path("neighborhoods")
-                            .path(String.valueOf(neighborhoodId))
-                            .path("posts")
-                            .path(String.valueOf(postId))
-                            .build())
-                    .queryParam("userId", uriInfo.getBaseUriBuilder()
-                            .path("neighborhoods")
-                            .path(String.valueOf(neighborhoodId))
-                            .path("users")
-                            .path(String.valueOf(userId))
-                            .build());
-        } else if (postId != null) {
+                    .queryParam("postId", postURN)
+                    .queryParam("userId", userURN);
+        } else if (postURN != null) {
             uriBuilder
-                    .queryParam("postId", uriInfo.getBaseUriBuilder()
-                            .path("neighborhoods")
-                            .path(String.valueOf(neighborhoodId))
-                            .path("posts")
-                            .path(String.valueOf(postId))
-                            .build());
-        } else if (userId != null) {
+                    .queryParam("postId", postURN);
+        } else if (userURN != null) {
             uriBuilder
-                    .queryParam("userId", "userId", uriInfo.getBaseUriBuilder()
-                            .path("neighborhoods")
-                            .path(String.valueOf(neighborhoodId))
-                            .path("users")
-                            .path(String.valueOf(userId))
-                            .build());
+                    .queryParam("userId", userURN);
         }
 
         links.setSelf(uriBuilder.build());

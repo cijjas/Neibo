@@ -65,34 +65,45 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Neighborhood> getNeighborhoods(int page, int size, Long workerId) {
+    public List<Neighborhood> getNeighborhoods(int page, int size, String workerURN) {
         LOGGER.info("Getting Neighborhoods");
 
-        ValidationUtils.checkPageAndSize(page, size);
-        ValidationUtils.checkWorkerId(workerId);
+        Long workerId = null;
+        if (workerURN != null){
+            workerId = ValidationUtils.extractURNId(workerURN);
+            ValidationUtils.checkWorkerId(workerId);
+        }
 
-        List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoods(page, size, workerId);
-/*        neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == 0);
-        neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == -1);*/
-        return neighborhoods;
+        ValidationUtils.checkPageAndSize(page, size);
+
+        return neighborhoodDao.getNeighborhoods(page, size, workerId);
     }
 
     // ---------------------------------------------------
 
     @Override
-    public int countNeighborhoods(Long workerId) {
+    public int countNeighborhoods(String workerURN) {
         LOGGER.info("Counting Neighborhoods");
 
-        ValidationUtils.checkWorkerId(workerId);
+        Long workerId = null;
+        if (workerURN != null){
+            workerId = ValidationUtils.extractURNId(workerURN);
+            ValidationUtils.checkWorkerId(workerId);
+        }
 
         return neighborhoodDao.countNeighborhoods(workerId);
     }
 
     @Override
-    public int calculateNeighborhoodPages(Long workerId, int size) {
+    public int calculateNeighborhoodPages(String workerURN, int size) {
         LOGGER.info("Calculating Neighborhood Pages");
 
-        ValidationUtils.checkWorkerId(workerId);
+        Long workerId = null;
+        if (workerURN != null){
+            workerId = ValidationUtils.extractURNId(workerURN);
+            ValidationUtils.checkWorkerId(workerId);
+        }
+
         ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(neighborhoodDao.countNeighborhoods(workerId), size);

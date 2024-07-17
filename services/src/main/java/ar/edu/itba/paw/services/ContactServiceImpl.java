@@ -39,7 +39,7 @@ public class ContactServiceImpl implements ContactService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Contact> getContacts(final long neighborhoodId) {
+    public List<Contact> getContacts(long neighborhoodId) {
         LOGGER.info("Getting Contacts for Neighborhood {}", neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);

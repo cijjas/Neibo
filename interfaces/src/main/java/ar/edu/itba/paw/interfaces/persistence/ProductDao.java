@@ -19,9 +19,9 @@ public interface ProductDao {
 
     Optional<Product> findProduct(final long productId, long neighborhoodId);
 
-    List<Product> getProducts(long neighborhoodId, String department, Long userId, String productStatus, int page, int size);
+    List<Product> getProducts(long neighborhoodId, Long departmentId, Long userId, Long productStatusId, int page, int size);
 
-    int countProducts(long neighborhoodId, String department, Long userId, String productStatus);
+    int countProducts(long neighborhoodId, Long departmentId, Long userId, Long productStatusId);
 
     // --------------------------------------------- PRODUCTS DELETE ---------------------------------------------------
 

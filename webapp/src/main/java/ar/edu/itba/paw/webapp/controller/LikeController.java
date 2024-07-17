@@ -51,8 +51,8 @@ public class LikeController extends GlobalControllerAdvice{
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response listLikes(
-            @QueryParam("onPost") final Long postId,
-            @QueryParam("likedBy") final Long userId,
+            @QueryParam("onPost") final String postURN,
+            @QueryParam("likedBy") final String userURN,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
@@ -65,7 +65,7 @@ public class LikeController extends GlobalControllerAdvice{
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        final List<Like> likes = ls.getLikes(neighborhoodId, postId, userId, page, size);
+        final List<Like> likes = ls.getLikes(neighborhoodId, postURN, userURN, page, size);
         if (likes.isEmpty())
             return Response.noContent()
                     .tag(entityLevelETag)
@@ -76,7 +76,7 @@ public class LikeController extends GlobalControllerAdvice{
         // Pagination Links
         Link[] links = ControllerUtils.createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "likes",
-                ls.calculateLikePages(neighborhoodId, postId, userId, size),
+                ls.calculateLikePages(neighborhoodId, postURN, userURN, size),
                 page,
                 size);
 
@@ -91,8 +91,8 @@ public class LikeController extends GlobalControllerAdvice{
     @Path("/count")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response countLikes(
-            @QueryParam("postId") final Long postId,
-            @QueryParam("userId") final Long userId
+            @QueryParam("postId") final String postURN,
+            @QueryParam("userId") final String userURN
     ){
         LOGGER.info("GET request arrived at '/neighborhoods/{}/likes/count'", neighborhoodId);
 
@@ -103,8 +103,8 @@ public class LikeController extends GlobalControllerAdvice{
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        int count = ls.countLikes(neighborhoodId, postId, userId);
-        LikeCountDto dto = LikeCountDto.fromLikeCount(count, postId, userId, neighborhoodId,  uriInfo);
+        int count = ls.countLikes(neighborhoodId, postURN, userURN);
+        LikeCountDto dto = LikeCountDto.fromLikeCount(count, postURN, userURN, neighborhoodId,  uriInfo);
 
         return Response.ok(new GenericEntity<LikeCountDto>(dto) {})
                 .cacheControl(cacheControl)

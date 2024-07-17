@@ -16,7 +16,7 @@ public interface TagService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    List<Tag> getTags(Long postId, long neighborhoodId, int page, int size);
+    List<Tag> getTags(String postURN, long neighborhoodId, int page, int size);
 
     Optional<Tag> findTag(long tagId, long neighborhoodId);
 
@@ -26,7 +26,7 @@ public interface TagService {
 
     String createURLForTagFilter(String tags, String currentUrl, long neighborhoodId);
 
-    int calculateTagPages(Long postId, Long neighborhoodId, int size);
+    int calculateTagPages(String postURN, long neighborhoodId, int size);
 
-    int countTags(Long postId, Long neighborhoodId);
+    int countTags(String postURN, long neighborhoodId);
 }

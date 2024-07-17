@@ -46,7 +46,7 @@ public class ProfessionController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listProfessions(
-            @QueryParam("workerId") final Long workerId
+            @QueryParam("workerId") final String workerURN
     ) {
         LOGGER.info("GET request arrived at '/professions'");
 
@@ -58,7 +58,7 @@ public class ProfessionController {
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        List<Profession> professions = ps.getWorkerProfessions(workerId);
+        List<Profession> professions = ps.getWorkerProfessions(workerURN);
         if (professions.isEmpty())
             return Response.noContent()
                     .tag(entityLevelETag)

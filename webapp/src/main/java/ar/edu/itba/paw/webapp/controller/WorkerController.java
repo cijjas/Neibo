@@ -55,10 +55,10 @@ public class WorkerController extends GlobalControllerAdvice {
     public Response listWorkers(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("withProfessions") final List<String> professions,
-            @QueryParam("inNeighborhoods") final List<String> neighborhoodIds,
-            @QueryParam("withRole") final String workerRole,
-            @QueryParam("withStatus") final String workerStatus
+            @QueryParam("withProfessions") final List<String> professionURNs,
+            @QueryParam("inNeighborhoods") final List<String> neighborhoodURNs,
+            @QueryParam("withRole") final String workerRoleURN,
+            @QueryParam("withStatus") final String workerStatusURN
     ) {
         LOGGER.info("GET request arrived at '/workers'");
 
@@ -69,7 +69,7 @@ public class WorkerController extends GlobalControllerAdvice {
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        List<Worker> workers = ws.getWorkers(page, size, professions, neighborhoodIds, workerRole, workerStatus);
+        List<Worker> workers = ws.getWorkers(page, size, professionURNs, neighborhoodURNs, workerRoleURN, workerStatusURN);
         if (workers.isEmpty())
             return Response.noContent()
                     .tag(entityLevelETag)
@@ -80,7 +80,7 @@ public class WorkerController extends GlobalControllerAdvice {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "workers",
-                ws.calculateWorkerPages(professions, neighborhoodIds, size, workerRole, workerStatus),
+                ws.calculateWorkerPages(professionURNs, neighborhoodURNs, size, workerRoleURN, workerStatusURN),
                 page,
                 size
         );

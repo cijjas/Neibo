@@ -123,50 +123,53 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Booking> getBookings(Long userId, Long amenityId, long neighborhoodId, int page, int size) {
-        LOGGER.info("Getting Bookings for User {} on Amenity {} from Neighborhood {}", userId, amenityId, neighborhoodId);
+    public List<Booking> getBookings(String userURN, String amenityURN, long neighborhoodId, int page, int size) {
+        LOGGER.info("Getting Bookings for User {} on Amenity {} from Neighborhood {}", userURN, amenityURN, neighborhoodId);
 
-        ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkAmenityId(amenityId);
+        Long userId = null;
+        if (userURN != null){
+            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
+            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
+            ValidationUtils.checkUserRoleId(userTwoIds.getSecondId());
+            userId = userTwoIds.getSecondId();
+        }
+
+        Long amenityId = null;
+        if (amenityURN != null){
+           TwoIds amenityTwoIds = ValidationUtils.extractTwoURNIds(amenityURN);
+           ValidationUtils.checkNeighborhoodId(amenityTwoIds.getFirstId());
+           ValidationUtils.checkAmenityId(amenityTwoIds.getSecondId());
+           amenityId = amenityTwoIds.getSecondId();
+        }
+
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
 
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return bookingDao.getBookings(userId, amenityId, page, size);
-//        List<GroupedBooking> groupedBookings = new ArrayList<>();
-//        GroupedBooking currentGroupedBooking = null;
-//
-//        for (Booking booking : userBookings) {
-//            if (currentGroupedBooking == null || !currentGroupedBooking.canCombine(booking)) {
-//                // Create a new GroupedBooking when the current one cannot be continued
-//                Time endTime = calculateEndTime(booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval());
-//                currentGroupedBooking = new GroupedBooking(
-//                        booking.getAmenityAvailability().getAmenity().getName(),
-//                        booking.getBookingDate(),
-//                        booking.getAmenityAvailability().getShift().getDay().getDayName(),
-//                        booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval(),
-//                        endTime
-//                );
-//                currentGroupedBooking.addBookingId(booking.getBookingId());
-//                groupedBookings.add(currentGroupedBooking);
-//            } else {
-//                // Use the combine method to update the current GroupedBooking
-//                Time endTime = calculateEndTime(booking.getAmenityAvailability().getShift().getStartTime().getTimeInterval());
-//                currentGroupedBooking.combine(booking);
-//                currentGroupedBooking.addBookingId(booking.getBookingId());
-//            }
-//        }
-//
-//        return groupedBookings;
     }
 
     @Override
-    public int calculateBookingPages(Long userId, Long amenityId, long neighborhoodId, int size) {
-        LOGGER.info("Calculating Booking Pages for User {} on Amenity {} from Neighborhood {}", userId, amenityId, neighborhoodId);
+    public int calculateBookingPages(String userURN, String amenityURN, long neighborhoodId, int size) {
+        LOGGER.info("Calculating Booking Pages for User {} on Amenity {} from Neighborhood {}", userURN, amenityURN, neighborhoodId);
 
-        ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkAmenityId(amenityId);
+        Long userId = null;
+        if (userURN != null){
+            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
+            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
+            ValidationUtils.checkUserRoleId(userTwoIds.getSecondId());
+            userId = userTwoIds.getSecondId();
+        }
+
+        Long amenityId = null;
+        if (amenityURN != null){
+            TwoIds amenityTwoIds = ValidationUtils.extractTwoURNIds(amenityURN);
+            ValidationUtils.checkNeighborhoodId(amenityTwoIds.getFirstId());
+            ValidationUtils.checkAmenityId(amenityTwoIds.getSecondId());
+            amenityId = amenityTwoIds.getSecondId();
+        }
+
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkSize(size);
 

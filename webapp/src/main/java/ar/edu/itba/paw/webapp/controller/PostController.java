@@ -59,7 +59,7 @@ public class PostController extends GlobalControllerAdvice{
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("inChannel") final String channelURN,
             @QueryParam("withTags") final List<String> tagURNs,
-            @QueryParam("withStatus") @DefaultValue("none") final String postStatusURN,
+            @QueryParam("withStatus") final String postStatusURN,
             @QueryParam("postedBy") final String userURN
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);

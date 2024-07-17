@@ -22,11 +22,11 @@ public interface UserDao {
 
     Optional<User> findUser(final String mail);
 
-    List<User> getUsers(String role, long neighborhoodId, int page, int size);
+    List<User> getUsers(Long userRoleId, long neighborhoodId, int page, int size);
 
     List<User> getNeighborsSubscribed(long postId);
 
-    int countTotalUsers(String role, long neighborhoodId);
+    int countTotalUsers(Long userRoleId, long neighborhoodId);
 
     List<User> getEventUsers(long eventId);
 

@@ -61,7 +61,7 @@ public class UserController {
     public Response listUsers(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("withRole") final String userRole,
+            @QueryParam("withRole") final String userRoleURN,
             @PathParam("neighborhoodId") final long neighborhoodId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users'", neighborhoodId);
@@ -73,7 +73,7 @@ public class UserController {
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        final List<User> users = us.getUsers(userRole, neighborhoodId, page, size);
+        final List<User> users = us.getUsers(userRoleURN, neighborhoodId, page, size);
         if (users.isEmpty())
             return Response.noContent()
                     .tag(entityLevelETag)
@@ -82,7 +82,7 @@ public class UserController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/users",
-                us.calculateUserPages(userRole, neighborhoodId, size),
+                us.calculateUserPages(userRoleURN, neighborhoodId, size),
                 page,
                 size
         );

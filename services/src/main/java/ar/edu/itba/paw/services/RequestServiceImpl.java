@@ -92,11 +92,25 @@ public class RequestServiceImpl implements RequestService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Request> getRequests(Long userId, Long productId, int page, int size, long neighborhoodId){
-        LOGGER.info("Getting Requests for Product {} made by User {} from Neighborhood {}", productId, userId, neighborhoodId);
+    public List<Request> getRequests(String userURN, String productURN, int page, int size, long neighborhoodId){
+        LOGGER.info("Getting Requests for Product {} made by User {} from Neighborhood {}", productURN, userURN, neighborhoodId);
 
-        ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkProductId(productId);
+        Long userId = null;
+        if (userURN != null) {
+            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
+            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
+            ValidationUtils.checkUserId(userTwoIds.getSecondId());
+            userId = userTwoIds.getSecondId();
+        }
+
+        Long productId = null;
+        if (productURN != null) {
+            TwoIds productTwoIds = ValidationUtils.extractTwoURNIds(productURN);
+            ValidationUtils.checkNeighborhoodId(productTwoIds.getFirstId());
+            ValidationUtils.checkProductId(productTwoIds.getSecondId());
+            productId = productTwoIds.getSecondId();
+        }
+
         ValidationUtils.checkPageAndSize(page, size);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
@@ -106,21 +120,48 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public int countRequests(Long productId, Long userId) {
-        LOGGER.info("Counting Requests for Product {} made by User {}", productId, userId);
+    public int countRequests(String productURN, String userURN) {
+        LOGGER.info("Counting Requests for Product {} made by User {}", productURN, userURN);
 
-        ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkProductId(productId);
+        Long userId = null;
+        if (userURN != null) {
+            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
+            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
+            ValidationUtils.checkUserId(userTwoIds.getSecondId());
+            userId = userTwoIds.getSecondId();
+        }
+
+        Long productId = null;
+        if (productURN != null) {
+            TwoIds productTwoIds = ValidationUtils.extractTwoURNIds(productURN);
+            ValidationUtils.checkNeighborhoodId(productTwoIds.getFirstId());
+            ValidationUtils.checkProductId(productTwoIds.getSecondId());
+            productId = productTwoIds.getSecondId();
+        }
 
         return requestDao.countRequests(productId, userId);
     }
 
     @Override
-    public int calculateRequestPages(Long productId, Long userId, int size) {
-        LOGGER.info("Calculating Request Pages for Product {} made by User {}", productId, userId);
+    public int calculateRequestPages(String productURN, String userURN, int size) {
+        LOGGER.info("Calculating Request Pages for Product {} made by User {}", productURN, userURN);
 
-        ValidationUtils.checkUserId(userId);
-        ValidationUtils.checkProductId(productId);
+        Long userId = null;
+        if (userURN != null) {
+            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
+            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
+            ValidationUtils.checkUserId(userTwoIds.getSecondId());
+            userId = userTwoIds.getSecondId();
+        }
+
+        Long productId = null;
+        if (productURN != null) {
+            TwoIds productTwoIds = ValidationUtils.extractTwoURNIds(productURN);
+            ValidationUtils.checkNeighborhoodId(productTwoIds.getFirstId());
+            ValidationUtils.checkProductId(productTwoIds.getSecondId());
+            productId = productTwoIds.getSecondId();
+        }
+
         ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(requestDao.countRequests(productId, userId), size);

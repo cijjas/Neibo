@@ -7,6 +7,7 @@ import ar.edu.itba.paw.interfaces.persistence.TagDao;
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.interfaces.services.TagService;
 import ar.edu.itba.paw.models.Entities.Tag;
+import ar.edu.itba.paw.models.TwoIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
+import javax.validation.Validation;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -126,10 +128,17 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> getTags(Long postId, long neighborhoodId, int page, int size) {
-        LOGGER.info("Getting Tags in Post {} from Neighborhood {}", postId, neighborhoodId);
+    public List<Tag> getTags(String postURN, long neighborhoodId, int page, int size) {
+        LOGGER.info("Getting Tags in Post {} from Neighborhood {}", postURN, neighborhoodId);
 
-        ValidationUtils.checkPostId(postId);
+        Long postId = null;
+        if (postURN != null){
+            TwoIds twoIds = ValidationUtils.extractTwoURNIds(postURN);
+            ValidationUtils.checkNeighborhoodId(twoIds.getFirstId());
+            ValidationUtils.checkPostId(twoIds.getSecondId());
+            postId = twoIds.getSecondId();
+        }
+
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
 
@@ -139,8 +148,16 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public int countTags(Long postId, Long neighborhoodId) {
-        LOGGER.info("Counting Tags in Post {} from Neighborhood {}", postId, neighborhoodId);
+    public int countTags(String postURN, long neighborhoodId) {
+        LOGGER.info("Counting Tags in Post {} from Neighborhood {}", postURN, neighborhoodId);
+
+        Long postId = null;
+        if (postURN != null){
+            TwoIds twoIds = ValidationUtils.extractTwoURNIds(postURN);
+            ValidationUtils.checkNeighborhoodId(twoIds.getFirstId());
+            ValidationUtils.checkPostId(twoIds.getSecondId());
+            postId = twoIds.getSecondId();
+        }
 
         ValidationUtils.checkPostId(postId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -149,8 +166,16 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public int calculateTagPages(Long postId, Long neighborhoodId, int size) {
-        LOGGER.info("Calculating Tag Pages in Post {} from Neighborhood {}", postId, neighborhoodId);
+    public int calculateTagPages(String postURN, long neighborhoodId, int size) {
+        LOGGER.info("Calculating Tag Pages in Post {} from Neighborhood {}", postURN, neighborhoodId);
+
+        Long postId = null;
+        if (postURN != null){
+            TwoIds twoIds = ValidationUtils.extractTwoURNIds(postURN);
+            ValidationUtils.checkNeighborhoodId(twoIds.getFirstId());
+            ValidationUtils.checkPostId(twoIds.getSecondId());
+            postId = twoIds.getSecondId();
+        }
 
         ValidationUtils.checkPostId(postId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);

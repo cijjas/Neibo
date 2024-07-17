@@ -16,9 +16,9 @@ public interface PurchaseService {
 
     Optional<Purchase> findPurchase(long purchaseId, long userId, long neighborhoodId);
 
-    List<Purchase> getPurchases(long userId, String type, int page, int size, long neighborhoodId);
+    List<Purchase> getPurchases(long userId, String typeURN, int page, int size, long neighborhoodId);
 
-    int countPurchases(long userId, String type);
+    int countPurchases(long userId, String typeURN);
 
-    int calculatePurchasePages(long userId, String type, int size);
+    int calculatePurchasePages(long userId, String typeURN, int size);
 }

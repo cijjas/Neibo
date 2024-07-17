@@ -135,43 +135,56 @@ public class UserServiceImpl implements UserService {
 
         ValidationUtils.checkNeighborhoodIdInUsers(neighborhoodId);
 
-        return userDao.getUsers(UserRole.NEIGHBOR.name(), neighborhoodId, 0, 0);
+        return userDao.getUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId, 0, 0);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> getUsers(String role, long neighborhoodId, int page, int size) {
-        LOGGER.info("Getting Users with Role {} from Neighborhood {} ", role, neighborhoodId);
+    public List<User> getUsers(String userRoleURN, long neighborhoodId, int page, int size) {
+        LOGGER.info("Getting Users with Role {} from Neighborhood {} ", userRoleURN, neighborhoodId);
 
-        ValidationUtils.checkNeighborhoodIdInUsers(neighborhoodId);
+        Long userRoleId = null;
+        if (userRoleURN != null){
+            userRoleId = ValidationUtils.extractURNId(userRoleURN);
+            ValidationUtils.checkUserRoleId(userRoleId);
+        }
         ValidationUtils.checkPageAndSize(page, size);
-        ValidationUtils.checkOptionalUserRoleString(role);
 
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
-        return userDao.getUsers(role, neighborhoodId, page, size);
+        return userDao.getUsers(userRoleId, neighborhoodId, page, size);
     }
 
     @Override
-    public int countUsers(String role, long neighborhoodId) {
-        LOGGER.info("Counting Users with Role {} from Neighborhood {} ", role, neighborhoodId);
+    public int countUsers(String userRoleURN, long neighborhoodId) {
+        LOGGER.info("Counting Users with Role {} from Neighborhood {} ", userRoleURN, neighborhoodId);
+
+        Long userRoleId = null;
+        if (userRoleURN != null){
+            userRoleId = ValidationUtils.extractURNId(userRoleURN);
+            ValidationUtils.checkUserRoleId(userRoleId);
+        }
 
         ValidationUtils.checkNeighborhoodIdInUsers(neighborhoodId);
-        ValidationUtils.checkOptionalUserRoleString(role);
 
-        return userDao.countTotalUsers(role, neighborhoodId);
+        return userDao.countTotalUsers(userRoleId, neighborhoodId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public int calculateUserPages(String role, long neighborhoodId, int size) {
-        LOGGER.info("Calculating User Pages with Role {} from Neighborhood {} ", role, neighborhoodId);
+    public int calculateUserPages(String userRoleURN, long neighborhoodId, int size) {
+        LOGGER.info("Calculating User Pages with Role {} from Neighborhood {} ", userRoleURN, neighborhoodId);
+
+        Long userRoleId = null;
+        if (userRoleURN != null){
+            userRoleId = ValidationUtils.extractURNId(userRoleURN);
+            ValidationUtils.checkUserRoleId(userRoleId);
+        }
 
         ValidationUtils.checkNeighborhoodIdInUsers(neighborhoodId);
         ValidationUtils.checkSize(size);
-        ValidationUtils.checkOptionalUserRoleString(role);
 
-        return PaginationUtils.calculatePages(userDao.countTotalUsers(role, neighborhoodId), size);
+        return PaginationUtils.calculatePages(userDao.countTotalUsers(userRoleId, neighborhoodId), size);
     }
 
     //funcion deprecada?? ahora existe attendanceController

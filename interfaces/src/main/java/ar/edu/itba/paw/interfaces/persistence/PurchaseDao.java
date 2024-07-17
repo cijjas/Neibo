@@ -19,7 +19,7 @@ public interface PurchaseDao {
 
     Optional<Purchase> findPurchase(long purchaseId, long userId, long neighborhoodId);
 
-    List<Purchase> getPurchases(long userId, String type, int page, int size);
+    List<Purchase> getPurchases(long userId, Long transactionTypeId, int page, int size);
 
-    int countPurchases(long userId, String type);
+    int countPurchases(long userId, Long transactionTypeId);
 }
