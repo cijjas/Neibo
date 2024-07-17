@@ -62,18 +62,21 @@ public class ProductController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
+        // Content
+        final List<Product> products = ps.getProducts(neighborhoodId, department, userId, productStatus, page, size);
+        String productsHashCode = String.valueOf(products.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(productsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        final List<Product> products = ps.getProducts(neighborhoodId, department, userId, productStatus, page, size);
         if (products.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(productsHashCode)
                     .build();
+
         final List<ProductDto> productsDto = products.stream()
                 .map(p -> ProductDto.fromProduct(p, uriInfo)).collect(Collectors.toList());
 
@@ -87,7 +90,7 @@ public class ProductController extends GlobalControllerAdvice {
 
         return Response.ok(new GenericEntity<List<ProductDto>>(productsDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(productsHashCode)
                 .links(links)
                 .build();
     }
@@ -102,17 +105,18 @@ public class ProductController extends GlobalControllerAdvice {
         LOGGER.info("GET request arrived '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 
         // Content
-        Product product = ps.findProduct(productId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Product product = ps.findProduct(productId, neighborhoodId).orElseThrow(() -> new NotFoundException("Product not found"));
+        String productHashCode = String.valueOf(product.hashCode());
 
         // Cache Control
-        EntityTag rowLevelETag = new EntityTag(product.getVersion().toString());
-        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(productHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
 
         return Response.ok(ProductDto.fromProduct(product, uriInfo))
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .cacheControl(cacheControl)
+                .tag(productHashCode)
                 .build();
     }
 
@@ -123,24 +127,15 @@ public class ProductController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
         // Creation & ETag Generation
         final Product product = ps.createProduct(getRequestingUserId(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentURN(), form.getImageURNs(), form.getQuantity());
-        entityLevelETag = ETagUtility.generateETag();
-        EntityTag rowLevelETag = new EntityTag(product.getVersion().toString());
+        String productHashCode = String.valueOf(product.hashCode());
 
         // Resource  URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(product.getProductId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(productHashCode)
                 .build();
     }
 
@@ -150,25 +145,16 @@ public class ProductController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateProductPartially(
             @PathParam("id") final long id,
-            @Valid @NotNull final ListingForm partialUpdate,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @Valid @NotNull final ListingForm partialUpdate
     ) {
         LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(ps.findProduct(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Modification & ETag Generation
+        // Modification & HashCode Generation
         final Product updatedProduct = ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartmentURN(), partialUpdate.getImageURNs(), partialUpdate.getQuantity());
-        entityLevelETag = ETagUtility.generateETag();
-        rowLevelETag = new EntityTag(updatedProduct.getVersion().toString());
+        String productHashCode = String.valueOf(updatedProduct.hashCode());
 
         return Response.ok(ProductDto.fromProduct(updatedProduct, uriInfo))
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(productHashCode)
                 .build();
     }
 
@@ -177,28 +163,17 @@ public class ProductController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.canDeleteProduct(#productId)")
     public Response deleteById(
-            @PathParam("id") final long productId,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @PathParam("id") final long productId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, productId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(ps.findProduct(productId, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Deletion & ETag Generation Attempt
+        // Attempt to delete the amenity
         if(ps.deleteProduct(productId)) {
-            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent()
-                    .tag(entityLevelETag)
                     .build();
         }
 
         return Response.status(Response.Status.NOT_FOUND)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

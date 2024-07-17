@@ -36,28 +36,30 @@ public class ShiftStatusController {
     @Context
     private Request request;
 
-    private final EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listShiftStatuses() {
         LOGGER.info("GET request arrived at '/shift-statuses'");
 
+        // Content
+        ShiftStatus[] shiftStatuses = ShiftStatus.values();
+        String shiftStatusesHashCode = String.valueOf(Arrays.hashCode(shiftStatuses));
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(shiftStatusesHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        List<ShiftStatusDto> shiftStatusDto = Arrays.stream(ShiftStatus.values())
+        List<ShiftStatusDto> shiftStatusDto = Arrays.stream(shiftStatuses)
                 .map(tt -> ShiftStatusDto.fromShiftStatus(tt, uriInfo))
                 .collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<ShiftStatusDto>>(shiftStatusDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(shiftStatusesHashCode)
                 .build();
     }
 
@@ -70,19 +72,19 @@ public class ShiftStatusController {
     ) {
         LOGGER.info("GET request arrived at '/shift-statuses/{}'", id);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(id));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
         // Content
-        ShiftStatusDto shiftStatusDto = ShiftStatusDto.fromShiftStatus(ShiftStatus.fromId(id), uriInfo);
+        ShiftStatus shiftStatus = ShiftStatus.fromId(id);
+        String shiftStatusHashCode = String.valueOf(shiftStatus.hashCode());
 
-        return Response.ok(shiftStatusDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(shiftStatusHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        return Response.ok(ShiftStatusDto.fromShiftStatus(shiftStatus, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(shiftStatusHashCode)
                 .build();
     }
 }

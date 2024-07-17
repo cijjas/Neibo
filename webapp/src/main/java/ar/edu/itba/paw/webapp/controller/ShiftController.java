@@ -51,26 +51,29 @@ public class ShiftController {
     ) {
         LOGGER.info("GET request arrived at '/shifts'");
 
+        // Content
+        List<Shift> shifts = ss.getShifts(amenityURN);
+        String shiftsHashCode = String.valueOf(shifts.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(shiftsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        List<Shift> shifts = ss.getShifts(amenityURN);
         if (shifts.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(shiftsHashCode)
                     .build();
+
         List<ShiftDto> shiftDto = shifts.stream()
                 .map(s -> ShiftDto.fromShift(s, uriInfo))
                 .collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<ShiftDto>>(shiftDto) {})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(shiftsHashCode)
                 .build();
     }
 
@@ -78,25 +81,23 @@ public class ShiftController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findShift(
-            @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
-
+            @PathParam("id") final long id
     ) {
         LOGGER.info("GET request arrived at '/shifts/{}'", id);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(id));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
         // Content
-        ShiftDto shiftDto = ShiftDto.fromShift(ss.findShift(id).orElseThrow(NotFoundException::new), uriInfo);
+        Shift shift = ss.findShift(id).orElseThrow(() -> new NotFoundException("Shift not found"));
+        String shiftHashCode = String.valueOf(shift.hashCode());
 
-        return Response.ok(shiftDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(shiftHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        return Response.ok(ShiftDto.fromShift(shift, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(shiftHashCode)
                 .build();
     }
 }

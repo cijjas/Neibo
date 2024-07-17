@@ -42,30 +42,27 @@ public class ImageController {
     @Context
     private Request request;
 
-    private EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findById(
-            @PathParam("id") long imageId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") long imageId
     ) {
         LOGGER.info("GET request arrived at '/images/{}'", imageId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(imageId));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
         // Content
-        ImageDto imageDto = ImageDto.fromImage(is.findImage(imageId).orElseThrow(NotFoundException::new), uriInfo);
+        Image image = is.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
+        String imageHashCode = String.valueOf(image.hashCode());
 
-        return Response.ok(imageDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(imageHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        return Response.ok(ImageDto.fromImage(image, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(imageHashCode)
                 .build();
     }
 
@@ -84,24 +81,15 @@ public class ImageController {
             return Response.ok().build();
         }
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
-        // Creation & ETag Generation
+        // Creation & HashCode Generation
         final Image image = is.storeImage(fileInputStream);
-        entityLevelETag = ETagUtility.generateETag();
-        EntityTag rowLevelETag = new EntityTag(image.getImageId().toString());
+        String imageHashCode = String.valueOf(image.hashCode());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(image.getImageId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(imageHashCode)
                 .build();
     }
 

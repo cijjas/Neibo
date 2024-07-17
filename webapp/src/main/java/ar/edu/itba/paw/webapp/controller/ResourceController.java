@@ -51,31 +51,32 @@ public class ResourceController {
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
-    private EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listResources() {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
 
+        // Content
+        final List<Resource> resources = rs.getResources(neighborhoodId);
+        String resourcesHashCode = String.valueOf(resources.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(resourcesHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        final List<Resource> resources = rs.getResources(neighborhoodId);
         if (resources.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(resourcesHashCode)
                     .build();
+
         final List<ResourceDto> resourcesDto = resources.stream()
                 .map(r -> ResourceDto.fromResource(r, uriInfo)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<ResourceDto>>(resourcesDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(resourcesHashCode)
                 .build();
     }
 
@@ -83,23 +84,23 @@ public class ResourceController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findResource(
-            @PathParam("id") final long resourceId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final long resourceId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, resourceId);
 
         // Content
         Resource resource = rs.findResource(resourceId, neighborhoodId).orElseThrow(NotFoundException::new);
+        String resourceHashCode = String.valueOf(resource.hashCode());
 
         // Cache Control
-        EntityTag rowLevelETag = new EntityTag(resource.getVersion().toString());
-        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(resourceHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
 
         return Response.ok(ResourceDto.fromResource(resource, uriInfo))
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .cacheControl(cacheControl)
+                .tag(resourceHashCode)
                 .build();
     }
 
@@ -111,24 +112,15 @@ public class ResourceController {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
         // Creation & ETag Generation
         final Resource resource = rs.createResource(neighborhoodId, form.getTitle(), form.getDescription(), form.getImageURN());
-        entityLevelETag = ETagUtility.generateETag();
-        EntityTag rowLevelETag = new EntityTag(resource.getVersion().toString());
+        String resourceHashCode = String.valueOf(resource.hashCode());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(resource.getResourceId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(resourceHashCode)
                 .build();
     }
 
@@ -138,25 +130,16 @@ public class ResourceController {
     @Secured("ROLE_ADMINISTRATOR")
     public Response updateResourcePartially(
             @PathParam("id") final long id,
-            @Valid @NotNull final ResourceForm partialUpdate,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @Valid @NotNull final ResourceForm partialUpdate
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(rs.findResource(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Modification & ETag Generation
+        // Modification & HashCode Generation
         final Resource updatedResource = rs.updateResource(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getImageURN());
-        entityLevelETag = ETagUtility.generateETag();
-        rowLevelETag = new EntityTag(updatedResource.getVersion().toString());
+        String resourceHashCode = String.valueOf(updatedResource.hashCode());
 
         return Response.ok(ResourceDto.fromResource(updatedResource, uriInfo))
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(resourceHashCode)
                 .build();
     }
 
@@ -170,23 +153,13 @@ public class ResourceController {
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(rs.findResource(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Deletion & ETag Generation Attempt
+        // Deletion Attempt
         if(rs.deleteResource(id)) {
-            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent()
-                    .tag(entityLevelETag)
                     .build();
         }
 
         return Response.status(Response.Status.NOT_FOUND)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

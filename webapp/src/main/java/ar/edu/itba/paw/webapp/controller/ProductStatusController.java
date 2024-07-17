@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.ProductStatus;
+import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.webapp.dto.ProductStatusDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,29 +35,29 @@ public class ProductStatusController {
     @Context
     private Request request;
 
-
-    private final EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listProductStatuses() {
         LOGGER.info("GET request arrived at '/product-statuses'");
 
+        // Content
+        ProductStatus[] productStatuses = ProductStatus.values();
+        String productStatusesHashCode = String.valueOf(Arrays.hashCode(productStatuses));
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(productStatusesHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        List<ProductStatusDto> productStatusDto = Arrays.stream(ProductStatus.values())
+        List<ProductStatusDto> productStatusDto = Arrays.stream(productStatuses)
                 .map(tt -> ProductStatusDto.fromProductStatus(tt, uriInfo))
                 .collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<ProductStatusDto>>(productStatusDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(productStatusesHashCode)
                 .build();
     }
 
@@ -64,24 +65,23 @@ public class ProductStatusController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findProductStatus(
-            @PathParam("id") final int id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final int id
     ) {
         LOGGER.info("GET request arrived at '/product-statuses/{}'", id);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(id));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
         // Content
-        ProductStatusDto productStatusDto = ProductStatusDto.fromProductStatus(ProductStatus.fromId(id), uriInfo);
+        ProductStatus productStatus = ProductStatus.fromId(id);
+        String productStatusHashCode = String.valueOf(productStatus.hashCode());
 
-        return Response.ok(productStatusDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(productStatusHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        return Response.ok(ProductStatusDto.fromProductStatus(productStatus, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(productStatusHashCode)
                 .build();
     }
 }

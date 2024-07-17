@@ -43,29 +43,29 @@ public class DepartmentController {
     @Context
     private Request request;
 
-    private final EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listDepartments() {
         LOGGER.info("GET request arrived at '/departments'");
 
+        // Content
+        Department[] departments = Department.values();
+        String departmentsHashCode = String.valueOf(Arrays.hashCode(departments));
+
         //Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null) {
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(departmentsHashCode));
+        if (builder != null)
             return builder.cacheControl(cacheControl).build();
-        }
 
-        // Content
         List<DepartmentDto> departmentDto = Arrays.stream(Department.values())
                 .map(d -> DepartmentDto.fromDepartment(d, uriInfo))
                 .collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<DepartmentDto>>(departmentDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(departmentsHashCode)
                 .build();
     }
 
@@ -73,24 +73,23 @@ public class DepartmentController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findDepartment(
-            @PathParam("id") final int departmentId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final int departmentId
     ) {
         LOGGER.info("GET request arrived at '/departments/{}'", departmentId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(departmentId));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
         // Content
-        DepartmentDto departmentDto = DepartmentDto.fromDepartment(Department.fromId(departmentId), uriInfo);
+        Department department = Department.fromId(departmentId);
+        String departmentHashCode = String.valueOf(department.hashCode());
 
-        return Response.ok(departmentDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(departmentHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        return Response.ok(DepartmentDto.fromDepartment(department, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(departmentHashCode)
                 .build();
     }
 }

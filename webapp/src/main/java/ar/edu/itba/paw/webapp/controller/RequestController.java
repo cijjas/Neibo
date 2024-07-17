@@ -97,23 +97,23 @@ public class RequestController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.canAccessRequest(#requestId)")
     public Response findRequest(
-            @PathParam("id") final long requestId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final long requestId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
 
         // Content
-        Request request = rs.findRequest(requestId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Request productRequest = rs.findRequest(requestId, neighborhoodId).orElseThrow(() -> new NotFoundException("Request not found"));
+        String requestHashCode = String.valueOf(productRequest.hashCode());
 
         // Cache Control
-        EntityTag rowLevelETag = new EntityTag(request.getVersion().toString());
-        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(requestHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
 
-        return Response.ok(RequestDto.fromRequest(request, uriInfo))
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+        return Response.ok(RequestDto.fromRequest(productRequest, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(requestHashCode)
                 .build();
     }
 
@@ -125,24 +125,15 @@ public class RequestController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
-        // Creation & Etag Generation
+        // Creation & HashCode Generation
         final Request request = rs.createRequest(getRequestingUserId(), form.getProductURN(), form.getRequestMessage(), form.getQuantity());
-        entityLevelETag = ETagUtility.generateETag();
-        EntityTag rowLevelETag = new EntityTag(request.getVersion().toString());
+        String requestHashCode = String.valueOf(request.hashCode());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(request.getRequestId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(requestHashCode)
                 .build();
     }
 
@@ -152,25 +143,16 @@ public class RequestController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.canAccessRequest(#requestId)")
     public Response updateRequest(
-            @PathParam("id") final long requestId,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @PathParam("id") final long requestId
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/requests/{}", neighborhoodId, requestId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(rs.findRequest(requestId, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Modification & ETag Generation
+        // Modification & HashCode Generation
         final Request updatedRequest = rs.markRequestAsFulfilled(requestId);
-        entityLevelETag = ETagUtility.generateETag();
-        rowLevelETag = new EntityTag(updatedRequest.getVersion().toString());
+        String requestHashCode = String.valueOf(updatedRequest.hashCode());
 
         return Response.ok(RequestDto.fromRequest(updatedRequest, uriInfo))
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(requestHashCode)
                 .build();
     }
 
@@ -179,28 +161,17 @@ public class RequestController extends GlobalControllerAdvice {
     @Produces(value = {MediaType.APPLICATION_JSON,})
     @PreAuthorize("@accessControlHelper.canDeleteRequest(#requestId)")
     public Response deleteById(
-            @PathParam("id") final long requestId,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @PathParam("id") final long requestId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/requests/{}'", neighborhoodId, requestId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(rs.findRequest(requestId, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Deletion & ETag Generation Attempt
+        // Deletion Attempt
         if (rs.deleteRequest(requestId)) {
-            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent()
-                    .tag(entityLevelETag)
                     .build();
         }
 
         return Response.status(Response.Status.NOT_FOUND)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

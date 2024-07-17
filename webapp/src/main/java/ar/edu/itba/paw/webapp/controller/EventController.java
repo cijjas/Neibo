@@ -66,18 +66,21 @@ public class EventController {
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events'", neighborhoodId);
 
+        // Content
+        final List<Event> events = es.getEvents(date, neighborhoodId, page, size);
+        String eventsHashCode = String.valueOf(events.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(eventsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        final List<Event> events = es.getEvents(date, neighborhoodId, page, size);
         if(events.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(eventsHashCode)
                     .build();
+
         final List<EventDto> eventsDto = events.stream()
                 .map(e -> EventDto.fromEvent(e, uriInfo)).collect(Collectors.toList());
 
@@ -91,7 +94,7 @@ public class EventController {
 
         return Response.ok(new GenericEntity<List<EventDto>>(eventsDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(eventsHashCode)
                 .links(links)
                 .build();
     }
@@ -100,23 +103,23 @@ public class EventController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findEvent(
-            @PathParam("id") final long eventId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final long eventId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, eventId);
 
         // Content
-        Event event = es.findEvent(eventId, neighborhoodId).orElseThrow(NotFoundException::new);
+        Event event = es.findEvent(eventId, neighborhoodId).orElseThrow(() -> new NotFoundException("Event not found"));
+        String eventHashCode = String.valueOf(event.hashCode());
 
         // Cache Control
-        EntityTag rowLevelETag = new EntityTag(event.getVersion().toString());
-        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(eventHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
 
         return Response.ok(EventDto.fromEvent(event, uriInfo))
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .cacheControl(cacheControl)
+                .tag(eventHashCode)
                 .build();
     }
 
@@ -128,24 +131,15 @@ public class EventController {
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events'", neighborhoodId);
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
-        // Creation & ETag Generation
+        // Creation & HashCode Generation
         final Event event = es.createEvent(form.getName(), form.getDescription(), form.getDate(), form.getStartTime(), form.getEndTime() , neighborhoodId);
-        entityLevelETag = ETagUtility.generateETag();
-        EntityTag rowLevelETag = new EntityTag(event.getVersion().toString());
+        String eventHashCode = String.valueOf(event.hashCode());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(event.getEventId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(eventHashCode)
                 .build();
     }
 
@@ -156,25 +150,16 @@ public class EventController {
     @Secured("ROLE_ADMINISTRATOR")
     public Response updateEventPartially(
             @PathParam("id") final long id,
-            @Valid @NotNull final EventForm partialUpdate,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @Valid @NotNull final EventForm partialUpdate
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(es.findEvent(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Modification & ETag Generation
+        // Modification & HashCode Generation
         final Event updatedEvent = es.updateEventPartially(id, partialUpdate.getName(), partialUpdate.getDescription(), partialUpdate.getDate(), partialUpdate.getStartTime(), partialUpdate.getEndTime());
-        entityLevelETag = ETagUtility.generateETag();
-        rowLevelETag = new EntityTag(updatedEvent.getVersion().toString());
+        String eventHashCode = String.valueOf(updatedEvent.hashCode());
 
         return Response.ok(EventDto.fromEvent(updatedEvent, uriInfo))
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(eventHashCode)
                 .build();
     }
 
@@ -183,28 +168,17 @@ public class EventController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Secured("ROLE_ADMINISTRATOR")
     public Response deleteById(
-            @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @PathParam("id") final long id
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}'", neighborhoodId, id);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(es.findEvent(id, neighborhoodId).orElseThrow(NotFoundException::new).getVersion().toString());
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Deletion & ETag Generation Attempt
+        // Deletion attempt
         if(es.deleteEvent(id)) {
-            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent()
-                    .tag(entityLevelETag)
                     .build();
         }
 
         return Response.status(Response.Status.NOT_FOUND)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

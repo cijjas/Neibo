@@ -66,18 +66,21 @@ public class BookingController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
+        // Content
+        final List<Booking> bookings = bs.getBookings(userId, amenityId, neighborhoodId, page, size);
+        String bookingsHashCode = String.valueOf(bookings.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(bookingsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        final List<Booking> bookings = bs.getBookings(userId, amenityId, neighborhoodId, page, size);
         if (bookings.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(bookingsHashCode)
                     .build();
+
         final List<BookingDto> bookingsDto = bookings.stream()
                 .map(b -> BookingDto.fromBooking(b, uriInfo)).collect(Collectors.toList());
 
@@ -92,7 +95,7 @@ public class BookingController extends GlobalControllerAdvice{
         return Response.ok(new GenericEntity<List<BookingDto>>(bookingsDto){})
                 .links(links)
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(bookingsHashCode)
                 .build();
     }
 
@@ -100,24 +103,25 @@ public class BookingController extends GlobalControllerAdvice{
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findBooking(
-            @PathParam("id") final long bookingId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final long bookingId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 
+        Booking booking = bs.findBooking(bookingId, neighborhoodId).orElseThrow(() -> new NotFoundException("Booking Not Found"));
+        String bookingHashCode = String.valueOf(booking.hashCode());
+
         // Cache Control
-        EntityTag rowLevelETag = new EntityTag(String.valueOf(bookingId));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(bookingHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
 
         // Content
-        BookingDto bookingDto = BookingDto.fromBooking(bs.findBooking(bookingId, neighborhoodId).orElseThrow(NotFoundException::new), uriInfo);
+        BookingDto bookingDto = BookingDto.fromBooking(booking, uriInfo);
 
         return Response.ok(bookingDto)
-                .tag(entityLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(bookingHashCode)
+                .cacheControl(cacheControl)
                 .build();
     }
 
@@ -128,14 +132,7 @@ public class BookingController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
-        // Creation & ETag Generation
+        // Creation & HashCode Generation
         final long[] bookingIds = bs.createBooking(getRequestingUserId(), form.getAmenityURN(), form.getShiftURNs(), form.getReservationDate());
         entityLevelETag = ETagUtility.generateETag();
 
@@ -159,22 +156,12 @@ public class BookingController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(String.valueOf(bookingId));
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Deletion & ETag Generation Attempt
+        // Deletion Attempt
         if(bs.deleteBooking(bookingId)) {
-            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent()
-                    .tag(entityLevelETag)
                     .build();
         }
         return Response.status(Response.Status.NOT_FOUND)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

@@ -58,18 +58,21 @@ public class LikeController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
 
+        // Content
+        final List<Like> likes = ls.getLikes(neighborhoodId, postId, userId, page, size);
+        String likesHashCode = String.valueOf(likes.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(likesHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        final List<Like> likes = ls.getLikes(neighborhoodId, postId, userId, page, size);
         if (likes.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(likesHashCode)
                     .build();
+
         final List<LikeDto> likesDto = likes.stream()
                 .map(l -> LikeDto.fromLike(l, uriInfo)).collect(Collectors.toList());
 
@@ -83,7 +86,7 @@ public class LikeController extends GlobalControllerAdvice{
         return Response.ok(new GenericEntity<List<LikeDto>>(likesDto) {})
                 .links(links)
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(likesHashCode)
                 .build();
     }
 
@@ -119,22 +122,15 @@ public class LikeController extends GlobalControllerAdvice{
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
-        // Creation & ETag Generation
+        // Creation & HashCode Generation
         final Like like = ls.createLike(form.getPostURN(), getRequestingUserId());
-        entityLevelETag = ETagUtility.generateETag();
+        String likeHashCode = String.valueOf(like.hashCode());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(like.getId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
+                .tag(likeHashCode)
                 .build();
     }
 
@@ -142,26 +138,15 @@ public class LikeController extends GlobalControllerAdvice{
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(
             @QueryParam("userId") final long userId,
-            @QueryParam("postId") final long postId,
-            @HeaderParam(HttpHeaders.IF_MATCH) String ifMatch
+            @QueryParam("postId") final long postId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/likes/'", neighborhoodId);
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
         if(ls.deleteLike(postId, userId)) {
-            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent()
-                    .tag(entityLevelETag)
                     .build();
         }
         return Response.status(Response.Status.NOT_FOUND)
-                .tag(entityLevelETag)
                 .build();
     }
 }

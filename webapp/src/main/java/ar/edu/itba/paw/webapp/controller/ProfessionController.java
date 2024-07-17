@@ -50,25 +50,28 @@ public class ProfessionController {
     ) {
         LOGGER.info("GET request arrived at '/professions'");
 
+        // Content
+        List<Profession> professions = ps.getWorkerProfessions(workerId);
+        String professionsHashCode = String.valueOf(professions.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(professionsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        List<Profession> professions = ps.getWorkerProfessions(workerId);
         if (professions.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(professionsHashCode)
                     .build();
+
         List<ProfessionDto> professionDto = professions.stream()
                 .map(p -> ProfessionDto.fromProfession(Professions.valueOf(p.toString()), uriInfo)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<ProfessionDto>>(professionDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(professionsHashCode)
                 .build();
     }
 
@@ -76,24 +79,23 @@ public class ProfessionController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findProfession(
-            @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final long id
     ) {
         LOGGER.info("GET request arrived at '/professions/{}'", id);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(id));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
         // Content
-        ProfessionDto professionDto = ProfessionDto.fromProfession(Professions.fromId(id), uriInfo);
+        Professions profession = Professions.fromId(id);
+        String professionHashCode = String.valueOf(profession.hashCode());
 
-        return Response.ok(professionDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(professionHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        return Response.ok(ProfessionDto.fromProfession(profession, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(professionHashCode)
                 .build();
     }
 }

@@ -47,9 +47,6 @@ public class ReviewController extends GlobalControllerAdvice {
     @PathParam("workerId")
     private Long workerId;
 
-    private EntityTag entityLevelETag = ETagUtility.generateETag();
-
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listReviews(
@@ -58,18 +55,21 @@ public class ReviewController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("GET request arrived at '/workers/{}/reviews'", workerId);
 
+        // Content
+        final List<Review> reviews = rs.getReviews(workerId, page, size);
+        String reviewsHashCode = String.valueOf(reviews.hashCode());
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(reviewsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        // Content
-        final List<Review> reviews = rs.getReviews(workerId, page, size);
         if (reviews.isEmpty())
             return Response.noContent()
-                    .tag(entityLevelETag)
+                    .tag(reviewsHashCode)
                     .build();
+
         final List<ReviewDto> reviewsDto = reviews.stream()
                 .map(r -> ReviewDto.fromReview(r, uriInfo)).collect(Collectors.toList());
 
@@ -84,7 +84,7 @@ public class ReviewController extends GlobalControllerAdvice {
         return Response.ok(new GenericEntity<List<ReviewDto>>(reviewsDto){})
                 .links(links)
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(reviewsHashCode)
                 .build();
     }
 
@@ -92,23 +92,23 @@ public class ReviewController extends GlobalControllerAdvice {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findReview(
-            @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final long id
     ) {
         LOGGER.info("GET request arrived at '/workers/{}/reviews/{}'", workerId, id);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(id));
-        Response response = checkMutableETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
         // Content
-        ReviewDto reviewDto = ReviewDto.fromReview(rs.findReview(id, workerId).orElseThrow(NotFoundException::new), uriInfo);
+        Review review = rs.findReview(id, workerId).orElseThrow(() -> new NotFoundException("Review not found"));
+        String reviewHashCode = String.valueOf(review.hashCode());
 
-        return Response.ok(reviewDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(reviewHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        return Response.ok(ReviewDto.fromReview(review, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(reviewHashCode)
                 .build();
     }
 
@@ -120,24 +120,15 @@ public class ReviewController extends GlobalControllerAdvice {
     ) {
         LOGGER.info("POST request arrived at '/workers/{}/reviews'", workerId);
 
-        // Cache Control
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
-        if (builder != null)
-            return Response.status(Response.Status.PRECONDITION_FAILED)
-                    .tag(entityLevelETag)
-                    .build();
-
-        // Creation & ETag Generation
+        // Creation & HashCode Generation
         final Review review = rs.createReview(workerId, getRequestingUserId(), form.getRating(), form.getReview());
-        entityLevelETag = ETagUtility.generateETag();
-        EntityTag rowLevelETag = new EntityTag(review.getReviewId().toString());
+        String reviewHashCode = String.valueOf(review.hashCode());
 
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(review.getReviewId())).build();
 
         return Response.created(uri)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
+                .tag(reviewHashCode)
                 .build();
     }
 
@@ -145,27 +136,16 @@ public class ReviewController extends GlobalControllerAdvice {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(
-            @PathParam("id") final long reviewId,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @PathParam("id") final long reviewId
     ) {
         LOGGER.info("DELETE request arrived at '/workers/{}/reviews/{}'", workerId, reviewId);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(String.valueOf(reviewId));
-        Response response = checkModificationETagPreconditions(ifMatch, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
-        // Deletion & ETag Generation Attempt
+        // Deletion Attempt
         if(rs.deleteReview(reviewId)) {
-            entityLevelETag = ETagUtility.generateETag();
             return Response.noContent()
-                    .tag(entityLevelETag)
                     .build();
         }
         return Response.status(Response.Status.NOT_FOUND)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
                 .build();
     }
 }

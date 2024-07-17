@@ -40,16 +40,17 @@ public class LanguageController {
     @Context
     private Request request;
 
-    private final EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listLanguages() {
         LOGGER.info("GET request arrived at '/languages'");
 
+        Language[] languages = Language.values();
+        String languagesHashCode = String.valueOf(Arrays.hashCode(languages));
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(languagesHashCode));
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -61,7 +62,7 @@ public class LanguageController {
 
         return Response.ok(new GenericEntity<List<LanguageDto>>(languagesDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(languagesHashCode)
                 .build();
     }
 
@@ -69,24 +70,25 @@ public class LanguageController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findLanguage(
-            @PathParam("id") final long languageId,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final long languageId
     ) {
         LOGGER.info("GET request arrived at '/languages/{}'", languageId);
 
+        // Content
+        Language language = Language.fromId(languageId);
+        String languageHashCode = String.valueOf(language.hashCode());
+
         // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(languageId));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(languageHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
         
         // Content
-        LanguageDto languageDto = LanguageDto.fromLanguage(Language.fromId(languageId), uriInfo);
 
-        return Response.ok(languageDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+        return Response.ok(LanguageDto.fromLanguage(language, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(languageHashCode)
                 .build();
     }
 }

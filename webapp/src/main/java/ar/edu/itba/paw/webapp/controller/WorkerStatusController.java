@@ -34,28 +34,30 @@ public class WorkerStatusController {
     @Context
     private Request request;
 
-    private final EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listWorkerStatuses() {
         LOGGER.info("GET request arrived at '/worker-statuses'");
 
+        // Content
+        WorkerStatus[] workerStatuses = WorkerStatus.values();
+        String workerStatusesHashCode = String.valueOf(Arrays.hashCode(workerStatuses));
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(workerStatusesHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        List<WorkerStatusDto> workerStatusDto = Arrays.stream(WorkerStatus.values())
+        List<WorkerStatusDto> workerStatusDto = Arrays.stream(workerStatuses)
                 .map(tt -> WorkerStatusDto.fromWorkerStatus(tt, uriInfo))
                 .collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<WorkerStatusDto>>(workerStatusDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(workerStatusesHashCode)
                 .build();
     }
 
@@ -63,24 +65,23 @@ public class WorkerStatusController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findWorkerStatus(
-            @PathParam("id") final int id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final int id
     ) {
         LOGGER.info("GET request arrived at '/worker-statuses/{}'", id);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(id));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
         // Content
-        WorkerStatusDto workerStatusDto = WorkerStatusDto.fromWorkerStatus(WorkerStatus.fromId(id), uriInfo);
+        WorkerStatus workerStatus = WorkerStatus.fromId(id);
+        String workerStatusHashCode = String.valueOf(workerStatus.hashCode());
 
-        return Response.ok(workerStatusDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(workerStatusHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        return Response.ok(WorkerStatusDto.fromWorkerStatus(workerStatus, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(workerStatusHashCode)
                 .build();
     }
 }

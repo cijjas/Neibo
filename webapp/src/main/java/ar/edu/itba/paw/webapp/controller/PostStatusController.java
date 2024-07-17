@@ -36,28 +36,29 @@ public class PostStatusController {
     @Context
     private Request request;
 
-    private final EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listPostStatuses() {
         LOGGER.info("GET request arrived at '/post-statuses'");
 
+        PostStatus[] postStatuses = PostStatus.values();
+        String postStatusesHashCode = String.valueOf(Arrays.hashCode(postStatuses));
+
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        Response.ResponseBuilder builder = request.evaluatePreconditions(entityLevelETag);
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(postStatusesHashCode));
         cacheControl.setMaxAge(MAX_AGE_SECONDS);
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        List<PostStatusDto> postStatusDto = Arrays.stream(PostStatus.values())
+        List<PostStatusDto> postStatusDto = Arrays.stream(postStatuses)
                 .map(tt -> PostStatusDto.fromPostStatus(tt, uriInfo))
                 .collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<PostStatusDto>>(postStatusDto){})
                 .cacheControl(cacheControl)
-                .tag(entityLevelETag)
+                .tag(postStatusesHashCode)
                 .build();
     }
 
@@ -65,24 +66,23 @@ public class PostStatusController {
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response findPostStatus(
-            @PathParam("id") final int id,
-            @HeaderParam(HttpHeaders.IF_NONE_MATCH) EntityTag clientETag
+            @PathParam("id") final int id
     ) {
         LOGGER.info("GET request arrived at '/post-statuses/{}'", id);
 
-        // Cache Control
-        EntityTag rowLevelETag = new EntityTag(Long.toString(id));
-        Response response = checkETagPreconditions(clientETag, entityLevelETag, rowLevelETag);
-        if (response != null)
-            return response;
-
         // Content
-        PostStatusDto postStatusDto = PostStatusDto.fromPostStatus(PostStatus.fromId(id), uriInfo);
+        PostStatus postStatus = PostStatus.fromId(id);
+        String postStatusHashCode = String.valueOf(postStatus.hashCode());
 
-        return Response.ok(postStatusDto)
-                .tag(entityLevelETag)
-                .header(CUSTOM_ROW_LEVEL_ETAG_NAME, rowLevelETag)
-                .header(HttpHeaders.CACHE_CONTROL, MAX_AGE_HEADER)
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(postStatusHashCode));
+        if (builder != null)
+            return builder.cacheControl(cacheControl).build();
+
+        return Response.ok(PostStatusDto.fromPostStatus(postStatus, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(postStatusHashCode)
                 .build();
     }
 }
