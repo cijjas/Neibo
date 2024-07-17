@@ -22,7 +22,7 @@ public interface TagService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    void createTagsAndCategorizePost(long postId, String[] tagURIs);
+    void createTagsAndCategorizePost(long postId, List<String> tagURIs);
 
     String createURLForTagFilter(String tags, String currentUrl, long neighborhoodId);
 
