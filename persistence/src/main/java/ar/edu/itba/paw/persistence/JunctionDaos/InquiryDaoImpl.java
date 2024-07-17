@@ -79,7 +79,7 @@ public class InquiryDaoImpl implements InquiryDao {
         LOGGER.debug("Selecting Inquiries from Product with id {}", productId);
 
         TypedQuery<Long> idQuery = em.createQuery("SELECT i.inquiryId FROM Inquiry i " +
-                "WHERE i.product.productId = :productId ORDER BY i.inquiryDate DESC", Long.class);
+                "WHERE i.product.productId = :productId ORDER BY i.inquiryDate, i.inquiryId DESC", Long.class);
         idQuery.setParameter("productId", productId);
         idQuery.setFirstResult((page - 1) * size);
         idQuery.setMaxResults(size);
@@ -88,7 +88,7 @@ public class InquiryDaoImpl implements InquiryDao {
 
         if (!inquiryIds.isEmpty()) {
             TypedQuery<Inquiry> inquiryQuery = em.createQuery(
-                    "SELECT i FROM Inquiry i WHERE i.inquiryId IN :inquiryIds ORDER BY i.inquiryDate DESC ", Inquiry.class);
+                    "SELECT i FROM Inquiry i WHERE i.inquiryId IN :inquiryIds ORDER BY i.inquiryDate, i.inquiryId DESC ", Inquiry.class);
             inquiryQuery.setParameter("inquiryIds", inquiryIds);
             return inquiryQuery.getResultList();
         }

@@ -36,6 +36,8 @@ public class AttendanceDaoImpl implements AttendanceDao {
         // We join through the eventId
         Join<Attendance, Event> eventJoin = idRoot.join("event");
         idQuery.where(cb.equal(eventJoin.get("eventId"), eventId));
+        // Order by EventId and the UserId
+        idQuery.orderBy(cb.asc(idRoot.get("event").get("eventId")), cb.asc(idRoot.get("user").get("userId")));
         // Create the query
         TypedQuery<Long> idTypedQuery = em.createQuery(idQuery);
         // We implement pagination in the query
@@ -51,6 +53,8 @@ public class AttendanceDaoImpl implements AttendanceDao {
         Root<Attendance> dataRoot = dataQuery.from(Attendance.class);
         // Add predicate that enforces existence within the IDs recovered in the first query
         dataQuery.where(dataRoot.get("id").in(attendanceIds));
+        // Order By EventId and then by UserId
+        dataQuery.orderBy(cb.asc(dataRoot.get("event").get("eventId")), cb.asc(dataRoot.get("user").get("userId")));
         // Create!
         TypedQuery<Attendance> dataTypedQuery = em.createQuery(dataQuery);
         // Return Results

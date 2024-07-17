@@ -56,29 +56,31 @@ public class TagDaoImpl implements TagDao {
         LOGGER.debug("Selecting Tags By Criteria");
 
         TypedQuery<Long> query = null;
-        if(postId != null) {
-            query = em.createQuery("SELECT t.tagId FROM Tag t JOIN t.posts p WHERE p.postId = :postId", Long.class)
+        if (postId != null) {
+            query = em.createQuery("SELECT t.tagId FROM Tag t JOIN t.posts p WHERE p.postId = :postId ORDER BY t.tagId", Long.class)
                     .setParameter("postId", postId);
         } else {
             query = em.createQuery("SELECT DISTINCT t.tagId FROM Tag t " +
                             "JOIN t.posts p " +
                             "JOIN p.user u " +
                             "JOIN u.neighborhood nh " +
-                            "WHERE nh.neighborhoodId = :neighborhoodId", Long.class)
+                            "WHERE nh.neighborhoodId = :neighborhoodId ORDER BY t.tagId", Long.class)
                     .setParameter("neighborhoodId", neighborhoodId);
         }
         query.setFirstResult((page - 1) * size)
-                .setMaxResults(size)
-                .getResultList();
+                .setMaxResults(size);
         List<Long> tagIds = query.getResultList();
+
         if (!tagIds.isEmpty()) {
             TypedQuery<Tag> tagQuery = em.createQuery(
-                    "SELECT t FROM Tag t WHERE t.tagId IN :tagIds", Tag.class);
+                    "SELECT t FROM Tag t WHERE t.tagId IN :tagIds ORDER BY t.tagId", Tag.class);
             tagQuery.setParameter("tagIds", tagIds);
             return tagQuery.getResultList();
         }
+
         return Collections.emptyList();
     }
+
 
     @Override
     public int countTags(Long postId, long neighborhoodId) {

@@ -73,20 +73,25 @@ public class EventDaoImpl implements EventDao {
     public List<Event> getEvents(String date, long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Events from Date {}", date);
 
+        // Build the JPQL query for fetching event IDs
         StringBuilder jpqlBuilder = new StringBuilder("SELECT e.eventId FROM Event e WHERE e.neighborhood.neighborhoodId = :neighborhoodId");
 
         if (date != null) {
             jpqlBuilder.append(" AND e.date = :date");
         }
 
+        // Append the ORDER BY clause
+        jpqlBuilder.append(" ORDER BY e.date, e.startTime, e.eventId");
+
+        // Create the query
         TypedQuery<Long> query = em.createQuery(jpqlBuilder.toString(), Long.class);
 
+        // Set the parameters
         if (date != null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 query.setParameter("date", dateFormat.parse(date));
             } catch (ParseException e) {
-                // Handle the exception if needed
                 throw new IllegalArgumentException("Invalid value (" + date + ") for the 'date' parameter. Please use a date in YYYY-(M)M-(D)D format.");
             }
         }
@@ -95,17 +100,20 @@ public class EventDaoImpl implements EventDao {
         query.setFirstResult((page - 1) * size);
         query.setMaxResults(size);
 
+        // Get the list of event IDs
         List<Long> eventIds = query.getResultList();
 
         if (!eventIds.isEmpty()) {
+            // Build the JPQL query for fetching events
             TypedQuery<Event> eventQuery = em.createQuery(
-                    "SELECT e FROM Event e WHERE e.eventId IN :eventIds", Event.class);
+                    "SELECT e FROM Event e WHERE e.eventId IN :eventIds ORDER BY e.date, e.startTime, e.eventId", Event.class);
             eventQuery.setParameter("eventIds", eventIds);
             return eventQuery.getResultList();
         }
 
         return Collections.emptyList();
     }
+
 
     @Override
     public int countEvents(String date, long neighborhoodId) {

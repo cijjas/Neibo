@@ -49,31 +49,39 @@ public class AffiliationDaoImpl implements AffiliationDao {
         LOGGER.debug("Selecting Worker Affiliations By Criteria");
 
         TypedQuery<AffiliationKey> idQuery = null;
+        StringBuilder queryBuilder = new StringBuilder("SELECT a.id FROM Affiliation a ");
+
+        boolean whereClauseAdded = false;
         if (workerId != null && neighborhoodId != null) {
-            idQuery = em.createQuery(
-                    "SELECT a.id FROM Affiliation a WHERE a.worker.id = :workerId AND a.neighborhood.neighborhoodId = :neighborhoodId", AffiliationKey.class);
-            idQuery.setParameter("workerId", workerId);
-            idQuery.setParameter("neighborhoodId", neighborhoodId);
+            queryBuilder.append("WHERE a.worker.id = :workerId AND a.neighborhood.neighborhoodId = :neighborhoodId ");
+            whereClauseAdded = true;
         } else if (workerId != null) {
-            idQuery = em.createQuery(
-                    "SELECT a.id FROM Affiliation a WHERE a.worker.id = :workerId", AffiliationKey.class);
-            idQuery.setParameter("workerId", workerId);
+            queryBuilder.append("WHERE a.worker.id = :workerId ");
+            whereClauseAdded = true;
         } else if (neighborhoodId != null) {
-            idQuery = em.createQuery(
-                    "SELECT a.id FROM Affiliation a WHERE a.neighborhood.neighborhoodId = :neighborhoodId", AffiliationKey.class);
+            queryBuilder.append("WHERE a.neighborhood.neighborhoodId = :neighborhoodId ");
+            whereClauseAdded = true;
+        }
+
+        queryBuilder.append("ORDER BY a.worker.id, a.neighborhood.neighborhoodId");
+
+        idQuery = em.createQuery(queryBuilder.toString(), AffiliationKey.class);
+
+        if (workerId != null) {
+            idQuery.setParameter("workerId", workerId);
+        }
+        if (neighborhoodId != null) {
             idQuery.setParameter("neighborhoodId", neighborhoodId);
-        } else {
-            idQuery = em.createQuery(
-                    "SELECT a.id FROM Affiliation a", AffiliationKey.class);
         }
 
         idQuery.setFirstResult((page - 1) * size);
         idQuery.setMaxResults(size);
+
         List<AffiliationKey> ids = idQuery.getResultList();
 
         if (!ids.isEmpty()) {
             TypedQuery<Affiliation> affiliationQuery = em.createQuery(
-                    "SELECT a FROM Affiliation a WHERE a.id IN :ids", Affiliation.class);
+                    "SELECT a FROM Affiliation a WHERE a.id IN :ids ORDER BY a.worker.id, a.neighborhood.neighborhoodId", Affiliation.class);
             affiliationQuery.setParameter("ids", ids);
             return affiliationQuery.getResultList();
         }

@@ -100,6 +100,7 @@ public class RequestDaoImpl implements RequestDao {
                     break;
             }
         }
+        queryBuilder.append(" ORDER BY r.requestDate DESC");
 
         TypedQuery<Long> idQuery = em.createQuery(queryBuilder.toString(), Long.class);
 

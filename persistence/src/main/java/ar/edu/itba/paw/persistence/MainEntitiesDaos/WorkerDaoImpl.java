@@ -71,7 +71,7 @@ public class WorkerDaoImpl implements WorkerDao {
                     "    FROM users w\n" +
                     "    LEFT JOIN workers_neighborhoods wn ON w.userid = wn.workerid ";
 
-
+    @Override
     public List<Worker> getWorkers(int page, int size, List<Long> professionIds, List<Long> neighborhoodIds, Long workerRoleId, Long workerStatusId) {
         StringBuilder queryStringBuilder = new StringBuilder();
         queryStringBuilder.append("SELECT DISTINCT w.*, wi.* FROM users w ");
@@ -100,6 +100,9 @@ public class WorkerDaoImpl implements WorkerDao {
             queryStringBuilder.append("AND wn.neighborhoodid IN :neighborhoodIds ");
         }
 
+        // Order by creationDate in the User entity
+        queryStringBuilder.append("ORDER BY w.creationDate ASC");
+
         // Create and execute the native query
         Query nativeQuery = em.createNativeQuery(queryStringBuilder.toString(), Worker.class);
         nativeQuery.setFirstResult((page - 1) * size);
@@ -113,7 +116,6 @@ public class WorkerDaoImpl implements WorkerDao {
         if (professionIds != null && !professionIds.isEmpty()) {
             nativeQuery.setParameter("professions", professionIds);
         }
-
 
         if (neighborhoodIds != null && !neighborhoodIds.isEmpty()) {
             nativeQuery.setParameter("neighborhoodIds", neighborhoodIds);

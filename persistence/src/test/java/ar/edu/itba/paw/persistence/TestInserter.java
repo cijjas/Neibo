@@ -66,7 +66,6 @@ public class TestInserter {
                 .endTime(em.find(ar.edu.itba.paw.models.Entities.Time.class, endTimeId))
                 .neighborhood(em.find(Neighborhood.class, neighborhoodId))
                 .build();
-        event.setVersion(1L);
         em.persist(event);
         em.flush();
         return event.getEventId();
@@ -79,7 +78,6 @@ public class TestInserter {
                 .contactPhone(contactPhone)
                 .neighborhood(em.find(Neighborhood.class, neighborhoodId))
                 .build();
-        contact.setVersion(1L);
         em.persist(contact);
         em.flush();
         return contact.getContactId();
@@ -133,7 +131,6 @@ public class TestInserter {
                 .role(role)
                 .identification(identification)
                 .build();
-        user.setVersion(1L);
         em.persist(user);
         em.flush();
         return user.getUserId();
@@ -155,7 +152,6 @@ public class TestInserter {
                 .image(em.find(Image.class,imageId))
                 .neighborhood(em.find(Neighborhood.class, neighborhoodId))
                 .build();
-        resource.setVersion(1L);
         em.persist(resource);
         em.flush();
         return resource.getResourceId();
@@ -218,7 +214,6 @@ public class TestInserter {
 
     public void createAffiliation(long workerId, long neighborhoodId) {
         Affiliation affiliation = new Affiliation(em.find(Worker.class, workerId), em.find(Neighborhood.class, neighborhoodId), WorkerRole.VERIFIED_WORKER);
-        affiliation.setVersion(1L);
         em.persist(affiliation);
         em.flush();
     }
@@ -243,7 +238,6 @@ public class TestInserter {
                 .address(address)
                 .businessName(businessName)
                 .build();
-        worker.setVersion(1L);
         em.persist(worker);
         em.flush();
         return worker.getWorkerId();
@@ -263,7 +257,6 @@ public class TestInserter {
                 .neighborhood(em.find(Neighborhood.class, neighborhoodId))
                 .description(description)
                 .build();
-        amenity.setVersion(1L);
         em.persist(amenity);
         em.flush();
         return amenity.getAmenityId();
@@ -319,7 +312,6 @@ public class TestInserter {
                 .tertiaryPicture(em.find(Image.class, tertiaryPictureId))
                 .remainingUnits(units)
                 .build();
-        product.setVersion(1L);
         em.persist(product);
         em.flush();
         return product.getProductId();
@@ -340,7 +332,6 @@ public class TestInserter {
                 .user(em.find(User.class, userId))
                 .message(message)
                 .build();
-        inquiry.setVersion(1L);
         em.persist(inquiry);
         em.flush();
         return inquiry.getInquiryId();
@@ -353,7 +344,6 @@ public class TestInserter {
                 .message(message)
                 .fulfilled(false)
                 .build();
-        request.setVersion(1L);
         em.persist(request);
         em.flush();
         return request.getRequestId();

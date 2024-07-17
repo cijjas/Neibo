@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,25 +64,39 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     public List<Neighborhood> getNeighborhoods(int page, int size, Long workerId) {
         LOGGER.debug("Selecting Neighborhoods");
 
-        StringBuilder queryStringBuilder = new StringBuilder();
-        queryStringBuilder.append("SELECT DISTINCT n.* FROM neighborhoods n ");
+        // Build the first query to fetch neighborhood IDs
+        StringBuilder idQueryStringBuilder = new StringBuilder();
+        idQueryStringBuilder.append("SELECT DISTINCT n.neighborhoodid FROM neighborhoods n ");
 
         if (workerId != null) {
-            queryStringBuilder.append("JOIN workers_neighborhoods wn ON n.neighborhoodid = wn.neighborhoodid ");
-            queryStringBuilder.append("WHERE wn.workerid = :workerId ");
+            idQueryStringBuilder.append("JOIN workers_neighborhoods wn ON n.neighborhoodid = wn.neighborhoodid ");
+            idQueryStringBuilder.append("WHERE wn.workerid = :workerId ");
         }
 
-        Query nativeQuery = em.createNativeQuery(queryStringBuilder.toString(), Neighborhood.class);
-        nativeQuery.setFirstResult((page - 1) * size);
-        nativeQuery.setMaxResults(size);
+        Query idQuery = em.createNativeQuery(idQueryStringBuilder.toString());
+        idQuery.setFirstResult((page - 1) * size);
+        idQuery.setMaxResults(size);
 
         if (workerId != null) {
-            nativeQuery.setParameter("workerId", workerId);
+            idQuery.setParameter("workerId", workerId);
         }
 
-        List<Neighborhood> neighborhoods = nativeQuery.getResultList();
-        return neighborhoods;
+        List<Long> neighborhoodIds = idQuery.getResultList();
+
+        if (neighborhoodIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // Build the second query to fetch neighborhoods using the fetched IDs and order the results
+        TypedQuery<Neighborhood> dataQuery = em.createQuery(
+                "SELECT n FROM Neighborhood n WHERE n.neighborhoodId IN :neighborhoodIds ORDER BY n.name, n.neighborhoodId",
+                Neighborhood.class
+        );
+        dataQuery.setParameter("neighborhoodIds", neighborhoodIds);
+
+        return dataQuery.getResultList();
     }
+
 
     @Override
     public int countNeighborhoods(Long workerId) {
