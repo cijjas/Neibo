@@ -51,8 +51,6 @@ public class ChannelController {
     @PathParam("neighborhoodId")
     private long neighborhoodId;
 
-    private EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listChannels() {

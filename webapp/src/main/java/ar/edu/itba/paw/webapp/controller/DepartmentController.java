@@ -83,6 +83,7 @@ public class DepartmentController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(departmentHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();

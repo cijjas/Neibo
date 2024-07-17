@@ -78,6 +78,7 @@ public class ShiftStatusController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(shiftStatusHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
