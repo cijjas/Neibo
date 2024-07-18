@@ -5,6 +5,7 @@ import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.dto.RequestDto;
 import ar.edu.itba.paw.webapp.form.MarkAsSoldForm;
 import ar.edu.itba.paw.webapp.form.RequestForm;
+import ar.edu.itba.paw.webapp.form.UpdateRequestForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,7 @@ public class RequestController extends GlobalControllerAdvice {
             @QueryParam("requestedBy") final String userURN,
             @QueryParam("forProduct") final String productURN,
             @QueryParam("withType") final String typeURN,
-            @QueryParam("fulfilled") final Boolean fulfilled
+            @QueryParam("withStatus") final String statusURN
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 
@@ -71,7 +72,7 @@ public class RequestController extends GlobalControllerAdvice {
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        List<Request> requests = rs.getRequests(userURN, productURN, typeURN, fulfilled, page, size, neighborhoodId);
+        List<Request> requests = rs.getRequests(userURN, productURN, typeURN, statusURN, page, size, neighborhoodId);
         if (requests.isEmpty())
             return Response.noContent()
                     .tag(entityLevelETag)
@@ -82,7 +83,7 @@ public class RequestController extends GlobalControllerAdvice {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/requests",
-                rs.calculateRequestPages(productURN, userURN, typeURN, fulfilled, size),
+                rs.calculateRequestPages(productURN, userURN, typeURN, statusURN, size),
                 page,
                 size
         );
@@ -145,12 +146,13 @@ public class RequestController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.canAccessRequest(#requestId)")
     public Response updateRequest(
-            @PathParam("id") final long requestId
+            @PathParam("id") final long requestId,
+            @Valid @NotNull final UpdateRequestForm form
     ) {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/requests/{}", neighborhoodId, requestId);
 
         // Modification & HashCode Generation
-        final Request updatedRequest = rs.markRequestAsFulfilled(requestId);
+        final Request updatedRequest = rs.updateRequest(requestId, form.getRequestStatusURN());
         String requestHashCode = String.valueOf(updatedRequest.hashCode());
 
         return Response.ok(RequestDto.fromRequest(updatedRequest, uriInfo))

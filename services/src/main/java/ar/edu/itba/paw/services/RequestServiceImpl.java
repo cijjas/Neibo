@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
@@ -94,110 +95,59 @@ public class RequestServiceImpl implements RequestService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Request> getRequests(String userURN, String productURN, String typeURN, Boolean fulfilled, int page, int size, long neighborhoodId){
+    public List<Request> getRequests(String userURN, String productURN, String typeURN, String statusURN, int page, int size, long neighborhoodId){
         LOGGER.info("Getting Requests for Product {} made by User {} from Neighborhood {}", productURN, userURN, neighborhoodId);
 
-        Long userId = null;
-        if (userURN != null) {
-            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
-            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
-            ValidationUtils.checkUserId(userTwoIds.getSecondId());
-            userId = userTwoIds.getSecondId();
-        }
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
+        Long productId = ValidationUtils.checkURNAndExtractProductId(productURN);
+        Long transactionTypeId = ValidationUtils.checkURNAndExtractTransactionTypeId(typeURN);
+        Long requestStatusId = ValidationUtils.checkURNAndExtractRequestStatusId(statusURN);
 
-        Long productId = null;
-        if (productURN != null) {
-            TwoIds productTwoIds = ValidationUtils.extractTwoURNIds(productURN);
-            ValidationUtils.checkNeighborhoodId(productTwoIds.getFirstId());
-            ValidationUtils.checkProductId(productTwoIds.getSecondId());
-            productId = productTwoIds.getSecondId();
-        }
-
-        Long transactionTypeId = null;
-        if (typeURN != null){
-            transactionTypeId = ValidationUtils.extractURNId(typeURN);
-            ValidationUtils.checkTransactionTypeId(transactionTypeId);
-        } else throw new IllegalArgumentException("Transaction-Type is required");
-
-        ValidationUtils.checkFulfilled(fulfilled);
         ValidationUtils.checkPageAndSize(page, size);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
-        return requestDao.getRequests(userId, productId, transactionTypeId, fulfilled, page, size);
+        return requestDao.getRequests(userId, productId, transactionTypeId, requestStatusId, page, size);
     }
 
     @Override
-    public int countRequests(String productURN, String userURN, String typeURN, Boolean fulfilled) {
+    public int countRequests(String productURN, String userURN, String typeURN, String statusURN) {
         LOGGER.info("Counting Requests for Product {} made by User {}", productURN, userURN);
 
-        Long userId = null;
-        if (userURN != null) {
-            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
-            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
-            ValidationUtils.checkUserId(userTwoIds.getSecondId());
-            userId = userTwoIds.getSecondId();
-        }
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
+        Long productId = ValidationUtils.checkURNAndExtractProductId(productURN);
+        Long transactionTypeId = ValidationUtils.checkURNAndExtractTransactionTypeId(typeURN);
+        Long requestStatusId = ValidationUtils.checkURNAndExtractRequestStatusId(statusURN);
 
-        Long productId = null;
-        if (productURN != null) {
-            TwoIds productTwoIds = ValidationUtils.extractTwoURNIds(productURN);
-            ValidationUtils.checkNeighborhoodId(productTwoIds.getFirstId());
-            ValidationUtils.checkProductId(productTwoIds.getSecondId());
-            productId = productTwoIds.getSecondId();
-        }
-
-        Long transactionTypeId = null;
-        if (typeURN != null){
-            transactionTypeId = ValidationUtils.extractURNId(typeURN);
-            ValidationUtils.checkTransactionTypeId(transactionTypeId);
-        }
-
-        return requestDao.countRequests(productId, userId, transactionTypeId, fulfilled);
+        return requestDao.countRequests(productId, userId, transactionTypeId, requestStatusId);
     }
 
     @Override
-    public int calculateRequestPages(String productURN, String userURN, String typeURN, Boolean fulfilled, int size) {
+    public int calculateRequestPages(String productURN, String userURN, String typeURN, String statusURN, int size) {
         LOGGER.info("Calculating Request Pages for Product {} made by User {}", productURN, userURN);
 
-        Long userId = null;
-        if (userURN != null) {
-            TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
-            ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
-            ValidationUtils.checkUserId(userTwoIds.getSecondId());
-            userId = userTwoIds.getSecondId();
-        }
-
-        Long productId = null;
-        if (productURN != null) {
-            TwoIds productTwoIds = ValidationUtils.extractTwoURNIds(productURN);
-            ValidationUtils.checkNeighborhoodId(productTwoIds.getFirstId());
-            ValidationUtils.checkProductId(productTwoIds.getSecondId());
-            productId = productTwoIds.getSecondId();
-        }
-
-        Long typeId = null;
-        if (typeURN != null){
-            typeId = ValidationUtils.extractURNId(typeURN);
-            ValidationUtils.checkTransactionTypeId(typeId);
-        }
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
+        Long productId = ValidationUtils.checkURNAndExtractProductId(productURN);
+        Long transactionTypeId = ValidationUtils.checkURNAndExtractTransactionTypeId(typeURN);
+        Long requestStatusId = ValidationUtils.checkURNAndExtractRequestStatusId(statusURN);
 
         ValidationUtils.checkSize(size);
 
-        return PaginationUtils.calculatePages(requestDao.countRequests(userId, productId, typeId, fulfilled), size);
+        return PaginationUtils.calculatePages(requestDao.countRequests(userId, productId, transactionTypeId, requestStatusId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Request markRequestAsFulfilled(long requestId) {
-        LOGGER.info("Marking Request {} as fulfilled", requestId);
+    public Request updateRequest(long requestId, String requestStatusURN) {
+        LOGGER.info("Updating Request {} as {}", requestId, requestStatusURN);
 
         ValidationUtils.checkRequestId(requestId);
+        Long requestStatusId = ValidationUtils.checkURNAndExtractRequestStatusId(requestStatusURN);
 
         Request request = requestDao.findRequest(requestId).orElseThrow(()-> new NotFoundException("Request Not Found"));
-        request.setFulfilled(true);
+        request.setStatus(RequestStatus.fromId(requestStatusId));
         request.setPurchaseDate(new java.sql.Date(System.currentTimeMillis()));
 
         return request;

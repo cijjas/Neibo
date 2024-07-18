@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.models.Entities;
 
-import org.hibernate.annotations.ColumnDefault;
+import ar.edu.itba.paw.enums.RequestStatus;
+import ar.edu.itba.paw.enums.UserRole;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -30,8 +31,9 @@ public class Request implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date requestDate;
 
-    @Column(name = "fulfilled")
-    private Boolean fulfilled;
+    @Column(name = "status", length = 30)
+    @Enumerated(EnumType.STRING)
+    private RequestStatus status;
 
     @Column(name = "purchaseDate")
     @Temporal(TemporalType.TIMESTAMP)
@@ -49,7 +51,7 @@ public class Request implements Serializable {
         this.message = builder.message;
         this.user = builder.user;
         this.requestDate = builder.requestDate;
-        this.fulfilled = builder.fulfilled;
+        this.status = builder.status;
         this.units = builder.units;
         this.purchaseDate = builder.purchaseDate;
     }
@@ -95,12 +97,12 @@ public class Request implements Serializable {
         this.requestDate = requestDate;
     }
 
-    public Boolean getFulfilled() {
-        return fulfilled;
+    public RequestStatus getStatus() {
+        return status;
     }
 
-    public void setFulfilled(Boolean fulfilled) {
-        this.fulfilled = fulfilled;
+    public void setStatus(RequestStatus status) {
+        this.status = status;
     }
 
     public Date getPurchaseDate() {
@@ -129,7 +131,7 @@ public class Request implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(requestId, fulfilled);
+        return Objects.hash(requestId, status);
     }
 
     public static class Builder {
@@ -138,7 +140,7 @@ public class Request implements Serializable {
         private User user;
         private String message;
         private Date requestDate;
-        private Boolean fulfilled;
+        private RequestStatus status;
         private Date purchaseDate;
         private Integer units;
 
@@ -167,8 +169,8 @@ public class Request implements Serializable {
             return this;
         }
 
-        public Request.Builder fulfilled(Boolean fulfilled) {
-            this.fulfilled = fulfilled;
+        public Request.Builder status(RequestStatus status) {
+            this.status = status;
             return this;
         }
 

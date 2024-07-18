@@ -7,6 +7,8 @@ public class Links {
     private URI worker;
     private URI workers;
     private URI workerRole;
+    private URI userRole;
+    private URI requestStatus;
     private URI neighborhood;
     private URI shift;
     private URI shifts;
@@ -70,6 +72,14 @@ public class Links {
         this.workers = workers;
     }
 
+    public URI getRequestStatus() {
+        return requestStatus;
+    }
+
+    public void setRequestStatus(URI requestStatus) {
+        this.requestStatus = requestStatus;
+    }
+
     public URI getWorkerRole() {
         return workerRole;
     }
@@ -124,6 +134,14 @@ public class Links {
 
     public void setPosts(URI posts) {
         this.posts = posts;
+    }
+
+    public URI getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(URI userRole) {
+        this.userRole = userRole;
     }
 
     public URI getAttendees() {

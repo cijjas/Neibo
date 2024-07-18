@@ -20,7 +20,7 @@ public interface RequestDao {
 
     Optional<Request> findRequest(long requestId, long neighborhoodId);
 
-    List<Request> getRequests(Long userId, Long productId, Long typeId, boolean fulfilled, int page, int size);
+    List<Request> getRequests(Long userId, Long productId, Long typeId, Long statusId, int page, int size);
 
-    int countRequests(Long userId, Long productId, Long typeId, boolean fulfilled);
+    int countRequests(Long userId, Long productId, Long typeId, Long statusId);
 }
