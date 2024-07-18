@@ -169,7 +169,7 @@ public class Worker {
 
     @Override
     public int hashCode() {
-        return Objects.hash(workerId);
+        return Objects.hash(workerId, phoneNumber, address, businessName, backgroundPictureId, bio);
     }
 
     public static class Builder {

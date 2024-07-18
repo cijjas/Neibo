@@ -102,7 +102,7 @@ public class Amenity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(amenityId);
+        return Objects.hash(amenityId, name, description);
     }
 
 

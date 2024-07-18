@@ -170,7 +170,7 @@ public class Event {
 
     @Override
     public int hashCode() {
-        return Objects.hash(eventId);
+        return Objects.hash(eventId, name, description, date, startTime, endTime);
     }
 
     // Builder Class

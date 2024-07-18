@@ -274,7 +274,7 @@ public class Product {
 
     @Override
     public int hashCode() {
-        return Objects.hash(productId);
+        return Objects.hash(productId, name, description, price, used, remainingUnits, primaryPicture, secondaryPicture, tertiaryPicture, department);
     }
 
     public static class Builder {

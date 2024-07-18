@@ -19,8 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
-import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.MAX_AGE_HEADER;
+import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
 /*
  * # Summary
@@ -94,6 +93,7 @@ public class ChannelController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(channelHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -119,7 +119,12 @@ public class ChannelController {
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(channel.getChannelId())).build();
 
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
+
         return Response.created(uri)
+                .cacheControl(cacheControl)
                 .tag(channelHashCode)
                 .build();
     }

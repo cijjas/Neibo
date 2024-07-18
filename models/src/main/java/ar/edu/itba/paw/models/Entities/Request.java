@@ -129,7 +129,7 @@ public class Request implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(requestId);
+        return Objects.hash(requestId, fulfilled);
     }
 
     public static class Builder {

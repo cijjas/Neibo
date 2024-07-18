@@ -107,6 +107,7 @@ public class AttendanceController extends GlobalControllerAdvice {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(attendanceHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -132,7 +133,12 @@ public class AttendanceController extends GlobalControllerAdvice {
         // Resource URN
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(attendance.getId().getUserId())).build();
 
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
+
         return Response.created(uri)
+                .cacheControl(cacheControl)
                 .tag(attendanceHashCode)
                 .build();
     }
