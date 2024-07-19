@@ -12,7 +12,6 @@ public class WorkerDto {
     private String businessName;
     private String address;
     private String bio;
-    private UserRole role;
     private Links _links;
 
     public static WorkerDto fromWorker(Worker worker, UriInfo uriInfo) {
@@ -22,7 +21,6 @@ public class WorkerDto {
         dto.businessName = worker.getBusinessName();
         dto.address = worker.getAddress();
         dto.bio = worker.getBio();
-        dto.role = worker.getUser().getRole();
 
         Links links = new Links();
         URI self = uriInfo.getBaseUriBuilder()
@@ -30,6 +28,10 @@ public class WorkerDto {
                 .path(String.valueOf(worker.getWorkerId()))
                 .build();
         links.setSelf(self);
+        links.setUserRole(uriInfo.getBaseUriBuilder()
+                .path("user-roles")
+                .path(String.valueOf(worker.getUser().getRole().getId()))
+                .build());
         links.setUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))
@@ -95,14 +97,6 @@ public class WorkerDto {
 
     public void setBio(String bio) {
         this.bio = bio;
-    }
-
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
     }
 
     public Links get_links() {

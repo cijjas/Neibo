@@ -103,7 +103,7 @@ public class Inquiry {
 
     @Override
     public int hashCode() {
-        return Objects.hash(inquiryId);
+        return Objects.hash(inquiryId, reply);
     }
 
     public static class Builder {

@@ -342,7 +342,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId);
+        return Objects.hash(userId, mail, name, surname, password, phoneNumber, darkMode, language, role, profilePicture, identification);
     }
 
     public static class Builder {

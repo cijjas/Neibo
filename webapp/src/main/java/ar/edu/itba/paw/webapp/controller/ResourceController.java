@@ -148,8 +148,7 @@ public class ResourceController {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @Secured("ROLE_ADMINISTRATOR")
     public Response deleteResourceById(
-            @PathParam("id") final long id,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @PathParam("id") final long id
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
 

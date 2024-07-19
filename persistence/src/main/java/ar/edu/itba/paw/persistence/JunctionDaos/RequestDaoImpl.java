@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
+import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.interfaces.persistence.RequestDao;
 import ar.edu.itba.paw.models.Entities.Product;
@@ -33,7 +34,7 @@ public class RequestDaoImpl implements RequestDao {
                 .user(em.find(User.class, userId))
                 .message(message)
                 .requestDate(new java.sql.Date(System.currentTimeMillis()))
-                .fulfilled(false)
+                .status(RequestStatus.REQUESTED)
                 .units(quantity)
                 .build();
         em.persist(request);
@@ -76,13 +77,13 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
-    public List<Request> getRequests(Long userId, Long productId, Long typeId, boolean fulfilled, int page, int size) {
+    public List<Request> getRequests(Long userId, Long productId, Long typeId, Long statusId, int page, int size) {
         LOGGER.debug("Selecting Requests By Criteria");
 
         StringBuilder queryBuilder = new StringBuilder("SELECT r.requestId FROM Request r WHERE ");
 
-        // Add fulfilled condition
-        queryBuilder.append("r.fulfilled = :fulfilled ");
+        // Add status condition
+        queryBuilder.append("r.status = :status ");
 
         // Add productId condition
         if (productId != null) {
@@ -105,7 +106,7 @@ public class RequestDaoImpl implements RequestDao {
         TypedQuery<Long> idQuery = em.createQuery(queryBuilder.toString(), Long.class);
 
         // Set parameters for the query
-        idQuery.setParameter("fulfilled", fulfilled);
+        idQuery.setParameter("status", RequestStatus.fromId(statusId));
         if (userId != null) {
             idQuery.setParameter("userId", userId);
         }
@@ -130,13 +131,13 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
-    public int countRequests(Long userId, Long productId, Long typeId, boolean fulfilled) {
+    public int countRequests(Long userId, Long productId, Long typeId, Long statusId) {
         LOGGER.debug("Selecting Requests Count by Criteria");
 
         StringBuilder queryBuilder = new StringBuilder("SELECT r.requestId FROM Request r WHERE ");
 
-        // Add fulfilled condition
-        queryBuilder.append("r.fulfilled = :fulfilled ");
+        // Add status condition
+        queryBuilder.append("r.status = :status ");
 
         // Add productId condition
         if (productId != null) {
@@ -158,7 +159,7 @@ public class RequestDaoImpl implements RequestDao {
         TypedQuery<Long> idQuery = em.createQuery(queryBuilder.toString(), Long.class);
 
         // Set parameters for the query
-        idQuery.setParameter("fulfilled", fulfilled);
+        idQuery.setParameter("status", RequestStatus.fromId(statusId));
         if (userId != null) {
             idQuery.setParameter("userId", userId);
         }

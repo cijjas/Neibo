@@ -8,7 +8,7 @@ import java.util.Set;
 
 public interface AttendanceService {
 
-    Attendance createAttendance(long userId, long eventId);
+    Attendance createAttendance(String userURN, long eventId);
 
     // -----------------------------------------------------------------------------------------------------------------
 

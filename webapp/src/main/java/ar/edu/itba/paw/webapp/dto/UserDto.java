@@ -15,7 +15,7 @@ public class UserDto {
     private Boolean darkMode;
     private String phoneNumber;
     private Integer identification;
-    private UserRole role;
+//    private UserRole role;
     private Links _links;
 
     public static UserDto fromUser(final User user, final UriInfo uriInfo) {
@@ -27,9 +27,13 @@ public class UserDto {
         dto.darkMode = user.getDarkMode();
         dto.phoneNumber = user.getPhoneNumber();
         dto.identification = user.getIdentification();
-        dto.role = user.getRole();
+//        dto.role = user.getRole();
 
         Links links = new Links();
+        links.setUserRole(uriInfo.getBaseUriBuilder()
+                .path("user-roles")
+                .path(String.valueOf(user.getRole().getId()))
+                .build());
         URI self = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
@@ -142,13 +146,6 @@ public class UserDto {
         this.identification = identification;
     }
 
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
-    }
 
     public Links get_links() {
         return _links;

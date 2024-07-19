@@ -25,13 +25,6 @@ public class ValidationUtils {
         checkSize(size);
     }
 
-    public static void checkFulfilled(Boolean fulfilled) {
-        if (fulfilled == null) {
-            LOGGER.info("Invalid Boolean");
-            throw new IllegalArgumentException("Must specify request or purchase. Please use true/false for Query Param 'fulfilled'.");
-        }
-    }
-
     public static void checkQuantity(int quantity) {
         if (quantity <= 0) {
             LOGGER.info("Invalid Quantity");
@@ -364,6 +357,36 @@ public class ValidationUtils {
         ValidationUtils.checkNeighborhoodId(userTwoIds.getFirstId());
         ValidationUtils.checkUserId(userTwoIds.getSecondId());
         return userTwoIds.getSecondId();
+    }
+
+    public static Long checkURNAndExtractProductId(String productURN) {
+        if (productURN == null)
+            return null;
+        if (!URNValidator.validateURN(productURN, "product")){
+            throw new IllegalArgumentException("Malformed URN");
+        }
+        TwoIds productTwoIds = ValidationUtils.extractTwoURNIds(productURN);
+        ValidationUtils.checkNeighborhoodId(productTwoIds.getFirstId());
+        ValidationUtils.checkProductId(productTwoIds.getSecondId());
+        return productTwoIds.getSecondId();
+    }
+
+    public static Long checkURNAndExtractRequestStatusId(String requestStatusURN) {
+        if (requestStatusURN == null)
+            return null;
+        if (!URNValidator.validateURN(requestStatusURN, "request-statuses")){
+            throw new IllegalArgumentException("Malformed URN");
+        }
+        return ValidationUtils.extractURNId(requestStatusURN);
+    }
+
+    public static Long checkURNAndExtractTransactionTypeId(String typeURN) {
+        if (typeURN == null)
+            return null;
+        if (!URNValidator.validateURN(typeURN, "transaction-type")){
+            throw new IllegalArgumentException("Malformed URN");
+        }
+        return ValidationUtils.extractURNId(typeURN);
     }
 
     public static Long checkURNAndExtractAmenityId(String amenityURN){

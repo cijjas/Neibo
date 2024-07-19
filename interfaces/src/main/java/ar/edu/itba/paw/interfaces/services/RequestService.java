@@ -15,13 +15,13 @@ public interface RequestService {
 
     Optional<Request> findRequest(long requestId, long neighborhoodId);
 
-    List<Request> getRequests(String userURN, String productURN, String typeURN, Boolean fulfilled, int page, int size, long neighborhoodId);
+    List<Request> getRequests(String userURN, String productURN, String typeURN, String statusURN, int page, int size, long neighborhoodId);
 
-    int countRequests(String productURN, String userURN, String typeURN, Boolean fulfilled);
+    int countRequests(String productURN, String userURN, String typeURN, String statusURN);
 
-    int calculateRequestPages(String productURN, String userURN, String typeURN, Boolean fulfilled, int size);
+    int calculateRequestPages(String productURN, String userURN, String typeURN, String statusURN, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Request markRequestAsFulfilled(long requestId);
+    Request updateRequest(long requestId, String requestStatusURN);
 }

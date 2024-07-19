@@ -106,6 +106,7 @@ public class NeighborhoodController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(neighborhoodHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -130,7 +131,12 @@ public class NeighborhoodController {
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(neighborhood.getNeighborhoodId())).build();
 
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
+
         return Response.created(uri)
+                .cacheControl(cacheControl)
                 .tag(neighborhoodHashCode)
                 .build();
     }

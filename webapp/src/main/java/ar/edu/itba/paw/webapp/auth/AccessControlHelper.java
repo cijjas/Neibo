@@ -127,6 +127,20 @@ public class AccessControlHelper {
         return getRequestingUserId(authentication) == userId;
     }
 
+    // A user can create an attendance for themselves, or an Administrator for anyone
+    public Boolean canCreateAttendance(long userId, long neighborhoodId) {
+        LOGGER.info("Verifying Create Attendance Accessibility");
+        Authentication authentication = getAuthentication();
+
+        if (getRequestingUser(authentication).getNeighborhoodId() != neighborhoodId)
+            return false;
+
+        if (isAdministrator(authentication))
+            return true;
+
+        return getRequestingUserId(authentication) == userId;
+    }
+
     // Neighbors can access their own Transactions and Administrators can access all their neighbors' Transactions
     public Boolean canAccessTransactions(long userId) {
         LOGGER.info("Verifying List Transactions Accessibility");

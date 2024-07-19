@@ -99,7 +99,7 @@ public class Resource {
 
     @Override
     public int hashCode() {
-        return Objects.hash(resourceId);
+        return Objects.hash(resourceId, title, description, image);
     }
 
     public static class Builder {

@@ -65,7 +65,6 @@ public class TagController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(tagsHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -132,7 +131,12 @@ public class TagController {
         // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(tag.getTagId())).build();
 
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
+
         return Response.created(uri)
+                .cacheControl(cacheControl)
                 .tag(tagHashCode)
                 .build();
     }

@@ -25,12 +25,9 @@ public class NeighborhoodSelectionValidator implements ConstraintValidator<Neigh
             return true;
         }
 
-        System.out.println("before grabbing neighborhoods");
         List<Neighborhood> neighborhoods = neighborhoodService.getNeighborhoods();
-        System.out.println("after grabbing neighborhoods");
         for (Neighborhood neighborhood : neighborhoods) {
             if (Objects.equals(neighborhood.getNeighborhoodId(), id)) {
-                System.out.println("gonna return true in neighborhood validator");
                 return true;
             }
         }

@@ -111,6 +111,7 @@ public class PostController extends GlobalControllerAdvice{
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(postHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -136,7 +137,12 @@ public class PostController extends GlobalControllerAdvice{
         final URI uri = uriInfo.getAbsolutePathBuilder()
                 .path(String.valueOf(post.getPostId())).build();
 
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
+
         return Response.created(uri)
+                .cacheControl(cacheControl)
                 .tag(postHashCode)
                 .build();
     }

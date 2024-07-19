@@ -104,6 +104,7 @@ public class CommentController extends GlobalControllerAdvice{
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(commentHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -128,7 +129,12 @@ public class CommentController extends GlobalControllerAdvice{
         // Resource URN
         URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(comment.getCommentId())).build();
 
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+        cacheControl.setMaxAge(MAX_AGE_SECONDS);
+
         return Response.created(uri)
+                .cacheControl(cacheControl)
                 .tag(commentHashCode)
                 .build();
     }
@@ -137,8 +143,7 @@ public class CommentController extends GlobalControllerAdvice{
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(
-            @PathParam("id") final long commentId,
-            @HeaderParam(HttpHeaders.IF_MATCH) EntityTag ifMatch
+            @PathParam("id") final long commentId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/posts/{}/comments/{}'", neighborhoodId, postId, commentId);
 
