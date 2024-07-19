@@ -38,9 +38,13 @@ public class AccessControlHelper {
         LOGGER.info("Neighborhood Belonging Bind");
 
         Authentication authentication = getAuthentication();
+
+        if (isAnonymous(authentication))
+            return false;
+
         UserAuth userAuth = (UserAuth) authentication.getPrincipal();
 
-        if (isAnonymous(authentication) || isUnverifiedOrRejected(authentication))
+        if (isUnverifiedOrRejected(authentication))
             return false;
 
         Long userNeighborhoodId = userAuth.getNeighborhoodId();

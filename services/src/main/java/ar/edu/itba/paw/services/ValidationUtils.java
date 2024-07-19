@@ -331,17 +331,6 @@ public class ValidationUtils {
         return productStatusId;
     }
 
-    public static Long checkURNAndExtractWorkerId(String workerURN){
-        if (workerURN == null)
-            return null;
-        if (!URNValidator.validateURN(workerURN, "workers")){
-            throw new IllegalArgumentException("Malformed URN");
-        }
-        Long workerId = ValidationUtils.extractURNId(workerURN);
-        ValidationUtils.checkWorkerId(workerId);
-        return workerId;
-    }
-
     public static Long checkURNAndExtractNeighborhoodId(String neighborhoodURN){
         if (neighborhoodURN == null)
             return null;
@@ -351,6 +340,18 @@ public class ValidationUtils {
         Long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         return neighborhoodId;
+    }
+
+    public static Long checkURNAndExtractWorkerId(String workerURN){
+        if (workerURN == null)
+            return null;
+        if (!URNValidator.validateURN(workerURN, "workers")){
+            throw new IllegalArgumentException("Malformed URN");
+        }
+        TwoIds workerTwoIds = ValidationUtils.extractTwoURNIds(workerURN);
+        // Worker Neighborhood == 0 is already check by the regex, actually the positive values are as well
+        ValidationUtils.checkWorkerId(workerTwoIds.getSecondId());
+        return workerTwoIds.getSecondId();
     }
 
     public static Long checkURNAndExtractUserId(String userURN){

@@ -13,6 +13,7 @@ import javax.persistence.TypedQuery;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class NeighborhoodDaoImpl implements NeighborhoodDao {
@@ -64,7 +65,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     public List<Neighborhood> getNeighborhoods(int page, int size, Long workerId) {
         LOGGER.debug("Selecting Neighborhoods");
 
-        // Build the first query to fetch neighborhood IDs
+        // Build the first query to fetch neighborhood IDs with ordering
         StringBuilder idQueryStringBuilder = new StringBuilder();
         idQueryStringBuilder.append("SELECT DISTINCT n.neighborhoodid FROM neighborhoods n ");
 
@@ -72,6 +73,9 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
             idQueryStringBuilder.append("JOIN workers_neighborhoods wn ON n.neighborhoodid = wn.neighborhoodid ");
             idQueryStringBuilder.append("WHERE wn.workerid = :workerId ");
         }
+
+        // Add ordering to the first query
+        idQueryStringBuilder.append("ORDER BY n.neighborhoodid");
 
         Query idQuery = em.createNativeQuery(idQueryStringBuilder.toString());
         idQuery.setFirstResult((page - 1) * size);
@@ -81,22 +85,25 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
             idQuery.setParameter("workerId", workerId);
         }
 
-        List<Long> neighborhoodIds = idQuery.getResultList();
-
+        // If List<Long> is used it returns this error "Parameter value element [-1] did not match expected type [java.lang.Long (n/a)]"
+        // There is an ID = -1 in the result set, the banned users
+        List<?> result = idQuery.getResultList();
+        List<Long> neighborhoodIds = result.stream()
+                                       .map(id -> ((Number) id).longValue())
+                                       .collect(Collectors.toList());
         if (neighborhoodIds.isEmpty()) {
             return Collections.emptyList();
         }
 
         // Build the second query to fetch neighborhoods using the fetched IDs and order the results
         TypedQuery<Neighborhood> dataQuery = em.createQuery(
-                "SELECT n FROM Neighborhood n WHERE n.neighborhoodId IN :neighborhoodIds ORDER BY n.name, n.neighborhoodId",
+                "SELECT n FROM Neighborhood n WHERE n.neighborhoodId IN :neighborhoodIds ORDER BY n.neighborhoodId",
                 Neighborhood.class
         );
         dataQuery.setParameter("neighborhoodIds", neighborhoodIds);
 
         return dataQuery.getResultList();
     }
-
 
     @Override
     public int countNeighborhoods(Long workerId) {

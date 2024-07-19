@@ -127,7 +127,23 @@ public class LikeController extends GlobalControllerAdvice{
         String likeHashCode = String.valueOf(like.hashCode());
 
         // Resource URN
-        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(like.getId())).build();
+        final URI uri = uriInfo.getBaseUriBuilder()
+                .path("neighborhoods")
+                .path(String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId()))
+                .path("likes")
+                .queryParam("likedBy", uriInfo.getBaseUriBuilder()
+                        .path("neighborhoods")
+                        .path(String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId()))
+                        .path("users")
+                        .path(String.valueOf(like.getUser().getUserId()))
+                        .build())
+                .queryParam("onPost", uriInfo.getBaseUriBuilder()
+                        .path("neighborhoods")
+                        .path(String.valueOf(like.getPost().getUser().getNeighborhood().getNeighborhoodId()))
+                        .path("posts")
+                        .path(String.valueOf(like.getPost().getPostId()))
+                        .build())
+                .build();
 
         return Response.created(uri)
                 .tag(likeHashCode)
@@ -137,8 +153,8 @@ public class LikeController extends GlobalControllerAdvice{
     @DELETE
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(
-            @QueryParam("userId") final String userURN,
-            @QueryParam("postId") final String postURN
+            @QueryParam("likedBy") final String userURN,
+            @QueryParam("onPost") final String postURN
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/likes/'", neighborhoodId);
 
