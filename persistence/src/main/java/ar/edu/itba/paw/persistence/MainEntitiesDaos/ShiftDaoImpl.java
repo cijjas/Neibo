@@ -117,6 +117,8 @@ public class ShiftDaoImpl implements ShiftDao {
             hql.append(" WHERE a.amenityId = :amenityId");
         }
 
+        hql.append(" ORDER BY s.day DESC, s.startTime DESC");
+
         TypedQuery<Shift> query = em.createQuery(hql.toString(), Shift.class);
         if (amenityId != null) {
             query.setParameter("amenityId", amenityId);

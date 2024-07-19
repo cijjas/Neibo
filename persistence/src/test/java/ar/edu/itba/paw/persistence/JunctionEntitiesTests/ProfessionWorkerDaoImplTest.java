@@ -5,6 +5,7 @@ import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.Entities.Profession;
 import ar.edu.itba.paw.models.Entities.Specialization;
 import ar.edu.itba.paw.persistence.JunctionDaos.ProfessionWorkerDaoImpl;
+import ar.edu.itba.paw.persistence.MainEntitiesDaos.ProfessionDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -39,6 +40,8 @@ public class ProfessionWorkerDaoImplTest {
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private ProfessionWorkerDaoImpl professionWorkerDao;
+    @Autowired
+    private ProfessionDaoImpl professionDao;
 
     @PersistenceContext
     private EntityManager em;
@@ -77,7 +80,7 @@ public class ProfessionWorkerDaoImplTest {
         testInserter.createSpecialization(uKey, pKey);
 
         // Exercise
-        List<Profession> profession = professionWorkerDao.getWorkerProfessions(uKey);
+        List<Profession> profession = professionDao.getProfessions(uKey);
 
         // Validations & Post Conditions
         assertFalse(profession.isEmpty());
@@ -89,7 +92,7 @@ public class ProfessionWorkerDaoImplTest {
 //        long pKey = testInserter.createProfession(PROFESSION_NAME);
 
         // Exercise
-        List<Profession> profession = professionWorkerDao.getWorkerProfessions(1L);
+        List<Profession> profession = professionDao.getProfessions(1L);
 
         // Validations & Post Conditions
         assertTrue(profession.isEmpty());

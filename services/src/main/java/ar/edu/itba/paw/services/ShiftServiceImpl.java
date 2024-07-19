@@ -52,8 +52,10 @@ public class ShiftServiceImpl implements ShiftService {
     public List<Shift> getShifts(String amenityURN) {
         LOGGER.info("Getting Shifts");
 
-        Long amenityId = ValidationUtils.checkURNAndExtractAmenityId(amenityURN);
+        if(amenityURN == null)
+            return shiftDao.getShifts();
 
+        Long amenityId = ValidationUtils.checkURNAndExtractAmenityId(amenityURN);
         return shiftDao.getShifts(amenityId);
     }
 

@@ -1,7 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.enums.Professions;
-import ar.edu.itba.paw.interfaces.services.ProfessionWorkerService;
+import ar.edu.itba.paw.interfaces.services.ProfessionService;
 import ar.edu.itba.paw.models.Entities.Profession;
 import ar.edu.itba.paw.webapp.dto.*;
 import org.slf4j.Logger;
@@ -14,7 +14,6 @@ import javax.ws.rs.core.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.checkETagPreconditions;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
 /*
@@ -33,15 +32,13 @@ public class ProfessionController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProfessionController.class);
 
     @Autowired
-    private ProfessionWorkerService ps;
+    private ProfessionService ps;
 
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
-
-    private final EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -51,7 +48,7 @@ public class ProfessionController {
         LOGGER.info("GET request arrived at '/professions'");
 
         // Content
-        List<Profession> professions = ps.getWorkerProfessions(workerURN);
+        List<Profession> professions = ps.getProfessions(workerURN);
         String professionsHashCode = String.valueOf(professions.hashCode());
 
         // Cache Control

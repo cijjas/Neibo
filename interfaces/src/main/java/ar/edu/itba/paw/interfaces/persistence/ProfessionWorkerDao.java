@@ -11,7 +11,4 @@ public interface ProfessionWorkerDao {
 
     Specialization createSpecialization(long workerId, long professionId);
 
-    // --------------------------------------- WORKERS PROFESSIONS SELECT ----------------------------------------------
-
-    List<Profession> getWorkerProfessions(Long workerId);
 }

@@ -120,7 +120,6 @@ public class AttendanceController extends GlobalControllerAdvice {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.canCreateAttendance(#form.userURN, #neighborhoodId)")
     public Response createAttendance(
             @Valid @NotNull final AttendanceForm form
     ) {
@@ -144,15 +143,14 @@ public class AttendanceController extends GlobalControllerAdvice {
     }
 
     @DELETE
-    @Path("/{userId}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteByUser(
-            @PathParam("userId") final long userId
+            @Valid @NotNull final AttendanceForm form
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance/{}'", neighborhoodId, eventId, userId);
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
         // Deletion Attempt
-        if(as.deleteAttendance(userId, eventId)) {
+        if(as.deleteAttendance(form.getUserURN(), eventId)) {
             return Response.noContent()
                     .build();
         }

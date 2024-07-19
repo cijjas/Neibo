@@ -1,22 +1,15 @@
 package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.*;
-import org.hibernate.validator.constraints.Email;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Arrays;
 
 public class WorkerSignupForm {
-    @NotNull
-    @Size(min = 1, max = 64)
-    @Pattern(regexp = "^[a-zA-Z ]*")
-    private String workerName;
-
-    @NotNull
-    @Pattern(regexp = "^[a-zA-Z ]*")
-    @Size(min = 1, max = 64)
-    private String workerSurname;
+    @UserURNConstraint
+    private String userURN;
 
     @ProfessionsURNConstraint
     private String[] professionURNs;
@@ -36,39 +29,12 @@ public class WorkerSignupForm {
     @Size(min = 1, max = 128)
     private String address;
 
-    @NotNull
-    @Size(min = 1, max = 128)
-    @Email
-    @EmailConstraint
-    private String workerEmail;
-
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Pattern(regexp = "^[a-zA-Z0-9]*")
-    private String workerPassword;
-
-    @NotNull
-    @Size(min = 1, max = 9)
-    @Pattern(regexp = "^[0-9]*")
-    private String workerIdentification;
-
-    @LanguageURNConstraint
-    private String workerLanguageURN;
-
-    public String getWorkerName() {
-        return workerName;
+    public String getUserURN() {
+        return userURN;
     }
 
-    public void setWorkerName(String workerName) {
-        this.workerName = workerName;
-    }
-
-    public String getWorkerSurname() {
-        return workerSurname;
-    }
-
-    public void setWorkerSurname(String workerSurname) {
-        this.workerSurname = workerSurname;
+    public void setUserURN(String userURN) {
+        this.userURN = userURN;
     }
 
     public String[] getProfessionURNs() {
@@ -103,48 +69,12 @@ public class WorkerSignupForm {
         this.address = address;
     }
 
-    public String getWorkerEmail() {
-        return workerEmail;
-    }
-
-    public void setWorkerEmail(String workerEmail) {
-        this.workerEmail = workerEmail;
-    }
-
-    public String getWorkerPassword() {
-        return workerPassword;
-    }
-
-    public void setWorkerPassword(String workerPassword) {
-        this.workerPassword = workerPassword;
-    }
-
-    public String getWorkerIdentification() {
-        return workerIdentification;
-    }
-
-    public void setWorkerIdentification(String workerIdentification) {
-        this.workerIdentification = workerIdentification;
-    }
-
-    public String getWorkerLanguageURN() {
-        return workerLanguageURN;
-    }
-
-    public void setWorkerLanguageURN(String workerLanguageURN) {
-        this.workerLanguageURN = workerLanguageURN;
-    }
-
     @Override
     public String toString() {
-        return "PublishForm{" +
-                "name='" + workerName + '\'' +
-                ", surname='" + workerSurname + '\'' +
-                ", password='" + workerPassword + '\'' +
-                ", mail='" + workerEmail + '\'' +
-                ", identification='" + workerIdentification + '\'' +
-                ", language='" + workerLanguageURN + '\'' +
-                "phoneNumber='" + phoneNumber + '\'' +
+        return "WorkerSignupForm{" +
+                "userURN='" + userURN + '\'' +
+                ", professionURNs=" + Arrays.toString(professionURNs) +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 ", businessName='" + businessName + '\'' +
                 ", address='" + address + '\'' +
                 '}';
