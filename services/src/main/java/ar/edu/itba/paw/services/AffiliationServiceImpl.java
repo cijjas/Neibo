@@ -12,6 +12,7 @@ import ar.edu.itba.paw.interfaces.services.AffiliationService;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.models.Entities.Affiliation;
+import ar.edu.itba.paw.models.TwoIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +95,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     public Affiliation createAffiliation(String workerURN, String neighborhoodURN, String workerRoleURN) {
         LOGGER.info("Creating Affiliation between Worker {} and Neighborhood {} with Role {}", workerURN, neighborhoodURN, workerRoleURN);
 
-        long workerId = ValidationUtils.extractURNId(workerURN);
+        TwoIds workerTwoIds = ValidationUtils.extractTwoURNIds(workerURN);
         long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
         Long workerRoleId = null;
         if(workerRoleURN != null){
@@ -102,13 +103,14 @@ public class AffiliationServiceImpl implements AffiliationService {
             ValidationUtils.checkWorkerRoleId(workerRoleId);
         }
 
-        ValidationUtils.checkWorkerId(workerId);
+        // should also check for the first id in the worker two ids, it will be fixed once the validation style is unified
+        ValidationUtils.checkWorkerId(workerTwoIds.getSecondId());
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        workerDao.findWorker(workerId).orElseThrow(()-> new NotFoundException("Worker Not Found"));
+        workerDao.findWorker(workerTwoIds.getSecondId()).orElseThrow(()-> new NotFoundException("Worker Not Found"));
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(()-> new NotFoundException("Neighborhood Not Found"));
 
-        return affiliationDao.createAffiliation(workerId, neighborhoodId, workerRoleId);
+        return affiliationDao.createAffiliation(workerTwoIds.getSecondId(), neighborhoodId, workerRoleId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
