@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ChannelURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ImageURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.TagsConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.TagsURNConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.Size;
@@ -17,7 +18,7 @@ public class PublishForm {
     @Size(min = 0, max = 2000)
     private String message;
 
-    @TagsConstraint
+    @TagsURNConstraint
     private List<String> tagURNs;
 
     @ImageURNConstraint

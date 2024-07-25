@@ -28,6 +28,8 @@ public class URNValidator {
     private static final String PRODUCT_STATUS_URN_REGEX = "^(https?://[^/]+)?/product-statuses/\\d+$";
     private static final String REQUEST_STATUS_URN_REGEX = "^(https?://[^/]+)?/request-statuses/\\d+$";
     private static final String TRANSACTION_TYPE_URN_REGEX = "^(https?://[^/]+)?/transaction-types/\\d+$";
+    private static final String TAGS_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+/tags/\\d+$";
+
     // Compile regex patterns during application startup
     static {
         patternMap.put("channel", Pattern.compile(CHANNEL_URN_REGEX));
@@ -52,6 +54,8 @@ public class URNValidator {
         patternMap.put("productStatuses", Pattern.compile(PRODUCT_STATUS_URN_REGEX));
         patternMap.put("transaction-type", Pattern.compile(TRANSACTION_TYPE_URN_REGEX));
         patternMap.put("request-statuses", Pattern.compile(REQUEST_STATUS_URN_REGEX));
+        patternMap.put("tags", Pattern.compile(TAGS_URN_REGEX));
+
     }
 
     // Method to validate a URN based on its type

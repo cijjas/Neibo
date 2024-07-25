@@ -24,6 +24,7 @@ public class URNValidator {
     private static final String USER_ROLE_URN_REGEX = "^(https?://[^/]+)?/user-roles/\\d+$";
     private static final String WORKER_ROLE_URN_REGEX = "^(https?://[^/]+)?/worker-roles/\\d+$";
     private static final String IMAGE_URN_REGEX = "^(https?://[^/]+)?/images/\\d+$";
+    private static final String TAGS_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+/tags/\\d+$";
     // Compile regex patterns during application startup<
     static {
         patternMap.put("channel", Pattern.compile(CHANNEL_URN_REGEX));
@@ -43,6 +44,7 @@ public class URNValidator {
         patternMap.put("images", Pattern.compile(IMAGE_URN_REGEX));
         patternMap.put("workerRole", Pattern.compile(WORKER_ROLE_URN_REGEX));
         patternMap.put("requestStatus", Pattern.compile(REQUEST_STATUS_URN_REGEX));
+        patternMap.put("tags", Pattern.compile(TAGS_URN_REGEX));
     }
 
     // Method to validate a URN based on its type
