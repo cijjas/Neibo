@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
+import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.webapp.auth.UserDetailsService;
 import ar.edu.itba.paw.webapp.security.api.filter.HttpMethodFilter;
 import ar.edu.itba.paw.webapp.security.api.jwt.JwtAuthenticationEntryPoint;
@@ -91,66 +92,77 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
 
-
-                // UNRESTRICTED
                 .antMatchers(
-                        "/test/**",
                         "/",
-                        "/auth/**",
-                        "/professions/**",
-                        "/departments/**",
-                        "/shifts/**",
-                        "/times/**",
-                        "/days/**",
-                        "/base-channels/**",
-                        "/user-roles/**",
-                        "/worker-roles/**",
-                        "/worker-statuses/**",
-                        "/transaction-types/**",
-                        "/post-statuses/**",
-                        "/product-statuses/**",
-                        "/shift-statuses/**",
-                        "/languages/**",
-                        "/images/**",
-
-                        "/neighborhoods/*",                         // POST needed for sign-up, GET has restriction on QP
+                        "/departments/*",
+                        "/shifts/*",
+                        "/shift-statuses/*",
+                        "/base-channels/*",
+                        "/user-roles/*",
+                        "/worker-roles/*",
+                        "/worker-statuses/*",
+                        "/post-statuses/*",
+                        "/product-statuses/*",
+                        "/languages/*",
+                        "/professions/*",
+                        "/neighborhoods/*",
                         "/neighborhoods",
-                        "/neighborhoods/*/users",                   // POST needed for sign-up, GET is restricted
-                        "/workers"                                  // POST needed for worker sign-up, GET is restricted
+                        "/neighborhoods/*/users",
+                        "/workers",
+                        "/transaction-types/*"
                 ).permitAll()
 
-
-                // ANY USER WITH AN ACCOUNT CAN ACCESS HIS PROFILE
                 .antMatchers(
-                        "/neighborhoods/*/users/*"
-                ).hasAnyRole("UNVERIFIED_NEIGHBOR","WORKER", "NEIGHBOR", "ADMINISTRATOR", "REJECTED")
+                        "/neighborhoods/*/users/*",
+                        "/workers/*",
+                        "/images/*"
+                ).hasAnyRole(
+                        UserRole.REJECTED.name(),
+                        UserRole.UNVERIFIED_NEIGHBOR.name(),
+                        UserRole.WORKER.name(),
+                        UserRole.NEIGHBOR.name(),
+                        UserRole.ADMINISTRATOR.name(),
+                        UserRole.SUPER_ADMINISTRATOR.name()
+                )
 
-
-                // BELONGING CONDITION
-                .antMatchers("/neighborhoods/**").access("@accessControlHelper.isNeighborhoodMember(request)")
-
-
-                // WORKERS, NEIGHBOR AND ADMINISTRATOR
                 .antMatchers(
-                        "/affiliations/*",
-                        "/workers/**",
+                        "/affiliations",
+                        "/workers/*/reviews/*"
+                ).hasAnyRole(
+                        UserRole.WORKER.name(),
+                        UserRole.NEIGHBOR.name(),
+                        UserRole.ADMINISTRATOR.name(),
+                        UserRole.SUPER_ADMINISTRATOR.name()
+                )
+
+                // EVERYTHING WITHIN A NEIGHBORHOOD CAN BE ACCESSED BY USERS BELONGING TO THAT NEIGHBORHOOD OR THE SUPER ADMINISTRATOR
+                // ALSO THE WORKERS NEIGHBORHOOD CAN BE ACCESSED BY EVERYONE
+
+                .antMatchers(
                         "/neighborhoods/*/posts/*"
-                ).hasAnyRole("WORKER", "NEIGHBOR", "ADMINISTRATOR")
-
+                ).access(
+                        "hasAnyRole('WORKER', 'NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " +
+                                "and " +
+                                "@accessControlHelper.isNeighborhoodMember(request)"
+                )
 
                 // NEIGHBORS AND ADMINISTRATORS
                 .antMatchers(
-                        "/neighborhoods/*/products/*/comments/**",  // custom product restrictions
-                        "/neighborhoods/*/products/**",             // custom product restrictions
+                        "/neighborhoods/*/products/*/comments/**",
+                        "/neighborhoods/*/products/**",
                         "/neighborhoods/*/tags/**",
                         "/neighborhoods/*/likes/**",
-                        "/neighborhoods/*/channels/**",             // only an Administrator can do more than GET
-                        "/neighborhoods/*/amenities/**",            // only an Administrator can do more than GET
+                        "/neighborhoods/*/channels/**",
+                        "/neighborhoods/*/amenities/**",
                         "/neighborhoods/*/bookings/**",
-                        "/neighborhoods/*/resources/**",            // only an Administrator can do more than GET
-                        "/neighborhoods/*/contacts/**",             // only an Administrator can do more than GET
-                        "/neighborhoods/*/events/**"                // only an Administrator can do more than GET
-                ).hasAnyRole("NEIGHBOR", "ADMINISTRATOR")
+                        "/neighborhoods/*/resources/**",
+                        "/neighborhoods/*/contacts/**",
+                        "/neighborhoods/*/events/**"
+                ).access(
+                        "hasAnyRole('NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " +
+                                "and " +
+                                "@accessControlHelper.isNeighborhoodMember(request)"
+                )
                 .anyRequest().authenticated();
     }
 

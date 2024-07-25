@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.enums.Authority;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.User;
@@ -38,19 +39,22 @@ public class UserDetailsService implements org.springframework.security.core.use
         // Add roles based on user data from the database
         switch (n.getRole()) {
             case ADMINISTRATOR:
-                authorities.add(new SimpleGrantedAuthority("ROLE_ADMINISTRATOR"));
+                authorities.add(new SimpleGrantedAuthority(Authority.ROLE_ADMINISTRATOR.name()));
                 break;
             case UNVERIFIED_NEIGHBOR:
-                authorities.add(new SimpleGrantedAuthority("ROLE_UNVERIFIED_NEIGHBOR"));
+                authorities.add(new SimpleGrantedAuthority(Authority.ROLE_UNVERIFIED_NEIGHBOR.name()));
                 break;
             case NEIGHBOR:
-                authorities.add(new SimpleGrantedAuthority("ROLE_NEIGHBOR"));
+                authorities.add(new SimpleGrantedAuthority(Authority.ROLE_NEIGHBOR.name()));
                 break;
             case WORKER:
-                authorities.add(new SimpleGrantedAuthority("ROLE_WORKER"));
+                authorities.add(new SimpleGrantedAuthority(Authority.ROLE_WORKER.name()));
                 break;
             case REJECTED:
-                authorities.add(new SimpleGrantedAuthority("ROLE_REJECTED"));
+                authorities.add(new SimpleGrantedAuthority(Authority.ROLE_REJECTED.name()));
+                break;
+            case SUPER_ADMINISTRATOR:
+                authorities.add(new SimpleGrantedAuthority(Authority.ROLE_SUPER_ADMINISTRATOR.name()));
                 break;
             default:
                 break;

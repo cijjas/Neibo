@@ -94,7 +94,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     @Override
     public Affiliation createAffiliation(String workerURN, String neighborhoodURN, String workerRoleURN) {
         LOGGER.info("Creating Affiliation between Worker {} and Neighborhood {} with Role {}", workerURN, neighborhoodURN, workerRoleURN);
-
+        
         TwoIds workerTwoIds = ValidationUtils.extractTwoURNIds(workerURN);
         long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
         Long workerRoleId = null;

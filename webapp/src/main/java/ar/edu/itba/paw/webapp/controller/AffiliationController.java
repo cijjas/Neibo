@@ -64,6 +64,7 @@ public class AffiliationController {
 
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
+    // ?
     @GET
     @Produces(value = {MediaType.APPLICATION_JSON,})
     public Response listAffiliations(
@@ -119,7 +120,17 @@ public class AffiliationController {
         String affiliationHashCode = String.valueOf(affiliation.hashCode());
 
         // Resource URN
-        URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(affiliation.getWorker().getWorkerId())).build();
+        URI uri = uriInfo.getBaseUriBuilder()
+                .path("affiliations")
+                .queryParam("inNeighborhood", uriInfo.getBaseUriBuilder()
+                        .path("neighborhoods")
+                        .path(String.valueOf(affiliation.getNeighborhood().getNeighborhoodId()))
+                        .build())
+                .queryParam("forWorker", uriInfo.getBaseUriBuilder()
+                        .path("workers")
+                        .path(String.valueOf(affiliation.getWorker().getWorkerId()))
+                        .build())
+                .build();
 
         return Response.created(uri)
                 .tag(affiliationHashCode)

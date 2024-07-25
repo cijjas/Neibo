@@ -44,6 +44,10 @@ public class AccessControlHelper {
 
         UserAuth userAuth = (UserAuth) authentication.getPrincipal();
 
+        if (isSuperAdministrator(authentication)){
+            return true;
+        }
+
         if (isUnverifiedOrRejected(authentication))
             return false;
 
@@ -290,6 +294,10 @@ public class AccessControlHelper {
 
     private Boolean isAdministrator(Authentication authentication){
         return getRequestingUser(authentication).getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMINISTRATOR"));
+    }
+
+    private Boolean isSuperAdministrator(Authentication authentication){
+        return getRequestingUser(authentication).getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_SUPER_ADMINISTRATOR"));
     }
 
     private long getRequestingUserId(Authentication authentication){
