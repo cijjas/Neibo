@@ -50,29 +50,16 @@ public class WorkerServiceImpl implements WorkerService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Worker createWorker(String mail, String name, String surname, String password, String identification, String phoneNumber, String address, String languageURN, String[] professionURNs, String businessName) {
-        LOGGER.info("Creating Worker with mail {}", mail);
+    public Worker createWorker(String userURN, String phoneNumber, String address, String[] professionURNs, String businessName) {
+        LOGGER.info("Creating Worker associated with User {}", userURN);
 
-        int id = 0;
-        try {
-            id = Integer.parseInt(identification);
-        } catch (NumberFormatException e) {
-            LOGGER.error("Error whilst formatting Identification");
-            throw new UnexpectedException("Unexpected Error while creating Worker");
-        }
-        Language language = Language.ENGLISH;
-        if(languageURN != null) {
-            long languageId = ValidationUtils.extractURNId(languageURN);
-            ValidationUtils.checkLanguageId(languageId);
-            language = Language.fromId(languageId);
-        }
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
 
-        User user = userDao.createUser(mail, passwordEncoder.encode(password), name, surname, BaseNeighborhood.WORKERS_NEIGHBORHOOD.getId(), language, false, UserRole.WORKER, id);
-        Worker worker = workerDao.createWorker(user.getUserId(), phoneNumber, address, businessName);
+        Worker worker = workerDao.createWorker(userId, phoneNumber, address, businessName);
         for(String urn : professionURNs){
             long professionId = ValidationUtils.extractURNId(urn);
             ValidationUtils.checkProfessionId(professionId);
-            professionWorkerDao.createSpecialization(user.getUserId(), professionId);
+            professionWorkerDao.createSpecialization(userId, professionId);
         }
         return worker;
     }

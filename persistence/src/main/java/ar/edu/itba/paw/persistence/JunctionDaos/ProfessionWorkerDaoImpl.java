@@ -30,24 +30,4 @@ public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
         return specialization;
     }
 
-    // --------------------------------------- WORKERS PROFESSIONS SELECT ----------------------------------------------
-
-    @Override
-    public List<Profession> getWorkerProfessions(Long workerId) {
-        LOGGER.debug("Selecting Professions of Worker {}", workerId);
-
-        StringBuilder queryString = new StringBuilder("SELECT p FROM Profession p");
-
-        if (workerId != null) {
-            queryString.append(" JOIN p.workers w WHERE w.user.id = :workerId");
-        }
-
-        TypedQuery<Profession> query = em.createQuery(queryString.toString(), Profession.class);
-
-        if (workerId != null) {
-            query.setParameter("workerId", workerId);
-        }
-
-        return query.getResultList();
-    }
 }

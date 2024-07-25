@@ -26,5 +26,5 @@ public interface AttendanceService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteAttendance(long userId, long eventId);
+    boolean deleteAttendance(String userURN, long eventId);
 }

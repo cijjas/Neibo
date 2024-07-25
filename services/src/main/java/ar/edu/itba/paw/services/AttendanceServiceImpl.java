@@ -33,7 +33,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public Attendance createAttendance(String userURN, long eventId) {
         LOGGER.info("Adding User {} as Attendee for Event {}", userURN, eventId);
-        long userId = ValidationUtils.extractURNId(userURN);
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
         ValidationUtils.checkAttendanceId(userId, eventId);
 
         return attendanceDao.createAttendee(userId, eventId);
@@ -99,9 +99,10 @@ public class AttendanceServiceImpl implements AttendanceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteAttendance(long userId, long eventId) {
-        LOGGER.info("Removing User {} as Attendee for Event {}", userId, eventId);
+    public boolean deleteAttendance(String userURN, long eventId) {
+        LOGGER.info("Removing User {} as Attendee for Event {}", userURN, eventId);
 
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
         ValidationUtils.checkAttendanceId(userId, eventId);
 
         return attendanceDao.deleteAttendee(userId, eventId);

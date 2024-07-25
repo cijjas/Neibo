@@ -62,15 +62,10 @@ public class TagServiceImpl implements TagService {
 
         ValidationUtils.checkPostId(postId);
 
-        if (tagURIs == null) {
-            return;
-        }
-
         //cycle array of URI's extracting the id of each tag
         for (String tagURI : tagURIs) {
-            long tagId = ValidationUtils.extractURNId(tagURI);
-            ValidationUtils.checkTagId(tagId);
-            Tag tag = tagDao.findTag(tagId).orElseThrow(() -> new NotFoundException("Tag Not Found"));
+            Long tagId = ValidationUtils.checkURNAndExtractTagId(tagURI);
+            tagDao.findTag(tagId).orElseThrow(() -> new NotFoundException("Tag Not Found"));
             categorizationDao.createCategorization(tagId, postId);
         }
     }

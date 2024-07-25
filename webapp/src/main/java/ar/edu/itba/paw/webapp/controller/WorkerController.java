@@ -129,7 +129,7 @@ public class WorkerController extends GlobalControllerAdvice {
         LOGGER.info("POST request arrived at '/workers'");
 
         // Creation & Etag Generation
-        final Worker worker = ws.createWorker(form.getWorkerEmail(), form.getWorkerName(), form.getWorkerSurname(), form.getWorkerPassword(), form.getWorkerIdentification(), form.getPhoneNumber(), form.getAddress(), form.getWorkerLanguageURN(), form.getProfessionURNs(), form.getBusinessName());
+        final Worker worker = ws.createWorker(form.getUserURN(), form.getPhoneNumber(), form.getAddress(), form.getProfessionURNs(), form.getBusinessName());
         String workerHashCode = String.valueOf(worker.hashCode());
 
         // Resource URN

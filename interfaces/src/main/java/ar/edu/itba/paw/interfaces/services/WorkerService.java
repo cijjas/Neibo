@@ -12,7 +12,7 @@ import java.util.Set;
 
 public interface WorkerService {
 
-    Worker createWorker(String mail, String name, String surname, String password, String identification, String phoneNumber, String address, String languageURN, String[] professionURNs, String businessName);
+    Worker createWorker(String userURN, String phoneNumber, String address, String[] professionURNs, String businessName);
 
     // -----------------------------------------------------------------------------------------------------------------
 

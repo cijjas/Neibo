@@ -93,7 +93,6 @@ public class ChannelController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(channelHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -121,7 +120,6 @@ public class ChannelController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
 
         return Response.created(uri)
                 .cacheControl(cacheControl)
