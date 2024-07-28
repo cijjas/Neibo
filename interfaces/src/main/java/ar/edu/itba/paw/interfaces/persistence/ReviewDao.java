@@ -18,6 +18,8 @@ public interface ReviewDao {
 
     List<Review> getReviews(long workerId, int page, int size);
 
+    Optional<Review> findLatestReview(long workerId, long userId);
+
     Optional<Float> getAvgRating(long workerId);
 
     // ---------------------------------------------------

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +33,12 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public Review createReview(long workerId, long userId, float rating, String review) {
         LOGGER.info("Creating a Review for Worker {} made by User {}", workerId, userId);
+        // Check if user has already created a review this same day for the same worker
+        reviewDao.findLatestReview(workerId, userId).ifPresent(r -> {
+            if (r.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().equals(new java.sql.Date(System.currentTimeMillis()).toLocalDate())) {
+                throw new IllegalArgumentException("User has already created a review for this worker today");
+            }
+        });
 
         return reviewDao.createReview(workerId, userId, rating, review);
     }

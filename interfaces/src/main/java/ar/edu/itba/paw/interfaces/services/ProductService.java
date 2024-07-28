@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
-    Product createProduct(long userId, String name, String description, String price, boolean used, String departmentURN, String[] imageURNs, long units);
+    Product createProduct(long userId, String name, String description, Double price, boolean used, String departmentURN, String[] imageURNs, long units);
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ public interface ProductService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    Product updateProductPartially(long productId, String name, String description, String price, boolean used, String departmentURN, String[] imageURNs, Long stock);
+    Product updateProductPartially(long productId, String name, String description, Double price, boolean used, String departmentURN, String[] imageURNs, Long stock);
 
     // -----------------------------------------------------------------------------------------------------------------
 

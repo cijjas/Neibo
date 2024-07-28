@@ -16,8 +16,8 @@ public class ListingForm {
     @Size(max = 100)
     private String title;
 
-    @NotBlank
-    private String price;
+    @NotNull
+    private Double price;
 
     @ImagesURNConstraint
     private String[] imageURNs;
@@ -57,10 +57,13 @@ public class ListingForm {
         return title;
     }
 
-    public String getPrice() {
+    public Double getPrice() {
         return price;
     }
 
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 
     public String getDescription() {
         return description;
@@ -70,9 +73,6 @@ public class ListingForm {
         this.title = title;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
-    }
 
 
     public void setDescription(String description) {
