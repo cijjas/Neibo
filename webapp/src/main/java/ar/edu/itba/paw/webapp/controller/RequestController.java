@@ -129,7 +129,7 @@ public class RequestController extends GlobalControllerAdvice {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Request request = rs.createRequest(getRequestingUserId(), form.getProductURN(), form.getRequestMessage(), form.getQuantity());
+        final Request request = rs.createRequest(form.getUserURN(), form.getProductURN(), form.getRequestMessage(), form.getQuantity());
         String requestHashCode = String.valueOf(request.hashCode());
 
         // Resource URN

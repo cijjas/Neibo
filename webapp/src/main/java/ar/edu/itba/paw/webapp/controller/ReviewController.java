@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.enums.Authority;
 import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.models.Entities.Review;
 import ar.edu.itba.paw.webapp.dto.ReviewDto;
@@ -8,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -113,15 +115,16 @@ public class ReviewController extends GlobalControllerAdvice {
     }
 
     @POST
-    @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR"})
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @PreAuthorize("@accessControlHelper.canCreateReview(#form.userURN)")
     public Response createReview(
             @Valid @NotNull final ReviewForm form
     ) {
         LOGGER.info("POST request arrived at '/workers/{}/reviews'", workerId);
 
         // Creation & HashCode Generation
-        final Review review = rs.createReview(workerId, getRequestingUserId(), form.getRating(), form.getReview());
+        final Review review = rs.createReview(workerId, form.getUserURN(), form.getRating(), form.getReview());
         String reviewHashCode = String.valueOf(review.hashCode());
 
         // Resource URN
@@ -135,6 +138,7 @@ public class ReviewController extends GlobalControllerAdvice {
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured("ROLE_SUPER_ADMINISTRATOR")
     public Response deleteById(
             @PathParam("id") final long reviewId
     ) {

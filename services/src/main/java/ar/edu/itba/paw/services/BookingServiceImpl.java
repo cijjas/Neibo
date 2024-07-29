@@ -41,8 +41,8 @@ public class BookingServiceImpl implements BookingService {
         this.shiftDao = shiftDao;
     }
 
-    public Booking createBooking(long userId, String amenityURN, String shiftURN, String reservationDate) {
-        LOGGER.info("Creating a Booking for Amenity {} on Date {} for User {}", amenityURN, reservationDate, userId);
+    public Booking createBooking(String userURN, String amenityURN, String shiftURN, String reservationDate) {
+        LOGGER.info("Creating a Booking for Amenity {} on Date {} for User {}", amenityURN, reservationDate, userURN);
 
         TwoIds twoIds = ValidationUtils.extractTwoURNIds(amenityURN);
         long neighborhoodId = twoIds.getFirstId();
@@ -71,6 +71,8 @@ public class BookingServiceImpl implements BookingService {
 
         // Finding availabilityId using amenityId and shiftId
         long availabilityId = availabilityDao.findId(amenityId, shiftId).orElseThrow(() -> new NotFoundException("Availability not found."));
+
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN); // Cant be null due to check from the form
 
         // Creating booking
         return bookingDao.createBooking(userId, availabilityId, parsedSqlDate);

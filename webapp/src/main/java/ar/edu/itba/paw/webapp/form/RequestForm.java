@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.form;
 
 import ar.edu.itba.paw.webapp.form.validation.constraints.AmenityURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ProductURNConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNAuthorizationConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 
@@ -21,6 +22,18 @@ public class RequestForm {
     @NotNull
     @Range(min = 1, max = 100)
     private Integer quantity;
+
+    @NotNull
+    @UserURNAuthorizationConstraint
+    private String userURN;
+
+    public String getUserURN() {
+        return userURN;
+    }
+
+    public void setUserURN(String userURN) {
+        this.userURN = userURN;
+    }
 
     public String getRequestMessage() {
         return requestMessage;

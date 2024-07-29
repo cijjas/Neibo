@@ -111,7 +111,6 @@ public class PostController extends GlobalControllerAdvice{
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(postHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -130,7 +129,7 @@ public class PostController extends GlobalControllerAdvice{
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
         // Validation, Creation & ETag Generation
-        final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), getRequestingUserId(), publishForm.getChannelURN(), publishForm.getTagURNs(), publishForm.getPostImageURN());
+        final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), publishForm.getUserURN(), publishForm.getChannelURN(), publishForm.getTagURNs(), publishForm.getPostImageURN());
         String postHashCode = String.valueOf(post.hashCode());
 
         // Resource URN
@@ -139,7 +138,6 @@ public class PostController extends GlobalControllerAdvice{
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
 
         return Response.created(uri)
                 .cacheControl(cacheControl)

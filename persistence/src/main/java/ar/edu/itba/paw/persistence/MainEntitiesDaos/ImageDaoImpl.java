@@ -71,4 +71,15 @@ public class ImageDaoImpl implements ImageDao {
 
         return Optional.ofNullable(em.find(Image.class, imageId));
     }
+
+    @Override
+    public boolean deleteImage(long imageId) {
+        LOGGER.debug("Deleting Image with imageId {}", imageId);
+        Image neighborhood = em.find(Image.class, imageId);
+        if (neighborhood != null) {
+            em.remove(neighborhood);
+            return true;
+        }
+        return false;
+    }
 }

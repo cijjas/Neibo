@@ -99,10 +99,9 @@ public class AttendanceServiceImpl implements AttendanceService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteAttendance(String userURN, long eventId) {
-        LOGGER.info("Removing User {} as Attendee for Event {}", userURN, eventId);
+    public boolean deleteAttendance(long userId, long eventId) {
+        LOGGER.info("Removing User {} as Attendee for Event {}", userId, eventId);
 
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
         ValidationUtils.checkAttendanceId(userId, eventId);
 
         return attendanceDao.deleteAttendee(userId, eventId);

@@ -122,7 +122,7 @@ public class InquiryController extends GlobalControllerAdvice{
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.canCreateInquiry(#productId)")
+    @PreAuthorize("@accessControlHelper.canCreateInquiry(#productId, #form.userURN)")
     public Response createInquiry(
             @Valid @NotNull final InquiryForm form,
             @PathParam("productId") final long productId
@@ -130,7 +130,7 @@ public class InquiryController extends GlobalControllerAdvice{
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products/{}/inquiries'", neighborhoodId, productId);
 
         // Creation & HashCode Generation
-        final Inquiry inquiry = is.createInquiry(getRequestingUserId(), productId, form.getQuestionMessage());
+        final Inquiry inquiry = is.createInquiry(form.getUserURN(), productId, form.getQuestionMessage());
         String inquiryHashCode = String.valueOf(inquiry.hashCode());
 
         // Resource URN
@@ -180,5 +180,4 @@ public class InquiryController extends GlobalControllerAdvice{
         return Response.status(Response.Status.NOT_FOUND)
                 .build();
     }
-
 }

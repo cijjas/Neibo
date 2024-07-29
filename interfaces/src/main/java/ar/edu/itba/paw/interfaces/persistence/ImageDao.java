@@ -17,4 +17,8 @@ public interface ImageDao {
     // --------------------------------------------- IMAGES SELECT -----------------------------------------------------
 
     Optional<Image> findImage(long imageId);
+
+    // --------------------------------------------- IMAGES DELETE -----------------------------------------------------
+
+    boolean deleteImage(long imageId);
 }

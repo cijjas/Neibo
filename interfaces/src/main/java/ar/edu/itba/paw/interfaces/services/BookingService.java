@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface BookingService {
 
-    Booking createBooking(long userId, String amenityId, String shiftId, String reservationDate);
+    Booking createBooking(String userURN, String amenityId, String shiftId, String reservationDate);
 
     // -----------------------------------------------------------------------------------------------------------------
 

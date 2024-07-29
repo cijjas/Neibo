@@ -52,4 +52,13 @@ public class ImageServiceImpl implements ImageService {
 
         return imageDao.findImage(imageId);
     }
+
+    @Override
+    public boolean deleteImage(long imageId) {
+        LOGGER.info("Deleting Neighborhood {}", imageId);
+
+        ValidationUtils.checkImageId(imageId);
+
+        return imageDao.deleteImage(imageId);
+    }
 }

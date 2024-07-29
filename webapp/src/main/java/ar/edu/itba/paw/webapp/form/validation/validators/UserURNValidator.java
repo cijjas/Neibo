@@ -17,6 +17,5 @@ public class UserURNValidator implements ConstraintValidator<UserURNConstraint, 
             return false;
 
         return URNValidator.validateURN(userURN, "users");
-
     }
 }

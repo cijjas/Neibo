@@ -125,4 +125,15 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
 
         return Integer.parseInt(( nativeQuery.getSingleResult()).toString());
     }
+
+    @Override
+    public boolean deleteNeighborhood(long neighborhoodId) {
+        LOGGER.debug("Deleting Neighborhood with neighborhoodId {}", neighborhoodId);
+        Neighborhood neighborhood = em.find(Neighborhood.class, neighborhoodId);
+        if (neighborhood != null) {
+            em.remove(neighborhood);
+            return true;
+        }
+        return false;
+    }
 }

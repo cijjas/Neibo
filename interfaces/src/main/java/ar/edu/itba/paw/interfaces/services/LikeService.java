@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface LikeService {
 
-    Like createLike(String postURN, long userId);
+    Like createLike(String postURN, String userURN);
 
     // -----------------------------------------------------------------------------------------------------------------
 

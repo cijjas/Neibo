@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.form;
 
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNAuthorizationConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
@@ -11,6 +12,19 @@ public class InquiryForm {
     @NotNull
     @Size(max = 500)
     private String questionMessage;
+
+    @NotNull
+    @UserURNAuthorizationConstraint
+    private String userURN;
+
+
+    public String getUserURN() {
+        return userURN;
+    }
+
+    public void setUserURN(String userURN) {
+        this.userURN = userURN;
+    }
 
     public String getQuestionMessage() {
         return questionMessage;

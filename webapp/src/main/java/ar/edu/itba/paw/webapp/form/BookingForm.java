@@ -16,6 +16,18 @@ public class BookingForm {
     @ReservationDateConstraint
     private String reservationDate;
 
+    @NotNull
+    @UserURNAuthorizationConstraint
+    private String userURN;
+
+    public String getUserURN() {
+        return userURN;
+    }
+
+    public void setUserURN(String userURN) {
+        this.userURN = userURN;
+    }
+
     public String getAmenityURN() {
         return amenityURN;
     }

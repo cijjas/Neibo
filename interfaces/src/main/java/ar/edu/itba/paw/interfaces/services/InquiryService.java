@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InquiryService {
-    Inquiry createInquiry(final long userId, final long productId, final String message);
+    Inquiry createInquiry(String userURN, final long productId, final String message);
 
     boolean deleteInquiry(final long inquiryId);
     // -----------------------------------------------------------------------------------------------------------------

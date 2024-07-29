@@ -8,6 +8,7 @@ import ar.edu.itba.paw.webapp.form.LikeForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -60,7 +61,15 @@ public class LikeController extends GlobalControllerAdvice{
 
         // Content
         final List<Like> likes = ls.getLikes(neighborhoodId, postURN, userURN, page, size);
-        String likesHashCode = String.valueOf(likes.hashCode());
+        String likesHashCode;
+
+        // This is required to keep a consistent hash code across creates and this endpoint used as a find
+        if (likes.size() == 1) {
+            Like singleLike = likes.get(0);
+            likesHashCode = String.valueOf(singleLike.hashCode());
+        } else {
+            likesHashCode = String.valueOf(likes.hashCode());
+        }
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
@@ -123,7 +132,7 @@ public class LikeController extends GlobalControllerAdvice{
         LOGGER.info("POST request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Like like = ls.createLike(form.getPostURN(), getRequestingUserId());
+        final Like like = ls.createLike(form.getPostURN(), form.getUserURN());
         String likeHashCode = String.valueOf(like.hashCode());
 
         // Resource URN
@@ -152,6 +161,7 @@ public class LikeController extends GlobalControllerAdvice{
 
     @DELETE
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @PreAuthorize("@accessControlHelper.canModify(#userURN)")
     public Response deleteById(
             @QueryParam("likedBy") final String userURN,
             @QueryParam("onPost") final String postURN

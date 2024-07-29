@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ReviewService {
 
-    Review createReview(long workerId, long userId, float rating, String review);
+    Review createReview(long workerId, String userURN, float rating, String review);
 
     // -----------------------------------------------------------------------------------------------------------------
 

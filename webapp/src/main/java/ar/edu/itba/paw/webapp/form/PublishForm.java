@@ -1,11 +1,9 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.ChannelURNConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.ImageURNConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.TagsConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.TagsURNConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.*;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -26,6 +24,18 @@ public class PublishForm {
 
     @ChannelURNConstraint
     private String channelURN;
+
+    @NotNull
+    @UserURNAuthorizationConstraint
+    private String userURN;
+
+    public String getUserURN() {
+        return userURN;
+    }
+
+    public void setUserURN(String userURN) {
+        this.userURN = userURN;
+    }
 
     public String getChannelURN() {
         return channelURN;

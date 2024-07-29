@@ -107,7 +107,7 @@ public class ContactController {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @Secured("ROLE_ADMINISTRATOR")
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response createContact(
             @Valid @NotNull final ContactForm form
     ) {
@@ -129,7 +129,7 @@ public class ContactController {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @Secured("ROLE_ADMINISTRATOR")
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response updateContactPartially(
             @PathParam("id") final long id,
             @Valid @NotNull final ContactForm partialUpdate
@@ -148,7 +148,7 @@ public class ContactController {
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @Secured("ROLE_ADMINISTRATOR")
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response deleteById(
             @PathParam("id") final long id
     ) {

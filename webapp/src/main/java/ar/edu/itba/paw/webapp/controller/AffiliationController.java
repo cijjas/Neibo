@@ -5,9 +5,11 @@ import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Affiliation;
 import ar.edu.itba.paw.webapp.dto.AffiliationDto;
 import ar.edu.itba.paw.webapp.form.AffiliationForm;
+import ar.edu.itba.paw.webapp.form.CreateAffiliationForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -79,6 +81,13 @@ public class AffiliationController {
         List<Affiliation> affiliations = nws.getAffiliations(workerURN, neighborhoodURN, page, size);
         String affiliationsHashCode = String.valueOf(affiliations.hashCode());
 
+        // This is required to keep a consistent hash code across creates and this endpoint used as a find
+        if (affiliations.size() == 1) {
+            Affiliation singleAffiliation = affiliations.get(0);
+            affiliationsHashCode= String.valueOf(singleAffiliation.hashCode());
+        } else {
+            affiliationsHashCode = String.valueOf(affiliations.hashCode());
+        }
         // Cache Control
         CacheControl cacheControl = new CacheControl();
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(affiliationsHashCode));
@@ -110,8 +119,9 @@ public class AffiliationController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
+    @PreAuthorize("@accessControlHelper.canCreateAffiliation(#form.workerURN)")
     public Response addAffiliation(
-            @Valid @NotNull final AffiliationForm form
+            @Valid @NotNull final CreateAffiliationForm form
     ) {
         LOGGER.info("POST request arrived at '/affiliations'");
 
@@ -139,14 +149,16 @@ public class AffiliationController {
 
     @PATCH
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canUpdateAffiliation(#form.neighborhoodURN)")
+    @PreAuthorize("@accessControlHelper.canUpdateAffiliation(#neighborhoodURN)")
     public Response updateAffiliation(
+            @QueryParam("inNeighborhood") String neighborhoodURN,
+            @QueryParam("forWorker") String workerURN,
             @Valid @NotNull final AffiliationForm form
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
 
         // Modification & HashCode Generation
-        final Affiliation updatedAffiliation = nws.updateAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRoleURN());
+        final Affiliation updatedAffiliation = nws.updateAffiliation(workerURN, neighborhoodURN, form.getWorkerRoleURN());
         String updatedAffiliationHashCode = String.valueOf(updatedAffiliation.hashCode());
 
         return Response.ok(AffiliationDto.fromAffiliation(updatedAffiliation, uriInfo))
@@ -156,13 +168,15 @@ public class AffiliationController {
 
     @DELETE
     @Produces(value = {MediaType.APPLICATION_JSON,})
+    @PreAuthorize("@accessControlHelper.canDeleteAffiliation(#workerURN)")
     public Response removeWorkerFromNeighborhood(
-            @Valid @NotNull final AffiliationForm form
+            @QueryParam("inNeighborhood") String neighborhoodURN,
+            @QueryParam("forWorker") String workerURN
     ) {
         LOGGER.info("DELETE request arrived at '/affiliations'");
 
         // Deletion Attempt
-        if (nws.deleteAffiliation(form.getWorkerURN(), form.getNeighborhoodURN())) {
+        if (nws.deleteAffiliation(workerURN, neighborhoodURN)) {
             return Response.noContent()
                     .build();
         }

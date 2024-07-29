@@ -7,6 +7,7 @@ import ar.edu.itba.paw.webapp.form.BookingForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -133,7 +134,7 @@ public class BookingController extends GlobalControllerAdvice{
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Booking booking = bs.createBooking(getRequestingUserId(), form.getAmenityURN(), form.getShiftURN(), form.getReservationDate());
+        final Booking booking = bs.createBooking(form.getUserURN(), form.getAmenityURN(), form.getShiftURN(), form.getReservationDate());
         String bookingHashCode = String.valueOf(booking.hashCode());
 
         // Resource URN
@@ -147,8 +148,10 @@ public class BookingController extends GlobalControllerAdvice{
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @PreAuthorize("@accessControlHelper.canDeleteBooking(#bookingId, #neighborhoodId)")
     public Response deleteById(
-            @PathParam("id") final long bookingId
+            @PathParam("id") final long bookingId,
+            @PathParam("neighborhoodId") final long neighborhoodId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/bookings/{}'", neighborhoodId, bookingId);
 

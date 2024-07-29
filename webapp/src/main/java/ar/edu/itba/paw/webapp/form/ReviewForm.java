@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.form;
 
+import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNAuthorizationConstraint;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
 
@@ -14,6 +15,18 @@ public class ReviewForm {
     @NotBlank
     @Size(min = 0, max = 255)
     private String review;
+
+    @NotNull
+    @UserURNAuthorizationConstraint
+    private String userURN;
+
+    public String getUserURN() {
+        return userURN;
+    }
+
+    public void setUserURN(String userURN) {
+        this.userURN = userURN;
+    }
 
     public Float getRating() {
         return rating;

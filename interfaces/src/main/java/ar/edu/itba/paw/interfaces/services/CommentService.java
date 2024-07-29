@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface CommentService {
 
-    Comment createComment(final String comment, final long neighborId, final long postId);
+    Comment createComment(final String comment, final String userURN, final long postId);
 
     boolean deleteComment(final long commentId);
 

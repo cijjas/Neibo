@@ -341,10 +341,9 @@ public class ValidationUtils {
         if (!URNValidator.validateURN(workerURN, "workers")){
             throw new IllegalArgumentException("Malformed URN");
         }
-        TwoIds workerTwoIds = ValidationUtils.extractTwoURNIds(workerURN);
-        // Worker Neighborhood == 0 is already check by the regex, actually the positive values are as well
-        ValidationUtils.checkWorkerId(workerTwoIds.getSecondId());
-        return workerTwoIds.getSecondId();
+        Long workerId = ValidationUtils.extractURNId(workerURN);
+        ValidationUtils.checkWorkerId(workerId);
+        return workerId;
     }
 
     public static Long checkURNAndExtractUserId(String userURN){

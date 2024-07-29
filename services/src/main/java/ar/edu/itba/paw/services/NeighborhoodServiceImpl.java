@@ -96,4 +96,13 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
 
         return PaginationUtils.calculatePages(neighborhoodDao.countNeighborhoods(workerId), size);
     }
+
+    @Override
+    public boolean deleteNeighborhood(long neighborhoodId) {
+        LOGGER.info("Deleting Neighborhood {}", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        return neighborhoodDao.deleteNeighborhood(neighborhoodId);
+    }
 }

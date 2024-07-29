@@ -7,6 +7,7 @@ import ar.edu.itba.paw.webapp.form.CommentForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -104,7 +105,6 @@ public class CommentController extends GlobalControllerAdvice{
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(commentHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -123,7 +123,7 @@ public class CommentController extends GlobalControllerAdvice{
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
 
         // Creation & HashCode Generation
-        final Comment comment = cs.createComment(form.getComment(), getRequestingUserId(), postId);
+        final Comment comment = cs.createComment(form.getComment(), form.getUserURN(), postId);
         String commentHashCode = String.valueOf(comment.hashCode());
 
         // Resource URN
@@ -131,7 +131,6 @@ public class CommentController extends GlobalControllerAdvice{
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
 
         return Response.created(uri)
                 .cacheControl(cacheControl)
@@ -142,6 +141,7 @@ public class CommentController extends GlobalControllerAdvice{
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @PreAuthorize("@accessControlHelper.canDeleteComment(#commentId)")
     public Response deleteById(
             @PathParam("id") final long commentId
     ) {

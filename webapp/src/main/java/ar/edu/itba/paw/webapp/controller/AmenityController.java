@@ -117,7 +117,7 @@ public class AmenityController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @Secured("ROLE_ADMINISTRATOR")
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response createAmenity(
             @Valid @NotNull final AmenityForm form
     ) {
@@ -139,7 +139,7 @@ public class AmenityController {
     @Path("/{id}")
     @Consumes(value = {MediaType.APPLICATION_JSON,})
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @Secured("ROLE_ADMINISTRATOR")
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response updateAmenityPartially(
             @PathParam("id") final long id,
             @Valid @NotNull final AmenityUpdateForm partialUpdate
@@ -159,7 +159,7 @@ public class AmenityController {
     @DELETE
     @Path("/{id}")
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @Secured("ROLE_ADMINISTRATOR")
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response deleteById(
             @PathParam("id") final long id
     ) {

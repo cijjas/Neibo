@@ -125,7 +125,7 @@ public class EventController {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @Secured("ROLE_ADMINISTRATOR")
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response createEvent(
             @Valid @NotNull final EventForm form
     ) {
@@ -147,7 +147,7 @@ public class EventController {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @Secured("ROLE_ADMINISTRATOR")
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response updateEventPartially(
             @PathParam("id") final long id,
             @Valid @NotNull final EventForm partialUpdate
@@ -166,7 +166,7 @@ public class EventController {
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @Secured("ROLE_ADMINISTRATOR")
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response deleteById(
             @PathParam("id") final long id
     ) {

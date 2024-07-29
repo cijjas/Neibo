@@ -45,8 +45,8 @@ public class RequestServiceImpl implements RequestService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Request createRequest(long userId, String productURN, String message, int quantity) {
-        LOGGER.info("Creating a Request for Product {} by User {}", productURN, userId);
+    public Request createRequest(String userURN, String productURN, String message, int quantity) {
+        LOGGER.info("Creating a Request for Product {} by User {}", productURN, userURN);
 
         TwoIds twoIds = ValidationUtils.extractTwoURNIds(productURN);
         long neighborhoodId = twoIds.getFirstId();
@@ -59,6 +59,9 @@ public class RequestServiceImpl implements RequestService {
         Product product = productDao.findProduct(productId, neighborhoodId).orElseThrow(() -> new NotFoundException("Product not found"));
         User seller = userDao.findUser(product.getSeller().getUserId()).orElseThrow(() -> new NotFoundException("User not found"));
         emailService.sendNewRequestMail(product, seller, message);
+
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
+
         return requestDao.createRequest(userId, productId, message, quantity);
     }
 

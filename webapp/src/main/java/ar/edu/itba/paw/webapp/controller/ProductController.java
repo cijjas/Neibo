@@ -4,6 +4,7 @@ import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.webapp.dto.ProductDto;
 import ar.edu.itba.paw.webapp.form.ListingForm;
+import ar.edu.itba.paw.webapp.form.UpdateProductForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,7 +129,7 @@ public class ProductController extends GlobalControllerAdvice {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
         // Creation & ETag Generation
-        final Product product = ps.createProduct(getRequestingUserId(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentURN(), form.getImageURNs(), form.getQuantity());
+        final Product product = ps.createProduct(form.getUserURN(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentURN(), form.getImageURNs(), form.getQuantity());
         String productHashCode = String.valueOf(product.hashCode());
 
         // Resource  URN
@@ -145,7 +146,7 @@ public class ProductController extends GlobalControllerAdvice {
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response updateProductPartially(
             @PathParam("id") final long id,
-            @Valid @NotNull final ListingForm partialUpdate
+            @Valid @NotNull final UpdateProductForm partialUpdate
     ) {
         LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);
 

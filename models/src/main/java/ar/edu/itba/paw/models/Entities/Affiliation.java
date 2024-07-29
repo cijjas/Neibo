@@ -76,11 +76,11 @@ public class Affiliation implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Affiliation)) return false;
         Affiliation that = (Affiliation) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(id, that.id) && role == that.role;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, role);
     }
 }

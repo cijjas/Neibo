@@ -15,7 +15,7 @@ public class URNValidator {
     private static final String REQUEST_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+/products/\\d+/requests/\\d+$";
     private static final String USER_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+/users/\\d+$";
     private static final String DEPARTMENT_URN_REGEX = "^(https?://[^/]+)?/departments/\\d+$";
-    private static final String WORKERS_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/0/users/\\d+$";
+    private static final String WORKERS_URN_REGEX = "^(https?://[^/]+)?/workers/\\d+$";
     private static final String INQUIRY_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+/products/\\d+/inquiries/\\d+$";
     private static final String PRODUCT_URN_REGEX = "^(https?://[^/]+)?/neighborhoods/\\d+/products/\\d+$";
     private static final String LANGUAGE_URN_REGEX = "^(https?://[^/]+)?/languages/\\d+$";

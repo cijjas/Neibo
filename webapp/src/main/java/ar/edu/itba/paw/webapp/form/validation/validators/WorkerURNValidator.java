@@ -15,6 +15,6 @@ public class WorkerURNValidator implements ConstraintValidator<WorkerURNConstrai
     public boolean isValid(String workerURN, ConstraintValidatorContext constraintValidatorContext) {
         if(workerURN==null)
             return false;
-        return URNValidator.validateURN(workerURN, "worker");
+        return URNValidator.validateURN(workerURN, "workers");
     }
 }

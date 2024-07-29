@@ -7,7 +7,13 @@ import ar.edu.itba.paw.webapp.form.validation.constraints.WorkerURNConstraint;
 
 import java.util.List;
 
-public class AffiliationForm {
+public class CreateAffiliationForm {
+    @WorkerURNConstraint
+    private String workerURN;
+
+    @NeighborhoodURNConstraint
+    private String neighborhoodURN;
+
     @WorkerRoleURNConstraint
     private String workerRoleURN;
 
@@ -19,10 +25,26 @@ public class AffiliationForm {
         this.workerRoleURN = workerRoleURN;
     }
 
+    public String getNeighborhoodURN() {
+        return neighborhoodURN;
+    }
+
+    public void setNeighborhoodURN(String neighborhoodURN) {
+        this.neighborhoodURN = neighborhoodURN;
+    }
+
+    public String getWorkerURN() {
+        return workerURN;
+    }
+
+    public void setWorkerURN(String workerURN) {
+        this.workerURN = workerURN;
+    }
+
     @Override
     public String toString() {
-        return "AffiliationForm{" +
-                "workerRoleURN='" + workerRoleURN + '\'' +
+        return "NeighborhoodForm{" +
+                ", neighborhoodId='" + neighborhoodURN + '\'' +
                 '}';
     }
 }

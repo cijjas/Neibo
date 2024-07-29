@@ -104,7 +104,7 @@ public class ChannelController {
     }
 
     @POST
-    @Secured("ROLE_ADMINISTRATOR")
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createChannel(
             @Valid @NotNull NewChannelForm form
@@ -129,7 +129,7 @@ public class ChannelController {
 
     @DELETE
     @Path("/{id}")
-    @Secured("ROLE_ADMINISTRATOR")
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(
             @PathParam("id") final long channelId

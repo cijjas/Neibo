@@ -42,11 +42,10 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Product createProduct(long userId, String name, String description, String price, boolean used, String departmentURN, String[] imageURNs, long units) {
-        LOGGER.info("Creating Product {} from User {}", name, userId);
+    public Product createProduct(String userURN, String name, String description, String price, boolean used, String departmentURN, String[] imageURNs, long units) {
+        LOGGER.info("Creating Product {} from User {}", name, userURN);
 
         long departmentId = ValidationUtils.extractURNId(departmentURN);
-        ValidationUtils.checkUserId(userId);
         ValidationUtils.checkDepartmentId(departmentId);
 
         double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
@@ -54,6 +53,8 @@ public class ProductServiceImpl implements ProductService {
         int imageURNsLength = imageURNs == null? 0 : imageURNs.length;
         for(int i = 0; i < imageURNsLength; i++)
             idArray[i] = getImageId(imageURNs[i]);
+
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
 
         return productDao.createProduct(userId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2], units);
     }

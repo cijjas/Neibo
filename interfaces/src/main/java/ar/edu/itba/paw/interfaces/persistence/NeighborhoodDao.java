@@ -25,4 +25,6 @@ public interface NeighborhoodDao {
 
     int countNeighborhoods(Long workerId);
 
+    boolean deleteNeighborhood(long neighborhoodId);
+
 }

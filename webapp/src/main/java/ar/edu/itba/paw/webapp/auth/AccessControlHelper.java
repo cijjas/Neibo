@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.auth;
 
+import ar.edu.itba.paw.enums.Authority;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Entities.*;
@@ -10,11 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 @Component
 public class AccessControlHelper {
@@ -32,6 +31,12 @@ public class AccessControlHelper {
 
     @Autowired
     private RequestService rs;
+
+    @Autowired
+    private CommentService cs;
+
+    @Autowired
+    private BookingService bs;
 
     // All requests that correspond to a certain Neighborhood have to be done from a User from that same Neighborhood
     public boolean isNeighborhoodMember(HttpServletRequest request) {
@@ -68,21 +73,16 @@ public class AccessControlHelper {
         return false;
     }
 
-
     // Workers, Neighbors and Administrators can access /neighborhoods using Query Params
     public boolean hasAccessNeighborhoodQP(Long workerId) {
         LOGGER.info("Verifying Query Params Accessibility");
 
         Authentication authentication = getAuthentication();
 
-        if (!isAnonymous(authentication)) {
-            if (workerId != null) {
-                return isUnverifiedOrRejected(authentication);
-            }
+        if (workerId == null)
             return true;
-        }
 
-        return workerId == null;
+        return !isAnonymous(authentication);
     }
 
     // Neighbors and Administrators can access the user details of others
@@ -91,8 +91,13 @@ public class AccessControlHelper {
 
         Authentication authentication = getAuthentication();
 
+
         if (isAnonymous(authentication))
             return false;
+
+        if (isSuperAdministrator(authentication)){
+            return true;
+        }
 
         if (isUnverifiedOrRejected(authentication))
             return getRequestingUserId(authentication) == userId;
@@ -107,6 +112,10 @@ public class AccessControlHelper {
 
         Authentication authentication = getAuthentication();
 
+        if (isSuperAdministrator(authentication)){
+            return true;
+        }
+
         if (isAnonymous(authentication))
             return false;
 
@@ -118,9 +127,14 @@ public class AccessControlHelper {
 
 
     // A user can update his own profile but only an Administrator can update other people's profile
+    // This is probably wrong, no anonymous check
     public Boolean canUpdateUser(long userId, long neighborhoodId) {
         LOGGER.info("Verifying Update User Accessibility");
         Authentication authentication = getAuthentication();
+
+        if (isSuperAdministrator(authentication)){
+            return true;
+        }
 
         if (getRequestingUser(authentication).getNeighborhoodId() != neighborhoodId)
             return false;
@@ -131,15 +145,97 @@ public class AccessControlHelper {
         return getRequestingUserId(authentication) == userId;
     }
 
-    // A user can create/delete an attendance for themselves, or an Administrator for anyone
-    public Boolean canModifyAttendance(String userURN) {
-        LOGGER.info("Verifying Create Attendance Accessibility");
+    // A User can modify the things he creates
+    public Boolean canModify(String userURN) {
+        LOGGER.info("Verifying Accessibility for the User's entities");
         Authentication authentication = getAuthentication();
 
-        if (isAdministrator(authentication))
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
             return true;
 
-        return getRequestingUserId(authentication) == extractURNId(userURN);
+        // maybe this should verify the neighborhood id as well :/
+
+        return getRequestingUserId(authentication) == extractTwoURNIds(userURN).getSecondId();
+    }
+
+    // A user can create/delete an attendance for themselves, or an Administrator for anyone
+    public Boolean canDeleteAttendance(long userId) {
+        LOGGER.info("Verifying Delete Attendance Accessibility");
+        Authentication authentication = getAuthentication();
+
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
+            return true;
+
+        return getRequestingUserId(authentication) == userId;
+    }
+
+    public Boolean canCreateAffiliation(String workerURN) {
+        LOGGER.info("Verifying Create Affiliation Accessibility");
+        Authentication authentication = getAuthentication();
+
+        if (isSuperAdministrator(authentication))
+            return true;
+
+        return getRequestingUserId(authentication) == extractURNId(workerURN);
+    }
+
+    public Boolean canDeleteAffiliation(String workerURN) {
+        LOGGER.info("Verifying Delete Affiliation Accessibility");
+        Authentication authentication = getAuthentication();
+
+        if (isSuperAdministrator(authentication))
+            return true;
+
+        return getRequestingUserId(authentication) == extractURNId(workerURN);
+    }
+
+    public Boolean canUpdateAffiliation(String neighborhoodURN) {
+        LOGGER.info("Verifying Update Affiliation Accessibility");
+        Authentication authentication = getAuthentication();
+
+        if (isSuperAdministrator(authentication))
+            return true;
+
+        return getRequestingUserNeighborhoodId(authentication) == extractURNId(neighborhoodURN);
+    }
+
+    // A user can create/delete an attendance for themselves, or an Administrator for anyone
+    public Boolean canDeleteComment(long commentId) {
+        LOGGER.info("Verifying Delete Comment Accessibility");
+        Authentication authentication = getAuthentication();
+
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
+            return true;
+
+        Comment c = cs.findComment(commentId).orElseThrow(NotFoundException::new);
+
+        return getRequestingUserId(authentication) == c.getUser().getUserId();
+    }
+
+    // A user can create/delete an attendance for themselves, or an Administrator for anyone
+    public Boolean canDeleteBooking(long bookingId, long neighborhoodId) {
+        LOGGER.info("Verifying Booking Accessibility");
+        Authentication authentication = getAuthentication();
+
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
+            return true;
+
+        Booking b = bs.findBooking(bookingId, neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return getRequestingUserId(authentication) == b.getUser().getUserId();
+    }
+
+    // A user can create/delete an attendance for themselves, or an Administrator for anyone
+    public Boolean canCreateReview(String userURN) {
+        LOGGER.info("Verifying Review Creation Accessibility");
+        Authentication authentication = getAuthentication();
+
+        if (isSuperAdministrator(authentication))
+            return true;
+
+        long userId = extractTwoURNIds(userURN).getSecondId();
+
+        return getRequestingUserId(authentication) == userId;
     }
 
     // Neighbors can access their own Transactions and Administrators can access all their neighbors' Transactions
@@ -147,7 +243,7 @@ public class AccessControlHelper {
         LOGGER.info("Verifying List Transactions Accessibility");
         Authentication authentication = getAuthentication();
 
-        if (isAdministrator(authentication))
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
             return true;
 
         return getRequestingUserId(authentication) == userId;
@@ -158,7 +254,7 @@ public class AccessControlHelper {
         LOGGER.info("Verifying List Transactions Accessibility");
         Authentication authentication = getAuthentication();
 
-        if (isAdministrator(authentication))
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
             return true;
 
         Product p = ps.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
@@ -171,7 +267,7 @@ public class AccessControlHelper {
         LOGGER.info("Verifying List Transactions Accessibility");
         Authentication authentication = getAuthentication();
 
-        if (isAdministrator(authentication))
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
             return true;
 
         Post p = postService.findPost(postId).orElseThrow(()-> new NotFoundException("Post Not Found"));
@@ -183,7 +279,7 @@ public class AccessControlHelper {
         LOGGER.info("Verifying List Transactions Accessibility");
         Authentication authentication = getAuthentication();
 
-        if (isAdministrator(authentication))
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
             return true;
 
         Inquiry i = is.findInquiry(inquiryId).orElseThrow(()-> new NotFoundException("Product Not Found"));
@@ -195,7 +291,7 @@ public class AccessControlHelper {
         LOGGER.info("Verifying List Transactions Accessibility");
         Authentication authentication = getAuthentication();
 
-        if (isAdministrator(authentication))
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
             return true;
 
         Request r = rs.findRequest(requestId).orElseThrow(()-> new NotFoundException("Product Not Found"));
@@ -203,20 +299,24 @@ public class AccessControlHelper {
         return r.getUser().getUserId() == getRequestingUserId(authentication);
     }
 
-    // The seller of the product cant create an Inquiry for it
-    public Boolean canCreateInquiry(long productId){
+    // The seller of the product cant create an Inquiry for it, on second thought he may publish some frequently asked questions
+    public Boolean canCreateInquiry(long productId, String userURN){
         LOGGER.info("Verifying Inquiry Creation Accessibility");
         Authentication authentication = getAuthentication();
 
-        Product p = ps.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
+            return true;
 
-        return p.getSeller().getUserId() != getRequestingUserId(authentication);
+        return getRequestingUserId(authentication) == extractTwoURNIds(userURN).getSecondId();
     }
 
     // The seller of the product can answer Inquiries for that Product
     public Boolean canAnswerInquiry(long inquiryId){
         LOGGER.info("Verifying Inquiry Answering Accessibility");
         Authentication authentication = getAuthentication();
+
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
+            return true;
 
         Inquiry i = is.findInquiry(inquiryId).orElseThrow(()-> new NotFoundException("Inquiry Not Found"));
 
@@ -230,7 +330,7 @@ public class AccessControlHelper {
 
         // If both userId and productId are null, only administrators can access
         if (userId == null && productId == null) {
-            if (isAdministrator(authentication)) {
+            if (isAdministrator(authentication) || isSuperAdministrator(authentication)) {
                 return true;
             } else {
                 throw new IllegalArgumentException("requestedBy and productURN query params are missing.");
@@ -252,7 +352,7 @@ public class AccessControlHelper {
         LOGGER.info("Verifying Request Accessibility");
         Authentication authentication = getAuthentication();
 
-        if (isAdministrator(authentication))
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
             return true;
 
         Request r = rs.findRequest(requestId).orElseThrow(()-> new NotFoundException("Request Not Found"));
@@ -266,6 +366,9 @@ public class AccessControlHelper {
         LOGGER.info("Verifying Request Creation Accessibility");
         Authentication authentication = getAuthentication();
 
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
+            return true;
+
         TwoIds twoIds = extractTwoURNIds(productURN);
         long neighborhoodId = twoIds.getFirstId();
         long productId = twoIds.getSecondId();
@@ -275,14 +378,16 @@ public class AccessControlHelper {
         return p.getSeller().getUserId() != getRequestingUserId(authentication);
     }
 
+    // -------------------------------------------------------------------------------
+
     private Authentication getAuthentication(){
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
     private boolean isUnverifiedOrRejected(Authentication authentication) {
         return authentication.getAuthorities().stream()
-                .anyMatch(authority -> authority.getAuthority().equals("ROLE_UNVERIFIED_NEIGHBOR") ||
-                        authority.getAuthority().equals("ROLE_REJECTED"));
+                .anyMatch(authority -> authority.getAuthority().equals(Authority.ROLE_UNVERIFIED_NEIGHBOR.name()) ||
+                        authority.getAuthority().equals(Authority.ROLE_REJECTED.name()));
     }
 
     private boolean isAnonymous(Authentication authentication) {
@@ -290,34 +395,23 @@ public class AccessControlHelper {
     }
 
     private Boolean isAdministrator(Authentication authentication){
-        return getRequestingUser(authentication).getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMINISTRATOR"));
+        return getRequestingUser(authentication).getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals(Authority.ROLE_ADMINISTRATOR.name()));
     }
 
     private Boolean isSuperAdministrator(Authentication authentication){
-        return getRequestingUser(authentication).getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_SUPER_ADMINISTRATOR"));
+        return getRequestingUser(authentication).getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals(Authority.ROLE_SUPER_ADMINISTRATOR.name()));
     }
 
     private long getRequestingUserId(Authentication authentication){
         return getRequestingUser(authentication).getUserId();
     }
 
-    private UserAuth getRequestingUser(Authentication authentication){
-        return (UserAuth) authentication.getPrincipal();
+    private long getRequestingUserNeighborhoodId(Authentication authentication){
+        return getRequestingUser(authentication).getNeighborhoodId();
     }
 
-    //A worker's affiliation to a neighborhood can only be updated by an administrator from said neighborhood
-    public Boolean canUpdateAffiliation(String neighborhoodURN) {
-        LOGGER.info("Verifying Update Affiliation Accessibility");
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        UserAuth userAuth = (UserAuth) authentication.getPrincipal();
-
-        long neighborhoodId = extractURNId(neighborhoodURN);
-
-        if (userAuth.getNeighborhoodId() == neighborhoodId && userAuth.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMINISTRATOR")))
-            return true;
-
-        return false;
+    private UserAuth getRequestingUser(Authentication authentication){
+        return (UserAuth) authentication.getPrincipal();
     }
 
     private long extractURNId(String URN) {

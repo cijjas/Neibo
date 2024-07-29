@@ -106,7 +106,7 @@ public class ResourceController {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @Secured("ROLE_ADMINISTRATOR")
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response createResource(
             @Valid @NotNull final ResourceForm form
     ) {
@@ -127,7 +127,7 @@ public class ResourceController {
     @PATCH
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @Secured("ROLE_ADMINISTRATOR")
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response updateResourcePartially(
             @PathParam("id") final long id,
             @Valid @NotNull final ResourceForm partialUpdate
@@ -146,7 +146,7 @@ public class ResourceController {
     @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @Secured("ROLE_ADMINISTRATOR")
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_SUPER_ADMINISTRATOR"})
     public Response deleteResourceById(
             @PathParam("id") final long id
     ) {

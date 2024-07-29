@@ -94,41 +94,47 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(
                         "/",
+                        "/departments",
                         "/departments/*",
+                        "/shifts",
                         "/shifts/*",
+                        "/shift-statuses",
                         "/shift-statuses/*",
+                        "/base-channels",
                         "/base-channels/*",
+                        "/user-roles",
                         "/user-roles/*",
+                        "/worker-roles",
                         "/worker-roles/*",
+                        "/worker-statuses",
                         "/worker-statuses/*",
+                        "/post-statuses",
                         "/post-statuses/*",
+                        "/product-statuses",
                         "/product-statuses/*",
+                        "/languages",
                         "/languages/*",
+                        "/professions",
                         "/professions/*",
-                        "/neighborhoods/*",
+                        "/transaction-types",
+                        "/transaction-types/*",
                         "/neighborhoods",
+                        "/neighborhoods/*",
                         "/neighborhoods/*/users",
-                        "/workers",
-                        "/transaction-types/*"
+                        "/workers"
                 ).permitAll()
 
                 .antMatchers(
                         "/neighborhoods/*/users/*",
                         "/workers/*",
-                        "/images/*"
+                        "/images/*",
+                        "/affiliations",
+                        "/affiliations/*",
+                        "/workers/*/reviews",
+                        "/workers/*/reviews/*"
                 ).hasAnyRole(
                         UserRole.REJECTED.name(),
                         UserRole.UNVERIFIED_NEIGHBOR.name(),
-                        UserRole.WORKER.name(),
-                        UserRole.NEIGHBOR.name(),
-                        UserRole.ADMINISTRATOR.name(),
-                        UserRole.SUPER_ADMINISTRATOR.name()
-                )
-
-                .antMatchers(
-                        "/affiliations",
-                        "/workers/*/reviews/*"
-                ).hasAnyRole(
                         UserRole.WORKER.name(),
                         UserRole.NEIGHBOR.name(),
                         UserRole.ADMINISTRATOR.name(),
@@ -139,6 +145,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 // ALSO THE WORKERS NEIGHBORHOOD CAN BE ACCESSED BY EVERYONE
 
                 .antMatchers(
+                        "/neighborhoods/*/posts",
                         "/neighborhoods/*/posts/*"
                 ).access(
                         "hasAnyRole('WORKER', 'NEIGHBOR', 'ADMINISTRATOR', 'SUPER_ADMINISTRATOR') " +
@@ -148,8 +155,9 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 // NEIGHBORS AND ADMINISTRATORS
                 .antMatchers(
-                        "/neighborhoods/*/products/*/comments/**",
+                        "/neighborhoods/*/posts/*/comments/**",
                         "/neighborhoods/*/products/**",
+                        "/neighborhoods/*/requests/**",
                         "/neighborhoods/*/tags/**",
                         "/neighborhoods/*/likes/**",
                         "/neighborhoods/*/channels/**",
@@ -163,7 +171,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                                 "and " +
                                 "@accessControlHelper.isNeighborhoodMember(request)"
                 )
-                .anyRequest().authenticated();
+                .anyRequest().denyAll();
     }
 
    /* @Override

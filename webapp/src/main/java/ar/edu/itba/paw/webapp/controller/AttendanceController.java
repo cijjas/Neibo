@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.AttendanceService;
 import ar.edu.itba.paw.models.Entities.Attendance;
 import ar.edu.itba.paw.webapp.dto.AttendanceDto;
-import ar.edu.itba.paw.webapp.form.AmenityUpdateForm;
 import ar.edu.itba.paw.webapp.form.AttendanceForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
-import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 
 /*
  * # Summary
@@ -107,7 +105,6 @@ public class AttendanceController extends GlobalControllerAdvice {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(attendanceHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -134,7 +131,6 @@ public class AttendanceController extends GlobalControllerAdvice {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
 
         return Response.created(uri)
                 .cacheControl(cacheControl)
@@ -143,14 +139,16 @@ public class AttendanceController extends GlobalControllerAdvice {
     }
 
     @DELETE
+    @Path("/{userId}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response deleteByUser(
-            @Valid @NotNull final AttendanceForm form
+    @PreAuthorize("@accessControlHelper.canDeleteAttendance(#userId)")
+    public Response deleteById(
+            @PathParam("userId") final long userId
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
         // Deletion Attempt
-        if(as.deleteAttendance(form.getUserURN(), eventId)) {
+        if(as.deleteAttendance(userId, eventId)) {
             return Response.noContent()
                     .build();
         }

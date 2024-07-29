@@ -106,7 +106,6 @@ public class NeighborhoodController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
         Response.ResponseBuilder builder = request.evaluatePreconditions(new EntityTag(neighborhoodHashCode));
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
@@ -118,6 +117,7 @@ public class NeighborhoodController {
     }
 
     @POST
+    @Secured("ROLE_SUPER_ADMINISTRATOR")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response createNeighborhood(
             @Valid @NotNull final NewNeighborhoodForm form
@@ -133,11 +133,28 @@ public class NeighborhoodController {
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
-        cacheControl.setMaxAge(MAX_AGE_SECONDS);
 
         return Response.created(uri)
                 .cacheControl(cacheControl)
                 .tag(neighborhoodHashCode)
+                .build();
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @Secured("ROLE_SUPER_ADMINISTRATOR")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response deleteById(
+            @PathParam("id") final long neighborhoodId
+    ) {
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}'", neighborhoodId);
+
+        // Deletion Attempt
+        if(ns.deleteNeighborhood(neighborhoodId)) {
+            return Response.noContent()
+                    .build();
+        }
+        return Response.status(Response.Status.NOT_FOUND)
                 .build();
     }
 }

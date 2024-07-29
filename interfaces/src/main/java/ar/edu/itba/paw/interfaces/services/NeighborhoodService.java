@@ -24,4 +24,6 @@ public interface NeighborhoodService {
     int countNeighborhoods(String workerURN);
 
     int calculateNeighborhoodPages(String workerURN, int size);
+
+    boolean deleteNeighborhood(long neighborhoodId);
 }

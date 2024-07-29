@@ -95,7 +95,7 @@ public class AffiliationServiceImpl implements AffiliationService {
     public Affiliation createAffiliation(String workerURN, String neighborhoodURN, String workerRoleURN) {
         LOGGER.info("Creating Affiliation between Worker {} and Neighborhood {} with Role {}", workerURN, neighborhoodURN, workerRoleURN);
         
-        TwoIds workerTwoIds = ValidationUtils.extractTwoURNIds(workerURN);
+        long workerId = ValidationUtils.extractURNId(workerURN);
         long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
         Long workerRoleId = null;
         if(workerRoleURN != null){
@@ -104,30 +104,32 @@ public class AffiliationServiceImpl implements AffiliationService {
         }
 
         // should also check for the first id in the worker two ids, it will be fixed once the validation style is unified
-        ValidationUtils.checkWorkerId(workerTwoIds.getSecondId());
+        ValidationUtils.checkWorkerId(workerId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        workerDao.findWorker(workerTwoIds.getSecondId()).orElseThrow(()-> new NotFoundException("Worker Not Found"));
+        workerDao.findWorker(workerId).orElseThrow(()-> new NotFoundException("Worker Not Found"));
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(()-> new NotFoundException("Neighborhood Not Found"));
 
-        return affiliationDao.createAffiliation(workerTwoIds.getSecondId(), neighborhoodId, workerRoleId);
+        return affiliationDao.createAffiliation(workerId, neighborhoodId, workerRoleId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Affiliation updateAffiliation(String workerURN, String neighborhoodURN, String workerRole) {
-        LOGGER.info("Creating Affiliation between Worker {} and Neighborhood {} to Role {}", workerURN, neighborhoodURN, workerRole);
+    public Affiliation updateAffiliation(String workerURN, String neighborhoodURN, String workerRoleURN) {
+        LOGGER.info("Creating Affiliation between Worker {} and Neighborhood {} to Role {}", workerURN, neighborhoodURN, workerRoleURN);
+
+        // check not null workerURN and neighborhoodURN
 
         long workerId = ValidationUtils.extractURNId(workerURN);
         long neighborhoodId = ValidationUtils.extractURNId(neighborhoodURN);
 
         ValidationUtils.checkWorkerId(workerId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
-        ValidationUtils.checkWorkerRoleString(workerRole);
 
         Affiliation affiliation = affiliationDao.findAffiliation(workerId, neighborhoodId).orElseThrow(()-> new NotFoundException("Affiliation Not Found"));
-        affiliation.setRole(WorkerRole.valueOf(workerRole));
+        long workerRoleId = ValidationUtils.extractURNId(workerRoleURN);
+        affiliation.setRole(WorkerRole.fromId(workerRoleId));
 
         return affiliation;
     }

@@ -31,15 +31,16 @@ public class LikeServiceImpl implements LikeService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Like createLike(String postURN, long userId) {
-        LOGGER.info("Creating Like for Post {} by User {}", postURN, userId);
+    public Like createLike(String postURN, String userURN) {
+        LOGGER.info("Creating Like for Post {} by User {}", postURN, userURN);
 
         TwoIds twoIds = ValidationUtils.extractTwoURNIds(postURN);
         long neighborhoodId = twoIds.getFirstId();
         long postId = twoIds.getSecondId();
-
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPostId(postId);
+
+        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN); // cant be null, the form verifies that
 
         return likeDao.createLike(postId, userId);
     }
