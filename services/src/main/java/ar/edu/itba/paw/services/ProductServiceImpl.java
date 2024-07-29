@@ -42,13 +42,12 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Product createProduct(String userURN, String name, String description, String price, boolean used, String departmentURN, String[] imageURNs, long units) {
+    public Product createProduct(String userURN, String name, String description, Double price, boolean used, String departmentURN, String[] imageURNs, long units) {
         LOGGER.info("Creating Product {} from User {}", name, userURN);
 
         long departmentId = ValidationUtils.extractURNId(departmentURN);
         ValidationUtils.checkDepartmentId(departmentId);
 
-        double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
         Long[] idArray = {0L, 0L, 0L};
         int imageURNsLength = imageURNs == null? 0 : imageURNs.length;
         for(int i = 0; i < imageURNsLength; i++)
@@ -56,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
 
         Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
 
-        return productDao.createProduct(userId, name, description, priceDouble, used, departmentId, idArray[0], idArray[1], idArray[2], units);
+        return productDao.createProduct(userId, name, description, price, used, departmentId, idArray[0], idArray[1], idArray[2], units);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -128,7 +127,7 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Product updateProductPartially(long productId, String name, String description, String price, boolean used, String departmentURN, String[] imageURNs, Long stock){
+    public Product updateProductPartially(long productId, String name, String description, Double price, boolean used, String departmentURN, String[] imageURNs, Long stock){
         LOGGER.info("Updating Product {}", productId);
 
         long departmentId = ValidationUtils.extractURNId(departmentURN);
@@ -139,10 +138,12 @@ public class ProductServiceImpl implements ProductService {
             product.setName(name);
         if(description != null && !description.isEmpty())
             product.setDescription(description);
-        if(price != null && !price.isEmpty()) {
-            double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
-            product.setPrice(priceDouble);
-        }
+//        if(price != null && !price.isEmpty()) {
+//            double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
+//            product.setPrice(priceDouble);
+//        }
+        if(price != null)
+            product.setPrice(price);
         if(used != product.isUsed())
             product.setUsed(used);
         if(departmentId != 0)

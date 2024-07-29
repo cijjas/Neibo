@@ -14,7 +14,7 @@ public class UpdateProductForm{
     private String title;
 
     @NotBlank
-    private String price;
+    private Double price;
 
     @ImagesURNConstraint
     private String[] imageURNs;
@@ -65,11 +65,6 @@ public class UpdateProductForm{
         return title;
     }
 
-    public String getPrice() {
-        return price;
-    }
-
-
     public String getDescription() {
         return description;
     }
@@ -78,10 +73,13 @@ public class UpdateProductForm{
         this.title = title;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public Double getPrice() {
+        return price;
     }
 
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 
     public void setDescription(String description) {
         this.description = description;

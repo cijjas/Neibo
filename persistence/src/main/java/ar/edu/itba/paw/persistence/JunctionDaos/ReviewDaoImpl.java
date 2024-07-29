@@ -82,6 +82,22 @@ public class ReviewDaoImpl implements ReviewDao {
     }
 
     @Override
+    public Optional<Review> findLatestReview(long workerId, long userId) {
+        LOGGER.debug("Selecting Latest Review from Worker {} made by User {}", workerId, userId);
+
+        TypedQuery<Review> query = em.createQuery(
+                "SELECT r FROM Review r WHERE r.worker.user.userId = :workerId AND r.user.userId = :userId ORDER BY r.date DESC",
+                Review.class
+        );
+
+        query.setParameter("workerId", workerId);
+        query.setParameter("userId", userId);
+
+        List<Review> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
+    @Override
     public Optional<Float> getAvgRating(long workerId) {
         LOGGER.debug("Selecting Average Rating for Worker {}", workerId);
 
