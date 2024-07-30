@@ -95,37 +95,34 @@ public class ProductDaoImpl implements ProductDao {
             nativeQuery.append("AND p.departmentid = :departmentId ");
         }
 
-        if (userId != null && productStatusId == null) {
-            // Was bought by a user with this ID or is being sold by a user with this ID
-            nativeQuery.append("AND (p.productid IN (" +
-                    "SELECT DISTINCT p.productid FROM products_users_purchases p " +
-                    "WHERE p.userid = :userId ) " +
-                    "OR " +
-                    "p.sellerid = :userId ) ");
-
-        }
-
-        if (productStatusId != null) {
-            switch (ProductStatus.fromId(productStatusId)) {
-                case BOUGHT:
-                    nativeQuery.append("AND (p.productId IN (" +
-                            "SELECT DISTINCT p.productid FROM products_users_purchases pc " +
-                            "WHERE pc.userid = :userId AND p.remainingunits = 0)) ");
-                    break;
-                case SOLD:
-                    nativeQuery.append("AND (p.productId IN (" +
-                            "SELECT DISTINCT p.productid FROM products_users_purchases pc " +
-                            "JOIN products pd ON pd.productid = pc.productid " +
-                            "WHERE pd.sellerid = :userId AND p.remainingunits = 0)) ");
-                    break;
-                case SELLING:
-                    nativeQuery.append("AND (p.productId IN (" +
-                            "SELECT DISTINCT p.productid FROM products p " +
-                            "WHERE p.sellerid = :userId AND p.remainingunits > 0)) ");
-                    break;
+        if (userId != null) {
+            if(productStatusId == null) {
+                // Was bought by a user with this ID (is the userId in the request) or is being sold by a user with this ID (is the sellerId in product)
+                nativeQuery.append("AND (p.productid IN (" +
+                        "SELECT DISTINCT r.productid FROM products_users_requests r " +
+                        "WHERE r.userid = :userId ) " +
+                        "OR " +
+                        "p.sellerid = :userId ) ");
+            } else {
+                switch (ProductStatus.fromId(productStatusId)) {
+                    case BOUGHT:
+                        nativeQuery.append("AND (p.productId IN (" +
+                                "SELECT DISTINCT r.productid FROM products_users_requests r " +
+                                "WHERE r.userid = :userId)) ");
+                        break;
+                    case SOLD:
+                        nativeQuery.append("AND (p.productId IN (" +
+                                "SELECT DISTINCT pd.productid FROM products pd " +
+                                "WHERE pd.sellerid = :userId AND p.remainingunits = 0)) ");
+                        break;
+                    case SELLING:
+                        nativeQuery.append("AND (p.productId IN (" +
+                                "SELECT DISTINCT p.productid FROM products p " +
+                                "WHERE p.sellerid = :userId AND p.remainingunits > 0)) ");
+                        break;
+                }
             }
         }
-
 
         nativeQuery.append(" ORDER BY p.creationdate DESC");
 
@@ -161,34 +158,32 @@ public class ProductDaoImpl implements ProductDao {
             nativeQuery.append("AND p.departmentid = :departmentId ");
         }
 
-        if (userId != null && productStatusId == null) {
-            // Was bought by a user with this ID or is being sold by a user with this ID
-            nativeQuery.append("AND (p.productid IN (" +
-                    "SELECT DISTINCT p.productid FROM products_users_purchases p " +
-                    "WHERE p.userid = :userId ) " +
-                    "OR " +
-                    "p.sellerid = :userId ) ");
-
-        }
-
-        if (productStatusId != null) {
-            switch (ProductStatus.fromId(productStatusId)) {
-                case BOUGHT:
-                    nativeQuery.append("AND (p.productId IN (" +
-                            "SELECT DISTINCT p.productid FROM products_users_purchases pc " +
-                            "WHERE pc.userid = :userId AND p.remainingunits = 0)) ");
-                    break;
-                case SOLD:
-                    nativeQuery.append("AND (p.productId IN (" +
-                            "SELECT DISTINCT p.productid FROM products_users_purchases pc " +
-                            "JOIN products pd ON pd.productid = pc.productid " +
-                            "WHERE pd.sellerid = :userId AND p.remainingunits = 0)) ");
-                    break;
-                case SELLING:
-                    nativeQuery.append("AND (p.productId IN (" +
-                            "SELECT DISTINCT p.productid FROM products p " +
-                            "WHERE p.sellerid = :userId AND p.remainingunits > 0)) ");
-                    break;
+        if (userId != null) {
+            if(productStatusId == null) {
+                // Was bought by a user with this ID (is the userId in the request) or is being sold by a user with this ID (is the sellerId in product)
+                nativeQuery.append("AND (p.productid IN (" +
+                        "SELECT DISTINCT r.productid FROM products_users_requests r " +
+                        "WHERE r.userid = :userId ) " +
+                        "OR " +
+                        "p.sellerid = :userId ) ");
+            } else {
+                switch (ProductStatus.fromId(productStatusId)) {
+                    case BOUGHT:
+                        nativeQuery.append("AND (p.productId IN (" +
+                                "SELECT DISTINCT r.productid FROM products_users_requests r " +
+                                "WHERE r.userid = :userId)) ");
+                        break;
+                    case SOLD:
+                        nativeQuery.append("AND (p.productId IN (" +
+                                "SELECT DISTINCT pd.productid FROM products pd " +
+                                "WHERE pd.sellerid = :userId AND p.remainingunits = 0)) ");
+                        break;
+                    case SELLING:
+                        nativeQuery.append("AND (p.productId IN (" +
+                                "SELECT DISTINCT p.productid FROM products p " +
+                                "WHERE p.sellerid = :userId AND p.remainingunits > 0)) ");
+                        break;
+                }
             }
         }
 

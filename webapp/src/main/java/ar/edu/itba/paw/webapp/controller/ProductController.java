@@ -58,7 +58,7 @@ public class ProductController extends GlobalControllerAdvice {
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
             @QueryParam("inDepartment") final String departmentURN,
-            @QueryParam("listedBy") final String userURN,
+            @QueryParam("forUser") final String userURN,
             @QueryParam("withStatus") final String productStatusURN
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);

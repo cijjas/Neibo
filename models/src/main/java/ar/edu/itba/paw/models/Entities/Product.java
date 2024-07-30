@@ -59,10 +59,6 @@ public class Product {
     @JoinTable(name = "products_users_requests", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
     private Set<User> requesters;
 
-    @ManyToMany
-    @JoinTable(name = "products_users_purchases", joinColumns = @JoinColumn(name = "productid"), inverseJoinColumns = @JoinColumn(name = "userid"))
-    private Set<User> purchasers;
-
     @Column(name = "creationDate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
@@ -114,14 +110,6 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Set<User> getPurchasers() {
-        return purchasers;
-    }
-
-    public void setPurchasers(Set<User> purchasers) {
-        this.purchasers = purchasers;
     }
 
     public Long getRemainingUnits() {
