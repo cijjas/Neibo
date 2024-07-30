@@ -73,9 +73,10 @@ public class PostServiceImpl implements PostService {
         ValidationUtils.checkPostId(postId);
 
         Post post = findPost(postId).orElseThrow(NotFoundException::new);
-        Set<Tag> tags = post.getTags();
+//        Set<Tag> tags = post.getTags();
 
-        if(postDao.deletePost(postId)) {
+        return postDao.deletePost(postId);
+/*        if(postDao.deletePost(postId)) {
             for(Tag t : tags) {
                 //if tag was only being used in this (deleted) post, delete the tag
                 if(postDao.countPosts(null, Collections.singletonList(t.getTagId()), neighborhoodId, null, null) == 0)
@@ -85,6 +86,7 @@ public class PostServiceImpl implements PostService {
         } else {
             return false;
         }
+*/
     }
 
 //    @Override

@@ -54,7 +54,7 @@ public class TagController {
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response listTags(
-            @QueryParam("postId") final String postURN,
+            @QueryParam("onPost") final String postURN,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {

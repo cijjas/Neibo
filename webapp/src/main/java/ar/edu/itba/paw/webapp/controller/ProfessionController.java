@@ -44,7 +44,7 @@ public class ProfessionController {
     @Produces(MediaType.APPLICATION_JSON)
     // falta un preauthorize aca para que no usen el query param
     public Response listProfessions(
-            @QueryParam("workerId") final String workerURN
+            @QueryParam("forWorker") final String workerURN
     ) {
         LOGGER.info("GET request arrived at '/professions'");
 
