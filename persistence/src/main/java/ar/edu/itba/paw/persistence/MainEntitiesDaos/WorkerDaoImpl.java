@@ -108,7 +108,6 @@ public class WorkerDaoImpl implements WorkerDao {
         nativeQuery.setFirstResult((page - 1) * size);
         nativeQuery.setMaxResults(size);
 
-        System.out.println(queryStringBuilder);
         // Set parameters
         if (workerRoleId != null) {
             nativeQuery.setParameter("workerRole", WorkerRole.fromId(workerRoleId).name());
@@ -172,4 +171,14 @@ public class WorkerDaoImpl implements WorkerDao {
         return ((Number) countQuery.getSingleResult()).intValue();
     }
 
+    @Override
+    public boolean deleteWorker(long workerId) {
+        LOGGER.debug("Deleting Worker with workerId {}", workerId);
+        Worker worker = em.find(Worker.class, workerId);
+        if (worker != null) {
+            em.remove(worker);
+            return true;
+        }
+        return false;
+    }
 }

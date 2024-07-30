@@ -150,8 +150,6 @@ public class PostDaoImplTest {
         // Exercise
         List<Post> retrievedPosts = postDao.getPosts(chKey1, BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1, null, null);
 
-        System.out.println(retrievedPosts);
-
         // Validations
         assertEquals(2, retrievedPosts.size());
     }

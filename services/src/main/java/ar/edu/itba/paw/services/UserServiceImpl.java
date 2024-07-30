@@ -270,4 +270,13 @@ public class UserServiceImpl implements UserService {
 
         return user;
     }
+
+    @Override
+    public boolean deleteUser(long userId) {
+        LOGGER.info("Deleting User {}", userId);
+
+        ValidationUtils.checkUserId(userId);
+
+        return userDao.deleteUser(userId);
+    }
 }

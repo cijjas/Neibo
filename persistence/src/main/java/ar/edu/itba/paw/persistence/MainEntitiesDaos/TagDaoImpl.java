@@ -70,7 +70,7 @@ public class TagDaoImpl implements TagDao {
         query.setFirstResult((page - 1) * size)
                 .setMaxResults(size);
         List<Long> tagIds = query.getResultList();
-
+        System.out.println(query);
         if (!tagIds.isEmpty()) {
             TypedQuery<Tag> tagQuery = em.createQuery(
                     "SELECT t FROM Tag t WHERE t.tagId IN :tagIds ORDER BY t.tagId", Tag.class);

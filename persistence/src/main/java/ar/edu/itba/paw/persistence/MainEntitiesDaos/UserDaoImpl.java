@@ -202,4 +202,15 @@ public class UserDaoImpl implements UserDao {
         query.setMaxResults(size);
         return query.getResultList();
     }
+
+    @Override
+    public boolean deleteUser(long userId) {
+        LOGGER.debug("Deleting Tag with tagId {}", userId);
+        User user = em.find(User.class, userId);
+        if (user != null) {
+            em.remove(user);
+            return true;
+        }
+        return false;
+    }
 }

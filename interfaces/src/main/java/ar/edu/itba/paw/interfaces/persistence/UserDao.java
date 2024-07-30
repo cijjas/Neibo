@@ -35,4 +35,6 @@ public interface UserDao {
     boolean isAttending(long eventId, long userId);
 
     List<User> getProductRequesters(long productId, int page, int size);
+
+    boolean deleteUser(long userId);
 }

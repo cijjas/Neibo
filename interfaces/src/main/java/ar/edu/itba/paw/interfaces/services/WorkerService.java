@@ -29,4 +29,8 @@ public interface WorkerService {
     // -----------------------------------------------------------------------------------------------------------------
 
     Worker updateWorkerPartially(long userId, String phoneNumber, String address, String businessName, String backgroundPictureURN, String bio);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    boolean deleteWorker(long workerId);
 }

@@ -87,7 +87,7 @@ public class EmailServiceImpl implements EmailService {
         thymeleafContext.setVariables(null);
         String htmlBody = thymeleafTemplateEngine.process(templateModel, thymeleafContext);
 
-        sendHtmlMessage(to, subject, variables, templateModel, language);
+        // sendHtmlMessage(to, subject, variables, templateModel, language);
     }
 
     @Override

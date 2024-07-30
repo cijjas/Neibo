@@ -183,4 +183,15 @@ public class WorkerServiceImpl implements WorkerService {
 
         return worker;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean deleteWorker(long workerId) {
+        LOGGER.info("Deleting Worker {}", workerId);
+
+        ValidationUtils.checkTagId(workerId);
+
+        return workerDao.deleteWorker(workerId);
+    }
 }
