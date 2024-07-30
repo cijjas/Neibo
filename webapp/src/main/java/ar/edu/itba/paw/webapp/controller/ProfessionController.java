@@ -43,7 +43,7 @@ public class ProfessionController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response listProfessions(
-            @QueryParam("workerId") final String workerURN
+            @QueryParam("forWorker") final String workerURN
     ) {
         LOGGER.info("GET request arrived at '/professions'");
 

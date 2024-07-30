@@ -103,8 +103,8 @@ public class LikeController extends GlobalControllerAdvice{
     @Path("/count")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response countLikes(
-            @QueryParam("postId") final String postURN,
-            @QueryParam("userId") final String userURN
+            @QueryParam("onPost") final String postURN,
+            @QueryParam("likedBy") final String userURN
     ){
         LOGGER.info("GET request arrived at '/neighborhoods/{}/likes/count'", neighborhoodId);
 

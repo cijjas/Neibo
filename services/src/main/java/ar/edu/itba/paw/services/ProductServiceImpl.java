@@ -138,10 +138,6 @@ public class ProductServiceImpl implements ProductService {
             product.setName(name);
         if(description != null && !description.isEmpty())
             product.setDescription(description);
-//        if(price != null && !price.isEmpty()) {
-//            double priceDouble = Double.parseDouble(price.replace("$", "").replace(",", ""));
-//            product.setPrice(priceDouble);
-//        }
         if(price != null)
             product.setPrice(price);
         if(used != product.isUsed())

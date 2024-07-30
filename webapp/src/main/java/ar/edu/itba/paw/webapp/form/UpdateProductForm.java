@@ -13,7 +13,6 @@ public class UpdateProductForm{
     @Size(max = 100)
     private String title;
 
-    @NotBlank
     private Double price;
 
     @ImagesURNConstraint
