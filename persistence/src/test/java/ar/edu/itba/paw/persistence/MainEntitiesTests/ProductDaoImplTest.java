@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Department;
+import ar.edu.itba.paw.enums.ProductStatus;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.persistence.MainEntitiesDaos.ProductDaoImpl;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -110,68 +112,68 @@ public class ProductDaoImplTest {
         assertFalse(maybeProduct.isPresent());
     }
 
-//    @Test
-//    public void testGetProductsByNeighborhood() {
-//        // Pre Conditions
-//        long iKey = testInserter.createImage();
-//        long nhKey = testInserter.createNeighborhood();
-//        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-//        long uKey2 = testInserter.createUser(MAIL2, nhKey);
-//        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-//        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
-//        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, uKey1, dKey1);
-//
-//        // Exercise
-//        List<Product> products = productDao.getProducts(nhKey, Department.NONE, 1, 10);
-//
-//        // Validations & Post Conditions
-//        assertFalse(products.isEmpty());
-//        assertEquals(2, products.size());
-//    }
-//
-//    @Test
-//    public void testGetProductsByInvalidNeighborhood() {
-//        // Pre Conditions
-//
-//        // Exercise
-//        List<Product> products = productDao.getProducts(1, Department.NONE, 1, 10);
-//
-//        // Validations & Post Conditions
-//        assertTrue(products.isEmpty());
-//    }
+    @Test
+    public void testGetProductsByNeighborhood() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+        long uKey2 = testInserter.createUser(MAIL2, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
+        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, uKey1, dKey1);
 
-//    @Test
-//    public void testGetNoProductsByNeighborhoodByDepartment() {
-//        // Pre Conditions
-//        long iKey = testInserter.createImage();
-//        long nhKey = testInserter.createNeighborhood();
-//        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-//        long uKey2 = testInserter.createUser(MAIL2, nhKey);
-//
-//        // Exercise
-//        List<Product> products = productDao.getProducts(nhKey, ar.edu.itba.paw.enums.Department.APPLIANCES, 1, 10);
-//
-//        // Validations & Post Conditions
-//        assertTrue(products.isEmpty());
-//    }
+        // Exercise
+        List<Product> products = productDao.getProducts(nhKey, null, uKey1, (long) ProductStatus.SOLD.getId(), 1, 10);
 
-//    @Test
-//    public void testGetProductsByNeighborhoodByInvalidDepartment() {
-//        // Pre Conditions
-//        long iKey = testInserter.createImage();
-//        long nhKey = testInserter.createNeighborhood();
-//        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-//        long uKey2 = testInserter.createUser(MAIL2, nhKey);
-//        long dKey2 = testInserter.createDepartment(Department.ELECTRONICS);
-//        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey2);
-//        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, uKey1, dKey2);
-//
-//        // Exercise
-//        List<Product> products = productDao.getProducts(nhKey, Department.TRAVEL_LUGGAGE, 1, 10);
-//
-//        // Validations & Post Conditions
-//        assertTrue(products.isEmpty());
-//    }
+        // Validations & Post Conditions
+        assertFalse(products.isEmpty());
+        assertEquals(2, products.size());
+    }
+
+    @Test
+    public void testGetProductsByInvalidNeighborhood() {
+        // Pre Conditions
+
+        // Exercise
+        List<Product> products = productDao.getProducts(1L, (long) Department.NONE.getId(), 1L, (long) ProductStatus.SELLING.getId(), 1, 10);
+
+        // Validations & Post Conditions
+        assertTrue(products.isEmpty());
+    }
+
+    @Test
+    public void testGetNoProductsByNeighborhoodByDepartment() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+        long uKey2 = testInserter.createUser(MAIL2, nhKey);
+
+        // Exercise
+        List<Product> products = productDao.getProducts(nhKey, (long) Department.APPLIANCES.getId(), uKey1, (long) ProductStatus.SELLING.getId(), 1, 10);
+
+        // Validations & Post Conditions
+        assertTrue(products.isEmpty());
+    }
+
+    @Test
+    public void testGetProductsByNeighborhoodByInvalidDepartment() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+        long uKey2 = testInserter.createUser(MAIL2, nhKey);
+        long dKey2 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey2);
+        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, uKey1, dKey2);
+
+        // Exercise
+        List<Product> products = productDao.getProducts(nhKey, (long) Department.TRAVEL_LUGGAGE.getId(), uKey1, (long) ProductStatus.SELLING.getId(), 1, 10);
+
+        // Validations & Post Conditions
+        assertTrue(products.isEmpty());
+    }
 
 
 

@@ -51,12 +51,13 @@ public class PostDaoImplTest {
     private static final String USER_MAIL_7 = "liker7-2@test.com";
     private static final String USER_MAIL_8 = "liker8-2@test.com";
     private static final String USER_MAIL_9 = "liker9-2@test.com";
-    private static final String CHANNEL_NAME_1 = "Channel 1";
-    private static final String CHANNEL_NAME_2 = "Channel 2";
-    private static final String TAG_NAME_1 = "Tag1";
-    private static final String TAG_NAME_2 = "Tag2";
     private static final int BASE_PAGE = 1;
     private static final int BASE_PAGE_SIZE = 10;
+    private static final String CHANNEL_NAME_1 = "Channel 1";
+    private static final String CHANNEL_NAME_2 = "Channel 2";
+    private static final String TAG_NAME_1 = "Tag 1";
+    private static final String TAG_NAME_2 = "Tag 2";
+
     @Autowired
     private DataSource ds;
     @Autowired
@@ -128,17 +129,17 @@ public class PostDaoImplTest {
         // Validations
         assertFalse(maybePost.isPresent());
     }
-/*
+
     @Test
     public void testGetPostsByCriteriaNeighborhood() {
         // Pre Conditions
         populatePosts();
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPosts(null, BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1, PostStatus.NONE.name(), 0L);
+        List<Post> retrievedPosts = postDao.getPosts(null, BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1, null, null);
 
         // Validations
-        assertEquals(2, retrievedPosts.size()); // Adjust based on the expected number of retrieved posts
+        assertEquals(2, retrievedPosts.size());
     }
 
     @Test
@@ -147,8 +148,9 @@ public class PostDaoImplTest {
         populatePosts();
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPosts(CHANNEL_NAME_1, BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1, PostStatus.NONE.name(), 0L);
+        List<Post> retrievedPosts = postDao.getPosts(chKey1, BASE_PAGE, BASE_PAGE_SIZE, null, nhKey1, null, null);
 
+        System.out.println(retrievedPosts);
 
         // Validations
         assertEquals(2, retrievedPosts.size());
@@ -158,11 +160,11 @@ public class PostDaoImplTest {
     public void testGetPostsByCriteriaChannelAndNeighborhoodAndTag() {
         // Pre Conditions
         populatePosts();
-        List<String> TAG_LIST = new ArrayList<>();
-        TAG_LIST.add(TAG_NAME_1);
+        List<Long> TAG_LIST = new ArrayList<>();
+        TAG_LIST.add(tKey1);
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPosts(CHANNEL_NAME_1, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey1, PostStatus.NONE.name(), 0L);
+        List<Post> retrievedPosts = postDao.getPosts(chKey1, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey1, null, null);
 
         // Validations
         assertEquals(1, retrievedPosts.size());
@@ -172,11 +174,11 @@ public class PostDaoImplTest {
     public void testGetPostsByCriteriaChannelAndNeighborhoodAndMultipleTag() {
         // Pre Conditions
         populatePosts();
-        List<String> TAG_LIST = new ArrayList<>();
-        TAG_LIST.add(TAG_NAME_2);
+        List<Long> TAG_LIST = new ArrayList<>();
+        TAG_LIST.add(tKey2);
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPosts(CHANNEL_NAME_2, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey2, PostStatus.NONE.name(), 0L);
+        List<Post> retrievedPosts = postDao.getPosts(chKey2, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey2, null, null);
 
         // Validations
         assertEquals(2, retrievedPosts.size());
@@ -186,11 +188,11 @@ public class PostDaoImplTest {
     public void testGetPostsByCriteriaChannelAndNeighborhoodAndMultipleTagAndSize() {
         // Pre Conditions
         populatePosts();
-        List<String> TAG_LIST = new ArrayList<>();
-        TAG_LIST.add(TAG_NAME_2);
+        List<Long> TAG_LIST = new ArrayList<>();
+        TAG_LIST.add(tKey2);
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPosts(CHANNEL_NAME_2, BASE_PAGE, 1, TAG_LIST, nhKey2, PostStatus.NONE.name(), 0L);
+        List<Post> retrievedPosts = postDao.getPosts(chKey2, BASE_PAGE, 1, TAG_LIST, nhKey2, null, null);
 
         // Validations
         assertEquals(1, retrievedPosts.size());
@@ -200,16 +202,15 @@ public class PostDaoImplTest {
     public void testGetPostsByCriteriaChannelAndNeighborhoodAndMultipleTagAndSizeAndPage() {
         // Pre Conditions
         populatePosts();
-        List<String> TAG_LIST = new ArrayList<>();
-        TAG_LIST.add(TAG_NAME_2);
+        List<Long> TAG_LIST = new ArrayList<>();
+        TAG_LIST.add(tKey2);
 
         // Exercise
-        List<Post> retrievedPosts = postDao.getPosts(CHANNEL_NAME_2, 2, 1, TAG_LIST, nhKey2, PostStatus.NONE.name(), 0L);
+        List<Post> retrievedPosts = postDao.getPosts(chKey2, 2, 1, TAG_LIST, nhKey2, null, null);
 
         // Validations
         assertEquals(1, retrievedPosts.size());
     }
-    */
 
     // ------------------ !!! HOT & TRENDING POSTS CANT BE TESTED AS HSQL DOES NOT ACCEPT INTERVAL !!! -----------------
 

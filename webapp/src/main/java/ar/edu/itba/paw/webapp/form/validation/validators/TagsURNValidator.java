@@ -12,7 +12,6 @@ public class TagsURNValidator implements ConstraintValidator<TagsURNConstraint, 
 
     @Override
     public boolean isValid(List<String> tagURNs, ConstraintValidatorContext constraintValidatorContext) {
-        System.out.println("Validating tags URNs: " + tagURNs);
         if(tagURNs == null || tagURNs.isEmpty())
             return true; //no tags is considered valid
 

@@ -60,7 +60,6 @@ create table if not exists users
     name             varchar(64)  not null,
     surname          varchar(64)  not null,
     creationdate     timestamp    not null,
-    version         BIGINT DEFAULT 1 NOT NULL,
     neighborhoodid   BIGINT      not null
         references neighborhoods
             on delete cascade
@@ -157,7 +156,6 @@ create table if not exists resources
 (
     resourceid          BIGINT DEFAULT NEXTVAL('resources_resourceid_seq') PRIMARY KEY,
     resourcetitle       varchar(64),
-    version        BIGINT DEFAULT 1 NOT NULL,
     resourcedescription varchar(255),
     resourceimageid     BIGINT
         references images
@@ -175,7 +173,6 @@ create table if not exists contacts
     contactname    varchar(64) not null,
     contactaddress varchar(128),
     contactphone   varchar(32),
-    version        BIGINT DEFAULT 1 NOT NULL,
     neighborhoodid BIGINT     not null
         references neighborhoods
         constraint fklux0wry30t2vlbwyv6nwm4pv6
@@ -186,7 +183,6 @@ CREATE TABLE IF NOT EXISTS amenities (
                                          amenityid      BIGINT DEFAULT NEXTVAL('amenities_amenityid_seq') PRIMARY KEY,
                                          name           varchar(512) not null,
                                          description    varchar(512) not null,
-                                         version        BIGINT DEFAULT 1 NOT NULL,
                                          neighborhoodid BIGINT      not null
                                              references neighborhoods
                                                  on delete cascade
@@ -220,7 +216,6 @@ create table if not exists workers_info
     businessname        varchar(128),
     address             varchar(128) not null,
     backgroundpictureid BIGINT,
-    version        BIGINT DEFAULT 1 NOT NULL,
     bio                 varchar(255)
 );
 
@@ -244,7 +239,6 @@ create table if not exists workers_neighborhoods
         constraint fklyb81uy312pcm3bqlygtudqac
             references neighborhoods,
     role           varchar(255),
-    version        BIGINT DEFAULT 1 NOT NULL,
     primary key (workerid, neighborhoodid)
 );
 
@@ -294,7 +288,6 @@ create table if not exists events
     name           varchar(255) not null,
     description    text,
     date           date         not null,
-    version        BIGINT DEFAULT 1 NOT NULL,
     neighborhoodid BIGINT      not null
         references neighborhoods
             on delete cascade
@@ -396,7 +389,6 @@ create table if not exists products
     name               varchar(128)     not null,
     description        varchar(1000)    not null,
     price              double precision not null,
-    version        BIGINT DEFAULT 1 NOT NULL,
     used               boolean          not null,
     primarypictureid   BIGINT
         references images
@@ -443,52 +435,40 @@ create table if not exists products_users_inquiries
             references users,
     message     varchar(512) not null,
     reply       varchar(512),
-    version        BIGINT DEFAULT 1 NOT NULL,
     inquirydate timestamp
 );
 
 create table if not exists products_users_requests
 (
     requestid   BIGINT DEFAULT NEXTVAL('products_users_requests_requestid_seq') PRIMARY KEY,
-    productid   BIGINT
+    productid    bigint
         references products
             on delete cascade
         constraint fk3rojkgclaljwd3vr0qa8qbsmc
             references products,
-    userid      BIGINT
+    userid       bigint
         references users
             on delete cascade
         constraint fkt3dd1mkdokg6anp41w64y397t
             references users,
-    message     varchar(512) not null,
-    requestdate timestamp,
-    version        BIGINT DEFAULT 1 NOT NULL,
-    fulfilled   boolean
-);
-
-create table if not exists products_users_purchases
-(
-    purchaseid BIGINT DEFAULT NEXTVAL('products_users_purchases_purchaseid_seq') PRIMARY KEY,
-    units      BIGINT,
-    productid  BIGINT
-        references products
-        constraint fkj6tu1b7jvw2sgsyqkym9rof52
-            references products,
-    userid     BIGINT
-        references users
-        constraint fkecl9mfhyuqwevvryrohsti10a
-            references users,
-    purchasedate timestamp
+    message      varchar(512)                                                              not null,
+    requestdate  timestamp,
+    purchasedate timestamp,
+    units        integer,
+    status       varchar(30)
 );
 
 
 
 -- Insert neighborhoods
 INSERT INTO neighborhoods (neighborhoodid, neighborhoodname)
+VALUES (-2, 'Super Admin Neighborhood')
+ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods (neighborhoodid, neighborhoodname)
 VALUES (-1, 'Rejected')
 ON CONFLICT DO NOTHING;
 INSERT INTO neighborhoods (neighborhoodid, neighborhoodname)
-VALUES (0, 'WorkerForm NeighborhoodForm')
+VALUES (0, 'Worker Neighborhood')
 ON CONFLICT DO NOTHING;
 INSERT INTO neighborhoods (neighborhoodid, neighborhoodname)
 VALUES (1, 'Olivos Golf Club')
@@ -698,41 +678,196 @@ VALUES (7, 'Sunday')
 ON CONFLICT (dayid) DO NOTHING;
 
 -- Populate Users
--- admin@test.com || admin
-INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode,
-                   language, role)
-VALUES (1, 'admin@test.com', 'Administrator', 'Tester', CURRENT_TIMESTAMP, 1, 1,
-        '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'ADMINISTRATOR')
-ON CONFLICT DO NOTHING;
--- admin2@test.com || admin
-INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode,
-                   language, role)
-VALUES (2, 'admin2@test.com', 'Administrator', 'Tester', CURRENT_TIMESTAMP, 2, 2,
-        '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'ADMINISTRATOR')
-ON CONFLICT DO NOTHING;
--- admin3@test.com || admin
-INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode,
-                   language, role)
-VALUES (3, 'admin3@test.com', 'Administrator', 'Tester', CURRENT_TIMESTAMP, 3, 3,
-        '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'ADMINISTRATOR')
-ON CONFLICT DO NOTHING;
 
--- verified@test.com || verified
-INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode,
-                   language, role)
-VALUES (4, 'verified@test.com', 'Verified', 'Tester', CURRENT_TIMESTAMP, 4, 1,
-        '$2a$10$AUfasTu1ntiaxPHNNMzIx.mF9.pzyvLR1QduRJPl723cgTk5gI9KO', false, 'ENGLISH', 'NEIGHBOR')
-ON CONFLICT DO NOTHING;
+insert into users (userid, mail, name, surname, creationdate, neighborhoodid, password, darkmode, language, role, profilepictureid, identification, phonenumber) values (1, 'admin@test.com', 'Administrator', 'Tester', '2024-07-29 20:35:10.858422', 1, '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'ADMINISTRATOR', null, 1, null) ON CONFLICT DO NOTHING;
+insert into users (userid, mail, name, surname, creationdate, neighborhoodid, password, darkmode, language, role, profilepictureid, identification, phonenumber) values (2, 'admin2@test.com', 'Administrator', 'Tester', '2024-07-29 20:35:10.859353', 2, '$2a$10$oEcSbZRjVa1K/3zXlNWAPuRZkqVmn1hJr2Z5RO7ZZByZqwHXhobuu', false, 'ENGLISH', 'ADMINISTRATOR', null, 2, null) ON CONFLICT DO NOTHING;
+insert into users (userid, mail, name, surname, creationdate, neighborhoodid, password, darkmode, language, role, profilepictureid, identification, phonenumber) values (3, 'admin3@test.com', 'Administrator', 'Tester', '2024-07-29 20:35:10.859911', 3, '$2a$10$TUmHdE0xP4PCAklMnULXAusGEqDlhOp9liBbBBj7wv8Bu9Emzs1aa', false, 'ENGLISH', 'ADMINISTRATOR', null, 3, null) ON CONFLICT DO NOTHING;
+insert into users (userid, mail, name, surname, creationdate, neighborhoodid, password, darkmode, language, role, profilepictureid, identification, phonenumber) values (4, 'verified@test.com', 'Verified', 'Tester', '2024-07-29 20:35:10.860441', 1, '$2a$10$AUfasTu1ntiaxPHNNMzIx.mF9.pzyvLR1QduRJPl723cgTk5gI9KO', false, 'ENGLISH', 'NEIGHBOR', null, 4, null) ON CONFLICT DO NOTHING;
+insert into users (userid, mail, name, surname, creationdate, neighborhoodid, password, darkmode, language, role, profilepictureid, identification, phonenumber) values (5, 'worker@test.com', 'Worker', 'Tester', '2024-07-29 20:35:10.860957', 0,'$2a$10$vqk.fb0cifAqdxUS4aUj8ukhDxgQ2nR9i.ALbUMVOt92UolFQV73C', false, 'ENGLISH', 'WORKER', null, 5, null) ON CONFLICT DO NOTHING;
+insert into users (userid, mail, name, surname, creationdate, neighborhoodid, password, darkmode, language, role, profilepictureid, identification, phonenumber) values (6, 'otherworker@test.com', 'Other Worker', 'Tester', '2024-07-29 20:39:11.070000', 0, '$2a$10$DNM3yuoFKnaMC3SH30QHAuvfljYxjyONMcTdVN4LY.6SY3c6gvMCW', false, 'ENGLISH', 'WORKER', null, 11, null) ON CONFLICT DO NOTHING;
+insert into users (userid, mail, name, surname, creationdate, neighborhoodid, password, darkmode, language, role, profilepictureid, identification, phonenumber) values (7, 'rejected@test.com', 'Rejected', 'Tester', '2024-07-29 20:39:10.542000', -1, '$2a$10$ynI2yX9gmO9B2zCvyblp4u7YfprsosxdBbGiZC2s87scJKYOLcrK.', false, 'ENGLISH', 'REJECTED', null, 6, null) ON CONFLICT DO NOTHING;
+insert into users (userid, mail, name, surname, creationdate, neighborhoodid, password, darkmode, language, role, profilepictureid, identification, phonenumber) values (8, 'otherrejected@test.com', 'Other Rejected', 'Tester', '2024-07-29 20:39:10.685000', -1, '$2a$10$1U0PpkrVDL8k2nHcFboUFuPKL9jbJU.ZWMsq4lmZX6pmyHB5SkIn2', false, 'ENGLISH', 'REJECTED', null, 7, null) ON CONFLICT DO NOTHING;
+insert into users (userid, mail, name, surname, creationdate, neighborhoodid, password, darkmode, language, role, profilepictureid, identification, phonenumber) values (9, 'unverified@test.com', 'Unverified', 'Tester', '2024-07-29 20:39:10.783000', 1, '$2a$10$06dguI61v1bNEy6QQyg2nu9LA7/MrhF7ZihXTR32bl5ck3VgECqQi', false, 'ENGLISH', 'UNVERIFIED_NEIGHBOR', null, 8, null) ON CONFLICT DO NOTHING;
+insert into users (userid, mail, name, surname, creationdate, neighborhoodid, password, darkmode, language, role, profilepictureid, identification, phonenumber) values (10, 'otherunverified@test.com', 'Other Unverified', 'Tester', '2024-07-29 20:39:10.877000', 1, '$2a$10$hcw16.2M3R/Lydnk8QAT0e56Yz6CW3y0jgH9SoP3UGLRONQ8tdlhO', false, 'ENGLISH', 'UNVERIFIED_NEIGHBOR', null, 9, null) ON CONFLICT DO NOTHING;
+insert into users (userid, mail, name, surname, creationdate, neighborhoodid, password, darkmode, language, role, profilepictureid, identification, phonenumber) values (11, 'otherverified@test.com', 'Other Verified', 'Tester', '2024-07-29 20:39:10.970000', 1, '$2a$10$.4nQNa7Y3CA0AGI7X9mwTO37AQaWHeho0.CQR7Mt4p6Du5yQK0WrW', false, 'ENGLISH', 'NEIGHBOR', null, 10, null) ON CONFLICT DO NOTHING;
+insert into users (userid, mail, name, surname, creationdate, neighborhoodid, password, darkmode, language, role, profilepictureid, identification, phonenumber) values (12, 'superadmin@test.com', 'Super Admin', 'Tester', '2024-07-29 20:39:11.179000', -2, '$2a$10$8LZMiGzU2gC/ZkBPeObbv.ZtpjfJ29VEJSRutI3EdDGUWpMG2vShS', false, 'ENGLISH', 'SUPER_ADMINISTRATOR', null, 12, null) ON CONFLICT DO NOTHING;
 
--- worker@test.com || admin
-INSERT INTO users (userid, mail, name, surname, creationDate, identification, neighborhoodId, password, darkmode,
-                   language, role)
-VALUES (5, 'worker@test.com', 'Worker', 'Tester', CURRENT_TIMESTAMP, 5, 0,
-        '$2a$10$Nm/ooz9u7QIeMY4SwFtlROdphgDnH9ez0JcQyeDPWJio6PqHTzR4K', false, 'ENGLISH', 'WORKER')
-ON CONFLICT DO NOTHING;
 INSERT INTO workers_info (workerid, address, backgroundpictureid, bio, businessname, phonenumber)
 VALUES (5, 'Wherever', null, 'Best in Town', 'Fix it All', '1231231')
 ON CONFLICT DO NOTHING;
+
+INSERT INTO workers_info (workerid, address, backgroundpictureid, bio, businessname, phonenumber)
+VALUES (6, 'Wherever I Wanna Be', null, 'Second Best in Town', 'Fix it Almost All', '43243847')
+ON CONFLICT DO NOTHING;
+
+insert into shifts (shiftid, dayid, starttime) values (1, 1, 1) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (2, 1, 2) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (3, 1, 3) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (4, 1, 4) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (5, 1, 5) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (6, 1, 6) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (7, 1, 7) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (8, 1, 8) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (9, 1, 9) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (10, 1, 10) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (11, 1, 11) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (12, 1, 12) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (13, 1, 13) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (14, 1, 14) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (15, 1, 15) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (16, 1, 16) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (17, 1, 17) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (18, 1, 18) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (19, 1, 19) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (20, 1, 20) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (21, 1, 21) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (22, 1, 22) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (23, 1, 23) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (24, 1, 24) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (25, 2, 1) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (26, 2, 2) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (27, 2, 3) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (28, 2, 4) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (29, 2, 5) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (30, 2, 6) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (31, 2, 7) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (32, 2, 8) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (33, 2, 9) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (34, 2, 10) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (35, 2, 11) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (36, 2, 12) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (37, 2, 13) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (38, 2, 14) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (39, 2, 15) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (40, 2, 16) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (41, 2, 17) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (42, 2, 18) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (43, 2, 19) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (44, 2, 20) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (45, 2, 21) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (46, 2, 22) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (47, 2, 23) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (48, 2, 24) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (49, 3, 1) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (50, 3, 2) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (51, 3, 3) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (52, 3, 4) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (53, 3, 5) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (54, 3, 6) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (55, 3, 7) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (56, 3, 8) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (57, 3, 9) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (58, 3, 10) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (59, 3, 11) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (60, 3, 12) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (61, 3, 13) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (62, 3, 14) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (63, 3, 15) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (64, 3, 16) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (65, 3, 17) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (66, 3, 18) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (67, 3, 19) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (68, 3, 20) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (69, 3, 21) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (70, 3, 22) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (71, 3, 23) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (72, 3, 24) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (73, 4, 1) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (74, 4, 2) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (75, 4, 3) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (76, 4, 4) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (77, 4, 5) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (78, 4, 6) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (79, 4, 7) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (80, 4, 8) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (81, 4, 9) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (82, 4, 10) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (83, 4, 11) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (84, 4, 12) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (85, 4, 13) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (86, 4, 14) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (87, 4, 15) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (88, 4, 16) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (89, 4, 17) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (90, 4, 18) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (91, 4, 19) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (92, 4, 20) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (93, 4, 21) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (94, 4, 22) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (95, 4, 23) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (96, 4, 24) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (97, 5, 1) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (98, 5, 2) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (99, 5, 3) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (100, 5, 4) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (101, 5, 5) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (102, 5, 6) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (103, 5, 7) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (104, 5, 8) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (105, 5, 9) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (106, 5, 10) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (107, 5, 11) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (108, 5, 12) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (109, 5, 13) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (110, 5, 14) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (111, 5, 15) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (112, 5, 16) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (113, 5, 17) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (114, 5, 18) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (115, 5, 19) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (116, 5, 20) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (117, 5, 21) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (118, 5, 22) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (119, 5, 23) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (120, 5, 24) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (121, 6, 1) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (122, 6, 2) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (123, 6, 3) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (124, 6, 4) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (125, 6, 5) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (126, 6, 6) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (127, 6, 7) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (128, 6, 8) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (129, 6, 9) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (130, 6, 10) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (131, 6, 11) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (132, 6, 12) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (133, 6, 13) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (134, 6, 14) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (135, 6, 15) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (136, 6, 16) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (137, 6, 17) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (138, 6, 18) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (139, 6, 19) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (140, 6, 20) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (141, 6, 21) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (142, 6, 22) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (143, 6, 23) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (144, 6, 24) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (145, 7, 1) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (146, 7, 2) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (147, 7, 3) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (148, 7, 4) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (149, 7, 5) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (150, 7, 6) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (151, 7, 7) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (152, 7, 8) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (153, 7, 9) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (154, 7, 10) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (155, 7, 11) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (156, 7, 12) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (157, 7, 13) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (158, 7, 14) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (159, 7, 15) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (160, 7, 16) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (161, 7, 17) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (162, 7, 18) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (163, 7, 19) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (164, 7, 20) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (165, 7, 21) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (166, 7, 22) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (167, 7, 23) ON CONFLICT DO NOTHING;
+insert into shifts (shiftid, dayid, starttime) values (168, 7, 24) ON CONFLICT DO NOTHING;
 
 
 -- Adjusting sequences for neighborhoods

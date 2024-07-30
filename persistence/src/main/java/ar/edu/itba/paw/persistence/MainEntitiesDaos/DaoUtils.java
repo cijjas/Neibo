@@ -59,7 +59,7 @@ class DaoUtils {
     }
 
     static void appendChannelCondition(StringBuilder query, List<Object> queryParams, Long channelId) {
-        query.append(" AND channel.channelid = ?");
+        query.append(" AND c.channelId = ?");
         queryParams.add(channelId);
     }
 
@@ -115,7 +115,7 @@ class DaoUtils {
     static void appendTagsCondition(StringBuilder query, List<Object> queryParams, List<Long> tagIds) {
         query.append(" AND EXISTS (");
         query.append("SELECT 1 FROM posts_tags pt JOIN tags t ON pt.tagid = t.tagid");
-        query.append(" WHERE pt.postid = p.postid AND t.tag IN (");
+        query.append(" WHERE pt.postid = p.postid AND t.tagid IN (");
 
         appendLongParams(query, queryParams, tagIds);
 

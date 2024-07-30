@@ -165,8 +165,7 @@ public class UserController {
                 .build();
     }
 
-    /*
-    @DELETE
+/*    @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response deleteById(@PathParam("id") final long id) {

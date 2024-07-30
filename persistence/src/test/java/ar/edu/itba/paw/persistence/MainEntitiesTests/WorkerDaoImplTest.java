@@ -127,23 +127,28 @@ public class WorkerDaoImplTest {
         List<Long> neighborhoods = Collections.singletonList(nhKey1);
 
         // Exercise
-        List<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, BASE_PAGE_SIZE, null, neighborhoods, (long) WorkerRole.VERIFIED_WORKER.getId(), (long) WorkerStatus.NONE.getId());
+        List<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, BASE_PAGE_SIZE, null, neighborhoods, (long) WorkerRole.VERIFIED_WORKER.getId(), null);
 
         // Validations
-        assertEquals(2, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
+        assertEquals(2, retrievedWorkers.size());
     }
 
     @Test
     public void testGetWorkersByNeighborhoodAndProfessions() {
         // Pre Conditions
         populateWorkers();
-        List<Long> neighborhoods = Collections.singletonList(nhKey1);
 
         // Exercise
-        List<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, BASE_PAGE_SIZE, Collections.singletonList((long) Professions.PLUMBER.getId()), neighborhoods, (long) WorkerRole.VERIFIED_WORKER.getId(), (long) WorkerStatus.NONE.getId());
+        List<Worker> retrievedWorkers = workerDao.getWorkers(
+                BASE_PAGE,
+                BASE_PAGE_SIZE,
+                Collections.singletonList(pKey1),
+                Collections.singletonList(nhKey1),
+                (long) WorkerRole.VERIFIED_WORKER.getId(),
+                (long) WorkerStatus.NONE.getId());
 
         // Validations
-        assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
+        assertEquals(1, retrievedWorkers.size());
     }
 
     @Test
@@ -156,7 +161,7 @@ public class WorkerDaoImplTest {
         List<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, 1, null, neighborhoods, (long) WorkerRole.VERIFIED_WORKER.getId(), (long) WorkerStatus.NONE.getId());
 
         // Validations
-        assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
+        assertEquals(1, retrievedWorkers.size());
     }
 
     @Test
@@ -169,7 +174,7 @@ public class WorkerDaoImplTest {
         List<Worker> retrievedWorkers = workerDao.getWorkers(2, 1, null, neighborhoods, (long) WorkerRole.VERIFIED_WORKER.getId(), (long) WorkerStatus.NONE.getId());
 
         // Validations
-        assertEquals(1, retrievedWorkers.size()); // Adjust based on the expected number of retrieved workers
+        assertEquals(1, retrievedWorkers.size());
     }
 
     private void populateWorkers() {

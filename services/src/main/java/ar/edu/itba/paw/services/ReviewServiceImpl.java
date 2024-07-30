@@ -36,11 +36,12 @@ public class ReviewServiceImpl implements ReviewService {
         Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
 
         // Check if user has already created a review this same day for the same worker
-        reviewDao.findLatestReview(workerId, userId).ifPresent(r -> {
+        // Deactivated for testing
+/*        reviewDao.findLatestReview(workerId, userId).ifPresent(r -> {
             if (r.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().equals(new java.sql.Date(System.currentTimeMillis()).toLocalDate())) {
                 throw new IllegalArgumentException("User has already created a review for this worker today");
             }
-        });
+        });*/
 
         return reviewDao.createReview(workerId, userId, rating, review);
     }

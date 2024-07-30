@@ -93,7 +93,7 @@ public class WorkerDaoImpl implements WorkerDao {
         if (professionIds != null && !professionIds.isEmpty()) {
             queryStringBuilder.append("AND EXISTS (SELECT 1 FROM workers_professions wp, professions p ");
             queryStringBuilder.append("WHERE w.userid = wp.workerid AND wp.professionid = p.professionid ");
-            queryStringBuilder.append("AND p.profession IN :professions) ");
+            queryStringBuilder.append("AND p.professionid IN :professions) ");
         }
 
         if (neighborhoodIds != null && !neighborhoodIds.isEmpty()) {
@@ -108,9 +108,10 @@ public class WorkerDaoImpl implements WorkerDao {
         nativeQuery.setFirstResult((page - 1) * size);
         nativeQuery.setMaxResults(size);
 
+        System.out.println(queryStringBuilder);
         // Set parameters
         if (workerRoleId != null) {
-            nativeQuery.setParameter("workerRole", WorkerRole.fromId(workerRoleId));
+            nativeQuery.setParameter("workerRole", WorkerRole.fromId(workerRoleId).name());
         }
 
         if (professionIds != null && !professionIds.isEmpty()) {

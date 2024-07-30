@@ -57,8 +57,7 @@ public class ProfessionWorkerDaoImplTest {
         long pKey = testInserter.createProfession();
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
-        testInserter.createWorker(uKey);
-
+        long wKey = testInserter.createWorker(uKey);
 
         // Exercise
         Specialization specialization = professionWorkerDao.createSpecialization(uKey, pKey);
@@ -72,7 +71,6 @@ public class ProfessionWorkerDaoImplTest {
     @Test
     public void testGetWorkerProfession() {
         // Pre Conditions
-//        long pKey = testInserter.createProfession(PROFESSION_NAME);
         long pKey = testInserter.createProfession();
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -89,7 +87,6 @@ public class ProfessionWorkerDaoImplTest {
     @Test
     public void testNoGetWorkerProfession() {
         // Pre Conditions
-//        long pKey = testInserter.createProfession(PROFESSION_NAME);
 
         // Exercise
         List<Profession> profession = professionDao.getProfessions(1L);

@@ -51,7 +51,7 @@ public class WorkerController extends GlobalControllerAdvice {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_WORKER"})
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_WORKER", "ROLE_SUPER_ADMINISTRATOR"})
     public Response listWorkers(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,

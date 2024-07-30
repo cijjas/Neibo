@@ -57,15 +57,13 @@ drop table if exists departments cascade;
 CREATE TABLE IF NOT EXISTS neighborhoods
 (
     neighborhoodid   INTEGER IDENTITY PRIMARY KEY,
-    neighborhoodname VARCHAR(128),
-    version BIGINT DEFAULT 1 NOT NULL
+    neighborhoodname VARCHAR(128)
 );
 
 CREATE TABLE IF NOT EXISTS channels
 (
     channelid INTEGER IDENTITY PRIMARY KEY,
-    channel   VARCHAR(64) NOT NULL UNIQUE,
-    version BIGINT DEFAULT 1 NOT NULL
+    channel   VARCHAR(64) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS images
@@ -88,8 +86,7 @@ CREATE TABLE IF NOT EXISTS users
     role             VARCHAR(64),
     profilepictureid INTEGER      REFERENCES images ON DELETE SET NULL,
     identification   INTEGER,
-    phonenumber     VARCHAR(64),
-    version BIGINT DEFAULT 1 NOT NULL
+    phonenumber     VARCHAR(64)
 );
 
 CREATE TABLE IF NOT EXISTS amenities
@@ -97,8 +94,7 @@ CREATE TABLE IF NOT EXISTS amenities
     amenityid      INTEGER IDENTITY PRIMARY KEY,
     name           VARCHAR(512) NOT NULL,
     description    LONGVARCHAR  NOT NULL,
-    neighborhoodid INTEGER      NOT NULL REFERENCES neighborhoods ON DELETE CASCADE,
-    version BIGINT DEFAULT 1 NOT NULL
+    neighborhoodid INTEGER      NOT NULL REFERENCES neighborhoods ON DELETE CASCADE
 );
 
 
@@ -112,8 +108,7 @@ CREATE TABLE IF NOT EXISTS neighborhoods_channels
 CREATE TABLE IF NOT EXISTS tags
 (
     tagid INTEGER IDENTITY PRIMARY KEY,
-    tag   VARCHAR(64) NOT NULL UNIQUE,
-    version BIGINT DEFAULT 1 NOT NULL
+    tag   VARCHAR(64) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS posts
@@ -124,8 +119,7 @@ CREATE TABLE IF NOT EXISTS posts
     postdate      TIMESTAMP    NOT NULL,
     userid        INTEGER      NOT NULL REFERENCES users ON DELETE CASCADE,
     channelid     INTEGER      NOT NULL REFERENCES channels ON DELETE CASCADE,
-    postpictureid INTEGER      REFERENCES images ON DELETE SET NULL,
-    version BIGINT DEFAULT 1 NOT NULL
+    postpictureid INTEGER      REFERENCES images ON DELETE SET NULL
 
 );
 
@@ -143,7 +137,6 @@ CREATE TABLE IF NOT EXISTS posts_users_likes
     postid   INTEGER NOT NULL REFERENCES posts ON DELETE CASCADE,
     userid   INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
     likedate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    version BIGINT DEFAULT 1 NOT NULL,
         PRIMARY KEY (postid, userid)
 );
 
@@ -159,7 +152,6 @@ CREATE TABLE IF NOT EXISTS comments
     commentid   INTEGER IDENTITY PRIMARY KEY,
     comment     VARCHAR(512) NOT NULL,
     commentdate DATE         NOT NULL,
-    version BIGINT DEFAULT 1 NOT NULL,
         userid      INTEGER      NOT NULL REFERENCES users ON DELETE CASCADE,
     postid      INTEGER      NOT NULL REFERENCES posts ON DELETE CASCADE
 );
@@ -170,8 +162,7 @@ CREATE TABLE IF NOT EXISTS resources
     resourcetitle       VARCHAR(64),
     resourcedescription VARCHAR(255),
     resourceimageid     INTEGER REFERENCES images ON DELETE CASCADE,
-    neighborhoodid      INTEGER NOT NULL REFERENCES neighborhoods,
-    version BIGINT DEFAULT 1 NOT NULL
+    neighborhoodid      INTEGER NOT NULL REFERENCES neighborhoods
 );
 
 create table contacts
@@ -180,8 +171,7 @@ create table contacts
     contactname    varchar(64) not null,
     contactaddress varchar(128),
     contactphone   varchar(32),
-    neighborhoodid integer     not null references neighborhoods,
-    version BIGINT DEFAULT 1 NOT NULL
+    neighborhoodid integer     not null references neighborhoods
 );
 
 
@@ -194,7 +184,6 @@ CREATE TABLE IF NOT EXISTS workers_info
     address             VARCHAR(128) NOT NULL,
     backgroundPictureId INT,
     bio                 VARCHAR(255),
-    version BIGINT DEFAULT 1 NOT NULL,
         PRIMARY KEY (workerId),
     FOREIGN KEY (workerId) REFERENCES users (userId) ON DELETE CASCADE
 );
@@ -212,7 +201,6 @@ CREATE TABLE IF NOT EXISTS workers_neighborhoods
     workerId       INT,
     neighborhoodId INT,
     role VARCHAR(128),
-    version BIGINT DEFAULT 1 NOT NULL,
         PRIMARY KEY (workerId, neighborhoodId),
     FOREIGN KEY (workerId) REFERENCES users (userId) ON DELETE CASCADE,
     FOREIGN KEY (neighborhoodId) REFERENCES neighborhoods (neighborhoodId) ON DELETE CASCADE
@@ -237,7 +225,6 @@ CREATE TABLE IF NOT EXISTS reviews
     rating   FLOAT,
     review   VARCHAR(255),
     date     TIMESTAMP NOT NULL,
-    version BIGINT DEFAULT 1 NOT NULL,
         FOREIGN KEY (workerId) REFERENCES users (userId) ON DELETE CASCADE,
     FOREIGN KEY (userId) REFERENCES users (userId) ON DELETE CASCADE
 );
@@ -258,15 +245,13 @@ CREATE TABLE IF NOT EXISTS events
     date           DATE         NOT NULL,
     starttimeid    INTEGER      NOT NULL REFERENCES times ON DELETE CASCADE,
     endtimeid      INTEGER      NOT NULL REFERENCES times ON DELETE CASCADE,
-    neighborhoodid INTEGER      NOT NULL REFERENCES neighborhoods ON DELETE CASCADE,
-    version BIGINT DEFAULT 1 NOT NULL
+    neighborhoodid INTEGER      NOT NULL REFERENCES neighborhoods ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS events_users
 (
     userid  INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
     eventid INTEGER NOT NULL REFERENCES events ON DELETE CASCADE,
-    version BIGINT DEFAULT 1 NOT NULL,
         PRIMARY KEY (eventid, userid)
 );
 
@@ -291,7 +276,6 @@ CREATE TABLE amenities_shifts_availability
     amenityAvailabilityId INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
     amenityId             INTEGER REFERENCES amenities (amenityid), -- Assuming amenities table exists
     shiftId               INTEGER REFERENCES shifts (shiftId),
-    version BIGINT DEFAULT 1 NOT NULL,
         UNIQUE (amenityId, shiftId)
 );
 
@@ -302,7 +286,6 @@ CREATE TABLE users_availability
     amenityAvailabilityId INTEGER REFERENCES amenities_shifts_availability (amenityAvailabilityId) ON DELETE CASCADE,
     userId                INTEGER REFERENCES users (userid), -- Assuming users table exists
     date                  DATE,
-    version BIGINT DEFAULT 1 NOT NULL,
         UNIQUE (amenityAvailabilityId, date)
 );
 
@@ -326,7 +309,6 @@ CREATE TABLE IF NOT EXISTS products (
     remainingUnits INTEGER,
     departmentId INTEGER,
     creationDate DATE,
-    version BIGINT DEFAULT 1 NOT NULL,
 
     FOREIGN KEY (departmentId) references departments(departmentId) ON DELETE CASCADE,
     FOREIGN KEY (primaryPictureId) REFERENCES images(imageId) ON DELETE CASCADE,
@@ -343,30 +325,23 @@ CREATE TABLE IF NOT EXISTS products_users_inquiries (
                                                         message VARCHAR(512) NOT NULL,
     inquiryDate DATE,
     reply VARCHAR(512),
-    version BIGINT DEFAULT 1 NOT NULL,
         FOREIGN KEY (productId) REFERENCES products(productId) ON DELETE CASCADE,
     FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
     );
 
--- Create Junction Table products_users_requests (Requests)
-CREATE TABLE IF NOT EXISTS products_users_requests (
-    requestId INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-    productId INTEGER,
-    userId INTEGER,
-    message VARCHAR(512) NOT NULL,
-    fulfilled BOOLEAN,
-    requestDate DATE,
-    version BIGINT DEFAULT 1 NOT NULL,
+
+-- Create the table with appropriate columns and constraints
+CREATE TABLE products_users_requests (
+     requestId INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+     productid BIGINT,
+     userid BIGINT,
+     message VARCHAR(512) NOT NULL,
+     requestdate TIMESTAMP,
+     purchasedate TIMESTAMP,
+     units INTEGER,
+     status VARCHAR(30),
     FOREIGN KEY (productId) REFERENCES products(productId) ON DELETE CASCADE,
     FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
-    );
-
-CREATE TABLE products_users_purchases (
-  purchaseid INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
-  productid INTEGER REFERENCES products(productid),
-  userid INTEGER REFERENCES users(userid),
-  units INTEGER,
-  purchasedate DATE,
-  version BIGINT DEFAULT 1 NOT NULL
 );
+
 

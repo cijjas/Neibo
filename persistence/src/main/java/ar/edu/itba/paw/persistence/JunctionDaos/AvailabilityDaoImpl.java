@@ -79,7 +79,6 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
                 throw new IllegalArgumentException("Invalid value (" + date + ") for the 'date' parameter. Please use a date in YYYY-(M)M-(D)D format.");
             }
             dayOfWeek = DayOfTheWeek.convertToCustomDayId(calendar.get(Calendar.DAY_OF_WEEK));
-            System.out.println(dayOfWeek);
             nativeQuery.append(" AND s.dayId = :dayOfWeek");
         }
 
@@ -103,7 +102,6 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
             }
         }
 
-        System.out.println(nativeQuery);
         Query query = em.createNativeQuery(nativeQuery.toString(), Availability.class);
         query.setParameter("amenityId", amenityId);
 

@@ -60,8 +60,6 @@ public class UserDetailsService implements org.springframework.security.core.use
                 break;
         }
 
-        System.out.println(authorities);
-
         return new UserAuth(n.getMail(), n.getPassword(), authorities, n.getUserId(), n.getNeighborhood().getNeighborhoodId());
     }
 

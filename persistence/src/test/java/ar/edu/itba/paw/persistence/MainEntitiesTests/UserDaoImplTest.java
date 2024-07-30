@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +39,7 @@ public class UserDaoImplTest {
     private static final String USER_MAIL_2 = "user2@test.com";
     private static final String USER_MAIL_3 = "user3@test.com";
     private static final String USER_MAIL_4 = "user4@test.com";
+    private static final java.sql.Date DATE = Date.valueOf("2001-3-14");
     private static final int BASE_PAGE = 1;
     private static final int BASE_PAGE_SIZE = 10;
     private final String PASSWORD = "password";
@@ -94,7 +96,7 @@ public class UserDaoImplTest {
     public void testFindUserById() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, ROLE, ID);
+        uKey1 = testInserter.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, ROLE, ID, DATE);
 
         // Exercise
         Optional<User> maybeUser = userDao.findUser(uKey1);
@@ -258,9 +260,9 @@ public class UserDaoImplTest {
         nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
         nhKey2 = testInserter.createNeighborhood(NH_NAME_2);
 
-        uKey1 = testInserter.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, UserRole.NEIGHBOR, ID);
-        uKey2 = testInserter.createUser(USER_MAIL_2, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, UserRole.NEIGHBOR, ID);
-        uKey3 = testInserter.createUser(USER_MAIL_3, PASSWORD, NAME, SURNAME, nhKey2, LANGUAGE, DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, ID);
-        uKey4 = testInserter.createUser(USER_MAIL_4, PASSWORD, NAME, SURNAME, nhKey2, LANGUAGE, DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, ID);
+        uKey1 = testInserter.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, UserRole.NEIGHBOR, ID, DATE);
+        uKey2 = testInserter.createUser(USER_MAIL_2, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, UserRole.NEIGHBOR, ID, DATE);
+        uKey3 = testInserter.createUser(USER_MAIL_3, PASSWORD, NAME, SURNAME, nhKey2, LANGUAGE, DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, ID, DATE);
+        uKey4 = testInserter.createUser(USER_MAIL_4, PASSWORD, NAME, SURNAME, nhKey2, LANGUAGE, DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, ID, DATE);
     }
 }

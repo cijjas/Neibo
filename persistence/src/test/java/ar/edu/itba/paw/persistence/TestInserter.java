@@ -118,7 +118,7 @@ public class TestInserter {
     }
 
     public long createUser(String mail, String password, String name, String surname,
-                           long neighborhoodId, Language language, boolean darkMode, UserRole role, int identification) {
+                           long neighborhoodId, Language language, boolean darkMode, UserRole role, int identification, java.sql.Date date) {
         User user = new User.Builder()
                 .name(name).mail(mail)
                 .surname(surname)
@@ -126,6 +126,7 @@ public class TestInserter {
                 .neighborhood(em.find(Neighborhood.class, neighborhoodId))
                 .darkMode(darkMode)
                 .language(language)
+                .creationDate(date)
                 .role(role)
                 .identification(identification)
                 .build();
@@ -347,17 +348,6 @@ public class TestInserter {
         return request.getRequestId();
     }
 
-    public long createPurchase(long productId, long userId, long unitsBought) {
-        Purchase purchase = new Purchase.Builder()
-                .product(em.find(Product.class, productId))
-                .user(em.find(User.class, userId))
-                .units(unitsBought)
-                .build();
-        em.persist(purchase);
-        em.flush();
-        return purchase.getPurchaseId();
-    }
-
     // -----------------------------------------------------------------------------------------------------------------
     // ------------------------------------------------- OVERLOADS -----------------------------------------------------
     // -----------------------------------------------------------------------------------------------------------------
@@ -414,7 +404,7 @@ public class TestInserter {
         Language lang = Language.ENGLISH;
         boolean dm = false;
         UserRole role = UserRole.NEIGHBOR;
-        return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id);
+        return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id, java.sql.Date.valueOf("2001-3-14"));
     }
 
     public long createUser(String mail, long neighborhoodId) {
@@ -426,7 +416,7 @@ public class TestInserter {
         Language lang = Language.ENGLISH;
         boolean dm = false;
         UserRole role = UserRole.NEIGHBOR;
-        return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id);
+        return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id, java.sql.Date.valueOf("2001-3-14"));
     }
 
     public long createUser(String mail, UserRole role, long neighborhoodId) {
@@ -437,7 +427,7 @@ public class TestInserter {
         int id = 43243846;
         Language lang = Language.ENGLISH;
         boolean dm = false;
-        return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id);
+        return createUser(mail, password, name, surname, neighborhoodId, lang, dm, role, id, java.sql.Date.valueOf("2001-3-14"));
     }
 
     public long createTag() {
@@ -479,11 +469,11 @@ public class TestInserter {
         return createReview(workerId, userId, rating, review);
     }
 
-    public void createWorker(long workerId) {
+    public long createWorker(long workerId) {
         String phoneNumber = "11-2222-3333";
         String address = "Somewhere 1232";
         String businessName = "Jo&Co";
-        createWorker(workerId, phoneNumber, address, businessName);
+        return createWorker(workerId, phoneNumber, address, businessName);
     }
 
     public long createAmenity(long neighborhoodId) {
@@ -512,10 +502,7 @@ public class TestInserter {
         double price = 23432;
         boolean used = true;
         long units = 1L;
-        long longProduct = createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, departmentId, units);
-        if ( buyerId != null )
-            createPurchase(longProduct, buyerId, 1L);
-        return longProduct;
+        return createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, departmentId, units);
     }
 
     public long createProduct(String name, long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
@@ -524,10 +511,7 @@ public class TestInserter {
         double price = 23432;
         boolean used = true;
         long units = 1L;
-        long longProduct = createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, departmentId, units);
-        if ( buyerId != null )
-            createPurchase(longProduct, buyerId, 1L);
-        return longProduct;
+        return createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, departmentId, units);
     }
 
     public long createDepartment(){

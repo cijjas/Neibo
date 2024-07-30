@@ -46,4 +46,6 @@ public interface UserService {
 
     User updateUser(long userId, String mail, String name, String surname, String password, Boolean darkMode, String phoneNumber, String profilePictureURN, Integer identification, String languageURN, String userRoleURN);
 
+    // -----------------------------------------------------------------------------------------------------------------
+
 }

@@ -35,7 +35,6 @@ public class NeighborhoodSelectionValidator implements ConstraintValidator<Neigh
         constraintValidatorContext.disableDefaultConstraintViolation();
         constraintValidatorContext.buildConstraintViolationWithTemplate("Invalid neighborhood")
                 .addConstraintViolation();
-        System.out.println("gonna return false in neighborhood validator");
         return false;
     }
 
