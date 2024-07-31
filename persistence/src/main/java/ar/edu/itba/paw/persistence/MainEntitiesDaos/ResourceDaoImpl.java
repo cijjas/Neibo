@@ -17,6 +17,7 @@ import java.util.Optional;
 @Repository
 public class ResourceDaoImpl implements ResourceDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
@@ -29,7 +30,7 @@ public class ResourceDaoImpl implements ResourceDao {
         Resource resource = new Resource.Builder()
                 .title(title)
                 .description(description)
-                .image(em.find(Image.class,imageId))
+                .image(em.find(Image.class, imageId))
                 .neighborhood(em.find(Neighborhood.class, neighborhoodId))
                 .build();
         em.persist(resource);
@@ -37,6 +38,13 @@ public class ResourceDaoImpl implements ResourceDao {
     }
 
     // --------------------------------------------- RESOURCES SELECT --------------------------------------------------
+
+    @Override
+    public Optional<Resource> findResource(final long resourceId) {
+        LOGGER.debug("Selecting Resource with resourceId {}", resourceId);
+
+        return Optional.ofNullable(em.find(Resource.class, resourceId));
+    }
 
     public List<Resource> getResources(long neighborhoodId) {
         LOGGER.debug("Selecting Resources from Neighborhood {}", neighborhoodId);
@@ -57,12 +65,5 @@ public class ResourceDaoImpl implements ResourceDao {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public Optional<Resource> findResource(final long resourceId) {
-        LOGGER.debug("Selecting Resource with resourceId {}", resourceId);
-
-        return Optional.ofNullable(em.find(Resource.class, resourceId));
     }
 }

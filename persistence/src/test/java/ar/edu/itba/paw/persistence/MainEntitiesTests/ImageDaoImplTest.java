@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
@@ -50,13 +51,13 @@ public class ImageDaoImplTest {
     }
 
     @Test
-    public void testStoreImageAndGetImage() {
+    public void testStoreImageAndGetImage() throws IOException {
         // Pre Conditions
         byte[] fakeImageBytes = new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
         MockMultipartFile fakeImage = new MockMultipartFile(NAME, FILE_NAME, CONTENT_TYPE, fakeImageBytes);
 
         // Exercise
-        Image storedImage = imageDao.storeImage(fakeImage);
+        Image storedImage = imageDao.storeImage(fakeImage.getInputStream());
 
         // Validations & Post Conditions
         em.flush();

@@ -206,6 +206,8 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    // ---------------------------------------------- USERS DELETE -----------------------------------------------------
+
     @Override
     public boolean deleteUser(long userId) {
         LOGGER.info("Deleting User {}", userId);

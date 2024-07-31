@@ -21,6 +21,7 @@ import java.util.Optional;
 @Repository
 public class AmenityDaoImpl implements AmenityDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(AmenityDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
@@ -102,8 +103,6 @@ public class AmenityDaoImpl implements AmenityDao {
         // Return Results
         return dataTypedQuery.getResultList();
     }
-
-    // ---------------------------------------------------
 
     @Override
     public int countAmenities(long neighborhoodId) {

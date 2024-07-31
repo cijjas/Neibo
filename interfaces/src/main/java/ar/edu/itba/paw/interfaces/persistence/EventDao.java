@@ -20,13 +20,7 @@ public interface EventDao {
 
     List<Event> getEvents(String date, long neighborhoodId, int page, int size);
 
-    List<Event> getEvents(long neighborhoodId);
-
     List<Event> getEvents(long neighborhoodId, Date startDate, Date endDate);
-
-    List<Date> getEventDates(long neighborhoodId);
-
-    boolean isUserSubscribedToEvent(long userId, long eventId);
 
     int countEvents(String date, long neighborhoodId);
 

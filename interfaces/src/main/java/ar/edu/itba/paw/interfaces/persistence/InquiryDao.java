@@ -11,9 +11,6 @@ public interface InquiryDao {
 
     Inquiry createInquiry(final long userId, final long productId, final String message);
 
-    // ---------------------------------------------- INQUIRY DELETE ---------------------------------------------------
-    boolean deleteInquiry(final long inquiryId);
-
     // ---------------------------------------------- INQUIRY INSERT ---------------------------------------------------
 
     Optional<Inquiry> findInquiry(final long inquiryId);
@@ -22,7 +19,9 @@ public interface InquiryDao {
 
     List<Inquiry> getInquiries(long productId, int page, int size);
 
-    // ---------------------------------------------------
-
     int countInquiries(long productId);
+
+    // ---------------------------------------------- INQUIRY DELETE ---------------------------------------------------
+
+    boolean deleteInquiry(final long inquiryId);
 }

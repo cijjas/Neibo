@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.CommentDao;
 import ar.edu.itba.paw.models.Entities.Comment;
-import ar.edu.itba.paw.models.Entities.Event;
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
@@ -19,6 +18,7 @@ import java.util.Optional;
 @Repository
 public class CommentDaoImpl implements CommentDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
@@ -35,18 +35,6 @@ public class CommentDaoImpl implements CommentDao {
                 .build();
         em.persist(comment);
         return comment;
-    }
-
-    @Override
-    public boolean deleteComment(long commentId) {
-        LOGGER.debug("Deleting Comment with id {}", commentId);
-
-        Comment comment = em.find(Comment.class, commentId);
-        if (comment != null) {
-            em.remove(comment);
-            return true;
-        }
-        return false;
     }
 
     // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
@@ -99,8 +87,6 @@ public class CommentDaoImpl implements CommentDao {
         return Collections.emptyList();
     }
 
-    // ---------------------------------------------------
-
     @Override
     public int countComments(long id) {
         LOGGER.debug("Selecting Comments Count from Post {}", id);
@@ -110,5 +96,19 @@ public class CommentDaoImpl implements CommentDao {
                 .setParameter("postId", id)
                 .getSingleResult();
         return count != null ? count.intValue() : 0;
+    }
+
+    // -------------------------------------------- COMMENTS DELETE ----------------------------------------------------
+
+    @Override
+    public boolean deleteComment(long commentId) {
+        LOGGER.debug("Deleting Comment with id {}", commentId);
+
+        Comment comment = em.find(Comment.class, commentId);
+        if (comment != null) {
+            em.remove(comment);
+            return true;
+        }
+        return false;
     }
 }

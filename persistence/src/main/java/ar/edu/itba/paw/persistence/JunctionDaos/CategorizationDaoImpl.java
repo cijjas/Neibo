@@ -14,6 +14,7 @@ import javax.persistence.PersistenceContext;
 @Repository
 public class CategorizationDaoImpl implements CategorizationDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(CategorizationDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 

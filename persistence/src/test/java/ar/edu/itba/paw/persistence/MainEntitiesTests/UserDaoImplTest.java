@@ -141,39 +141,6 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void testIsAttending() {
-        // Pre Conditions
-        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
-        long tKey1 = testInserter.createTime();
-        long tKey2 = testInserter.createTime();
-        long eKey = testInserter.createEvent(nhKey1, tKey1, tKey2);
-        testInserter.createAttendance(uKey1, eKey);
-
-        // Exercise
-        boolean isAttending = userDao.isAttending(eKey, uKey1);
-
-        // Validations
-        assertTrue(isAttending);
-    }
-
-    @Test
-    public void testIsNotAttending() {
-        // Pre Conditions
-        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
-        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
-        long tKey1 = testInserter.createTime();
-        long tKey2 = testInserter.createTime();
-        long eKey = testInserter.createEvent(nhKey1, tKey1, tKey2);
-
-        // Exercise
-        boolean isAttending = userDao.isAttending(eKey, uKey1);
-
-        // Validations
-        assertFalse(isAttending);
-    }
-
-    @Test
     public void testGetEventsByUser() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NH_NAME_1);

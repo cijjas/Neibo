@@ -4,7 +4,6 @@ import ar.edu.itba.paw.models.Entities.Attendance;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface AttendanceDao {
 
@@ -14,13 +13,9 @@ public interface AttendanceDao {
 
     // ---------------------------------------------- ATTENDANCE SELECT ------------------------------------------------
 
-    List<Attendance> getAttendance(long eventId, int page, int size);
-
     Optional<Attendance> findAttendance(long userId, long eventId, long neighborhoodId);
 
-    Optional<Attendance> findAttendance(long attendanceId);
-
-    // ---------------------------------------------------
+    List<Attendance> getAttendance(long eventId, int page, int size);
 
     int countAttendance(long eventId);
 

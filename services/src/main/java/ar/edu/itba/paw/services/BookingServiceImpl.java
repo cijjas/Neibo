@@ -68,7 +68,7 @@ public class BookingServiceImpl implements BookingService {
         shiftDao.findShift(shiftId).orElseThrow(() -> new NotFoundException("Shift not found."));
 
         // Finding availabilityId using amenityId and shiftId
-        long availabilityId = availabilityDao.findId(amenityId, shiftId).orElseThrow(() -> new NotFoundException("Availability not found."));
+        long availabilityId = availabilityDao.findAvailabilityId(amenityId, shiftId).orElseThrow(() -> new NotFoundException("Availability not found."));
 
         Long userId = ValidationUtils.checkURNAndExtractUserId(userURN); // Cant be null due to check from the form
 

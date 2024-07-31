@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
-import ar.edu.itba.paw.models.Entities.*;
+import ar.edu.itba.paw.models.Entities.Event;
+import ar.edu.itba.paw.models.Entities.Neighborhood;
+import ar.edu.itba.paw.models.Entities.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -9,10 +11,6 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Root;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -23,6 +21,7 @@ import java.util.Optional;
 @Repository
 public class EventDaoImpl implements EventDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(EventDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
@@ -143,17 +142,6 @@ public class EventDaoImpl implements EventDao {
     }
 
     @Override
-    public List<Event> getEvents(long neighborhoodId) {
-        LOGGER.debug("Selecting Events from Neighborhood {}", neighborhoodId);
-
-        String jpql = "SELECT e FROM Event e WHERE e.neighborhood.neighborhoodId = :neighborhoodId";
-        TypedQuery<Event> query = em.createQuery(jpql, Event.class);
-        query.setParameter("neighborhoodId", neighborhoodId);
-        return query.getResultList();
-    }
-
-
-    @Override
     public List<Event> getEvents(long neighborhoodId, Date startDate, Date endDate) {
         LOGGER.debug("Selecting Events from Neighborhood {} between {} and {}", neighborhoodId, startDate, endDate);
 
@@ -163,28 +151,6 @@ public class EventDaoImpl implements EventDao {
         query.setParameter("startDate", startDate);
         query.setParameter("endDate", endDate);
         return query.getResultList();
-    }
-
-    @Override
-    public List<Date> getEventDates(long neighborhoodId) {
-        LOGGER.debug("Selecting Event Dates from Neighborhood {}", neighborhoodId);
-
-        String jpql = "SELECT DISTINCT e.date FROM Event e WHERE e.neighborhood.neighborhoodId = :neighborhoodId";
-        TypedQuery<Date> query = em.createQuery(jpql, Date.class);
-        query.setParameter("neighborhoodId", neighborhoodId);
-        return query.getResultList();
-    }
-
-    @Override
-    public boolean isUserSubscribedToEvent(long userId, long eventId) {
-        LOGGER.debug("Selecting if User {} is subscribed to Event {}", userId, eventId);
-
-        String jpql = "SELECT COUNT(u) FROM User u JOIN u.eventsSubscribed e WHERE u.userId = :userId AND e.eventId = :eventId";
-        TypedQuery<Long> query = em.createQuery(jpql, Long.class);
-        query.setParameter("userId", userId);
-        query.setParameter("eventId", eventId);
-        Long count = query.getSingleResult();
-        return count != null && count > 0;
     }
 
     // ---------------------------------------------- EVENT DELETE -----------------------------------------------------

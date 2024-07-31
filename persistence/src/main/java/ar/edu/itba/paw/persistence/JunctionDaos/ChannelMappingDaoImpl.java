@@ -15,6 +15,7 @@ import javax.persistence.PersistenceContext;
 @Repository
 public class ChannelMappingDaoImpl implements ChannelMappingDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelMappingDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 

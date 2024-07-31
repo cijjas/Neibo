@@ -13,6 +13,7 @@ import java.util.Optional;
 @Repository
 public class DepartmentDaoImpl implements DepartmentDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(DepartmentDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
@@ -28,6 +29,8 @@ public class DepartmentDaoImpl implements DepartmentDao {
         em.persist(department);
         return department;
     }
+
+    // ---------------------------------------------- DEPARTMENT SELECT ------------------------------------------------
 
     @Override
     public Optional<Department> findDepartment(long departmentId) {

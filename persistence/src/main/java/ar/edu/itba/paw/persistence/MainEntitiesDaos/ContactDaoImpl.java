@@ -17,6 +17,7 @@ import java.util.Optional;
 @Repository
 public class ContactDaoImpl implements ContactDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
@@ -39,29 +40,6 @@ public class ContactDaoImpl implements ContactDao {
     // --------------------------------------------- CONTACT SELECT ----------------------------------------------------
 
     @Override
-    public List<Contact> getContacts(final long neighborhoodId) {
-        LOGGER.debug("Selecting Contacts from Neighborhood {}", neighborhoodId);
-
-        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.neighborhood.neighborhoodId = :neighborhoodId", Contact.class);
-        query.setParameter("neighborhoodId", neighborhoodId);
-        return query.getResultList();
-    }
-
-    // --------------------------------------------- CONTACT DELETE ----------------------------------------------------
-
-    @Override
-    public boolean deleteContact(long contactId) {
-        LOGGER.debug("Deleting Contact with id {}", contactId);
-
-        Contact contact = em.find(Contact.class, contactId);
-        if (contact != null) {
-            em.remove(contact);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public Optional<Contact> findContact(final long contactId) {
         LOGGER.debug("Selecting Contact with id {}", contactId);
 
@@ -82,5 +60,28 @@ public class ContactDaoImpl implements ContactDao {
 
         List<Contact> result = query.getResultList();
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
+    @Override
+    public List<Contact> getContacts(final long neighborhoodId) {
+        LOGGER.debug("Selecting Contacts from Neighborhood {}", neighborhoodId);
+
+        TypedQuery<Contact> query = em.createQuery("SELECT c FROM Contact c WHERE c.neighborhood.neighborhoodId = :neighborhoodId", Contact.class);
+        query.setParameter("neighborhoodId", neighborhoodId);
+        return query.getResultList();
+    }
+
+    // --------------------------------------------- CONTACT DELETE ----------------------------------------------------
+
+    @Override
+    public boolean deleteContact(long contactId) {
+        LOGGER.debug("Deleting Contact with id {}", contactId);
+
+        Contact contact = em.find(Contact.class, contactId);
+        if (contact != null) {
+            em.remove(contact);
+            return true;
+        }
+        return false;
     }
 }

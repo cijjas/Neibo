@@ -80,9 +80,9 @@ public class BookingServiceImplTest {
     /*@Test
     public void testCreate() {
         // 1. Preconditions
-        when(availabilityDao.findId(AMENITY_ID, SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
-        when(availabilityDao.findId(AMENITY_ID, SHIFT_ID_2)).thenReturn(OptionalLong.of(AVAILABILITY_ID_2));
-        when(availabilityDao.findId(AMENITY_ID, SHIFT_ID_3)).thenReturn(OptionalLong.of(AVAILABILITY_ID_3));
+        when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
+        when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_2)).thenReturn(OptionalLong.of(AVAILABILITY_ID_2));
+        when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_3)).thenReturn(OptionalLong.of(AVAILABILITY_ID_3));
 
         when(bookingDao.createBooking(eq(USER_ID), eq(AVAILABILITY_ID_1), eq(BOOKING_DATE))).thenReturn(mockBooking1);
         when(bookingDao.createBooking(eq(USER_ID), eq(AVAILABILITY_ID_2), eq(BOOKING_DATE))).thenReturn(mockBooking2);
@@ -108,7 +108,7 @@ public class BookingServiceImplTest {
     @Test(expected = RuntimeException.class)
     public void testCreateAlreadyExists() {
         // 1. Preconditions
-        when(availabilityDao.findId(AMENITY_ID, SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
+        when(availabilityDao.findAvailabilityId(AMENITY_ID, SHIFT_ID_1)).thenReturn(OptionalLong.of(AVAILABILITY_ID_1));
         when(bookingDao.createBooking(eq(USER_ID), eq(AMENITY_AVAILABILITY_ID), eq(BOOKING_DATE))).thenThrow(RuntimeException.class);
 
         List<Long> shiftIds = new ArrayList<>();

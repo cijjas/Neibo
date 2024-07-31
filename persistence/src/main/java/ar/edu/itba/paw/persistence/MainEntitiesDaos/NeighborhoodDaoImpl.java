@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Repository
 public class NeighborhoodDaoImpl implements NeighborhoodDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
@@ -40,7 +41,7 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
     public Optional<Neighborhood> findNeighborhood(long id) {
         LOGGER.debug("Selecting Neighborhood with id {}", id);
 
-        return Optional.ofNullable(em.find(Neighborhood.class,  id));
+        return Optional.ofNullable(em.find(Neighborhood.class, id));
     }
 
     @Override
@@ -89,8 +90,8 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
         // There is an ID = -1 in the result set, the banned users
         List<?> result = idQuery.getResultList();
         List<Long> neighborhoodIds = result.stream()
-                                       .map(id -> ((Number) id).longValue())
-                                       .collect(Collectors.toList());
+                .map(id -> ((Number) id).longValue())
+                .collect(Collectors.toList());
         if (neighborhoodIds.isEmpty()) {
             return Collections.emptyList();
         }
@@ -123,8 +124,10 @@ public class NeighborhoodDaoImpl implements NeighborhoodDao {
             nativeQuery.setParameter("workerId", workerId);
         }
 
-        return Integer.parseInt(( nativeQuery.getSingleResult()).toString());
+        return Integer.parseInt((nativeQuery.getSingleResult()).toString());
     }
+
+    // ----------------------------------------- NEIGHBORHOODS DELETE --------------------------------------------------
 
     @Override
     public boolean deleteNeighborhood(long neighborhoodId) {

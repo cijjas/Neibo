@@ -17,6 +17,7 @@ import java.util.Optional;
 @Repository
 public class ReviewDaoImpl implements ReviewDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
@@ -103,12 +104,10 @@ public class ReviewDaoImpl implements ReviewDao {
 
         TypedQuery<Double> query = em.createQuery("SELECT AVG(rating) FROM Review r WHERE r.worker.user.userId = :workerId", Double.class);
         query.setParameter("workerId", workerId);
-        if(query.getSingleResult() == null)
+        if (query.getSingleResult() == null)
             return Optional.of(0.0f);
         return Optional.of(query.getSingleResult().floatValue());
     }
-
-    // ---------------------------------------------------
 
     @Override
     public int countReviews(long workerId) {

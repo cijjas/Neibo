@@ -92,31 +92,6 @@ public class ShiftDaoImplTest {
     }
 
     @Test
-    public void testFindShiftId() {
-        // Pre Conditions
-        long dKey = testInserter.createDay();
-        long tKey = testInserter.createTime();
-        testInserter.createShift(dKey, tKey);
-
-        // Exercise
-        Optional<Shift> foundShift = shiftDao.findShift(tKey, dKey);
-
-        // Validations & Post Conditions
-        assertTrue(foundShift.isPresent());
-    }
-
-    @Test
-    public void testFindShiftIdInvalid() {
-        // Pre Conditions
-
-        // Exercise
-        Optional<Shift> foundShift = shiftDao.findShift(1, 1);
-
-        // Validations & Post Conditions
-        assertFalse(foundShift.isPresent());
-    }
-
-    @Test
     public void testGetAmenityShifts() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
