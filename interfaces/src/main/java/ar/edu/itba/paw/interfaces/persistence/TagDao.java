@@ -18,13 +18,10 @@ public interface TagDao {
 
     List<Tag> getTags(Long postId, long neighborhoodId, int page, int size);
 
-    Optional<Tag> findTag(long tagId);
+    Optional<Tag> findTag(long tagId, long neighborhoodId);
+
+    Optional<Tag> findTag(String tagName);
 
     int countTags(Long postId, long neighborhoodId);
 
-    List<Tag> getTags(long postId);
-
-    List<Tag> getNeighborhoodTags(long neighborhoodId);
-
-    List<Tag> getAllTags();
 }

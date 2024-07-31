@@ -9,10 +9,11 @@ import java.util.Optional;
 
 public interface TagService {
 
-    Tag createTag(String name);
+    Tag createTag(long neighborhoodId, String name);
 
     // -----------------------------------------------------------------------------------------------------------------
-    boolean deleteTag(long tagId);
+
+    boolean deleteTag(long neighborhoodId, long tagId);
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -22,11 +23,8 @@ public interface TagService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    void createTagsAndCategorizePost(long postId, List<String> tagURIs);
-
-    String createURLForTagFilter(String tags, String currentUrl, long neighborhoodId);
+    void categorizePost(long postId, List<String> tagURIs, long neighborhoodId);
 
     int calculateTagPages(String postURN, long neighborhoodId, int size);
 
-    int countTags(String postURN, long neighborhoodId);
 }

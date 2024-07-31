@@ -6,17 +6,12 @@ import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Post;
-import ar.edu.itba.paw.models.Entities.Tag;
-import ar.edu.itba.paw.models.TwoIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Validation;
-import java.io.InputStream;
 import java.util.*;
 
 @Service
@@ -29,27 +24,29 @@ public class PostServiceImpl implements PostService {
     private final EmailService emailService;
     private final TagService tagService;
     private final ImageService imageService;
+    private final ChannelService channelService;
 
     @Autowired
     public PostServiceImpl(final PostDao postDao, UserService userService, EmailService emailService,
-                           TagService tagService, ImageService imageService, NeighborhoodDao neighborhoodDao) {
+                           TagService tagService, ImageService imageService, NeighborhoodDao neighborhoodDao, ChannelService channelService) {
         this.imageService = imageService;
         this.tagService = tagService;
         this.postDao = postDao;
         this.userService = userService;
         this.emailService = emailService;
         this.neighborhoodDao = neighborhoodDao;
+        this.channelService = channelService;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Post createPost(String title, String description, String userURN, String channelURN, List<String> tagURNs, String imageURN) {
+    public Post createPost(String title, String description, String userURN, String channelURN, List<String> tagURNs, String imageURN, long neighborhoodId) {
         LOGGER.info("Creating Post with Title {} by User {}", title, userURN);
 
-        long baseChannelId = ValidationUtils.extractURNId(channelURN);
+        Long channelId = ValidationUtils.checkURNAndExtractChannelId(channelURN);
 
-        // TODO check valid baseChannelId, id > 0 && id < enum.size
+        channelService.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         Image i = null;
         if (imageURN != null) {
@@ -60,9 +57,9 @@ public class PostServiceImpl implements PostService {
 
         Long userId = ValidationUtils.checkURNAndExtractUserId(userURN); // cannot be null due to form validation
 
-        Post p = postDao.createPost(title, description, userId, baseChannelId, i == null ? 0 : i.getImageId());
+        Post p = postDao.createPost(title, description, userId, channelId, i == null ? 0 : i.getImageId());
         if(tagURNs != null && !tagURNs.isEmpty())
-            tagService.createTagsAndCategorizePost(p.getPostId(), tagURNs);
+            tagService.categorizePost(p.getPostId(), tagURNs, neighborhoodId);
         return p;
     }
 

@@ -129,7 +129,7 @@ public class PostController extends GlobalControllerAdvice{
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
         // Validation, Creation & ETag Generation
-        final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), publishForm.getUserURN(), publishForm.getChannelURN(), publishForm.getTagURNs(), publishForm.getPostImageURN());
+        final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), publishForm.getUserURN(), publishForm.getChannelURN(), publishForm.getTagURNs(), publishForm.getPostImageURN(), neighborhoodId);
         String postHashCode = String.valueOf(post.hashCode());
 
         // Resource URN

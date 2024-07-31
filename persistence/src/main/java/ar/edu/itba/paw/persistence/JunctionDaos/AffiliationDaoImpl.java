@@ -51,16 +51,12 @@ public class AffiliationDaoImpl implements AffiliationDao {
         TypedQuery<AffiliationKey> idQuery = null;
         StringBuilder queryBuilder = new StringBuilder("SELECT a.id FROM Affiliation a ");
 
-        boolean whereClauseAdded = false;
         if (workerId != null && neighborhoodId != null) {
             queryBuilder.append("WHERE a.worker.id = :workerId AND a.neighborhood.neighborhoodId = :neighborhoodId ");
-            whereClauseAdded = true;
         } else if (workerId != null) {
             queryBuilder.append("WHERE a.worker.id = :workerId ");
-            whereClauseAdded = true;
         } else if (neighborhoodId != null) {
             queryBuilder.append("WHERE a.neighborhood.neighborhoodId = :neighborhoodId ");
-            whereClauseAdded = true;
         }
 
         queryBuilder.append("ORDER BY a.worker.id, a.neighborhood.neighborhoodId");

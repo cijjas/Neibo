@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.interfaces.persistence.ChannelDao;
-import ar.edu.itba.paw.interfaces.services.ChannelMappingService;
 import ar.edu.itba.paw.models.Entities.Channel;
 import org.junit.Assert;
 import org.junit.Test;
@@ -20,8 +19,6 @@ public class ChannelServiceImplTest {
 
     @Mock
     private ChannelDao channelDao;
-    @Mock
-    private ChannelMappingService channelMappingService;
     @InjectMocks
     private ChannelServiceImpl cs;
 

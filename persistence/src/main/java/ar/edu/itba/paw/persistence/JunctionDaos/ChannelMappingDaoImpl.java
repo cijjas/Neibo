@@ -11,6 +11,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import java.util.Collections;
+import java.util.List;
 
 @Repository
 public class ChannelMappingDaoImpl implements ChannelMappingDao {
@@ -22,7 +25,7 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
 
     @Override
     public ChannelMapping createChannelMapping(long channelId, long neighborhoodId) {
-        LOGGER.debug("Inserting Channel Mapping");
+        LOGGER.debug("Inserting Channel Mapping for Channel {} for Neighborhood {}", channelId, neighborhoodId);
 
         ChannelMapping channelMapping = new ChannelMapping(em.find(Neighborhood.class, neighborhoodId), em.find(Channel.class, channelId));
         em.persist(channelMapping);
@@ -31,6 +34,7 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
 
     // ---------------------------------- NEIGHBORHOODS CHANNELS DELETE ------------------------------------------------
 
+    @Override
     public boolean deleteChannelMapping(long channelId, long neighborhoodId) {
         LOGGER.debug("Deleting ChannelMapping with channelId {} and neighborhoodId {}", channelId, neighborhoodId);
 
@@ -41,5 +45,82 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public List<ChannelMapping> getChannelMappings(Long channelId, Long neighborhoodId, int page, int size) {
+        LOGGER.debug("Selecting Channel Mappings by Criteria");
+
+        TypedQuery<ChannelMappingKey> idQuery = null;
+        StringBuilder queryBuilder = new StringBuilder("SELECT cm.id FROM ChannelMapping cm ");
+
+        if (channelId != null && neighborhoodId != null) {
+            queryBuilder.append("WHERE cm.channel.channelId = :channelId AND cm.neighborhood.neighborhoodId = :neighborhoodId ");
+        } else if (channelId != null) {
+            queryBuilder.append("WHERE cm.channel.channelId = :channelId ");
+        } else if (neighborhoodId != null) {
+            queryBuilder.append("WHERE cm.neighborhood.neighborhoodId = :neighborhoodId ");
+        }
+
+        queryBuilder.append("ORDER BY cm.neighborhood.neighborhoodId");
+
+        idQuery = em.createQuery(queryBuilder.toString(), ChannelMappingKey.class);
+
+        if (channelId != null) {
+            idQuery.setParameter("channelId", channelId);
+        }
+        if (neighborhoodId != null) {
+            idQuery.setParameter("neighborhoodId", neighborhoodId);
+        }
+
+        idQuery.setFirstResult((page - 1) * size);
+        idQuery.setMaxResults(size);
+
+        List<ChannelMappingKey> ids = idQuery.getResultList();
+
+        if (!ids.isEmpty()) {
+            TypedQuery<ChannelMapping> channelMappingQuery = em.createQuery(
+                    "SELECT cm FROM ChannelMapping cm WHERE cm.id IN :ids ORDER BY cm.neighborhood.neighborhoodId", ChannelMapping.class);
+            channelMappingQuery.setParameter("ids", ids);
+            return channelMappingQuery.getResultList();
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public int channelMappingsCount(Long channelId, Long neighborhoodId) {
+        LOGGER.debug("Counting Channel Mappings by Criteria");
+
+        TypedQuery<ChannelMappingKey> idQuery = null;
+        StringBuilder queryBuilder = new StringBuilder("SELECT cm.id FROM ChannelMapping cm ");
+
+        if (channelId != null && neighborhoodId != null) {
+            queryBuilder.append("WHERE cm.channel.channelId = :channelId AND cm.neighborhood.neighborhoodId = :neighborhoodId ");
+        } else if (channelId != null) {
+            queryBuilder.append("WHERE cm.channel.channelId = :channelId ");
+        } else if (neighborhoodId != null) {
+            queryBuilder.append("WHERE cm.neighborhood.neighborhoodId = :neighborhoodId ");
+        }
+
+        queryBuilder.append("ORDER BY cm.neighborhood.neighborhoodId");
+
+        idQuery = em.createQuery(queryBuilder.toString(), ChannelMappingKey.class);
+
+        if (channelId != null) {
+            idQuery.setParameter("channelId", channelId);
+        }
+        if (neighborhoodId != null) {
+            idQuery.setParameter("neighborhoodId", neighborhoodId);
+        }
+
+        List<ChannelMappingKey> ids = idQuery.getResultList();
+
+        if (!ids.isEmpty()) {
+            TypedQuery<ChannelMapping> channelMappingQuery = em.createQuery(
+                    "SELECT cm FROM ChannelMapping cm WHERE cm.id IN :ids ORDER BY cm.neighborhood.neighborhoodId", ChannelMapping.class);
+            channelMappingQuery.setParameter("ids", ids);
+            return channelMappingQuery.getResultList().size();
+        }
+        return 0;
     }
 }

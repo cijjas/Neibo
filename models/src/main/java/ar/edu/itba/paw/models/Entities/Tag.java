@@ -5,6 +5,7 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tags")
@@ -21,6 +22,14 @@ public class Tag {
     @ManyToMany
     @JoinTable(name = "posts_tags", joinColumns = @JoinColumn(name = "tagid"), inverseJoinColumns = @JoinColumn(name = "postid"))
     private List<Post> posts;
+
+    @ManyToMany
+    @JoinTable(
+            name = "neighborhoods_tags",
+            joinColumns = @JoinColumn(name = "tagid"),
+            inverseJoinColumns = @JoinColumn(name = "neighborhoodid")
+    )
+    private Set<Neighborhood> neighborhoods;
 
     Tag() {
     }

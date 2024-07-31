@@ -125,7 +125,7 @@ public class TagController {
         LOGGER.info("POST request arrived at '/neighborhoods/'");
 
         // Creation & HashCode Generation
-        final Tag tag = ts.createTag(form.getName());
+        final Tag tag = ts.createTag(neighborhoodId, form.getName());
         String tagHashCode = String.valueOf(tag.hashCode());
 
         // Resource URN
@@ -150,7 +150,7 @@ public class TagController {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/tags/{}'", neighborhoodId, tagId);
 
         // Deletion Attempt
-        if(ts.deleteTag(tagId)) {
+        if(ts.deleteTag(neighborhoodId, tagId)) {
             return Response.noContent()
                     .build();
         }
