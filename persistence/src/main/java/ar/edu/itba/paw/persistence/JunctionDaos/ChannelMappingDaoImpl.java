@@ -22,7 +22,7 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
     @PersistenceContext
     private EntityManager em;
 
-    // ---------------------------------- NEIGHBORHOODS CHANNELS INSERT ------------------------------------------------
+    // ----------------------------------------------------------------------------------
 
     @Override
     public ChannelMapping createChannelMapping(long channelId, long neighborhoodId) {
@@ -33,20 +33,7 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
         return channelMapping;
     }
 
-    // ---------------------------------- NEIGHBORHOODS CHANNELS DELETE ------------------------------------------------
-
-    @Override
-    public boolean deleteChannelMapping(long channelId, long neighborhoodId) {
-        LOGGER.debug("Deleting ChannelMapping with channelId {} and neighborhoodId {}", channelId, neighborhoodId);
-
-        ChannelMapping channelMapping = em.find(ChannelMapping.class, new ChannelMappingKey(neighborhoodId, channelId));
-        if (channelMapping != null) {
-            em.remove(channelMapping);
-            return true;
-        } else {
-            return false;
-        }
-    }
+    // ----------------------------------------------------------------------------------
 
     @Override
     public List<ChannelMapping> getChannelMappings(Long channelId, Long neighborhoodId, int page, int size) {
@@ -123,5 +110,20 @@ public class ChannelMappingDaoImpl implements ChannelMappingDao {
             return channelMappingQuery.getResultList().size();
         }
         return 0;
+    }
+
+    // ----------------------------------------------------------------------------------
+
+    @Override
+    public boolean deleteChannelMapping(long channelId, long neighborhoodId) {
+        LOGGER.debug("Deleting ChannelMapping with channelId {} and neighborhoodId {}", channelId, neighborhoodId);
+
+        ChannelMapping channelMapping = em.find(ChannelMapping.class, new ChannelMappingKey(neighborhoodId, channelId));
+        if (channelMapping != null) {
+            em.remove(channelMapping);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

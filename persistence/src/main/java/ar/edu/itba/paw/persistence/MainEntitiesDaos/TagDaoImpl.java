@@ -32,17 +32,6 @@ public class TagDaoImpl implements TagDao {
         return tag;
     }
 
-    @Override
-    public boolean deleteTag(long tagId) {
-        LOGGER.debug("Deleting Tag with tagId {}", tagId);
-        Tag tag = em.find(Tag.class, tagId);
-        if (tag != null) {
-            em.remove(tag);
-            return true;
-        }
-        return false;
-    }
-
     // ---------------------------------------------- TAGS SELECT ------------------------------------------------------
 
     @Override
@@ -124,6 +113,18 @@ public class TagDaoImpl implements TagDao {
         }
 
         return 0;
+    }
+
+    // ---------------------------------------------- TAGS DELETE ------------------------------------------------------
+    @Override
+    public boolean deleteTag(long tagId) {
+        LOGGER.debug("Deleting Tag with tagId {}", tagId);
+        Tag tag = em.find(Tag.class, tagId);
+        if (tag != null) {
+            em.remove(tag);
+            return true;
+        }
+        return false;
     }
 
 }

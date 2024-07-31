@@ -19,7 +19,7 @@ public class TagMappingDaoImpl implements TagMappingDao {
     @PersistenceContext
     private EntityManager em;
 
-    // ---------------------------------- NEIGHBORHOODS CHANNELS INSERT ------------------------------------------------
+    // ----------------------------------------------------------------------------------
 
     @Override
     public TagMapping createTagMappingDao(long tagId, long neighborhoodId) {
@@ -30,20 +30,7 @@ public class TagMappingDaoImpl implements TagMappingDao {
         return tagMapping;
     }
 
-    // ---------------------------------- NEIGHBORHOODS CHANNELS DELETE ------------------------------------------------
-
-    @Override
-    public boolean deleteTagMapping(long tagId, long neighborhoodId) {
-        LOGGER.debug("Deleting Tag Mapping with tagId {} and neighborhoodId {}", tagId, neighborhoodId);
-
-        TagMapping tagMapping = em.find(TagMapping.class, new TagMappingKey(neighborhoodId, tagId));
-        if (tagMapping != null) {
-            em.remove(tagMapping);
-            return true;
-        } else {
-            return false;
-        }
-    }
+    // ----------------------------------------------------------------------------------
 
     @Override
     public List<TagMapping> getTagMappings(Long tagId, Long neighborhoodId, int page, int size) {
@@ -120,6 +107,21 @@ public class TagMappingDaoImpl implements TagMappingDao {
             return tagMappingQuery.getResultList().size();
         }
         return 0;
+    }
+
+    // ----------------------------------------------------------------------------------
+
+    @Override
+    public boolean deleteTagMapping(long tagId, long neighborhoodId) {
+        LOGGER.debug("Deleting Tag Mapping with tagId {} and neighborhoodId {}", tagId, neighborhoodId);
+
+        TagMapping tagMapping = em.find(TagMapping.class, new TagMappingKey(neighborhoodId, tagId));
+        if (tagMapping != null) {
+            em.remove(tagMapping);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
