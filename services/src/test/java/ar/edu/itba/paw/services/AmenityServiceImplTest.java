@@ -60,8 +60,6 @@ public class AmenityServiceImplTest {
                 .build()
         );
 
-        when(shiftDao.findShift(anyLong(), anyLong())).thenReturn(Optional.empty());
-
         when(shiftDao.createShift(anyLong(), anyLong())).thenReturn(new Shift.Builder()
                 .shiftId(SHIFT_ID)
                 .build()

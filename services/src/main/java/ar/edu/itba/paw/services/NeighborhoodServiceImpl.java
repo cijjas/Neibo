@@ -60,6 +60,7 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
         List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoods();
         neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == 0);
         neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == -1);
+        neighborhoods.removeIf(neighborhood -> neighborhood.getNeighborhoodId().intValue() == -2);
 
         return neighborhoods;
     }

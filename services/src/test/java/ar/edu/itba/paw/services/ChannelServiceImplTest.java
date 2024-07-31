@@ -19,8 +19,6 @@ public class ChannelServiceImplTest {
 
     @Mock
     private ChannelDao channelDao;
-    @Mock
-    private ChannelMappingService channelMappingService;
     @InjectMocks
     private ChannelServiceImpl cs;
 
