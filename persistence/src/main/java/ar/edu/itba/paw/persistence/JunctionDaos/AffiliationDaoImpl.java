@@ -128,15 +128,6 @@ public class AffiliationDaoImpl implements AffiliationDao {
         return Optional.ofNullable(em.find(Affiliation.class, new AffiliationKey(workerId, neighborhoodId)));
     }
 
-    @Override
-    public Set<Neighborhood> getNeighborhoods(long workerId) {
-        LOGGER.debug("Selecting neighborhoods for the Worker {}", workerId);
-
-        TypedQuery<Neighborhood> query = em.createQuery("SELECT n FROM Worker w JOIN w.workNeighborhoods n WHERE w.user.id = :workerId", Neighborhood.class);
-        query.setParameter("workerId", workerId);
-        return new HashSet<>(query.getResultList());
-    }
-
     // ----------------------------------------- NEIGHBORHOOD WORKERS DELETE -------------------------------------------
 
     @Override

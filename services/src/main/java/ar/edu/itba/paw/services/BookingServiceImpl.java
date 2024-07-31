@@ -11,21 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static org.hibernate.type.descriptor.java.JdbcDateTypeDescriptor.DATE_FORMAT;
-
 @Service
 @Transactional
 public class BookingServiceImpl implements BookingService {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingServiceImpl.class);
+
     private final BookingDao bookingDao;
     private final AvailabilityDao availabilityDao;
     private final NeighborhoodDao neighborhoodDao;
@@ -40,6 +36,8 @@ public class BookingServiceImpl implements BookingService {
         this.amenityDao = amenityDao;
         this.shiftDao = shiftDao;
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     public Booking createBooking(String userURN, String amenityURN, String shiftURN, String reservationDate) {
         LOGGER.info("Creating a Booking for Amenity {} on Date {} for User {}", amenityURN, reservationDate, userURN);
@@ -80,11 +78,9 @@ public class BookingServiceImpl implements BookingService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     @Override
     @Transactional(readOnly = true)
-    public Optional<Booking> findBooking(long bookingId, long neighborhoodId){
+    public Optional<Booking> findBooking(long bookingId, long neighborhoodId) {
         LOGGER.info("Finding Booking {}", bookingId);
 
         ValidationUtils.checkBookingId(bookingId);
@@ -111,6 +107,8 @@ public class BookingServiceImpl implements BookingService {
         return bookingDao.getBookings(userId, amenityId, page, size);
     }
 
+    // ---------------------------------------------------
+
     @Override
     public int calculateBookingPages(String userURN, String amenityURN, long neighborhoodId, int size) {
         LOGGER.info("Calculating Booking Pages for User {} on Amenity {} from Neighborhood {}", userURN, amenityURN, neighborhoodId);
@@ -135,18 +133,5 @@ public class BookingServiceImpl implements BookingService {
         ValidationUtils.checkBookingId(bookingId);
 
         return bookingDao.deleteBooking(bookingId);
-    }
-
-    @Override
-    public boolean deleteBookings(List<Long> bookingIds) {
-        LOGGER.info("Deleting Bookings {}", bookingIds);
-
-        boolean result = true;
-        for (long bookingId : bookingIds) {
-            ValidationUtils.checkBookingId(bookingId);
-            if (!deleteBooking(bookingId))
-                result = false;
-        }
-        return result;
     }
 }

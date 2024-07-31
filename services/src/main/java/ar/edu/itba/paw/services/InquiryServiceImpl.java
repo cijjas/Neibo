@@ -3,7 +3,6 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.InquiryDao;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.InquiryService;
 import ar.edu.itba.paw.models.Entities.Inquiry;
@@ -22,6 +21,7 @@ import java.util.Optional;
 @Transactional
 public class InquiryServiceImpl implements InquiryService {
     private static final Logger LOGGER = LoggerFactory.getLogger(InquiryServiceImpl.class);
+
     private final InquiryDao inquiryDao;
     private final EmailService emailService;
     private final ProductDao productDao;
@@ -47,15 +47,6 @@ public class InquiryServiceImpl implements InquiryService {
         Long userId = ValidationUtils.checkURNAndExtractUserId(userURN); // Cant be null due to form validation
 
         return inquiryDao.createInquiry(userId, productId, message);
-    }
-
-    @Override
-    public boolean deleteInquiry(long inquiryId) {
-        LOGGER.info("Deleting Inquiry {}", inquiryId);
-
-        ValidationUtils.checkInquiryId(inquiryId);
-
-        return inquiryDao.deleteInquiry(inquiryId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -97,15 +88,6 @@ public class InquiryServiceImpl implements InquiryService {
     // ---------------------------------------------------
 
     @Override
-    public int countInquiries(long productId) {
-        LOGGER.info("Counting Inquiries for Product {}", productId);
-
-        ValidationUtils.checkProductId(productId);
-
-        return inquiryDao.countInquiries(productId);
-    }
-
-    @Override
     public int calculateInquiryPages(long productId, int size) {
         LOGGER.info("Calculating Inquiry Pages for Product {}", productId);
 
@@ -130,5 +112,16 @@ public class InquiryServiceImpl implements InquiryService {
         emailService.sendInquiryMail(receiver, product, reply, true);
 
         return inquiry;
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean deleteInquiry(long inquiryId) {
+        LOGGER.info("Deleting Inquiry {}", inquiryId);
+
+        ValidationUtils.checkInquiryId(inquiryId);
+
+        return inquiryDao.deleteInquiry(inquiryId);
     }
 }

@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
 public class LikeServiceImpl implements LikeService {
     private static final Logger LOGGER = LoggerFactory.getLogger(LikeServiceImpl.class);
+
     private final LikeDao likeDao;
     private final NeighborhoodDao neighborhoodDao;
 
@@ -48,7 +48,7 @@ public class LikeServiceImpl implements LikeService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Like> getLikes(long neighborhoodId, String postURN, String userURN, int page, int size){
+    public List<Like> getLikes(long neighborhoodId, String postURN, String userURN, int page, int size) {
         LOGGER.info("Getting Likes for Post {} by User {} from Neighborhood {}", postURN, userURN, neighborhoodId);
 
         Long postId = ValidationUtils.checkURNAndExtractPostId(postURN);
@@ -62,28 +62,7 @@ public class LikeServiceImpl implements LikeService {
         return likeDao.getLikes(postId, userId, neighborhoodId, page, size);
     }
 
-    @Override
-    public Optional<Like> findLike(Long postId, Long userId) {
-        LOGGER.info("Finding Like for Post {} by User {}", postId, userId);
-
-        ValidationUtils.checkPostId(postId);
-        ValidationUtils.checkUserId(userId);
-
-        return likeDao.findLike(postId, userId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public boolean isPostLiked(long postId, long userId) {
-        LOGGER.info("Checking a Like from User {} to Post {} exists", userId, postId);
-
-        ValidationUtils.checkLikeIds(postId, userId);
-
-        return likeDao.isPostLiked(postId, userId);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
+    // ---------------------------------------------------
 
     @Override
     public int countLikes(long neighborhoodId, String postURN, String userURN) {
@@ -119,7 +98,7 @@ public class LikeServiceImpl implements LikeService {
     public boolean deleteLike(String postURN, String userURN) {
         LOGGER.info("Removing Like from Post {} given by User {}", postURN, userURN);
 
-        if ( postURN == null || userURN == null )
+        if (postURN == null || userURN == null)
             throw new IllegalArgumentException("Both the Post and the User have to be specified when deleting");
 
         TwoIds postTwoIds = ValidationUtils.extractTwoURNIds(postURN);

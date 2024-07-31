@@ -5,5 +5,6 @@ import ar.edu.itba.paw.models.Entities.Profession;
 import java.util.List;
 
 public interface ProfessionService {
+
     List<Profession> getProfessions(String workerURN);
 }

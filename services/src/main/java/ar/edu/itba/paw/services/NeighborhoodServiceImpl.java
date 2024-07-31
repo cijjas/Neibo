@@ -16,6 +16,7 @@ import java.util.Optional;
 @Transactional
 public class NeighborhoodServiceImpl implements NeighborhoodService {
     private static final Logger LOGGER = LoggerFactory.getLogger(NeighborhoodServiceImpl.class);
+
     private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
@@ -76,15 +77,6 @@ public class NeighborhoodServiceImpl implements NeighborhoodService {
     }
 
     // ---------------------------------------------------
-
-    @Override
-    public int countNeighborhoods(String workerURN) {
-        LOGGER.info("Counting Neighborhoods");
-
-        Long workerId = ValidationUtils.checkURNAndExtractWorkerId(workerURN);
-
-        return neighborhoodDao.countNeighborhoods(workerId);
-    }
 
     @Override
     public int calculateNeighborhoodPages(String workerURN, int size) {

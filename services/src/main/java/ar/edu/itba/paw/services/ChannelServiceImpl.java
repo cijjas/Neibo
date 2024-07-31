@@ -19,6 +19,7 @@ import java.util.Optional;
 @Transactional
 public class ChannelServiceImpl implements ChannelService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelServiceImpl.class);
+
     private final ChannelDao channelDao;
     private final ChannelMappingDao channelMappingDao;
     private final NeighborhoodDao neighborhoodDao;
@@ -40,15 +41,6 @@ public class ChannelServiceImpl implements ChannelService {
         Channel channel = channelDao.createChannel(name);
         channelMappingDao.createChannelMapping(channel.getChannelId(), neighborhoodId);
         return channel;
-    }
-
-    @Override
-    public boolean deleteChannel(long channelId) {
-        LOGGER.info("Deleting Channel {}", channelId);
-
-        ValidationUtils.checkChannelId(channelId);
-
-        return channelDao.deleteChannel(channelId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -74,5 +66,16 @@ public class ChannelServiceImpl implements ChannelService {
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
         return channelDao.getChannels(neighborhoodId);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean deleteChannel(long channelId) {
+        LOGGER.info("Deleting Channel {}", channelId);
+
+        ValidationUtils.checkChannelId(channelId);
+
+        return channelDao.deleteChannel(channelId);
     }
 }

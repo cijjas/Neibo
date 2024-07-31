@@ -24,6 +24,7 @@ import java.util.Optional;
 @Transactional
 public class AmenityServiceImpl implements AmenityService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AmenityServiceImpl.class);
+
     private final AmenityDao amenityDao;
     private final ShiftDao shiftDao;
     private final AvailabilityDao availabilityDao;
@@ -103,36 +104,27 @@ public class AmenityServiceImpl implements AmenityService {
     // ---------------------------------------------------
 
     @Override
-    public int countAmenities(long neighborhoodId) {
-        LOGGER.info("Counting Amenities from Neighborhood {}", neighborhoodId);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        return amenityDao.countAmenities(neighborhoodId);
-    }
-
-    @Override
     public int calculateAmenityPages(long neighborhoodId, int size) {
         LOGGER.info("Calculating Amenity Pages for Neighborhood {}", neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkSize(size);
 
-        return PaginationUtils.calculatePages(amenityDao.countAmenities(neighborhoodId), size) ;
+        return PaginationUtils.calculatePages(amenityDao.countAmenities(neighborhoodId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Amenity updateAmenityPartially(long amenityId, String name, String description, List<String> shiftURNs){
+    public Amenity updateAmenityPartially(long amenityId, String name, String description, List<String> shiftURNs) {
         LOGGER.info("Updating Amenity {}", amenityId);
 
-        Amenity amenity = amenityDao.findAmenity(amenityId).orElseThrow(()-> new NotFoundException("Amenity Not Found"));
-        if(name != null && !name.isEmpty())
+        Amenity amenity = amenityDao.findAmenity(amenityId).orElseThrow(() -> new NotFoundException("Amenity Not Found"));
+        if (name != null && !name.isEmpty())
             amenity.setName(name);
-        if(description != null && !description.isEmpty())
+        if (description != null && !description.isEmpty())
             amenity.setDescription(description);
-        if(shiftURNs != null && !shiftURNs.isEmpty()){
+        if (shiftURNs != null && !shiftURNs.isEmpty()) {
             for (String shiftURN : shiftURNs) {
                 long shiftId = ValidationUtils.extractURNId(shiftURN);
                 ValidationUtils.checkShiftId(shiftId);

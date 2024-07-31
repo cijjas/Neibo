@@ -15,6 +15,7 @@ import java.util.List;
 @Transactional
 public class ProfessionServiceImpl implements ProfessionService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProfessionServiceImpl.class);
+
     private final ProfessionDao professionDao;
 
     @Autowired
@@ -33,6 +34,4 @@ public class ProfessionServiceImpl implements ProfessionService {
 
         return professionDao.getProfessions(workerId);
     }
-
-
 }

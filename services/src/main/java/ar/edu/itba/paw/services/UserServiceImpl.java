@@ -8,20 +8,16 @@ import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
-import ar.edu.itba.paw.interfaces.services.NeighborhoodService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.User;
-import ar.edu.itba.paw.models.TwoIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +25,7 @@ import java.util.Optional;
 @Transactional
 public class UserServiceImpl implements UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
+
     private final UserDao userDao;
     private final NeighborhoodDao neighborhoodDao;
     private final ImageService imageService;
@@ -60,7 +57,7 @@ public class UserServiceImpl implements UserService {
         }
 
         Language language = Language.ENGLISH;
-        if(languageURN != null) {
+        if (languageURN != null) {
             long languageId = ValidationUtils.extractURNId(languageURN);
             ValidationUtils.checkLanguageId(languageId);
             language = Language.fromId(languageId);
@@ -152,16 +149,7 @@ public class UserServiceImpl implements UserService {
         return userDao.getUsers(userRoleId, neighborhoodId, page, size);
     }
 
-    @Override
-    public int countUsers(String userRoleURN, long neighborhoodId) {
-        LOGGER.info("Counting Users with Role {} from Neighborhood {} ", userRoleURN, neighborhoodId);
-
-        Long userRoleId = ValidationUtils.checkURNAndExtractUserRoleId(userRoleURN);
-
-        ValidationUtils.checkNeighborhoodIdInUsers(neighborhoodId);
-
-        return userDao.countTotalUsers(userRoleId, neighborhoodId);
-    }
+    // ---------------------------------------------------
 
     @Override
     @Transactional(readOnly = true)
@@ -174,59 +162,6 @@ public class UserServiceImpl implements UserService {
         ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(userDao.countTotalUsers(userRoleId, neighborhoodId), size);
-    }
-
-    //funcion deprecada?? ahora existe attendanceController
-    @Override
-    @Transactional(readOnly = true)
-    public List<User> getEventUsers(long eventId) {
-        LOGGER.info("Getting Users attending Event {}", eventId);
-
-        ValidationUtils.checkEventId(eventId);
-
-        return userDao.getEventUsers(eventId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<User> getEventUsers(long eventId, int page, int size) {
-        LOGGER.info("Getting User attending Event {}", eventId);
-
-        ValidationUtils.checkEventId(eventId);
-        ValidationUtils.checkPageAndSize(page, size);
-
-        return userDao.getEventUsers(eventId, page, size);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public int calculateEventPages(long eventId, int size) {
-        LOGGER.info("Calculating User Pages attending Event {}", eventId);
-
-        ValidationUtils.checkEventId(eventId);
-        ValidationUtils.checkSize(size);
-
-        return PaginationUtils.calculatePages(userDao.getEventUsers(eventId).size(), size);
-    }
-
-    @Override
-    public List<User> getProductRequesters(long productId, int page, int size) {
-        LOGGER.info("Getting Users Requesting Product {} ", productId);
-
-        ValidationUtils.checkProductId(productId);
-        ValidationUtils.checkPageAndSize(page, size);
-
-        return userDao.getProductRequesters(productId, page, size);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public boolean isAttending(long eventId, long userId) {
-        LOGGER.info("Checking if User {} is attending Event {}", userId, eventId);
-
-        ValidationUtils.checkAttendanceId(eventId, userId);
-
-        return userDao.isAttending(eventId, userId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -257,12 +192,12 @@ public class UserServiceImpl implements UserService {
         }
         if (identification != null)
             user.setIdentification(identification);
-        if(languageURN != null) {
+        if (languageURN != null) {
             long languageId = ValidationUtils.extractURNId(languageURN);
             ValidationUtils.checkLanguageId(languageId);
             user.setLanguage(Language.fromId(languageId));
         }
-        if(userRoleURN != null) {
+        if (userRoleURN != null) {
             long userRoleId = ValidationUtils.extractURNId(userRoleURN);
             ValidationUtils.checkUserRoleId(userRoleId);
             user.setRole(UserRole.fromId(userRoleId));

@@ -19,8 +19,6 @@ public interface AmenityService {
 
     // ---------------------------------------------------
 
-    int countAmenities(long neighborhoodId);
-
     int calculateAmenityPages(long neighborhoodId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------

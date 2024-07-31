@@ -5,7 +5,6 @@ import ar.edu.itba.paw.interfaces.persistence.CommentDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.interfaces.services.CommentService;
 import ar.edu.itba.paw.interfaces.services.EmailService;
-import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Comment;
 import ar.edu.itba.paw.models.Entities.Post;
@@ -22,6 +21,7 @@ import java.util.Optional;
 @Transactional
 public class CommentServiceImpl implements CommentService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentServiceImpl.class);
+
     private final CommentDao commentDao;
     private final EmailService emailService;
     private final PostDao postDao;
@@ -41,17 +41,10 @@ public class CommentServiceImpl implements CommentService {
     public Comment createComment(String comment, String userURN, long postId) {
         LOGGER.info("Creating Comment {} from User {} for Post {}", comment, userURN, postId);
 
-        Post post = postDao.findPost(postId).orElseThrow(()-> new NotFoundException("Post Not Found"));
+        Post post = postDao.findPost(postId).orElseThrow(() -> new NotFoundException("Post Not Found"));
         emailService.sendNewCommentMail(post, userService.getNeighborsSubscribed(postId));
         Long userId = ValidationUtils.checkURNAndExtractUserId(userURN); // cannot be null as it is checked by the form, the strategy should be unified
         return commentDao.createComment(comment, userId, postId);
-    }
-
-    @Override
-    public boolean deleteComment(long commentId) {
-        LOGGER.info("Deleting Comment {}", commentId);
-
-        return commentDao.deleteComment(commentId);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -94,16 +87,6 @@ public class CommentServiceImpl implements CommentService {
 
     // ---------------------------------------------------
 
-    @Override
-    @Transactional(readOnly = true)
-    public int countComments(long postId) {
-        LOGGER.info("Counting Comments for Post {}", postId);
-
-        ValidationUtils.checkPostId(postId);
-
-        return commentDao.countComments(postId);
-    }
-
     @Transactional(readOnly = true)
     public int calculateCommentPages(long postId, int size) {
         LOGGER.info("Calculating Comment for Post {}", postId);
@@ -113,4 +96,14 @@ public class CommentServiceImpl implements CommentService {
 
         return PaginationUtils.calculatePages(commentDao.countComments(postId), size);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean deleteComment(long commentId) {
+        LOGGER.info("Deleting Comment {}", commentId);
+
+        return commentDao.deleteComment(commentId);
+    }
+
 }

@@ -17,11 +17,9 @@ public interface AffiliationDao {
 
     List<Affiliation> getAffiliations(Long workerId, Long neighborhoodId, int page, int size);
 
-    int countAffiliations(Long workerId, Long neighborhoodId);
-
     Optional<Affiliation> findAffiliation(long workerId, long neighborhoodId);
 
-    Set<Neighborhood> getNeighborhoods(long workerId);
+    int countAffiliations(Long workerId, Long neighborhoodId);
 
     // --------------------------------------- NEIGHBORHOODS WORKERS DELETE ----------------------------------------
 

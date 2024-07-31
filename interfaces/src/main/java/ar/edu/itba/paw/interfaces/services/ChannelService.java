@@ -9,11 +9,13 @@ public interface ChannelService {
 
     Channel createChannel(long neighborhoodId, final String name);
 
-    boolean deleteChannel(long channelId);
-
     // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Channel> findChannel(long channelId, long neighborhoodId);
 
     List<Channel> getChannels(long neighborhoodId);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    boolean deleteChannel(long channelId);
 }

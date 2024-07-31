@@ -4,20 +4,16 @@ import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.DepartmentDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
-import ar.edu.itba.paw.interfaces.persistence.PurchaseDao;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.ProductService;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Product;
-import ar.edu.itba.paw.models.TwoIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Validation;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +21,7 @@ import java.util.Optional;
 @Transactional
 public class ProductServiceImpl implements ProductService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
+
     private final ProductDao productDao;
     private final NeighborhoodDao neighborhoodDao;
     private final ImageService imageService;
@@ -49,8 +46,8 @@ public class ProductServiceImpl implements ProductService {
         ValidationUtils.checkDepartmentId(departmentId);
 
         Long[] idArray = {0L, 0L, 0L};
-        int imageURNsLength = imageURNs == null? 0 : imageURNs.length;
-        for(int i = 0; i < imageURNsLength; i++)
+        int imageURNsLength = imageURNs == null ? 0 : imageURNs.length;
+        for (int i = 0; i < imageURNsLength; i++)
             idArray[i] = getImageId(imageURNs[i]);
 
         Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
@@ -98,20 +95,7 @@ public class ProductServiceImpl implements ProductService {
     // ---------------------------------------------------
 
     @Override
-    public int countProducts(long neighborhoodId, String departmentURN, String userURN, String productStatusURN) {
-        LOGGER.info("Counting Products with status {} from Department {} by User {} from Neighborhood {}", productStatusURN, departmentURN, userURN, neighborhoodId);
-
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
-        Long departmentId = ValidationUtils.checkURNAndExtractUserDepartmentId(departmentURN);
-        Long productStatusId = ValidationUtils.checkURNAndExtractUserProductStatusId(productStatusURN);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        return productDao.countProducts(neighborhoodId, departmentId, userId, productStatusId);
-    }
-
-    @Override
-    public int calculateProductPages(long neighborhoodId, int size, String departmentURN, String userURN, String productStatusURN){
+    public int calculateProductPages(long neighborhoodId, int size, String departmentURN, String userURN, String productStatusURN) {
         LOGGER.info("Calculating Product Pages with status {} from Department {} by User {} from Neighborhood {}", productStatusURN, departmentURN, userURN, neighborhoodId);
 
         Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
@@ -127,27 +111,27 @@ public class ProductServiceImpl implements ProductService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Product updateProductPartially(long productId, String name, String description, Double price, boolean used, String departmentURN, String[] imageURNs, Long stock){
+    public Product updateProductPartially(long productId, String name, String description, Double price, boolean used, String departmentURN, String[] imageURNs, Long stock) {
         LOGGER.info("Updating Product {}", productId);
 
         long departmentId = ValidationUtils.extractURNId(departmentURN);
         ValidationUtils.checkDepartmentId(departmentId);
 
-        Product product = findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
-        if(name != null && !name.isEmpty())
+        Product product = findProduct(productId).orElseThrow(() -> new NotFoundException("Product Not Found"));
+        if (name != null && !name.isEmpty())
             product.setName(name);
-        if(description != null && !description.isEmpty())
+        if (description != null && !description.isEmpty())
             product.setDescription(description);
-        if(price != null)
+        if (price != null)
             product.setPrice(price);
-        if(used != product.isUsed())
+        if (used != product.isUsed())
             product.setUsed(used);
-        if(departmentId != 0)
-            product.setDepartment(departmentDao.findDepartment(departmentId).orElseThrow(()-> new NotFoundException("Department Not Found")));
-        if(stock != null)
+        if (departmentId != 0)
+            product.setDepartment(departmentDao.findDepartment(departmentId).orElseThrow(() -> new NotFoundException("Department Not Found")));
+        if (stock != null)
             product.setRemainingUnits(stock);
 
-        if(imageURNs != null && imageURNs.length > 0 && imageURNs[0] != null) {
+        if (imageURNs != null && imageURNs.length > 0 && imageURNs[0] != null) {
             int pictureFilesLength = imageURNs.length;
 
             long imageId = ValidationUtils.extractURNId(imageURNs[0]);
@@ -155,14 +139,14 @@ public class ProductServiceImpl implements ProductService {
             Image i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
             product.setPrimaryPicture(i);
 
-            if(pictureFilesLength >= 2) {
+            if (pictureFilesLength >= 2) {
                 imageId = ValidationUtils.extractURNId(imageURNs[1]);
                 ValidationUtils.checkImageId(imageId);
                 i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));
                 product.setSecondaryPicture(i);
             }
 
-            if(pictureFilesLength == 3) {
+            if (pictureFilesLength == 3) {
                 imageId = ValidationUtils.extractURNId(imageURNs[2]);
                 ValidationUtils.checkImageId(imageId);
                 i = imageService.findImage(imageId).orElseThrow(() -> new NotFoundException("Image not found"));

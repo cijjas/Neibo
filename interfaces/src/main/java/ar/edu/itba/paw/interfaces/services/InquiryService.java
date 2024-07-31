@@ -8,7 +8,6 @@ import java.util.Optional;
 public interface InquiryService {
     Inquiry createInquiry(String userURN, final long productId, final String message);
 
-    boolean deleteInquiry(final long inquiryId);
     // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Inquiry> findInquiry(final long inquiryId);
@@ -19,11 +18,13 @@ public interface InquiryService {
 
     // ---------------------------------------------------
 
-    int countInquiries(long productId);
-
     int calculateInquiryPages(long productId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
     Inquiry replyInquiry(final long inquiryId, final String reply);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    boolean deleteInquiry(final long inquiryId);
 }
