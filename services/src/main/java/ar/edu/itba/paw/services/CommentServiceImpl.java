@@ -41,8 +41,6 @@ public class CommentServiceImpl implements CommentService {
     public Comment createComment(String comment, String userURN, long postId) {
         LOGGER.info("Creating Comment {} from User {} for Post {}", comment, userURN, postId);
 
-        Post post = postDao.findPost(postId).orElseThrow(() -> new NotFoundException("Post Not Found"));
-        emailService.sendNewCommentMail(post, userService.getNeighborsSubscribed(postId));
         Long userId = ValidationUtils.checkURNAndExtractUserId(userURN); // cannot be null as it is checked by the form, the strategy should be unified
         return commentDao.createComment(comment, userId, postId);
     }

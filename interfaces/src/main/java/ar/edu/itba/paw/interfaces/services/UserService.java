@@ -20,8 +20,6 @@ public interface UserService {
 
     List<User> getNeighbors(long neighborhoodId);
 
-    List<User> getNeighborsSubscribed(long postId);
-
     List<User> getUsers(String userRoleURN, long neighborhoodId, int page, int size);
 
     // ---------------------------------------------------

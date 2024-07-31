@@ -38,6 +38,8 @@ public class AccessControlHelper {
     @Autowired
     private BookingService bs;
 
+    // ------------------------------------------ GENERIC RESTRICTIONS -------------------------------------------------
+
     // All requests that correspond to a certain Neighborhood have to be done from a User from that same Neighborhood
     public boolean isNeighborhoodMember(HttpServletRequest request) {
         LOGGER.info("Neighborhood Belonging Bind");
@@ -73,6 +75,21 @@ public class AccessControlHelper {
         return false;
     }
 
+    // A User can modify the things he creates
+    public Boolean canModify(String userURN) {
+        LOGGER.info("Verifying Accessibility for the User's entities");
+        Authentication authentication = getAuthentication();
+
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
+            return true;
+
+        // maybe this should verify the neighborhood id as well :/
+
+        return getRequestingUserId(authentication) == extractTwoURNIds(userURN).getSecondId();
+    }
+
+    // --------------------------------------------- NEIGHBORHOODS -----------------------------------------------------
+
     // Workers, Neighbors and Administrators can access /neighborhoods using Query Params
     public boolean hasAccessNeighborhoodQP(Long workerId) {
         LOGGER.info("Verifying Query Params Accessibility");
@@ -83,6 +100,24 @@ public class AccessControlHelper {
             return true;
 
         return !isAnonymous(authentication);
+    }
+
+    // -------------------------------------------------- USERS --------------------------------------------------------
+
+    // Neighbors and Administrators can access the whole user list and the workers user list
+    public boolean hasAccessToUserList(long neighborhoodId) {
+        LOGGER.info("Verifying User List Accessibility");
+
+        Authentication authentication = getAuthentication();
+
+        if (isAnonymous(authentication) || isUnverifiedOrRejected(authentication))
+            return false;
+
+        if (isSuperAdministrator(authentication)){
+            return true;
+        }
+
+        return neighborhoodId == 0 || neighborhoodId == getRequestingUserNeighborhoodId(authentication);
     }
 
     // Neighbors and Administrators can access the user details of others
@@ -106,25 +141,7 @@ public class AccessControlHelper {
         return neighborhoodId == 0 || neighborhoodId == getRequestingUser(authentication).getNeighborhoodId();
     }
 
-    // Neighbors and Administrators can access the whole user list and the workers user list
-    public boolean hasAccessToUserList(long neighborhoodId) {
-        LOGGER.info("Verifying User List Accessibility");
-
-        Authentication authentication = getAuthentication();
-
-        if (isAnonymous(authentication) || isUnverifiedOrRejected(authentication))
-            return false;
-
-        if (isSuperAdministrator(authentication)){
-            return true;
-        }
-
-        return neighborhoodId == 0 || neighborhoodId == getRequestingUserNeighborhoodId(authentication);
-    }
-
-
     // A user can update his own profile but only an Administrator can update other people's profile
-    // This is probably wrong, no anonymous check
     public Boolean canUpdateUser(long userId, long neighborhoodId) {
         LOGGER.info("Verifying Update User Accessibility");
         Authentication authentication = getAuthentication();
@@ -142,8 +159,22 @@ public class AccessControlHelper {
         return getRequestingUserId(authentication) == userId;
     }
 
+    // ----------------------------------------------- WORKERS ---------------------------------------------------------
+
+    public Boolean canUpdateWorker(long workerId){
+        LOGGER.info("Verifying Worker Update Accessibility");
+        Authentication authentication = getAuthentication();
+
+        if (isSuperAdministrator(authentication))
+            return true;
+
+        return workerId == getRequestingUserId(authentication);
+    }
+
+    // ------------------------------------------------- LIKES ---------------------------------------------------------
+
     // A User can modify the things he creates
-    public Boolean canModify(String userURN) {
+    public Boolean canDeleteLike(String userURN) {
         LOGGER.info("Verifying Accessibility for the User's entities");
         Authentication authentication = getAuthentication();
 
@@ -155,6 +186,8 @@ public class AccessControlHelper {
         return getRequestingUserId(authentication) == extractTwoURNIds(userURN).getSecondId();
     }
 
+    // ---------------------------------------------- ATTENDANCES ------------------------------------------------------
+
     // A user can create/delete an attendance for themselves, or an Administrator for anyone
     public Boolean canDeleteAttendance(long userId) {
         LOGGER.info("Verifying Delete Attendance Accessibility");
@@ -165,6 +198,8 @@ public class AccessControlHelper {
 
         return getRequestingUserId(authentication) == userId;
     }
+
+    // ---------------------------------------------- AFFILIATIONS -----------------------------------------------------
 
     public Boolean canCreateAffiliation(String workerURN) {
         LOGGER.info("Verifying Create Affiliation Accessibility");
@@ -196,6 +231,8 @@ public class AccessControlHelper {
         return getRequestingUserNeighborhoodId(authentication) == extractURNId(neighborhoodURN);
     }
 
+    // ------------------------------------------------ COMMENTS -------------------------------------------------------
+
     // A user can create/delete an attendance for themselves, or an Administrator for anyone
     public Boolean canDeleteComment(long commentId) {
         LOGGER.info("Verifying Delete Comment Accessibility");
@@ -208,6 +245,8 @@ public class AccessControlHelper {
 
         return getRequestingUserId(authentication) == c.getUser().getUserId();
     }
+
+    // ------------------------------------------------ BOOKINGS -------------------------------------------------------
 
     // A user can create/delete an attendance for themselves, or an Administrator for anyone
     public Boolean canDeleteBooking(long bookingId, long neighborhoodId) {
@@ -222,6 +261,8 @@ public class AccessControlHelper {
         return getRequestingUserId(authentication) == b.getUser().getUserId();
     }
 
+    // ------------------------------------------------ REVIEWS --------------------------------------------------------
+
     // A user can create/delete an attendance for themselves, or an Administrator for anyone
     public Boolean canCreateReview(String userURN) {
         LOGGER.info("Verifying Review Creation Accessibility");
@@ -235,20 +276,11 @@ public class AccessControlHelper {
         return getRequestingUserId(authentication) == userId;
     }
 
-    // Neighbors can access their own Transactions and Administrators can access all their neighbors' Transactions
-    public Boolean canAccessTransactions(long userId) {
-        LOGGER.info("Verifying List Transactions Accessibility");
-        Authentication authentication = getAuthentication();
-
-        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
-            return true;
-
-        return getRequestingUserId(authentication) == userId;
-    }
+    // ------------------------------------------------ PRODUCTS ----------------------------------------------------------
 
     // Only the owner of the product and the Administrator can delete the product
     public Boolean canDeleteProduct(long productId){
-        LOGGER.info("Verifying List Transactions Accessibility");
+        LOGGER.info("Verifying Product Delete Accessibility");
         Authentication authentication = getAuthentication();
 
         if (isAdministrator(authentication) || isSuperAdministrator(authentication))
@@ -259,9 +291,11 @@ public class AccessControlHelper {
         return p.getSeller().getUserId() == getRequestingUserId(authentication);
     }
 
+    // ------------------------------------------------ POSTS ----------------------------------------------------------
+
     // Only the creator of the post and the Administrator can delete the post
     public Boolean canDeletePost(long postId){
-        LOGGER.info("Verifying List Transactions Accessibility");
+        LOGGER.info("Verifying Post Delete Accessibility");
         Authentication authentication = getAuthentication();
 
         if (isAdministrator(authentication) || isSuperAdministrator(authentication))
@@ -272,8 +306,11 @@ public class AccessControlHelper {
         return p.getUser().getUserId() == getRequestingUserId(authentication);
     }
 
+    // ---------------------------------------------- INQUIRIES --------------------------------------------------------
+
+    // The author of the inquiry can delete it
     public Boolean canDeleteInquiry(long inquiryId){
-        LOGGER.info("Verifying List Transactions Accessibility");
+        LOGGER.info("Verifying Inquiry Delete Accessibility");
         Authentication authentication = getAuthentication();
 
         if (isAdministrator(authentication) || isSuperAdministrator(authentication))
@@ -284,19 +321,8 @@ public class AccessControlHelper {
         return i.getUser().getUserId() == getRequestingUserId(authentication);
     }
 
-    public Boolean canDeleteRequest(long requestId){
-        LOGGER.info("Verifying List Transactions Accessibility");
-        Authentication authentication = getAuthentication();
 
-        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
-            return true;
-
-        Request r = rs.findRequest(requestId).orElseThrow(()-> new NotFoundException("Product Not Found"));
-
-        return r.getUser().getUserId() == getRequestingUserId(authentication);
-    }
-
-    // The seller of the product cant create an Inquiry for it, on second thought he may publish some frequently asked questions
+    // The seller of the product cant create an Inquiry for it
     public Boolean canCreateInquiry(long productId, String userURN){
         LOGGER.info("Verifying Inquiry Creation Accessibility");
         Authentication authentication = getAuthentication();
@@ -304,7 +330,9 @@ public class AccessControlHelper {
         if (isAdministrator(authentication) || isSuperAdministrator(authentication))
             return true;
 
-        return getRequestingUserId(authentication) == extractTwoURNIds(userURN).getSecondId();
+        Product p = ps.findProduct(productId).orElseThrow(NotFoundException::new);
+
+        return p.getSeller().getUserId() != extractTwoURNIds(userURN).getSecondId();
     }
 
     // The seller of the product can answer Inquiries for that Product
@@ -320,31 +348,29 @@ public class AccessControlHelper {
         return i.getProduct().getSeller().getUserId() == getRequestingUserId(authentication);
     }
 
+    // ---------------------------------------------- REQUESTS ---------------------------------------------------------
+
     // A Neighbor can access the Requests for their products and the Administrator can access all requests
-    public Boolean canAccessRequests(Long userId, Long productId){
+    public Boolean canAccessRequests(String userURN, String productURN){
         LOGGER.info("Verifying Requests Accessibility");
         Authentication authentication = getAuthentication();
 
         // If both userId and productId are null, only administrators can access
-        if (userId == null && productId == null) {
-            if (isAdministrator(authentication) || isSuperAdministrator(authentication)) {
-                return true;
-            } else {
-                throw new IllegalArgumentException("requestedBy and productURN query params are missing.");
-            }
+        if (userURN== null && productURN == null) {
+            return isAdministrator(authentication) || isSuperAdministrator(authentication);
         }
 
         // If userId is not null and productId is null, check if the user is the one making the request
-        if (userId != null && productId == null) {
-            return userId.equals(getRequestingUserId(authentication));
+        if (userURN != null && productURN == null) {
+            return getRequestingUserId(authentication) == extractTwoURNIds(userURN).getSecondId();
         }
 
         // If productId is not null, check if the seller is the logged-in user
-        Product product = ps.findProduct(productId).orElseThrow(() -> new NotFoundException("Product Not Found"));
-        return product.getSeller().getUserId().equals(getRequestingUserId(authentication));
+        Product product = ps.findProduct(extractTwoURNIds(productURN).getSecondId()).orElseThrow(() -> new NotFoundException("Product Not Found"));
+        return product.getSeller().getUserId() == getRequestingUserId(authentication);
     }
 
-    // The seller of the product and the requester can access the request
+    // The seller and the requester can access the request
     public Boolean canAccessRequest(long requestId){
         LOGGER.info("Verifying Request Accessibility");
         Authentication authentication = getAuthentication();
@@ -354,8 +380,33 @@ public class AccessControlHelper {
 
         Request r = rs.findRequest(requestId).orElseThrow(()-> new NotFoundException("Request Not Found"));
 
-        long requestingUserId = getRequestingUserId(authentication);
-        return r.getUser().getUserId() == requestingUserId || r.getProduct().getSeller().getUserId() == requestingUserId;
+        return r.getUser().getUserId() == getRequestingUserId(authentication)|| r.getProduct().getSeller().getUserId() == getRequestingUserId(authentication);
+    }
+
+    // Only the seller can update the request
+    public Boolean canUpdateRequest(long requestId){
+        LOGGER.info("Verifying Update Request Accessibility");
+        Authentication authentication = getAuthentication();
+
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
+            return true;
+
+        Request r = rs.findRequest(requestId).orElseThrow(()-> new NotFoundException("Request Not Found"));
+
+        return r.getProduct().getSeller().getUserId() == getRequestingUserId(authentication);
+    }
+
+    // The Requester can delete his Request
+    public Boolean canDeleteRequest(long requestId){
+        LOGGER.info("Verifying List Transactions Accessibility");
+        Authentication authentication = getAuthentication();
+
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
+            return true;
+
+        Request r = rs.findRequest(requestId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+
+        return r.getUser().getUserId() == getRequestingUserId(authentication);
     }
 
     // The seller cant create a Request for his own Products
@@ -375,15 +426,6 @@ public class AccessControlHelper {
         return p.getSeller().getUserId() != getRequestingUserId(authentication);
     }
 
-    public Boolean canUpdateWorker(long workerId){
-        LOGGER.info("Verifying Worker Update Accessibility");
-        Authentication authentication = getAuthentication();
-
-        if (isSuperAdministrator(authentication))
-            return true;
-
-        return workerId == getRequestingUserId(authentication);
-    }
 
     // -------------------------------------------------------------------------------
 

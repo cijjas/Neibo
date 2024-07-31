@@ -29,7 +29,6 @@ public class Links {
     private URI comments;
     private URI tags;
     private URI likes;
-    private URI subscribers;
     private URI primaryPicture;
     private URI secondaryPicture;
     private URI tertiaryPicture;
@@ -254,14 +253,6 @@ public class Links {
 
     public void setLikes(URI likes) {
         this.likes = likes;
-    }
-
-    public URI getSubscribers() {
-        return subscribers;
-    }
-
-    public void setSubscribers(URI subscribers) {
-        this.subscribers = subscribers;
     }
 
     public URI getPrimaryPicture() {

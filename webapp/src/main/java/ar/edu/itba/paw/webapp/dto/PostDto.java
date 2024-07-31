@@ -63,12 +63,6 @@ public class PostDto {
                 .path("likes")
                 .queryParam("onPost", self)
                 .build());
-/*        links.setSubscribers(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("users")
-                .queryParam("subscribedTo", String.valueOf(post.getPostId()))
-                .build());*/
         dto.set_links(links);
         return dto;
     }

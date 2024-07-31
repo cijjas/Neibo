@@ -48,7 +48,7 @@ public class AffiliationDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
-  /*  @Test
+    @Test
     public void testCreateAffiliation() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
@@ -56,12 +56,12 @@ public class AffiliationDaoImplTest {
         testInserter.createWorker(uKey);
 
         // Exercise
-        affiliationDaoImpl.createAffiliation(uKey, nhKey);
+        affiliationDaoImpl.createAffiliation(uKey, nhKey, 2L);
 
         // Validations & Post Conditions
         em.flush();
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_neighborhoods.name()));
-    }*/
+    }
 
     @Test
     public void testFindWorkerByArea() {

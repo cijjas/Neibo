@@ -184,7 +184,6 @@ public class Post {
         private Set<Tag> tags;
         private Set<User> likedByUsers;
         private Set<Comment> comments;
-        private Set<User> subscribers;
 
         public Builder postId(Long postId) {
             this.postId = postId;
@@ -233,11 +232,6 @@ public class Post {
 
         public Builder comments(Set<Comment> comments) {
             this.comments = comments;
-            return this;
-        }
-
-        public Builder subscribers(Set<User> subscribers) {
-            this.subscribers = subscribers;
             return this;
         }
 
