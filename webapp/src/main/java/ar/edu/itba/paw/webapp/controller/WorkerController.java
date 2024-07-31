@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.validation.Valid;
@@ -98,6 +99,7 @@ public class WorkerController extends GlobalControllerAdvice {
 
     @GET
     @Path("/{id}")
+    @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_WORKER", "ROLE_SUPER_ADMINISTRATOR"})
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response findWorker(
             @PathParam("id") final long workerId,
@@ -143,6 +145,7 @@ public class WorkerController extends GlobalControllerAdvice {
     @PATCH
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @PreAuthorize("@accessControlHelper.canUpdateWorker(#workerId)")
     public Response updateWorkerPartially(
             @PathParam("id") final long workerId,
             @Valid @NotNull final WorkerUpdateForm partialUpdate
@@ -157,4 +160,20 @@ public class WorkerController extends GlobalControllerAdvice {
                 .tag(workerHashCode)
                 .build();
     }
+
+/*    @DELETE
+    @Path("/{id}")
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    @Secured("ROLE_SUPER_ADMINISTRATOR")
+    public Response deleteById(@PathParam("id") final long workerId) {
+        LOGGER.info("DELETE request arrived at '/workers/{}", workerId);
+
+        // Deletion Attempt
+        if(ws.deleteWorker(workerId)) {
+            return Response.noContent()
+                    .build();
+        }
+        return Response.status(Response.Status.NOT_FOUND)
+                .build();
+    }*/
 }

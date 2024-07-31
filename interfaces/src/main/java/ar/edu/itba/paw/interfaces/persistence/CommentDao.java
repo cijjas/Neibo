@@ -11,9 +11,6 @@ public interface CommentDao {
 
     Comment createComment(final String comment, final long neighborId, final long postId);
 
-    // -------------------------------------------- COMMENTS DELETE ----------------------------------------------------
-    boolean deleteComment(final long commentId);
-
     // -------------------------------------------- COMMENTS SELECT ----------------------------------------------------
 
     Optional<Comment> findComment(long commentId);
@@ -22,7 +19,9 @@ public interface CommentDao {
 
     List<Comment> getComments(long postId, int offset, int size);
 
-    // ---------------------------------------------------
-
     int countComments(long postId);
+
+    // -------------------------------------------- COMMENTS DELETE ----------------------------------------------------
+
+    boolean deleteComment(final long commentId);
 }

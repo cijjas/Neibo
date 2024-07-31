@@ -9,6 +9,7 @@ import ar.edu.itba.paw.webapp.form.SignupForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
@@ -168,9 +169,16 @@ public class UserController {
 /*    @DELETE
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response deleteById(@PathParam("id") final long id) {
-        LOGGER.info("Deleting User with id {}", id);
-        us.deleteById(id);
-        return Response.noContent().build();
+    @Secured("ROLE_SUPER_ADMINISTRATOR")
+    public Response deleteById(@PathParam("id") final long userId) {
+        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/users/{}'", neighborhoodId, userId);
+
+        // Deletion Attempt
+        if(us.deleteUser(userId)) {
+            return Response.noContent()
+                    .build();
+        }
+        return Response.status(Response.Status.NOT_FOUND)
+                .build();
     }*/
 }

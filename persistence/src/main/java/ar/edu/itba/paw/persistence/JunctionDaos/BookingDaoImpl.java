@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.BookingDao;
-import ar.edu.itba.paw.models.Entities.*;
+import ar.edu.itba.paw.models.Entities.Availability;
+import ar.edu.itba.paw.models.Entities.Booking;
+import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -9,18 +11,25 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import java.sql.Date;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class BookingDaoImpl implements BookingDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
+    private final String BOOKINGS_JOIN_AVAILABILITY =
+            "SELECT uav.*, bookingid, date, a.amenityid, s.shiftid, userid, a.name, d.dayid, t.timeid, timeinterval\n" +
+                    "FROM users_availability uav\n" +
+                    "INNER JOIN amenities_shifts_availability asa ON uav.amenityavailabilityid = asa.amenityavailabilityid\n" +
+                    "INNER JOIN amenities a ON asa.amenityid = a.amenityid\n" +
+                    "INNER JOIN shifts s ON s.shiftid = asa.shiftid\n" +
+                    "INNER JOIN days d ON s.dayid = d.dayid\n" +
+                    "INNER JOIN times t ON s.starttime = t.timeid";
     // --------------------------------------------- BOOKINGS INSERT ---------------------------------------------------
 
     @Override
@@ -38,21 +47,13 @@ public class BookingDaoImpl implements BookingDao {
 
     // --------------------------------------------- BOOKINGS SELECT ---------------------------------------------------
 
-    private final String BOOKINGS_JOIN_AVAILABILITY =
-            "SELECT uav.*, bookingid, date, a.amenityid, s.shiftid, userid, a.name, d.dayid, t.timeid, timeinterval\n" +
-                    "FROM users_availability uav\n" +
-                    "INNER JOIN amenities_shifts_availability asa ON uav.amenityavailabilityid = asa.amenityavailabilityid\n" +
-                    "INNER JOIN amenities a ON asa.amenityid = a.amenityid\n" +
-                    "INNER JOIN shifts s ON s.shiftid = asa.shiftid\n" +
-                    "INNER JOIN days d ON s.dayid = d.dayid\n" +
-                    "INNER JOIN times t ON s.starttime = t.timeid";
-
     @Override
-    public Optional<Booking> findBooking(long bookingId){
+    public Optional<Booking> findBooking(long bookingId) {
         LOGGER.debug("Selecting Booking with id {}", bookingId);
 
         return Optional.ofNullable(em.find(Booking.class, bookingId));
     }
+
 
     @Override
     public List<Booking> getBookings(Long userId, Long amenityId, int page, int size) {
@@ -129,41 +130,6 @@ public class BookingDaoImpl implements BookingDao {
 
         return ((Number) sqlQuery.getSingleResult()).intValue();
     }
-
-
-//    @Override
-//    public int countBookings(Long userId, Long amenityId) {
-//        LOGGER.debug("Counting Bookings for userId {} and amenityId {}", userId, amenityId);
-//
-//        StringBuilder countQuery = new StringBuilder(BOOKINGS_JOIN_AVAILABILITY);
-//        countQuery.insert(0, "WITH CountCTE AS (SELECT COUNT(*) FROM ");
-//        countQuery.append(" WHERE 1 = 1");
-//
-//        if (userId != null) {
-//            countQuery.append(" AND userid = :userId");
-//        }
-//
-//        if (amenityId != null) {
-//            countQuery.append(" AND asa.amenityid = :amenityId");
-//        }
-//
-//        countQuery.append(") SELECT * FROM CountCTE");
-//
-//        String sql = countQuery.toString();
-//
-//        Query sqlQuery = em.createNativeQuery(sql);
-//
-//        if (userId != null) {
-//            sqlQuery.setParameter("userId", userId);
-//        }
-//
-//        if (amenityId != null) {
-//            sqlQuery.setParameter("amenityId", amenityId);
-//        }
-//
-//        return ((Number) sqlQuery.getSingleResult()).intValue();
-//    }
-
 
     // ---------------------------------------- USERS_AVAILABILITY DELETE ----------------------------------------------
 

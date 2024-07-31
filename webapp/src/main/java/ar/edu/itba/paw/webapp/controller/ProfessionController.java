@@ -42,6 +42,7 @@ public class ProfessionController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    // falta un preauthorize aca para que no usen el query param
     public Response listProfessions(
             @QueryParam("forWorker") final String workerURN
     ) {

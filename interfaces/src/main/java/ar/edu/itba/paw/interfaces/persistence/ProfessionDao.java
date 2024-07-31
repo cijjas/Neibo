@@ -12,5 +12,6 @@ public interface ProfessionDao {
     Profession createProfession(Professions professionName);
 
     // --------------------------------------------- PROFESSIONS SELECT -------------------------------------------------
+
     List<Profession> getProfessions(Long workerId);
 }

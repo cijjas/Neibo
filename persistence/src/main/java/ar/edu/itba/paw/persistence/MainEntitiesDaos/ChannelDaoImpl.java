@@ -15,6 +15,7 @@ import java.util.Optional;
 @Repository
 public class ChannelDaoImpl implements ChannelDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
@@ -29,20 +30,6 @@ public class ChannelDaoImpl implements ChannelDao {
         em.persist(channel);
         return channel;
     }
-
-    @Override
-    public boolean deleteChannel(long channelId) {
-        LOGGER.info("Deleting Channel {}", channelId);
-
-        Channel channel = em.find(Channel.class, channelId);
-        if (channel == null) {
-            return false;
-        }
-
-        em.remove(channel);
-        return true;
-    }
-
     // -------------------------------------------- CHANNELS SELECT ----------------------------------------------------
 
     public Optional<Channel> findChannel(long channelId, long neighborhoodId) {
@@ -78,4 +65,20 @@ public class ChannelDaoImpl implements ChannelDao {
         query.setParameter("neighborhoodId", neighborhoodId);
         return query.getResultList();
     }
+
+    // -------------------------------------------- CHANNELS DELETE ----------------------------------------------------
+
+    @Override
+    public boolean deleteChannel(long channelId) {
+        LOGGER.info("Deleting Channel {}", channelId);
+
+        Channel channel = em.find(Channel.class, channelId);
+        if (channel == null) {
+            return false;
+        }
+
+        em.remove(channel);
+        return true;
+    }
+
 }

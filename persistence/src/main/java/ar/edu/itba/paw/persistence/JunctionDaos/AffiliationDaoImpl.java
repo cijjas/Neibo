@@ -1,12 +1,10 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
 import ar.edu.itba.paw.enums.WorkerRole;
-import ar.edu.itba.paw.enums.WorkerStatus;
-import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.AffiliationDao;
+import ar.edu.itba.paw.models.Entities.Affiliation;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.Worker;
-import ar.edu.itba.paw.models.Entities.Affiliation;
 import ar.edu.itba.paw.models.compositeKeys.AffiliationKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +13,9 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class AffiliationDaoImpl implements AffiliationDao {
@@ -35,13 +35,22 @@ public class AffiliationDaoImpl implements AffiliationDao {
         WorkerRole workerRole = WorkerRole.fromId(workerRoleId);
 
         Affiliation affiliation;
-        if (workerRole == null )
+        if (workerRole == null)
             affiliation = new Affiliation(worker, neighborhood, WorkerRole.UNVERIFIED_WORKER);
         else
             affiliation = new Affiliation(worker, neighborhood, workerRole);
 
         em.persist(affiliation);
         return affiliation;
+    }
+
+    // ----------------------------------------- NEIGHBORHOOD WORKERS SELECT -------------------------------------------
+
+    @Override
+    public Optional<Affiliation> findAffiliation(long workerId, long neighborhoodId) {
+        LOGGER.debug("Finding Affiliation with worker id {} in Neighborhood {}", workerId, neighborhoodId);
+
+        return Optional.ofNullable(em.find(Affiliation.class, new AffiliationKey(workerId, neighborhoodId)));
     }
 
     @Override
@@ -112,25 +121,6 @@ public class AffiliationDaoImpl implements AffiliationDao {
         }
 
         return count != null ? count.intValue() : 0;
-    }
-
-
-    // ----------------------------------------- NEIGHBORHOOD WORKERS SELECT -------------------------------------------
-
-    @Override
-    public Optional<Affiliation> findAffiliation(long workerId, long neighborhoodId) {
-        LOGGER.debug("Finding Affiliation with worker id {} in Neighborhood {}", workerId, neighborhoodId);
-
-        return Optional.ofNullable(em.find(Affiliation.class, new AffiliationKey(workerId, neighborhoodId)));
-    }
-
-    @Override
-    public Set<Neighborhood> getNeighborhoods(long workerId) {
-        LOGGER.debug("Selecting neighborhoods for the Worker {}", workerId);
-
-        TypedQuery<Neighborhood> query = em.createQuery("SELECT n FROM Worker w JOIN w.workNeighborhoods n WHERE w.user.id = :workerId", Neighborhood.class);
-        query.setParameter("workerId", workerId);
-        return new HashSet<>(query.getResultList());
     }
 
     // ----------------------------------------- NEIGHBORHOOD WORKERS DELETE -------------------------------------------

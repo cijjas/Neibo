@@ -1,12 +1,9 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.enums.WorkerRole;
-import ar.edu.itba.paw.enums.WorkerStatus;
 import ar.edu.itba.paw.models.Entities.Worker;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface WorkerDao {
 
@@ -21,4 +18,8 @@ public interface WorkerDao {
     List<Worker> getWorkers(int page, int size, List<Long> professionIds, List<Long> neighborhoodIds, Long workerRoleId, Long workerStatusId);
 
     int countWorkers(List<Long> professionIds, List<Long> neighborhoodIds, Long workerRoleId, Long workerStatusId);
+
+    // ---------------------------------------------- WORKERS DELETE ---------------------------------------------------
+
+    boolean deleteWorker(long workerId);
 }

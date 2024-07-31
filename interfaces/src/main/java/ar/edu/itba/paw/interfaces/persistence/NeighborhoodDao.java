@@ -21,9 +21,9 @@ public interface NeighborhoodDao {
 
     List<Neighborhood> getNeighborhoods(int page, int size, Long workerId);
 
-    // ---------------------------------------------------
-
     int countNeighborhoods(Long workerId);
+
+    // ----------------------------------------- NEIGHBORHOODS DELETE --------------------------------------------------
 
     boolean deleteNeighborhood(long neighborhoodId);
 

@@ -2,7 +2,6 @@ package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Entities.Shift;
 
-import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,10 +14,6 @@ public interface ShiftDao {
     // ----------------------------------------------- SHIFTS SELECT ---------------------------------------------------
 
     Optional<Shift> findShift(long shiftId);
-
-    Optional<Shift> findShift(long startTime, long dayId);
-
-    List<Shift> getShifts();
 
     List<Shift> getShifts(Long amenityId);
 }

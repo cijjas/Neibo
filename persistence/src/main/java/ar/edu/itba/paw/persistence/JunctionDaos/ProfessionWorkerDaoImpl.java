@@ -10,12 +10,11 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import java.util.List;
 
 @Repository
 public class ProfessionWorkerDaoImpl implements ProfessionWorkerDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProfessionWorkerDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 

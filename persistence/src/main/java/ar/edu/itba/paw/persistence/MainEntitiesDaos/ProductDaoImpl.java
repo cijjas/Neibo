@@ -1,11 +1,9 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
-import ar.edu.itba.paw.enums.Department;
 import ar.edu.itba.paw.enums.ProductStatus;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Product;
-import ar.edu.itba.paw.models.Entities.Purchase;
 import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +13,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,15 +45,7 @@ public class ProductDaoImpl implements ProductDao {
         return product;
     }
 
-    @Override
-    public boolean deleteProduct(long productId) {
-        LOGGER.debug("Deleting Product with id {}", productId);
-
-        int deletedCount = em.createQuery("DELETE FROM Product WHERE productId = :productId ")
-                .setParameter("productId", productId)
-                .executeUpdate();
-        return deletedCount > 0;
-    }
+    // ------------------------------------------------ PRODUCT SELECT -------------------------------------------------
 
     @Override
     public Optional<Product> findProduct(long productId) {
@@ -96,7 +83,7 @@ public class ProductDaoImpl implements ProductDao {
         }
 
         if (userId != null) {
-            if(productStatusId == null) {
+            if (productStatusId == null) {
                 // Was bought by a user with this ID (is the userId in the request) or is being sold by a user with this ID (is the sellerId in product)
                 nativeQuery.append("AND (p.productid IN (" +
                         "SELECT DISTINCT r.productid FROM products_users_requests r " +
@@ -159,7 +146,7 @@ public class ProductDaoImpl implements ProductDao {
         }
 
         if (userId != null) {
-            if(productStatusId == null) {
+            if (productStatusId == null) {
                 // Was bought by a user with this ID (is the userId in the request) or is being sold by a user with this ID (is the sellerId in product)
                 nativeQuery.append("AND (p.productid IN (" +
                         "SELECT DISTINCT r.productid FROM products_users_requests r " +
@@ -204,5 +191,17 @@ public class ProductDaoImpl implements ProductDao {
         Object countResult = query.getSingleResult();
 
         return Integer.parseInt(countResult.toString());
+    }
+
+    // --------------------------------------------- PRODUCTS DELETE ---------------------------------------------------
+
+    @Override
+    public boolean deleteProduct(long productId) {
+        LOGGER.debug("Deleting Product with id {}", productId);
+
+        int deletedCount = em.createQuery("DELETE FROM Product WHERE productId = :productId ")
+                .setParameter("productId", productId)
+                .executeUpdate();
+        return deletedCount > 0;
     }
 }

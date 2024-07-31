@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +18,7 @@ import java.util.Optional;
 @Transactional
 public class ReviewServiceImpl implements ReviewService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReviewServiceImpl.class);
+
     private final ReviewDao reviewDao;
     private final WorkerDao workerDao;
 
@@ -49,16 +49,6 @@ public class ReviewServiceImpl implements ReviewService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<Review> findReview(long reviewId) {
-        LOGGER.info("Finding Review {}", reviewId);
-
-        ValidationUtils.checkReviewId(reviewId);
-
-        return reviewDao.findReview(reviewId);
-    }
-
-    @Override
     public Optional<Review> findReview(long reviewId, long workerId) {
         LOGGER.info("Finding Review {} from Worker {}", reviewId, workerId);
 
@@ -68,16 +58,6 @@ public class ReviewServiceImpl implements ReviewService {
         workerDao.findWorker(workerId).orElseThrow(NotFoundException::new);
 
         return reviewDao.findReview(reviewId, workerId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Review> getReviews(long workerId) {
-        LOGGER.info("Getting Reviews for Worker {}", workerId);
-
-        ValidationUtils.checkWorkerId(workerId);
-
-        return reviewDao.getReviews(workerId);
     }
 
     @Override
@@ -93,27 +73,7 @@ public class ReviewServiceImpl implements ReviewService {
         return reviewDao.getReviews(workerId, page, size);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Float> getAvgRating(long workerId) {
-        LOGGER.info("Getting Average Rating for Worker {}", workerId);
-
-        ValidationUtils.checkWorkerId(workerId);
-
-        return reviewDao.getAvgRating(workerId);
-    }
-
     // ---------------------------------------------------
-
-    @Override
-    @Transactional(readOnly = true)
-    public int countReviews(long workerId) {
-        LOGGER.info("Counting Reviews for Worker {}", workerId);
-
-        ValidationUtils.checkWorkerId(workerId);
-
-        return reviewDao.countReviews(workerId);
-    }
 
     @Override
     public int calculateReviewPages(long workerId, int size) {

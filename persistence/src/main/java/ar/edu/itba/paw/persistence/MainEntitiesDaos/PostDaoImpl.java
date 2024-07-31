@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
-import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.models.Entities.Channel;
 import ar.edu.itba.paw.models.Entities.Image;
@@ -23,8 +22,29 @@ import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.*;
 @Repository
 public class PostDaoImpl implements PostDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(PostDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
+
+    private final String FROM_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES =
+            "SELECT DISTINCT p.*, channel, u.* " +
+                    "FROM posts p  " +
+                    "INNER JOIN users u ON p.userid = u.userid  " +
+                    "INNER JOIN channels c ON p.channelid = c.channelid  " +
+                    "LEFT JOIN posts_tags pt ON p.postid = pt.postid  " +
+                    "LEFT JOIN tags t ON pt.tagid = t.tagid " +
+                    "LEFT JOIN comments cm ON p.postid = cm.postid " +
+                    "LEFT JOIN posts_users_likes pul on p.postid = pul.postId ";
+
+    private final String COUNT_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES =
+            "SELECT COUNT(DISTINCT p.*) " +
+                    "FROM posts p  " +
+                    "INNER JOIN users u ON p.userid = u.userid  " +
+                    "INNER JOIN channels c ON p.channelid = c.channelid  " +
+                    "LEFT JOIN posts_tags pt ON p.postid = pt.postid  " +
+                    "LEFT JOIN tags t ON pt.tagid = t.tagid " +
+                    "LEFT JOIN comments cm ON p.postid = cm.postid " +
+                    "LEFT JOIN posts_users_likes pul on p.postid = pul.postId ";
 
     // ------------------------------------------------ POSTS INSERT ---------------------------------------------------
 
@@ -41,18 +61,6 @@ public class PostDaoImpl implements PostDao {
                 .build();
         em.persist(post);
         return post;
-    }
-
-    // ------------------------------------------------ POSTS DELETE ---------------------------------------------------
-    @Override
-    public boolean deletePost(long postId) {
-        LOGGER.debug("Deleting Post with id {}", postId);
-        Post post = em.find(Post.class, postId);
-        if (post == null) {
-            return false;
-        }
-        em.remove(post);
-        return true;
     }
 
     // ------------------------------------------------ POSTS SELECT ---------------------------------------------------
@@ -80,27 +88,6 @@ public class PostDaoImpl implements PostDao {
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
-    // --------------------------------------------------- COMPLEX -----------------------------------------------------
-
-    private final String FROM_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES =
-            "SELECT DISTINCT p.*, channel, u.* " +
-                    "FROM posts p  " +
-                    "INNER JOIN users u ON p.userid = u.userid  " +
-                    "INNER JOIN channels c ON p.channelid = c.channelid  " +
-                    "LEFT JOIN posts_tags pt ON p.postid = pt.postid  " +
-                    "LEFT JOIN tags t ON pt.tagid = t.tagid " +
-                    "LEFT JOIN comments cm ON p.postid = cm.postid " +
-                    "LEFT JOIN posts_users_likes pul on p.postid = pul.postId ";
-    private final String COUNT_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES =
-            "SELECT COUNT(DISTINCT p.*) " +
-                    "FROM posts p  " +
-                    "INNER JOIN users u ON p.userid = u.userid  " +
-                    "INNER JOIN channels c ON p.channelid = c.channelid  " +
-                    "LEFT JOIN posts_tags pt ON p.postid = pt.postid  " +
-                    "LEFT JOIN tags t ON pt.tagid = t.tagid " +
-                    "LEFT JOIN comments cm ON p.postid = cm.postid " +
-                    "LEFT JOIN posts_users_likes pul on p.postid = pul.postId ";
-
     @Override
     public List<Post> getPosts(Long channelId, int page, int size, List<Long> tagIds, long neighborhoodId, Long postStatusId, Long userId) {
         LOGGER.debug("Selecting Post from neighborhood {}, channel {}, user {}, tags {} and status {}", neighborhoodId, channelId, userId, tagIds, postStatusId);
@@ -116,8 +103,6 @@ public class PostDaoImpl implements PostDao {
             sqlQuery.setParameter(i + 1, queryParams.get(i));
         return sqlQuery.getResultList();
     }
-
-    // ---------------------------------------------------
 
     @Override
     public int countPosts(Long channelId, List<Long> tagIds, long neighborhoodId, Long postStatusId, Long userId) {
@@ -136,5 +121,18 @@ public class PostDaoImpl implements PostDao {
 
         Object result = sqlQuery.getSingleResult();
         return Integer.parseInt(result.toString());
+    }
+
+    // ------------------------------------------------ POSTS DELETE ---------------------------------------------------
+
+    @Override
+    public boolean deletePost(long postId) {
+        LOGGER.debug("Deleting Post with id {}", postId);
+        Post post = em.find(Post.class, postId);
+        if (post == null) {
+            return false;
+        }
+        em.remove(post);
+        return true;
     }
 }

@@ -20,6 +20,7 @@ import java.util.Optional;
 @Transactional
 public class TagServiceImpl implements TagService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TagServiceImpl.class);
+
     private final TagDao tagDao;
     private final CategorizationDao categorizationDao;
     private final TagMappingDao tagMappingDao;
@@ -46,26 +47,6 @@ public class TagServiceImpl implements TagService {
             tagMappingDao.createTagMappingDao(tag.getTagId(), neighborhoodId);
 
         return tag;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean deleteTag(long neighborhoodId, long tagId) {
-        LOGGER.info("Deleting Tag {}", tagId);
-
-        ValidationUtils.checkTagId(tagId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        tagDao.findTag(tagId, neighborhoodId).orElseThrow(NotFoundException::new);
-        tagMappingDao.deleteTagMapping(tagId, neighborhoodId);
-
-        //if the channel was only being used by this neighborhood, it gets deleted
-        if(tagMappingDao.tagMappingsCount(tagId, null) == 0) {
-            return tagDao.deleteTag(tagId);
-        }
-
-        return true;
     }
 
     @Override
@@ -107,18 +88,7 @@ public class TagServiceImpl implements TagService {
         return tagDao.getTags(postId, neighborhoodId, page, size);
     }
 
-    // todo: remove?
-/*    @Override
-    public int countTags(String postURN, long neighborhoodId) {
-        LOGGER.info("Counting Tags in Post {} from Neighborhood {}", postURN, neighborhoodId);
-
-        Long postId = ValidationUtils.checkURNAndExtractPostId(postURN);
-
-        ValidationUtils.checkPostId(postId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        return tagDao.countTags(postId, neighborhoodId);
-    }*/
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public int calculateTagPages(String postURN, long neighborhoodId, int size) {
@@ -132,4 +102,25 @@ public class TagServiceImpl implements TagService {
 
         return PaginationUtils.calculatePages(tagDao.countTags(postId, neighborhoodId), size);
     }
+
+    // ---------------------------------------------------
+
+    @Override
+    public boolean deleteTag(long neighborhoodId, long tagId) {
+        LOGGER.info("Deleting Tag {}", tagId);
+
+        ValidationUtils.checkTagId(tagId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        tagDao.findTag(tagId, neighborhoodId).orElseThrow(NotFoundException::new);
+        tagMappingDao.deleteTagMapping(tagId, neighborhoodId);
+
+        //if the channel was only being used by this neighborhood, it gets deleted
+        if(tagMappingDao.tagMappingsCount(tagId, null) == 0) {
+            return tagDao.deleteTag(tagId);
+        }
+
+        return true;
+    }
+
 }

@@ -20,6 +20,7 @@ import java.util.Optional;
 @Repository
 public class RequestDaoImpl implements RequestDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
@@ -41,39 +42,13 @@ public class RequestDaoImpl implements RequestDao {
         return request;
     }
 
-    @Override
-    public boolean deleteRequest(long requestId) {
-        LOGGER.debug("Deleting Request {}", requestId);
-
-        Request request = em.find(Request.class, requestId);
-        if (request != null) {
-            em.remove(request);
-            return true;
-        }
-        return false;
-    }
+    // --------------------------------------------- REQUESTS SELECT ---------------------------------------------------
 
     @Override
     public Optional<Request> findRequest(long requestId) {
         LOGGER.debug("Selecting Request {}", requestId);
 
         return Optional.ofNullable(em.find(Request.class, requestId));
-    }
-
-    @Override
-    public Optional<Request> findRequest(long requestId, long neighborhoodId) {
-        LOGGER.debug("Selecting Request with requestId {}, neighborhoodId {}", requestId, neighborhoodId);
-
-        TypedQuery<Request> query = em.createQuery(
-                "SELECT r FROM Request r WHERE r.id = :requestId AND r.user.neighborhood.id = :neighborhoodId",
-                Request.class
-        );
-
-        query.setParameter("requestId", requestId);
-        query.setParameter("neighborhoodId", neighborhoodId);
-
-        List<Request> result = query.getResultList();
-        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
     @Override
@@ -85,14 +60,14 @@ public class RequestDaoImpl implements RequestDao {
         boolean addedWhere = false;
 
         // Add status condition
-        if(statusId != null) {
+        if (statusId != null) {
             queryBuilder.append("WHERE r.status = :status ");
             addedWhere = true;
         }
 
         // Add productId condition
         if (productId != null) {
-            if(!addedWhere) {
+            if (!addedWhere) {
                 queryBuilder.append("WHERE r.product.productId = :productId ");
                 addedWhere = true;
             } else {
@@ -102,11 +77,11 @@ public class RequestDaoImpl implements RequestDao {
 
         if (typeId != null && userId != null) {
             TransactionType type = TransactionType.fromId(typeId);
-            if(!addedWhere) {
+            if (!addedWhere) {
                 queryBuilder.append("WHERE ");
             } else
                 queryBuilder.append("AND ");
-            switch(type) {
+            switch (type) {
                 case PURCHASE:
                     queryBuilder.append("r.user.userId = :userId ");
                     break;
@@ -120,7 +95,7 @@ public class RequestDaoImpl implements RequestDao {
         TypedQuery<Long> idQuery = em.createQuery(queryBuilder.toString(), Long.class);
 
         // Set parameters for the query
-        if(statusId != null) {
+        if (statusId != null) {
             idQuery.setParameter("status", RequestStatus.fromId(statusId));
         }
         if (productId != null) {
@@ -155,14 +130,14 @@ public class RequestDaoImpl implements RequestDao {
         boolean addedWhere = false;
 
         // Add status condition
-        if(statusId != null) {
+        if (statusId != null) {
             queryBuilder.append("WHERE r.status = :status ");
             addedWhere = true;
         }
 
         // Add productId condition
         if (productId != null) {
-            if(!addedWhere) {
+            if (!addedWhere) {
                 queryBuilder.append("WHERE r.product.productId = :productId ");
                 addedWhere = true;
             } else {
@@ -172,11 +147,11 @@ public class RequestDaoImpl implements RequestDao {
 
         if (typeId != null && userId != null) {
             TransactionType type = TransactionType.fromId(typeId);
-            if(!addedWhere) {
+            if (!addedWhere) {
                 queryBuilder.append("WHERE ");
             } else
                 queryBuilder.append("AND ");
-            switch(type) {
+            switch (type) {
                 case PURCHASE:
                     queryBuilder.append("r.user.userId = :userId ");
                     break;
@@ -190,7 +165,7 @@ public class RequestDaoImpl implements RequestDao {
         TypedQuery<Long> idQuery = em.createQuery(queryBuilder.toString(), Long.class);
 
         // Set parameters for the query
-        if(statusId != null) {
+        if (statusId != null) {
             idQuery.setParameter("status", RequestStatus.fromId(statusId));
         }
         if (productId != null) {
@@ -213,4 +188,17 @@ public class RequestDaoImpl implements RequestDao {
         return count;
     }
 
+    // --------------------------------------------- REQUESTS DELETE ---------------------------------------------------
+
+    @Override
+    public boolean deleteRequest(long requestId) {
+        LOGGER.debug("Deleting Request {}", requestId);
+
+        Request request = em.find(Request.class, requestId);
+        if (request != null) {
+            em.remove(request);
+            return true;
+        }
+        return false;
+    }
 }

@@ -89,34 +89,6 @@ public class LikeDaoImplTest {
     }
 
     @Test
-    public void testIsPostLiked() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(nhKey);
-        long chKey = testInserter.createChannel();
-        long iKey = testInserter.createImage();
-        long pKey = testInserter.createPost(uKey, chKey, iKey);
-        testInserter.createLike(pKey, uKey);
-
-        // Exercise
-        boolean liked = likeDao.isPostLiked(pKey, uKey);
-
-        // Validations & Post Conditions
-        assertTrue(liked);
-    }
-
-    @Test
-    public void testIsPostNotLiked() {
-        // Pre Conditions
-
-        // Exercise
-        boolean liked = likeDao.isPostLiked(1, 1);
-
-        // Validations & Post Conditions
-        assertFalse(liked);
-    }
-
-    @Test
     public void testDeleteLike() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();

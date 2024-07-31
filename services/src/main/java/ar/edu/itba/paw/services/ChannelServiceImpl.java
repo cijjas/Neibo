@@ -20,6 +20,7 @@ import java.util.Optional;
 @Transactional
 public class ChannelServiceImpl implements ChannelService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelServiceImpl.class);
+
     private final ChannelDao channelDao;
     private final ChannelMappingDao channelMappingDao;
     private final NeighborhoodDao neighborhoodDao;
@@ -45,26 +46,6 @@ public class ChannelServiceImpl implements ChannelService {
             channelMappingDao.createChannelMapping(channel.getChannelId(), neighborhoodId);
 
         return channel;
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean deleteChannel(long channelId, long neighborhoodId) {
-        LOGGER.info("Deleting Channel {}", channelId);
-
-        ValidationUtils.checkChannelId(channelId);
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        channelDao.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new);
-        channelMappingDao.deleteChannelMapping(channelId, neighborhoodId);
-
-        //if the channel was only being used by this neighborhood, it gets deleted
-        if(channelMappingDao.channelMappingsCount(channelId, null) == 0) {
-            channelDao.deleteChannel(channelId);
-        }
-
-        return true;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -98,5 +79,25 @@ public class ChannelServiceImpl implements ChannelService {
         ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(channelMappingDao.channelMappingsCount(null, neighborhoodId), size);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean deleteChannel(long channelId, long neighborhoodId) {
+        LOGGER.info("Deleting Channel {}", channelId);
+
+        ValidationUtils.checkChannelId(channelId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        channelDao.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new);
+        channelMappingDao.deleteChannelMapping(channelId, neighborhoodId);
+
+        //if the channel was only being used by this neighborhood, it gets deleted
+        if(channelMappingDao.channelMappingsCount(channelId, null) == 0) {
+            channelDao.deleteChannel(channelId);
+        }
+
+        return true;
     }
 }

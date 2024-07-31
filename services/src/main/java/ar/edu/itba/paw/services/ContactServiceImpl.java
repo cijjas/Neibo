@@ -18,6 +18,7 @@ import java.util.Optional;
 @Transactional
 public class ContactServiceImpl implements ContactService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ContactServiceImpl.class);
+
     private final ContactDao contactDao;
     private final NeighborhoodDao neighborhoodDao;
 
@@ -39,17 +40,6 @@ public class ContactServiceImpl implements ContactService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Contact> getContacts(long neighborhoodId) {
-        LOGGER.info("Getting Contacts for Neighborhood {}", neighborhoodId);
-
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
-
-        return contactDao.getContacts(neighborhoodId);
-    }
-
-    @Override
     public Optional<Contact> findContact(long contactId) {
         LOGGER.info("Finding Contact {}", contactId);
 
@@ -68,13 +58,24 @@ public class ContactServiceImpl implements ContactService {
         return contactDao.findContact(contactId, neighborhoodId);
     }
 
+    @Override
+    public List<Contact> getContacts(long neighborhoodId) {
+        LOGGER.info("Getting Contacts for Neighborhood {}", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return contactDao.getContacts(neighborhoodId);
+    }
+
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public Contact updateContact(long contactId, String contactName, String contactAddress, String contactPhone) {
         LOGGER.info("Updating Contact {}", contactId);
 
-        Contact contact = findContact(contactId).orElseThrow(()-> new NotFoundException("Contact Not Found"));
+        Contact contact = findContact(contactId).orElseThrow(() -> new NotFoundException("Contact Not Found"));
 
         if (contactName != null && !contactName.isEmpty())
             contact.setContactName(contactName);

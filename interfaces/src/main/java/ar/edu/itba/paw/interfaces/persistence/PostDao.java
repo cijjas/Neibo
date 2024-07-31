@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.enums.PostStatus;
 import ar.edu.itba.paw.models.Entities.Post;
 
 import java.util.List;
@@ -12,9 +11,6 @@ public interface PostDao {
 
     Post createPost(final String title, final String description, final long neighborId, final long channelId, final long imageId);
 
-    // ------------------------------------------------ POSTS DELETE ---------------------------------------------------
-    boolean deletePost(final long postId);
-
     // ------------------------------------------------ POSTS SELECT ---------------------------------------------------
 
     Optional<Post> findPost(long postId);
@@ -23,7 +19,9 @@ public interface PostDao {
 
     List<Post> getPosts(Long channelId, int page, int size, List<Long> tagIds, long neighborhoodId, Long postStatusId, Long userId);
 
-    // ---------------------------------------------------
-
     int countPosts(Long channelId, List<Long> tags, long neighborhoodId, Long postStatusId, Long userId);
+
+    // ------------------------------------------------ POSTS DELETE ---------------------------------------------------
+
+    boolean deletePost(final long postId);
 }

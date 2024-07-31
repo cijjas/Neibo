@@ -18,6 +18,7 @@ import java.util.List;
 @Repository
 public class ChannelMappingDaoImpl implements ChannelMappingDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChannelMappingDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 

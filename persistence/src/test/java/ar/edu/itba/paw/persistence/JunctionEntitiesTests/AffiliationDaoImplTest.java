@@ -90,34 +90,6 @@ public class AffiliationDaoImplTest {
         assertFalse(affiliation.isPresent());
     }
 
-
-    @Test
-    public void testGetNeighborhoods() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(nhKey);
-        testInserter.createWorker(uKey);
-        testInserter.createAffiliation(uKey, nhKey);
-
-        // Exercise
-        Set<Neighborhood> neighborhoods = affiliationDaoImpl.getNeighborhoods(uKey);
-
-        // Validations & Post Conditions
-        assertEquals(1, neighborhoods.size());
-    }
-
-    @Test
-    public void testGetNoNeighborhoods() {
-        // Pre Conditions
-
-        // Exercise
-        Set<Neighborhood> neighborhoods = affiliationDaoImpl.getNeighborhoods(1);
-
-        // Validations & Post Conditions
-        assertEquals(0, neighborhoods.size());
-    }
-
-
     @Test
     public void testDeleteAffiliation() {
         // Pre Conditions

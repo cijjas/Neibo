@@ -12,19 +12,18 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.appendCommonWorkerConditions;
-import static ar.edu.itba.paw.persistence.MainEntitiesDaos.DaoUtils.appendPaginationClause;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class WorkerDaoImpl implements WorkerDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
     // ---------------------------------------------- WORKERS INSERT -----------------------------------------------------
+
     @Override
     public Worker createWorker(long workerId, String phoneNumber, String address, String businessName) {
         LOGGER.debug("Inserting Worker");
@@ -48,28 +47,6 @@ public class WorkerDaoImpl implements WorkerDao {
 
         return Optional.ofNullable(em.find(Worker.class, workerId));
     }
-
-    private final String USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
-            "SELECT wi.workerid, userid, wi.phonenumber, businessname, address, bio, backgroundpictureid\n" +
-                    "FROM users w\n" +
-                    "LEFT JOIN workers_neighborhoods wn ON w.userid = wn.workerId\n" +
-                    "JOIN workers_info wi ON w.userid = wi.workerid\n" +
-                    "WHERE w.userid IN (\n" +
-                    "    SELECT DISTINCT w.userid\n" +
-                    "    FROM users w\n" +
-                    "    LEFT JOIN workers_neighborhoods wn ON w.userid = wn.workerid \n";
-
-    private final String COUNT_USERS_JOIN_WP_JOIN_PROFESSIONS_JOIN_WN_JOIN_WI =
-            "SELECT COUNT(DISTINCT w.userid)\n" +
-                    "FROM users w\n" +
-                    "LEFT JOIN workers_professions wp ON w.userid = wp.workerid\n" +
-                    "LEFT JOIN professions p ON wp.professionid = p.professionid\n" +
-                    "LEFT JOIN workers_neighborhoods wn ON w.userid = wn.workerId\n" +
-                    "LEFT JOIN workers_info wi ON w.userid = wi.workerid\n" +
-                    "WHERE w.userid IN (\n" +
-                    "    SELECT DISTINCT w.userid\n" +
-                    "    FROM users w\n" +
-                    "    LEFT JOIN workers_neighborhoods wn ON w.userid = wn.workerid ";
 
     @Override
     public List<Worker> getWorkers(int page, int size, List<Long> professionIds, List<Long> neighborhoodIds, Long workerRoleId, Long workerStatusId) {
@@ -108,7 +85,6 @@ public class WorkerDaoImpl implements WorkerDao {
         nativeQuery.setFirstResult((page - 1) * size);
         nativeQuery.setMaxResults(size);
 
-        System.out.println(queryStringBuilder);
         // Set parameters
         if (workerRoleId != null) {
             nativeQuery.setParameter("workerRole", WorkerRole.fromId(workerRoleId).name());
@@ -135,7 +111,7 @@ public class WorkerDaoImpl implements WorkerDao {
         queryStringBuilder.append("WHERE 1=1 ");
 
         // Additional conditions based on optional parameters
-        if (workerStatusId != null  && !(WorkerStatus.fromId(workerStatusId).equals(WorkerStatus.NONE))) {
+        if (workerStatusId != null && !(WorkerStatus.fromId(workerStatusId).equals(WorkerStatus.NONE))) {
             queryStringBuilder.append("AND (SELECT AVG(rating) FROM reviews r WHERE r.workerid = w.userid) > 4 ");
         }
 
@@ -172,4 +148,16 @@ public class WorkerDaoImpl implements WorkerDao {
         return ((Number) countQuery.getSingleResult()).intValue();
     }
 
+    // ---------------------------------------------- WORKERS DELETE ---------------------------------------------------
+
+    @Override
+    public boolean deleteWorker(long workerId) {
+        LOGGER.debug("Deleting Worker with workerId {}", workerId);
+        Worker worker = em.find(Worker.class, workerId);
+        if (worker != null) {
+            em.remove(worker);
+            return true;
+        }
+        return false;
+    }
 }

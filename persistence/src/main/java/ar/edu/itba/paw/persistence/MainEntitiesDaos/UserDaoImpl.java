@@ -14,7 +14,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.math.BigInteger;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +22,7 @@ import java.util.Optional;
 @Repository
 public class UserDaoImpl implements UserDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
@@ -81,19 +81,6 @@ public class UserDaoImpl implements UserDao {
         return query.getResultList().stream().findFirst();
     }
 
-    @Override
-    public List<User> getNeighborsSubscribed(long postId) {
-        LOGGER.debug("Selecting Neighbors that are subscribed to Post {}", postId);
-
-        String hql = "SELECT u FROM User u " +
-                "JOIN u.posts p " +
-                "WHERE p.postId = :postId AND u.role = :role";
-
-        return em.createQuery(hql, User.class)
-                .setParameter("postId", postId)
-                .setParameter("role", UserRole.NEIGHBOR)
-                .getResultList();
-    }
 
     @Override
     public List<User> getUsers(Long userRoleId, long neighborhoodId, int page, int size) {
@@ -169,37 +156,29 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> getEventUsers(long eventId, int page, int size) {
-        LOGGER.debug("Selecting Users that will attend Event {}", eventId);
+    public List<User> getNeighborsSubscribed(long postId) {
+        LOGGER.debug("Selecting Neighbors that are subscribed to Post {}", postId);
 
-        TypedQuery<User> query = em.createQuery("SELECT u FROM User u JOIN u.eventsSubscribed e WHERE e.eventId = :eventId", User.class);
-        query.setParameter("eventId", eventId);
-        query.setFirstResult((page - 1) * size);
-        query.setMaxResults(size);
-        return query.getResultList();
+        String hql = "SELECT u FROM User u " +
+                "JOIN u.posts p " +
+                "WHERE p.postId = :postId AND u.role = :role";
+
+        return em.createQuery(hql, User.class)
+                .setParameter("postId", postId)
+                .setParameter("role", UserRole.NEIGHBOR)
+                .getResultList();
     }
 
-    @Override
-    public boolean isAttending(long eventId, long userId) {
-        LOGGER.debug("Selecting User {} that attends Event {}", userId, eventId);
-
-        String sql = "SELECT COUNT(*) FROM events_users WHERE eventid = :eventId AND userid = :userId";
-        BigInteger result = (BigInteger) em.createNativeQuery(sql)
-                .setParameter("eventId", eventId)
-                .setParameter("userId", userId)
-                .getSingleResult();
-
-        return result.intValue() == 1;
-    }
+    // ---------------------------------------------- USERS DELETE-----------------------------------------------------
 
     @Override
-    public List<User> getProductRequesters(long productId, int page, int size) {
-        LOGGER.debug("Selecting Users that requested product {}", productId);
-
-        TypedQuery<User> query = em.createQuery("SELECT u FROM User u JOIN u.requestedProducts p WHERE p.productId = :productId", User.class);
-        query.setParameter("productId", productId);
-        query.setFirstResult((page - 1) * size);
-        query.setMaxResults(size);
-        return query.getResultList();
+    public boolean deleteUser(long userId) {
+        LOGGER.debug("Deleting Tag with tagId {}", userId);
+        User user = em.find(User.class, userId);
+        if (user != null) {
+            em.remove(user);
+            return true;
+        }
+        return false;
     }
 }

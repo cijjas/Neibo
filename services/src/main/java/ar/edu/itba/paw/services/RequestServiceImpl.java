@@ -12,7 +12,6 @@ import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.models.TwoIds;
-import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +25,7 @@ import java.util.Optional;
 @Transactional
 public class RequestServiceImpl implements RequestService {
     private static final Logger LOGGER = LoggerFactory.getLogger(RequestServiceImpl.class);
+
     private final RequestDao requestDao;
     private final UserDao userDao;
     private final ProductDao productDao;
@@ -95,10 +95,8 @@ public class RequestServiceImpl implements RequestService {
         return requestDao.findRequest(requestId);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
-
     @Override
-    public List<Request> getRequests(String userURN, String productURN, String typeURN, String statusURN, int page, int size, long neighborhoodId){
+    public List<Request> getRequests(String userURN, String productURN, String typeURN, String statusURN, int page, int size, long neighborhoodId) {
         LOGGER.info("Getting Requests for Product {} made by User {} from Neighborhood {}", productURN, userURN, neighborhoodId);
 
         Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
@@ -114,17 +112,7 @@ public class RequestServiceImpl implements RequestService {
         return requestDao.getRequests(userId, productId, transactionTypeId, requestStatusId, page, size);
     }
 
-    @Override
-    public int countRequests(String productURN, String userURN, String typeURN, String statusURN) {
-        LOGGER.info("Counting Requests for Product {} made by User {}", productURN, userURN);
-
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
-        Long productId = ValidationUtils.checkURNAndExtractProductId(productURN);
-        Long transactionTypeId = ValidationUtils.checkURNAndExtractTransactionTypeId(typeURN);
-        Long requestStatusId = ValidationUtils.checkURNAndExtractRequestStatusId(statusURN);
-
-        return requestDao.countRequests(productId, userId, transactionTypeId, requestStatusId);
-    }
+    // ---------------------------------------------------
 
     @Override
     public int calculateRequestPages(String productURN, String userURN, String typeURN, String statusURN, int size) {
@@ -149,7 +137,7 @@ public class RequestServiceImpl implements RequestService {
         ValidationUtils.checkRequestId(requestId);
         Long requestStatusId = ValidationUtils.checkURNAndExtractRequestStatusId(requestStatusURN);
 
-        Request request = requestDao.findRequest(requestId).orElseThrow(()-> new NotFoundException("Request Not Found"));
+        Request request = requestDao.findRequest(requestId).orElseThrow(() -> new NotFoundException("Request Not Found"));
         request.setStatus(RequestStatus.fromId(requestStatusId));
         request.setPurchaseDate(new java.sql.Date(System.currentTimeMillis()));
 

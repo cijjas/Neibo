@@ -18,6 +18,7 @@ import java.util.Optional;
 @Transactional
 public class AttendanceServiceImpl implements AttendanceService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AttendanceServiceImpl.class);
+
     private final AttendanceDao attendanceDao;
     private final EventDao eventDao;
 
@@ -53,16 +54,6 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<Attendance> findAttendance(long attendanceId) {
-        LOGGER.info("Finding Attendance {}", attendanceId);
-
-        ValidationUtils.checkAttendanceId(attendanceId);
-
-        return attendanceDao.findAttendance(attendanceId);
-    }
-
-    @Override
     public List<Attendance> getAttendance(long eventId, int page, int size, long neighborhoodId) {
         LOGGER.info("Getting Attendance for Event {}", eventId);
 
@@ -73,17 +64,6 @@ public class AttendanceServiceImpl implements AttendanceService {
         eventDao.findEvent(eventId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         return attendanceDao.getAttendance(eventId, page, size);
-    }
-
-    // ---------------------------------------------------
-
-    @Override
-    public int countAttendance(long eventId) {
-        LOGGER.info("Counting Attendance for Event {}", eventId);
-
-        ValidationUtils.checkEventId(eventId);
-
-        return attendanceDao.countAttendance(eventId);
     }
 
     @Override

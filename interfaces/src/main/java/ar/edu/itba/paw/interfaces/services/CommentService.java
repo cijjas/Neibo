@@ -9,8 +9,6 @@ public interface CommentService {
 
     Comment createComment(final String comment, final String userURN, final long postId);
 
-    boolean deleteComment(final long commentId);
-
     // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Comment> findComment(long commentId);
@@ -21,7 +19,9 @@ public interface CommentService {
 
     // ---------------------------------------------------
 
-    int countComments(long postId);
-
     int calculateCommentPages(long postId, int size);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    boolean deleteComment(final long commentId);
 }

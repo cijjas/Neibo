@@ -1,7 +1,10 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.AttendanceDao;
-import ar.edu.itba.paw.models.Entities.*;
+import ar.edu.itba.paw.models.Entities.Attendance;
+import ar.edu.itba.paw.models.Entities.Event;
+import ar.edu.itba.paw.models.Entities.Neighborhood;
+import ar.edu.itba.paw.models.Entities.User;
 import ar.edu.itba.paw.models.compositeKeys.AttendanceKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,15 +17,45 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class AttendanceDaoImpl implements AttendanceDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(AttendanceDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
+    // ---------------------------------------------- ATTENDANCE INSERT ------------------------------------------------
+
+    @Override
+    public Attendance createAttendee(long userId, long eventId) {
+        LOGGER.debug("Inserting Attendance with userId {} and eventId {}", userId, eventId);
+
+        Attendance attendance = new Attendance(em.find(User.class, userId), em.find(Event.class, eventId));
+        em.persist(attendance);
+        return attendance;
+    }
     // ---------------------------------------------- ATTENDANCE SELECT ------------------------------------------------
+
+    @Override
+    public Optional<Attendance> findAttendance(long userId, long eventId, long neighborhoodId) {
+        LOGGER.debug("Selecting Attendance with id {} and neighborhoodId {}", userId, neighborhoodId);
+
+        TypedQuery<Attendance> query = em.createQuery(
+                "SELECT a FROM Attendance a WHERE a.id = :attendanceId " + " AND a.event.neighborhood.neighborhoodId = :neighborhoodId",
+                Attendance.class
+        );
+
+        query.setParameter("attendanceId", new AttendanceKey(userId, eventId));
+        query.setParameter("neighborhoodId", neighborhoodId);
+
+        List<Attendance> result = query.getResultList();
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+    }
+
     @Override
     public List<Attendance> getAttendance(long eventId, int page, int size) {
         LOGGER.info("Getting Attendance for Event {}", eventId);
@@ -61,8 +94,6 @@ public class AttendanceDaoImpl implements AttendanceDao {
         return dataTypedQuery.getResultList();
     }
 
-    // ---------------------------------------------------
-
     @Override
     public int countAttendance(long eventId) {
         LOGGER.info("Counting Attendance for Event {}", eventId);
@@ -77,40 +108,6 @@ public class AttendanceDaoImpl implements AttendanceDao {
         return query.getSingleResult().intValue();
     }
 
-    @Override
-    public Optional<Attendance> findAttendance(long userId, long eventId, long neighborhoodId) {
-        LOGGER.debug("Selecting Attendance with id {} and neighborhoodId {}", userId, neighborhoodId);
-
-        TypedQuery<Attendance> query = em.createQuery(
-                "SELECT a FROM Attendance a WHERE a.id = :attendanceId " + " AND a.event.neighborhood.neighborhoodId = :neighborhoodId",
-                Attendance.class
-        );
-
-        query.setParameter("attendanceId", new AttendanceKey(userId, eventId));
-        query.setParameter("neighborhoodId", neighborhoodId);
-
-        List<Attendance> result = query.getResultList();
-        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
-    }
-
-
-    @Override
-    public Optional<Attendance> findAttendance(long attendanceId) {
-        LOGGER.debug("Selecting Attendance with id {}", attendanceId);
-
-        return Optional.ofNullable(em.find(Attendance.class, attendanceId));
-    }
-
-    // ---------------------------------------------- ATTENDANCE INSERT ------------------------------------------------
-
-    @Override
-    public Attendance createAttendee(long userId, long eventId) {
-        LOGGER.debug("Inserting Attendance with userId {} and eventId {}", userId, eventId);
-
-        Attendance attendance = new Attendance(em.find(User.class, userId), em.find(Event.class, eventId));
-        em.persist(attendance);
-        return attendance;
-    }
 
     // ---------------------------------------------- ATTENDANCE DELETE ------------------------------------------------
 

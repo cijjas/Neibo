@@ -76,7 +76,7 @@ public class AvailabilityDaoImplTest {
         long availabilityKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        OptionalLong foundAvailability = availabilityDao.findId(aKey, sKey);
+        OptionalLong foundAvailability = availabilityDao.findAvailabilityId(aKey, sKey);
 
         // Validations & Post Conditions
         assertTrue(foundAvailability.isPresent());
@@ -85,7 +85,7 @@ public class AvailabilityDaoImplTest {
     @Test
     public void testFindInvalidAvailabilityId() {
         // Exercise
-        OptionalLong foundAvailability = availabilityDao.findId(1, 1);
+        OptionalLong foundAvailability = availabilityDao.findAvailabilityId(1, 1);
 
         // Validations & Post Conditions
         assertFalse(foundAvailability.isPresent());

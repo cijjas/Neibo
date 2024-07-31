@@ -16,6 +16,7 @@ import java.util.OptionalLong;
 @Repository
 public class TimeDaoImpl implements TimeDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(TimeDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
@@ -25,7 +26,7 @@ public class TimeDaoImpl implements TimeDao {
     public Time createTime(java.sql.Time timeInterval) {
         LOGGER.debug("Inserting Time {}", timeInterval.getTime());
 
-        Time time =  new Time.Builder()
+        Time time = new Time.Builder()
                 .timeInterval(timeInterval)
                 .build();
         em.persist(time);

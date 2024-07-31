@@ -1,7 +1,9 @@
 package ar.edu.itba.paw.persistence.JunctionDaos;
 
 import ar.edu.itba.paw.interfaces.persistence.InquiryDao;
-import ar.edu.itba.paw.models.Entities.*;
+import ar.edu.itba.paw.models.Entities.Inquiry;
+import ar.edu.itba.paw.models.Entities.Product;
+import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -16,6 +18,7 @@ import java.util.Optional;
 @Repository
 public class InquiryDaoImpl implements InquiryDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(InquiryDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
@@ -35,19 +38,6 @@ public class InquiryDaoImpl implements InquiryDao {
 
         return inquiry;
     }
-
-    @Override
-    public boolean deleteInquiry(long inquiryId) {
-        LOGGER.debug("Deleting Inquiry with id {}", inquiryId);
-
-        Inquiry inquiry = em.find(Inquiry.class, inquiryId);
-        if (inquiry != null) {
-            em.remove(inquiry);
-            return true;
-        }
-        return false;
-    }
-
     // ------------------------------------------ INQUIRIES INSERT -----------------------------------------------------
 
     @Override
@@ -96,8 +86,6 @@ public class InquiryDaoImpl implements InquiryDao {
         return Collections.emptyList();
     }
 
-    // ---------------------------------------------------
-
     @Override
     public int countInquiries(long productId) {
         LOGGER.debug("Selecting Inquiries Count from Product {}", productId);
@@ -108,4 +96,19 @@ public class InquiryDaoImpl implements InquiryDao {
                 .getSingleResult();
         return count != null ? count.intValue() : 0;
     }
+
+    // ---------------------------------------------- INQUIRY DELETE ---------------------------------------------------
+
+    @Override
+    public boolean deleteInquiry(long inquiryId) {
+        LOGGER.debug("Deleting Inquiry with id {}", inquiryId);
+
+        Inquiry inquiry = em.find(Inquiry.class, inquiryId);
+        if (inquiry != null) {
+            em.remove(inquiry);
+            return true;
+        }
+        return false;
+    }
+
 }

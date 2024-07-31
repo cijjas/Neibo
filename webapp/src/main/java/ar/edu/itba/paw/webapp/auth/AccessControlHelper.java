@@ -112,17 +112,14 @@ public class AccessControlHelper {
 
         Authentication authentication = getAuthentication();
 
+        if (isAnonymous(authentication) || isUnverifiedOrRejected(authentication))
+            return false;
+
         if (isSuperAdministrator(authentication)){
             return true;
         }
 
-        if (isAnonymous(authentication))
-            return false;
-
-        if (isUnverifiedOrRejected(authentication))
-            return false;
-
-        return neighborhoodId == 0 || neighborhoodId == getRequestingUser(authentication).getNeighborhoodId();
+        return neighborhoodId == 0 || neighborhoodId == getRequestingUserNeighborhoodId(authentication);
     }
 
 
@@ -376,6 +373,16 @@ public class AccessControlHelper {
         Product p = ps.findProduct(productId, neighborhoodId).orElseThrow(()-> new NotFoundException("Product Not Found"));
 
         return p.getSeller().getUserId() != getRequestingUserId(authentication);
+    }
+
+    public Boolean canUpdateWorker(long workerId){
+        LOGGER.info("Verifying Worker Update Accessibility");
+        Authentication authentication = getAuthentication();
+
+        if (isSuperAdministrator(authentication))
+            return true;
+
+        return workerId == getRequestingUserId(authentication);
     }
 
     // -------------------------------------------------------------------------------

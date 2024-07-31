@@ -8,7 +8,6 @@ import java.util.Optional;
 public interface RequestService {
     Request createRequest(final String userURN, final String productURN, final String message, final int quantity);
 
-    boolean deleteRequest(long requestId);
     // -----------------------------------------------------------------------------------------------------------------
 
     Optional<Request> findRequest(long requestId);
@@ -17,11 +16,15 @@ public interface RequestService {
 
     List<Request> getRequests(String userURN, String productURN, String typeURN, String statusURN, int page, int size, long neighborhoodId);
 
-    int countRequests(String productURN, String userURN, String typeURN, String statusURN);
+    // ---------------------------------------------------
 
     int calculateRequestPages(String productURN, String userURN, String typeURN, String statusURN, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
     Request updateRequest(long requestId, String requestStatusURN);
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    boolean deleteRequest(long requestId);
 }

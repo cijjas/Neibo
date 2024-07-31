@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +20,7 @@ import java.util.Optional;
 @Transactional
 public class ResourceServiceImpl implements ResourceService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ResourceServiceImpl.class);
+
     private final ResourceDao resourceDao;
     private final NeighborhoodDao neighborhoodDao;
     private final ImageService imageService;
@@ -87,11 +87,11 @@ public class ResourceServiceImpl implements ResourceService {
     public Resource updateResource(long resourceId, String title, String description, String imageURN) {
         LOGGER.info("Updating Resource {}", resourceId);
 
-        Resource resource = findResource(resourceId).orElseThrow(()-> new NotFoundException("Resource Not Found"));
+        Resource resource = findResource(resourceId).orElseThrow(() -> new NotFoundException("Resource Not Found"));
 
-        if(title != null && !title.isEmpty())
+        if (title != null && !title.isEmpty())
             resource.setTitle(title);
-        if(description != null && !description.isEmpty())
+        if (description != null && !description.isEmpty())
             resource.setDescription(description);
 
         if (imageURN != null) {

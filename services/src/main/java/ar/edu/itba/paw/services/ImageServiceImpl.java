@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.Optional;
@@ -17,6 +16,7 @@ import java.util.Optional;
 @Transactional
 public class ImageServiceImpl implements ImageService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageServiceImpl.class);
+
     private final ImageDao imageDao;
 
     @Autowired
@@ -25,13 +25,6 @@ public class ImageServiceImpl implements ImageService {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-
-    @Override
-    public Image storeImage(MultipartFile image) {
-        LOGGER.info("Storing Image {}", image.getName());
-
-        return imageDao.storeImage(image);
-    }
 
     @Override
     public Image storeImage(InputStream imageStream) {
@@ -52,6 +45,8 @@ public class ImageServiceImpl implements ImageService {
 
         return imageDao.findImage(imageId);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public boolean deleteImage(long imageId) {

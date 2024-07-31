@@ -13,6 +13,7 @@ import java.util.Optional;
 @Repository
 public class DayDaoImpl implements DayDao {
     private static final Logger LOGGER = LoggerFactory.getLogger(DayDaoImpl.class);
+
     @PersistenceContext
     private EntityManager em;
 
