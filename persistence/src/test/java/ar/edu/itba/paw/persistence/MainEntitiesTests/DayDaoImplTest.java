@@ -47,7 +47,7 @@ public class DayDaoImplTest {
     }
 
     @Test
-    public void testCreateDay() {
+    public void create_valid() {
         // Pre Conditions
 
         // Exercise
@@ -60,7 +60,7 @@ public class DayDaoImplTest {
     }
 
     @Test
-    public void testFindDayById() {
+    public void find_dayId_valid() {
         // Pre Conditions
         long dayKey = testInserter.createDay();
 
@@ -72,7 +72,7 @@ public class DayDaoImplTest {
     }
 
     @Test
-    public void testFindDayByInvalidId() {
+    public void find_dayId_invalid_dayId() {
         // Pre Conditions
 
         // Exercise

@@ -23,6 +23,7 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -53,7 +54,7 @@ public class RequestDaoImplTest {
     }
 
     @Test
-    public void testCreateRequest() {
+    public void create_valid() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -61,7 +62,7 @@ public class RequestDaoImplTest {
         long uKey2 = testInserter.createUser(MAIL2, nhKey);
         long uKey3 = testInserter.createUser(MAIL3, nhKey);
         long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
 
         // Exercise
         Request request = requestDao.createRequest(uKey3, pKey, "hola", 1); //TODO: arreglar quantity?
@@ -73,15 +74,13 @@ public class RequestDaoImplTest {
     }
 
     @Test
-    public void testFindRequest() {
+    public void find_requestId_valid() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(MAIL1, nhKey);
-        long uKey2 = testInserter.createUser(MAIL2, nhKey);
-        long uKey3 = testInserter.createUser(MAIL3, nhKey);
         long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
         long rKey = testInserter.createRequest(pKey, uKey1);
 
         // Exercise
@@ -92,84 +91,73 @@ public class RequestDaoImplTest {
     }
 
     @Test
-    public void testFindRequestInvalidId() {
+    public void find_requestId_invalid_requestId() {
         // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(MAIL1, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long rKey = testInserter.createRequest(pKey, uKey1);
 
         // Exercise
-        Optional<Request> purchase = requestDao.findRequest(1);
+        Optional<Request> purchase = requestDao.findRequest(INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(purchase.isPresent());
     }
 
     @Test
-    public void getRequestsByProductId() {
+    public void get_userId() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(MAIL1, nhKey);
         long uKey2 = testInserter.createUser(MAIL2, nhKey);
-        long uKey3 = testInserter.createUser(MAIL3, nhKey);
         long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
-        testInserter.createRequest(pKey, uKey1);
+        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        testInserter.createRequest(pKey1, uKey1);
+        testInserter.createRequest(pKey1, uKey2);
+        testInserter.createRequest(pKey2, uKey1);
 
         // Exercise
-//        List<Request> requests = requestDao.getRequests(0L, pKey, PAGE, SIZE); // fix
+        List<Request> requests = requestDao.getRequests(uKey1, null, null, null, PAGE, SIZE);
 
         // Validations & Post Conditions
-//        assertFalse(requests.isEmpty());
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_requests.name()));
+        assertFalse(requests.isEmpty());
+        assertEquals(2, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_requests.name()));
     }
 
-    @Test
-    public void getRequestsByProductInvalidId() {
-        // Pre Conditions
-
-        // Exercise
-//        List<Request> requests = requestDao.getRequests(0L, 1L, PAGE, SIZE); // fix
-
-        // Validations & Post Conditions
-//        assertTrue(requests.isEmpty());
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_requests.name()));
-    }
-
-    @Test
-    public void getRequestsByProductAndUser() {
+        @Test
+    public void delete_requestId_valid() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(MAIL1, nhKey);
-        long uKey2 = testInserter.createUser(MAIL2, nhKey);
-        long uKey3 = testInserter.createUser(MAIL3, nhKey);
         long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
-        testInserter.createRequest(pKey, uKey1);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long rKey = testInserter.createRequest(pKey, uKey1);
 
         // Exercise
-//        List<Request> requests = requestDao.getRequests(pKey, uKey1, PAGE, SIZE); // fix
+        boolean deleted = requestDao.deleteRequest(rKey);
 
         // Validations & Post Conditions
-//        assertFalse(requests.isEmpty());
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_requests.name()));
+        em.flush();
+        assertTrue(deleted);
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
     }
 
     @Test
-    public void getNoRequestsByProductAndUser() {
+    public void delete_requestId_invalid_requestId() {
         // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-        long uKey2 = testInserter.createUser(MAIL2, nhKey);
-        long uKey3 = testInserter.createUser(MAIL3, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
 
         // Exercise
-//        List<Request> requests = requestDao.getRequests(pKey, uKey1, PAGE, SIZE); // fix
+        boolean deleted = requestDao.deleteRequest(INVALID_ID);
 
         // Validations & Post Conditions
-//        assertTrue(requests.isEmpty());
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products_users_requests.name()));
+        em.flush();
+        assertFalse(deleted);
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
     }
 }

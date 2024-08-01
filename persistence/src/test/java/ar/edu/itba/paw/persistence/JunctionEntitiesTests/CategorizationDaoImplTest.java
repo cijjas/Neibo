@@ -44,7 +44,7 @@ public class CategorizationDaoImplTest {
     }
 
     @Test
-    public void testCreateCategory() {
+    public void create_valid() {
         // Pre Conditions
         long chKey = testInserter.createChannel();
         long nhKey = testInserter.createNeighborhood();

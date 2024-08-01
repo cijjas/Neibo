@@ -24,6 +24,7 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.*;
 
+import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -75,7 +76,7 @@ public class WorkerDaoImplTest {
     }
 
     @Test
-    public void testCreateWorker() {
+    public void create_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(WORKER_MAIL_1, nhKey);
@@ -94,7 +95,7 @@ public class WorkerDaoImplTest {
     }
 
     @Test
-    public void testFindWorkerById() {
+    public void find_workerId_valid() {
         // Pre Conditions
         long pKey = testInserter.createProfession();
         long nhKey = testInserter.createNeighborhood();
@@ -110,7 +111,7 @@ public class WorkerDaoImplTest {
     }
 
     @Test
-    public void testFindWorkerByInvalidId() {
+    public void find_workerId_invalid_workerId() {
         // Pre Conditions
 
         // Exercise
@@ -177,6 +178,38 @@ public class WorkerDaoImplTest {
         assertEquals(1, retrievedWorkers.size());
     }
 
+/*
+    @Test
+	public void testWorkerDelete() {
+	    // Pre Conditions
+        long pKey = testInserter.createProfession();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(WORKER_MAIL_1, nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createSpecialization(uKey, pKey);
+
+	    // Exercise
+	    boolean deleted = workerDao.deleteWorker(uKey);
+
+	    // Validations & Post Conditions
+		em.flush();
+	    assertTrue(deleted);
+	    assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_info.name()));
+	}
+
+	@Test
+	public void testInvalidWorkerDelete() {
+	    // Pre Conditions
+
+	    // Exercise
+	    boolean deleted = workerDao.deleteWorker(INVALID_ID);
+
+	    // Validations & Post Conditions
+		em.flush();
+	    assertFalse(deleted);
+	}
+
+*/
     private void populateWorkers() {
 
         /*

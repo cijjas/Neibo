@@ -24,6 +24,7 @@ import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -61,7 +62,7 @@ public class EventDaoImplTest {
 
 
     @Test
-    public void testCreateEvent() {
+    public void create_valid() {
         // Pre Conditions
         long tKey1 = testInserter.createTime(EVENT_START_TIME);
         long tKey2 = testInserter.createTime(EVENT_END_TIME);
@@ -78,9 +79,8 @@ public class EventDaoImplTest {
         assertEquals(EVENT_DATE, e.getDate());
     }
 
-
     @Test
-    public void testFindEventById() {
+    public void find_eventId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime(EVENT_START_TIME);
@@ -96,7 +96,7 @@ public class EventDaoImplTest {
     }
 
     @Test
-    public void testFindEventByInvalidId() {
+    public void find_eventId_invalid_eventId() {
         // Pre Conditions
 
         // Exercise
@@ -107,7 +107,68 @@ public class EventDaoImplTest {
     }
 
     @Test
-    public void testGetEventsByDate() {
+    public void find_eventId_neighborhoodId_valid() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long tKey1 = testInserter.createTime(EVENT_START_TIME);
+        long tKey2 = testInserter.createTime(EVENT_END_TIME);
+        long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
+
+        // Exercise
+        Optional<Event> event = eventDao.findEvent(eKey, nhKey);
+
+        // Validations & Post Conditions
+        assertTrue(event.isPresent());
+        assertEquals(eKey, event.get().getEventId().longValue());
+    }
+
+    @Test
+    public void find_eventId_neighborhoodId_invalid_eventId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long tKey1 = testInserter.createTime(EVENT_START_TIME);
+        long tKey2 = testInserter.createTime(EVENT_END_TIME);
+        long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
+
+        // Exercise
+        Optional<Event> event = eventDao.findEvent(INVALID_ID, nhKey);
+
+        // Validations & Post Conditions
+        assertFalse(event.isPresent());
+    }
+
+    @Test
+    public void find_eventId_neighborhoodId_invalid_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long tKey1 = testInserter.createTime(EVENT_START_TIME);
+        long tKey2 = testInserter.createTime(EVENT_END_TIME);
+        long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
+
+        // Exercise
+        Optional<Event> event = eventDao.findEvent(eKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(event.isPresent());
+    }
+
+    @Test
+    public void find_eventId_neighborhoodId_invalid_eventId_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long tKey1 = testInserter.createTime(EVENT_START_TIME);
+        long tKey2 = testInserter.createTime(EVENT_END_TIME);
+        long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
+
+        // Exercise
+        Optional<Event> event = eventDao.findEvent(INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(event.isPresent());
+    }
+
+    @Test
+    public void getEventsOnDate_eventDate_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime();
@@ -122,7 +183,7 @@ public class EventDaoImplTest {
     }
 
     @Test
-    public void testGetEventsByNeighborhoodIdAndDateRange(){
+    public void getEventsOnDateRange_eventRange_neighborhoodId(){
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime(EVENT_START_TIME);
@@ -139,7 +200,7 @@ public class EventDaoImplTest {
     }
 
     @Test
-    public void testGetEventsByInvalidNeighborhoodIdAndDateRange(){
+    public void getEventsOnDateRange_neighborhoodId(){
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime(EVENT_START_TIME);
@@ -149,31 +210,14 @@ public class EventDaoImplTest {
         long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
 
         // Exercise
-        List<Event> events = eventDao.getEvents(-4, START_DATE, END_DATE);
+        List<Event> events = eventDao.getEvents(nhKey, null, null);
 
         // Validations & Post Conditions
         assertTrue(events.isEmpty());
     }
 
     @Test
-    public void testGetEventsByNeighborhoodIdAndInvalidDateRange(){
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long tKey1 = testInserter.createTime(EVENT_START_TIME);
-        long tKey2 = testInserter.createTime(EVENT_END_TIME);
-        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
-        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
-        long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
-
-        // Exercise
-        List<Event> events = eventDao.getEvents(nhKey, INVALID_START_DATE, INVALID_END_DATE);
-
-        // Validations & Post Conditions
-        assertTrue(events.isEmpty());
-    }
-
-    @Test
-    public void testDeleteEvent() {
+    public void delete_eventId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime(EVENT_START_TIME);
@@ -190,7 +234,7 @@ public class EventDaoImplTest {
     }
 
     @Test
-    public void testDeleteInvalidEvent() {
+    public void delete_eventId_invalid_eventId() {
         // Pre Conditions
 
         // Exercise

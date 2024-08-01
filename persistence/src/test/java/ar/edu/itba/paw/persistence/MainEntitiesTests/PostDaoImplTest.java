@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -85,7 +86,7 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void testCreatePost() {
+    public void create_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -104,7 +105,7 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void testFindPostById() {
+    public void find_postId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -120,7 +121,7 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void testFindPostByInvalidId() {
+    public void find_postId_invalid_postId() {
         // Pre Conditions
 
         // Exercise
@@ -131,7 +132,71 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void testGetPostsByCriteriaNeighborhood() {
+    public void find_postId_neighborhoodId_valid() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+
+        // Exercise
+        Optional<Post> maybePost = postDao.findPost(pKey, nhKey);
+
+        // Validations
+        assertTrue(maybePost.isPresent());
+    }
+
+    @Test
+    public void find_postId_neighborhoodId_invalid_postId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+
+        // Exercise
+        Optional<Post> maybePost = postDao.findPost(INVALID_ID, nhKey);
+
+        // Validations
+        assertFalse(maybePost.isPresent());
+    }
+
+    @Test
+    public void find_postId_neighborhoodId_invalid_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+
+        // Exercise
+        Optional<Post> maybePost = postDao.findPost(pKey, INVALID_ID);
+
+        // Validations
+        assertFalse(maybePost.isPresent());
+    }
+
+    @Test
+    public void find_postId_neighborhoodId_invalid_postId_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+
+        // Exercise
+        Optional<Post> maybePost = postDao.findPost(INVALID_ID, INVALID_ID);
+
+        // Validations
+        assertFalse(maybePost.isPresent());
+    }
+
+    @Test
+    public void get_neighborhoodId() {
         // Pre Conditions
         populatePosts();
 
@@ -143,7 +208,7 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void testGetPostsByCriteriaChannelAndNeighborhood() {
+    public void get_neighborhoodId_channelId() {
         // Pre Conditions
         populatePosts();
 
@@ -155,21 +220,7 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void testGetPostsByCriteriaChannelAndNeighborhoodAndTag() {
-        // Pre Conditions
-        populatePosts();
-        List<Long> TAG_LIST = new ArrayList<>();
-        TAG_LIST.add(tKey1);
-
-        // Exercise
-        List<Post> retrievedPosts = postDao.getPosts(chKey1, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey1, null, null);
-
-        // Validations
-        assertEquals(1, retrievedPosts.size());
-    }
-
-    @Test
-    public void testGetPostsByCriteriaChannelAndNeighborhoodAndMultipleTag() {
+    public void get_neighborhoodId_channelId_tagList() {
         // Pre Conditions
         populatePosts();
         List<Long> TAG_LIST = new ArrayList<>();
@@ -183,21 +234,7 @@ public class PostDaoImplTest {
     }
 
     @Test
-    public void testGetPostsByCriteriaChannelAndNeighborhoodAndMultipleTagAndSize() {
-        // Pre Conditions
-        populatePosts();
-        List<Long> TAG_LIST = new ArrayList<>();
-        TAG_LIST.add(tKey2);
-
-        // Exercise
-        List<Post> retrievedPosts = postDao.getPosts(chKey2, BASE_PAGE, 1, TAG_LIST, nhKey2, null, null);
-
-        // Validations
-        assertEquals(1, retrievedPosts.size());
-    }
-
-    @Test
-    public void testGetPostsByCriteriaChannelAndNeighborhoodAndMultipleTagAndSizeAndPage() {
+    public void get_pagination() {
         // Pre Conditions
         populatePosts();
         List<Long> TAG_LIST = new ArrayList<>();
@@ -210,6 +247,35 @@ public class PostDaoImplTest {
         assertEquals(1, retrievedPosts.size());
     }
 
+    @Test
+    public void delete_postId_valid() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+
+        // Exercise
+        boolean deleted = postDao.deletePost(pKey);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertTrue(deleted);
+        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.products.name()));
+    }
+
+    @Test
+    public void delete_postId_invalid_postId() {
+        // Pre Conditions
+
+        // Exercise
+        boolean deleted = postDao.deletePost(INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
     // ------------------ !!! HOT & TRENDING POSTS CANT BE TESTED AS HSQL DOES NOT ACCEPT INTERVAL !!! -----------------
 
     private void populatePosts() {

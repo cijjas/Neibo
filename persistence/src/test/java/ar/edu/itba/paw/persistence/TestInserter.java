@@ -496,7 +496,7 @@ public class TestInserter {
     }
 
     public long createProduct(long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
-                              long sellerId, Long buyerId, long departmentId){
+                              long sellerId, long departmentId){
         String name = "Iphone";
         String description = "Super Iphone";
         double price = 23432;

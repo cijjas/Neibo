@@ -49,7 +49,7 @@ public class TimeDaoImplTest {
     }
 
     @Test
-    public void testCreateTime() {
+    public void create_valid() {
         // Pre Conditions
 
         // Exercise
@@ -61,7 +61,7 @@ public class TimeDaoImplTest {
     }
 
     @Test
-    public void testFindTimeById() {
+    public void find_timeId_valid() {
         // Pre Conditions
         long timeKey = testInserter.createTime();
 
@@ -73,7 +73,7 @@ public class TimeDaoImplTest {
     }
 
     @Test
-    public void testFindTimeByInvalidId() {
+    public void find_timeId_invalid_timeId() {
         // Pre Conditions
 
         // Exercise
@@ -84,7 +84,7 @@ public class TimeDaoImplTest {
     }
 
     @Test
-    public void testFindIdByTime() {
+    public void findId_timeName_valid() {
         // Pre Conditions
         long timeKey = testInserter.createTime(TIME);
 
@@ -96,7 +96,7 @@ public class TimeDaoImplTest {
     }
 
     @Test
-    public void testFindIdByInvalidTime() {
+    public void findId_timeName_invalid_timeName() {
         // Pre Conditions
 
         // Exercise

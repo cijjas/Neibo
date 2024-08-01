@@ -44,7 +44,7 @@ public class ProfessionDaoImplTest {
     }
 
     @Test
-    public void testCreateProfession() {
+    public void create_valid() {
         // Pre Conditions
 
         // Exercise

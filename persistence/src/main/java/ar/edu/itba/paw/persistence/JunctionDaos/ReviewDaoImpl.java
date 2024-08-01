@@ -63,15 +63,6 @@ public class ReviewDaoImpl implements ReviewDao {
     }
 
     @Override
-    public List<Review> getReviews(long workerId) {
-        LOGGER.debug("Selecting Reviews from Worker {}", workerId);
-
-        TypedQuery<Review> query = em.createQuery("SELECT r FROM Review r WHERE r.worker.user.userId = :workerId ORDER BY r.date DESC", Review.class);
-        query.setParameter("workerId", workerId);
-        return query.getResultList();
-    }
-
-    @Override
     public List<Review> getReviews(long workerId, int page, int size) {
         LOGGER.debug("Selecting Reviews from Worker {}", workerId);
 

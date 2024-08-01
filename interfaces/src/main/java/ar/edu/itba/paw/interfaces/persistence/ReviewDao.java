@@ -17,8 +17,6 @@ public interface ReviewDao {
 
     Optional<Review> findReview(long reviewId, long workerId);
 
-    List<Review> getReviews(long workerId);
-
     List<Review> getReviews(long workerId, int page, int size);
 
     Optional<Review> findLatestReview(long workerId, long userId);

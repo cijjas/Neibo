@@ -23,6 +23,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -51,7 +52,7 @@ public class ImageDaoImplTest {
     }
 
     @Test
-    public void testStoreImageAndGetImage() throws IOException {
+    public void create_valid() throws IOException {
         // Pre Conditions
         byte[] fakeImageBytes = new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
         MockMultipartFile fakeImage = new MockMultipartFile(NAME, FILE_NAME, CONTENT_TYPE, fakeImageBytes);
@@ -66,7 +67,7 @@ public class ImageDaoImplTest {
     }
 
     @Test
-    public void testFindImage() {
+    public void find_imageId_valid() {
         // Pre Conditions
         long iKey = testInserter.createImage();
 
@@ -78,7 +79,7 @@ public class ImageDaoImplTest {
     }
 
     @Test
-    public void testFindInvalidImage() {
+    public void find_imageId_invalid_imageId() {
         // Pre Conditions
 
         // Exercise
@@ -87,4 +88,30 @@ public class ImageDaoImplTest {
         // Validations & Post Conditions
         assertFalse(maybeImage.isPresent());
     }
+
+    @Test
+	public void delete_imageId_valid() {
+	    // Pre Conditions
+        long iKey = testInserter.createImage();
+
+	    // Exercise
+	    boolean deleted = imageDao.deleteImage(iKey);
+
+	    // Validations & Post Conditions
+		em.flush();
+	    assertTrue(deleted);
+	    assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.images.name()));
+	}
+
+    @Test
+	public void delete_imageId_invalid_imageId() {
+	    // Pre Conditions
+
+	    // Exercise
+	    boolean deleted = imageDao.deleteImage(INVALID_ID);
+
+	    // Validations & Post Conditions
+		em.flush();
+	    assertFalse(deleted);
+	}
 }

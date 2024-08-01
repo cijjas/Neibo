@@ -20,7 +20,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
-import static org.junit.Assert.assertEquals;
+import java.util.Optional;
+
+import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
@@ -44,7 +47,7 @@ public class DepartmentDaoImplTest {
     }
 
     @Test
-    public void testCreateDepartment() {
+    public void create_valid() {
         // Pre Conditions
 
         // Exercise
@@ -54,4 +57,28 @@ public class DepartmentDaoImplTest {
         em.flush();
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.departments.name()));
     }
+
+    @Test
+	public void find_departmentId_valid() {
+	    // Pre Conditions
+        long dKey = testInserter.createDepartment();
+
+	    // Exercise
+	    Optional<Department> optional = departmentDao.findDepartment(dKey);
+
+	    // Validations & Post Conditions
+	    assertTrue(optional.isPresent());
+		assertEquals(dKey, optional.get().getDepartmentId().longValue());
+	}
+
+    @Test
+	public void find_departmentId_invalid_departmentId() {
+	    // Pre Conditions
+
+	    // Exercise
+	    Optional<Department> optional = departmentDao.findDepartment(INVALID_ID);
+
+	    // Validations & Post Conditions
+	    assertFalse(optional.isPresent());
+	}
 }

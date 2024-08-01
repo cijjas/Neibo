@@ -20,7 +20,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
+import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -47,7 +49,7 @@ public class ResourceDaoImplTest {
     }
 
     @Test
-    public void testCreateResource() {
+    public void create_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
 
@@ -60,7 +62,33 @@ public class ResourceDaoImplTest {
     }
 
     @Test
-    public void testGetResources() {
+    public void find_resourceId_valid() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long iKey = testInserter.createImage();
+        long rKey = testInserter.createResource(nhKey, iKey);
+
+        // Exercise
+        Optional<Resource> optional = resourceDao.findResource(rKey);
+
+        // Validations & Post Conditions
+        assertTrue(optional.isPresent());
+        assertEquals(rKey, optional.get().getResourceId().longValue());
+    }
+
+    @Test
+    public void find_resourceId_invalid_resourceId() {
+        // Pre Conditions
+
+        // Exercise
+        Optional<Resource> optional = resourceDao.findResource(INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optional.isPresent());
+    }
+
+    @Test
+    public void get_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long iKey = testInserter.createImage();
@@ -74,7 +102,7 @@ public class ResourceDaoImplTest {
     }
 
     @Test
-    public void testGetNoResources() {
+    public void get_empty() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
 
@@ -86,7 +114,7 @@ public class ResourceDaoImplTest {
     }
 
     @Test
-    public void testDeleteResource() {
+    public void delete_resourceId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long iKey = testInserter.createImage();
@@ -102,7 +130,7 @@ public class ResourceDaoImplTest {
     }
 
     @Test
-    public void testDeleteInvalidResource() {
+    public void delete_resourceId_invalid_resourceId() {
         // Pre Conditions
 
         // Exercise

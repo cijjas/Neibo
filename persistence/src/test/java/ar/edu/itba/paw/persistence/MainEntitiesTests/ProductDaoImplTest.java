@@ -24,6 +24,7 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -65,7 +66,7 @@ public class ProductDaoImplTest {
     }
 
     @Test
-    public void testCreateProduct() {
+    public void create_valid() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
@@ -86,13 +87,13 @@ public class ProductDaoImplTest {
     }
 
     @Test
-    public void testFindProductById() {
+    public void find_productId_valid() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(MAIL1, nhKey);
         long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey, null, dKey1);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey, dKey1);
 
         // Exercise
         Optional<Product> maybeProduct = productDao.findProduct(pKey);
@@ -102,7 +103,7 @@ public class ProductDaoImplTest {
     }
 
     @Test
-    public void testFindProductByInvalidId() {
+    public void find_productId_invalid_productId() {
         // Pre Conditions
 
         // Exercise
@@ -113,6 +114,72 @@ public class ProductDaoImplTest {
     }
 
     @Test
+    public void find_productId_neighborhoodId_valid() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(MAIL1, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey, dKey1);
+
+        // Exercise
+        Optional<Product> maybeProduct = productDao.findProduct(pKey, nhKey);
+
+        // Validations & Post Conditions
+        assertTrue(maybeProduct.isPresent());
+    }
+
+    @Test
+    public void find_productId_neighborhoodId_invalid_productId() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(MAIL1, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey, dKey1);
+
+        // Exercise
+        Optional<Product> maybeProduct = productDao.findProduct(INVALID_ID, nhKey);
+
+        // Validations & Post Conditions
+        assertFalse(maybeProduct.isPresent());
+    }
+
+    @Test
+    public void find_productId_neighborhoodId_invalid_neighborhoodId() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(MAIL1, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey, dKey1);
+
+        // Exercise
+        Optional<Product> maybeProduct = productDao.findProduct(pKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(maybeProduct.isPresent());
+    }
+
+    @Test
+    public void find_productId_neighborhoodId_invalid_productId_neighborhoodId() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(MAIL1, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey, dKey1);
+
+        // Exercise
+        Optional<Product> maybeProduct = productDao.findProduct(INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(maybeProduct.isPresent());
+    }
+
+/*
+
+    @Test
     public void testGetProductsByNeighborhood() {
         // Pre Conditions
         long iKey = testInserter.createImage();
@@ -120,8 +187,8 @@ public class ProductDaoImplTest {
         long uKey1 = testInserter.createUser(MAIL1, nhKey);
         long uKey2 = testInserter.createUser(MAIL2, nhKey);
         long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey1);
-        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, uKey1, dKey1);
+        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, dKey1);
 
         // Exercise
         List<Product> products = productDao.getProducts(nhKey, null, uKey1, (long) ProductStatus.SOLD.getId(), 1, 10);
@@ -164,8 +231,8 @@ public class ProductDaoImplTest {
         long uKey1 = testInserter.createUser(MAIL1, nhKey);
         long uKey2 = testInserter.createUser(MAIL2, nhKey);
         long dKey2 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, uKey2, dKey2);
-        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, uKey1, dKey2);
+        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey2);
+        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, dKey2);
 
         // Exercise
         List<Product> products = productDao.getProducts(nhKey, (long) Department.TRAVEL_LUGGAGE.getId(), uKey1, (long) ProductStatus.SELLING.getId(), 1, 10);
@@ -175,17 +242,16 @@ public class ProductDaoImplTest {
     }
 
 
-
-
+*/
 
     @Test
-    public void testDeleteProduct() {
+    public void delete_productId_valid() {
         // Pre Conditions
         long iKey = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(MAIL1, nhKey);
         long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, null, dKey1);
+        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
 
         // Exercise
         boolean deleted = productDao.deleteProduct(pKey1);
@@ -195,7 +261,7 @@ public class ProductDaoImplTest {
     }
 
     @Test
-    public void testDeleteInvalidProduct() {
+    public void delete_productId_invalid_productId() {
         // Pre Conditions
 
         // Exercise

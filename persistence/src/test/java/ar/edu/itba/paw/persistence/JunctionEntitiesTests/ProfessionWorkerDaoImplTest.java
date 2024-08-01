@@ -52,7 +52,7 @@ public class ProfessionWorkerDaoImplTest {
     }
 
     @Test
-    public void testCreateSpecialization() {
+    public void create_valid() {
         // Pre Conditions
         long pKey = testInserter.createProfession();
         long nhKey = testInserter.createNeighborhood();
@@ -69,7 +69,7 @@ public class ProfessionWorkerDaoImplTest {
     }
 
     @Test
-    public void testGetWorkerProfession() {
+    public void get_workerId() {
         // Pre Conditions
         long pKey = testInserter.createProfession();
         long nhKey = testInserter.createNeighborhood();
@@ -85,7 +85,7 @@ public class ProfessionWorkerDaoImplTest {
     }
 
     @Test
-    public void testNoGetWorkerProfession() {
+    public void get_empty() {
         // Pre Conditions
 
         // Exercise

@@ -53,7 +53,7 @@ public class ShiftDaoImplTest {
     }
 
     @Test
-    public void testCreateShift() {
+    public void create_valid() {
         // Pre Conditions
         long dKey = testInserter.createDay();
         long tKey = testInserter.createTime();
@@ -67,7 +67,7 @@ public class ShiftDaoImplTest {
     }
 
     @Test
-    public void testFindShiftById() {
+    public void find_shiftId_valid() {
         // Pre Conditions
         long dKey = testInserter.createDay();
         long tKey = testInserter.createTime();
@@ -81,7 +81,7 @@ public class ShiftDaoImplTest {
     }
 
     @Test
-    public void testFindShiftByInvalidId() {
+    public void find_shiftId_invalid_shiftId() {
         // Pre Conditions
 
         // Exercise
@@ -92,7 +92,7 @@ public class ShiftDaoImplTest {
     }
 
     @Test
-    public void testGetAmenityShifts() {
+    public void get_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey1 = testInserter.createAmenity(AMENITY_NAME_1, AMENITY_DESCRIPTION_1, nhKey);
@@ -109,7 +109,7 @@ public class ShiftDaoImplTest {
     }
 
     @Test
-    public void testGetNoAmenityShifts() {
+    public void get_empty() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey1 = testInserter.createAmenity(AMENITY_NAME_1, AMENITY_DESCRIPTION_1, nhKey);

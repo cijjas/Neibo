@@ -21,7 +21,9 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
+import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -48,7 +50,7 @@ public class BookingDaoImplTest {
     }
 
     @Test
-    public void testCreateBooking() {
+    public void create_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -65,6 +67,43 @@ public class BookingDaoImplTest {
         em.flush();
         assertNotNull(bookingId);
         assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users_availability.name()));
+    }
+
+    @Test
+    public void find_bookingId_valid() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long avKey = testInserter.createAvailability(aKey, sKey);
+        long bKey = testInserter.createBooking(uKey, avKey, RESERVATION_DATE);
+
+        // Exercise
+        Optional<Booking> booking = bookingDao.findBooking(bKey);
+
+        // Validations & Post Conditions
+        assertTrue(booking.isPresent());
+    }
+
+    @Test
+    public void find_bookingId_invalid_bookingId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long avKey = testInserter.createAvailability(aKey, sKey);
+
+        // Exercise
+        Optional<Booking> booking = bookingDao.findBooking(INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(booking.isPresent());
     }
 
     @Test
@@ -98,7 +137,7 @@ public class BookingDaoImplTest {
     }
 
     @Test
-    public void testDeleteBooking() {
+    public void delete_bookingId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -113,18 +152,20 @@ public class BookingDaoImplTest {
         boolean deleted = bookingDao.deleteBooking(bKey);
 
         // Validations & Post Conditions
+        em.flush();
         assertTrue(deleted);
         assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users_availability.name()));
     }
 
     @Test
-    public void testDeleteInvalidBooking() {
+    public void delete_bookingId_invalid_bookingId() {
         // Pre Conditions
 
         // Exercise
         boolean deleted = bookingDao.deleteBooking(1);
 
         // Validations & Post Conditions
+        em.flush();
         assertFalse(deleted);
         assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users_availability.name()));
     }

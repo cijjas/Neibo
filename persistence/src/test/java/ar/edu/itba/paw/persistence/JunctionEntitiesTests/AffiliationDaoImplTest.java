@@ -20,9 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -49,7 +51,7 @@ public class AffiliationDaoImplTest {
     }
 
     @Test
-    public void testCreateAffiliation() {
+    public void create_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -64,7 +66,7 @@ public class AffiliationDaoImplTest {
     }
 
     @Test
-    public void testFindWorkerByArea() {
+    public void find_workerId_neighborhoodId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -80,8 +82,42 @@ public class AffiliationDaoImplTest {
     }
 
     @Test
-    public void testFindWorkerByInvalidArea() {
+    public void find_workerId_neighborhoodId_invalid_workerId() {
         // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createAffiliation(uKey, nhKey);
+
+        // Exercise
+        Optional<Affiliation> affiliation = affiliationDaoImpl.findAffiliation(INVALID_ID, nhKey);
+
+        // Validations & Post Conditions
+        assertFalse(affiliation.isPresent());
+    }
+
+    @Test
+    public void find_workerId_neighborhoodId_invalid_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createAffiliation(uKey, nhKey);
+
+        // Exercise
+        Optional<Affiliation> affiliation = affiliationDaoImpl.findAffiliation(uKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(affiliation.isPresent());
+    }
+
+    @Test
+    public void find_workerId_neighborhoodId_invalid_workerId_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createAffiliation(uKey, nhKey);
 
         // Exercise
         Optional<Affiliation> affiliation = affiliationDaoImpl.findAffiliation(1, 1);
@@ -91,7 +127,90 @@ public class AffiliationDaoImplTest {
     }
 
     @Test
-    public void testDeleteAffiliation() {
+    public void get() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createAffiliation(uKey, nhKey);
+
+        // Exercise
+        List<Affiliation> affiliations = affiliationDaoImpl.getAffiliations(null, null, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(1, affiliations.size());
+    }
+
+    @Test
+    public void get_workerId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createAffiliation(uKey, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        testInserter.createWorker(uKey2);
+        testInserter.createAffiliation(uKey2, nhKey);
+
+        // Exercise
+        List<Affiliation> affiliations = affiliationDaoImpl.getAffiliations(uKey, null, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(1, affiliations.size());
+    }
+
+    @Test
+    public void get_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createAffiliation(uKey, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        testInserter.createWorker(uKey2);
+        testInserter.createAffiliation(uKey2, nhKey2);
+
+        // Exercise
+        List<Affiliation> affiliations = affiliationDaoImpl.getAffiliations(null, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(1, affiliations.size());
+    }
+
+    @Test
+    public void get_workerId_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createAffiliation(uKey, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        testInserter.createWorker(uKey2);
+        testInserter.createAffiliation(uKey2, nhKey2);
+        testInserter.createAffiliation(uKey2, nhKey);
+
+        // Exercise
+        List<Affiliation> affiliations = affiliationDaoImpl.getAffiliations(uKey, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(1, affiliations.size());
+    }
+
+    @Test
+    public void get_empty() {
+        // Pre Conditions
+
+        // Exercise
+        List<Affiliation> affiliations = affiliationDaoImpl.getAffiliations(null , null, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(0, affiliations.size());
+    }
+
+    @Test
+    public void delete_userId_neighborhoodId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -107,11 +226,47 @@ public class AffiliationDaoImplTest {
     }
 
     @Test
-    public void testDeleteInvalidAffiliation() {
+    public void delete_userId_neighborhoodId_invalid_userId() {
         // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createAffiliation(uKey, nhKey);
 
         // Exercise
-        boolean deleted = affiliationDaoImpl.deleteAffiliation(1, 1);
+        boolean deleted = affiliationDaoImpl.deleteAffiliation(INVALID_ID, nhKey);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_userId_neighborhoodId_invalid_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createAffiliation(uKey, nhKey);
+
+        // Exercise
+        boolean deleted = affiliationDaoImpl.deleteAffiliation(nhKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    @Test
+    public void delete_userId_neighborhoodId_invalid_userId_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createAffiliation(uKey, nhKey);
+
+        // Exercise
+        boolean deleted = affiliationDaoImpl.deleteAffiliation(INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();

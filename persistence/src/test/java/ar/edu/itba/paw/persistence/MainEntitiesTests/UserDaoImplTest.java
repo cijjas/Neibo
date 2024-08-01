@@ -25,6 +25,7 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -72,7 +73,7 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void testCreateUser() {
+    public void create_valid() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
 
@@ -93,7 +94,7 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void testFindUserById() {
+    public void find_userId_valid() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
         uKey1 = testInserter.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, ROLE, ID, DATE);
@@ -106,7 +107,7 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void testFindUserByInvalidId() {
+    public void find_userId_invalid_userId() {
         // Pre Conditions
 
         // Exercise
@@ -117,7 +118,60 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void testFindUserByMail() {
+    public void find_userId_neighborhoodId_valid() {
+        // Pre Conditions
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
+        uKey1 = testInserter.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, ROLE, ID, DATE);
+
+        // Exercise
+        Optional<User> maybeUser = userDao.findUser(uKey1, nhKey1);
+
+        // Validations
+        assertTrue(maybeUser.isPresent());
+    }
+
+    @Test
+    public void find_userId_neighborhoodId_invalid_userId() {
+        // Pre Conditions
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
+        uKey1 = testInserter.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, ROLE, ID, DATE);
+
+        // Exercise
+        Optional<User> maybeUser = userDao.findUser(INVALID_ID, nhKey1);
+
+        // Validations
+        assertFalse(maybeUser.isPresent());
+    }
+
+    @Test
+    public void find_userId_neighborhoodId_invalid_neighborhoodId() {
+        // Pre Conditions
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
+        uKey1 = testInserter.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, ROLE, ID, DATE);
+
+        // Exercise
+        Optional<User> maybeUser = userDao.findUser(uKey1, INVALID_ID);
+
+        // Validations
+        assertFalse(maybeUser.isPresent());
+    }
+
+    @Test
+    public void find_userId_neighborhoodId_invalid_userId_neighborhoodId() {
+        // Pre Conditions
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
+        uKey1 = testInserter.createUser(USER_MAIL_1, PASSWORD, NAME, SURNAME, nhKey1, LANGUAGE, DARK_MODE, ROLE, ID, DATE);
+
+        // Exercise
+        Optional<User> maybeUser = userDao.findUser(INVALID_ID, INVALID_ID);
+
+        // Validations
+        assertFalse(maybeUser.isPresent());
+    }
+
+
+    @Test
+    public void find_email_valid() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
         uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
@@ -130,7 +184,7 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void testFindUserByInvalidMail() {
+    public void find_email_invalid_email() {
         // Pre Conditions
 
         // Exercise
@@ -221,6 +275,32 @@ public class UserDaoImplTest {
         assertEquals(1, retrievedUsers.size()); // Adjust based on the expected number of retrieved posts
     }
 
+    @Test
+	public void delete_valid() {
+	    // Pre Conditions
+        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
+        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
+
+	    // Exercise
+	    boolean deleted = userDao.deleteUser(uKey1);
+
+	    // Validations & Post Conditions
+		em.flush();
+	    assertTrue(deleted);
+	    assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users.name()));
+	}
+
+	@Test
+	public void delete_invalid_userId() {
+	    // Pre Conditions
+
+	    // Exercise
+	    boolean deleted = userDao.deleteUser(INVALID_ID);
+
+	    // Validations & Post Conditions
+		em.flush();
+	    assertFalse(deleted);
+	}
 
     private void populateUsers() {
         // Pre Conditions
