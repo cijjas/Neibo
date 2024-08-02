@@ -82,7 +82,7 @@ public class RequestController extends GlobalControllerAdvice {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/requests",
-                rs.calculateRequestPages(product, user, type, status, size),
+                rs.calculateRequestPages(product, user, type, status, neighborhoodId, size),
                 page,
                 size
         );

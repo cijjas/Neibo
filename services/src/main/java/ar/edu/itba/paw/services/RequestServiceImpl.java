@@ -109,13 +109,13 @@ public class RequestServiceImpl implements RequestService {
 
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
-        return requestDao.getRequests(userId, productId, transactionTypeId, requestStatusId, page, size);
+        return requestDao.getRequests(userId, productId, transactionTypeId, requestStatusId, neighborhoodId, page, size);
     }
 
     // ---------------------------------------------------
 
     @Override
-    public int calculateRequestPages(String productURN, String userURN, String typeURN, String statusURN, int size) {
+    public int calculateRequestPages(String productURN, String userURN, String typeURN, String statusURN, long neighborhoodId, int size) {
         LOGGER.info("Calculating Request Pages for Product {} made by User {}", productURN, userURN);
 
         Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
@@ -125,7 +125,7 @@ public class RequestServiceImpl implements RequestService {
 
         ValidationUtils.checkSize(size);
 
-        return PaginationUtils.calculatePages(requestDao.countRequests(userId, productId, transactionTypeId, requestStatusId), size);
+        return PaginationUtils.calculatePages(requestDao.countRequests(userId, productId, transactionTypeId, requestStatusId, neighborhoodId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
