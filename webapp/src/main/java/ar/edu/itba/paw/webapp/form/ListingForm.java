@@ -17,7 +17,7 @@ public class ListingForm {
     private Double price;
 
     @ImagesURNConstraint
-    private String[] imageURNs;
+    private String[] images;
 
     @NotBlank
     @Size(max = 2000)
@@ -25,7 +25,7 @@ public class ListingForm {
 
     @NotNull
     @DepartmentURNConstraint
-    private String departmentURN;
+    private String department;
 
     @NotNull
     @Range(min = 1, max = 100)
@@ -36,14 +36,14 @@ public class ListingForm {
 
     @NotNull
     @UserURNAuthorizationConstraint
-    private String userURN;
+    private String user;
 
-    public String getUserURN() {
-        return userURN;
+    public String getUser() {
+        return user;
     }
 
-    public void setUserURN(String userURN) {
-        this.userURN = userURN;
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public Long getQuantity() {
@@ -82,26 +82,24 @@ public class ListingForm {
         this.title = title;
     }
 
-
-
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getDepartmentURN() {
-        return departmentURN;
+    public String[] getImages() {
+        return images;
     }
 
-    public void setDepartmentURN(String departmentURN) {
-        this.departmentURN = departmentURN;
+    public void setImages(String[] images) {
+        this.images = images;
     }
 
-    public String[] getImageURNs() {
-        return imageURNs;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setImageURNs(String[] imageURNs) {
-        this.imageURNs = imageURNs;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     @Override
@@ -110,7 +108,7 @@ public class ListingForm {
                 "title='" + title + '\'' +
                 ", price='" + price + '\'' +
                 ", description='" + description + '\'' +
-                ", department=" + departmentURN +
+                ", department=" + department +
                 '}';
     }
 }

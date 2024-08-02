@@ -56,15 +56,15 @@ public class WorkerController extends GlobalControllerAdvice {
     public Response listWorkers(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("withProfessions") final List<String> professionURNs,
-            @QueryParam("inNeighborhoods") final List<String> neighborhoodURNs,
-            @QueryParam("withRole") final String workerRoleURN,
-            @QueryParam("withStatus") final String workerStatusURN
+            @QueryParam("withProfessions") final List<String> professions,
+            @QueryParam("inNeighborhoods") final List<String> neighborhoods,
+            @QueryParam("withRole") final String workerRole,
+            @QueryParam("withStatus") final String workerStatus
     ) {
         LOGGER.info("GET request arrived at '/workers'");
 
         // Content
-        List<Worker> workers = ws.getWorkers(page, size, professionURNs, neighborhoodURNs, workerRoleURN, workerStatusURN);
+        List<Worker> workers = ws.getWorkers(page, size, professions, neighborhoods, workerRole, workerStatus);
         String workersHashCode = String.valueOf(workers.hashCode());
 
         // Cache Control
@@ -84,7 +84,7 @@ public class WorkerController extends GlobalControllerAdvice {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "workers",
-                ws.calculateWorkerPages(professionURNs, neighborhoodURNs, size, workerRoleURN, workerStatusURN),
+                ws.calculateWorkerPages(professions, neighborhoods, size, workerRole, workerStatus),
                 page,
                 size
         );
@@ -131,7 +131,7 @@ public class WorkerController extends GlobalControllerAdvice {
         LOGGER.info("POST request arrived at '/workers'");
 
         // Creation & Etag Generation
-        final Worker worker = ws.createWorker(form.getUserURN(), form.getPhoneNumber(), form.getAddress(), form.getProfessionURNs(), form.getBusinessName());
+        final Worker worker = ws.createWorker(form.getUser(), form.getPhoneNumber(), form.getAddress(), form.getProfessions(), form.getBusinessName());
         String workerHashCode = String.valueOf(worker.hashCode());
 
         // Resource URN
@@ -153,7 +153,7 @@ public class WorkerController extends GlobalControllerAdvice {
         LOGGER.info("PATCH request arrived at '/workers/{}'", workerId);
 
         // Modification & HashCode Generation
-        final Worker updatedWorker = ws.updateWorkerPartially(workerId, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPictureURN(), partialUpdate.getBio());
+        final Worker updatedWorker = ws.updateWorkerPartially(workerId, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio());
         String workerHashCode = String.valueOf(updatedWorker.hashCode());
 
         return Response.ok(WorkerDto.fromWorker(updatedWorker, uriInfo))

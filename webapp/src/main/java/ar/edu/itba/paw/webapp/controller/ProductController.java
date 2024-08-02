@@ -57,14 +57,14 @@ public class ProductController extends GlobalControllerAdvice {
     public Response listProducts(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("inDepartment") final String departmentURN,
-            @QueryParam("forUser") final String userURN,
-            @QueryParam("withStatus") final String productStatusURN
+            @QueryParam("inDepartment") final String department,
+            @QueryParam("forUser") final String user,
+            @QueryParam("withStatus") final String productStatus
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
         // Content
-        final List<Product> products = ps.getProducts(neighborhoodId, departmentURN, userURN, productStatusURN, page, size);
+        final List<Product> products = ps.getProducts(neighborhoodId, department, user, productStatus, page, size);
         String productsHashCode = String.valueOf(products.hashCode());
 
         // Cache Control
@@ -84,7 +84,7 @@ public class ProductController extends GlobalControllerAdvice {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/products",
-                ps.calculateProductPages(neighborhoodId, size, departmentURN, userURN, productStatusURN),
+                ps.calculateProductPages(neighborhoodId, size, department, user, productStatus),
                 page,
                 size
         );
@@ -129,10 +129,10 @@ public class ProductController extends GlobalControllerAdvice {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/products'", neighborhoodId);
 
         // Creation & ETag Generation
-        final Product product = ps.createProduct(form.getUserURN(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartmentURN(), form.getImageURNs(), form.getQuantity());
+        final Product product = ps.createProduct(form.getUser(), form.getTitle(), form.getDescription(), form.getPrice(), form.getUsed(), form.getDepartment(), form.getImages(), form.getQuantity());
         String productHashCode = String.valueOf(product.hashCode());
 
-        // Resource  URN
+        // Resource URN
         final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(product.getProductId())).build();
 
         return Response.created(uri)
@@ -151,7 +151,7 @@ public class ProductController extends GlobalControllerAdvice {
         LOGGER.info("UPDATE request arrived at '/neighborhoods/{}/products/{}'", neighborhoodId, id);
 
         // Modification & HashCode Generation
-        final Product updatedProduct = ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartmentURN(), partialUpdate.getImageURNs(), partialUpdate.getQuantity());
+        final Product updatedProduct = ps.updateProductPartially(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getPrice(), partialUpdate.getUsed(), partialUpdate.getDepartment(), partialUpdate.getImages(), partialUpdate.getQuantity());
         String productHashCode = String.valueOf(updatedProduct.hashCode());
 
         return Response.ok(ProductDto.fromProduct(updatedProduct, uriInfo))

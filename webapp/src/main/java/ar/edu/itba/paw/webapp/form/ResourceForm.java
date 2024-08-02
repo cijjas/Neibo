@@ -12,7 +12,7 @@ public class ResourceForm {
     private String description;
 
     @ImageURNConstraint
-    private String imageURN;
+    private String image;
 
     @NotNull
     @Size(min=1, max = 64)
@@ -26,12 +26,12 @@ public class ResourceForm {
         this.description = description;
     }
 
-    public String getImageURN() {
-        return imageURN;
+    public String getImage() {
+        return image;
     }
 
-    public void setImageURN(String imageURN) {
-        this.imageURN = imageURN;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getTitle() {

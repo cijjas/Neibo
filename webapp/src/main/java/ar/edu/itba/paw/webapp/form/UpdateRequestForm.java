@@ -4,20 +4,20 @@ import ar.edu.itba.paw.webapp.form.validation.constraints.RequestStatusURNConstr
 
 public class UpdateRequestForm {
     @RequestStatusURNConstraint
-    private String requestStatusURN;
+    private String requestStatus;
 
-    public String getRequestStatusURN() {
-        return requestStatusURN;
+    public String getRequestStatus() {
+        return requestStatus;
     }
 
-    public void setRequestStatusURN(String requestStatusURN) {
-        this.requestStatusURN = requestStatusURN;
+    public void setRequestStatus(String requestStatus) {
+        this.requestStatus = requestStatus;
     }
 
     @Override
     public String toString() {
         return "UpdateRequestForm{" +
-                "requestStatusURN='" + requestStatusURN + '\'' +
+                "requestStatus='" + requestStatus + '\'' +
                 '}';
     }
 }

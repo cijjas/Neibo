@@ -35,7 +35,9 @@ public class PostDto {
                 .path(String.valueOf(post.getUser().getUserId()))
                 .build());
         links.setChannel(uriInfo.getBaseUriBuilder()
-                .path("base-channels")
+                .path("neighborhoods")
+                .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
+                .path("channels")
                 .path(String.valueOf(post.getChannel().getChannelId()))
                 .build());
         if (post.getPostPicture() != null) {
@@ -63,12 +65,6 @@ public class PostDto {
                 .path("likes")
                 .queryParam("onPost", self)
                 .build());
-/*        links.setSubscribers(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
-                .path("users")
-                .queryParam("subscribedTo", String.valueOf(post.getPostId()))
-                .build());*/
         dto.set_links(links);
         return dto;
     }

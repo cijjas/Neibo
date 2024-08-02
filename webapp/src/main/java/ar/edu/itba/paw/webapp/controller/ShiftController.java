@@ -47,12 +47,12 @@ public class ShiftController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getShifts(
-            @QueryParam("forAmenity") final String amenityURN
+            @QueryParam("forAmenity") final String amenity
     ) {
         LOGGER.info("GET request arrived at '/shifts'");
 
         // Content
-        List<Shift> shifts = ss.getShifts(amenityURN);
+        List<Shift> shifts = ss.getShifts(amenity);
         String shiftsHashCode = String.valueOf(shifts.hashCode());
 
         // Cache Control

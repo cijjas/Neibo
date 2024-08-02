@@ -358,6 +358,17 @@ public class ValidationUtils {
         return userTwoIds.getSecondId();
     }
 
+    public static Long checkURNAndExtractUserWorkerId(String userURN) {
+        if (userURN == null)
+            return null;
+        if (!URNValidator.validateURN(userURN, "users")) {
+            throw new IllegalArgumentException("Malformed URN");
+        }
+        TwoIds userTwoIds = ValidationUtils.extractTwoURNIds(userURN);
+        ValidationUtils.checkUserId(userTwoIds.getSecondId());
+        return userTwoIds.getSecondId();
+    }
+
     public static Long checkURNAndExtractProductId(String productURN) {
         if (productURN == null)
             return null;

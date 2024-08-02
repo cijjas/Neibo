@@ -52,15 +52,15 @@ public class LikeController extends GlobalControllerAdvice{
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response listLikes(
-            @QueryParam("onPost") final String postURN,
-            @QueryParam("likedBy") final String userURN,
+            @QueryParam("onPost") final String post,
+            @QueryParam("likedBy") final String user,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
 
         // Content
-        final List<Like> likes = ls.getLikes(neighborhoodId, postURN, userURN, page, size);
+        final List<Like> likes = ls.getLikes(neighborhoodId, post, user, page, size);
         String likesHashCode;
 
         // This is required to keep a consistent hash code across creates and this endpoint used as a find
@@ -88,7 +88,7 @@ public class LikeController extends GlobalControllerAdvice{
         // Pagination Links
         Link[] links = ControllerUtils.createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "likes",
-                ls.calculateLikePages(neighborhoodId, postURN, userURN, size),
+                ls.calculateLikePages(neighborhoodId, post, user, size),
                 page,
                 size);
 
@@ -103,8 +103,8 @@ public class LikeController extends GlobalControllerAdvice{
     @Path("/count")
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response countLikes(
-            @QueryParam("onPost") final String postURN,
-            @QueryParam("likedBy") final String userURN
+            @QueryParam("onPost") final String post,
+            @QueryParam("likedBy") final String user
     ){
         LOGGER.info("GET request arrived at '/neighborhoods/{}/likes/count'", neighborhoodId);
 
@@ -115,8 +115,8 @@ public class LikeController extends GlobalControllerAdvice{
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        int count = ls.countLikes(neighborhoodId, postURN, userURN);
-        LikeCountDto dto = LikeCountDto.fromLikeCount(count, postURN, userURN, neighborhoodId,  uriInfo);
+        int count = ls.countLikes(neighborhoodId, post, user);
+        LikeCountDto dto = LikeCountDto.fromLikeCount(count, post, user, neighborhoodId,  uriInfo);
 
         return Response.ok(new GenericEntity<LikeCountDto>(dto) {})
                 .cacheControl(cacheControl)
@@ -132,7 +132,7 @@ public class LikeController extends GlobalControllerAdvice{
         LOGGER.info("POST request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Like like = ls.createLike(form.getPostURN(), form.getUserURN());
+        final Like like = ls.createLike(form.getPost(), form.getUser());
         String likeHashCode = String.valueOf(like.hashCode());
 
         // Resource URN
@@ -161,14 +161,14 @@ public class LikeController extends GlobalControllerAdvice{
 
     @DELETE
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.canModify(#userURN)")
+    @PreAuthorize("@accessControlHelper.canModify(#user)")
     public Response deleteById(
-            @QueryParam("likedBy") final String userURN,
-            @QueryParam("onPost") final String postURN
+            @QueryParam("likedBy") final String user,
+            @QueryParam("onPost") final String post
     ) {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/likes/'", neighborhoodId);
 
-        if(ls.deleteLike(postURN, userURN)) {
+        if(ls.deleteLike(post, user)) {
             return Response.noContent()
                     .build();
         }

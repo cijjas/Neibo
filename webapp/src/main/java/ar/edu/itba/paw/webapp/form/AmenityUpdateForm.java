@@ -19,7 +19,7 @@ public class AmenityUpdateForm {
     private String description;
 
     @ShiftsURNConstraint
-    private List<String> shiftURNs;
+    private List<String> shifts;
 
 
     public String getName() {
@@ -38,12 +38,12 @@ public class AmenityUpdateForm {
         this.description = description;
     }
 
-    public List<String> getShiftURNs() {
-        return shiftURNs;
+    public List<String> getShifts() {
+        return shifts;
     }
 
-    public void setShiftURNs(List<String> shiftURNs) {
-        this.shiftURNs = shiftURNs;
+    public void setShifts(List<String> shifts) {
+        this.shifts = shifts;
     }
 
     @Override

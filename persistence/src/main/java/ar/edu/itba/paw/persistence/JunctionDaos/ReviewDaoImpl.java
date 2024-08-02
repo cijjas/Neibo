@@ -93,6 +93,7 @@ public class ReviewDaoImpl implements ReviewDao {
 
         query.setParameter("workerId", workerId);
         query.setParameter("userId", userId);
+        query.setMaxResults(1); // Limit the result to the latest review
 
         List<Review> result = query.getResultList();
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));

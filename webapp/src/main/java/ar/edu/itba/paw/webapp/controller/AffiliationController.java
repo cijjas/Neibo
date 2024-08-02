@@ -72,13 +72,13 @@ public class AffiliationController {
     public Response listAffiliations(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("inNeighborhood") String neighborhoodURN,
-            @QueryParam("forWorker")String workerURN
+            @QueryParam("inNeighborhood") String neighborhood,
+            @QueryParam("forWorker")String worker
     ) {
         LOGGER.info("GET request arrived at '/affiliations'");
 
         // Content
-        List<Affiliation> affiliations = nws.getAffiliations(workerURN, neighborhoodURN, page, size);
+        List<Affiliation> affiliations = nws.getAffiliations(worker, neighborhood, page, size);
         String affiliationsHashCode = String.valueOf(affiliations.hashCode());
 
         // This is required to keep a consistent hash code across creates and this endpoint used as a find
@@ -105,7 +105,7 @@ public class AffiliationController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "affiliations/",
-                nws.calculateAffiliationPages(workerURN, neighborhoodURN, size),
+                nws.calculateAffiliationPages(worker, neighborhood, size),
                 page,
                 size
         );
@@ -119,14 +119,14 @@ public class AffiliationController {
 
     @POST
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canCreateAffiliation(#form.workerURN)")
+    @PreAuthorize("@accessControlHelper.canCreateAffiliation(#form.worker)")
     public Response addAffiliation(
             @Valid @NotNull final CreateAffiliationForm form
     ) {
         LOGGER.info("POST request arrived at '/affiliations'");
 
         // Creation & HashCode Generation
-        Affiliation affiliation = nws.createAffiliation(form.getWorkerURN(), form.getNeighborhoodURN(), form.getWorkerRoleURN());
+        Affiliation affiliation = nws.createAffiliation(form.getWorker(), form.getNeighborhood(), form.getWorkerRole());
         String affiliationHashCode = String.valueOf(affiliation.hashCode());
 
         // Resource URN
@@ -149,16 +149,16 @@ public class AffiliationController {
 
     @PATCH
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canUpdateAffiliation(#neighborhoodURN)")
+    @PreAuthorize("@accessControlHelper.canUpdateAffiliation(#neighborhood)")
     public Response updateAffiliation(
-            @QueryParam("inNeighborhood") String neighborhoodURN,
-            @QueryParam("forWorker") String workerURN,
+            @QueryParam("inNeighborhood") String neighborhood,
+            @QueryParam("forWorker") String worker,
             @Valid @NotNull final AffiliationForm form
     ) {
         LOGGER.info("PATCH request arrived at '/affiliations'");
 
         // Modification & HashCode Generation
-        final Affiliation updatedAffiliation = nws.updateAffiliation(workerURN, neighborhoodURN, form.getWorkerRoleURN());
+        final Affiliation updatedAffiliation = nws.updateAffiliation(worker, neighborhood, form.getWorkerRole());
         String updatedAffiliationHashCode = String.valueOf(updatedAffiliation.hashCode());
 
         return Response.ok(AffiliationDto.fromAffiliation(updatedAffiliation, uriInfo))
@@ -168,15 +168,15 @@ public class AffiliationController {
 
     @DELETE
     @Produces(value = {MediaType.APPLICATION_JSON,})
-    @PreAuthorize("@accessControlHelper.canDeleteAffiliation(#workerURN)")
+    @PreAuthorize("@accessControlHelper.canDeleteAffiliation(#worker)")
     public Response removeWorkerFromNeighborhood(
-            @QueryParam("inNeighborhood") String neighborhoodURN,
-            @QueryParam("forWorker") String workerURN
+            @QueryParam("inNeighborhood") String neighborhood,
+            @QueryParam("forWorker") String worker
     ) {
         LOGGER.info("DELETE request arrived at '/affiliations'");
 
         // Deletion Attempt
-        if (nws.deleteAffiliation(workerURN, neighborhoodURN)) {
+        if (nws.deleteAffiliation(worker, neighborhood)) {
             return Response.noContent()
                     .build();
         }

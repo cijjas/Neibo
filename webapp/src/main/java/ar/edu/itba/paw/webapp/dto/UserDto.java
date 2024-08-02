@@ -1,11 +1,13 @@
 package ar.edu.itba.paw.webapp.dto;
 
+import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.enums.TransactionType;
 import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.models.Entities.User;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.Date;
 
 public class UserDto {
 
@@ -15,7 +17,7 @@ public class UserDto {
     private Boolean darkMode;
     private String phoneNumber;
     private Integer identification;
-//    private UserRole role;
+    private Date creationDate;
     private Links _links;
 
     public static UserDto fromUser(final User user, final UriInfo uriInfo) {
@@ -27,13 +29,9 @@ public class UserDto {
         dto.darkMode = user.getDarkMode();
         dto.phoneNumber = user.getPhoneNumber();
         dto.identification = user.getIdentification();
-//        dto.role = user.getRole();
+        dto.creationDate = user.getCreationDate();
 
         Links links = new Links();
-        links.setUserRole(uriInfo.getBaseUriBuilder()
-                .path("user-roles")
-                .path(String.valueOf(user.getRole().getId()))
-                .build());
         URI self = uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
@@ -44,6 +42,14 @@ public class UserDto {
         links.setNeighborhood(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
+                .build());
+        links.setUserRole(uriInfo.getBaseUriBuilder()
+                .path("languages")
+                .path(String.valueOf(user.getLanguage().getId()))
+                .build());
+        links.setUserRole(uriInfo.getBaseUriBuilder()
+                .path("user-roles")
+                .path(String.valueOf(user.getRole().getId()))
                 .build());
         if (user.getProfilePicture() != null) {
             links.setProfilePicture(uriInfo.getBaseUriBuilder()
@@ -72,22 +78,38 @@ public class UserDto {
             links.setPurchases(uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")
                     .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
-                    .path("users")
-                    .path(String.valueOf(user.getUserId()))
-                    .path("transactions")
+                    .path("requests")
+                    .queryParam("requestedBy", self)
+                    .queryParam("withType", uriInfo.getBaseUriBuilder()
+                            .path("transaction-types")
+                            .path(String.valueOf(TransactionType.PURCHASE.getId())))
+                    .queryParam("withStatus", uriInfo.getBaseUriBuilder()
+                            .path("request-statuses")
+                            .path(String.valueOf(RequestStatus.ACCEPTED.getId())))
+                    .build());
+            links.setRequests(uriInfo.getBaseUriBuilder()
+                    .path("neighborhoods")
+                    .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
+                    .path("requests")
+                    .queryParam("requestedBy", self)
                     .queryParam("withType", uriInfo.getBaseUriBuilder()
                             .path("transaction-types")
                             .path(String.valueOf(TransactionType.PURCHASE)))
+                    .queryParam("withStatus", uriInfo.getBaseUriBuilder()
+                            .path("request-statuses")
+                            .path(String.valueOf(RequestStatus.REQUESTED.getId())))
                     .build());
             links.setSales(uriInfo.getBaseUriBuilder()
                     .path("neighborhoods")
                     .path(String.valueOf(user.getNeighborhood().getNeighborhoodId()))
-                    .path("users")
-                    .path(String.valueOf(user.getUserId()))
-                    .path("transactions")
+                    .path("requests")
+                    .queryParam("requestedBy", self)
                     .queryParam("withType", uriInfo.getBaseUriBuilder()
                             .path("transaction-types")
                             .path(String.valueOf(TransactionType.SALE)))
+                    .queryParam("withStatus", uriInfo.getBaseUriBuilder()
+                            .path("request-statuses")
+                            .path(String.valueOf(RequestStatus.ACCEPTED.getId())))
                     .build());
         }
         dto.set_links(links);
@@ -146,6 +168,13 @@ public class UserDto {
         this.identification = identification;
     }
 
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
 
     public Links get_links() {
         return _links;

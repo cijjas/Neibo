@@ -10,32 +10,33 @@ import javax.validation.constraints.NotNull;
 public class LikeForm {
     @NotNull
     @PostURNConstraint
-    private String postURN;
+    private String post;
 
     @NotNull
     @UserURNAuthorizationConstraint
-    private String userURN;
+    private String user;
 
-    public @NotNull String getUserURN() {
-        return userURN;
+    public String getPost() {
+        return post;
     }
 
-    public void setUserURN(@NotNull String userURN) {
-        this.userURN = userURN;
+    public void setPost(String post) {
+        this.post = post;
     }
 
-    public String getPostURN() {
-        return postURN;
+    public String getUser() {
+        return user;
     }
 
-    public void setPostURN(String postURN) {
-        this.postURN = postURN;
+    public void setUser(String user) {
+        this.user = user;
     }
 
     @Override
     public String toString() {
         return "LikeForm{" +
-                "postURN='" + postURN + '\'' +
+                "post='" + post + '\'' +
+                ", user='" + user + '\'' +
                 '}';
     }
 }

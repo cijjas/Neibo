@@ -63,12 +63,6 @@ public class Product {
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
 
-    @Transient
-    private String priceIntegerString;
-
-    @Transient
-    private String priceDecimalString;
-
     Product() {
     }
 
@@ -138,30 +132,6 @@ public class Product {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
-    }
-
-    public String getPriceIntegerString() {
-        if (priceIntegerString == null) {
-            this.priceIntegerString = "$" + String.format("%,.0f", this.price).replace(".0", "");
-        }
-        return priceIntegerString;
-    }
-
-    public void setPriceIntegerString(String priceIntegerString) {
-        this.priceIntegerString = priceIntegerString;
-    }
-
-    public String getPriceDecimalString() {
-        if (priceDecimalString == null) {
-            this.priceDecimalString = String.valueOf(this.price).split("\\.")[1];
-            if (this.priceDecimalString.length() == 1)
-                this.priceDecimalString += "0";
-        }
-        return priceDecimalString;
-    }
-
-    public void setPriceDecimalString(String priceDecimalString) {
-        this.priceDecimalString = priceDecimalString;
     }
 
     public boolean isUsed() {
@@ -247,8 +217,6 @@ public class Product {
                 ", remainingUnits=" + remainingUnits +
                 ", department=" + department +
                 ", creationDate=" + creationDate +
-                ", priceIntegerString='" + priceIntegerString + '\'' +
-                ", priceDecimalString='" + priceDecimalString + '\'' +
                 '}';
     }
 

@@ -4,6 +4,7 @@ import ar.edu.itba.paw.models.Entities.Product;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
+import java.util.Date;
 
 public class ProductDto {
 
@@ -12,6 +13,7 @@ public class ProductDto {
     private Double price;
     private boolean used;
     private Long remainingUnits;
+    private Date creationDate;
     private Links _links;
 
     public static ProductDto fromProduct(Product product, UriInfo uriInfo) {
@@ -22,6 +24,7 @@ public class ProductDto {
         dto.price = product.getPrice();
         dto.used = product.isUsed();
         dto.remainingUnits = product.getRemainingUnits();
+        dto.creationDate = product.getCreationDate();
 
         Links links = new Links();
         URI self = uriInfo.getBaseUriBuilder()
@@ -117,6 +120,14 @@ public class ProductDto {
 
     public void setRemainingUnits(Long remainingUnits) {
         this.remainingUnits = remainingUnits;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public Links get_links() {

@@ -60,15 +60,15 @@ public class BookingController extends GlobalControllerAdvice{
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listBookings(
-            @QueryParam("bookedBy") final String userURN,
-            @QueryParam("forAmenity") final String amenityURN,
+            @QueryParam("bookedBy") final String user,
+            @QueryParam("forAmenity") final String amenity,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
         // Content
-        final List<Booking> bookings = bs.getBookings(userURN, amenityURN, neighborhoodId, page, size);
+        final List<Booking> bookings = bs.getBookings(user, amenity, neighborhoodId, page, size);
         String bookingsHashCode = String.valueOf(bookings.hashCode());
 
         // Cache Control
@@ -88,7 +88,7 @@ public class BookingController extends GlobalControllerAdvice{
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/amenities",
-                bs.calculateBookingPages(userURN, amenityURN, neighborhoodId, size),
+                bs.calculateBookingPages(user, amenity, neighborhoodId, size),
                 page,
                 size
         );
@@ -134,7 +134,7 @@ public class BookingController extends GlobalControllerAdvice{
         LOGGER.info("POST request arrived at '/neighborhoods/{}/bookings'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Booking booking = bs.createBooking(form.getUserURN(), form.getAmenityURN(), form.getShiftURN(), form.getReservationDate());
+        final Booking booking = bs.createBooking(form.getUser(), form.getAmenity(), form.getShift(), form.getReservationDate());
         String bookingHashCode = String.valueOf(booking.hashCode());
 
         // Resource URN

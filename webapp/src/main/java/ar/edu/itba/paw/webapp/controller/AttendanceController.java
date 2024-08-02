@@ -123,7 +123,7 @@ public class AttendanceController extends GlobalControllerAdvice {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/events/{}/attendance'", neighborhoodId, eventId);
 
         // Creation & HashCode Generation
-        final Attendance attendance = as.createAttendance(form.getUserURN(), eventId);
+        final Attendance attendance = as.createAttendance(form.getUser(), eventId);
         String attendanceHashCode = String.valueOf(attendance.hashCode());
 
         // Resource URN

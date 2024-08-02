@@ -9,42 +9,44 @@ import java.util.List;
 
 public class CreateAffiliationForm {
     @WorkerURNConstraint
-    private String workerURN;
+    private String worker;
 
     @NeighborhoodURNConstraint
-    private String neighborhoodURN;
+    private String neighborhood;
 
     @WorkerRoleURNConstraint
-    private String workerRoleURN;
+    private String workerRole;
 
-    public String getWorkerRoleURN() {
-        return workerRoleURN;
+    public String getWorker() {
+        return worker;
     }
 
-    public void setWorkerRoleURN(String workerRoleURN) {
-        this.workerRoleURN = workerRoleURN;
+    public void setWorker(String worker) {
+        this.worker = worker;
     }
 
-    public String getNeighborhoodURN() {
-        return neighborhoodURN;
+    public String getNeighborhood() {
+        return neighborhood;
     }
 
-    public void setNeighborhoodURN(String neighborhoodURN) {
-        this.neighborhoodURN = neighborhoodURN;
+    public void setNeighborhood(String neighborhood) {
+        this.neighborhood = neighborhood;
     }
 
-    public String getWorkerURN() {
-        return workerURN;
+    public String getWorkerRole() {
+        return workerRole;
     }
 
-    public void setWorkerURN(String workerURN) {
-        this.workerURN = workerURN;
+    public void setWorkerRole(String workerRole) {
+        this.workerRole = workerRole;
     }
 
     @Override
     public String toString() {
-        return "NeighborhoodForm{" +
-                ", neighborhoodId='" + neighborhoodURN + '\'' +
+        return "CreateAffiliationForm{" +
+                "worker='" + worker + '\'' +
+                ", neighborhood='" + neighborhood + '\'' +
+                ", workerRole='" + workerRole + '\'' +
                 '}';
     }
 }

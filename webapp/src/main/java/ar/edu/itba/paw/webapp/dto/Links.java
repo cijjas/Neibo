@@ -47,6 +47,7 @@ public class Links {
     private URI reviews;
     private URI professions;
     private URI workerNeighborhoods;
+    private URI neighborhoods;
 
     public URI getSelf() {
         return self;
@@ -398,5 +399,13 @@ public class Links {
 
     public void setWorkerNeighborhoods(URI workerNeighborhoods) {
         this.workerNeighborhoods = workerNeighborhoods;
+    }
+
+    public URI getNeighborhoods() {
+        return neighborhoods;
+    }
+
+    public void setNeighborhoods(URI neighborhoods) {
+        this.neighborhoods = neighborhoods;
     }
 }

@@ -6,11 +6,11 @@ import javax.validation.constraints.NotNull;
 public class BookingForm {
     @NotNull
     @AmenityURNConstraint
-    private String amenityURN; // http://localhost:8080/neighborhoods/{neighborhoodId}/amenities/{amenityId}
+    private String amenity; // http://localhost:8080/neighborhoods/{neighborhoodId}/amenities/{amenityId}
 
     @NotNull
     @ShiftURNConstraint
-    private String shiftURN; // http://localhost:8080/shifts/{shiftId}
+    private String shift; // http://localhost:8080/shifts/{shiftId}
 
     @NotNull
     @ReservationDateConstraint
@@ -18,30 +18,30 @@ public class BookingForm {
 
     @NotNull
     @UserURNAuthorizationConstraint
-    private String userURN;
+    private String user;
 
-    public String getUserURN() {
-        return userURN;
+    public String getAmenity() {
+        return amenity;
     }
 
-    public void setUserURN(String userURN) {
-        this.userURN = userURN;
+    public void setAmenity(String amenity) {
+        this.amenity = amenity;
     }
 
-    public String getAmenityURN() {
-        return amenityURN;
+    public String getShift() {
+        return shift;
     }
 
-    public void setAmenityURN(String amenityURN) {
-        this.amenityURN = amenityURN;
+    public void setShift(String shift) {
+        this.shift = shift;
     }
 
-    public String getShiftURN() {
-        return shiftURN;
+    public String getUser() {
+        return user;
     }
 
-    public void setShiftURN(String shiftURN) {
-        this.shiftURN = shiftURN;
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public void setReservationDate(String reservationDate) {
@@ -55,7 +55,10 @@ public class BookingForm {
     @Override
     public String toString() {
         return "BookingForm{" +
-                ", reservationDate=" + reservationDate +
+                "amenity='" + amenity + '\'' +
+                ", shift='" + shift + '\'' +
+                ", reservationDate='" + reservationDate + '\'' +
+                ", user='" + user + '\'' +
                 '}';
     }
 }

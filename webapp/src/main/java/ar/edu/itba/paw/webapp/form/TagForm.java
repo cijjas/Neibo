@@ -21,7 +21,7 @@ public class TagForm {
 
     @Override
     public String toString() {
-        return "NewNeighborhoodForm{" +
+        return "TagForm{" +
                 "name='" + name + '\'' +
                 '}';
     }

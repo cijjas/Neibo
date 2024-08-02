@@ -9,10 +9,10 @@ import java.util.Arrays;
 
 public class WorkerSignupForm {
     @UserURNConstraint
-    private String userURN;
+    private String user;
 
     @ProfessionsURNConstraint
-    private String[] professionURNs;
+    private String[] professions;
 
     @NotNull
     @Size(min = 1, max = 64)
@@ -29,20 +29,20 @@ public class WorkerSignupForm {
     @Size(min = 1, max = 128)
     private String address;
 
-    public String getUserURN() {
-        return userURN;
+    public String getUser() {
+        return user;
     }
 
-    public void setUserURN(String userURN) {
-        this.userURN = userURN;
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    public String[] getProfessionURNs() {
-        return professionURNs;
+    public String[] getProfessions() {
+        return professions;
     }
 
-    public void setProfessionURNs(String[] professionURNs) {
-        this.professionURNs = professionURNs;
+    public void setProfessions(String[] professions) {
+        this.professions = professions;
     }
 
     public String getPhoneNumber() {
@@ -72,8 +72,8 @@ public class WorkerSignupForm {
     @Override
     public String toString() {
         return "WorkerSignupForm{" +
-                "userURN='" + userURN + '\'' +
-                ", professionURNs=" + Arrays.toString(professionURNs) +
+                "user='" + user + '\'' +
+                ", professions=" + Arrays.toString(professions) +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", businessName='" + businessName + '\'' +
                 ", address='" + address + '\'' +

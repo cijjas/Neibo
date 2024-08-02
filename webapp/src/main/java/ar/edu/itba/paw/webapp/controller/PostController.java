@@ -56,15 +56,15 @@ public class PostController extends GlobalControllerAdvice{
     public Response listPosts(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("inChannel") final String channelURN,
-            @QueryParam("withTags") final List<String> tagURNs,
-            @QueryParam("withStatus") final String postStatusURN,
-            @QueryParam("postedBy") final String userURN
+            @QueryParam("inChannel") final String channel,
+            @QueryParam("withTags") final List<String> tags,
+            @QueryParam("withStatus") final String postStatus,
+            @QueryParam("postedBy") final String user
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
         // Content
-        final List<Post> posts = ps.getPosts(channelURN, page, size, tagURNs, neighborhoodId, postStatusURN, userURN);
+        final List<Post> posts = ps.getPosts(channel, page, size, tags, neighborhoodId, postStatus, user);
         String postsHashCode = String.valueOf(posts.hashCode());
 
         // Cache Control
@@ -84,8 +84,8 @@ public class PostController extends GlobalControllerAdvice{
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/posts",
-                ps.calculatePostPages(channelURN, size, tagURNs, neighborhoodId,
-                        postStatusURN, userURN),
+                ps.calculatePostPages(channel, size, tags, neighborhoodId,
+                        postStatus, user),
                 page,
                 size
         );
@@ -129,7 +129,7 @@ public class PostController extends GlobalControllerAdvice{
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts'", neighborhoodId);
 
         // Validation, Creation & ETag Generation
-        final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), publishForm.getUserURN(), publishForm.getChannelURN(), publishForm.getTagURNs(), publishForm.getPostImageURN(), neighborhoodId);
+        final Post post = ps.createPost(publishForm.getSubject(), publishForm.getMessage(), publishForm.getUser(), publishForm.getChannel(), publishForm.getTags(), publishForm.getImage(), neighborhoodId);
         String postHashCode = String.valueOf(post.hashCode());
 
         // Resource URN
