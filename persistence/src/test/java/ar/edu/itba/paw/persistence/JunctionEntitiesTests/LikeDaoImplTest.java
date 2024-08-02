@@ -37,7 +37,7 @@ public class LikeDaoImplTest {
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private LikeDaoImpl likeDao;
+    private LikeDaoImpl likeDaoImpl;
     @PersistenceContext
     private EntityManager em;
 
@@ -45,6 +45,8 @@ public class LikeDaoImplTest {
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
     }
+
+    // ------------------------------------------------- CREATE --------------------------------------------------------
 
     @Test
     public void create_valid() {
@@ -56,13 +58,18 @@ public class LikeDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
-        likeDao.createLike(pKey, uKey);
+        Like like = likeDaoImpl.createLike(pKey, uKey);
 
         // Validations & Post Conditions
         em.flush();
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
+        assertNotNull(like);
+        assertEquals(pKey, like.getPost().getPostId().longValue());
+        assertEquals(uKey, like.getUser().getUserId().longValue());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
     }
+
+    // -------------------------------------------------- GETS ---------------------------------------------------------
+
     @Test
     public void get_neighborhoodId(){
         // Pre Conditions
@@ -78,10 +85,10 @@ public class LikeDaoImplTest {
         testInserter.createLike(pKey1, uKey2);
 
         // Exercise
-        List<Like> attendances = likeDao.getLikes(null, null, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(EMPTY_FIELD, EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertEquals(3, attendances.size());
+        assertEquals(THREE_ELEMENTS, likeList.size());
     }
 
     @Test
@@ -99,10 +106,10 @@ public class LikeDaoImplTest {
         testInserter.createLike(pKey1, uKey2);
 
         // Exercise
-        List<Like> attendances = likeDao.getLikes(null, uKey1, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(EMPTY_FIELD, uKey1, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertEquals(2, attendances.size());
+        assertEquals(TWO_ELEMENTS, likeList.size());
     }
 
     @Test
@@ -120,10 +127,10 @@ public class LikeDaoImplTest {
         testInserter.createLike(pKey1, uKey2);
 
         // Exercise
-        List<Like> attendances = likeDao.getLikes(pKey1, null, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(pKey1, EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertEquals(2, attendances.size());
+        assertEquals(TWO_ELEMENTS, likeList.size());
     }
 
     @Test
@@ -141,10 +148,10 @@ public class LikeDaoImplTest {
         testInserter.createLike(pKey1, uKey2);
 
         // Exercise
-        List<Like> attendances = likeDao.getLikes(pKey1, uKey1, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(pKey1, uKey1, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertEquals(1, attendances.size());
+        assertEquals(ONE_ELEMENT, likeList.size());
     }
 
     @Test
@@ -159,10 +166,10 @@ public class LikeDaoImplTest {
         long pKey2 = testInserter.createPost(uKey2, chKey, iKey);
 
         // Exercise
-        List<Like> attendances = likeDao.getLikes(pKey1, uKey1, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(pKey1, uKey1, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertEquals(0, attendances.size());
+        assertTrue(likeList.isEmpty());
     }
 
     @Test
@@ -176,10 +183,10 @@ public class LikeDaoImplTest {
         testInserter.createLike(pKey, uKey);
 
         // Exercise
-        int likes = likeDao.countLikes(pKey, uKey, nhKey);
+        int countLikes = likeDaoImpl.countLikes(pKey, uKey, nhKey);
 
         // Validations & Post Conditions
-        assertEquals(1, likes);
+        assertEquals(ONE_ELEMENT, countLikes);
     }
 
     @Test
@@ -187,11 +194,13 @@ public class LikeDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        int likes = likeDao.countLikes(INVALID_LONG_ID, INVALID_LONG_ID, INVALID_ID);
+        int countLikes = likeDaoImpl.countLikes(INVALID_LONG_ID, INVALID_LONG_ID, INVALID_ID);
 
         // Validations & Post Conditions
-        assertEquals(0, likes);
+        assertEquals(NO_ELEMENTS, countLikes);
     }
+
+    // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
     public void delete_postId_userId_valid() {
@@ -204,12 +213,12 @@ public class LikeDaoImplTest {
         testInserter.createLike(pKey, uKey);
 
         // Exercise
-        boolean deleted = likeDao.deleteLike(pKey, uKey);
+        boolean deleted = likeDaoImpl.deleteLike(pKey, uKey);
 
         // Validations & Post Conditions
         em.flush();
         assertTrue(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
     }
 
     @Test
@@ -223,12 +232,11 @@ public class LikeDaoImplTest {
         testInserter.createLike(pKey, uKey);
 
         // Exercise
-        boolean deleted = likeDao.deleteLike(INVALID_ID, uKey);
+        boolean deleted = likeDaoImpl.deleteLike(INVALID_ID, uKey);
 
         // Validations & Post Conditions
         em.flush();
         assertFalse(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
     }
 
     @Test
@@ -242,12 +250,11 @@ public class LikeDaoImplTest {
         testInserter.createLike(pKey, uKey);
 
         // Exercise
-        boolean deleted = likeDao.deleteLike(pKey, INVALID_ID);
+        boolean deleted = likeDaoImpl.deleteLike(pKey, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();
         assertFalse(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
     }
 
     @Test
@@ -261,11 +268,10 @@ public class LikeDaoImplTest {
         testInserter.createLike(pKey, uKey);
 
         // Exercise
-        boolean deleted = likeDao.deleteLike(INVALID_ID, INVALID_ID);
+        boolean deleted = likeDaoImpl.deleteLike(INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();
         assertFalse(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
     }
 }

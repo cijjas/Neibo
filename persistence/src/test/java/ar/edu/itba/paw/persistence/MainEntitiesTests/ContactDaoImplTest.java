@@ -22,7 +22,7 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
-import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
+import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -33,15 +33,15 @@ public class ContactDaoImplTest {
 
 
     private static final String CONTACT_NAME = "Sample Contact";
-    private static final String ADDRESS = "Sample Address";
-    private static final String NUMBER = "123456789";
+    private static final String CONTACT_ADDRESS = "Sample Address";
+    private static final String CONTACT_NUMBER = "123456789";
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private ContactDaoImpl contactDao;
+    private ContactDaoImpl contactDaoImpl;
     @PersistenceContext
     private EntityManager em;
 
@@ -50,21 +50,27 @@ public class ContactDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    // ------------------------------------------------- CREATE --------------------------------------------------------
+
     @Test
     public void create_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        Contact c = contactDao.createContact(nhKey, CONTACT_NAME, ADDRESS, NUMBER);
+        Contact contact = contactDaoImpl.createContact(nhKey, CONTACT_NAME, CONTACT_ADDRESS, CONTACT_NUMBER);
 
         // Validations & Post Conditions
         em.flush();
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.contacts.name()));
-        assertEquals(CONTACT_NAME, c.getContactName());
-        assertEquals(ADDRESS, c.getContactAddress());
-        assertEquals(NUMBER, c.getContactPhone());
+        assertNotNull(contact);
+        assertEquals(nhKey, contact.getNeighborhood().getNeighborhoodId().longValue());
+        assertEquals(CONTACT_NAME, contact.getContactName());
+        assertEquals(CONTACT_ADDRESS, contact.getContactAddress());
+        assertEquals(CONTACT_NUMBER, contact.getContactPhone());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.contacts.name()));
     }
+
+    // -------------------------------------------------- FINDS --------------------------------------------------------
 
 	@Test
 	public void find_contactId_valid() {
@@ -73,11 +79,11 @@ public class ContactDaoImplTest {
         long cKey = testInserter.createContact(nhKey);
 
 	    // Exercise
-	    Optional<Contact> optional = contactDao.findContact(cKey);
+	    Optional<Contact> optionalContact = contactDaoImpl.findContact(cKey);
 
 	    // Validations & Post Conditions
-	    assertTrue(optional.isPresent());
-		assertEquals(cKey, optional.get().getContactId().longValue());
+	    assertTrue(optionalContact.isPresent());
+		assertEquals(cKey, optionalContact.get().getContactId().longValue());
 	}
 
     @Test
@@ -86,10 +92,10 @@ public class ContactDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
 
 	    // Exercise
-	    Optional<Contact> optional = contactDao.findContact(INVALID_ID);
+	    Optional<Contact> optionalContact = contactDaoImpl.findContact(INVALID_ID);
 
 	    // Validations & Post Conditions
-	    assertFalse(optional.isPresent());
+	    assertFalse(optionalContact.isPresent());
 	}
 
 	@Test
@@ -99,11 +105,11 @@ public class ContactDaoImplTest {
         long cKey = testInserter.createContact(nhKey);
 
 	    // Exercise
-	    Optional<Contact> optional = contactDao.findContact(cKey, nhKey);
+	    Optional<Contact> optionalContact = contactDaoImpl.findContact(cKey, nhKey);
 
 	    // Validations & Post Conditions
-	    assertTrue(optional.isPresent());
-		assertEquals(cKey, optional.get().getContactId().longValue());
+	    assertTrue(optionalContact.isPresent());
+		assertEquals(cKey, optionalContact.get().getContactId().longValue());
 	}
 
     @Test
@@ -113,10 +119,10 @@ public class ContactDaoImplTest {
         long cKey = testInserter.createContact(nhKey);
 
 	    // Exercise
-	    Optional<Contact> optional = contactDao.findContact(INVALID_ID, nhKey);
+	    Optional<Contact> optionalContact = contactDaoImpl.findContact(INVALID_ID, nhKey);
 
 	    // Validations & Post Conditions
-	    assertFalse(optional.isPresent());
+	    assertFalse(optionalContact.isPresent());
 	}
 
     @Test
@@ -126,10 +132,10 @@ public class ContactDaoImplTest {
         long cKey = testInserter.createContact(nhKey);
 
 	    // Exercise
-	    Optional<Contact> optional = contactDao.findContact(cKey, INVALID_ID);
+	    Optional<Contact> optionalContact = contactDaoImpl.findContact(cKey, INVALID_ID);
 
 	    // Validations & Post Conditions
-	    assertFalse(optional.isPresent());
+	    assertFalse(optionalContact.isPresent());
 	}
 
     @Test
@@ -139,35 +145,40 @@ public class ContactDaoImplTest {
         long cKey = testInserter.createContact(nhKey);
 
 	    // Exercise
-	    Optional<Contact> optional = contactDao.findContact(INVALID_ID, INVALID_ID);
+	    Optional<Contact> optionalContact = contactDaoImpl.findContact(INVALID_ID, INVALID_ID);
 
 	    // Validations & Post Conditions
-	    assertFalse(optional.isPresent());
+	    assertFalse(optionalContact.isPresent());
 	}
+
+    // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test
     public void get_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        testInserter.createContact(nhKey, CONTACT_NAME, ADDRESS, NUMBER);
+        testInserter.createContact(nhKey, CONTACT_NAME, CONTACT_ADDRESS, CONTACT_NUMBER);
 
         // Exercise
-        List<Contact> contacts = contactDao.getContacts(nhKey);
+        List<Contact> contactList = contactDaoImpl.getContacts(nhKey);
 
         // Validations & Post Conditions
-        assertEquals(1, contacts.size());
+        assertEquals(ONE_ELEMENT, contactList.size());
     }
 
     @Test
     public void get_empty() {
         // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        List<Contact> contacts = contactDao.getContacts(1);
+        List<Contact> contactList = contactDaoImpl.getContacts(nhKey);
 
         // Validations & Post Conditions
-        assertEquals(0, contacts.size());
+        assertTrue(contactList.isEmpty());
     }
+
+    // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
     public void delete_contactId_valid() {
@@ -176,24 +187,25 @@ public class ContactDaoImplTest {
         long contactId = testInserter.createContact(nhKey);
 
         // Exercise
-        boolean deleted = contactDao.deleteContact(contactId);
+        boolean deleted = contactDaoImpl.deleteContact(contactId);
 
         // Validations & Post Conditions
         em.flush();
         assertTrue(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.contacts.name()));
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.contacts.name()));
     }
 
     @Test
     public void delete_contactId_invalid_contactId() {
         // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long contactId = testInserter.createContact(nhKey);
 
         // Exercise
-        boolean deleted = contactDao.deleteContact(1);
+        boolean deleted = contactDaoImpl.deleteContact(INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();
         assertFalse(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.contacts.name()));
     }
 }

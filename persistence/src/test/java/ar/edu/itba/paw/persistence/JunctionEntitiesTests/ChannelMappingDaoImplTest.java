@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
+import ar.edu.itba.paw.models.Entities.ChannelMapping;
 import ar.edu.itba.paw.persistence.JunctionDaos.ChannelMappingDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -19,7 +20,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
-import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
+import java.security.acl.NotOwnerException;
+
+import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -34,7 +37,7 @@ public class ChannelMappingDaoImplTest {
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private ChannelMappingDaoImpl channelMappingDao;
+    private ChannelMappingDaoImpl channelMappingDaoImpl;
     @PersistenceContext
     private EntityManager em;
 
@@ -43,6 +46,8 @@ public class ChannelMappingDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    // ------------------------------------------------- CREATE --------------------------------------------------------
+
     @Test
     public void create_valid() {
         // Pre Conditions
@@ -50,12 +55,17 @@ public class ChannelMappingDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        channelMappingDao.createChannelMapping(chKey, nhKey);
+        ChannelMapping channelMapping = channelMappingDaoImpl.createChannelMapping(chKey, nhKey);
 
         // Validations & Post Conditions
         em.flush();
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods_channels.name()));
+        assertNotNull(channelMapping);
+        assertEquals(chKey, channelMapping.getChannel().getChannelId().longValue());
+        assertEquals(nhKey, channelMapping.getNeighborhood().getNeighborhoodId().longValue());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods_channels.name()));
     }
+
+    // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
     public void delete_channelId_neighborhoodId_valid() {
@@ -65,15 +75,13 @@ public class ChannelMappingDaoImplTest {
         testInserter.createChannelMapping(nhKey, chKey);
 
         // Exercise
-        boolean deleted = channelMappingDao.deleteChannelMapping(chKey, nhKey);
+        boolean deleted = channelMappingDaoImpl.deleteChannelMapping(chKey, nhKey);
 
         // Validations & Post Conditions
         em.flush();
         assertTrue(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods_channels.name()));
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods_channels.name()));
     }
-
-
 
     @Test
     public void delete_channelId_neighborhoodId_invalid_channelId() {
@@ -83,12 +91,11 @@ public class ChannelMappingDaoImplTest {
         testInserter.createChannelMapping(nhKey, chKey);
 
         // Exercise
-        boolean deleted = channelMappingDao.deleteChannelMapping(INVALID_ID, nhKey);
+        boolean deleted = channelMappingDaoImpl.deleteChannelMapping(INVALID_ID, nhKey);
 
         // Validations & Post Conditions
         em.flush();
         assertFalse(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods_channels.name()));
     }
 
     @Test
@@ -99,12 +106,11 @@ public class ChannelMappingDaoImplTest {
         testInserter.createChannelMapping(nhKey, chKey);
 
         // Exercise
-        boolean deleted = channelMappingDao.deleteChannelMapping(chKey, INVALID_ID);
+        boolean deleted = channelMappingDaoImpl.deleteChannelMapping(chKey, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();
         assertFalse(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods_channels.name()));
     }
 
     @Test
@@ -115,11 +121,10 @@ public class ChannelMappingDaoImplTest {
         testInserter.createChannelMapping(nhKey, chKey);
 
         // Exercise
-        boolean deleted = channelMappingDao.deleteChannelMapping(INVALID_ID, INVALID_ID);
+        boolean deleted = channelMappingDaoImpl.deleteChannelMapping(INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();
         assertFalse(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods_channels.name()));
     }
 }

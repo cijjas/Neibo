@@ -23,6 +23,7 @@ import javax.sql.DataSource;
 import java.util.Optional;
 
 import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
+import static ar.edu.itba.paw.persistence.TestConstants.ONE_ELEMENT;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -36,7 +37,7 @@ public class DepartmentDaoImplTest {
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private ar.edu.itba.paw.persistence.MainEntitiesDaos.DepartmentDaoImpl departmentDao;
+    private ar.edu.itba.paw.persistence.MainEntitiesDaos.DepartmentDaoImpl departmentDaoImpl;
 
     @PersistenceContext
     private EntityManager em;
@@ -46,17 +47,23 @@ public class DepartmentDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    // ------------------------------------------------- CREATE --------------------------------------------------------
+
     @Test
     public void create_valid() {
         // Pre Conditions
 
         // Exercise
-        Department department = departmentDao.createDepartment(ar.edu.itba.paw.enums.Department.ELECTRONICS);
+        Department department = departmentDaoImpl.createDepartment(ar.edu.itba.paw.enums.Department.ELECTRONICS);
 
         // Validations & Post Conditions
         em.flush();
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.departments.name()));
+        assertNotNull(department);
+        assertEquals(ar.edu.itba.paw.enums.Department.ELECTRONICS.name(), department.getDepartment().name());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.departments.name()));
     }
+
+    // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
 	public void find_departmentId_valid() {
@@ -64,21 +71,22 @@ public class DepartmentDaoImplTest {
         long dKey = testInserter.createDepartment();
 
 	    // Exercise
-	    Optional<Department> optional = departmentDao.findDepartment(dKey);
+	    Optional<Department> optionalDepartment = departmentDaoImpl.findDepartment(dKey);
 
 	    // Validations & Post Conditions
-	    assertTrue(optional.isPresent());
-		assertEquals(dKey, optional.get().getDepartmentId().longValue());
+	    assertTrue(optionalDepartment.isPresent());
+		assertEquals(dKey, optionalDepartment.get().getDepartmentId().longValue());
 	}
 
     @Test
 	public void find_departmentId_invalid_departmentId() {
 	    // Pre Conditions
+        long dKey = testInserter.createDepartment();
 
 	    // Exercise
-	    Optional<Department> optional = departmentDao.findDepartment(INVALID_ID);
+	    Optional<Department> optionalDepartment = departmentDaoImpl.findDepartment(INVALID_ID);
 
 	    // Validations & Post Conditions
-	    assertFalse(optional.isPresent());
+	    assertFalse(optionalDepartment.isPresent());
 	}
 }

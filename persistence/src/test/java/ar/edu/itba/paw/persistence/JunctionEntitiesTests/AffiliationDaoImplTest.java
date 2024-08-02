@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.models.Entities.Affiliation;
 import ar.edu.itba.paw.persistence.JunctionDaos.AffiliationDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
@@ -22,7 +21,6 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
@@ -32,6 +30,8 @@ import static org.junit.Assert.*;
 @Transactional
 @Rollback
 public class AffiliationDaoImplTest {
+
+    public static final long AFFILIATION_WORKER_ROLE_ID = 2L;
 
     @Autowired
     private DataSource ds;
@@ -50,6 +50,8 @@ public class AffiliationDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    // ------------------------------------------------- CREATE --------------------------------------------------------
+
     @Test
     public void create_valid() {
         // Pre Conditions
@@ -58,12 +60,18 @@ public class AffiliationDaoImplTest {
         testInserter.createWorker(uKey);
 
         // Exercise
-        affiliationDaoImpl.createAffiliation(uKey, nhKey, 2L);
+        Affiliation affiliation = affiliationDaoImpl.createAffiliation(uKey, nhKey, AFFILIATION_WORKER_ROLE_ID);
 
         // Validations & Post Conditions
         em.flush();
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_neighborhoods.name()));
+        assertNotNull(affiliation);
+        assertEquals(AFFILIATION_WORKER_ROLE_ID, affiliation.getRole().getId());
+        assertEquals(nhKey, affiliation.getNeighborhood().getNeighborhoodId().longValue());
+        assertEquals(uKey, affiliation.getWorker().getUser().getUserId().longValue());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_neighborhoods.name()));
     }
+
+    // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
     public void find_workerId_neighborhoodId_valid() {
@@ -73,12 +81,13 @@ public class AffiliationDaoImplTest {
         testInserter.createWorker(uKey);
         testInserter.createAffiliation(uKey, nhKey);
 
-
         // Exercise
-        Optional<Affiliation> affiliation = affiliationDaoImpl.findAffiliation(uKey, nhKey);
+        Optional<Affiliation> optionalAffiliation = affiliationDaoImpl.findAffiliation(uKey, nhKey);
 
         // Validations & Post Conditions
-        assertTrue(affiliation.isPresent());
+        assertTrue(optionalAffiliation.isPresent());
+        assertEquals(nhKey, optionalAffiliation.get().getNeighborhood().getNeighborhoodId().longValue());
+        assertEquals(uKey, optionalAffiliation.get().getWorker().getWorkerId().longValue());
     }
 
     @Test
@@ -90,10 +99,10 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey, nhKey);
 
         // Exercise
-        Optional<Affiliation> affiliation = affiliationDaoImpl.findAffiliation(INVALID_ID, nhKey);
+        Optional<Affiliation> optionalAffiliation = affiliationDaoImpl.findAffiliation(INVALID_ID, nhKey);
 
         // Validations & Post Conditions
-        assertFalse(affiliation.isPresent());
+        assertFalse(optionalAffiliation.isPresent());
     }
 
     @Test
@@ -105,10 +114,10 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey, nhKey);
 
         // Exercise
-        Optional<Affiliation> affiliation = affiliationDaoImpl.findAffiliation(uKey, INVALID_ID);
+        Optional<Affiliation> optionalAffiliation = affiliationDaoImpl.findAffiliation(uKey, INVALID_ID);
 
         // Validations & Post Conditions
-        assertFalse(affiliation.isPresent());
+        assertFalse(optionalAffiliation.isPresent());
     }
 
     @Test
@@ -120,11 +129,13 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey, nhKey);
 
         // Exercise
-        Optional<Affiliation> affiliation = affiliationDaoImpl.findAffiliation(1, 1);
+        Optional<Affiliation> optionalAffiliation = affiliationDaoImpl.findAffiliation(INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
-        assertFalse(affiliation.isPresent());
+        assertFalse(optionalAffiliation.isPresent());
     }
+
+    // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test
     public void get() {
@@ -135,10 +146,10 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey, nhKey);
 
         // Exercise
-        List<Affiliation> affiliations = affiliationDaoImpl.getAffiliations(null, null, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Affiliation> affiliationList = affiliationDaoImpl.getAffiliations(EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertEquals(1, affiliations.size());
+        assertEquals(ONE_ELEMENT, affiliationList.size());
     }
 
     @Test
@@ -153,10 +164,10 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey);
 
         // Exercise
-        List<Affiliation> affiliations = affiliationDaoImpl.getAffiliations(uKey, null, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Affiliation> affiliationList = affiliationDaoImpl.getAffiliations(uKey, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertEquals(1, affiliations.size());
+        assertEquals(ONE_ELEMENT, affiliationList.size());
     }
 
     @Test
@@ -172,10 +183,10 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey2);
 
         // Exercise
-        List<Affiliation> affiliations = affiliationDaoImpl.getAffiliations(null, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Affiliation> affiliationList = affiliationDaoImpl.getAffiliations(EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertEquals(1, affiliations.size());
+        assertEquals(ONE_ELEMENT, affiliationList.size());
     }
 
     @Test
@@ -192,10 +203,10 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey);
 
         // Exercise
-        List<Affiliation> affiliations = affiliationDaoImpl.getAffiliations(uKey, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Affiliation> affiliationList = affiliationDaoImpl.getAffiliations(uKey, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertEquals(1, affiliations.size());
+        assertEquals(ONE_ELEMENT, affiliationList.size());
     }
 
     @Test
@@ -203,11 +214,13 @@ public class AffiliationDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Affiliation> affiliations = affiliationDaoImpl.getAffiliations(null , null, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Affiliation> affiliationList = affiliationDaoImpl.getAffiliations(EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertEquals(0, affiliations.size());
+        assertTrue(affiliationList.isEmpty());
     }
+
+    // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
     public void delete_userId_neighborhoodId_valid() {
@@ -223,6 +236,7 @@ public class AffiliationDaoImplTest {
         // Validations & Post Conditions
         em.flush();
         assertTrue(deleted);
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_neighborhoods.name()));
     }
 
     @Test

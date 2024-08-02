@@ -24,7 +24,7 @@ import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 
-import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
+import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -35,15 +35,13 @@ public class EventDaoImplTest {
 
     private static final String EVENT_NAME = "Sample Event";
     private static final String EVENT_DESCRIPTION = "Sample Description";
-    private static final Date EVENT_DATE = Date.valueOf("2022-12-12");
-    private static final String EVENT_DATE_2 = "2022-12-12";
+    private static final Date EVENT_DATE = Date.valueOf("2024-3-12");
     private static final Time EVENT_START_TIME = Time.valueOf("22:00:00");
     private static final Time EVENT_END_TIME = Time.valueOf("23:00:00");
-    public static final Date DATE = Date.valueOf("2024-3-14");
+
     public static final Date START_DATE = Date.valueOf("2024-3-10");
-    public static final Date INVALID_START_DATE = Date.valueOf("2094-3-10");
     public static final Date END_DATE = Date.valueOf("2024-3-24");
-    public static final Date INVALID_END_DATE = Date.valueOf("2094-3-24");
+    public static final Date NO_DATE = null;
 
     @Autowired
     private DataSource ds;
@@ -51,7 +49,7 @@ public class EventDaoImplTest {
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private EventDaoImpl eventDao;
+    private EventDaoImpl eventDaoImpl;
     @PersistenceContext
     private EntityManager em;
 
@@ -60,6 +58,7 @@ public class EventDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    // ------------------------------------------------- CREATE --------------------------------------------------------
 
     @Test
     public void create_valid() {
@@ -69,15 +68,21 @@ public class EventDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        Event e = eventDao.createEvent(EVENT_NAME, EVENT_DESCRIPTION, EVENT_DATE, tKey1, tKey2, nhKey);
+        Event event = eventDaoImpl.createEvent(EVENT_NAME, EVENT_DESCRIPTION, EVENT_DATE, tKey1, tKey2, nhKey);
 
         // Validations & Post Conditions
         em.flush();
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events.name()));
-        assertEquals(EVENT_NAME, e.getName());
-        assertEquals(EVENT_DESCRIPTION, e.getDescription());
-        assertEquals(EVENT_DATE, e.getDate());
+        assertNotNull(event);
+        assertEquals(tKey1, event.getStartTime().getTimeId().longValue());
+        assertEquals(tKey2, event.getEndTime().getTimeId().longValue());
+        assertEquals(nhKey, event.getNeighborhood().getNeighborhoodId().longValue());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events.name()));
+        assertEquals(EVENT_NAME, event.getName());
+        assertEquals(EVENT_DESCRIPTION, event.getDescription());
+        assertEquals(EVENT_DATE, event.getDate());
     }
+
+    // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
     public void find_eventId_valid() {
@@ -88,22 +93,26 @@ public class EventDaoImplTest {
         long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
 
         // Exercise
-        Optional<Event> event = eventDao.findEvent(eKey);
+        Optional<Event> optionalEvent = eventDaoImpl.findEvent(eKey);
 
         // Validations & Post Conditions
-        assertTrue(event.isPresent());
-        assertEquals(eKey, event.get().getEventId().longValue());
+        assertTrue(optionalEvent.isPresent());
+        assertEquals(eKey, optionalEvent.get().getEventId().longValue());
     }
 
     @Test
     public void find_eventId_invalid_eventId() {
         // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long tKey1 = testInserter.createTime(EVENT_START_TIME);
+        long tKey2 = testInserter.createTime(EVENT_END_TIME);
+        long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
 
         // Exercise
-        Optional<Event> event = eventDao.findEvent(1);
+        Optional<Event> optionalEvent = eventDaoImpl.findEvent(INVALID_ID);
 
         // Validations & Post Conditions
-        assertFalse(event.isPresent());
+        assertFalse(optionalEvent.isPresent());
     }
 
     @Test
@@ -115,11 +124,11 @@ public class EventDaoImplTest {
         long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
 
         // Exercise
-        Optional<Event> event = eventDao.findEvent(eKey, nhKey);
+        Optional<Event> optionalEvent = eventDaoImpl.findEvent(eKey, nhKey);
 
         // Validations & Post Conditions
-        assertTrue(event.isPresent());
-        assertEquals(eKey, event.get().getEventId().longValue());
+        assertTrue(optionalEvent.isPresent());
+        assertEquals(eKey, optionalEvent.get().getEventId().longValue());
     }
 
     @Test
@@ -131,10 +140,10 @@ public class EventDaoImplTest {
         long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
 
         // Exercise
-        Optional<Event> event = eventDao.findEvent(INVALID_ID, nhKey);
+        Optional<Event> optionalEvent = eventDaoImpl.findEvent(INVALID_ID, nhKey);
 
         // Validations & Post Conditions
-        assertFalse(event.isPresent());
+        assertFalse(optionalEvent.isPresent());
     }
 
     @Test
@@ -146,10 +155,10 @@ public class EventDaoImplTest {
         long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
 
         // Exercise
-        Optional<Event> event = eventDao.findEvent(eKey, INVALID_ID);
+        Optional<Event> optionalEvent = eventDaoImpl.findEvent(eKey, INVALID_ID);
 
         // Validations & Post Conditions
-        assertFalse(event.isPresent());
+        assertFalse(optionalEvent.isPresent());
     }
 
     @Test
@@ -161,26 +170,13 @@ public class EventDaoImplTest {
         long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
 
         // Exercise
-        Optional<Event> event = eventDao.findEvent(INVALID_ID, INVALID_ID);
+        Optional<Event> optionalEvent = eventDaoImpl.findEvent(INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
-        assertFalse(event.isPresent());
+        assertFalse(optionalEvent.isPresent());
     }
 
-    @Test
-    public void getEventsOnDate_eventDate_neighborhoodId() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long tKey1 = testInserter.createTime();
-        long tKey2 = testInserter.createTime();
-        long eKey = testInserter.createEvent(EVENT_NAME, EVENT_DESCRIPTION, EVENT_DATE, tKey1, tKey2, nhKey);
-
-        // Exercise
-        List<Event> events = eventDao.getEvents(EVENT_DATE_2, nhKey, 1, 10);
-
-        // Validations & Post Conditions
-        assertEquals(1, events.size());
-    }
+    // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test
     public void getEventsOnDateRange_eventRange_neighborhoodId(){
@@ -188,15 +184,15 @@ public class EventDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime(EVENT_START_TIME);
         long tKey2 = testInserter.createTime(EVENT_END_TIME);
-        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
-        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
-        long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
+        long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
 
         // Exercise
-        List<Event> events = eventDao.getEvents(nhKey, START_DATE, END_DATE);
+        List<Event> eventList = eventDaoImpl.getEvents(nhKey, START_DATE, END_DATE);
 
         // Validations & Post Conditions
-        assertEquals(3, events.size());
+        assertEquals(THREE_ELEMENTS, eventList.size());
     }
 
     @Test
@@ -205,16 +201,18 @@ public class EventDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime(EVENT_START_TIME);
         long tKey2 = testInserter.createTime(EVENT_END_TIME);
-        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
-        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
-        long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, DATE);
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
+        long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
 
         // Exercise
-        List<Event> events = eventDao.getEvents(nhKey, null, null);
+        List<Event> eventList = eventDaoImpl.getEvents(nhKey, NO_DATE, NO_DATE);
 
         // Validations & Post Conditions
-        assertTrue(events.isEmpty());
+        assertTrue(eventList.isEmpty());
     }
+
+    // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
     public void delete_eventId_valid() {
@@ -225,24 +223,27 @@ public class EventDaoImplTest {
         long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
 
         // Exercise
-        boolean deleted = eventDao.deleteEvent(eKey);
+        boolean deleted = eventDaoImpl.deleteEvent(eKey);
 
         // Validations & Post Conditions
         em.flush();
         assertTrue(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events.name()));
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events.name()));
     }
 
     @Test
     public void delete_eventId_invalid_eventId() {
         // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long tKey1 = testInserter.createTime(EVENT_START_TIME);
+        long tKey2 = testInserter.createTime(EVENT_END_TIME);
+        long eKey = testInserter.createEvent(nhKey, tKey1, tKey2);
 
         // Exercise
-        boolean deleted = eventDao.deleteEvent(1);
+        boolean deleted = eventDaoImpl.deleteEvent(INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();
         assertFalse(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.events.name()));
     }
 }

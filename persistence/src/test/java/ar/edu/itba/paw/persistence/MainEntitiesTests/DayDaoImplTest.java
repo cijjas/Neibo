@@ -21,6 +21,8 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
+import static ar.edu.itba.paw.persistence.TestConstants.ONE_ELEMENT;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -36,7 +38,7 @@ public class DayDaoImplTest {
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private DayDao dayDao;
+    private DayDao dayDaoImpl;
 
     @PersistenceContext
     EntityManager em;
@@ -46,18 +48,23 @@ public class DayDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    // ------------------------------------------------- CREATE --------------------------------------------------------
+
     @Test
     public void create_valid() {
         // Pre Conditions
 
         // Exercise
-        Day createdDay = dayDao.createDay(DAY_NAME);
+        Day day = dayDaoImpl.createDay(DAY_NAME);
 
         // Validations & Post Conditions
         em.flush();
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.days.name()));
-        assertEquals(DAY_NAME, createdDay.getDayName());
+        assertNotNull(day);
+        assertEquals(DAY_NAME, day.getDayName());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.days.name()));
     }
+
+    // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
     public void find_dayId_valid() {
@@ -65,20 +72,22 @@ public class DayDaoImplTest {
         long dayKey = testInserter.createDay();
 
         // Exercise
-        Optional<Day> foundDay = dayDao.findDay(dayKey);
+        Optional<Day> optionalDay = dayDaoImpl.findDay(dayKey);
 
         // Validations & Post Conditions
-        assertTrue(foundDay.isPresent());
+        assertTrue(optionalDay.isPresent());
+        assertEquals(dayKey, optionalDay.get().getDayId().longValue());
     }
 
     @Test
     public void find_dayId_invalid_dayId() {
         // Pre Conditions
+        long dayKey = testInserter.createDay();
 
         // Exercise
-        Optional<Day> foundDay = dayDao.findDay(1);
+        Optional<Day> optionalDay = dayDaoImpl.findDay(INVALID_ID);
 
         // Validations & Post Conditions
-        assertFalse(foundDay.isPresent());
+        assertFalse(optionalDay.isPresent());
     }
 }

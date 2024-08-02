@@ -120,7 +120,8 @@ public class TestInserter {
     public long createUser(String mail, String password, String name, String surname,
                            long neighborhoodId, Language language, boolean darkMode, UserRole role, int identification, java.sql.Date date) {
         User user = new User.Builder()
-                .name(name).mail(mail)
+                .name(name)
+                .mail(mail)
                 .surname(surname)
                 .password(password)
                 .neighborhood(em.find(Neighborhood.class, neighborhoodId))

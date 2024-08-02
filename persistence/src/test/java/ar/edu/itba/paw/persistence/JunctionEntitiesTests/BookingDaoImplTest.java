@@ -23,7 +23,7 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
+import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -32,14 +32,14 @@ import static org.junit.Assert.*;
 @Rollback
 public class BookingDaoImplTest {
 
-    private final Date RESERVATION_DATE = Date.valueOf("2024-12-12");
+    private final Date BOOKING_DATE = Date.valueOf("2024-12-12");
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private BookingDao bookingDao;
+    private BookingDao bookingDaoImpl;
     @PersistenceContext
     private EntityManager em;
 
@@ -48,6 +48,8 @@ public class BookingDaoImplTest {
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
     }
+
+    // ------------------------------------------------- CREATE --------------------------------------------------------
 
     @Test
     public void create_valid() {
@@ -61,13 +63,18 @@ public class BookingDaoImplTest {
         long avKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        Booking bookingId = bookingDao.createBooking(uKey, avKey, RESERVATION_DATE);
+        Booking booking= bookingDaoImpl.createBooking(uKey, avKey, BOOKING_DATE);
 
         // Validations & Post Conditions
         em.flush();
-        assertNotNull(bookingId);
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users_availability.name()));
+        assertNotNull(booking);
+        assertEquals(BOOKING_DATE, booking.getBookingDate());
+        assertEquals(uKey, booking.getUser().getUserId().longValue());
+        assertEquals(avKey, booking.getAmenityAvailability().getAmenityAvailabilityId().longValue());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users_availability.name()));
     }
+
+    // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
     public void find_bookingId_valid() {
@@ -79,13 +86,14 @@ public class BookingDaoImplTest {
         long tKey = testInserter.createTime();
         long sKey = testInserter.createShift(dKey, tKey);
         long avKey = testInserter.createAvailability(aKey, sKey);
-        long bKey = testInserter.createBooking(uKey, avKey, RESERVATION_DATE);
+        long bKey = testInserter.createBooking(uKey, avKey, BOOKING_DATE);
 
         // Exercise
-        Optional<Booking> booking = bookingDao.findBooking(bKey);
+        Optional<Booking> optionalBooking = bookingDaoImpl.findBooking(bKey);
 
         // Validations & Post Conditions
-        assertTrue(booking.isPresent());
+        assertTrue(optionalBooking.isPresent());
+        assertEquals(bKey, optionalBooking.get().getBookingId().longValue());
     }
 
     @Test
@@ -100,10 +108,10 @@ public class BookingDaoImplTest {
         long avKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        Optional<Booking> booking = bookingDao.findBooking(INVALID_ID);
+        Optional<Booking> optionalBooking = bookingDaoImpl.findBooking(INVALID_ID);
 
         // Validations & Post Conditions
-        assertFalse(booking.isPresent());
+        assertFalse(optionalBooking.isPresent());
     }
 
     @Test
@@ -116,13 +124,13 @@ public class BookingDaoImplTest {
         long tKey = testInserter.createTime();
         long sKey = testInserter.createShift(dKey, tKey);
         long avKey = testInserter.createAvailability(aKey, sKey);
-        long bKey = testInserter.createBooking(uKey, avKey, RESERVATION_DATE);
+        long bKey = testInserter.createBooking(uKey, avKey, BOOKING_DATE);
 
         // Exercise
-        List<Booking> userBookings = bookingDao.getBookings(uKey, aKey, 1, 10);
+        List<Booking> bookingList = bookingDaoImpl.getBookings(uKey, aKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertEquals(1, userBookings.size());
+        assertEquals(ONE_ELEMENT, bookingList.size());
     }
 
     @Test
@@ -130,11 +138,13 @@ public class BookingDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Booking> userBookings = bookingDao.getBookings(1L, 1L, 1, 10);
+        List<Booking> bookingList = bookingDaoImpl.getBookings(EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertEquals(0, userBookings.size());
+        assertTrue(bookingList.isEmpty());
     }
+
+    // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
     public void delete_bookingId_valid() {
@@ -146,27 +156,34 @@ public class BookingDaoImplTest {
         long tKey = testInserter.createTime();
         long sKey = testInserter.createShift(dKey, tKey);
         long avKey = testInserter.createAvailability(aKey, sKey);
-        long bKey = testInserter.createBooking(uKey, avKey, RESERVATION_DATE);
+        long bKey = testInserter.createBooking(uKey, avKey, BOOKING_DATE);
 
         // Exercise
-        boolean deleted = bookingDao.deleteBooking(bKey);
+        boolean deleted = bookingDaoImpl.deleteBooking(bKey);
 
         // Validations & Post Conditions
         em.flush();
         assertTrue(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users_availability.name()));
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users_availability.name()));
     }
 
     @Test
     public void delete_bookingId_invalid_bookingId() {
         // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long avKey = testInserter.createAvailability(aKey, sKey);
+        long bKey = testInserter.createBooking(uKey, avKey, BOOKING_DATE);
 
         // Exercise
-        boolean deleted = bookingDao.deleteBooking(1);
+        boolean deleted = bookingDaoImpl.deleteBooking(INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();
         assertFalse(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users_availability.name()));
     }
 }

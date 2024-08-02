@@ -24,6 +24,8 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
 
+import static ar.edu.itba.paw.persistence.TestConstants.EMPTY_FIELD;
+import static ar.edu.itba.paw.persistence.TestConstants.ONE_ELEMENT;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -32,16 +34,15 @@ import static org.junit.Assert.*;
 @Rollback
 public class ProfessionWorkerDaoImplTest {
 
-    private final String PROFESSION_NAME = "Plumber";
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private ProfessionWorkerDaoImpl professionWorkerDao;
+    private ProfessionWorkerDaoImpl professionWorkerDaoImpl;
     @Autowired
-    private ProfessionDaoImpl professionDao;
+    private ProfessionDaoImpl professionDaoImpl;
 
     @PersistenceContext
     private EntityManager em;
@@ -50,6 +51,8 @@ public class ProfessionWorkerDaoImplTest {
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
     }
+
+    // ------------------------------------------------- CREATE --------------------------------------------------------
 
     @Test
     public void create_valid() {
@@ -60,13 +63,18 @@ public class ProfessionWorkerDaoImplTest {
         long wKey = testInserter.createWorker(uKey);
 
         // Exercise
-        Specialization specialization = professionWorkerDao.createSpecialization(uKey, pKey);
+        Specialization specialization = professionWorkerDaoImpl.createSpecialization(uKey, pKey);
 
         // Validations & Post Conditions
         em.flush();
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_professions.name()));
+        assertNotNull(specialization);
+        assertEquals(uKey, specialization.getWorker().getUser().getUserId().longValue());
+        assertEquals(pKey, specialization.getProfession().getProfessionId().longValue());
         assertEquals(Professions.PLUMBER.name(), specialization.getProfession().getProfession().name());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_professions.name()));
     }
+
+    // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test
     public void get_workerId() {
@@ -78,10 +86,10 @@ public class ProfessionWorkerDaoImplTest {
         testInserter.createSpecialization(uKey, pKey);
 
         // Exercise
-        List<Profession> profession = professionDao.getProfessions(uKey);
+        List<Profession> professionList = professionDaoImpl.getProfessions(uKey);
 
         // Validations & Post Conditions
-        assertFalse(profession.isEmpty());
+        assertFalse(professionList.isEmpty());
     }
 
     @Test
@@ -89,9 +97,9 @@ public class ProfessionWorkerDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Profession> profession = professionDao.getProfessions(1L);
+        List<Profession> professionList = professionDaoImpl.getProfessions(EMPTY_FIELD);
 
         // Validations & Post Conditions
-        assertTrue(profession.isEmpty());
+        assertTrue(professionList.isEmpty());
     }
 }

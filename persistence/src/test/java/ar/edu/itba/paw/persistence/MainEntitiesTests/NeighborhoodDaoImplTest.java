@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.Entities.Neighborhood;
 import ar.edu.itba.paw.persistence.MainEntitiesDaos.NeighborhoodDaoImpl;
+import ar.edu.itba.paw.persistence.TestConstants;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -31,14 +32,13 @@ import static org.junit.Assert.*;
 @Rollback
 public class NeighborhoodDaoImplTest {
 
-    private final String NEIGHBORHOOD_NAME = "Testing Create Neighborhood";
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private NeighborhoodDaoImpl neighborhoodDao;
+    private NeighborhoodDaoImpl neighborhoodDaoImpl;
     @PersistenceContext
     private EntityManager em;
 
@@ -47,19 +47,23 @@ public class NeighborhoodDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    // ------------------------------------------------- CREATE --------------------------------------------------------
+
     @Test
     public void create_valid() {
         // Pre Conditions
 
         // Exercise
-        Neighborhood nh = neighborhoodDao.createNeighborhood(NEIGHBORHOOD_NAME);
+        Neighborhood neighborhood = neighborhoodDaoImpl.createNeighborhood(NEIGHBORHOOD_NAME_1);
 
         // Validations & Post Conditions
         em.flush();
-        assertNotNull(nh);
-        assertEquals(NEIGHBORHOOD_NAME, nh.getName());
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods.name()));
+        assertNotNull(neighborhood);
+        assertEquals(NEIGHBORHOOD_NAME_1, neighborhood.getName());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods.name()));
     }
+
+    // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
     public void find_neighborhoodId_valid() {
@@ -67,47 +71,51 @@ public class NeighborhoodDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhood(nhKey);
+        Optional<Neighborhood> optionalNeighborhood = neighborhoodDaoImpl.findNeighborhood(nhKey);
 
         // Validations & Post Conditions
-        assertTrue(nh.isPresent());
-        assertEquals(nhKey, nh.get().getNeighborhoodId().longValue());
+        assertTrue(optionalNeighborhood.isPresent());
+        assertEquals(nhKey, optionalNeighborhood.get().getNeighborhoodId().longValue());
     }
 
     @Test
     public void find_neighborhoodId_invalid_neighborhoodId() {
         // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhood(1);
+        Optional<Neighborhood> optionalNeighborhood = neighborhoodDaoImpl.findNeighborhood(INVALID_ID);
 
         // Validations & Post Conditions
-        assertFalse(nh.isPresent());
+        assertFalse(optionalNeighborhood.isPresent());
     }
 
     @Test
     public void find_neighborhoodName_valid() {
         // Pre Conditions
-        long nhKey = testInserter.createNeighborhood(NEIGHBORHOOD_NAME);
+        long nhKey = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
 
         // Exercise
-        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhood(NEIGHBORHOOD_NAME);
+        Optional<Neighborhood> optionalNeighborhood = neighborhoodDaoImpl.findNeighborhood(NEIGHBORHOOD_NAME_1);
 
         // Validations & Post Conditions
-        assertTrue(nh.isPresent());
-        assertEquals(nhKey, nh.get().getNeighborhoodId().longValue());
+        assertTrue(optionalNeighborhood.isPresent());
+        assertEquals(nhKey, optionalNeighborhood.get().getNeighborhoodId().longValue());
     }
 
     @Test
     public void find_neighborhoodName_invalid_neighborhoodName() {
         // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        Optional<Neighborhood> nh = neighborhoodDao.findNeighborhood(NEIGHBORHOOD_NAME);
+        Optional<Neighborhood> optionalNeighborhood = neighborhoodDaoImpl.findNeighborhood(INVALID_STRING_ID);
 
         // Validations & Post Conditions
-        assertFalse(nh.isPresent());
+        assertFalse(optionalNeighborhood.isPresent());
     }
+
+    // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test
     public void weirdGet() {
@@ -115,10 +123,10 @@ public class NeighborhoodDaoImplTest {
         testInserter.createNeighborhood();
 
         // Exercise
-        List<Neighborhood> elements = neighborhoodDao.getNeighborhoods();
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods();
 
         // Validations & Post Conditions
-        assertEquals(1, elements.size());
+        assertEquals(ONE_ELEMENT, neighborhoodList.size());
     }
 
     @Test
@@ -126,29 +134,29 @@ public class NeighborhoodDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Neighborhood> elements = neighborhoodDao.getNeighborhoods();
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods();
 
         // Validations & Post Conditions
-        assertEquals(0, elements.size());
+        assertTrue(neighborhoodList.isEmpty());
     }
 
     @Test
     public void get() {
         // Pre Conditions
-        testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        testInserter.createNeighborhood(TestConstants.NEIGHBORHOOD_NAME_1);
         testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
 
         // Exercise
-        List<Neighborhood> elements = neighborhoodDao.getNeighborhoods(BASE_PAGE, BASE_PAGE_SIZE, null);
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(BASE_PAGE, BASE_PAGE_SIZE, EMPTY_FIELD);
 
         // Validations & Post Conditions
-        assertEquals(2, elements.size());
+        assertEquals(TWO_ELEMENTS, neighborhoodList.size());
     }
 
     @Test
     public void get_workerId() {
         // Pre Conditions
-        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        long nhKey1 = testInserter.createNeighborhood(TestConstants.NEIGHBORHOOD_NAME_1);
         long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
         long uKey1 = testInserter.createUser(WORKER_MAIL_1, nhKey1);
         long uKey2 = testInserter.createUser(WORKER_MAIL_2, nhKey1);
@@ -159,16 +167,16 @@ public class NeighborhoodDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey1);
 
         // Exercise
-        List<Neighborhood> elements = neighborhoodDao.getNeighborhoods(BASE_PAGE, BASE_PAGE_SIZE, uKey1);
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(BASE_PAGE, BASE_PAGE_SIZE, uKey1);
 
         // Validations & Post Conditions
-        assertEquals(2, elements.size());
+        assertEquals(TWO_ELEMENTS, neighborhoodList.size());
     }
 
     @Test
     public void get_empty() {
         // Pre Conditions
-        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        long nhKey1 = testInserter.createNeighborhood(TestConstants.NEIGHBORHOOD_NAME_1);
         long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
         long uKey1 = testInserter.createUser(WORKER_MAIL_1, nhKey1);
         long uKey2 = testInserter.createUser(WORKER_MAIL_2, nhKey1);
@@ -176,11 +184,13 @@ public class NeighborhoodDaoImplTest {
         testInserter.createWorker(uKey2);
 
         // Exercise
-        List<Neighborhood> elements = neighborhoodDao.getNeighborhoods(BASE_PAGE, BASE_PAGE_SIZE, uKey1);
+        List<Neighborhood> neighborhoodList = neighborhoodDaoImpl.getNeighborhoods(BASE_PAGE, BASE_PAGE_SIZE, uKey1);
 
         // Validations & Post Conditions
-        assertEquals(0, elements.size());
+        assertTrue(neighborhoodList.isEmpty());
     }
+
+    // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
 	public void delete_neighborhoodId_valid() {
@@ -188,20 +198,21 @@ public class NeighborhoodDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
 
 	    // Exercise
-	    boolean deleted = neighborhoodDao.deleteNeighborhood(nhKey);
+	    boolean deleted = neighborhoodDaoImpl.deleteNeighborhood(nhKey);
 
 	    // Validations & Post Conditions
 		em.flush();
 	    assertTrue(deleted);
-	    assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods.name()));
+	    assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods.name()));
 	}
 
     @Test
 	public void delete_neighborhoodId_invalid_neighborhoodId() {
 	    // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
 
 	    // Exercise
-	    boolean deleted = neighborhoodDao.deleteNeighborhood(INVALID_ID);
+	    boolean deleted = neighborhoodDaoImpl.deleteNeighborhood(INVALID_ID);
 
 	    // Validations & Post Conditions
 		em.flush();

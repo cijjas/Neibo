@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.Entities.Review;
 import ar.edu.itba.paw.persistence.JunctionDaos.ReviewDaoImpl;
+import ar.edu.itba.paw.persistence.TestConstants;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -31,22 +32,18 @@ import static org.junit.Assert.*;
 @Rollback
 public class ReviewDaoImplTest {
 
-    private final float RATING = 4.5f;
     private final double DELTA = 0.001;
-    private final String REVIEW_TEXT = "Great service!";
-    private final String WORKER_MAIL = "worker@test.com";
-    private final String REVIEWER_MAIL = "reviewer@test.com";
-    private final float RATING_1 = 4.0f;
-    private final float RATING_2 = 4.5f;
-    private final String REVIEW_1 = "Great service";
-    private final String REVIEW_2 = "Good service";
+    private final float REVIEW_RATING_1 = 4.0f;
+    private final float REVIEW_RATING_2 = 4.5f;
+    private final String REVIEW_MESSAGE_1 = "Great service";
+    private final String REVIEW_MESSAGE_2 = "Good service";
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private ReviewDaoImpl reviewDao;
+    private ReviewDaoImpl ReviewDaoImpl;
 
     @PersistenceContext
     private EntityManager em;
@@ -56,143 +53,149 @@ public class ReviewDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    // ------------------------------------------------- CREATE --------------------------------------------------------
+
     @Test
     public void create_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long uKey = testInserter.createUser(TestConstants.USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(TestConstants.USER_MAIL_2, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
 
         // Exercise
-        Review createdReview = reviewDao.createReview(uKey, uKey2, RATING, REVIEW_TEXT);
+        Review review = ReviewDaoImpl.createReview(uKey, uKey2, REVIEW_RATING_1, REVIEW_MESSAGE_1);
 
         // Validations & Post Conditions
         em.flush();
-        assertNotNull(createdReview);
-        assertEquals(uKey, createdReview.getWorker().getUser().getUserId().longValue());
-        assertEquals(uKey2, createdReview.getUser().getUserId().longValue());
-        assertEquals(RATING, createdReview.getRating(), DELTA);
-        assertEquals(REVIEW_TEXT, createdReview.getReview());
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.reviews.name()));
+        assertNotNull(review);
+        assertEquals(uKey, review.getWorker().getUser().getUserId().longValue());
+        assertEquals(uKey2, review.getUser().getUserId().longValue());
+        assertEquals(REVIEW_RATING_1, review.getRating(), DELTA);
+        assertEquals(REVIEW_MESSAGE_1, review.getReview());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.reviews.name()));
     }
+
+    // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
     public void find_reviewId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long uKey = testInserter.createUser(TestConstants.USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
         long rKey = testInserter.createReview(uKey, uKey2);
 
         // Exercise
-        Optional<Review> retrievedReview = reviewDao.findReview(rKey);
+        Optional<Review> optionalReview = ReviewDaoImpl.findReview(rKey);
 
         // Validations & Post Conditions
-        assertTrue(retrievedReview.isPresent());
+        assertTrue(optionalReview.isPresent());
+        assertEquals(rKey, optionalReview.get().getReviewId().longValue());
     }
 
     @Test
     public void find_reviewId_invalid_reviewId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
         long rKey = testInserter.createReview(uKey, uKey2);
 
         // Exercise
-        Optional<Review> retrievedReview = reviewDao.findReview(INVALID_ID);
+        Optional<Review> optionalReview = ReviewDaoImpl.findReview(INVALID_ID);
 
         // Validations & Post Conditions
-        assertFalse(retrievedReview.isPresent());
+        assertFalse(optionalReview.isPresent());
     }
 
     @Test
     public void find_reviewId_workerId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
         long rKey = testInserter.createReview(uKey, uKey2);
 
         // Exercise
-        Optional<Review> retrievedReview = reviewDao.findReview(rKey, uKey);
+        Optional<Review> optionalReview = ReviewDaoImpl.findReview(rKey, uKey);
 
         // Validations & Post Conditions
-        assertTrue(retrievedReview.isPresent());
+        assertTrue(optionalReview.isPresent());
+        assertEquals(rKey, optionalReview.get().getReviewId().longValue());
     }
 
     @Test
     public void find_reviewId_workerId_invalid_reviewId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
         long rKey = testInserter.createReview(uKey, uKey2);
 
         // Exercise
-        Optional<Review> retrievedReview = reviewDao.findReview(INVALID_ID, uKey);
+        Optional<Review> optionalReview = ReviewDaoImpl.findReview(INVALID_ID, uKey);
 
         // Validations & Post Conditions
-        assertFalse(retrievedReview.isPresent());
+        assertFalse(optionalReview.isPresent());
     }
 
     @Test
     public void find_reviewId_workerId_invalid_workerId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
         long rKey = testInserter.createReview(uKey, uKey2);
 
         // Exercise
-        Optional<Review> retrievedReview = reviewDao.findReview(rKey, INVALID_ID);
+        Optional<Review> optionalReview = ReviewDaoImpl.findReview(rKey, INVALID_ID);
 
         // Validations & Post Conditions
-        assertFalse(retrievedReview.isPresent());
+        assertFalse(optionalReview.isPresent());
     }
 
     @Test
     public void find_reviewId_workerId_invalid_reviewId_workerId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
         long rKey = testInserter.createReview(uKey, uKey2);
 
         // Exercise
-        Optional<Review> retrievedReview = reviewDao.findReview(INVALID_ID, INVALID_ID);
+        Optional<Review> optionalReview = ReviewDaoImpl.findReview(INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
-        assertFalse(retrievedReview.isPresent());
+        assertFalse(optionalReview.isPresent());
     }
 
     @Test
     public void findLatestReview_workerId_userId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
@@ -200,19 +203,19 @@ public class ReviewDaoImplTest {
         long rKey2 = testInserter.createReview(uKey, uKey2);
 
         // Exercise
-        Optional<Review> retrievedReview = reviewDao.findLatestReview(uKey, uKey2);
+        Optional<Review> optionalReview = ReviewDaoImpl.findLatestReview(uKey, uKey2);
 
         // Validations & Post Conditions
-        assertTrue(retrievedReview.isPresent());
-        assertEquals(rKey2, retrievedReview.get().getReviewId().longValue());
+        assertTrue(optionalReview.isPresent());
+        assertEquals(rKey2, optionalReview.get().getReviewId().longValue());
     }
 
     @Test
     public void findLatestReview_workerId_userId_invalid_workerId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
@@ -220,18 +223,18 @@ public class ReviewDaoImplTest {
         long rKey2 = testInserter.createReview(uKey, uKey2);
 
         // Exercise
-        Optional<Review> retrievedReview = reviewDao.findLatestReview(INVALID_ID, uKey2);
+        Optional<Review> optionalReview = ReviewDaoImpl.findLatestReview(INVALID_ID, uKey2);
 
         // Validations & Post Conditions
-        assertFalse(retrievedReview.isPresent());
+        assertFalse(optionalReview.isPresent());
     }
 
     @Test
     public void findLatestReview_workerId_userId_invalid_userId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
@@ -239,18 +242,18 @@ public class ReviewDaoImplTest {
         long rKey2 = testInserter.createReview(uKey, uKey2);
 
         // Exercise
-        Optional<Review> retrievedReview = reviewDao.findLatestReview(uKey, INVALID_ID);
+        Optional<Review> optionalReview = ReviewDaoImpl.findLatestReview(uKey, INVALID_ID);
 
         // Validations & Post Conditions
-        assertFalse(retrievedReview.isPresent());
+        assertFalse(optionalReview.isPresent());
     }
 
         @Test
     public void findLatestReview_workerId_userId_invalid_workerId_userId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
@@ -258,19 +261,21 @@ public class ReviewDaoImplTest {
         long rKey2 = testInserter.createReview(uKey, uKey2);
 
         // Exercise
-        Optional<Review> retrievedReview = reviewDao.findLatestReview(INVALID_ID, INVALID_ID);
+        Optional<Review> optionalReview = ReviewDaoImpl.findLatestReview(INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
-        assertFalse(retrievedReview.isPresent());
+        assertFalse(optionalReview.isPresent());
     }
+
+    // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test
     public void get_workerId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(USER_MAIL_1, nhKey); // Reviewer
-        long uKey3 = testInserter.createUser(USER_MAIL_2, nhKey); // Reviewer
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(TestConstants.USER_MAIL_2, nhKey); // Reviewer
+        long uKey3 = testInserter.createUser(TestConstants.USER_MAIL_3, nhKey); // Reviewer
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
@@ -278,124 +283,140 @@ public class ReviewDaoImplTest {
         long rKey2 = testInserter.createReview(uKey, uKey3);
 
         // Exercise
-        List<Review> elements = reviewDao.getReviews(uKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Review> reviewList = ReviewDaoImpl.getReviews(uKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertEquals(2, elements.size());
+        assertEquals(TWO_ELEMENTS, reviewList.size());
     }
 
     @Test
     public void get_empty() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(USER_MAIL_1, nhKey); // Reviewer
-        long uKey3 = testInserter.createUser(USER_MAIL_2, nhKey); // Reviewer
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey); // Reviewer
+        long uKey3 = testInserter.createUser(USER_MAIL_3, nhKey); // Reviewer
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
 
         // Exercise
-        List<Review> elements = reviewDao.getReviews(uKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Review> reviewList = ReviewDaoImpl.getReviews(uKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertEquals(0, elements.size());
+        assertTrue(reviewList.isEmpty());
     }
 
     @Test
     public void getAvgRating_workerId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
-        testInserter.createReview(uKey, uKey2, RATING_1, REVIEW_1);
-        testInserter.createReview(uKey, uKey2, RATING_2, REVIEW_2);
+        testInserter.createReview(uKey, uKey2, REVIEW_RATING_1, REVIEW_MESSAGE_1);
+        testInserter.createReview(uKey, uKey2, REVIEW_RATING_2, REVIEW_MESSAGE_2);
 
         // Exercise
-        Optional<Float> maybeAvgRating = reviewDao.getAvgRating(uKey);
+        Optional<Float> optionalAvgRating = ReviewDaoImpl.getAvgRating(uKey);
 
         // Validations & Post Conditions
-        assertTrue(maybeAvgRating.isPresent());
-        assertEquals((RATING_1 + RATING_2) / 2, maybeAvgRating.get(), DELTA); // Average of 4.0 and 4.5
+        assertTrue(optionalAvgRating.isPresent());
+        assertEquals((REVIEW_RATING_1 + REVIEW_RATING_2) / 2, optionalAvgRating.get(), DELTA); // Average of 4.0 and 4.5
     }
 
     @Test
     public void getAvgRating_workerId_null() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
 
         // Exercise
-        Optional<Float> maybeAvgRating = reviewDao.getAvgRating(uKey);
+        Optional<Float> optionalAvgRating = ReviewDaoImpl.getAvgRating(uKey);
 
         // Validations & Post Conditions
-        assertTrue(maybeAvgRating.isPresent());
-        assertEquals(0, maybeAvgRating.get(), DELTA);
+        assertTrue(optionalAvgRating.isPresent());
+        assertEquals(NO_ELEMENTS, optionalAvgRating.get(), DELTA);
     }
+
+    // ------------------------------------------------- COUNTS --------------------------------------------------------
 
     @Test
     public void count_workerId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
-        testInserter.createReview(uKey, uKey2, RATING_1, REVIEW_1);
-        testInserter.createReview(uKey, uKey2, RATING_2, REVIEW_2);
+        testInserter.createReview(uKey, uKey2, REVIEW_RATING_1, REVIEW_MESSAGE_1);
+        testInserter.createReview(uKey, uKey2, REVIEW_RATING_2, REVIEW_MESSAGE_2);
 
         // Exercise
-        int count = reviewDao.countReviews(uKey);
+        int countReviews = ReviewDaoImpl.countReviews(uKey);
 
         // Validations & Post Conditions
-        assertEquals(2, count);
+        assertEquals(TWO_ELEMENTS, countReviews);
     }
 
     @Test
     public void count_empty() {
         // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long pKey = testInserter.createProfession();
+        testInserter.createWorker(uKey);
+        testInserter.createSpecialization(uKey, pKey);
 
         // Exercise
-        int count = reviewDao.countReviews(1);
+        int countReviews = ReviewDaoImpl.countReviews(uKey);
 
         // Validations & Post Conditions
-        assertEquals(0, count);
+        assertEquals(NO_ELEMENTS, countReviews);
     }
+
+    // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
     public void delete_reviewId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(WORKER_MAIL, nhKey);
-        long uKey2 = testInserter.createUser(REVIEWER_MAIL, nhKey);
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long pKey = testInserter.createProfession();
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
-        long rKey = testInserter.createReview(uKey, uKey2, RATING_1, REVIEW_1);
+        long rKey = testInserter.createReview(uKey, uKey2, REVIEW_RATING_1, REVIEW_MESSAGE_1);
 
         // Exercise
-        boolean deleted = reviewDao.deleteReview(rKey);
+        boolean deleted = ReviewDaoImpl.deleteReview(rKey);
 
         // Validations & Post Conditions
         em.flush();
         assertTrue(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.reviews.name()));
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.reviews.name()));
     }
 
     @Test
     public void delete_reviewId_invalid_reviewId() {
         // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long pKey = testInserter.createProfession();
+        testInserter.createWorker(uKey);
+        testInserter.createSpecialization(uKey, pKey);
+        long rKey = testInserter.createReview(uKey, uKey2, REVIEW_RATING_1, REVIEW_MESSAGE_1);
 
         // Exercise
-        boolean deleted = reviewDao.deleteReview(1);
+        boolean deleted = ReviewDaoImpl.deleteReview(INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();

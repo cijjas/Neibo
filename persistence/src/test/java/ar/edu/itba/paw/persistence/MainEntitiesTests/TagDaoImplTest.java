@@ -19,10 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.util.List;
 import java.util.Optional;
 
-import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
+import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -38,7 +37,7 @@ public class TagDaoImplTest {
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private TagDaoImpl tagDao;
+    private TagDaoImpl tagDaoImpl;
 
     @PersistenceContext
     private EntityManager em;
@@ -47,18 +46,62 @@ public class TagDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    // ------------------------------------------------- CREATE --------------------------------------------------------
+
     @Test
     public void create_valid() {
         // Pre Conditions
 
         // Exercise
-        Tag ch = tagDao.createTag(TAG_NAME);
+        Tag tag = tagDaoImpl.createTag(TAG_NAME);
 
         // Validations & Post Conditions
         em.flush();
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.tags.name()));
-        assertEquals(TAG_NAME, ch.getTag());
+        assertNotNull(tag);
+        assertEquals(TAG_NAME, tag.getTag());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.tags.name()));
     }
+
+    // -------------------------------------------------- FINDS --------------------------------------------------------
+
+    @Test
+    public void find_tagId_valid() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long tKey = testInserter.createTag();
+        testInserter.createCategorization(tKey, pKey);
+
+        // Exercise
+        Optional<Tag> optionalTag = tagDaoImpl.findTag(tKey);
+
+        // Validations & Post Conditions
+        assertTrue(optionalTag.isPresent());
+		assertEquals(tKey, optionalTag.get().getTagId().longValue());
+    }
+
+    @Test
+    public void find_tagId_invalid_tagId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long tKey = testInserter.createTag();
+        testInserter.createCategorization(tKey, pKey);
+
+        // Exercise
+        Optional<Tag> optionalTag = tagDaoImpl.findTag(INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalTag.isPresent());
+    }
+
+    // -------------------------------------------------- GETS ---------------------------------------------------------
 
 /*    @Test
     public void testGetTagsByPostId() {
@@ -138,57 +181,30 @@ public class TagDaoImplTest {
         assertEquals(3, tags.size());
     }
     */
-    @Test
-    public void find_tagId_valid() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(nhKey);
-        long chKey = testInserter.createChannel();
-        long pKey = testInserter.createPost(uKey, chKey, 0);
-        long tKey = testInserter.createTag();
-        testInserter.createCategorization(tKey, pKey);
 
-        // Exercise
-        Optional<Tag> optional = tagDao.findTag(tKey);
-
-        // Validations & Post Conditions
-        assertTrue(optional.isPresent());
-		assertEquals(tKey, optional.get().getTagId().longValue());
-    }
-
-    @Test
-    public void find_tagId_invalid_tagId() {
-        // Pre Conditions
-
-        // Exercise
-        Optional<Tag> optional = tagDao.findTag(INVALID_ID);
-
-        // Validations & Post Conditions
-        assertFalse(optional.isPresent());
-    }
-
-
+    // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
 	public void delete_tagId_valid() {
 	    // Pre Conditions
-        long tKey1 = testInserter.createTag("Tag 1");
+        long tKey1 = testInserter.createTag(TAG_NAME);
 
 	    // Exercise
-	    boolean deleted = tagDao.deleteTag(tKey1);
+	    boolean deleted = tagDaoImpl.deleteTag(tKey1);
 
 	    // Validations & Post Conditions
 		em.flush();
 	    assertTrue(deleted);
-	    assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.tags.name()));
+	    assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.tags.name()));
 	}
 
 	@Test
 	public void delete_tagId_invalid_tagId() {
-	    // Pre Conditions
+        // Pre Conditions
+        long tKey1 = testInserter.createTag(TAG_NAME);
 
 	    // Exercise
-	    boolean deleted = tagDao.deleteTag(INVALID_ID);
+	    boolean deleted = tagDaoImpl.deleteTag(INVALID_ID);
 
 	    // Validations & Post Conditions
 		em.flush();

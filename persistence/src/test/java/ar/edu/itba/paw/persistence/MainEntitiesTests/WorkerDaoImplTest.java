@@ -24,7 +24,7 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.*;
 
-import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
+import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -33,31 +33,18 @@ import static org.junit.Assert.*;
 @Rollback
 public class WorkerDaoImplTest {
 
-    private static final String NH_NAME_1 = "Neighborhood 1";
-    private static final String NH_NAME_2 = "Neighborhood 2";
-    private static final int BASE_PAGE = 1;
-    private static final int BASE_PAGE_SIZE = 10;
-    public static final String NEW_PHONE = "New Phone";
-    public static final String NEW_ADDRESS = "New Address";
-    public static final String NEW_BUSINESS = "New Business";
-    public static final String NEW_BIO = "New Bio";
-    private final String PHONE_NUMBER_1 = "123-456-7890";
-    private final String ADDRESS_1 = "123 Worker St";
-    private final String BUSINESS_1 = "Worker Business";
-    private final String WORKER_MAIL_1 = "worker1-1@test.com";
-    private final String WORKER_MAIL_2 = "worker2-1@test.com";
-    private final String WORKER_MAIL_3 = "worker3-2@test.com";
-    private final String WORKER_MAIL_4 = "worker4-2@test.com";
-    private final String PROFESSION_1 = "Profession 1";
-    private final String PROFESSION_2 = "Profession 2";
-    private final String BIO_1 = "Im alive and in some time ill be dead";
+
+    private final String WORKER_PHONE_NUMBER = "123-456-7890";
+    private final String WORKER_ADDRESS = "123 Worker St";
+    private final String WORKER_BUSINESS_NAME = "Worker Business";
+
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private WorkerDaoImpl workerDao;
+    private WorkerDaoImpl workerDaoImpl;
 
     @PersistenceContext
     private EntityManager em;
@@ -75,6 +62,8 @@ public class WorkerDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    // ------------------------------------------------- CREATE --------------------------------------------------------
+
     @Test
     public void create_valid() {
         // Pre Conditions
@@ -82,17 +71,19 @@ public class WorkerDaoImplTest {
         long uKey = testInserter.createUser(WORKER_MAIL_1, nhKey);
 
         // Exercise
-        Worker createdWorker = workerDao.createWorker(uKey, PHONE_NUMBER_1, ADDRESS_1, BUSINESS_1);
+        Worker worker = workerDaoImpl.createWorker(uKey, WORKER_PHONE_NUMBER, WORKER_ADDRESS, WORKER_BUSINESS_NAME);
 
         // Validations & Post Conditions
         em.flush();
-        assertNotNull(createdWorker);
-        assertEquals(uKey, createdWorker.getUser().getUserId().longValue());
-        assertEquals(PHONE_NUMBER_1, createdWorker.getPhoneNumber());
-        assertEquals(ADDRESS_1, createdWorker.getAddress());
-        assertEquals(BUSINESS_1, createdWorker.getBusinessName());
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_info.name()));
+        assertNotNull(worker);
+        assertEquals(uKey, worker.getUser().getUserId().longValue());
+        assertEquals(WORKER_PHONE_NUMBER, worker.getPhoneNumber());
+        assertEquals(WORKER_ADDRESS, worker.getAddress());
+        assertEquals(WORKER_BUSINESS_NAME, worker.getBusinessName());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_info.name()));
     }
+
+    // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
     public void find_workerId_valid() {
@@ -104,22 +95,30 @@ public class WorkerDaoImplTest {
         testInserter.createSpecialization(uKey, pKey);
 
         // Exercise
-        Optional<Worker> foundWorker = workerDao.findWorker(uKey);
+        Optional<Worker> optionalWorker = workerDaoImpl.findWorker(uKey);
 
         // Validations & Post Conditions
-        assertTrue(foundWorker.isPresent());
+        assertTrue(optionalWorker.isPresent());
+        assertEquals(uKey, optionalWorker.get().getUser().getUserId().longValue());
     }
 
     @Test
     public void find_workerId_invalid_workerId() {
         // Pre Conditions
+        long pKey = testInserter.createProfession();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(WORKER_MAIL_1, nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createSpecialization(uKey, pKey);
 
         // Exercise
-        Optional<Worker> foundWorker = workerDao.findWorker(1);
+        Optional<Worker> optionalWorker = workerDaoImpl.findWorker(INVALID_ID);
 
         // Validations & Post Conditions
-        assertFalse(foundWorker.isPresent());
+        assertFalse(optionalWorker.isPresent());
     }
+
+    // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test
     public void testGetWorkersByNeighborhood() {
@@ -128,10 +127,10 @@ public class WorkerDaoImplTest {
         List<Long> neighborhoods = Collections.singletonList(nhKey1);
 
         // Exercise
-        List<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, BASE_PAGE_SIZE, null, neighborhoods, (long) WorkerRole.VERIFIED_WORKER.getId(), null);
+        List<Worker> workerList = workerDaoImpl.getWorkers(BASE_PAGE, BASE_PAGE_SIZE, Collections.emptyList(), neighborhoods, (long) WorkerRole.VERIFIED_WORKER.getId(), EMPTY_FIELD);
 
         // Validations
-        assertEquals(2, retrievedWorkers.size());
+        assertEquals(TWO_ELEMENTS, workerList.size());
     }
 
     @Test
@@ -140,7 +139,7 @@ public class WorkerDaoImplTest {
         populateWorkers();
 
         // Exercise
-        List<Worker> retrievedWorkers = workerDao.getWorkers(
+        List<Worker> workerList = workerDaoImpl.getWorkers(
                 BASE_PAGE,
                 BASE_PAGE_SIZE,
                 Collections.singletonList(pKey1),
@@ -149,7 +148,7 @@ public class WorkerDaoImplTest {
                 (long) WorkerStatus.NONE.getId());
 
         // Validations
-        assertEquals(1, retrievedWorkers.size());
+        assertEquals(ONE_ELEMENT, workerList.size());
     }
 
     @Test
@@ -159,10 +158,10 @@ public class WorkerDaoImplTest {
         List<Long> neighborhoods = Collections.singletonList(nhKey1);
 
         // Exercise
-        List<Worker> retrievedWorkers = workerDao.getWorkers(BASE_PAGE, 1, null, neighborhoods, (long) WorkerRole.VERIFIED_WORKER.getId(), (long) WorkerStatus.NONE.getId());
+        List<Worker> workerList = workerDaoImpl.getWorkers(BASE_PAGE, BASE_PAGE_SIZE, Collections.emptyList(), neighborhoods, (long) WorkerRole.VERIFIED_WORKER.getId(), (long) WorkerStatus.NONE.getId());
 
         // Validations
-        assertEquals(1, retrievedWorkers.size());
+        assertEquals(ONE_ELEMENT, workerList.size());
     }
 
     @Test
@@ -172,11 +171,13 @@ public class WorkerDaoImplTest {
         List<Long> neighborhoods = Collections.singletonList(nhKey1);
 
         // Exercise
-        List<Worker> retrievedWorkers = workerDao.getWorkers(2, 1, null, neighborhoods, (long) WorkerRole.VERIFIED_WORKER.getId(), (long) WorkerStatus.NONE.getId());
+        List<Worker> workerList = workerDaoImpl.getWorkers(TEST_PAGE, TEST_PAGE_SIZE, Collections.emptyList(), neighborhoods, (long) WorkerRole.VERIFIED_WORKER.getId(), (long) WorkerStatus.NONE.getId());
 
         // Validations
-        assertEquals(1, retrievedWorkers.size());
+        assertEquals(ONE_ELEMENT, workerList.size());
     }
+
+    // ------------------------------------------------ DELETES --------------------------------------------------------
 
 /*
     @Test
@@ -200,6 +201,11 @@ public class WorkerDaoImplTest {
 	@Test
 	public void testInvalidWorkerDelete() {
 	    // Pre Conditions
+        long pKey = testInserter.createProfession();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(WORKER_MAIL_1, nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createSpecialization(uKey, pKey);
 
 	    // Exercise
 	    boolean deleted = workerDao.deleteWorker(INVALID_ID);
@@ -220,8 +226,8 @@ public class WorkerDaoImplTest {
          * Worker 4 -> Neighborhood 2, Profession 1  & Profession 2
          */
 
-        nhKey1 = testInserter.createNeighborhood(NH_NAME_1);
-        nhKey2 = testInserter.createNeighborhood(NH_NAME_2);
+        nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
 
         uKey1 = testInserter.createUser(WORKER_MAIL_1, nhKey1);
         uKey2 = testInserter.createUser(WORKER_MAIL_2, nhKey1);

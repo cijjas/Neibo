@@ -19,10 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -31,19 +31,13 @@ import static org.junit.Assert.*;
 @Rollback
 public class ShiftDaoImplTest {
 
-    private final String DATE = "2022-12-12";
-    private final String AMENITY_NAME_1 = "Amenity Name";
-    private final String AMENITY_DESCRIPTION_1 = "Amenity Description";
-
-    private static final int BASE_PAGE = 1;
-    private static final int BASE_PAGE_SIZE = 10;
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private ShiftDao shiftDao;
+    private ShiftDao shiftDaoImpl;
 
     @PersistenceContext
     private EntityManager em;
@@ -52,6 +46,8 @@ public class ShiftDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    // ------------------------------------------------- CREATE --------------------------------------------------------
+
     @Test
     public void create_valid() {
         // Pre Conditions
@@ -59,12 +55,17 @@ public class ShiftDaoImplTest {
         long tKey = testInserter.createTime();
 
         // Exercise
-        Shift createdShift = shiftDao.createShift(dKey, tKey);
+        Shift shift = shiftDaoImpl.createShift(dKey, tKey);
 
         // Validations & Post Conditions
         em.flush();
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.shifts.name()));
+        assertNotNull(shift);
+        assertEquals(dKey, shift.getDay().getDayId().longValue());
+        assertEquals(tKey, shift.getStartTime().getTimeId().longValue());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.shifts.name()));
     }
+
+    // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
     public void find_shiftId_valid() {
@@ -74,53 +75,59 @@ public class ShiftDaoImplTest {
         long shiftKey = testInserter.createShift(dKey, tKey);
 
         // Exercise
-        Optional<Shift> foundShift = shiftDao.findShift(shiftKey);
+        Optional<Shift> optionalShift = shiftDaoImpl.findShift(shiftKey);
 
         // Validations & Post Conditions
-        assertTrue(foundShift.isPresent());
+        assertTrue(optionalShift.isPresent());
+        assertEquals(shiftKey, optionalShift.get().getShiftId().longValue());
     }
 
     @Test
     public void find_shiftId_invalid_shiftId() {
         // Pre Conditions
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long shiftKey = testInserter.createShift(dKey, tKey);
 
         // Exercise
-        Optional<Shift> foundShift = shiftDao.findShift(1);
+        Optional<Shift> optionalShift = shiftDaoImpl.findShift(INVALID_ID);
 
         // Validations & Post Conditions
-        assertFalse(foundShift.isPresent());
+        assertFalse(optionalShift.isPresent());
     }
+
+    // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test
     public void get_neighborhoodId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long aKey1 = testInserter.createAmenity(AMENITY_NAME_1, AMENITY_DESCRIPTION_1, nhKey);
+        long aKey1 = testInserter.createAmenity(nhKey);
         long dKey = testInserter.createDay();
         long tKey = testInserter.createTime();
         long sKey = testInserter.createShift(dKey,tKey);
         testInserter.createAvailability(aKey1, sKey);
 
         // Exercise
-        List<Shift> shifts = shiftDao.getShifts(aKey1);
+        List<Shift> shiftList = shiftDaoImpl.getShifts(aKey1);
 
         // Validations & Post Conditions
-        assertEquals(1, shifts.size());
+        assertEquals(ONE_ELEMENT, shiftList.size());
     }
 
     @Test
     public void get_empty() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        long aKey1 = testInserter.createAmenity(AMENITY_NAME_1, AMENITY_DESCRIPTION_1, nhKey);
+        long aKey1 = testInserter.createAmenity(nhKey);
         long dKey = testInserter.createDay();
         long tKey = testInserter.createTime();
         long sKey = testInserter.createShift(dKey,tKey);
 
         // Exercise
-        List<Shift> shifts = shiftDao.getShifts(aKey1);
+        List<Shift> shiftList = shiftDaoImpl.getShifts(aKey1);
 
         // Validations & Post Conditions
-        assertEquals(0, shifts.size());
+        assertTrue(shiftList.isEmpty());
     }
 }
