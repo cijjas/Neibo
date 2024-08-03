@@ -247,7 +247,7 @@ public class CommentDaoImplTest {
 
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
-    public void get_postId(){
+    public void get(){
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);

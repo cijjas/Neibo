@@ -308,7 +308,7 @@ public class ReviewDaoImplTest {
     }
 
     @Test
-    public void getAvgRating_workerId() {
+    public void findAverageRating_workerId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
@@ -320,7 +320,7 @@ public class ReviewDaoImplTest {
         testInserter.createReview(uKey, uKey2, REVIEW_RATING_2, REVIEW_MESSAGE_2);
 
         // Exercise
-        Optional<Float> optionalAvgRating = ReviewDaoImpl.getAvgRating(uKey);
+        Optional<Float> optionalAvgRating = ReviewDaoImpl.findAverageRating(uKey);
 
         // Validations & Post Conditions
         assertTrue(optionalAvgRating.isPresent());
@@ -328,7 +328,7 @@ public class ReviewDaoImplTest {
     }
 
     @Test
-    public void getAvgRating_workerId_null() {
+    public void findAverageRating_workerId_null() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
@@ -338,7 +338,7 @@ public class ReviewDaoImplTest {
         testInserter.createSpecialization(uKey, pKey);
 
         // Exercise
-        Optional<Float> optionalAvgRating = ReviewDaoImpl.getAvgRating(uKey);
+        Optional<Float> optionalAvgRating = ReviewDaoImpl.findAverageRating(uKey);
 
         // Validations & Post Conditions
         assertTrue(optionalAvgRating.isPresent());

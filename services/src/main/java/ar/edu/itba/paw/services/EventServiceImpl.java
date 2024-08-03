@@ -68,6 +68,8 @@ public class EventServiceImpl implements EventService {
         java.sql.Date parsedSqlDate = new java.sql.Date(parsedDate.getTime());
         Long[] times = stringToTime(startTime, endTime);
         Event createdEvent = eventDao.createEvent(name, description, parsedSqlDate, times[0], times[1], neighborhoodId);
+        // This should be made in batches using the paginated version of getNeighbors
+        // Also its sending mails to unverified users
         emailService.sendEventMail(createdEvent, "event.custom.message2", userService.getNeighbors(neighborhoodId));
         return createdEvent;
     }

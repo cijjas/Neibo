@@ -59,8 +59,9 @@ public class AmenityServiceImpl implements AmenityService {
             shift.ifPresent(value -> availabilityDao.createAvailability(amenity.getAmenityId(), value.getShiftId()));
         }
 
+        // This should be made in batches using the paginated version of getNeighbors
+        // Also its sending mails to unverified users
         List<User> userlist = userService.getNeighbors(neighborhoodId);
-
         emailService.sendNewAmenityMail(neighborhoodId, name, description, userlist);
 
         return amenity;

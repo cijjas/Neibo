@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.models.Entities.Post;
+import ar.edu.itba.paw.persistence.MainEntitiesDaos.UserDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -37,10 +38,14 @@ public class PostDaoImplTest {
     private static final String POST_TITLE_2 = "Title 2";
     private static final String POST_TITLE_3 = "Title 3";
     private static final String POST_TITLE_4 = "Title 4";
+    private static final String POST_TITLE_5 = "Title 5";
+    private static final String POST_TITLE_6 = "Title 6";
     private static final String POST_DESCRIPTION_1 = "Desc 1";
     private static final String POST_DESCRIPTION_2 = "Desc 2";
     private static final String POST_DESCRIPTION_3 = "Desc 3";
     private static final String POST_DESCRIPTION_4 = "Desc 4";
+    private static final String POST_DESCRIPTION_5 = "Desc 5";
+    private static final String POST_DESCRIPTION_6 = "Desc 6";
     private static final String CHANNEL_NAME_1 = "Channel 1";
     private static final String CHANNEL_NAME_2 = "Channel 2";
     private static final String TAG_NAME_1 = "Tag 1";
@@ -66,6 +71,8 @@ public class PostDaoImplTest {
 
     @PersistenceContext
     private EntityManager em;
+    @Autowired
+    private UserDaoImpl userDaoImpl;
 
     @Before
     public void setUp() {
@@ -199,7 +206,7 @@ public class PostDaoImplTest {
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test
-    public void get_neighborhoodId() {
+    public void get() {
         // Pre Conditions
         populatePosts();
 
@@ -207,11 +214,11 @@ public class PostDaoImplTest {
         List<Post> postList = postDaoImpl.getPosts(EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE, Collections.emptyList(), nhKey1, EMPTY_FIELD, EMPTY_FIELD);
 
         // Validations
-        assertEquals(TWO_ELEMENTS, postList.size());
+        assertEquals(FOUR_ELEMENTS, postList.size());
     }
 
     @Test
-    public void get_neighborhoodId_channelId() {
+    public void get_channelId() {
         // Pre Conditions
         populatePosts();
 
@@ -219,11 +226,38 @@ public class PostDaoImplTest {
         List<Post> postList = postDaoImpl.getPosts(chKey1, BASE_PAGE, BASE_PAGE_SIZE, Collections.emptyList(), nhKey1, EMPTY_FIELD, EMPTY_FIELD);
 
         // Validations
-        assertEquals(TWO_ELEMENTS, postList.size());
+        assertEquals(THREE_ELEMENTS, postList.size());
     }
 
     @Test
-    public void get_neighborhoodId_channelId_tagList() {
+    public void get_tagList() {
+        // Pre Conditions
+        populatePosts();
+        List<Long> TAG_LIST = new ArrayList<>();
+        TAG_LIST.add(tKey2);
+
+        // Exercise
+        List<Post> postList = postDaoImpl.getPosts(EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey2, EMPTY_FIELD, EMPTY_FIELD);
+
+        // Validations
+        assertEquals(TWO_ELEMENTS, postList.size());
+    }
+
+
+    @Test
+    public void get_userId() {
+        // Pre Conditions
+        populatePosts();
+
+        // Exercise
+        List<Post> postList = postDaoImpl.getPosts(EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE, Collections.emptyList(), nhKey1, EMPTY_FIELD, uKey1);
+
+        // Validations
+        assertEquals(THREE_ELEMENTS, postList.size());
+    }
+
+    @Test
+    public void get_channelId_tagList() {
         // Pre Conditions
         populatePosts();
         List<Long> TAG_LIST = new ArrayList<>();
@@ -234,6 +268,48 @@ public class PostDaoImplTest {
 
         // Validations
         assertEquals(TWO_ELEMENTS, postList.size());
+    }
+
+
+    @Test
+    public void get_channelId_userId() {
+        // Pre Conditions
+        populatePosts();
+
+        // Exercise
+        List<Post> postList = postDaoImpl.getPosts(chKey1, BASE_PAGE, BASE_PAGE_SIZE, Collections.emptyList(), nhKey1, EMPTY_FIELD, uKey1);
+
+        // Validations
+        assertEquals(TWO_ELEMENTS, postList.size());
+    }
+
+
+    @Test
+    public void get_userId_tagList() {
+        // Pre Conditions
+        populatePosts();
+        List<Long> TAG_LIST = new ArrayList<>();
+        TAG_LIST.add(tKey1);
+
+        // Exercise
+        List<Post> postList = postDaoImpl.getPosts(EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey1, EMPTY_FIELD, uKey1);
+
+        // Validations
+        assertEquals(ONE_ELEMENT, postList.size());
+    }
+
+    @Test
+    public void get_channelId_userId_tagList() {
+        // Pre Conditions
+        populatePosts();
+        List<Long> TAG_LIST = new ArrayList<>();
+        TAG_LIST.add(tKey1);
+
+        // Exercise
+        List<Post> postList = postDaoImpl.getPosts(chKey1, BASE_PAGE, BASE_PAGE_SIZE, TAG_LIST, nhKey1, EMPTY_FIELD, uKey1);
+
+        // Validations
+        assertEquals(ONE_ELEMENT, postList.size());
     }
 
     @Test
@@ -286,18 +362,17 @@ public class PostDaoImplTest {
         em.flush();
         assertFalse(deleted);
     }
-    // ------------------ !!! HOT & TRENDING POSTS CANT BE TESTED AS HSQL DOES NOT ACCEPT INTERVAL !!! -----------------
+
+    // --------------------------------------------------- HELPERS -----------------------------------------------------
 
     private void populatePosts() {
-        /*
-         * 4 Posts
-         * Post 1 -> In Neighborhood 1, By User 1, with no tags
-         * Post 2 -> In Neighborhood 1, By User 2, with tag 1
-         * Post 3 -> In Neighborhood 2, By User 3, with tag 2
-         * Post 4 -> In Neighborhood 2, By User 4, with tag 1 & tag 2
-         */
+        // [U1, C1, {}]
+        // [U2, C1, {T1}]
+        // [U3, C2, {T2}]
+        // [U4, C2, {T1, T2}]
+        // [U1, C1, {T1}]
+        // [U1, C2, {}]
 
-        // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
 
@@ -312,20 +387,17 @@ public class PostDaoImplTest {
         tKey1 = testInserter.createTag(TAG_NAME_1);
         tKey2 = testInserter.createTag(TAG_NAME_2);
 
-        long pKey1 = testInserter.createPost(POST_TITLE_1, POST_DESCRIPTION_1, uKey1, chKey1, 0);
-        long pKey2 = testInserter.createPost(POST_TITLE_2, POST_DESCRIPTION_2, uKey2, chKey1, 0);
+        long iKey = testInserter.createImage();
+        long pKey1 = testInserter.createPost(POST_TITLE_1, POST_DESCRIPTION_1, uKey1, chKey1, iKey);
+        long pKey2 = testInserter.createPost(POST_TITLE_2, POST_DESCRIPTION_2, uKey2, chKey1, iKey);
         testInserter.createCategorization(tKey1, pKey2);
-        long pKey3 = testInserter.createPost(POST_TITLE_3, POST_DESCRIPTION_3, uKey3, chKey2, 0);
+        long pKey3 = testInserter.createPost(POST_TITLE_3, POST_DESCRIPTION_3, uKey3, chKey2, iKey);
         testInserter.createCategorization(tKey2, pKey3);
-        long pKey4 = testInserter.createPost(POST_TITLE_4, POST_DESCRIPTION_4, uKey4, chKey2, 0);
+        long pKey4 = testInserter.createPost(POST_TITLE_4, POST_DESCRIPTION_4, uKey4, chKey2, iKey);
         testInserter.createCategorization(tKey1, pKey4);
         testInserter.createCategorization(tKey2, pKey4);
-
-        // Comments to become hot
-        testInserter.createComment(uKey4, pKey4);
-        testInserter.createComment(uKey4, pKey4);
-        testInserter.createComment(uKey4, pKey4);
-        testInserter.createComment(uKey4, pKey4);
-        testInserter.createComment(uKey4, pKey4);
+        long pKey5 = testInserter.createPost(POST_TITLE_5, POST_DESCRIPTION_5, uKey1, chKey1, iKey);
+        testInserter.createCategorization(tKey1, pKey5);
+        testInserter.createPost(POST_TITLE_6, POST_DESCRIPTION_6, uKey1, chKey2, iKey);
     }
 }

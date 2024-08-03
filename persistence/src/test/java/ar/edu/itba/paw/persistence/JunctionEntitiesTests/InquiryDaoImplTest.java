@@ -257,6 +257,43 @@ public class InquiryDaoImplTest {
         assertFalse(optionalInquiry.isPresent());
     }
 
+    // -------------------------------------------------- GETS ---------------------------------------------------------
+
+    @Test
+    public void get() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long iqKey1 = testInserter.createInquiry(pKey, uKey2);
+        long iqKey2 = testInserter.createInquiry(pKey, uKey2);
+
+        // Exercise
+        List<Inquiry> inquiryList = inquiryDaoImpl.getInquiries(pKey, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(TWO_ELEMENTS, inquiryList.size());
+    }
+
+    @Test
+    public void get_empty() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+
+        // Exercise
+        List<Inquiry> inquiryList = inquiryDaoImpl.getInquiries(pKey, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertTrue(inquiryList.isEmpty());
+    }
+
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test

@@ -28,6 +28,10 @@ public class TestConstants {
     public static final int ONE_ELEMENT = 1;
     public static final int TWO_ELEMENTS = 2;
     public static final int THREE_ELEMENTS = 3;
+    public static final int FOUR_ELEMENTS = 4;
+    public static final int FIVE_ELEMENTS = 5;
+    public static final int SIX_ELEMENTS = 6;
+    public static final int SEVEN_ELEMENTS = 7;
 
     public static final Long EMPTY_FIELD = null;
 

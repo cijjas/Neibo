@@ -90,7 +90,7 @@ public class ReviewDaoImpl implements ReviewDao {
     }
 
     @Override
-    public Optional<Float> getAvgRating(long workerId) {
+    public Optional<Float> findAverageRating(long workerId) {
         LOGGER.debug("Selecting Average Rating for Worker {}", workerId);
 
         TypedQuery<Double> query = em.createQuery("SELECT AVG(rating) FROM Review r WHERE r.worker.user.userId = :workerId", Double.class);

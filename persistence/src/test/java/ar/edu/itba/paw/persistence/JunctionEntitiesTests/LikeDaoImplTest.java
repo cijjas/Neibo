@@ -71,7 +71,7 @@ public class LikeDaoImplTest {
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test
-    public void get_neighborhoodId(){
+    public void get(){
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);

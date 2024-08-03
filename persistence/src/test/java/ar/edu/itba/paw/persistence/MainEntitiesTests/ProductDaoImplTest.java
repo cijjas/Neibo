@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Department;
+import ar.edu.itba.paw.enums.ProductStatus;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.persistence.MainEntitiesDaos.ProductDaoImpl;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Optional;
 
 import static ar.edu.itba.paw.persistence.TestConstants.*;
@@ -31,23 +33,21 @@ import static org.junit.Assert.*;
 @Rollback
 public class ProductDaoImplTest {
 
-    public static final String PRODUCT_NAME = "Product Name";
     public static final String PRODUCT_DESCRIPTION = "Product Description";
     public static final float PRODUCT_PRICE = 35.35f;
     public static final boolean PRODUCT_USED = true;
     public static final long PRODUCT_UNITS = 2L;
+    public static final String PRODUCT_NAME_1 = "Product Name 1";
+    public static final String PRODUCT_NAME_2 = "Product Name 2";
+    public static final String PRODUCT_NAME_3 = "Product Name 3";
+    public static final String PRODUCT_NAME_4 = "Product Name 4";
+    public static final String PRODUCT_NAME_5 = "Product Name 5";
 
-    public static final String MAIL2 = "user2@gmail.com";
-    public static final String MAIL3 = "user3@gmail.com";
-    public static final String PRODUCT_NAME1 = "New Product Name";
-    public static final String PRODUCT_DESCRIPTION1 = "New Product Description";
-    public static final float PRICE1 = 30.12f;
-    public static final boolean USED1 = false;
-    public static final String NAME = "Iphone";
-    public static final String STRING = "lala";
-    public static final String ANOTHER_PRODUCT = "AnotherProduct";
-    public static final String FIRST_NEIGHBORHOOD = "First Neighborhood";
-    public static final String SECOND_NEIGHBORHOOD = "Second Neighborhood";
+    private static long nhKey;
+    private static long uKey1;
+    private static long uKey2;
+    private static long dKey1;
+    private static long dKey2;
 
 
     @Autowired
@@ -78,7 +78,7 @@ public class ProductDaoImplTest {
         long dKey = Department.ELECTRONICS.getId();
 
         // Exercise
-        Product product = productDaoImpl.createProduct(uKey, PRODUCT_NAME, PRODUCT_DESCRIPTION, PRODUCT_PRICE, PRODUCT_USED, iKey1, iKey2, iKey3, dKey, PRODUCT_UNITS);
+        Product product = productDaoImpl.createProduct(uKey, PRODUCT_NAME_1, PRODUCT_DESCRIPTION, PRODUCT_PRICE, PRODUCT_USED, iKey1, iKey2, iKey3, dKey, PRODUCT_UNITS);
 
         // Validations & Post Conditions
         em.flush();
@@ -88,7 +88,7 @@ public class ProductDaoImplTest {
         assertEquals(iKey2, product.getSecondaryPicture().getImageId().longValue());
         assertEquals(iKey3, product.getTertiaryPicture().getImageId().longValue());
         assertEquals(dKey, product.getDepartment().getDepartmentId().longValue());
-        assertEquals(PRODUCT_NAME, product.getName());
+        assertEquals(PRODUCT_NAME_1, product.getName());
         assertEquals(PRODUCT_DESCRIPTION, product.getDescription());
         assertEquals(PRODUCT_USED, product.isUsed());
         assertEquals(PRODUCT_UNITS,product.getRemainingUnits().longValue());
@@ -198,72 +198,79 @@ public class ProductDaoImplTest {
 
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
-/*
 
     @Test
-    public void testGetProductsByNeighborhood() {
+    public void get() {
         // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-        long uKey2 = testInserter.createUser(MAIL2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
-        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, dKey1);
+        populateProducts();
 
         // Exercise
-        List<Product> products = productDao.getProducts(nhKey, null, uKey1, (long) ProductStatus.SOLD.getId(), 1, 10);
+        List<Product> productList= productDaoImpl.getProducts(nhKey, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+
         // Validations & Post Conditions
-        assertTrue(products.isEmpty()); //TODO fix me
-//        assertEquals(2, products.size());
+        assertEquals(SEVEN_ELEMENTS, productList.size());
     }
 
     @Test
-    public void testGetProductsByInvalidNeighborhood() {
+    public void get_departmentId() {
         // Pre Conditions
+        populateProducts();
 
         // Exercise
-        List<Product> products = productDao.getProducts(1L, (long) Department.NONE.getId(), 1L, (long) ProductStatus.SELLING.getId(), 1, 10);
+        List<Product> productList= productDaoImpl.getProducts(nhKey, dKey1, EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertTrue(products.isEmpty());
+        assertEquals(FOUR_ELEMENTS, productList.size());
     }
 
     @Test
-    public void testGetNoProductsByNeighborhoodByDepartment() {
+    public void get_userId() {
         // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-        long uKey2 = testInserter.createUser(MAIL2, nhKey);
+        populateProducts();
 
         // Exercise
-        List<Product> products = productDao.getProducts(nhKey, (long) Department.APPLIANCES.getId(), uKey1, (long) ProductStatus.SELLING.getId(), 1, 10);
+        List<Product> productList= productDaoImpl.getProducts(nhKey, EMPTY_FIELD, uKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertTrue(products.isEmpty());
+        assertEquals(SIX_ELEMENTS, productList.size());
     }
 
     @Test
-    public void testGetProductsByNeighborhoodByInvalidDepartment() {
+    public void get_boughtStatus() {
         // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(MAIL1, nhKey);
-        long uKey2 = testInserter.createUser(MAIL2, nhKey);
-        long dKey2 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey2);
-        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey2, dKey2);
+        populateProducts();
 
         // Exercise
-        List<Product> products = productDao.getProducts(nhKey, (long) Department.TRAVEL_LUGGAGE.getId(), uKey1, (long) ProductStatus.SELLING.getId(), 1, 10);
+        List<Product> productList= productDaoImpl.getProducts(nhKey, EMPTY_FIELD, EMPTY_FIELD, (long) ProductStatus.SELLING.getId(), BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertTrue(products.isEmpty());
+        assertEquals(FIVE_ELEMENTS, productList.size());
     }
 
+    @Test
+    public void get_soldStatus() {
+        // Pre Conditions
+        populateProducts();
 
-*/
+        // Exercise
+        List<Product> productList= productDaoImpl.getProducts(nhKey, EMPTY_FIELD, EMPTY_FIELD, (long) ProductStatus.SOLD.getId(), BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(FIVE_ELEMENTS, productList.size());
+    }
+
+    @Test
+    public void get_sellingStatus() {
+        // Pre Conditions
+        populateProducts();
+
+        // Exercise
+        List<Product> productList= productDaoImpl.getProducts(nhKey, EMPTY_FIELD, EMPTY_FIELD, (long) ProductStatus.SELLING.getId(), BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(TWO_ELEMENTS, productList.size());
+    }
+
 
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
@@ -300,5 +307,37 @@ public class ProductDaoImplTest {
         // Validations & Post Conditions
         em.flush();
         assertFalse(deleted);
+    }
+
+    // --------------------------------------------------- HELPERS -----------------------------------------------------
+
+    private void populateProducts(){
+        // UserId, ProductStatus (BOUGHT, SOLD, SELLING), Department
+
+        // [U1, BOUGHT(U2), D1]
+        // [U1, BOUGHT(U2), D1]
+        // [U1, BOUGHT(U2), D2]
+        // [U1, SELLING, D1]
+        // [U2, BOUGHT(U1), D2]
+        // [U2, BOUGHT(U1), D2]
+        // [U2, SELLING, D1]
+
+        // empty, bought, sold, requested, department, userId,
+
+        long iKey = testInserter.createImage();
+        nhKey = testInserter.createNeighborhood();
+        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        dKey2 = testInserter.createDepartment(Department.AUTOMOTIVE);
+
+        long pKey1 = testInserter.createProduct(PRODUCT_NAME_1, iKey, iKey, iKey, uKey1, dKey1, uKey2);
+        long pKey2 = testInserter.createProduct(PRODUCT_NAME_2, iKey, iKey, iKey, uKey1, dKey1, uKey2);
+        long pKey3 = testInserter.createProduct(PRODUCT_NAME_3, iKey, iKey, iKey, uKey1, dKey2, uKey2);
+        long pKey4 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long pKey5 = testInserter.createProduct(PRODUCT_NAME_4, iKey, iKey, iKey, uKey2, dKey2, uKey1);
+        long pKey6 = testInserter.createProduct(PRODUCT_NAME_5, iKey, iKey, iKey, uKey2, dKey2, uKey1);
+        long pKey7 = testInserter.createProduct(iKey, iKey, iKey, uKey2, dKey1);
+
     }
 }

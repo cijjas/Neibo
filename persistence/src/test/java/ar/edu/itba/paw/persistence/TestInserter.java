@@ -337,12 +337,12 @@ public class TestInserter {
         return inquiry.getInquiryId();
     }
 
-    public long createRequest(long productId, long userId, String message){
+    public long createRequest(long productId, long userId, String message, RequestStatus requestStatus){
         Request request = new Request.Builder()
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
                 .message(message)
-                .status(RequestStatus.REQUESTED)
+                .status(requestStatus)
                 .build();
         em.persist(request);
         em.flush();
@@ -507,12 +507,18 @@ public class TestInserter {
     }
 
     public long createProduct(String name, long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
-                              long sellerId, Long buyerId, long departmentId){
+                              long sellerId, long departmentId, Long buyerId){
         String description = "Super Iphone";
         double price = 23432;
         boolean used = true;
         long units = 1L;
-        return createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, departmentId, units);
+        long pKey = createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, departmentId, units);
+        if (buyerId != null){
+            // create request and fulfill it?
+            createRequest(pKey, buyerId, "GImme", RequestStatus.ACCEPTED);
+            em.find(Product.class, pKey).setRemainingUnits(0L);
+        }
+        return pKey;
     }
 
     public long createDepartment(){
@@ -527,6 +533,6 @@ public class TestInserter {
 
     public long createRequest(long productId, long userId){
         String message = "Hello";
-        return createRequest(productId, userId, message);
+        return createRequest(productId, userId, message, RequestStatus.REQUESTED);
     }
 }

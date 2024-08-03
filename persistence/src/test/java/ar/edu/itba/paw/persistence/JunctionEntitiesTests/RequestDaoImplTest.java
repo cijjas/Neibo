@@ -110,25 +110,17 @@ public class RequestDaoImplTest {
         assertFalse(purchase.isPresent());
     }
 
+    // -------------------------------------------------- GETS ---------------------------------------------------------
+
     @Test
-    public void get_userId() {
+    public void get() {
         // Pre Conditions
-        long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
-        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
-        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
-        testInserter.createRequest(pKey1, uKey1);
-        testInserter.createRequest(pKey1, uKey2);
-        testInserter.createRequest(pKey2, uKey1);
+
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(uKey1, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertFalse(requestList.isEmpty());
         assertEquals(TWO_ELEMENTS, requestList.size());
     }
 
@@ -170,5 +162,19 @@ public class RequestDaoImplTest {
         em.flush();
         assertFalse(deleted);
         assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.posts_users_likes.name()));
+    }
+
+    private void populateRequests(){
+        // userId, productId, typeId(PURCHASE, SALE), statusId(REQUESTED, DECLINED, ACCEPTED)
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey1 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long pKey2 = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        testInserter.createRequest(pKey1, uKey1);
+        testInserter.createRequest(pKey1, uKey2);
+        testInserter.createRequest(pKey2, uKey1);
     }
 }
