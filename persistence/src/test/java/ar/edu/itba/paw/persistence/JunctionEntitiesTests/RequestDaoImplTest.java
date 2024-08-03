@@ -46,6 +46,8 @@ public class RequestDaoImplTest {
     @PersistenceContext
     private EntityManager em;
 
+    private static long nhKey;
+
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -118,7 +120,7 @@ public class RequestDaoImplTest {
 
 
         // Exercise
-        List<Request> requestList = requestDaoImpl.getRequests(EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Request> requestList = requestDaoImpl.getRequests(EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, EMPTY_FIELD, nhKey,BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, requestList.size());

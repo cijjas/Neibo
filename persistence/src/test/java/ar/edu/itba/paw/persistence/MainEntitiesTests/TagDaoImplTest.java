@@ -72,11 +72,11 @@ public class TagDaoImplTest {
         long chKey = testInserter.createChannel();
         long iKey = testInserter.createImage();
         long pKey = testInserter.createPost(uKey, chKey, iKey);
-        long tKey = testInserter.createTag();
+        long tKey = testInserter.createTag(TAG_NAME);
         testInserter.createCategorization(tKey, pKey);
 
         // Exercise
-        Optional<Tag> optionalTag = tagDaoImpl.findTag(tKey);
+        Optional<Tag> optionalTag = tagDaoImpl.findTag(TAG_NAME);
 
         // Validations & Post Conditions
         assertTrue(optionalTag.isPresent());
@@ -95,7 +95,7 @@ public class TagDaoImplTest {
         testInserter.createCategorization(tKey, pKey);
 
         // Exercise
-        Optional<Tag> optionalTag = tagDaoImpl.findTag(INVALID_ID);
+        Optional<Tag> optionalTag = tagDaoImpl.findTag(INVALID_STRING_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalTag.isPresent());
@@ -112,13 +112,13 @@ public class TagDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, 0);
         long tKey = testInserter.createTag();
         testInserter.createCategorization(tKey, pKey);
-        /*
+
         // Exercise
         List<Tag> tags = tagDao.getTags(pKey); todo fix me
 
         // Validations & Post Conditions
         assertFalse(tags.isEmpty());
-        assertEquals(1, tags.size()); */
+        assertEquals(1, tags.size());
     }
 
     @Test
@@ -126,10 +126,10 @@ public class TagDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        /*List<Tag> tags = tagDao.getTags(1); todo fix me
+        List<Tag> tags = tagDao.getTags(1); todo fix me
 
         // Validations & Post Conditions
-        assertTrue(tags.isEmpty()); */
+        assertTrue(tags.isEmpty());
     }
 
     @Test
@@ -141,26 +141,26 @@ public class TagDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, 0);
         long tKey = testInserter.createTag();
         testInserter.createCategorization(tKey, pKey);
-/*
+
         // Exercise
         List<Tag> tags = tagDao.getNeighborhoodTags(nhKey); todo fix me
 
         // Validations & Post Conditions
-        assertEquals(1, tags.size()); */
+        assertEquals(1, tags.size());
     }
 
     @Test
     public void testGetNoTags() {
         // Pre Conditions
 
-        /*
+
         // Exercise
         List<Tag> tags = tagDao.getNeighborhoodTags(1);
 
         // Validations & Post Conditions
         assertEquals(0, tags.size());
-         todo fix me
-         */
+
+
     }
 
     @Test
@@ -178,12 +178,12 @@ public class TagDaoImplTest {
         testInserter.createCategorization(tKey3, pKey);
 
         // Exercise
-        /* List<Tag> tags = tagDao.getAllTags();
+        List<Tag> tags = tagDao.getAllTags();
 
         // Validations & Post Conditions
         assertEquals(3, tags.size());
-        todo
-         */
+
+
     }
     */
 
