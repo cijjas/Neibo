@@ -1,15 +1,11 @@
 package ar.edu.itba.paw.webapp.form.validation.validators;
 
 import ar.edu.itba.paw.interfaces.services.ShiftService;
-import ar.edu.itba.paw.webapp.form.ReservationTimeForm;
-import ar.edu.itba.paw.webapp.form.validation.constraints.ReservationTimeConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ShiftsConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.sql.Time;
-import java.time.LocalTime;
 import java.util.List;
 
 public class ShiftsValidator implements ConstraintValidator<ShiftsConstraint, List<Long>> {

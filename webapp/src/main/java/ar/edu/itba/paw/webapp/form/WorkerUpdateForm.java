@@ -29,7 +29,7 @@ public class WorkerUpdateForm {
     private String address;
 
     @ImageURNConstraint
-    private String backgroundPictureURN;
+    private String backgroundPicture;
 
     public String getPhoneNumber() { return phoneNumber; }
 
@@ -47,12 +47,12 @@ public class WorkerUpdateForm {
 
     public void setBio(String bio) { this.bio = bio; }
 
-    public String getBackgroundPictureURN() {
-        return backgroundPictureURN;
+    public String getBackgroundPicture() {
+        return backgroundPicture;
     }
 
-    public void setBackgroundPictureURN(String backgroundPictureURN) {
-        this.backgroundPictureURN = backgroundPictureURN;
+    public void setBackgroundPicture(String backgroundPicture) {
+        this.backgroundPicture = backgroundPicture;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class WorkerUpdateForm {
                 ", businessName='" + businessName + '\'' +
                 ", address='" + address + '\'' +
                 ", bio='" + bio + '\'' +
-                ", backgroundPicture=" + backgroundPictureURN +
+                ", backgroundPicture=" + backgroundPicture +
                 '}';
     }
 }

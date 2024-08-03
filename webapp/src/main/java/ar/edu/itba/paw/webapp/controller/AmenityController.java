@@ -124,7 +124,7 @@ public class AmenityController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/amenities'", neighborhoodId);
 
         // Creation & HashCode Generation
-        Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, form.getSelectedShiftURNs());
+        Amenity amenity = as.createAmenity(form.getName(), form.getDescription(), neighborhoodId, form.getSelectedShifts());
         String amenityHashCode = String.valueOf(amenity.hashCode());
 
         // Resource URN
@@ -147,7 +147,7 @@ public class AmenityController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/amenities/{}'", neighborhoodId, id);
 
         // Modification & HashCode Generation
-        final Amenity updatedAmenity = as.updateAmenityPartially(id, partialUpdate.getName(), partialUpdate.getDescription(), partialUpdate.getShiftURNs());
+        final Amenity updatedAmenity = as.updateAmenityPartially(id, partialUpdate.getName(), partialUpdate.getDescription(), partialUpdate.getShifts());
         String updatedAmenityHashCode = String.valueOf(updatedAmenity.hashCode());
 
         // Return the updated resource along with the EntityLevelETag

@@ -11,20 +11,17 @@ public interface TagDao {
 
     Tag createTag(String name);
 
-    // ---------------------------------------------- TAGS DELETE ------------------------------------------------------
-    boolean deleteTag(long tagId);
-
     // ---------------------------------------------- TAGS SELECT ------------------------------------------------------
 
     List<Tag> getTags(Long postId, long neighborhoodId, int page, int size);
 
-    Optional<Tag> findTag(long tagId);
+    Optional<Tag> findTag(long tagId, long neighborhoodId);
+
+    Optional<Tag> findTag(String tagName);
 
     int countTags(Long postId, long neighborhoodId);
 
-    List<Tag> getTags(long postId);
+    // ---------------------------------------------- TAGS DELETE ------------------------------------------------------
+    boolean deleteTag(long tagId);
 
-    List<Tag> getNeighborhoodTags(long neighborhoodId);
-
-    List<Tag> getAllTags();
 }

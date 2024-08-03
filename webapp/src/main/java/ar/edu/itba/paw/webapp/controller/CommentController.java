@@ -123,7 +123,7 @@ public class CommentController extends GlobalControllerAdvice{
         LOGGER.info("POST request arrived at '/neighborhoods/{}/posts/{}/comments'", neighborhoodId, postId);
 
         // Creation & HashCode Generation
-        final Comment comment = cs.createComment(form.getComment(), form.getUserURN(), postId);
+        final Comment comment = cs.createComment(form.getComment(), form.getUser(), postId);
         String commentHashCode = String.valueOf(comment.hashCode());
 
         // Resource URN

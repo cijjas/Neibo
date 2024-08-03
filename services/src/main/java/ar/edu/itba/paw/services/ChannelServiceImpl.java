@@ -6,6 +6,7 @@ import ar.edu.itba.paw.interfaces.persistence.ChannelMappingDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.models.Entities.Channel;
+import ar.edu.itba.paw.models.Entities.ChannelMapping;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +39,12 @@ public class ChannelServiceImpl implements ChannelService {
     public Channel createChannel(long neighborhoodId, String name) {
         LOGGER.info("Creating Channel {}", name);
 
-        Channel channel = channelDao.createChannel(name);
-        channelMappingDao.createChannelMapping(channel.getChannelId(), neighborhoodId);
+        // find channel by name, if it doesn't exist create it
+        Channel channel = channelDao.findChannel(name).orElseGet(() -> channelDao.createChannel(name));
+
+        if(channelMappingDao.channelMappingsCount(channel.getChannelId(), neighborhoodId) == 0)
+            channelMappingDao.createChannelMapping(channel.getChannelId(), neighborhoodId);
+
         return channel;
     }
 
@@ -48,7 +53,7 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Channel> findChannel(long channelId, long neighborhoodId) {
-        LOGGER.info("Creating Channel {} from Neighborhood {}", channelId, neighborhoodId);
+        LOGGER.info("Finding Channel {} from Neighborhood {}", channelId, neighborhoodId);
 
         ValidationUtils.checkChannelId(channelId);
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
@@ -63,19 +68,36 @@ public class ChannelServiceImpl implements ChannelService {
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
-
         return channelDao.getChannels(neighborhoodId);
+    }
+
+    @Override
+    public int calculateChannelPages(long neighborhoodId, int size) {
+        LOGGER.info("Calculating Channel Pages for Neighborhood {}", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkSize(size);
+
+        return PaginationUtils.calculatePages(channelMappingDao.channelMappingsCount(null, neighborhoodId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public boolean deleteChannel(long channelId) {
+    public boolean deleteChannel(long channelId, long neighborhoodId) {
         LOGGER.info("Deleting Channel {}", channelId);
 
         ValidationUtils.checkChannelId(channelId);
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        return channelDao.deleteChannel(channelId);
+        channelDao.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new);
+        channelMappingDao.deleteChannelMapping(channelId, neighborhoodId);
+
+        //if the channel was only being used by this neighborhood, it gets deleted
+        if(channelMappingDao.channelMappingsCount(channelId, null) == 0) {
+            channelDao.deleteChannel(channelId);
+        }
+
+        return true;
     }
 }

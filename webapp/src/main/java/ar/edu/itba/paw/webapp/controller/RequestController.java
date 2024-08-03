@@ -3,7 +3,6 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.interfaces.services.RequestService;
 import ar.edu.itba.paw.models.Entities.Request;
 import ar.edu.itba.paw.webapp.dto.RequestDto;
-import ar.edu.itba.paw.webapp.form.MarkAsSoldForm;
 import ar.edu.itba.paw.webapp.form.RequestForm;
 import ar.edu.itba.paw.webapp.form.UpdateRequestForm;
 import org.slf4j.Logger;
@@ -58,10 +57,10 @@ public class RequestController extends GlobalControllerAdvice {
     public Response listRequests(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("requestedBy") final String userURN,
-            @QueryParam("forProduct") final String productURN,
-            @QueryParam("withType") final String typeURN,
-            @QueryParam("withStatus") final String statusURN
+            @QueryParam("requestedBy") final String user,
+            @QueryParam("forProduct") final String product,
+            @QueryParam("withType") final String type,
+            @QueryParam("withStatus") final String status
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 
@@ -72,7 +71,7 @@ public class RequestController extends GlobalControllerAdvice {
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        List<Request> requests = rs.getRequests(userURN, productURN, typeURN, statusURN, page, size, neighborhoodId);
+        List<Request> requests = rs.getRequests(user, product, type, status, page, size, neighborhoodId);
         if (requests.isEmpty())
             return Response.noContent()
                     .tag(entityLevelETag)
@@ -83,7 +82,7 @@ public class RequestController extends GlobalControllerAdvice {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhoods/" + neighborhoodId + "/requests",
-                rs.calculateRequestPages(productURN, userURN, typeURN, statusURN, size),
+                rs.calculateRequestPages(product, user, type, status, neighborhoodId, size),
                 page,
                 size
         );
@@ -122,14 +121,14 @@ public class RequestController extends GlobalControllerAdvice {
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.canCreateRequest(#form.productURN)")
+    @PreAuthorize("@accessControlHelper.canCreateRequest(#form.product)")
     public Response createRequest(
             @Valid @NotNull final RequestForm form
     ) {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/requests'", neighborhoodId);
 
         // Creation & HashCode Generation
-        final Request request = rs.createRequest(form.getUserURN(), form.getProductURN(), form.getRequestMessage(), form.getQuantity());
+        final Request request = rs.createRequest(form.getUser(), form.getProduct(), form.getRequestMessage(), form.getQuantity());
         String requestHashCode = String.valueOf(request.hashCode());
 
         // Resource URN
@@ -152,7 +151,7 @@ public class RequestController extends GlobalControllerAdvice {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/requests/{}", neighborhoodId, requestId);
 
         // Modification & HashCode Generation
-        final Request updatedRequest = rs.updateRequest(requestId, form.getRequestStatusURN());
+        final Request updatedRequest = rs.updateRequest(requestId, form.getRequestStatus());
         String requestHashCode = String.valueOf(updatedRequest.hashCode());
 
         return Response.ok(RequestDto.fromRequest(updatedRequest, uriInfo))

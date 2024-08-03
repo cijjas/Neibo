@@ -52,41 +52,29 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
-    public List<Request> getRequests(Long userId, Long productId, Long typeId, Long statusId, int page, int size) {
+    public List<Request> getRequests(Long userId, Long productId, Long typeId, Long statusId, long neighborhoodId, int page, int size) {
         LOGGER.debug("Selecting Requests By Criteria");
 
-        StringBuilder queryBuilder = new StringBuilder("SELECT r.requestId FROM Request r ");
-
-        boolean addedWhere = false;
+        StringBuilder queryBuilder = new StringBuilder("SELECT r.requestId FROM Request r WHERE r.user.neighborhood.neighborhoodId = :neighborhoodId ");
 
         // Add status condition
         if (statusId != null) {
-            queryBuilder.append("WHERE r.status = :status ");
-            addedWhere = true;
+            queryBuilder.append("AND r.status = :status ");
         }
 
         // Add productId condition
         if (productId != null) {
-            if (!addedWhere) {
-                queryBuilder.append("WHERE r.product.productId = :productId ");
-                addedWhere = true;
-            } else {
-                queryBuilder.append("AND r.product.productId = :productId ");
-            }
+            queryBuilder.append("AND r.product.productId = :productId ");
         }
 
         if (typeId != null && userId != null) {
             TransactionType type = TransactionType.fromId(typeId);
-            if (!addedWhere) {
-                queryBuilder.append("WHERE ");
-            } else
-                queryBuilder.append("AND ");
             switch (type) {
                 case PURCHASE:
-                    queryBuilder.append("r.user.userId = :userId ");
+                    queryBuilder.append("AND r.user.userId = :userId ");
                     break;
                 case SALE:
-                    queryBuilder.append("r.product.seller.userId = :userId ");
+                    queryBuilder.append("AND r.product.seller.userId = :userId ");
                     break;
             }
         }
@@ -95,6 +83,7 @@ public class RequestDaoImpl implements RequestDao {
         TypedQuery<Long> idQuery = em.createQuery(queryBuilder.toString(), Long.class);
 
         // Set parameters for the query
+        idQuery.setParameter("neighborhoodId", neighborhoodId);
         if (statusId != null) {
             idQuery.setParameter("status", RequestStatus.fromId(statusId));
         }
@@ -122,41 +111,29 @@ public class RequestDaoImpl implements RequestDao {
     }
 
     @Override
-    public int countRequests(Long userId, Long productId, Long typeId, Long statusId) {
+    public int countRequests(Long userId, Long productId, Long typeId, Long statusId, long neighborhoodId) {
         LOGGER.debug("Selecting Requests Count by Criteria");
 
-        StringBuilder queryBuilder = new StringBuilder("SELECT r.requestId FROM Request r ");
-
-        boolean addedWhere = false;
+        StringBuilder queryBuilder = new StringBuilder("SELECT r.requestId FROM Request r WHERE r.user.neighborhood.neighborhoodId = :neighborhoodId ");
 
         // Add status condition
         if (statusId != null) {
-            queryBuilder.append("WHERE r.status = :status ");
-            addedWhere = true;
+            queryBuilder.append("AND r.status = :status ");
         }
 
         // Add productId condition
         if (productId != null) {
-            if (!addedWhere) {
-                queryBuilder.append("WHERE r.product.productId = :productId ");
-                addedWhere = true;
-            } else {
-                queryBuilder.append("AND r.product.productId = :productId ");
-            }
+            queryBuilder.append("AND r.product.productId = :productId ");
         }
 
         if (typeId != null && userId != null) {
             TransactionType type = TransactionType.fromId(typeId);
-            if (!addedWhere) {
-                queryBuilder.append("WHERE ");
-            } else
-                queryBuilder.append("AND ");
             switch (type) {
                 case PURCHASE:
-                    queryBuilder.append("r.user.userId = :userId ");
+                    queryBuilder.append("AND r.user.userId = :userId ");
                     break;
                 case SALE:
-                    queryBuilder.append("r.product.seller.userId = :userId ");
+                    queryBuilder.append("AND r.product.seller.userId = :userId ");
                     break;
             }
         }
@@ -165,6 +142,7 @@ public class RequestDaoImpl implements RequestDao {
         TypedQuery<Long> idQuery = em.createQuery(queryBuilder.toString(), Long.class);
 
         // Set parameters for the query
+        idQuery.setParameter("neighborhoodId", neighborhoodId);
         if (statusId != null) {
             idQuery.setParameter("status", RequestStatus.fromId(statusId));
         }

@@ -113,7 +113,7 @@ public class ResourceController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/resources'", neighborhoodId);
 
         // Creation & ETag Generation
-        final Resource resource = rs.createResource(neighborhoodId, form.getTitle(), form.getDescription(), form.getImageURN());
+        final Resource resource = rs.createResource(neighborhoodId, form.getTitle(), form.getDescription(), form.getImage());
         String resourceHashCode = String.valueOf(resource.hashCode());
 
         // Resource URN
@@ -135,7 +135,7 @@ public class ResourceController {
         LOGGER.info("PATCH request arrived at '/neighborhoods/{}/resources/{}'", neighborhoodId, id);
 
         // Modification & HashCode Generation
-        final Resource updatedResource = rs.updateResource(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getImageURN());
+        final Resource updatedResource = rs.updateResource(id, partialUpdate.getTitle(), partialUpdate.getDescription(), partialUpdate.getImage());
         String resourceHashCode = String.valueOf(updatedResource.hashCode());
 
         return Response.ok(ResourceDto.fromResource(updatedResource, uriInfo))

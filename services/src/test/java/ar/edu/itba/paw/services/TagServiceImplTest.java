@@ -33,7 +33,7 @@ public class TagServiceImplTest {
         );
 
         // 2. Exercise
-        Tag newTag = ts.createTag(TAG);
+        Tag newTag = ts.createTag(1, TAG); //todo: fix neighborhood
 
         // 3. Postconditions
         Assert.assertNotNull(newTag);
@@ -48,7 +48,7 @@ public class TagServiceImplTest {
         when(tagDao.createTag(eq(TAG))).thenThrow(RuntimeException.class);
 
         // 2. Exercise
-        Tag newTag = ts.createTag(TAG);
+        Tag newTag = ts.createTag(1, TAG); //todo: fix neighborhood
 
         // 3. Postconditions
     }

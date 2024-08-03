@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.AmenityURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ProductURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNAuthorizationConstraint;
 import org.hibernate.validator.constraints.NotBlank;
@@ -17,7 +16,7 @@ public class RequestForm {
 
     @NotNull
     @ProductURNConstraint
-    private String productURN;
+    private String product;
 
     @NotNull
     @Range(min = 1, max = 100)
@@ -25,15 +24,8 @@ public class RequestForm {
 
     @NotNull
     @UserURNAuthorizationConstraint
-    private String userURN;
+    private String user;
 
-    public String getUserURN() {
-        return userURN;
-    }
-
-    public void setUserURN(String userURN) {
-        this.userURN = userURN;
-    }
 
     public String getRequestMessage() {
         return requestMessage;
@@ -43,12 +35,20 @@ public class RequestForm {
         this.requestMessage = requestMessage;
     }
 
-    public String getProductURN() {
-        return productURN;
+    public String getProduct() {
+        return product;
     }
 
-    public void setProductURN(String productURN) {
-        this.productURN = productURN;
+    public void setProduct(String product) {
+        this.product = product;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public Integer getQuantity() {
@@ -62,7 +62,10 @@ public class RequestForm {
     @Override
     public String toString() {
         return "RequestForm{" +
-                ", requestMessage='" + requestMessage + '\'' +
+                "requestMessage='" + requestMessage + '\'' +
+                ", product='" + product + '\'' +
+                ", quantity=" + quantity +
+                ", user='" + user + '\'' +
                 '}';
     }
 }

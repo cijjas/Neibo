@@ -18,7 +18,7 @@ public interface RequestService {
 
     // ---------------------------------------------------
 
-    int calculateRequestPages(String productURN, String userURN, String typeURN, String statusURN, int size);
+    int calculateRequestPages(String productURN, String userURN, String typeURN, String statusURN, long neighborhoodId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

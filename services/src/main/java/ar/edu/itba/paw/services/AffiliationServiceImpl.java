@@ -69,8 +69,6 @@ public class AffiliationServiceImpl implements AffiliationService {
         return affiliationDao.getAffiliations(workerId, neighborhoodId, page, size);
     }
 
-    // ---------------------------------------------------
-
     @Override
     public int calculateAffiliationPages(String workerURN, String neighborhoodURN, int size) {
         LOGGER.info("Calculating Affiliation Pages between Worker {} and Neighborhood {}", workerURN, neighborhoodURN);

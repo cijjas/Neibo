@@ -62,13 +62,13 @@ public class UserController {
     public Response listUsers(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
-            @QueryParam("withRole") final String userRoleURN,
+            @QueryParam("withRole") final String userRole,
             @PathParam("neighborhoodId") final long neighborhoodId
     ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
         // Content
-        final List<User> users = us.getUsers(userRoleURN, neighborhoodId, page, size);
+        final List<User> users = us.getUsers(userRole, neighborhoodId, page, size);
         String usersHashCode = String.valueOf(users.hashCode());
 
         // Cache Control
@@ -85,7 +85,7 @@ public class UserController {
         // Pagination Links
         Link[] links = createPaginationLinks(
                 uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/users",
-                us.calculateUserPages(userRoleURN, neighborhoodId, size),
+                us.calculateUserPages(userRole, neighborhoodId, size),
                 page,
                 size
         );
@@ -134,7 +134,7 @@ public class UserController {
         LOGGER.info("POST request arrived at '/neighborhoods/{}/users'", neighborhoodId);
 
         // Creation & ETag Generation
-        final User user = us.createNeighbor(form.getEmail(), form.getPassword(), form.getName(), form.getSurname(), neighborhoodId, form.getLanguageURN(), form.getIdentification());
+        final User user = us.createNeighbor(form.getEmail(), form.getPassword(), form.getName(), form.getSurname(), neighborhoodId, form.getLanguage(), form.getIdentification());
         String userHashCode = String.valueOf(user.hashCode());
 
         // Resource URN
@@ -158,7 +158,7 @@ public class UserController {
 
 
         // Modification & HashCode Generation
-        final User updatedUser = us.updateUser(id, partialUpdate.getEmail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), partialUpdate.getProfilePictureURN(), partialUpdate.getIdentification(), partialUpdate.getLanguageURN(), partialUpdate.getUserRoleURN());
+        final User updatedUser = us.updateUser(id, partialUpdate.getEmail(), partialUpdate.getName(), partialUpdate.getSurname(), partialUpdate.getPassword(), partialUpdate.getDarkMode(), partialUpdate.getPhoneNumber(), partialUpdate.getProfilePicture(), partialUpdate.getIdentification(), partialUpdate.getLanguage(), partialUpdate.getUserRole());
         String updatedUserHashCode = String.valueOf(updatedUser.hashCode());
 
         return Response.ok(UserDto.fromUser(updatedUser, uriInfo))

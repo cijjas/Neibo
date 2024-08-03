@@ -102,8 +102,6 @@ public class AmenityServiceImpl implements AmenityService {
         return amenityDao.getAmenities(neighborhoodId, page, size);
     }
 
-    // ---------------------------------------------------
-
     @Override
     public int calculateAmenityPages(long neighborhoodId, int size) {
         LOGGER.info("Calculating Amenity Pages for Neighborhood {}", neighborhoodId);

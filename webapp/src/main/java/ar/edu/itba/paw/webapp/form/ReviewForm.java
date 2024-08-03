@@ -18,14 +18,14 @@ public class ReviewForm {
 
     @NotNull
     @UserURNAuthorizationConstraint
-    private String userURN;
+    private String user;
 
-    public String getUserURN() {
-        return userURN;
+    public String getUser() {
+        return user;
     }
 
-    public void setUserURN(String userURN) {
-        this.userURN = userURN;
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public Float getRating() {

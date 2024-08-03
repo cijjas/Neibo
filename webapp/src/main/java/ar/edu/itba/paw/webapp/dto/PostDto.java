@@ -35,7 +35,9 @@ public class PostDto {
                 .path(String.valueOf(post.getUser().getUserId()))
                 .build());
         links.setChannel(uriInfo.getBaseUriBuilder()
-                .path("base-channels")
+                .path("neighborhoods")
+                .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
+                .path("channels")
                 .path(String.valueOf(post.getChannel().getChannelId()))
                 .build());
         if (post.getPostPicture() != null) {

@@ -25,17 +25,17 @@ public class UserUpdateForm {
     private String password;
 
     @LanguageURNConstraint
-    private String languageURN;
+    private String language;
 
     @UserRoleURNConstraint
-    private String userRoleURN;
+    private String userRole;
 
     private Boolean darkMode;
 
     private String phoneNumber;
 
     @ImageURNConstraint
-    private String profilePictureURN;
+    private String profilePicture;
 
     private Integer identification;
 
@@ -72,33 +72,34 @@ public class UserUpdateForm {
 
     public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
 
-    public String getProfilePictureURN() {
-        return profilePictureURN;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setProfilePictureURN(String profilePictureURN) {
-        this.profilePictureURN = profilePictureURN;
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public Integer getIdentification() { return identification; }
 
     public void setIdentification(Integer identification) { this.identification = identification; }
 
-    public String getLanguageURN() {
-        return languageURN;
-    }
-
-    public void setLanguageURN(String languageURN) {
-        this.languageURN = languageURN;
-    }
-
-    public String getUserRoleURN() {
-        return userRoleURN;
-    }
-
-    public void setUserRoleURN(String userRoleURN) {
-        this.userRoleURN = userRoleURN;
-    }
 
     @Override
     public String toString() {
@@ -107,11 +108,11 @@ public class UserUpdateForm {
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", password='" + password + '\'' +
-                ", languageURN=" + languageURN +
-                ", userRoleId=" + userRoleURN +
+                ", language=" + language +
+                ", userRole=" + userRole +
                 ", darkMode=" + darkMode +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", profilePicture=" + profilePictureURN +
+                ", profilePicture=" + profilePicture +
                 ", identification=" + identification +
                 '}';
     }

@@ -7,13 +7,13 @@ import java.net.URI;
 
 public class ChannelDto {
 
-    private String channel;
+    private Channel channel;
     private Links _links;
 
     public static ChannelDto fromChannel(Channel channel, UriInfo uriInfo, Long neighborhoodId) {
         final ChannelDto dto = new ChannelDto();
 
-        dto.channel = channel.getChannel();
+        dto.channel = channel;
 
         Links links = new Links();
         URI self = uriInfo.getBaseUriBuilder()
@@ -32,11 +32,11 @@ public class ChannelDto {
     }
 
 
-    public String getChannel() {
+    public Channel getChannel() {
         return channel;
     }
 
-    public void setChannel(String channel) {
+    public void setChannel(Channel channel) {
         this.channel = channel;
     }
 

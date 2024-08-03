@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
+import ar.edu.itba.paw.interfaces.services.ChannelService;
 import ar.edu.itba.paw.interfaces.services.ImageService;
 import ar.edu.itba.paw.interfaces.services.PostService;
 import ar.edu.itba.paw.interfaces.services.TagService;
@@ -27,24 +28,26 @@ public class PostServiceImpl implements PostService {
     private final NeighborhoodDao neighborhoodDao;
     private final TagService tagService;
     private final ImageService imageService;
+    private final ChannelService channelService;
 
     @Autowired
-    public PostServiceImpl(final PostDao postDao, TagService tagService, ImageService imageService, NeighborhoodDao neighborhoodDao) {
+    public PostServiceImpl(final PostDao postDao, TagService tagService, ImageService imageService, NeighborhoodDao neighborhoodDao, ChannelService channelService) {
         this.imageService = imageService;
         this.tagService = tagService;
         this.postDao = postDao;
         this.neighborhoodDao = neighborhoodDao;
+        this.channelService = channelService;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Post createPost(String title, String description, String userURN, String channelURN, List<String> tagURNs, String imageURN) {
+    public Post createPost(String title, String description, String userURN, String channelURN, List<String> tagURNs, String imageURN, long neighborhoodId) {
         LOGGER.info("Creating Post with Title {} by User {}", title, userURN);
 
-        long baseChannelId = ValidationUtils.extractURNId(channelURN);
+        Long channelId = ValidationUtils.checkURNAndExtractChannelId(channelURN);
 
-        // TODO check valid baseChannelId, id > 0 && id < enum.size
+        channelService.findChannel(channelId, neighborhoodId).orElseThrow(NotFoundException::new);
 
         Image i = null;
         if (imageURN != null) {
@@ -55,9 +58,9 @@ public class PostServiceImpl implements PostService {
 
         Long userId = ValidationUtils.checkURNAndExtractUserId(userURN); // cannot be null due to form validation
 
-        Post p = postDao.createPost(title, description, userId, baseChannelId, i == null ? 0 : i.getImageId());
+        Post p = postDao.createPost(title, description, userId, channelId, i == null ? 0 : i.getImageId());
         if (tagURNs != null && !tagURNs.isEmpty())
-            tagService.createTagsAndCategorizePost(p.getPostId(), tagURNs);
+            tagService.categorizePost(p.getPostId(), tagURNs, neighborhoodId);
         return p;
     }
 

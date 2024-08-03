@@ -1,28 +1,23 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.enums.WorkerStatus;
-import ar.edu.itba.paw.webapp.form.validation.constraints.NeighborhoodURNConstraint;
 import ar.edu.itba.paw.webapp.form.validation.constraints.WorkerRoleURNConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.WorkerURNConstraint;
-
-import java.util.List;
 
 public class AffiliationForm {
     @WorkerRoleURNConstraint
-    private String workerRoleURN;
+    private String workerRole;
 
-    public String getWorkerRoleURN() {
-        return workerRoleURN;
+    public String getWorkerRole() {
+        return workerRole;
     }
 
-    public void setWorkerRoleURN(String workerRoleURN) {
-        this.workerRoleURN = workerRoleURN;
+    public void setWorkerRole(String workerRole) {
+        this.workerRole = workerRole;
     }
 
     @Override
     public String toString() {
         return "AffiliationForm{" +
-                "workerRoleURN='" + workerRoleURN + '\'' +
+                "workerRole='" + workerRole + '\'' +
                 '}';
     }
 }

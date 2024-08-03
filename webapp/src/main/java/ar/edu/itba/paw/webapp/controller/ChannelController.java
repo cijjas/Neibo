@@ -18,6 +18,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.*;
 
@@ -52,7 +53,10 @@ public class ChannelController {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response listChannels() {
+    public Response listChannels(
+            @QueryParam("page") @DefaultValue("1") final int page,
+            @QueryParam("size") @DefaultValue("10") final int size
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
 
         // Content
@@ -73,9 +77,18 @@ public class ChannelController {
         List<ChannelDto> channelDto = channels.stream()
                 .map(c -> ChannelDto.fromChannel(c, uriInfo, neighborhoodId)).collect(Collectors.toList());
 
+        // Pagination Links
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/channels",
+                cs.calculateChannelPages(neighborhoodId, size),
+                page,
+                size
+        );
+
         return Response.ok(new GenericEntity<List<ChannelDto>>(channelDto){})
                 .cacheControl(cacheControl)
                 .tag(channelsHashCode)
+                .links(links)
                 .build();
     }
 
@@ -137,7 +150,7 @@ public class ChannelController {
         LOGGER.info("DELETE request arrived at '/neighborhoods/{}/channels/{}'", neighborhoodId, channelId);
 
         // Deletion Attempt
-        if(cs.deleteChannel(channelId)) {
+        if(cs.deleteChannel(channelId, neighborhoodId)) {
             return Response.noContent()
                     .build();
         }

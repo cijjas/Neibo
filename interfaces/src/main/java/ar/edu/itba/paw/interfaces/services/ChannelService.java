@@ -14,8 +14,10 @@ public interface ChannelService {
     Optional<Channel> findChannel(long channelId, long neighborhoodId);
 
     List<Channel> getChannels(long neighborhoodId);
+    int calculateChannelPages(long neighborhoodId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
+    boolean deleteChannel(long channelId, long neighborhoodId);
 
-    boolean deleteChannel(long channelId);
+
 }

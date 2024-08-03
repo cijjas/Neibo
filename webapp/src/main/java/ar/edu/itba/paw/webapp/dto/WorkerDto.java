@@ -28,10 +28,6 @@ public class WorkerDto {
                 .path(String.valueOf(worker.getWorkerId()))
                 .build();
         links.setSelf(self);
-        links.setUserRole(uriInfo.getBaseUriBuilder()
-                .path("user-roles")
-                .path(String.valueOf(worker.getUser().getRole().getId()))
-                .build());
         links.setUser(uriInfo.getBaseUriBuilder()
                 .path("neighborhoods")
                 .path(String.valueOf(worker.getUser().getNeighborhood().getNeighborhoodId()))

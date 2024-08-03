@@ -117,14 +117,14 @@ public class ReviewController extends GlobalControllerAdvice {
     @POST
     @Secured({"ROLE_ADMINISTRATOR", "ROLE_NEIGHBOR", "ROLE_SUPER_ADMINISTRATOR"})
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.canCreateReview(#form.userURN)")
+    @PreAuthorize("@accessControlHelper.canCreateReview(#form.user)")
     public Response createReview(
             @Valid @NotNull final ReviewForm form
     ) {
         LOGGER.info("POST request arrived at '/workers/{}/reviews'", workerId);
 
         // Creation & HashCode Generation
-        final Review review = rs.createReview(workerId, form.getUserURN(), form.getRating(), form.getReview());
+        final Review review = rs.createReview(workerId, form.getUser(), form.getRating(), form.getReview());
         String reviewHashCode = String.valueOf(review.hashCode());
 
         // Resource URN

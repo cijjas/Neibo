@@ -19,10 +19,6 @@ public class SignupForm {
     private String surname;
 
     @NotNull
-    @NeighborhoodURNConstraint
-    private String neighborhoodURN;
-
-    @NotNull
     @Size(min = 1, max = 128)
     @Email
     @EmailConstraint
@@ -40,7 +36,7 @@ public class SignupForm {
 
     @NotNull
     @LanguageURNConstraint
-    private String languageURN;
+    private String language;
 
     public String getIdentification() {
         return identification;
@@ -66,20 +62,12 @@ public class SignupForm {
         this.surname = surname;
     }
 
-    public String getNeighborhoodURN() {
-        return neighborhoodURN;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setNeighborhoodURN(String neighborhoodURN) {
-        this.neighborhoodURN = neighborhoodURN;
-    }
-
-    public String getLanguageURN() {
-        return languageURN;
-    }
-
-    public void setLanguageURN(String languageURN) {
-        this.languageURN = languageURN;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public String getEmail() {
@@ -100,12 +88,13 @@ public class SignupForm {
 
     @Override
     public String toString() {
-        return "PublishForm{" +
+        return "SignupForm{" +
                 "name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", neighborhoodId='" + neighborhoodURN + '\'' +
+                ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", mail='" + email + '\'' +
+                ", identification='" + identification + '\'' +
+                ", language='" + language + '\'' +
                 '}';
     }
 }

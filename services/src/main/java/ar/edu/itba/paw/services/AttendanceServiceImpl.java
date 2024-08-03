@@ -66,8 +66,6 @@ public class AttendanceServiceImpl implements AttendanceService {
         return attendanceDao.getAttendance(eventId, page, size);
     }
 
-    // ---------------------------------------------------
-
     @Override
     public int calculateAttendancePages(long eventId, int size) {
         LOGGER.info("Calculating Attendance Pages for Event {}", eventId);

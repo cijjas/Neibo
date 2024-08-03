@@ -7,9 +7,9 @@ import java.util.Optional;
 
 public interface TagService {
 
-    Tag createTag(String name);
+    Tag createTag(long neighborhoodId, String name);
 
-    void createTagsAndCategorizePost(long postId, List<String> tagURIs);
+    void categorizePost(long postId, List<String> tagURIs, long neighborhoodId);
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -17,11 +17,12 @@ public interface TagService {
 
     List<Tag> getTags(String postURN, long neighborhoodId, int page, int size);
 
-    // ---------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     int calculateTagPages(String postURN, long neighborhoodId, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    boolean deleteTag(long tagId);
+    boolean deleteTag(long neighborhoodId, long tagId);
+
 }

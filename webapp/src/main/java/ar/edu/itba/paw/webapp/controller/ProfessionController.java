@@ -44,12 +44,12 @@ public class ProfessionController {
     @Produces(MediaType.APPLICATION_JSON)
     // falta un preauthorize aca para que no usen el query param
     public Response listProfessions(
-            @QueryParam("forWorker") final String workerURN
+            @QueryParam("forWorker") final String worker
     ) {
         LOGGER.info("GET request arrived at '/professions'");
 
         // Content
-        List<Profession> professions = ps.getProfessions(workerURN);
+        List<Profession> professions = ps.getProfessions(worker);
         String professionsHashCode = String.valueOf(professions.hashCode());
 
         // Cache Control

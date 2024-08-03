@@ -7,13 +7,13 @@ import java.net.URI;
 
 public class ProfessionDto {
 
-    private String name;
+    private Professions profession;
     private Links _links;
 
     public static ProfessionDto fromProfession(Professions profession, UriInfo uriInfo) {
         final ProfessionDto dto = new ProfessionDto();
 
-        dto.name = profession.name();
+        dto.profession = profession;
 
         Links links = new Links();
         URI self = uriInfo.getBaseUriBuilder()
@@ -31,14 +31,13 @@ public class ProfessionDto {
     }
 
 
-    public String getName() {
-        return name;
+    public Professions getProfession() {
+        return profession;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProfession(Professions profession) {
+        this.profession = profession;
     }
-
 
     public Links get_links() {
         return _links;

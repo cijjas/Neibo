@@ -42,7 +42,7 @@ public class WorkerServiceImpl implements WorkerService {
     public Worker createWorker(String userURN, String phoneNumber, String address, String[] professionURNs, String businessName) {
         LOGGER.info("Creating Worker associated with User {}", userURN);
 
-        Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
+        Long userId = ValidationUtils.checkURNAndExtractUserWorkerId(userURN);
 
         Worker worker = workerDao.createWorker(userId, phoneNumber, address, businessName);
         for (String urn : professionURNs) {

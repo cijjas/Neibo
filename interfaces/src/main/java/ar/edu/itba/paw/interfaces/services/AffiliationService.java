@@ -12,8 +12,6 @@ public interface AffiliationService {
 
     List<Affiliation> getAffiliations(String workerURN, String neighborhoodURN, int page, int size);
 
-    // ---------------------------------------------------
-
     int calculateAffiliationPages(String workerURN, String neighborhoodURN, int size);
 
     // -----------------------------------------------------------------------------------------------------------------

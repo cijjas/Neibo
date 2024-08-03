@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Arrays;
 
 public class UpdateProductForm{
     @NotBlank
@@ -16,7 +17,7 @@ public class UpdateProductForm{
     private Double price;
 
     @ImagesURNConstraint
-    private String[] imageURNs;
+    private String[] images;
 
     @NotBlank
     @Size(max = 2000)
@@ -24,7 +25,7 @@ public class UpdateProductForm{
 
     @NotNull
     @DepartmentURNConstraint
-    private String departmentURN;
+    private String department;
 
     @NotNull
     @Range(min = 1, max = 100)
@@ -33,16 +34,6 @@ public class UpdateProductForm{
     @NotNull
     private Boolean used;
 
-    @UserURNAuthorizationConstraint
-    private String userURN;
-
-    public String getUserURN() {
-        return userURN;
-    }
-
-    public void setUserURN(String userURN) {
-        this.userURN = userURN;
-    }
 
     public Long getQuantity() {
         return quantity;
@@ -84,29 +75,32 @@ public class UpdateProductForm{
         this.description = description;
     }
 
-    public String getDepartmentURN() {
-        return departmentURN;
+    public String[] getImages() {
+        return images;
     }
 
-    public void setDepartmentURN(String departmentURN) {
-        this.departmentURN = departmentURN;
+    public void setImages(String[] images) {
+        this.images = images;
     }
 
-    public String[] getImageURNs() {
-        return imageURNs;
+    public String getDepartment() {
+        return department;
     }
 
-    public void setImageURNs(String[] imageURNs) {
-        this.imageURNs = imageURNs;
+    public void setDepartment(String department) {
+        this.department = department;
     }
 
     @Override
     public String toString() {
-        return "ListingForm{" +
+        return "UpdateProductForm{" +
                 "title='" + title + '\'' +
-                ", price='" + price + '\'' +
+                ", price=" + price +
+                ", images=" + Arrays.toString(images) +
                 ", description='" + description + '\'' +
-                ", department=" + departmentURN +
+                ", department='" + department + '\'' +
+                ", quantity=" + quantity +
+                ", used=" + used +
                 '}';
     }
 }

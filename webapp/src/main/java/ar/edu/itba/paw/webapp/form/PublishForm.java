@@ -17,41 +17,18 @@ public class PublishForm {
     private String message;
 
     @TagsURNConstraint
-    private List<String> tagURNs;
+    private List<String> tags;
 
     @ImageURNConstraint
-    private String postImageURN;
+    private String image;
 
     @ChannelURNConstraint
-    private String channelURN;
+    private String channel;
 
     @NotNull
     @UserURNAuthorizationConstraint
-    private String userURN;
+    private String user;
 
-    public String getUserURN() {
-        return userURN;
-    }
-
-    public void setUserURN(String userURN) {
-        this.userURN = userURN;
-    }
-
-    public String getChannelURN() {
-        return channelURN;
-    }
-
-    public void setChannelURN(String channelURN) {
-        this.channelURN = channelURN;
-    }
-
-    public List<String> getTagURNs() {
-        return tagURNs;
-    }
-
-    public void setTagURNs(List<String> tagURNs) {
-        this.tagURNs = tagURNs;
-    }
 
     public String getSubject() {
         return subject;
@@ -69,12 +46,36 @@ public class PublishForm {
         this.message = message;
     }
 
-    public String getPostImageURN() {
-        return postImageURN;
+    public List<String> getTags() {
+        return tags;
     }
 
-    public void setPostImageURN(String postImageURN) {
-        this.postImageURN = postImageURN;
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     @Override
@@ -82,8 +83,10 @@ public class PublishForm {
         return "PublishForm{" +
                 "subject='" + subject + '\'' +
                 ", message='" + message + '\'' +
-                ", postImageURN='" + postImageURN + '\'' +
-                ", tags='" + tagURNs + '\'' +
+                ", tags=" + tags +
+                ", image='" + image + '\'' +
+                ", channel='" + channel + '\'' +
+                ", user='" + user + '\'' +
                 '}';
     }
 }

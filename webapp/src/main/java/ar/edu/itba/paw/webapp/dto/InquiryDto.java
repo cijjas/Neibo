@@ -16,7 +16,7 @@ public class InquiryDto {
         final InquiryDto dto = new InquiryDto();
 
         dto.message = inquiry.getMessage();
-        dto.reply = inquiry.getMessage();
+        dto.reply = inquiry.getReply();
         dto.inquiryDate = inquiry.getInquiryDate();
 
         Links links = new Links();
