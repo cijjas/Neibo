@@ -267,46 +267,6 @@ public class ReviewDaoImplTest {
         assertFalse(optionalReview.isPresent());
     }
 
-    // -------------------------------------------------- GETS ---------------------------------------------------------
-
-    @Test
-    public void get_workerId() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(TestConstants.USER_MAIL_2, nhKey); // Reviewer
-        long uKey3 = testInserter.createUser(TestConstants.USER_MAIL_3, nhKey); // Reviewer
-        long pKey = testInserter.createProfession();
-        testInserter.createWorker(uKey);
-        testInserter.createSpecialization(uKey, pKey);
-        long rKey1 = testInserter.createReview(uKey, uKey2);
-        long rKey2 = testInserter.createReview(uKey, uKey3);
-
-        // Exercise
-        List<Review> reviewList = ReviewDaoImpl.getReviews(uKey, BASE_PAGE, BASE_PAGE_SIZE);
-
-        // Validations & Post Conditions
-        assertEquals(TWO_ELEMENTS, reviewList.size());
-    }
-
-    @Test
-    public void get_empty() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey); // Reviewer
-        long uKey3 = testInserter.createUser(USER_MAIL_3, nhKey); // Reviewer
-        long pKey = testInserter.createProfession();
-        testInserter.createWorker(uKey);
-        testInserter.createSpecialization(uKey, pKey);
-
-        // Exercise
-        List<Review> reviewList = ReviewDaoImpl.getReviews(uKey, BASE_PAGE, BASE_PAGE_SIZE);
-
-        // Validations & Post Conditions
-        assertTrue(reviewList.isEmpty());
-    }
-
     @Test
     public void findAverageRating_workerId() {
         // Pre Conditions
@@ -345,10 +305,50 @@ public class ReviewDaoImplTest {
         assertEquals(NO_ELEMENTS, optionalAvgRating.get(), DELTA);
     }
 
+    // -------------------------------------------------- GETS ---------------------------------------------------------
+
+    @Test
+    public void get() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(TestConstants.USER_MAIL_2, nhKey); // Reviewer
+        long uKey3 = testInserter.createUser(TestConstants.USER_MAIL_3, nhKey); // Reviewer
+        long pKey = testInserter.createProfession();
+        testInserter.createWorker(uKey);
+        testInserter.createSpecialization(uKey, pKey);
+        long rKey1 = testInserter.createReview(uKey, uKey2);
+        long rKey2 = testInserter.createReview(uKey, uKey3);
+
+        // Exercise
+        List<Review> reviewList = ReviewDaoImpl.getReviews(uKey, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(TWO_ELEMENTS, reviewList.size());
+    }
+
+    @Test
+    public void get_empty() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey); // Reviewer
+        long uKey3 = testInserter.createUser(USER_MAIL_3, nhKey); // Reviewer
+        long pKey = testInserter.createProfession();
+        testInserter.createWorker(uKey);
+        testInserter.createSpecialization(uKey, pKey);
+
+        // Exercise
+        List<Review> reviewList = ReviewDaoImpl.getReviews(uKey, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertTrue(reviewList.isEmpty());
+    }
+
     // ------------------------------------------------- COUNTS --------------------------------------------------------
 
     @Test
-    public void count_workerId() {
+    public void count() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(USER_MAIL_1, nhKey);

@@ -243,7 +243,6 @@ public class PostDaoImplTest {
         assertEquals(TWO_ELEMENTS, postList.size());
     }
 
-
     @Test
     public void get_userId() {
         // Pre Conditions
@@ -270,7 +269,6 @@ public class PostDaoImplTest {
         assertEquals(TWO_ELEMENTS, postList.size());
     }
 
-
     @Test
     public void get_channelId_userId() {
         // Pre Conditions
@@ -282,7 +280,6 @@ public class PostDaoImplTest {
         // Validations
         assertEquals(TWO_ELEMENTS, postList.size());
     }
-
 
     @Test
     public void get_userId_tagList() {
@@ -310,6 +307,138 @@ public class PostDaoImplTest {
 
         // Validations
         assertEquals(ONE_ELEMENT, postList.size());
+    }
+
+    @Test
+    public void get_empty() {
+        // Pre Conditions
+
+        // Exercise
+        List<Post> postList = postDaoImpl.getPosts(EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE, Collections.emptyList(), nhKey1, EMPTY_FIELD, EMPTY_FIELD);
+
+        // Validations
+        assertTrue(postList.isEmpty());
+    }
+
+    // ------------------------------------------------- COUNTS --------------------------------------------------------
+
+    // HSQL does not accept queries with SELECT COUNT(DISTINCT p.*) org.hsqldb.HsqlException: unexpected token: )
+        @Test
+    public void count() {
+        // Pre Conditions
+        populatePosts();
+
+        // Exercise
+        int countPosts = postDaoImpl.countPosts(EMPTY_FIELD, Collections.emptyList(), nhKey1, EMPTY_FIELD, EMPTY_FIELD);
+
+        // Validations
+        assertEquals(FOUR_ELEMENTS, countPosts);
+    }
+
+    @Test
+    public void count_channelId() {
+        // Pre Conditions
+        populatePosts();
+
+        // Exercise
+        int countPosts = postDaoImpl.countPosts(chKey1, Collections.emptyList(), nhKey1, EMPTY_FIELD, EMPTY_FIELD);
+
+        // Validations
+        assertEquals(THREE_ELEMENTS, countPosts);
+    }
+
+    @Test
+    public void count_tagList() {
+        // Pre Conditions
+        populatePosts();
+        List<Long> TAG_LIST = new ArrayList<>();
+        TAG_LIST.add(tKey2);
+
+        // Exercise
+        int countPosts = postDaoImpl.countPosts(EMPTY_FIELD, TAG_LIST, nhKey2, EMPTY_FIELD, EMPTY_FIELD);
+
+        // Validations
+        assertEquals(TWO_ELEMENTS, countPosts);
+    }
+
+
+    @Test
+    public void count_userId() {
+        // Pre Conditions
+        populatePosts();
+
+        // Exercise
+        int countPosts = postDaoImpl.countPosts(EMPTY_FIELD, Collections.emptyList(), nhKey1, EMPTY_FIELD, uKey1);
+
+        // Validations
+        assertEquals(THREE_ELEMENTS, countPosts);
+    }
+
+    @Test
+    public void count_channelId_tagList() {
+        // Pre Conditions
+        populatePosts();
+        List<Long> TAG_LIST = new ArrayList<>();
+        TAG_LIST.add(tKey2);
+
+        // Exercise
+        int countPosts = postDaoImpl.countPosts(chKey2, TAG_LIST, nhKey2, EMPTY_FIELD, EMPTY_FIELD);
+
+        // Validations
+        assertEquals(TWO_ELEMENTS, countPosts);
+    }
+
+
+    @Test
+    public void count_channelId_userId() {
+        // Pre Conditions
+        populatePosts();
+
+        // Exercise
+        int countPosts = postDaoImpl.countPosts(chKey1, Collections.emptyList(), nhKey1, EMPTY_FIELD, uKey1);
+
+        // Validations
+        assertEquals(TWO_ELEMENTS, countPosts);
+    }
+
+
+    @Test
+    public void count_userId_tagList() {
+        // Pre Conditions
+        populatePosts();
+        List<Long> TAG_LIST = new ArrayList<>();
+        TAG_LIST.add(tKey1);
+
+        // Exercise
+        int countPosts = postDaoImpl.countPosts(EMPTY_FIELD, TAG_LIST, nhKey1, EMPTY_FIELD, uKey1);
+
+        // Validations
+        assertEquals(ONE_ELEMENT, countPosts);
+    }
+
+    @Test
+    public void count_channelId_userId_tagList() {
+        // Pre Conditions
+        populatePosts();
+        List<Long> TAG_LIST = new ArrayList<>();
+        TAG_LIST.add(tKey1);
+
+        // Exercise
+        int countPosts = postDaoImpl.countPosts(chKey1, TAG_LIST, nhKey1, EMPTY_FIELD, uKey1);
+
+        // Validations
+        assertEquals(ONE_ELEMENT, countPosts);
+    }
+
+    @Test
+    public void count_empty() {
+        // Pre Conditions
+
+        // Exercise
+        int countPosts = postDaoImpl.countPosts(EMPTY_FIELD, Collections.emptyList(), nhKey1, EMPTY_FIELD, EMPTY_FIELD);
+
+        // Validations
+        assertEquals(NO_ELEMENTS, countPosts);
     }
 
     @Test

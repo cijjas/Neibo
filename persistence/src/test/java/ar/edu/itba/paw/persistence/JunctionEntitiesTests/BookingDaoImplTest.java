@@ -46,6 +46,12 @@ public class BookingDaoImplTest {
     @PersistenceContext
     private EntityManager em;
 
+    private static long nhKey;
+    private static long uKey1;
+    private static long uKey2;
+    private static long uKey3;
+    private static long aKey1;
+    private static long aKey2;
 
     @Before
     public void setUp() {
@@ -122,20 +128,7 @@ public class BookingDaoImplTest {
     @Test
     public void get() {
         // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long uKey3 = testInserter.createUser(USER_MAIL_3, nhKey);
-        long aKey1 = testInserter.createAmenity(nhKey);
-        long aKey2 = testInserter.createAmenity(nhKey);
-        long dKey = testInserter.createDay();
-        long tKey = testInserter.createTime();
-        long sKey = testInserter.createShift(dKey, tKey);
-        long avKey1 = testInserter.createAvailability(aKey1, sKey);
-        long avKey2 = testInserter.createAvailability(aKey2, sKey);
-        long bKey1 = testInserter.createBooking(uKey1, avKey1, BOOKING_DATE_1);
-        long bKey2 = testInserter.createBooking(uKey1, avKey1, BOOKING_DATE_2);
-        long bKey3 = testInserter.createBooking(uKey2, avKey2, BOOKING_DATE_1);
+        populateBookings();
 
         // Exercise
         List<Booking> bookingList = bookingDaoImpl.getBookings(EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
@@ -147,20 +140,7 @@ public class BookingDaoImplTest {
         @Test
     public void get_userId() {
         // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long uKey3 = testInserter.createUser(USER_MAIL_3, nhKey);
-        long aKey1 = testInserter.createAmenity(nhKey);
-        long aKey2 = testInserter.createAmenity(nhKey);
-        long dKey = testInserter.createDay();
-        long tKey = testInserter.createTime();
-        long sKey = testInserter.createShift(dKey, tKey);
-        long avKey1 = testInserter.createAvailability(aKey1, sKey);
-        long avKey2 = testInserter.createAvailability(aKey2, sKey);
-        long bKey1 = testInserter.createBooking(uKey1, avKey1, BOOKING_DATE_1);
-        long bKey2 = testInserter.createBooking(uKey1, avKey1, BOOKING_DATE_2);
-        long bKey3 = testInserter.createBooking(uKey2, avKey2, BOOKING_DATE_1);
+        populateBookings();
 
         // Exercise
         List<Booking> bookingList = bookingDaoImpl.getBookings(uKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
@@ -172,20 +152,7 @@ public class BookingDaoImplTest {
             @Test
     public void get_amenityId() {
         // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long uKey3 = testInserter.createUser(USER_MAIL_3, nhKey);
-        long aKey1 = testInserter.createAmenity(nhKey);
-        long aKey2 = testInserter.createAmenity(nhKey);
-        long dKey = testInserter.createDay();
-        long tKey = testInserter.createTime();
-        long sKey = testInserter.createShift(dKey, tKey);
-        long avKey1 = testInserter.createAvailability(aKey1, sKey);
-        long avKey2 = testInserter.createAvailability(aKey2, sKey);
-        long bKey1 = testInserter.createBooking(uKey1, avKey1, BOOKING_DATE_1);
-        long bKey2 = testInserter.createBooking(uKey1, avKey1, BOOKING_DATE_2);
-        long bKey3 = testInserter.createBooking(uKey2, avKey2, BOOKING_DATE_1);
+        populateBookings();
 
         // Exercise
         List<Booking> bookingList = bookingDaoImpl.getBookings(EMPTY_FIELD, aKey1, BASE_PAGE, BASE_PAGE_SIZE);
@@ -197,23 +164,10 @@ public class BookingDaoImplTest {
     @Test
     public void get_userId_amenityId() {
         // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long uKey3 = testInserter.createUser(USER_MAIL_3, nhKey);
-        long aKey1 = testInserter.createAmenity(nhKey);
-        long aKey2 = testInserter.createAmenity(nhKey);
-        long dKey = testInserter.createDay();
-        long tKey = testInserter.createTime();
-        long sKey = testInserter.createShift(dKey, tKey);
-        long avKey1 = testInserter.createAvailability(aKey1, sKey);
-        long avKey2 = testInserter.createAvailability(aKey2, sKey);
-        long bKey1 = testInserter.createBooking(uKey1, avKey1, BOOKING_DATE_1);
-        long bKey2 = testInserter.createBooking(uKey1, avKey1, BOOKING_DATE_2);
-        long bKey3 = testInserter.createBooking(uKey2, avKey2, BOOKING_DATE_1);
+        populateBookings();
 
         // Exercise
-        List<Booking> bookingList = bookingDaoImpl.getBookings(uKey1, avKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Booking> bookingList = bookingDaoImpl.getBookings(uKey1, aKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, bookingList.size());
@@ -228,6 +182,67 @@ public class BookingDaoImplTest {
 
         // Validations & Post Conditions
         assertTrue(bookingList.isEmpty());
+    }
+
+    // ------------------------------------------------- COUNTS ---------------------------------------------------------
+
+    @Test
+    public void count() {
+        // Pre Conditions
+        populateBookings();
+
+        // Exercise
+        int countBookings = bookingDaoImpl.countBookings(EMPTY_FIELD, EMPTY_FIELD);
+
+        // Validations & Post Conditions
+        assertEquals(THREE_ELEMENTS, countBookings);
+    }
+
+        @Test
+    public void count_userId() {
+        // Pre Conditions
+        populateBookings();
+
+        // Exercise
+        int countBookings = bookingDaoImpl.countBookings(uKey1, EMPTY_FIELD);
+
+        // Validations & Post Conditions
+        assertEquals(TWO_ELEMENTS, countBookings);
+    }
+
+            @Test
+    public void count_amenityId() {
+        // Pre Conditions
+        populateBookings();
+
+        // Exercise
+        int countBookings = bookingDaoImpl.countBookings(EMPTY_FIELD, aKey1);
+
+        // Validations & Post Conditions
+        assertEquals(TWO_ELEMENTS, countBookings);
+    }
+
+    @Test
+    public void count_userId_amenityId() {
+        // Pre Conditions
+        populateBookings();
+
+        // Exercise
+        int countBookings = bookingDaoImpl.countBookings(uKey1, aKey1);
+
+        // Validations & Post Conditions
+        assertEquals(TWO_ELEMENTS, countBookings);
+    }
+
+    @Test
+    public void count_empty() {
+        // Pre Conditions
+
+        // Exercise
+        int countBookings = bookingDaoImpl.countBookings(EMPTY_FIELD, EMPTY_FIELD);
+
+        // Validations & Post Conditions
+        assertEquals(NO_ELEMENTS, countBookings);
     }
 
     // ------------------------------------------------ DELETES --------------------------------------------------------
@@ -271,5 +286,24 @@ public class BookingDaoImplTest {
         // Validations & Post Conditions
         em.flush();
         assertFalse(deleted);
+    }
+
+    // ----------------------------------------------- POPULATION ------------------------------------------------------
+
+    private void populateBookings(){
+        nhKey = testInserter.createNeighborhood();
+        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        uKey3 = testInserter.createUser(USER_MAIL_3, nhKey);
+        aKey1 = testInserter.createAmenity(nhKey);
+        aKey2 = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long avKey1 = testInserter.createAvailability(aKey1, sKey);
+        long avKey2 = testInserter.createAvailability(aKey2, sKey);
+        long bKey1 = testInserter.createBooking(uKey1, avKey1, BOOKING_DATE_1);
+        long bKey2 = testInserter.createBooking(uKey1, avKey1, BOOKING_DATE_2);
+        long bKey3 = testInserter.createBooking(uKey2, avKey2, BOOKING_DATE_1);
     }
 }

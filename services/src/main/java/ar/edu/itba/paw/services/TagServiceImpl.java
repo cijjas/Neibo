@@ -43,7 +43,7 @@ public class TagServiceImpl implements TagService {
         //find tag by name, if it doesn't exist create it
         Tag tag = tagDao.findTag(name).orElseGet(() -> tagDao.createTag(name));
 
-        if(tagMappingDao.tagMappingsCount(tag.getTagId(), neighborhoodId) == 0)
+        if(tagMappingDao.countTagMappings(tag.getTagId(), neighborhoodId) == 0)
             tagMappingDao.createTagMappingDao(tag.getTagId(), neighborhoodId);
 
         return tag;
@@ -116,7 +116,7 @@ public class TagServiceImpl implements TagService {
         tagMappingDao.deleteTagMapping(tagId, neighborhoodId);
 
         //if the channel was only being used by this neighborhood, it gets deleted
-        if(tagMappingDao.tagMappingsCount(tagId, null) == 0) {
+        if(tagMappingDao.countTagMappings(tagId, null) == 0) {
             return tagDao.deleteTag(tagId);
         }
 

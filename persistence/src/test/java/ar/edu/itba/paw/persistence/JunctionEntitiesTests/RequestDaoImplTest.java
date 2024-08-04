@@ -169,7 +169,7 @@ public class RequestDaoImplTest {
     private void populateRequests(){
         // userId, productId, typeId(PURCHASE, SALE), statusId(REQUESTED, DECLINED, ACCEPTED)
         long iKey = testInserter.createImage();
-        long nhKey = testInserter.createNeighborhood();
+        nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
         long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);

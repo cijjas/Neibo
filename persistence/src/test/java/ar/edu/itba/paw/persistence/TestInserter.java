@@ -212,8 +212,8 @@ public class TestInserter {
         return time.getTimeId();
     }
 
-    public void createAffiliation(long workerId, long neighborhoodId) {
-        Affiliation affiliation = new Affiliation(em.find(Worker.class, workerId), em.find(Neighborhood.class, neighborhoodId), WorkerRole.VERIFIED_WORKER);
+    public void createAffiliation(long workerId, long neighborhoodId, WorkerRole workerRole) {
+        Affiliation affiliation = new Affiliation(em.find(Worker.class, workerId), em.find(Neighborhood.class, neighborhoodId), workerRole);
         em.persist(affiliation);
         em.flush();
     }
@@ -287,7 +287,7 @@ public class TestInserter {
         return img.getImageId();
     }
 
-    public long createProfession(Professions professionType) {
+    public long createProfession(String professionType) {
         final Profession profession = new Profession.Builder()
                 .profession(professionType)
                 .build();
@@ -347,6 +347,12 @@ public class TestInserter {
         em.persist(request);
         em.flush();
         return request.getRequestId();
+    }
+
+    public void createTagMapping(long neighborhoodId, long tagId){
+        TagMapping tagMapping = new TagMapping(em.find(Neighborhood.class, neighborhoodId), em.find(Tag.class, tagId));
+        em.persist(tagMapping);
+        em.flush();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -493,7 +499,7 @@ public class TestInserter {
     }
 
     public long createProfession() {
-        return createProfession(Professions.PLUMBER);
+        return createProfession(Professions.PLUMBER.name());
     }
 
     public long createProduct(long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
@@ -514,8 +520,7 @@ public class TestInserter {
         long units = 1L;
         long pKey = createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, departmentId, units);
         if (buyerId != null){
-            // create request and fulfill it?
-            createRequest(pKey, buyerId, "GImme", RequestStatus.ACCEPTED);
+            createRequest(pKey, buyerId, "Gimme that", RequestStatus.ACCEPTED);
             em.find(Product.class, pKey).setRemainingUnits(0L);
         }
         return pKey;
@@ -534,5 +539,9 @@ public class TestInserter {
     public long createRequest(long productId, long userId){
         String message = "Hello";
         return createRequest(productId, userId, message, RequestStatus.REQUESTED);
+    }
+
+    public void createAffiliation(long workerId, long neighborhoodId) {
+        createAffiliation(workerId, neighborhoodId, WorkerRole.VERIFIED_WORKER);
     }
 }

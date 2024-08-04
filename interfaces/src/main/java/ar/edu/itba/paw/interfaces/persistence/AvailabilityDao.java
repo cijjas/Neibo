@@ -2,7 +2,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Entities.Availability;
 
-import java.util.OptionalLong;
+import java.util.Optional;
 
 public interface AvailabilityDao {
 
@@ -12,7 +12,7 @@ public interface AvailabilityDao {
 
     // -------------------------------------------- AVAILABILITY SELECT ------------------------------------------------
 
-    OptionalLong findAvailabilityId(long amenityId, long shiftId);
+    Optional<Availability> findAvailability(long amenityId, long shiftId);
 
     // -------------------------------------------- AVAILABILITY DELETE ------------------------------------------------
 

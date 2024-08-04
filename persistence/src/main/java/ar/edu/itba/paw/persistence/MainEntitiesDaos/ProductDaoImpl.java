@@ -113,6 +113,7 @@ public class ProductDaoImpl implements ProductDao {
 
         nativeQuery.append(" ORDER BY p.creationdate DESC");
 
+        System.out.println(nativeQuery);
         Query query = em.createNativeQuery(nativeQuery.toString(), Product.class);
 
         query.setParameter("neighborhoodId", neighborhoodId);

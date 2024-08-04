@@ -312,7 +312,7 @@ public class ProductDaoImplTest {
     // --------------------------------------------------- HELPERS -----------------------------------------------------
 
     private void populateProducts(){
-        // UserId, ProductStatus (BOUGHT, SOLD, SELLING), Department
+        // UserId,  SOLD, Department
 
         // [U1, BOUGHT(U2), D1]
         // [U1, BOUGHT(U2), D1]

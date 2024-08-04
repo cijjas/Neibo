@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
+import java.util.List;
 import java.util.Optional;
 
 import static ar.edu.itba.paw.persistence.TestConstants.*;
@@ -30,7 +31,16 @@ import static org.junit.Assert.*;
 @Rollback
 public class TagDaoImplTest {
 
-    private final String TAG_NAME = "Sample Tag";
+    private final String TAG_NAME_1 = "Tag Name 1";
+    private final String TAG_NAME_2 = "Tag Name 2";
+    private final String TAG_NAME_3 = "Tag Name 3";
+    private final String TAG_NAME_4 = "Tag Name 4";
+    private final String TAG_NAME_5 = "Tag Name 5";
+
+    private static long nhKey;
+    private static long pKey1;
+    private static long pKey2;
+
     @Autowired
     private DataSource ds;
     @Autowired
@@ -53,12 +63,12 @@ public class TagDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Tag tag = tagDaoImpl.createTag(TAG_NAME);
+        Tag tag = tagDaoImpl.createTag(TAG_NAME_1);
 
         // Validations & Post Conditions
         em.flush();
         assertNotNull(tag);
-        assertEquals(TAG_NAME, tag.getTag());
+        assertEquals(TAG_NAME_1, tag.getTag());
         assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.tags.name()));
     }
 
@@ -72,11 +82,11 @@ public class TagDaoImplTest {
         long chKey = testInserter.createChannel();
         long iKey = testInserter.createImage();
         long pKey = testInserter.createPost(uKey, chKey, iKey);
-        long tKey = testInserter.createTag(TAG_NAME);
+        long tKey = testInserter.createTag(TAG_NAME_1);
         testInserter.createCategorization(tKey, pKey);
 
         // Exercise
-        Optional<Tag> optionalTag = tagDaoImpl.findTag(TAG_NAME);
+        Optional<Tag> optionalTag = tagDaoImpl.findTag(TAG_NAME_1);
 
         // Validations & Post Conditions
         assertTrue(optionalTag.isPresent());
@@ -103,96 +113,85 @@ public class TagDaoImplTest {
 
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
-/*    @Test
-    public void testGetTagsByPostId() {
+    @Test
+    public void get() {
         // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(nhKey);
-        long chKey = testInserter.createChannel();
-        long pKey = testInserter.createPost(uKey, chKey, 0);
-        long tKey = testInserter.createTag();
-        testInserter.createCategorization(tKey, pKey);
+        populateTags();
 
         // Exercise
-        List<Tag> tags = tagDao.getTags(pKey); todo fix me
+        List<Tag> tags = tagDaoImpl.getTags(EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertFalse(tags.isEmpty());
-        assertEquals(1, tags.size());
+        assertEquals(FOUR_ELEMENTS, tags.size());
     }
 
     @Test
-    public void testGetNoTagsByPostId() {
+    public void get_postId() {
+        // Pre Conditions
+        populateTags();
+
+        // Exercise
+        List<Tag> tags = tagDaoImpl.getTags(pKey1, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(THREE_ELEMENTS, tags.size());
+    }
+
+    @Test
+    public void get_empty() {
         // Pre Conditions
 
         // Exercise
-        List<Tag> tags = tagDao.getTags(1); todo fix me
+        List<Tag> tags = tagDaoImpl.getTags(EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(tags.isEmpty());
     }
 
+    // ------------------------------------------------- COUNTS ---------------------------------------------------------
+
     @Test
-    public void testGetTags() {
+    public void count() {
         // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(nhKey);
-        long chKey = testInserter.createChannel();
-        long pKey = testInserter.createPost(uKey, chKey, 0);
-        long tKey = testInserter.createTag();
-        testInserter.createCategorization(tKey, pKey);
+        populateTags();
 
         // Exercise
-        List<Tag> tags = tagDao.getNeighborhoodTags(nhKey); todo fix me
+        int countTags = tagDaoImpl.countTags(EMPTY_FIELD, nhKey);
 
         // Validations & Post Conditions
-        assertEquals(1, tags.size());
+        assertEquals(FOUR_ELEMENTS, countTags);
     }
 
     @Test
-    public void testGetNoTags() {
+    public void count_postId() {
         // Pre Conditions
-
+        populateTags();
 
         // Exercise
-        List<Tag> tags = tagDao.getNeighborhoodTags(1);
+        int countTags = tagDaoImpl.countTags(pKey1, nhKey);
 
         // Validations & Post Conditions
-        assertEquals(0, tags.size());
-
-
+        assertEquals(THREE_ELEMENTS, countTags);
     }
 
     @Test
-    public void testGetAllTags() {
+    public void count_empty() {
         // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(nhKey);
-        long chKey = testInserter.createChannel();
-        long pKey = testInserter.createPost(uKey, chKey, 0);
-        long tKey1 = testInserter.createTag("Tag 1");
-        long tKey2 = testInserter.createTag("Tag 2");
-        long tKey3 = testInserter.createTag("Tag 3");
-        testInserter.createCategorization(tKey1, pKey);
-        testInserter.createCategorization(tKey2, pKey);
-        testInserter.createCategorization(tKey3, pKey);
 
         // Exercise
-        List<Tag> tags = tagDao.getAllTags();
+        int countTags = tagDaoImpl.countTags(EMPTY_FIELD, nhKey);
 
         // Validations & Post Conditions
-        assertEquals(3, tags.size());
-
-
+        assertEquals(NO_ELEMENTS, countTags);
     }
-    */
+
 
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
 	public void delete_tagId_valid() {
 	    // Pre Conditions
-        long tKey1 = testInserter.createTag(TAG_NAME);
+        long tKey1 = testInserter.createTag(TAG_NAME_1);
 
 	    // Exercise
 	    boolean deleted = tagDaoImpl.deleteTag(tKey1);
@@ -206,7 +205,7 @@ public class TagDaoImplTest {
 	@Test
 	public void delete_tagId_invalid_tagId() {
         // Pre Conditions
-        long tKey1 = testInserter.createTag(TAG_NAME);
+        long tKey1 = testInserter.createTag(TAG_NAME_1);
 
 	    // Exercise
 	    boolean deleted = tagDaoImpl.deleteTag(INVALID_ID);
@@ -215,4 +214,40 @@ public class TagDaoImplTest {
 		em.flush();
 	    assertFalse(deleted);
 	}
+
+    // ----------------------------------------------- POPULATION ------------------------------------------------------
+
+    private void populateTags() {
+
+        // [P1]
+        // [P1]
+        // [P1]
+        // [P2]
+
+        long iKey = testInserter.createImage();
+        nhKey = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        pKey1 = testInserter.createPost(uKey, chKey, iKey);
+        pKey2 = testInserter.createPost(uKey, chKey, iKey);
+
+        long tKey1 = testInserter.createTag(TAG_NAME_1);
+        long tKey2 = testInserter.createTag(TAG_NAME_2);
+        long tKey3 = testInserter.createTag(TAG_NAME_3);
+        long tKey4 = testInserter.createTag(TAG_NAME_4);
+        long tKey5 = testInserter.createTag(TAG_NAME_5);
+
+        testInserter.createCategorization(tKey1, pKey1);
+        testInserter.createCategorization(tKey2, pKey1);
+        testInserter.createCategorization(tKey3, pKey1);
+        testInserter.createCategorization(tKey4, pKey2);
+        
+        testInserter.createTagMapping(nhKey, tKey1);
+        testInserter.createTagMapping(nhKey, tKey2);
+        testInserter.createTagMapping(nhKey, tKey3);
+        testInserter.createTagMapping(nhKey, tKey4);
+        testInserter.createTagMapping(nhKey2, tKey5);
+    }
+
 }

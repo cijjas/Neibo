@@ -19,6 +19,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.itba.paw.webapp.controller.ControllerUtils.createPaginationLinks;
 import static ar.edu.itba.paw.webapp.controller.ETagUtility.*;
 import static ar.edu.itba.paw.webapp.controller.GlobalControllerAdvice.CUSTOM_ROW_LEVEL_ETAG_NAME;
 
@@ -54,11 +55,14 @@ public class ContactController {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    public Response listContacts() {
+    public Response listContacts(
+            @QueryParam("page") @DefaultValue("1") final int page,
+            @QueryParam("size") @DefaultValue("10") final int size
+    ) {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/contacts'", neighborhoodId);
 
         // Content
-        final List<Contact> contacts = cs.getContacts(neighborhoodId);
+        final List<Contact> contacts = cs.getContacts(neighborhoodId, page, size);
         String contactsHashCode = String.valueOf(contacts.hashCode());
 
         // Cache Control
@@ -75,9 +79,18 @@ public class ContactController {
         final List<ContactDto> contactsDto = contacts.stream()
                 .map(c -> ContactDto.fromContact(c, uriInfo)).collect(Collectors.toList());
 
+        // Pagination Links
+        Link[] links = createPaginationLinks(
+                uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "/contacts",
+                cs.calculateContactPages(neighborhoodId, size),
+                page,
+                size
+        );
+
         return Response.ok(new GenericEntity<List<ContactDto>>(contactsDto){})
                 .cacheControl(cacheControl)
                 .tag(contactsHashCode)
+                .links(links)
                 .build();
     }
 

@@ -13,7 +13,7 @@ public interface TagMappingDao {
 
     List<TagMapping> getTagMappings(Long tagId, Long neighborhoodId, int page, int size);
 
-    int tagMappingsCount(Long tagId, Long neighborhoodId);
+    int countTagMappings(Long tagId, Long neighborhoodId);
 
     // ---------------------------------------------- TAG MAPPING DELETE ------------------------------------------------------
 

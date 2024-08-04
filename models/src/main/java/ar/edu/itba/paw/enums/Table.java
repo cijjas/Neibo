@@ -2,6 +2,7 @@ package ar.edu.itba.paw.enums;
 
 public enum Table {
     neighborhoods,
+    neighborhoods_channels,
     channels,
     contacts,
     images,
@@ -9,8 +10,8 @@ public enum Table {
     users,
     amenities,
     amenities_hours,
-    neighborhoods_channels,
     tags,
+    neighborhoods_tags,
     posts,
     posts_tags,
     posts_users_likes,
@@ -34,5 +35,6 @@ public enum Table {
     products_departments,
     products_users_inquiries,
     products_users_requests,
+
 
 }

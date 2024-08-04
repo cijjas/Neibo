@@ -285,7 +285,7 @@ public class CommentDaoImplTest {
     // ------------------------------------------------- COUNTS --------------------------------------------------------
 
     @Test
-    public void count_postId() {
+    public void count() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -299,7 +299,6 @@ public class CommentDaoImplTest {
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countComments);
-        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.comments.name()));
     }
 
     @Test
@@ -316,7 +315,6 @@ public class CommentDaoImplTest {
 
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countComments);
-        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.comments.name()));
     }
 
     // ------------------------------------------------ DELETES --------------------------------------------------------

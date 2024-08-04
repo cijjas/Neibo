@@ -59,14 +59,26 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<Contact> getContacts(long neighborhoodId) {
+    public List<Contact> getContacts(long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Contacts for Neighborhood {}", neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
 
-        return contactDao.getContacts(neighborhoodId);
+        return contactDao.getContacts(neighborhoodId, page, size);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public int calculateContactPages(long neighborhoodId, int size) {
+        LOGGER.info("Calculating Contact Pages for Neighborhood {}", neighborhoodId);
+
+        ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkSize(size);
+
+        return PaginationUtils.calculatePages(contactDao.countContacts(neighborhoodId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

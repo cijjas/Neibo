@@ -41,6 +41,11 @@ public class LikeDaoImplTest {
     @PersistenceContext
     private EntityManager em;
 
+    private static long nhKey;
+    private static long uKey1;
+    private static long uKey2;
+    private static long pKey1;
+    private static long pKey2;
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -73,16 +78,7 @@ public class LikeDaoImplTest {
     @Test
     public void get(){
         // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long chKey = testInserter.createChannel();
-        long iKey = testInserter.createImage();
-        long pKey1 = testInserter.createPost(uKey1, chKey, iKey);
-        long pKey2 = testInserter.createPost(uKey2, chKey, iKey);
-        testInserter.createLike(pKey1, uKey1);
-        testInserter.createLike(pKey2, uKey1);
-        testInserter.createLike(pKey1, uKey2);
+        populateLikes();
 
         // Exercise
         List<Like> likeList = likeDaoImpl.getLikes(EMPTY_FIELD, EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
@@ -94,16 +90,7 @@ public class LikeDaoImplTest {
     @Test
     public void get_neighborhoodId_userId(){
         // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long chKey = testInserter.createChannel();
-        long iKey = testInserter.createImage();
-        long pKey1 = testInserter.createPost(uKey1, chKey, iKey);
-        long pKey2 = testInserter.createPost(uKey2, chKey, iKey);
-        testInserter.createLike(pKey1, uKey1);
-        testInserter.createLike(pKey2, uKey1);
-        testInserter.createLike(pKey1, uKey2);
+        populateLikes();
 
         // Exercise
         List<Like> likeList = likeDaoImpl.getLikes(EMPTY_FIELD, uKey1, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
@@ -115,16 +102,7 @@ public class LikeDaoImplTest {
     @Test
     public void get_neighborhoodId_postId(){
         // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long chKey = testInserter.createChannel();
-        long iKey = testInserter.createImage();
-        long pKey1 = testInserter.createPost(uKey1, chKey, iKey);
-        long pKey2 = testInserter.createPost(uKey2, chKey, iKey);
-        testInserter.createLike(pKey1, uKey1);
-        testInserter.createLike(pKey2, uKey1);
-        testInserter.createLike(pKey1, uKey2);
+        populateLikes();
 
         // Exercise
         List<Like> likeList = likeDaoImpl.getLikes(pKey1, EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
@@ -136,16 +114,7 @@ public class LikeDaoImplTest {
     @Test
     public void get_neighborhoodId_userId_postId(){
         // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
-        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
-        long chKey = testInserter.createChannel();
-        long iKey = testInserter.createImage();
-        long pKey1 = testInserter.createPost(uKey1, chKey, iKey);
-        long pKey2 = testInserter.createPost(uKey2, chKey, iKey);
-        testInserter.createLike(pKey1, uKey1);
-        testInserter.createLike(pKey2, uKey1);
-        testInserter.createLike(pKey1, uKey2);
+        populateLikes();
 
         // Exercise
         List<Like> likeList = likeDaoImpl.getLikes(pKey1, uKey1, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
@@ -172,29 +141,69 @@ public class LikeDaoImplTest {
         assertTrue(likeList.isEmpty());
     }
 
+    // ------------------------------------------------- COUNTS ---------------------------------------------------------
+
     @Test
-    public void count_valid() {
+    public void count(){
         // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long uKey = testInserter.createUser(nhKey);
-        long chKey = testInserter.createChannel();
-        long iKey = testInserter.createImage();
-        long pKey = testInserter.createPost(uKey, chKey, iKey);
-        testInserter.createLike(pKey, uKey);
+        populateLikes();
 
         // Exercise
-        int countLikes = likeDaoImpl.countLikes(pKey, uKey, nhKey);
+        int countLikes = likeDaoImpl.countLikes(EMPTY_FIELD, EMPTY_FIELD, nhKey);
+
+        // Validations & Post Conditions
+        assertEquals(THREE_ELEMENTS, countLikes);
+    }
+
+    @Test
+    public void count_neighborhoodId_userId(){
+        // Pre Conditions
+        populateLikes();
+
+        // Exercise
+        int countLikes = likeDaoImpl.countLikes(EMPTY_FIELD, uKey1, nhKey);
+
+        // Validations & Post Conditions
+        assertEquals(TWO_ELEMENTS, countLikes);
+    }
+
+    @Test
+    public void count_neighborhoodId_postId(){
+        // Pre Conditions
+        populateLikes();
+
+        // Exercise
+        int countLikes = likeDaoImpl.countLikes(pKey1, EMPTY_FIELD, nhKey);
+
+        // Validations & Post Conditions
+        assertEquals(TWO_ELEMENTS, countLikes);
+    }
+
+    @Test
+    public void count_neighborhoodId_userId_postId(){
+        // Pre Conditions
+        populateLikes();
+
+        // Exercise
+        int countLikes = likeDaoImpl.countLikes(pKey1, uKey1, nhKey);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countLikes);
     }
 
     @Test
-    public void count_empty() {
+    public void count_empty(){
         // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey1 = testInserter.createPost(uKey1, chKey, iKey);
+        long pKey2 = testInserter.createPost(uKey2, chKey, iKey);
 
         // Exercise
-        int countLikes = likeDaoImpl.countLikes(INVALID_LONG_ID, INVALID_LONG_ID, INVALID_ID);
+        int countLikes = likeDaoImpl.countLikes(pKey1, uKey1, nhKey);
 
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countLikes);
@@ -273,5 +282,20 @@ public class LikeDaoImplTest {
         // Validations & Post Conditions
         em.flush();
         assertFalse(deleted);
+    }
+
+    // ----------------------------------------------- POPULATION ------------------------------------------------------
+
+    private void populateLikes(){
+        nhKey = testInserter.createNeighborhood();
+        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        pKey1 = testInserter.createPost(uKey1, chKey, iKey);
+        pKey2 = testInserter.createPost(uKey2, chKey, iKey);
+        testInserter.createLike(pKey1, uKey1);
+        testInserter.createLike(pKey2, uKey1);
+        testInserter.createLike(pKey1, uKey2);
     }
 }

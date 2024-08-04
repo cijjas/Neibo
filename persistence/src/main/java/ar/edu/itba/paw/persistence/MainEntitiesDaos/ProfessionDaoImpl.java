@@ -22,10 +22,10 @@ public class ProfessionDaoImpl implements ProfessionDao {
     // ------------------------------------------------ PROFESSION INSERT ----------------------------------------------
 
     @Override
-    public Profession createProfession(Professions professionType) {
-        LOGGER.debug("Inserting Profession {}", professionType);
+    public Profession createProfession(String professionName) {
+        LOGGER.debug("Inserting Profession {}", professionName);
         final Profession profession = new Profession.Builder()
-                .profession(professionType)
+                .profession(professionName)
                 .build();
         em.persist(profession);
         return profession;

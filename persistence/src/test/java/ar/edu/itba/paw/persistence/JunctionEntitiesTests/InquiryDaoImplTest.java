@@ -294,6 +294,43 @@ public class InquiryDaoImplTest {
         assertTrue(inquiryList.isEmpty());
     }
 
+    // ------------------------------------------------- COUNTS ---------------------------------------------------------
+
+    @Test
+    public void count() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long iqKey1 = testInserter.createInquiry(pKey, uKey2);
+        long iqKey2 = testInserter.createInquiry(pKey, uKey2);
+
+        // Exercise
+        int countInquiries = inquiryDaoImpl.countInquiries(pKey);
+
+        // Validations & Post Conditions
+        assertEquals(TWO_ELEMENTS, countInquiries);
+    }
+
+    @Test
+    public void count_empty() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+
+        // Exercise
+        int countInquiries = inquiryDaoImpl.countInquiries(pKey);
+
+        // Validations & Post Conditions
+        assertEquals(NO_ELEMENTS, countInquiries);
+    }
+
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test

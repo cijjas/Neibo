@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.util.OptionalLong;
+import java.util.Optional;
 
 import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
@@ -84,11 +84,11 @@ public class AvailabilityDaoImplTest {
         long avKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        OptionalLong optionalAvailability = availabilityDaoImpl.findAvailabilityId(aKey, sKey);
+        Optional<Availability> optionalAvailability = availabilityDaoImpl.findAvailability(aKey, sKey);
 
         // Validations & Post Conditions
         assertTrue(optionalAvailability.isPresent());
-        assertEquals(avKey, optionalAvailability.getAsLong());
+        assertEquals(avKey, optionalAvailability.get().getAmenityAvailabilityId().longValue());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class AvailabilityDaoImplTest {
         long availabilityKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        OptionalLong optionalAvailability = availabilityDaoImpl.findAvailabilityId(INVALID_ID, sKey);
+        Optional<Availability> optionalAvailability = availabilityDaoImpl.findAvailability(INVALID_ID, sKey);
 
         // Validations & Post Conditions
         assertFalse(optionalAvailability.isPresent());
@@ -120,7 +120,7 @@ public class AvailabilityDaoImplTest {
         long availabilityKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        OptionalLong optionalAvailability = availabilityDaoImpl.findAvailabilityId(aKey, INVALID_ID);
+        Optional<Availability> optionalAvailability = availabilityDaoImpl.findAvailability(aKey, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalAvailability.isPresent());
@@ -137,7 +137,7 @@ public class AvailabilityDaoImplTest {
         long availabilityKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        OptionalLong optionalAvailability = availabilityDaoImpl.findAvailabilityId(INVALID_ID, INVALID_ID);
+        Optional<Availability> optionalAvailability = availabilityDaoImpl.findAvailability(INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalAvailability.isPresent());

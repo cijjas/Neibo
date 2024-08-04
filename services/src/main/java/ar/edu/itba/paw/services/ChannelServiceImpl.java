@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,13 +63,14 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<Channel> getChannels(long neighborhoodId) {
-        LOGGER.info("Getting Channels from Neighborhood {}", neighborhoodId);
+    public List<Channel> getChannels(long neighborhoodId, int page, int size) {
+        LOGGER.info("Getting Channels for Neighborhood {}", neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
 
-        return channelDao.getChannels(neighborhoodId);
+        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
+
+        return channelDao.getChannels(neighborhoodId, page, size);
     }
 
     @Override
@@ -78,7 +80,7 @@ public class ChannelServiceImpl implements ChannelService {
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkSize(size);
 
-        return PaginationUtils.calculatePages(channelMappingDao.channelMappingsCount(null, neighborhoodId), size);
+        return PaginationUtils.calculatePages(channelDao.countChannels(neighborhoodId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

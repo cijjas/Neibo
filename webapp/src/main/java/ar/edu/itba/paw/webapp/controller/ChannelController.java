@@ -60,7 +60,7 @@ public class ChannelController {
         LOGGER.info("GET request arrived at '/neighborhoods/{}/channels'", neighborhoodId);
 
         // Content
-        List<Channel> channels = cs.getChannels(neighborhoodId);
+        List<Channel> channels = cs.getChannels(neighborhoodId, page, size);
         String channelsHashCode = String.valueOf(channels.hashCode());
 
         // Cache Control

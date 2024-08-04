@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.interfaces.services.BookingService;
+import ar.edu.itba.paw.models.Entities.Availability;
 import ar.edu.itba.paw.models.Entities.Booking;
 import ar.edu.itba.paw.models.TwoIds;
 import org.slf4j.Logger;
@@ -68,12 +69,12 @@ public class BookingServiceImpl implements BookingService {
         shiftDao.findShift(shiftId).orElseThrow(() -> new NotFoundException("Shift not found."));
 
         // Finding availabilityId using amenityId and shiftId
-        long availabilityId = availabilityDao.findAvailabilityId(amenityId, shiftId).orElseThrow(() -> new NotFoundException("Availability not found."));
+        Availability availability = availabilityDao.findAvailability(amenityId, shiftId).orElseThrow(() -> new NotFoundException("Availability not found."));
 
         Long userId = ValidationUtils.checkURNAndExtractUserId(userURN); // Cant be null due to check from the form
 
         // Creating booking
-        return bookingDao.createBooking(userId, availabilityId, parsedSqlDate);
+        return bookingDao.createBooking(userId, availability.getAmenityAvailabilityId(), parsedSqlDate);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

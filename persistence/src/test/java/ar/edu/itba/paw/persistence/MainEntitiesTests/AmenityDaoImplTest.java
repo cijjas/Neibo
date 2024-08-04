@@ -179,6 +179,33 @@ public class AmenityDaoImplTest {
         assertTrue(amenityList.isEmpty());
     }
 
+    // ------------------------------------------------- COUNTS ---------------------------------------------------------
+
+     @Test
+    public void count() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+
+        // Exercise
+        int countAmenities = amenityDaoImpl.countAmenities(nhKey);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, countAmenities);
+    }
+
+    @Test
+    public void count_empty() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+
+        // Exercise
+        int countAmenities = amenityDaoImpl.countAmenities(nhKey);
+
+        // Validations & Post Conditions
+        assertEquals(NO_ELEMENTS, countAmenities);
+    }
+
     @Test
     public void get_pagination() {
         // Pre Conditions

@@ -9,7 +9,7 @@ public interface ProfessionDao {
 
     // --------------------------------------------- PROFESSIONS INSERT -------------------------------------------------
 
-    Profession createProfession(Professions professionName);
+    Profession createProfession(String professionName);
 
     // --------------------------------------------- PROFESSIONS SELECT -------------------------------------------------
 

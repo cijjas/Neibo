@@ -154,13 +154,13 @@ public class ContactDaoImplTest {
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test
-    public void get_neighborhoodId() {
+    public void get() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         testInserter.createContact(nhKey, CONTACT_NAME, CONTACT_ADDRESS, CONTACT_NUMBER);
 
         // Exercise
-        List<Contact> contactList = contactDaoImpl.getContacts(nhKey);
+        List<Contact> contactList = contactDaoImpl.getContacts(nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, contactList.size());
@@ -172,10 +172,37 @@ public class ContactDaoImplTest {
         long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        List<Contact> contactList = contactDaoImpl.getContacts(nhKey);
+        List<Contact> contactList = contactDaoImpl.getContacts(nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(contactList.isEmpty());
+    }
+
+    // ------------------------------------------------- COUNTS --------------------------------------------------------
+
+    @Test
+    public void count() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        testInserter.createContact(nhKey, CONTACT_NAME, CONTACT_ADDRESS, CONTACT_NUMBER);
+
+        // Exercise
+        int countContacts = contactDaoImpl.countContacts(nhKey);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, countContacts);
+    }
+
+    @Test
+    public void count_empty() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+
+        // Exercise
+        int countContacts = contactDaoImpl.countContacts(nhKey);
+
+        // Validations & Post Conditions
+        assertEquals(NO_ELEMENTS, countContacts);
     }
 
     // ------------------------------------------------ DELETES --------------------------------------------------------

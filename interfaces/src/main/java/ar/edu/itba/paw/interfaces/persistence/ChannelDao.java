@@ -17,7 +17,9 @@ public interface ChannelDao {
 
     Optional<Channel> findChannel(String name);
 
-    List<Channel> getChannels(final long neighborhoodId);
+    List<Channel> getChannels(final long neighborhoodId, int page, int size);
+
+    int countChannels(final long neighborhoodId);
 
     // -------------------------------------------- CHANNELS DELETE ----------------------------------------------------
 

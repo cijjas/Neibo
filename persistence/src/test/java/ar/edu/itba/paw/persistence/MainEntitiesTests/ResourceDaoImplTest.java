@@ -103,7 +103,7 @@ public class ResourceDaoImplTest {
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test
-    public void get_neighborhoodId() {
+    public void get() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long iKey = testInserter.createImage();

@@ -220,6 +220,91 @@ public class AffiliationDaoImplTest {
         assertTrue(affiliationList.isEmpty());
     }
 
+    // ------------------------------------------------- COUNTS ---------------------------------------------------------
+
+    @Test
+    public void count() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createAffiliation(uKey, nhKey);
+
+        // Exercise
+        int countAffiliations = affiliationDaoImpl.countAffiliations(EMPTY_FIELD, EMPTY_FIELD);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, countAffiliations);
+    }
+
+    @Test
+    public void count_workerId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createAffiliation(uKey, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        testInserter.createWorker(uKey2);
+        testInserter.createAffiliation(uKey2, nhKey);
+
+        // Exercise
+        int countAffiliations = affiliationDaoImpl.countAffiliations(uKey, EMPTY_FIELD);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, countAffiliations);
+    }
+
+    @Test
+    public void count_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createAffiliation(uKey, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        testInserter.createWorker(uKey2);
+        testInserter.createAffiliation(uKey2, nhKey2);
+
+        // Exercise
+        int countAffiliations = affiliationDaoImpl.countAffiliations(EMPTY_FIELD, nhKey);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, countAffiliations);
+    }
+
+    @Test
+    public void count_workerId_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createAffiliation(uKey, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        testInserter.createWorker(uKey2);
+        testInserter.createAffiliation(uKey2, nhKey2);
+        testInserter.createAffiliation(uKey2, nhKey);
+
+        // Exercise
+        int countAffiliations= affiliationDaoImpl.countAffiliations(uKey, nhKey);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, countAffiliations);
+    }
+
+    @Test
+    public void count_empty() {
+        // Pre Conditions
+
+        // Exercise
+        int countAffiliations = affiliationDaoImpl.countAffiliations(EMPTY_FIELD, EMPTY_FIELD);
+
+        // Validations & Post Conditions
+        assertEquals(NO_ELEMENTS, countAffiliations);
+    }
+
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test

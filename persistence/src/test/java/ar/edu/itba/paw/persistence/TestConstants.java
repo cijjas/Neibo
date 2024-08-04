@@ -23,6 +23,7 @@ public class TestConstants {
     public static final String NEIGHBORHOOD_NAME_1 = "Neighborhood 1";
     public static final String NEIGHBORHOOD_NAME_2 = "Neighborhood 2";
     public static final String NEIGHBORHOOD_NAME_3 = "Neighborhood 3";
+    public static final String NEIGHBORHOOD_NAME_4 = "Neighborhood 4";
 
     public static final int NO_ELEMENTS = 0;
     public static final int ONE_ELEMENT = 1;

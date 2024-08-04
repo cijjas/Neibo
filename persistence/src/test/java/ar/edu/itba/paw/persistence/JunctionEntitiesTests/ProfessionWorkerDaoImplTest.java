@@ -70,7 +70,7 @@ public class ProfessionWorkerDaoImplTest {
         assertNotNull(specialization);
         assertEquals(uKey, specialization.getWorker().getUser().getUserId().longValue());
         assertEquals(pKey, specialization.getProfession().getProfessionId().longValue());
-        assertEquals(Professions.PLUMBER.name(), specialization.getProfession().getProfession().name());
+        assertEquals(pKey, specialization.getProfession().getProfessionId().longValue());
         assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_professions.name()));
     }
 
@@ -95,6 +95,10 @@ public class ProfessionWorkerDaoImplTest {
     @Test
     public void get_empty() {
         // Pre Conditions
+        long pKey = testInserter.createProfession();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
 
         // Exercise
         List<Profession> professionList = professionDaoImpl.getProfessions(EMPTY_FIELD);

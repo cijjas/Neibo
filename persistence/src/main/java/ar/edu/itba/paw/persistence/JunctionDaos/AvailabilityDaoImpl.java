@@ -12,6 +12,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalLong;
 
 @Repository
@@ -38,14 +39,14 @@ public class AvailabilityDaoImpl implements AvailabilityDao {
     // -------------------------------------------- AVAILABILITY SELECT ------------------------------------------------
 
     @Override
-    public OptionalLong findAvailabilityId(long amenityId, long shiftId) {
+    public Optional<Availability> findAvailability(long amenityId, long shiftId) {
         LOGGER.debug("Selecting Availability with amenityId {} and shiftId {}", amenityId, shiftId);
 
-        TypedQuery<Long> query = em.createQuery("SELECT a.amenityAvailabilityId FROM Availability a WHERE a.shift.shiftId = :shiftId AND a.amenity.amenityId = :amenityId", Long.class);
+        TypedQuery<Availability> query = em.createQuery("SELECT a FROM Availability a WHERE a.shift.shiftId = :shiftId AND a.amenity.amenityId = :amenityId", Availability.class);
         query.setParameter("shiftId", shiftId);
         query.setParameter("amenityId", amenityId);
-        List<Long> resultList = query.getResultList();
-        return resultList.isEmpty() ? OptionalLong.empty() : OptionalLong.of(resultList.get(0));
+        List<Availability> resultList = query.getResultList();
+        return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
     }
 
     // -------------------------------------------- AVAILABILITY DELETE ------------------------------------------------

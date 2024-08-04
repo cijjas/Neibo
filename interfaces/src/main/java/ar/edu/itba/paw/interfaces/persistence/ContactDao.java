@@ -17,7 +17,9 @@ public interface ContactDao {
 
     Optional<Contact> findContact(final long contactId, long neighborhoodId);
 
-    List<Contact> getContacts(final long neighborhoodId);
+    List<Contact> getContacts(final long neighborhoodId, final int page, final int size);
+
+    int countContacts(final long neighborhoodId);
 
     // --------------------------------------------- CONTACT DELETE ----------------------------------------------------
 

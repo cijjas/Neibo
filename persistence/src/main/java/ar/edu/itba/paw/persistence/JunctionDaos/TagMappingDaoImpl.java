@@ -40,7 +40,7 @@ public class TagMappingDaoImpl implements TagMappingDao {
         StringBuilder queryBuilder = new StringBuilder("SELECT tm.id FROM TagMapping tm ");
 
         if (tagId != null && neighborhoodId != null) {
-            queryBuilder.append("WHERE tm.tag.tagId = :tagId AND cm.neighborhood.neighborhoodId = :neighborhoodId ");
+            queryBuilder.append("WHERE tm.tag.tagId = :tagId AND tm.neighborhood.neighborhoodId = :neighborhoodId ");
         } else if (tagId != null) {
             queryBuilder.append("WHERE tm.tag.tagId = :tagId ");
         } else if (neighborhoodId != null) {
@@ -73,7 +73,7 @@ public class TagMappingDaoImpl implements TagMappingDao {
     }
 
     @Override
-    public int tagMappingsCount(Long tagId, Long neighborhoodId) {
+    public int countTagMappings(Long tagId, Long neighborhoodId) {
         LOGGER.debug("Counting Tag Mappings by Criteria");
 
         TypedQuery<TagMappingKey> idQuery = null;
@@ -123,5 +123,4 @@ public class TagMappingDaoImpl implements TagMappingDao {
             return false;
         }
     }
-
 }

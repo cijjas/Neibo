@@ -14,9 +14,8 @@ public class Profession {
     @SequenceGenerator(sequenceName = "professions_professionid_seq", name = "professions_professionid_seq", allocationSize = 1)
     private Long professionId;
 
-    @Column(length = 64)
-    @Enumerated(EnumType.STRING)
-    private Professions profession;
+    @Column(name = "profession", length = 64, unique = true, nullable = false)
+    private String profession;
 
     @ManyToMany
     @JoinTable(name = "workers_professions", joinColumns = @JoinColumn(name = "professionid"), inverseJoinColumns = @JoinColumn(name = "workerid"))
@@ -34,7 +33,7 @@ public class Profession {
         return professionId;
     }
 
-    public Professions getProfession() {
+    public String getProfession() {
         return profession;
     }
 
@@ -69,14 +68,14 @@ public class Profession {
 
     public static class Builder {
         private Long professionId;
-        private Professions profession;
+        private String profession;
 
         public Builder professionId(Long professionId) {
             this.professionId = professionId;
             return this;
         }
 
-        public Builder profession(Professions profession) {
+        public Builder profession(String profession) {
             this.profession = profession;
             return this;
         }
