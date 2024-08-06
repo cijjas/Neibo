@@ -24,7 +24,7 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @EnableScheduling
@@ -87,7 +87,7 @@ public class EmailServiceImpl implements EmailService {
         thymeleafContext.setVariables(null);
         String htmlBody = thymeleafTemplateEngine.process(templateModel, thymeleafContext);
 
-        // sendHtmlMessage(to, subject, variables, templateModel, language);
+         sendHtmlMessage(to, subject, variables, templateModel, language);
     }
 
     @Override
@@ -144,23 +144,41 @@ public class EmailServiceImpl implements EmailService {
     @Scheduled(cron = "0 0 9 ? * MON") // CRON expression for weekly on Mondays at 8 PM
     public void sendWeeklyEventNotifications() {
         // Fetch the list of neighborhoods
-        List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoods();
+        List<Long> neighborhoodIds = neighborhoodDao.getNeighborhoodIds();
 
-        for (Neighborhood neighborhood : neighborhoods) {
-            long neighborhoodId = neighborhood.getNeighborhoodId();
+        for (Long neighborhoodId : neighborhoodIds) {
 
             // Fetch events for the specified neighborhood within the upcoming week
-            Date startDate = new Date(System.currentTimeMillis());
-            long oneWeekInMillis = 7L * 24L * 60L * 60L * 1000L; // One week in milliseconds
-            Date endDate = new Date(startDate.getTime() + oneWeekInMillis);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date currentDate = new Date(System.currentTimeMillis());
 
-            List<Event> events = eventDao.getEvents(neighborhoodId, startDate, endDate);
+            // Calculate one day in milliseconds
+            long oneDayInMillis = 24L * 60L * 60L * 1000L;
+
+            List<Event> allEvents = new ArrayList<>();
+
+            // Iterate through each day of the week
+            for (int i = 0; i < 7; i++) {
+                Date date = new Date(currentDate.getTime() + i * oneDayInMillis);
+                String formattedDate = dateFormat.format(date);
+
+                int page = 1;
+                int size = 10;
+                List<Event> dayEvents;
+
+                do {
+                    // Fetch events for the specified day with pagination
+                    dayEvents = eventDao.getEvents(formattedDate, neighborhoodId, page, size);
+                    allEvents.addAll(eventDao.getEvents(formattedDate, neighborhoodId, page, size));
+                    page++;
+                } while (dayEvents.size() == size); // Continue fetching next page if the current page is full
+            }
 
             // Create a map to accumulate events for each subscribed user
             Map<User, Set<Event>> userEventsMap = new HashMap<>();
 
             // Iterate through the events and collect them for each subscribed user
-            for (Event event : events) {
+            for (Event event : allEvents) {
                 List<User> subscribedUsers = userDao.getEventUsers(event.getEventId());
 
                 for (User user : subscribedUsers) {
@@ -213,24 +231,36 @@ public class EmailServiceImpl implements EmailService {
     @Scheduled(cron = "0 0 9 ? * *") // CRON expression for weekly on Mondays at 8 PM
     public void sendDailyEventNotifications() {
         // Fetch the list of neighborhoods
-        List<Neighborhood> neighborhoods = neighborhoodDao.getNeighborhoods();
+        List<Long> neighborhoodIds = neighborhoodDao.getNeighborhoodIds();
 
-        for (Neighborhood neighborhood : neighborhoods) {
-            long neighborhoodId = neighborhood.getNeighborhoodId();
+        for (Long neighborhoodId : neighborhoodIds) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
             // Calculate the date for the next day
             Date today = new Date(System.currentTimeMillis());
             long oneDayInMillis = 24L * 60L * 60L * 1000L; // One day in milliseconds
             Date nextDay = new Date(today.getTime() + oneDayInMillis);
+            String formattedDate = dateFormat.format(nextDay);
 
-            // Fetch events for the specified neighborhood happening in the next day
-            List<Event> events = eventDao.getEvents(neighborhoodId, nextDay, nextDay);
+            List<Event> allEvents = new ArrayList<>();
+
+            int page = 1;
+            int size = 10;
+            List<Event> events;
+
+            do {
+                // Fetch events for the next day with pagination
+                events = eventDao.getEvents(formattedDate, neighborhoodId, page, size);
+                allEvents.addAll(events);
+                page++;
+            } while (events.size() == size); // Continue fetching next page if the current page is full
+
 
             // Create a map to accumulate events for each subscribed user
             Map<User, Set<Event>> userEventsMap = new HashMap<>();
 
             // Iterate through the events and collect them for each subscribed user
-            for (Event event : events) {
+            for (Event event : allEvents) {
                 List<User> subscribedUsers = userDao.getEventUsers(event.getEventId());
 
                 for (User user : subscribedUsers) {

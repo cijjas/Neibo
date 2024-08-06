@@ -70,7 +70,9 @@ public class AmenityServiceImplTest {
                 .build()
         );
 
-        when(us.getNeighbors(anyLong())).thenReturn(new ArrayList<>());
+/*        when(us.getNeighbors(anyLong())).thenReturn(new ArrayList<>()); todo fix me
+
+ */
 
         ArrayList<String> shiftArray = new ArrayList<>(Arrays.asList(SHIFT_STRING));
 

@@ -9,6 +9,7 @@ import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.interfaces.services.UserService;
 import ar.edu.itba.paw.models.Entities.Event;
+import ar.edu.itba.paw.models.Entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,22 @@ public class EventServiceImpl implements EventService {
         java.sql.Date parsedSqlDate = new java.sql.Date(parsedDate.getTime());
         Long[] times = stringToTime(startTime, endTime);
         Event createdEvent = eventDao.createEvent(name, description, parsedSqlDate, times[0], times[1], neighborhoodId);
-        emailService.sendEventMail(createdEvent, "event.custom.message2", userService.getNeighbors(neighborhoodId));
+
+        int page = 1;
+        int size = 500; // Will fetch and send emails to 500 users at a time
+        List<User> users;
+        do {
+            // Fetch users in batches
+            users = userService.getNeighbors(neighborhoodId, page, size);
+
+            // Send email with the current batch of users
+            if (!users.isEmpty()) {
+                emailService.sendEventMail(createdEvent, "event.custom.message2", users);
+            }
+
+            page++;
+        } while (users.size() == size); // Continue fetching next page if the current page is full
+
         return createdEvent;
     }
 
@@ -105,6 +121,7 @@ public class EventServiceImpl implements EventService {
         LOGGER.info("Calculating Event Pages for Neighborhood {}", neighborhoodId);
 
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
+        ValidationUtils.checkOptionalDateString(date);
         ValidationUtils.checkSize(size);
 
         return PaginationUtils.calculatePages(eventDao.countEvents(date, neighborhoodId), size);

@@ -120,11 +120,11 @@ public class ReviewDaoImplTest {
         testInserter.createReview(uKey, uKey2, RATING_2, REVIEW_2);
 
         // Exercise
-        Optional<Float> maybeAvgRating = reviewDao.getAvgRating(uKey);
+        Float avgRating = reviewDao.getAvgRating(uKey);
 
         // Validations & Post Conditions
-        assertTrue(maybeAvgRating.isPresent());
-        assertEquals((RATING_1 + RATING_2) / 2, maybeAvgRating.get(), DELTA); // Average of 4.0 and 4.5
+//        assertTrue(maybeAvgRating.isPresent());
+        assertEquals((RATING_1 + RATING_2) / 2, avgRating, DELTA); // Average of 4.0 and 4.5
     }
 
     @Test
@@ -138,11 +138,11 @@ public class ReviewDaoImplTest {
         testInserter.createSpecialization(uKey, pKey);
 
         // Exercise
-        Optional<Float> maybeAvgRating = reviewDao.getAvgRating(uKey);
+        Float avgRating = reviewDao.getAvgRating(uKey);
 
         // Validations & Post Conditions
-        assertTrue(maybeAvgRating.isPresent());
-        assertEquals(0, maybeAvgRating.get(), DELTA);
+//        assertTrue(maybeAvgRating.isPresent());
+        assertEquals(0.0f, avgRating, DELTA);
     }
 
     @Test

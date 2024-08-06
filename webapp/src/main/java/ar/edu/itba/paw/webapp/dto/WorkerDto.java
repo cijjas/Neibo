@@ -12,15 +12,17 @@ public class WorkerDto {
     private String businessName;
     private String address;
     private String bio;
+    private Float averageRating;
     private Links _links;
 
-    public static WorkerDto fromWorker(Worker worker, UriInfo uriInfo) {
+    public static WorkerDto fromWorker(Worker worker, Float averageRating, UriInfo uriInfo) {
         final WorkerDto dto = new WorkerDto();
 
         dto.phoneNumber = worker.getPhoneNumber();
         dto.businessName = worker.getBusinessName();
         dto.address = worker.getAddress();
         dto.bio = worker.getBio();
+        dto.averageRating = averageRating;
 
         Links links = new Links();
         URI self = uriInfo.getBaseUriBuilder()
@@ -93,6 +95,14 @@ public class WorkerDto {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public Float getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(Float averageRating) {
+        this.averageRating = averageRating;
     }
 
     public Links get_links() {

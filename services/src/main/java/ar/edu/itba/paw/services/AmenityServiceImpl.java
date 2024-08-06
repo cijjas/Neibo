@@ -59,9 +59,20 @@ public class AmenityServiceImpl implements AmenityService {
             shift.ifPresent(value -> availabilityDao.createAvailability(amenity.getAmenityId(), value.getShiftId()));
         }
 
-        List<User> userlist = userService.getNeighbors(neighborhoodId);
+        int page = 1;
+        int size = 500; // Will fetch and send emails to 500 users at a time
+        List<User> users;
+        do {
+            // Fetch users in batches
+            users = userService.getNeighbors(neighborhoodId, page, size);
 
-        emailService.sendNewAmenityMail(neighborhoodId, name, description, userlist);
+            // Send email with the current batch of users
+            if (!users.isEmpty()) {
+                emailService.sendNewAmenityMail(neighborhoodId, name, description, users);
+            }
+
+            page++;
+        } while (users.size() == size); // Continue fetching next page if the current page is full
 
         return amenity;
     }

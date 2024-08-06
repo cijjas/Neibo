@@ -23,7 +23,7 @@ public interface ReviewDao {
 
     Optional<Review> findLatestReview(long workerId, long userId);
 
-    Optional<Float> getAvgRating(long workerId);
+    Float getAvgRating(long workerId);
 
     int countReviews(long workerId);
 
