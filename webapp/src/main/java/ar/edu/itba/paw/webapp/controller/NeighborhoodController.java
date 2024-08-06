@@ -47,8 +47,6 @@ public class NeighborhoodController {
     @Context
     private Request request;
 
-    private EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     @PreAuthorize("@accessControlHelper.hasAccessNeighborhoodQP(#workerId)")

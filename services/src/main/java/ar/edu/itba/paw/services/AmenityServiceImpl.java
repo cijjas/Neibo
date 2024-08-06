@@ -1,10 +1,8 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
-import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
-import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
-import ar.edu.itba.paw.interfaces.persistence.ShiftDao;
+import ar.edu.itba.paw.interfaces.persistence.*;
 import ar.edu.itba.paw.interfaces.services.AmenityService;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.UserService;
@@ -30,17 +28,17 @@ public class AmenityServiceImpl implements AmenityService {
     private final AvailabilityDao availabilityDao;
     private final NeighborhoodDao neighborhoodDao;
     private final EmailService emailService;
-    private final UserService userService;
+    private final UserDao userDao;
 
     @Autowired
     public AmenityServiceImpl(final AmenityDao amenityDao, final ShiftDao shiftDao, final AvailabilityDao availabilityDao,
-                              final EmailService emailService, final UserService userService, final NeighborhoodDao neighborhoodDao) {
+                              final EmailService emailService, final NeighborhoodDao neighborhoodDao, UserDao userDao) {
         this.availabilityDao = availabilityDao;
         this.shiftDao = shiftDao;
         this.amenityDao = amenityDao;
         this.emailService = emailService;
-        this.userService = userService;
         this.neighborhoodDao = neighborhoodDao;
+        this.userDao = userDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -64,7 +62,7 @@ public class AmenityServiceImpl implements AmenityService {
         List<User> users;
         do {
             // Fetch users in batches
-            users = userService.getNeighbors(neighborhoodId, page, size);
+            users = userDao.getUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId, page, size);
 
             // Send email with the current batch of users
             if (!users.isEmpty()) {

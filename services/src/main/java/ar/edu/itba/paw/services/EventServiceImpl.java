@@ -1,10 +1,12 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.UserRole;
 import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.exceptions.UnexpectedException;
 import ar.edu.itba.paw.interfaces.persistence.EventDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.TimeDao;
+import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.interfaces.services.EmailService;
 import ar.edu.itba.paw.interfaces.services.EventService;
 import ar.edu.itba.paw.interfaces.services.UserService;
@@ -35,20 +37,18 @@ public class EventServiceImpl implements EventService {
     private final TimeDao timeDao;
     private final NeighborhoodDao neighborhoodDao;
     private final EmailService emailService;
-
-    private final UserService userService;
+    private final UserDao userDao;
 
     @PersistenceContext
     private EntityManager em;
 
     @Autowired
-    public EventServiceImpl(final EventDao eventDao, final TimeDao timeDao, final EmailService emailService,
-                            final UserService userService, NeighborhoodDao neighborhoodDao) {
+    public EventServiceImpl(final EventDao eventDao, final TimeDao timeDao, final EmailService emailService, NeighborhoodDao neighborhoodDao, UserDao userDao) {
         this.eventDao = eventDao;
         this.timeDao = timeDao;
         this.emailService = emailService;
-        this.userService = userService;
         this.neighborhoodDao = neighborhoodDao;
+        this.userDao = userDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ public class EventServiceImpl implements EventService {
         List<User> users;
         do {
             // Fetch users in batches
-            users = userService.getNeighbors(neighborhoodId, page, size);
+            users = userDao.getUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId, page, size);
 
             // Send email with the current batch of users
             if (!users.isEmpty()) {

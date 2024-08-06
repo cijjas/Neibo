@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class TagMappingDaoImpl implements TagMappingDao {
@@ -31,6 +32,13 @@ public class TagMappingDaoImpl implements TagMappingDao {
     }
 
     // ----------------------------------------------------------------------------------
+
+    @Override
+    public Optional<TagMapping> findTagMapping(Long tagId, Long neighborhoodId) {
+        LOGGER.debug("Selecting Tag Mapping with Tag {} and Neighborhood {}", tagId, neighborhoodId);
+
+        return Optional.ofNullable(em.find(TagMapping.class, new TagMappingKey(neighborhoodId, tagId)));
+    }
 
     @Override
     public List<TagMapping> getTagMappings(Long tagId, Long neighborhoodId, int page, int size) {

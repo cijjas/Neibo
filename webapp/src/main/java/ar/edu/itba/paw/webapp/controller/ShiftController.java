@@ -42,8 +42,6 @@ public class ShiftController {
     @Context
     private Request request;
 
-    private EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getShifts(
