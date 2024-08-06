@@ -81,7 +81,7 @@ public class WorkerController extends GlobalControllerAdvice {
                     .build();
 
         List<WorkerDto> workerDto = workers.stream()
-                .map(w -> WorkerDto.fromWorker(w, rs.getAvgRating(w.getWorkerId()), uriInfo)).collect(Collectors.toList());
+                .map(w -> WorkerDto.fromWorker(w, rs.findAverageRating(w.getWorkerId()), uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
         Link[] links = createPaginationLinks(
@@ -119,7 +119,7 @@ public class WorkerController extends GlobalControllerAdvice {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        return Response.ok(WorkerDto.fromWorker(worker, rs.getAvgRating(worker.getWorkerId()), uriInfo))
+        return Response.ok(WorkerDto.fromWorker(worker, rs.findAverageRating(worker.getWorkerId()), uriInfo))
                 .cacheControl(cacheControl)
                 .tag(workerHashCode)
                 .build();
@@ -158,7 +158,7 @@ public class WorkerController extends GlobalControllerAdvice {
         final Worker updatedWorker = ws.updateWorkerPartially(workerId, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio());
         String workerHashCode = String.valueOf(updatedWorker.hashCode());
 
-        return Response.ok(WorkerDto.fromWorker(updatedWorker, rs.getAvgRating(updatedWorker.getWorkerId()), uriInfo))
+        return Response.ok(WorkerDto.fromWorker(updatedWorker, rs.findAverageRating(updatedWorker.getWorkerId()), uriInfo))
                 .tag(workerHashCode)
                 .build();
     }

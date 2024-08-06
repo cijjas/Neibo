@@ -155,20 +155,6 @@ public class UserDaoImpl implements UserDao {
                 .getResultList();
     }
 
-    @Override
-    public List<User> getNeighborsSubscribed(long postId) {
-        LOGGER.debug("Selecting Neighbors that are subscribed to Post {}", postId);
-
-        String hql = "SELECT u FROM User u " +
-                "JOIN u.posts p " +
-                "WHERE p.postId = :postId AND u.role = :role";
-
-        return em.createQuery(hql, User.class)
-                .setParameter("postId", postId)
-                .setParameter("role", UserRole.NEIGHBOR)
-                .getResultList();
-    }
-
     // ---------------------------------------------- USERS DELETE-----------------------------------------------------
 
     @Override

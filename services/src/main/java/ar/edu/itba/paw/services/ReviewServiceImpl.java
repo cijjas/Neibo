@@ -99,7 +99,7 @@ public class ReviewServiceImpl implements ReviewService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public Float getAvgRating(long workerId) {
-        return reviewDao.getAvgRating(workerId);
+    public Float findAverageRating(long workerId) {
+        return reviewDao.findAverageRating(workerId);
     }
 }

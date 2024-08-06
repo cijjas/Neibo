@@ -9,7 +9,6 @@ drop table if exists posts CASCADE;
 drop table if exists comments CASCADE;
 drop table if exists posts_tags CASCADE;
 drop table if exists users CASCADE; -- used to be neighbors
-drop table if exists posts_users_subscriptions CASCADE;
 -- used to be posts_neighbors
 
 -- S2
@@ -50,7 +49,6 @@ drop table if exists reviews cascade;
 drop table if exists products cascade;
 drop table if exists products_users_inquiries cascade;
 drop table if exists products_users_requests cascade;
-drop table if exists products_users_purchases cascade;
 drop table if exists departments cascade;
 
 
@@ -138,13 +136,6 @@ CREATE TABLE IF NOT EXISTS posts_users_likes
     userid   INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
     likedate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (postid, userid)
-);
-
-CREATE TABLE IF NOT EXISTS posts_users_subscriptions
-(
-    userid INTEGER NOT NULL REFERENCES users ON DELETE CASCADE,
-    postid INTEGER NOT NULL REFERENCES posts ON DELETE CASCADE,
-    PRIMARY KEY (postid, userid)
 );
 
 CREATE TABLE IF NOT EXISTS comments

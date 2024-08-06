@@ -53,7 +53,7 @@ public class RequestController extends GlobalControllerAdvice {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.canAccessRequests(#userId, #productId)")
+    @PreAuthorize("@accessControlHelper.canAccessRequests(#userURN, #productId)")
     public Response listRequests(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
@@ -143,7 +143,7 @@ public class RequestController extends GlobalControllerAdvice {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.canAccessRequest(#requestId)")
+    @PreAuthorize("@accessControlHelper.canUpdateRequest(#requestId)")
     public Response updateRequest(
             @PathParam("id") final long requestId,
             @Valid @NotNull final UpdateRequestForm form

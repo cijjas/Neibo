@@ -22,6 +22,8 @@ import javax.sql.DataSource;
 import java.util.Optional;
 import java.util.OptionalLong;
 
+import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
+import static ar.edu.itba.paw.persistence.TestConstants.ONE_ELEMENT;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -30,15 +32,15 @@ import static org.junit.Assert.*;
 @Rollback
 public class TimeDaoImplTest {
 
-    public static final java.sql.Time TIME = new java.sql.Time(System.currentTimeMillis());
-    private final java.sql.Time TIME_INTERVAL = new java.sql.Time(System.currentTimeMillis());
+    public static final java.sql.Time TIME_MILLISECONDS = new java.sql.Time(System.currentTimeMillis());
+    public static final java.sql.Time INVALID_TIME_MILLISECONDS = new java.sql.Time(1L);
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private TimeDao timeDao;
+    private TimeDao timeDaoImpl;
 
     @PersistenceContext
     private EntityManager em;
@@ -48,61 +50,71 @@ public class TimeDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    // ------------------------------------------------- CREATE --------------------------------------------------------
+
     @Test
-    public void testCreateTime() {
+    public void create_valid() {
         // Pre Conditions
 
         // Exercise
-        Time timeKey = timeDao.createTime(TIME_INTERVAL);
+        Time time = timeDaoImpl.createTime(TIME_MILLISECONDS);
 
         // Validations & Post Conditions
         em.flush();
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.times.name()));
+        assertNotNull(time);
+        assertEquals(TIME_MILLISECONDS, time.getTimeInterval());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.times.name()));
     }
 
+    // -------------------------------------------------- FINDS --------------------------------------------------------
+
     @Test
-    public void testFindTimeById() {
+    public void find_timeId_valid() {
         // Pre Conditions
         long timeKey = testInserter.createTime();
 
         // Exercise
-        Optional<Time> foundTime = timeDao.findTime(timeKey);
+        Optional<Time> optionalTime = timeDaoImpl.findTime(timeKey);
 
         // Validations & Post Conditions
-        assertTrue(foundTime.isPresent());
+        assertTrue(optionalTime.isPresent());
+        assertEquals(timeKey, optionalTime.get().getTimeId().longValue());
     }
 
     @Test
-    public void testFindTimeByInvalidId() {
+    public void find_timeId_invalid_timeId() {
         // Pre Conditions
+        long timeKey = testInserter.createTime();
 
         // Exercise
-        Optional<Time> foundTime = timeDao.findTime(1);
+        Optional<Time> optionalTime = timeDaoImpl.findTime(INVALID_ID);
 
         // Validations & Post Conditions
-        assertFalse(foundTime.isPresent());
+        assertFalse(optionalTime.isPresent());
     }
 
     @Test
-    public void testFindIdByTime() {
+    public void findId_timeName_valid() {
         // Pre Conditions
-        long timeKey = testInserter.createTime(TIME);
+        long timeKey = testInserter.createTime(TIME_MILLISECONDS);
 
         // Exercise
-        OptionalLong foundTime = timeDao.findId(TIME);
+        OptionalLong optionalLong = timeDaoImpl.findId(TIME_MILLISECONDS);
 
         // Validations & Post Conditions
-        assertTrue(foundTime.isPresent());
+        assertTrue(optionalLong.isPresent());
+        assertEquals(timeKey, optionalLong.getAsLong());
     }
 
     @Test
-    public void testFindIdByInvalidTime() {
+    public void findId_timeName_invalid_timeName() {
         // Pre Conditions
+        long timeKey = testInserter.createTime(TIME_MILLISECONDS);
 
         // Exercise
-        OptionalLong foundTime = timeDao.findId(TIME);
+        OptionalLong optionalLong = timeDaoImpl.findId(INVALID_TIME_MILLISECONDS);
 
         // Validations & Post Conditions
-        assertFalse(foundTime.isPresent());
+        assertFalse(optionalLong.isPresent());
     }
 }

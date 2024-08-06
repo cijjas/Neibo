@@ -22,6 +22,7 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -30,21 +31,18 @@ import static org.junit.Assert.*;
 @Rollback
 public class AmenityDaoImplTest {
 
-    public static final String NEW_AMENITY = "New Amenity";
-    public static final String NEW_DESCRIPTION = "New Description";
     private final String AMENITY_NAME_1 = "Amenity Name";
     private final String AMENITY_NAME_2 = "Amenity Name 2";
     private final String AMENITY_DESCRIPTION_1 = "Amenity Description";
     private final String AMENITY_DESCRIPTION_2 = "Amenity Description 2";
-    private static final int BASE_PAGE = 1;
-    private static final int BASE_PAGE_SIZE = 10;
+
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private AmenityDao amenityDao;
+    private AmenityDao amenityDaoImpl;
 
     @PersistenceContext
     private EntityManager em;
@@ -54,105 +52,175 @@ public class AmenityDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    // ------------------------------------------------- CREATE --------------------------------------------------------
+
     @Test
-    public void testCreateAmenity() {
+    public void create_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        Amenity createdAmenity = amenityDao.createAmenity(AMENITY_NAME_1, AMENITY_DESCRIPTION_2, nhKey);
+        Amenity amenity = amenityDaoImpl.createAmenity(AMENITY_NAME_1, AMENITY_DESCRIPTION_2, nhKey);
 
         // Validations & Post Conditions
         em.flush();
-        assertNotNull(createdAmenity);
-        assertEquals(AMENITY_NAME_1, createdAmenity.getName());
-        assertEquals(AMENITY_DESCRIPTION_2, createdAmenity.getDescription());
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.amenities.name()));
+        assertNotNull(amenity);
+        assertEquals(nhKey, amenity.getNeighborhood().getNeighborhoodId().longValue());
+        assertEquals(AMENITY_NAME_1, amenity.getName());
+        assertEquals(AMENITY_DESCRIPTION_2, amenity.getDescription());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.amenities.name()));
     }
 
+    // -------------------------------------------------- FINDS --------------------------------------------------------
+
     @Test
-    public void testFindAmenityById() {
+    public void find_amenityId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
 
         // Exercise
-        Optional<Amenity> foundAmenity = amenityDao.findAmenity(aKey);
+        Optional<Amenity> optionalAmenity = amenityDaoImpl.findAmenity(aKey);
 
         // Validations & Post Conditions
-        assertTrue(foundAmenity.isPresent());
+        assertTrue(optionalAmenity.isPresent());
+        assertEquals(aKey, optionalAmenity.get().getAmenityId().longValue());
     }
 
     @Test
-    public void testFindAmenityByInvalidId() {
-        // Exercise
-        Optional<Amenity> foundAmenity = amenityDao.findAmenity(1L);
-
-        // Validations & Post Conditions
-        assertFalse(foundAmenity.isPresent());
-    }
-
-    @Test
-    public void testGetAmenities() {
+    public void find_amenityId_invalid_amenityId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
 
         // Exercise
-        List<Amenity> amenities = amenityDao.getAmenities(nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        Optional<Amenity> optionalAmenity = amenityDaoImpl.findAmenity(INVALID_ID);
 
         // Validations & Post Conditions
-        assertEquals(1, amenities.size());
+        assertFalse(optionalAmenity.isPresent());
     }
 
     @Test
-    public void testGetAmenitiesBySize() {
+    public void find_amenityId_neighborhoodId_valid() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+
+        // Exercise
+        Optional<Amenity> optionalAmenity = amenityDaoImpl.findAmenity(aKey, nhKey);
+
+        // Validations & Post Conditions
+        assertTrue(optionalAmenity.isPresent());
+        assertEquals(aKey, optionalAmenity.get().getAmenityId().longValue());
+    }
+
+    @Test
+    public void find_amenityId_neighborhoodId_invalid_amenityId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+
+        // Exercise
+        Optional<Amenity> optionalAmenity = amenityDaoImpl.findAmenity(INVALID_ID, nhKey);
+
+        // Validations & Post Conditions
+        assertFalse(optionalAmenity.isPresent());
+    }
+
+    @Test
+    public void find_amenityId_neighborhoodId_invalid_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+
+        // Exercise
+        Optional<Amenity> optionalAmenity = amenityDaoImpl.findAmenity(aKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalAmenity.isPresent());
+    }
+
+    public void find_amenityId_neighborhoodId_invalid_amenityId_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+
+        // Exercise
+        Optional<Amenity> optionalAmenity = amenityDaoImpl.findAmenity(INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalAmenity.isPresent());
+    }
+
+    // -------------------------------------------------- GETS ---------------------------------------------------------
+
+    @Test
+    public void get() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+
+        // Exercise
+        List<Amenity> amenityList = amenityDaoImpl.getAmenities(nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, amenityList.size());
+    }
+
+    @Test
+    public void get_empty() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+
+        // Exercise
+        List<Amenity> amenityList = amenityDaoImpl.getAmenities(nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertTrue(amenityList.isEmpty());
+    }
+
+    @Test
+    public void get_pagination() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey1 = testInserter.createAmenity(AMENITY_NAME_1, AMENITY_DESCRIPTION_1, nhKey);
         long aKey2 = testInserter.createAmenity(AMENITY_NAME_2, AMENITY_DESCRIPTION_2, nhKey);
 
         // Exercise
-        List<Amenity> amenities = amenityDao.getAmenities(nhKey, BASE_PAGE, 1);
+        List<Amenity> amenityList = amenityDaoImpl.getAmenities(nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertEquals(1, amenities.size());
+        assertEquals(ONE_ELEMENT, amenityList.size());
     }
 
-    @Test
-    public void testGetNoAmenities() {
-        // Pre Conditions
-
-        // Exercise
-        List<Amenity> amenities = amenityDao.getAmenities(0, BASE_PAGE, BASE_PAGE_SIZE);
-
-        // Validations & Post Conditions
-        assertTrue(amenities.isEmpty());
-    }
+    // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-    public void testDeleteAmenity() {
+    public void delete_amenityId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
 
         // Exercise
-        boolean deleted = amenityDao.deleteAmenity(aKey);
+        boolean deleted = amenityDaoImpl.deleteAmenity(aKey);
 
         // Validations & Post Conditions
+        em.flush();
         assertTrue(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.amenities.name()));
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.amenities.name()));
     }
 
     @Test
-    public void testDeleteInvalidAmenity() {
+    public void delete_amenityId_invalid_amenityId() {
         // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
 
         // Exercise
-        boolean deleted = amenityDao.deleteAmenity(1L);
+        boolean deleted = amenityDaoImpl.deleteAmenity(INVALID_ID);
 
         // Validations & Post Conditions
+        em.flush();
         assertFalse(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.amenities.name()));
     }
 }

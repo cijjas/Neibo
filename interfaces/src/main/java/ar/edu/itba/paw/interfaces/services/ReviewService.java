@@ -23,5 +23,5 @@ public interface ReviewService {
 
     boolean deleteReview(long reviewId);
 
-    Float getAvgRating(long workerId);
+    Float findAverageRating(long workerId);
 }

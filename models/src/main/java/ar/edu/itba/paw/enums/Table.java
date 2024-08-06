@@ -14,7 +14,6 @@ public enum Table {
     posts,
     posts_tags,
     posts_users_likes,
-    posts_users_subscriptions,
     comments,
     events,
     events_users,

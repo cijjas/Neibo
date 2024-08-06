@@ -20,7 +20,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
+import static ar.edu.itba.paw.persistence.TestConstants.ONE_ELEMENT;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {TestConfig.class, TestInserter.class})
@@ -33,7 +35,7 @@ public class ProfessionDaoImplTest {
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private ar.edu.itba.paw.persistence.MainEntitiesDaos.ProfessionDaoImpl professionDao;
+    private ar.edu.itba.paw.persistence.MainEntitiesDaos.ProfessionDaoImpl professionDaoImpl;
 
     @PersistenceContext
     private EntityManager em;
@@ -43,15 +45,18 @@ public class ProfessionDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    // ------------------------------------------------- CREATE --------------------------------------------------------
+
     @Test
-    public void testCreateProfession() {
+    public void create_valid() {
         // Pre Conditions
 
         // Exercise
-        Profession profession = professionDao.createProfession(Professions.PLUMBER);
+        Profession profession = professionDaoImpl.createProfession(Professions.PLUMBER);
 
         // Validations & Post Conditions
         em.flush();
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.professions.name()));
+        assertNotNull(profession);
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.professions.name()));
     }
 }

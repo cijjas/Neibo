@@ -23,6 +23,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -31,16 +32,16 @@ import static org.junit.Assert.*;
 @Rollback
 public class ImageDaoImplTest {
 
-    private final String NAME = "image";
-    private final String FILE_NAME = "fake.jpg";
-    private final String CONTENT_TYPE = "image/jpeg";
+    private final String IMAGE_NAME = "image";
+    private final String IMAGE_FILE_NAME = "fake.jpg";
+    private final String IMAGE_CONTENT_TYPE = "image/jpeg";
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private ImageDao imageDao;
+    private ImageDao imageDaoImpl;
 
     @PersistenceContext
     private EntityManager em;
@@ -50,41 +51,76 @@ public class ImageDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    // ------------------------------------------------- CREATE --------------------------------------------------------
+
     @Test
-    public void testStoreImageAndGetImage() throws IOException {
+    public void create_valid() throws IOException {
         // Pre Conditions
         byte[] fakeImageBytes = new byte[]{(byte) 0xFF, (byte) 0xFF, (byte) 0xFF};
-        MockMultipartFile fakeImage = new MockMultipartFile(NAME, FILE_NAME, CONTENT_TYPE, fakeImageBytes);
+        MockMultipartFile fakeImage = new MockMultipartFile(IMAGE_NAME, IMAGE_FILE_NAME, IMAGE_CONTENT_TYPE, fakeImageBytes);
 
         // Exercise
-        Image storedImage = imageDao.storeImage(fakeImage.getInputStream());
+        Image image = imageDaoImpl.storeImage(fakeImage.getInputStream());
 
         // Validations & Post Conditions
         em.flush();
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.images.name()));
-        assertArrayEquals(fakeImageBytes, storedImage.getImage());
+        assertNotNull(image);
+        assertArrayEquals(fakeImageBytes, image.getImage());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.images.name()));
     }
 
+    // -------------------------------------------------- FINDS --------------------------------------------------------
+
     @Test
-    public void testFindImage() {
+    public void find_imageId_valid() {
         // Pre Conditions
         long iKey = testInserter.createImage();
 
         // Exercise
-        Optional<Image> maybeImage = imageDao.findImage(iKey);
+        Optional<Image> optionalImage = imageDaoImpl.findImage(iKey);
 
         // Validations & Post Conditions
-        assertTrue(maybeImage.isPresent());
+        assertTrue(optionalImage.isPresent());
+        assertEquals(iKey, optionalImage.get().getImageId().longValue());
     }
 
     @Test
-    public void testFindInvalidImage() {
+    public void find_imageId_invalid_imageId() {
         // Pre Conditions
+        long iKey = testInserter.createImage();
 
         // Exercise
-        Optional<Image> maybeImage = imageDao.findImage(1);
+        Optional<Image> optionalImage = imageDaoImpl.findImage(INVALID_ID);
 
         // Validations & Post Conditions
-        assertFalse(maybeImage.isPresent());
+        assertFalse(optionalImage.isPresent());
     }
+
+    // ------------------------------------------------ DELETES --------------------------------------------------------
+
+    @Test
+	public void delete_imageId_valid() {
+	    // Pre Conditions
+        long iKey = testInserter.createImage();
+
+	    // Exercise
+	    boolean deleted = imageDaoImpl.deleteImage(iKey);
+
+	    // Validations & Post Conditions
+		em.flush();
+	    assertTrue(deleted);
+	    assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.images.name()));
+	}
+
+    @Test
+	public void delete_imageId_invalid_imageId() {
+	    // Pre Conditions
+
+	    // Exercise
+	    boolean deleted = imageDaoImpl.deleteImage(INVALID_ID);
+
+	    // Validations & Post Conditions
+		em.flush();
+	    assertFalse(deleted);
+	}
 }

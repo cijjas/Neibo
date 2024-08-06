@@ -22,6 +22,7 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -30,18 +31,18 @@ import static org.junit.Assert.*;
 @Rollback
 public class CommentDaoImplTest {
 
-    private static final String COMMENT_TEXT = "Sample Comment";
-    private static final int BASE_PAGE = 1;
-    private static final int BASE_PAGE_SIZE = 10;
+    private static final String COMMENT_MESSAGE = "Sample Comment";
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private CommentDaoImpl commentDao;
+    private CommentDaoImpl commentDaoImpl;
     @PersistenceContext
     private EntityManager em;
+
+    // ------------------------------------------------- CREATE --------------------------------------------------------
 
     @Before
     public void setUp() {
@@ -49,7 +50,7 @@ public class CommentDaoImplTest {
     }
 
     @Test
-    public void testCreateComment() {
+    public void create_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -58,16 +59,21 @@ public class CommentDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
-        Comment c = commentDao.createComment(COMMENT_TEXT, uKey, pKey);
+        Comment comment = commentDaoImpl.createComment(COMMENT_MESSAGE, uKey, pKey);
 
         // Validations & Post Conditions
         em.flush();
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.comments.name()));
-        assertEquals(COMMENT_TEXT, c.getComment());
+        assertNotNull(comment);
+        assertEquals(pKey, comment.getPost().getPostId().longValue());
+        assertEquals(uKey, comment.getUser().getUserId().longValue());
+        assertEquals(COMMENT_MESSAGE, comment.getComment());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.comments.name()));
     }
 
+    // -------------------------------------------------- FINDS --------------------------------------------------------
+
     @Test
-    public void testFindCommentById() {
+    public void find_commentId_postId_neighborhoodId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -77,54 +83,171 @@ public class CommentDaoImplTest {
         long cKey = testInserter.createComment(uKey, pKey);
 
         // Exercise
-        Optional<Comment> comment = commentDao.findComment(cKey, pKey, nhKey);
+        Optional<Comment> optionalComment = commentDaoImpl.findComment(cKey, pKey, nhKey);
 
         // Validations & Post Conditions
-        assertTrue(comment.isPresent());
-        assertEquals(cKey, comment.get().getCommentId().longValue());
+        assertTrue(optionalComment.isPresent());
+        assertEquals(cKey, optionalComment.get().getCommentId().longValue());
     }
 
     @Test
-    public void testFindCommentByInvalidId() {
-        // Pre Conditions
-
-        // Exercise
-        Optional<Comment> comment = commentDao.findComment(1, 1, 1);
-
-        // Validations & Post Conditions
-        assertFalse(comment.isPresent());
-    }
-
-    @Test
-    public void testFindCommentsByPostId() {
+    public void find_commentId_postId_neighborhoodId_invalid_commentId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
         long chKey = testInserter.createChannel();
         long iKey = testInserter.createImage();
         long pKey = testInserter.createPost(uKey, chKey, iKey);
-        testInserter.createComment(uKey, pKey);
+        long cKey = testInserter.createComment(uKey, pKey);
 
         // Exercise
-        List<Comment> comments = commentDao.getComments(pKey, BASE_PAGE, BASE_PAGE_SIZE);
+        Optional<Comment> optionalComment = commentDaoImpl.findComment(INVALID_ID, pKey, nhKey);
 
         // Validations & Post Conditions
-        assertFalse(comments.isEmpty());
-        assertEquals(1, comments.size());
+        assertFalse(optionalComment.isPresent());
+    }
+
+
+    @Test
+    public void find_commentId_postId_neighborhoodId_invalid_postId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long cKey = testInserter.createComment(uKey, pKey);
+
+        // Exercise
+        Optional<Comment> optionalComment = commentDaoImpl.findComment(cKey, INVALID_ID, nhKey);
+
+        // Validations & Post Conditions
+        assertFalse(optionalComment.isPresent());
     }
 
     @Test
-    public void testFindCommentsByInvalidPostId() {
+    public void find_commentId_postId_neighborhoodId_invalid_neighborhoodId() {
         // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long cKey = testInserter.createComment(uKey, pKey);
 
         // Exercise
-        List<Comment> comments = commentDao.getComments(1, BASE_PAGE, BASE_PAGE_SIZE);
+        Optional<Comment> optionalComment = commentDaoImpl.findComment(cKey, pKey, INVALID_ID);
 
         // Validations & Post Conditions
-        assertTrue(comments.isEmpty());
+        assertFalse(optionalComment.isPresent());
     }
 
-    public void testGetComments(){
+    @Test
+    public void find_commentId_postId_neighborhoodId_invalid_commentId_postId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long cKey = testInserter.createComment(uKey, pKey);
+
+        // Exercise
+        Optional<Comment> optionalComment = commentDaoImpl.findComment(INVALID_ID, INVALID_ID, nhKey);
+
+        // Validations & Post Conditions
+        assertFalse(optionalComment.isPresent());
+    }
+
+    @Test
+    public void find_commentId_postId_neighborhoodId_invalid_commentId_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long cKey = testInserter.createComment(uKey, pKey);
+
+        // Exercise
+        Optional<Comment> optionalComment = commentDaoImpl.findComment(INVALID_ID, pKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalComment.isPresent());
+    }
+
+    @Test
+    public void find_commentId_postId_neighborhoodId_invalid_postId_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long cKey = testInserter.createComment(uKey, pKey);
+
+        // Exercise
+        Optional<Comment> optionalComment = commentDaoImpl.findComment(cKey, INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalComment.isPresent());
+    }
+
+    @Test
+    public void find_commentId_postId_neighborhoodId_invalid_commentId_postId_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long cKey = testInserter.createComment(uKey, pKey);
+
+        // Exercise
+        Optional<Comment> optionalComment = commentDaoImpl.findComment(INVALID_ID, INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalComment.isPresent());
+    }
+
+    @Test
+    public void find_commentId_valid() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long cKey = testInserter.createComment(uKey, pKey);
+
+        // Exercise
+        Optional<Comment> optionalComment = commentDaoImpl.findComment(cKey);
+
+        // Validations & Post Conditions
+        assertTrue(optionalComment.isPresent());
+        assertEquals(cKey, optionalComment.get().getCommentId().longValue());
+    }
+
+    @Test
+    public void find_commentId_invalid_commentId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long cKey = testInserter.createComment(uKey, pKey);
+
+        // Exercise
+        Optional<Comment> optionalComment = commentDaoImpl.findComment(INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalComment.isPresent());
+    }
+
+    // -------------------------------------------------- GETS ---------------------------------------------------------
+
+    public void get(){
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -133,31 +256,36 @@ public class CommentDaoImplTest {
         long pKey1 = testInserter.createPost(uKey, chKey, iKey);
         long pKey2 = testInserter.createPost(uKey, chKey, iKey);
         testInserter.createComment(uKey, pKey2);
-        // Same user commenting the same thing twice
         testInserter.createComment(uKey, pKey1);
         testInserter.createComment(uKey, pKey1);
 
         // Exercise
-        List<Comment> comments = commentDao.getComments(pKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Comment> commentList = commentDaoImpl.getComments(pKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertFalse(comments.isEmpty());
-        assertEquals(2, comments.size());
+        assertFalse(commentList.isEmpty());
+        assertEquals(TWO_ELEMENTS, commentList.size());
     }
 
-    public void testGetNoComments(){
+    public void get_empty(){
         // Pre Conditions
-
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey1 = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
-        List<Comment> comments = commentDao.getComments(1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Comment> commentList = commentDaoImpl.getComments(pKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertTrue(comments.isEmpty());
+        assertTrue(commentList.isEmpty());
     }
+
+    // ------------------------------------------------- COUNTS --------------------------------------------------------
 
     @Test
-    public void testGetCommentsCountByPostId() {
+    public void count_postId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -167,15 +295,15 @@ public class CommentDaoImplTest {
         testInserter.createComment(uKey, pKey);
 
         // Exercise
-        int comments = commentDao.countComments(pKey);
+        int countComments = commentDaoImpl.countComments(pKey);
 
         // Validations & Post Conditions
-        assertEquals(1, comments);
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.comments.name()));
+        assertEquals(ONE_ELEMENT, countComments);
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.comments.name()));
     }
 
     @Test
-    public void testGetCommentsCountByPostInvalidId() {
+    public void count_empty() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -184,10 +312,49 @@ public class CommentDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, iKey);
 
         // Exercise
-        int comments = commentDao.countComments(pKey);
+        int countComments = commentDaoImpl.countComments(pKey);
 
         // Validations & Post Conditions
-        assertEquals(0, comments);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.comments.name()));
+        assertEquals(NO_ELEMENTS, countComments);
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.comments.name()));
     }
+
+    // ------------------------------------------------ DELETES --------------------------------------------------------
+
+    @Test
+	public void delete_commentId_valid() {
+	    // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long cKey = testInserter.createComment(uKey, pKey);
+
+	    // Exercise
+	    boolean deleted = commentDaoImpl.deleteComment(cKey);
+
+	    // Validations & Post Conditions
+        em.flush();
+	    assertTrue(deleted);
+	    assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.comments.name()));
+	}
+
+    @Test
+	public void delete_commentId_invalid_commentId() {
+	    // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long cKey = testInserter.createComment(uKey, pKey);
+
+	    // Exercise
+	    boolean deleted = commentDaoImpl.deleteComment(INVALID_ID);
+
+	    // Validations & Post Conditions
+        em.flush();
+	    assertFalse(deleted);
+	}
 }

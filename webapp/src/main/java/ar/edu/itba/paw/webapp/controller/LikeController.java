@@ -161,7 +161,7 @@ public class LikeController extends GlobalControllerAdvice{
 
     @DELETE
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.canModify(#user)")
+    @PreAuthorize("@accessControlHelper.canDeleteLike(#user)")
     public Response deleteById(
             @QueryParam("likedBy") final String user,
             @QueryParam("onPost") final String post

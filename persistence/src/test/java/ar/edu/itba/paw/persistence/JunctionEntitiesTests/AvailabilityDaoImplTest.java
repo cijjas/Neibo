@@ -21,6 +21,7 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.OptionalLong;
 
+import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -38,7 +39,7 @@ public class AvailabilityDaoImplTest {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private AvailabilityDao availabilityDao;
+    private AvailabilityDao availabilityDaoImpl;
 
     @PersistenceContext
     private EntityManager em;
@@ -48,8 +49,10 @@ public class AvailabilityDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    // ------------------------------------------------- CREATE --------------------------------------------------------
+
     @Test
-    public void testCreateAvailability() {
+    public void create_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
@@ -58,15 +61,38 @@ public class AvailabilityDaoImplTest {
         long sKey = testInserter.createShift(dKey, tKey);
 
         // Exercise
-        Availability createdAvailability = availabilityDao.createAvailability(aKey, sKey);
+        Availability availability= availabilityDaoImpl.createAvailability(aKey, sKey);
 
         // Validations & Post Conditions
         em.flush();
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.amenities_shifts_availability.name()));
+        assertNotNull(availability);
+        assertEquals(aKey, availability.getAmenity().getAmenityId().longValue());
+        assertEquals(sKey, availability.getShift().getShiftId().longValue());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.amenities_shifts_availability.name()));
+    }
+
+    // -------------------------------------------------- FINDS --------------------------------------------------------
+
+    @Test
+    public void find_amenityId_shiftId_valid() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long avKey = testInserter.createAvailability(aKey, sKey);
+
+        // Exercise
+        OptionalLong optionalAvailability = availabilityDaoImpl.findAvailabilityId(aKey, sKey);
+
+        // Validations & Post Conditions
+        assertTrue(optionalAvailability.isPresent());
+        assertEquals(avKey, optionalAvailability.getAsLong());
     }
 
     @Test
-    public void testFindAvailabilityId() {
+    public void find_amenityId_shiftId_invalid_amenityId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
@@ -76,23 +102,15 @@ public class AvailabilityDaoImplTest {
         long availabilityKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        OptionalLong foundAvailability = availabilityDao.findAvailabilityId(aKey, sKey);
+        OptionalLong optionalAvailability = availabilityDaoImpl.findAvailabilityId(INVALID_ID, sKey);
 
         // Validations & Post Conditions
-        assertTrue(foundAvailability.isPresent());
+        assertFalse(optionalAvailability.isPresent());
     }
 
-    @Test
-    public void testFindInvalidAvailabilityId() {
-        // Exercise
-        OptionalLong foundAvailability = availabilityDao.findAvailabilityId(1, 1);
-
-        // Validations & Post Conditions
-        assertFalse(foundAvailability.isPresent());
-    }
 
     @Test
-    public void testDeleteAvailability() {
+    public void find_amenityId_shiftId_invalid_shiftId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long aKey = testInserter.createAmenity(nhKey);
@@ -102,21 +120,101 @@ public class AvailabilityDaoImplTest {
         long availabilityKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        boolean deleted = availabilityDao.deleteAvailability(aKey, sKey);
+        OptionalLong optionalAvailability = availabilityDaoImpl.findAvailabilityId(aKey, INVALID_ID);
 
         // Validations & Post Conditions
+        assertFalse(optionalAvailability.isPresent());
+    }
+
+    @Test
+    public void find_amenityId_shiftId_invalid_amenityId_shiftId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long availabilityKey = testInserter.createAvailability(aKey, sKey);
+
+        // Exercise
+        OptionalLong optionalAvailability = availabilityDaoImpl.findAvailabilityId(INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalAvailability.isPresent());
+    }
+
+    // ------------------------------------------------ DELETES --------------------------------------------------------
+
+    @Test
+    public void delete_amenityId_shiftId_valid() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long availabilityKey = testInserter.createAvailability(aKey, sKey);
+
+        // Exercise
+        boolean deleted = availabilityDaoImpl.deleteAvailability(aKey, sKey);
+
+        // Validations & Post Conditions
+        em.flush();
         assertTrue(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.amenities_shifts_availability.name()));
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.amenities_shifts_availability.name()));
     }
 
     @Test
-    public void testDeleteInvalidAvailability() {
+    public void delete_amenityId_shiftId_invalid_amenityId() {
         // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long availabilityKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        boolean deleted = availabilityDao.deleteAvailability(1, 1);
+        boolean deleted = availabilityDaoImpl.deleteAvailability(INVALID_ID, sKey);
 
         // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+        @Test
+    public void delete_amenityId_shiftId_invalid_shiftId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long availabilityKey = testInserter.createAvailability(aKey, sKey);
+
+        // Exercise
+        boolean deleted = availabilityDaoImpl.deleteAvailability(aKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+        @Test
+    public void delete_amenityId_shiftId_invalid_amenityId_shiftId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long aKey = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long availabilityKey = testInserter.createAvailability(aKey, sKey);
+
+        // Exercise
+        boolean deleted = availabilityDaoImpl.deleteAvailability(INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
         assertFalse(deleted);
     }
 }

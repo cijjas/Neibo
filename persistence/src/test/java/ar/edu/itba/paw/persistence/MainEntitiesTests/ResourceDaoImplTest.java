@@ -20,7 +20,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
+import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -29,15 +31,15 @@ import static org.junit.Assert.*;
 @Rollback
 public class ResourceDaoImplTest {
 
-    private final String SAMPLE_TITLE = "Sample Title";
-    private final String SAMPLE_DESC = "Sample Desc";
+    private final String RESOURCE_TITLE = "Sample Title";
+    private final String RESOURCE_DESCRIPTION = "Sample Desc";
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private ResourceDao resourceDao;
+    private ResourceDao resourceDaoImpl;
 
     @PersistenceContext
     private EntityManager em;
@@ -46,67 +48,113 @@ public class ResourceDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
-    @Test
-    public void testCreateResource() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-
-        // Exercise
-        resourceDao.createResource(nhKey, SAMPLE_TITLE, SAMPLE_DESC, 0);
-
-        // Validations & Post Conditions
-        em.flush();
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.resources.name()));
-    }
+    // ------------------------------------------------- CREATE --------------------------------------------------------
 
     @Test
-    public void testGetResources() {
+    public void create_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long iKey = testInserter.createImage();
-        testInserter.createResource(nhKey, iKey);
 
         // Exercise
-        List<Resource> resources = resourceDao.getResources(nhKey);
+        Resource resource = resourceDaoImpl.createResource(nhKey, RESOURCE_TITLE, RESOURCE_DESCRIPTION, iKey);
 
         // Validations & Post Conditions
-        assertEquals(1, resources.size());
+        em.flush();
+        assertNotNull(resource);
+        assertEquals(nhKey, resource.getNeighborhood().getNeighborhoodId().longValue());
+        assertEquals(iKey, resource.getImage().getImageId().longValue());
+        assertEquals(RESOURCE_TITLE, resource.getTitle());
+        assertEquals(RESOURCE_DESCRIPTION, resource.getDescription());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.resources.name()));
     }
 
-    @Test
-    public void testGetNoResources() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-
-        // Exercise
-        List<Resource> resources = resourceDao.getResources(nhKey);
-
-        // Validations & Post Conditions
-        assertEquals(0, resources.size());
-    }
+    // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void testDeleteResource() {
+    public void find_resourceId_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long iKey = testInserter.createImage();
         long rKey = testInserter.createResource(nhKey, iKey);
 
         // Exercise
-        boolean deleted = resourceDao.deleteResource(rKey);
+        Optional<Resource> optionalResource = resourceDaoImpl.findResource(rKey);
+
+        // Validations & Post Conditions
+        assertTrue(optionalResource.isPresent());
+        assertEquals(rKey, optionalResource.get().getResourceId().longValue());
+    }
+
+    @Test
+    public void find_resourceId_invalid_resourceId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long iKey = testInserter.createImage();
+        long rKey = testInserter.createResource(nhKey, iKey);
+
+        // Exercise
+        Optional<Resource> optionalResource = resourceDaoImpl.findResource(INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalResource.isPresent());
+    }
+
+    // -------------------------------------------------- GETS ---------------------------------------------------------
+
+    @Test
+    public void get_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long iKey = testInserter.createImage();
+        testInserter.createResource(nhKey, iKey);
+
+        // Exercise
+        List<Resource> resourceList = resourceDaoImpl.getResources(nhKey);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, resourceList.size());
+    }
+
+    @Test
+    public void get_empty() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+
+        // Exercise
+        List<Resource> resourceList = resourceDaoImpl.getResources(nhKey);
+
+        // Validations & Post Conditions
+        assertTrue(resourceList.isEmpty());
+    }
+
+    // ------------------------------------------------ DELETES --------------------------------------------------------
+
+    @Test
+    public void delete_resourceId_valid() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long iKey = testInserter.createImage();
+        long rKey = testInserter.createResource(nhKey, iKey);
+
+        // Exercise
+        boolean deleted = resourceDaoImpl.deleteResource(rKey);
 
         // Validations & Post Conditions
         em.flush();
         assertTrue(deleted);
-        assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.resources.name()));
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.resources.name()));
     }
 
     @Test
-    public void testDeleteInvalidResource() {
+    public void delete_resourceId_invalid_resourceId() {
         // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long iKey = testInserter.createImage();
+        long rKey = testInserter.createResource(nhKey, iKey);
 
         // Exercise
-        boolean deleted = resourceDao.deleteResource(1);
+        boolean deleted = resourceDaoImpl.deleteResource(INVALID_ID);
 
         // Validations & Post Conditions
         em.flush();

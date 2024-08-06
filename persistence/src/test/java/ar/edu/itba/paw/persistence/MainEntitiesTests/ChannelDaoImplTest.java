@@ -22,6 +22,7 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
+import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -32,15 +33,14 @@ public class ChannelDaoImplTest {
 
     private final String CHANNEL_NAME_1 = "Channel Name 1";
     private final String CHANNEL_NAME_2 = "Channel Name 2";
-    private final String NEIGHBORHOOD_NAME_1 = "Neighborhood Name 1";
-    private final String NEIGHBORHOOD_NAME_2 = "Neighborhood Name 2";
+
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private ChannelDaoImpl channelDao;
+    private ChannelDaoImpl channelDaoImpl;
 
     @PersistenceContext
     private EntityManager em;
@@ -50,71 +50,110 @@ public class ChannelDaoImplTest {
         jdbcTemplate = new JdbcTemplate(ds);
     }
 
+    // ------------------------------------------------- CREATE --------------------------------------------------------
+
     @Test
-    public void testCreateChannel() {
+    public void create_valid() {
         // Pre Conditions
 
         // Exercise
-        Channel ch = channelDao.createChannel(CHANNEL_NAME_1);
+        Channel channel = channelDaoImpl.createChannel(CHANNEL_NAME_1);
 
         // Validations & Post Conditions
         em.flush();
-        assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.channels.name()));
-        assertEquals(CHANNEL_NAME_1, ch.getChannel());
+        assertNotNull(channel);
+        assertEquals(CHANNEL_NAME_1, channel.getChannel());
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.channels.name()));
     }
 
+    // -------------------------------------------------- FINDS --------------------------------------------------------
+
     @Test
-    public void testFindChannelById() {
+    public void find_channelId_neighborhoodId_valid() {
         // Pre Conditions
         long chKey = testInserter.createChannel();
         long nhKey = testInserter.createNeighborhood();
         testInserter.createChannelMapping(nhKey, chKey);
 
         // Exercise
-        Optional<Channel> ch = channelDao.findChannel(chKey, nhKey);
+        Optional<Channel> optionalChannel = channelDaoImpl.findChannel(chKey, nhKey);
 
         // Validations & Post Conditions
-        assertTrue(ch.isPresent());
-        assertEquals(chKey, ch.get().getChannelId().longValue());
+        assertTrue(optionalChannel.isPresent());
+        assertEquals(chKey, optionalChannel.get().getChannelId().longValue());
     }
 
     @Test
-    public void testFindChannelByInvalidId() {
+    public void find_channelId_neighborhoodId_invalid_channelId() {
         // Pre Conditions
+        long chKey = testInserter.createChannel();
+        long nhKey = testInserter.createNeighborhood();
+        testInserter.createChannelMapping(nhKey, chKey);
 
         // Exercise
-        Optional<Channel> ch = channelDao.findChannel(1, 1);
+        Optional<Channel> optionalChannel = channelDaoImpl.findChannel(INVALID_ID, nhKey);
 
         // Validations & Post Conditions
-        assertFalse(ch.isPresent());
+        assertFalse(optionalChannel.isPresent());
     }
 
     @Test
-    public void testFindChannelByName() {
+    public void find_channelId_neighborhoodId_invalid_neighborhoodId() {
+        // Pre Conditions
+        long chKey = testInserter.createChannel();
+        long nhKey = testInserter.createNeighborhood();
+        testInserter.createChannelMapping(nhKey, chKey);
+
+        // Exercise
+        Optional<Channel> optionalChannel = channelDaoImpl.findChannel(chKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalChannel.isPresent());
+    }
+
+    @Test
+    public void find_channelId_neighborhoodId_invalid_channelId_neighborhoodId() {
+        // Pre Conditions
+        long chKey = testInserter.createChannel();
+        long nhKey = testInserter.createNeighborhood();
+        testInserter.createChannelMapping(nhKey, chKey);
+
+        // Exercise
+        Optional<Channel> optionalChannel = channelDaoImpl.findChannel(INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalChannel.isPresent());
+    }
+
+    @Test
+    public void find_channelName_valid() {
         // Pre Conditions
         testInserter.createChannel(CHANNEL_NAME_1);
 
         // Exercise
-        Optional<Channel> ch = channelDao.findChannel(CHANNEL_NAME_1);
+        Optional<Channel> optionalChannel = channelDaoImpl.findChannel(CHANNEL_NAME_1);
 
         // Validations & Post Conditions
-        assertTrue(ch.isPresent());
-        assertEquals(CHANNEL_NAME_1, ch.get().getChannel());
+        assertTrue(optionalChannel.isPresent());
+        assertEquals(CHANNEL_NAME_1, optionalChannel.get().getChannel());
     }
 
     @Test
-    public void testFindChannelByInvalidName() {
+    public void find_channelName_invalid_channelName() {
         // Pre Conditions
+        testInserter.createChannel(CHANNEL_NAME_1);
 
         // Exercise
-        Optional<Channel> ch = channelDao.findChannel(CHANNEL_NAME_1);
+        Optional<Channel> optionalChannel = channelDaoImpl.findChannel(INVALID_STRING_ID);
 
         // Validations & Post Conditions
-        assertFalse(ch.isPresent());
+        assertFalse(optionalChannel.isPresent());
     }
 
+    // -------------------------------------------------- GETS ---------------------------------------------------------
+
     @Test
-    public void testGetChannels() {
+    public void get_neighborhoodId() {
         // Pre Conditions
         long chKey1 = testInserter.createChannel(CHANNEL_NAME_1);
         long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
@@ -124,21 +163,50 @@ public class ChannelDaoImplTest {
         testInserter.createChannelMapping(nhKey2, chKey2);
 
         // Exercise
-        List<Channel> channels = channelDao.getChannels(nhKey1);
+        List<Channel> channelList = channelDaoImpl.getChannels(nhKey1);
 
         // Validations & Post Conditions
-        assertEquals(1, channels.size());
+        assertEquals(ONE_ELEMENT, channelList.size());
     }
 
     @Test
-    public void testGetNoChannels() {
+    public void get_empty() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
 
         // Exercise
-        List<Channel> channels = channelDao.getChannels(nhKey);
+        List<Channel> channelList = channelDaoImpl.getChannels(nhKey);
 
         // Validations & Post Conditions
-        assertEquals(0, channels.size());
+        assertTrue(channelList.isEmpty());
     }
+
+    // ------------------------------------------------ DELETES --------------------------------------------------------
+
+    @Test
+	public void delete_channelId_valid() {
+	    // Pre Conditions
+        long cKey = testInserter.createChannel(CHANNEL_NAME_1);
+
+	    // Exercise
+	    boolean deleted = channelDaoImpl.deleteChannel(cKey);
+
+	    // Validations & Post Conditions
+        em.flush();
+	    assertTrue(deleted);
+	    assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.channels.name()));
+	}
+
+    @Test
+	public void delete_channelId_invalid_channelId() {
+	    // Pre Conditions
+        long cKey = testInserter.createChannel(CHANNEL_NAME_1);
+
+	    // Exercise
+	    boolean deleted = channelDaoImpl.deleteChannel(INVALID_ID);
+
+	    // Validations & Post Conditions
+        em.flush();
+	    assertFalse(deleted);
+	}
 }
