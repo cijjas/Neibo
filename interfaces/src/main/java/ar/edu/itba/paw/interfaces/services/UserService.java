@@ -18,7 +18,7 @@ public interface UserService {
 
     Optional<User> findUser(final String mail);
 
-    List<User> getNeighbors(long neighborhoodId);
+    List<User> getNeighbors(long neighborhoodId, int page, int size);
 
     List<User> getUsers(String userRoleURN, long neighborhoodId, int page, int size);
 

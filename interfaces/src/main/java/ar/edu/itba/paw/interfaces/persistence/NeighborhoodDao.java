@@ -21,6 +21,9 @@ public interface NeighborhoodDao {
 
     List<Neighborhood> getNeighborhoods(int page, int size, Long workerId);
 
+    // Only used by Email Service
+    List<Long> getNeighborhoodIds();
+
     int countNeighborhoods(Long workerId);
 
     // ----------------------------------------- NEIGHBORHOODS DELETE --------------------------------------------------

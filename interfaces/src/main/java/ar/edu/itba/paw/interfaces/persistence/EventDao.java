@@ -2,6 +2,7 @@ package ar.edu.itba.paw.interfaces.persistence;
 
 import ar.edu.itba.paw.models.Entities.Event;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -19,8 +20,6 @@ public interface EventDao {
     Optional<Event> findEvent(long eventId, long neighborhoodId);
 
     List<Event> getEvents(String date, long neighborhoodId, int page, int size);
-
-    List<Event> getEvents(long neighborhoodId, Date startDate, Date endDate);
 
     int countEvents(String date, long neighborhoodId);
 

@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.interfaces.services.ReviewService;
 import ar.edu.itba.paw.interfaces.services.WorkerService;
 import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.webapp.dto.WorkerDto;
@@ -42,13 +43,14 @@ public class WorkerController extends GlobalControllerAdvice {
     @Autowired
     private WorkerService ws;
 
+    @Autowired
+    private ReviewService rs;
+
     @Context
     private UriInfo uriInfo;
 
     @Context
     private Request request;
-
-    private EntityTag entityLevelETag = ETagUtility.generateETag();
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
@@ -79,7 +81,7 @@ public class WorkerController extends GlobalControllerAdvice {
                     .build();
 
         List<WorkerDto> workerDto = workers.stream()
-                .map(w -> WorkerDto.fromWorker(w, uriInfo)).collect(Collectors.toList());
+                .map(w -> WorkerDto.fromWorker(w, rs.findAverageRating(w.getWorkerId()), uriInfo)).collect(Collectors.toList());
 
         // Pagination Links
         Link[] links = createPaginationLinks(
@@ -117,7 +119,7 @@ public class WorkerController extends GlobalControllerAdvice {
         if (builder != null)
             return builder.cacheControl(cacheControl).build();
 
-        return Response.ok(WorkerDto.fromWorker(worker, uriInfo))
+        return Response.ok(WorkerDto.fromWorker(worker, rs.findAverageRating(worker.getWorkerId()), uriInfo))
                 .cacheControl(cacheControl)
                 .tag(workerHashCode)
                 .build();
@@ -156,7 +158,7 @@ public class WorkerController extends GlobalControllerAdvice {
         final Worker updatedWorker = ws.updateWorkerPartially(workerId, partialUpdate.getPhoneNumber(), partialUpdate.getAddress(), partialUpdate.getBusinessName(), partialUpdate.getBackgroundPicture(), partialUpdate.getBio());
         String workerHashCode = String.valueOf(updatedWorker.hashCode());
 
-        return Response.ok(WorkerDto.fromWorker(updatedWorker, uriInfo))
+        return Response.ok(WorkerDto.fromWorker(updatedWorker, rs.findAverageRating(updatedWorker.getWorkerId()), uriInfo))
                 .tag(workerHashCode)
                 .build();
     }

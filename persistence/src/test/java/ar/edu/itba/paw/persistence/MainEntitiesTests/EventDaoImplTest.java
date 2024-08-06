@@ -39,9 +39,9 @@ public class EventDaoImplTest {
     private static final Time EVENT_START_TIME = Time.valueOf("22:00:00");
     private static final Time EVENT_END_TIME = Time.valueOf("23:00:00");
 
-    public static final Date START_DATE = Date.valueOf("2024-3-10");
+    public static final String START_DATE = "2024-3-10";
     public static final Date END_DATE = Date.valueOf("2024-3-24");
-    public static final Date NO_DATE = null;
+    public static final String NO_DATE = null;
 
     @Autowired
     private DataSource ds;
@@ -189,7 +189,7 @@ public class EventDaoImplTest {
         long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
 
         // Exercise
-        List<Event> eventList = eventDaoImpl.getEvents(nhKey, START_DATE, END_DATE);
+        List<Event> eventList = eventDaoImpl.getEvents(START_DATE, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, eventList.size());
@@ -206,7 +206,7 @@ public class EventDaoImplTest {
         long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
 
         // Exercise
-        List<Event> eventList = eventDaoImpl.getEvents(nhKey, NO_DATE, NO_DATE);
+        List<Event> eventList = eventDaoImpl.getEvents(NO_DATE, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(eventList.isEmpty());

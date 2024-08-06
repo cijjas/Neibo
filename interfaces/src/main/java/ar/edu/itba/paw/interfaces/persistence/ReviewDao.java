@@ -21,7 +21,7 @@ public interface ReviewDao {
 
     Optional<Review> findLatestReview(long workerId, long userId);
 
-    Optional<Float> findAverageRating(long workerId);
+    Float findAverageRating(long workerId);
 
     int countReviews(long workerId);
 

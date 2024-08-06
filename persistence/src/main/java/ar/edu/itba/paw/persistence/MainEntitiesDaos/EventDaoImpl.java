@@ -87,12 +87,7 @@ public class EventDaoImpl implements EventDao {
 
         // Set the parameters
         if (date != null) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                query.setParameter("date", dateFormat.parse(date));
-            } catch (ParseException e) {
-                throw new IllegalArgumentException("Invalid value (" + date + ") for the 'date' parameter. Please use a date in YYYY-(M)M-(D)D format.");
-            }
+            query.setParameter("date", date);
         }
 
         query.setParameter("neighborhoodId", neighborhoodId);
@@ -127,13 +122,7 @@ public class EventDaoImpl implements EventDao {
         TypedQuery<Long> query = em.createQuery(jpqlBuilder.toString(), Long.class);
 
         if (date != null) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            try {
-                query.setParameter("date", dateFormat.parse(date));
-            } catch (ParseException e) {
-                // Handle the exception if needed
-                throw new IllegalArgumentException("Invalid value (" + date + ") for the 'date' parameter. Please use a date in YYYY-(M)M-(D)D format.");
-            }
+            query.setParameter("date", date);
         }
 
         query.setParameter("neighborhoodId", neighborhoodId);
@@ -141,17 +130,17 @@ public class EventDaoImpl implements EventDao {
         return query.getSingleResult().intValue();
     }
 
-    @Override
-    public List<Event> getEvents(long neighborhoodId, Date startDate, Date endDate) {
-        LOGGER.debug("Selecting Events from Neighborhood {} between {} and {}", neighborhoodId, startDate, endDate);
-
-        String jpql = "SELECT e FROM Event e WHERE e.neighborhood.neighborhoodId = :neighborhoodId AND e.date BETWEEN :startDate AND :endDate";
-        TypedQuery<Event> query = em.createQuery(jpql, Event.class);
-        query.setParameter("neighborhoodId", neighborhoodId);
-        query.setParameter("startDate", startDate);
-        query.setParameter("endDate", endDate);
-        return query.getResultList();
-    }
+//    @Override
+//    public List<Event> getEvents(long neighborhoodId, Date startDate, Date endDate) {
+//        LOGGER.debug("Selecting Events from Neighborhood {} between {} and {}", neighborhoodId, startDate, endDate);
+//
+//        String jpql = "SELECT e FROM Event e WHERE e.neighborhood.neighborhoodId = :neighborhoodId AND e.date BETWEEN :startDate AND :endDate";
+//        TypedQuery<Event> query = em.createQuery(jpql, Event.class);
+//        query.setParameter("neighborhoodId", neighborhoodId);
+//        query.setParameter("startDate", startDate);
+//        query.setParameter("endDate", endDate);
+//        return query.getResultList();
+//    }
 
     // ---------------------------------------------- EVENT DELETE -----------------------------------------------------
 

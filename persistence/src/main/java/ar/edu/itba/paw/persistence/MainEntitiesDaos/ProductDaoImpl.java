@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
 import ar.edu.itba.paw.enums.ProductStatus;
+import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Product;
@@ -95,23 +96,33 @@ public class ProductDaoImpl implements ProductDao {
                     case BOUGHT:
                         nativeQuery.append("AND (p.productId IN (" +
                                 "SELECT DISTINCT r.productid FROM products_users_requests r " +
-                                "WHERE r.userid = :userId)) ");
+                                "WHERE r.userid = :userId AND r.status like 'ACCEPTED')) ");
                         break;
                     case SOLD:
-                        nativeQuery.append("AND (p.productId IN (" +
-                                "SELECT DISTINCT pd.productid FROM products pd " +
-                                "WHERE pd.sellerid = :userId AND p.remainingunits = 0)) ");
+                        nativeQuery.append("AND p.sellerid = :userId AND (p.productId IN (" +
+                                "SELECT DISTINCT r.productid FROM products_users_requests r " +
+                                "WHERE r.status like 'ACCEPTED')) ");
                         break;
                     case SELLING:
-                        nativeQuery.append("AND (p.productId IN (" +
-                                "SELECT DISTINCT p.productid FROM products p " +
-                                "WHERE p.sellerid = :userId AND p.remainingunits > 0)) ");
+                        nativeQuery.append("AND p.sellerid = :userId AND p.remainingunits > 0 ");
                         break;
                 }
             }
+        } else if (productStatusId != null) {
+            switch (ProductStatus.fromId(productStatusId)) {
+                case BOUGHT:
+                case SOLD:
+                    nativeQuery.append("AND (p.productId IN (" +
+                            "SELECT DISTINCT r.productid FROM products_users_requests r " +
+                            "WHERE r.status like 'ACCEPTED')) ");
+                    break;
+                case SELLING:
+                    nativeQuery.append("AND p.remainingunits > 0 ");
+                    break;
+            }
         }
 
-        nativeQuery.append(" ORDER BY p.creationdate DESC");
+        nativeQuery.append("ORDER BY p.creationdate DESC");
 
         System.out.println(nativeQuery);
         Query query = em.createNativeQuery(nativeQuery.toString(), Product.class);
@@ -125,6 +136,11 @@ public class ProductDaoImpl implements ProductDao {
         if (userId != null) {
             query.setParameter("userId", userId);
         }
+//        if(productStatusId != null && productStatusId != ProductStatus.SELLING.getId()) {
+//            query.setParameter("requestStatus", RequestStatus.ACCEPTED);
+//        }
+
+        System.out.println(nativeQuery.toString());
 
         // No parameters have to be set for the ProductStatus Condition
 
@@ -159,19 +175,29 @@ public class ProductDaoImpl implements ProductDao {
                     case BOUGHT:
                         nativeQuery.append("AND (p.productId IN (" +
                                 "SELECT DISTINCT r.productid FROM products_users_requests r " +
-                                "WHERE r.userid = :userId)) ");
+                                "WHERE r.userid = :userId AND r.status like 'ACCEPTED')) ");
                         break;
                     case SOLD:
-                        nativeQuery.append("AND (p.productId IN (" +
-                                "SELECT DISTINCT pd.productid FROM products pd " +
-                                "WHERE pd.sellerid = :userId AND p.remainingunits = 0)) ");
+                        nativeQuery.append("AND p.sellerid = :userId AND (p.productId IN (" +
+                                "SELECT DISTINCT r.productid FROM products_users_requests r " +
+                                "WHERE r.status like 'ACCEPTED')) ");
                         break;
                     case SELLING:
-                        nativeQuery.append("AND (p.productId IN (" +
-                                "SELECT DISTINCT p.productid FROM products p " +
-                                "WHERE p.sellerid = :userId AND p.remainingunits > 0)) ");
+                        nativeQuery.append("AND p.sellerid = :userId AND p.remainingunits > 0 ");
                         break;
                 }
+            }
+        } else if (productStatusId != null) {
+            switch (ProductStatus.fromId(productStatusId)) {
+                case BOUGHT:
+                case SOLD:
+                    nativeQuery.append("AND (p.productId IN (" +
+                            "SELECT DISTINCT r.productid FROM products_users_requests r " +
+                            "WHERE r.status like 'ACCEPTED')) ");
+                    break;
+                case SELLING:
+                    nativeQuery.append("AND p.remainingunits > 0 ");
+                    break;
             }
         }
 
@@ -182,10 +208,12 @@ public class ProductDaoImpl implements ProductDao {
         if (departmentId != null) {
             query.setParameter("departmentId", departmentId);
         }
-
         if (userId != null) {
             query.setParameter("userId", userId);
         }
+//        if(productStatusId != null && productStatusId != ProductStatus.SELLING.getId()) {
+//            query.setParameter("requestStatus", RequestStatus.ACCEPTED);
+//        }
 
         // No parameters have to be set for the ProductStatus Condition
 

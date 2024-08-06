@@ -95,4 +95,11 @@ public class ReviewServiceImpl implements ReviewService {
 
         return reviewDao.deleteReview(reviewId);
     }
+
+    // -----------------------------------------------------------------------------------------------------------------
+
+    @Override
+    public Float findAverageRating(long workerId) {
+        return reviewDao.findAverageRating(workerId);
+    }
 }
