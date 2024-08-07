@@ -54,8 +54,6 @@ public class UserController {
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
-    private EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON})
     @PreAuthorize("@accessControlHelper.hasAccessToUserList(#neighborhoodId)")

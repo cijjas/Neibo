@@ -117,16 +117,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<User> getNeighbors(long neighborhoodId, int page, int size) {
-        LOGGER.info("Getting Neighbors from Neighborhood {}", neighborhoodId);
-
-        ValidationUtils.checkNeighborhoodIdInUsers(neighborhoodId);
-
-        return userDao.getUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId, page, size);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<User> getUsers(String userRoleURN, long neighborhoodId, int page, int size) {
         LOGGER.info("Getting Users with Role {} from Neighborhood {} ", userRoleURN, neighborhoodId);
 

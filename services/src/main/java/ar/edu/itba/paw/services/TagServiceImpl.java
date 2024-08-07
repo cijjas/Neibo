@@ -43,7 +43,7 @@ public class TagServiceImpl implements TagService {
         //find tag by name, if it doesn't exist create it
         Tag tag = tagDao.findTag(name).orElseGet(() -> tagDao.createTag(name));
 
-        if(tagMappingDao.countTagMappings(tag.getTagId(), neighborhoodId) == 0)
+        if(!tagMappingDao.findTagMapping(tag.getTagId(), neighborhoodId).isPresent())
             tagMappingDao.createTagMappingDao(tag.getTagId(), neighborhoodId);
 
         return tag;

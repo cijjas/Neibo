@@ -49,8 +49,6 @@ public class TagController {
     @PathParam("neighborhoodId")
     private Long neighborhoodId;
 
-    private EntityTag entityLevelETag = ETagUtility.generateETag();
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
     public Response listTags(

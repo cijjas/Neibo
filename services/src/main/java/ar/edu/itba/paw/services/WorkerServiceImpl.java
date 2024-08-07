@@ -48,7 +48,7 @@ public class WorkerServiceImpl implements WorkerService {
         for (String urn : professionURNs) {
             long professionId = ValidationUtils.extractURNId(urn);
             ValidationUtils.checkProfessionId(professionId);
-            professionWorkerDao.createSpecialization(userId, professionId);
+            professionWorkerDao.findSpecialization(userId, professionId).orElseGet(() -> professionWorkerDao.createSpecialization(userId, professionId));
         }
         return worker;
     }

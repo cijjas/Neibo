@@ -54,9 +54,6 @@ public class BookingController extends GlobalControllerAdvice{
     @PathParam("neighborhoodId")
     private long neighborhoodId;
 
-    private EntityTag entityLevelETag = ETagUtility.generateETag();
-
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
     public Response listBookings(
