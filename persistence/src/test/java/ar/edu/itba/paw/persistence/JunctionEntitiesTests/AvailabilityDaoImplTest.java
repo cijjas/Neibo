@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.interfaces.persistence.AvailabilityDao;
 import ar.edu.itba.paw.models.Entities.Availability;
+import ar.edu.itba.paw.persistence.JunctionDaos.AvailabilityDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -39,7 +39,7 @@ public class AvailabilityDaoImplTest {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private AvailabilityDao availabilityDaoImpl;
+    private AvailabilityDaoImpl availabilityDaoImpl;
 
     @PersistenceContext
     private EntityManager em;
@@ -61,7 +61,7 @@ public class AvailabilityDaoImplTest {
         long sKey = testInserter.createShift(dKey, tKey);
 
         // Exercise
-        Availability availability= availabilityDaoImpl.createAvailability(aKey, sKey);
+        Availability availability = availabilityDaoImpl.createAvailability(aKey, sKey);
 
         // Validations & Post Conditions
         em.flush();
@@ -182,7 +182,7 @@ public class AvailabilityDaoImplTest {
         assertFalse(deleted);
     }
 
-        @Test
+    @Test
     public void delete_amenityId_shiftId_invalid_shiftId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
@@ -200,7 +200,7 @@ public class AvailabilityDaoImplTest {
         assertFalse(deleted);
     }
 
-        @Test
+    @Test
     public void delete_amenityId_shiftId_invalid_amenityId_shiftId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();

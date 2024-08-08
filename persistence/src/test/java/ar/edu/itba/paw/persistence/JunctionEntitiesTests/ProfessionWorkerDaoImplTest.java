@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
-import ar.edu.itba.paw.enums.Professions;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.models.Entities.Profession;
 import ar.edu.itba.paw.models.Entities.Specialization;
@@ -95,7 +94,6 @@ public class ProfessionWorkerDaoImplTest {
     @Test
     public void get_empty() {
         // Pre Conditions
-        long pKey = testInserter.createProfession();
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
         testInserter.createWorker(uKey);

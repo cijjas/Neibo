@@ -112,7 +112,7 @@ public class InquiryDaoImplTest {
         assertFalse(optionalInquiry.isPresent());
     }
 
-       @Test
+    @Test
     public void find_inquiryId_productId_neighborhoodId_valid() {
         // Pre Conditions
         long iKey = testInserter.createImage();
@@ -292,6 +292,29 @@ public class InquiryDaoImplTest {
 
         // Validations & Post Conditions
         assertTrue(inquiryList.isEmpty());
+    }
+
+    // ---------------------------------------------- PAGINATION -------------------------------------------------------
+
+    @Test
+    public void get_pagination() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long uKey3 = testInserter.createUser(USER_MAIL_3, nhKey);
+        long dKey1 = testInserter.createDepartment(Department.ELECTRONICS);
+        long pKey = testInserter.createProduct(iKey, iKey, iKey, uKey1, dKey1);
+        long iqKey1 = testInserter.createInquiry(pKey, uKey2);
+        long iqKey2 = testInserter.createInquiry(pKey, uKey2);
+        long iqKey3 = testInserter.createInquiry(pKey, uKey3);
+
+        // Exercise
+        List<Inquiry> inquiryList = inquiryDaoImpl.getInquiries(pKey, TEST_PAGE, TEST_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, inquiryList.size());
     }
 
     // ------------------------------------------------- COUNTS ---------------------------------------------------------

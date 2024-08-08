@@ -31,16 +31,14 @@ import static org.junit.Assert.*;
 @Rollback
 public class TagDaoImplTest {
 
+    private static long nhKey;
+    private static long pKey1;
+    private static long pKey2;
     private final String TAG_NAME_1 = "Tag Name 1";
     private final String TAG_NAME_2 = "Tag Name 2";
     private final String TAG_NAME_3 = "Tag Name 3";
     private final String TAG_NAME_4 = "Tag Name 4";
     private final String TAG_NAME_5 = "Tag Name 5";
-
-    private static long nhKey;
-    private static long pKey1;
-    private static long pKey2;
-
     @Autowired
     private DataSource ds;
     @Autowired
@@ -51,6 +49,7 @@ public class TagDaoImplTest {
 
     @PersistenceContext
     private EntityManager em;
+
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -90,7 +89,7 @@ public class TagDaoImplTest {
 
         // Validations & Post Conditions
         assertTrue(optionalTag.isPresent());
-		assertEquals(tKey, optionalTag.get().getTagId().longValue());
+        assertEquals(tKey, optionalTag.get().getTagId().longValue());
     }
 
     @Test
@@ -148,6 +147,35 @@ public class TagDaoImplTest {
         assertTrue(tags.isEmpty());
     }
 
+    // ---------------------------------------------- PAGINATION -------------------------------------------------------
+
+    @Test
+    public void get_pagination() {
+        // Pre Conditions
+        long iKey = testInserter.createImage();
+        nhKey = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        pKey1 = testInserter.createPost(uKey, chKey, iKey);
+        pKey2 = testInserter.createPost(uKey, chKey, iKey);
+        long tKey1 = testInserter.createTag(TAG_NAME_1);
+        long tKey2 = testInserter.createTag(TAG_NAME_2);
+        long tKey3 = testInserter.createTag(TAG_NAME_3);
+        testInserter.createCategorization(tKey1, pKey1);
+        testInserter.createCategorization(tKey2, pKey1);
+        testInserter.createCategorization(tKey3, pKey1);
+        testInserter.createTagMapping(nhKey, tKey1);
+        testInserter.createTagMapping(nhKey, tKey2);
+        testInserter.createTagMapping(nhKey, tKey3);
+
+        // Exercise
+        List<Tag> tags = tagDaoImpl.getTags(EMPTY_FIELD, nhKey, TEST_PAGE, TEST_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, tags.size());
+    }
+
     // ------------------------------------------------- COUNTS ---------------------------------------------------------
 
     @Test
@@ -189,31 +217,31 @@ public class TagDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-	public void delete_tagId_valid() {
-	    // Pre Conditions
-        long tKey1 = testInserter.createTag(TAG_NAME_1);
-
-	    // Exercise
-	    boolean deleted = tagDaoImpl.deleteTag(tKey1);
-
-	    // Validations & Post Conditions
-		em.flush();
-	    assertTrue(deleted);
-	    assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.tags.name()));
-	}
-
-	@Test
-	public void delete_tagId_invalid_tagId() {
+    public void delete_tagId_valid() {
         // Pre Conditions
         long tKey1 = testInserter.createTag(TAG_NAME_1);
 
-	    // Exercise
-	    boolean deleted = tagDaoImpl.deleteTag(INVALID_ID);
+        // Exercise
+        boolean deleted = tagDaoImpl.deleteTag(tKey1);
 
-	    // Validations & Post Conditions
-		em.flush();
-	    assertFalse(deleted);
-	}
+        // Validations & Post Conditions
+        em.flush();
+        assertTrue(deleted);
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.tags.name()));
+    }
+
+    @Test
+    public void delete_tagId_invalid_tagId() {
+        // Pre Conditions
+        long tKey1 = testInserter.createTag(TAG_NAME_1);
+
+        // Exercise
+        boolean deleted = tagDaoImpl.deleteTag(INVALID_ID);
+
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
 
     // ----------------------------------------------- POPULATION ------------------------------------------------------
 
@@ -242,7 +270,7 @@ public class TagDaoImplTest {
         testInserter.createCategorization(tKey2, pKey1);
         testInserter.createCategorization(tKey3, pKey1);
         testInserter.createCategorization(tKey4, pKey2);
-        
+
         testInserter.createTagMapping(nhKey, tKey1);
         testInserter.createTagMapping(nhKey, tKey2);
         testInserter.createTagMapping(nhKey, tKey3);

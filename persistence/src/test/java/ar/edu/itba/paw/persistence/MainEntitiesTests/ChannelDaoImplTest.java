@@ -33,6 +33,7 @@ public class ChannelDaoImplTest {
 
     private final String CHANNEL_NAME_1 = "Channel Name 1";
     private final String CHANNEL_NAME_2 = "Channel Name 2";
+    private final String CHANNEL_NAME_3 = "Channel Name 3";
 
     @Autowired
     private DataSource ds;
@@ -155,10 +156,10 @@ public class ChannelDaoImplTest {
     @Test
     public void get() {
         // Pre Conditions
-        long chKey1 = testInserter.createChannel(CHANNEL_NAME_1);
         long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
-        long chKey2 = testInserter.createChannel(CHANNEL_NAME_2);
         long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
+        long chKey1 = testInserter.createChannel(CHANNEL_NAME_1);
+        long chKey2 = testInserter.createChannel(CHANNEL_NAME_2);
         testInserter.createChannelMapping(nhKey1, chKey1);
         testInserter.createChannelMapping(nhKey2, chKey2);
 
@@ -179,6 +180,26 @@ public class ChannelDaoImplTest {
 
         // Validations & Post Conditions
         assertTrue(channelList.isEmpty());
+    }
+
+    // ---------------------------------------------- PAGINATION -------------------------------------------------------
+
+    @Test
+    public void get_pagination() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        long chKey1 = testInserter.createChannel(CHANNEL_NAME_1);
+        long chKey2 = testInserter.createChannel(CHANNEL_NAME_2);
+        long chKey3 = testInserter.createChannel(CHANNEL_NAME_3);
+        testInserter.createChannelMapping(nhKey1, chKey1);
+        testInserter.createChannelMapping(nhKey1, chKey2);
+        testInserter.createChannelMapping(nhKey1, chKey3);
+
+        // Exercise
+        List<Channel> channelList = channelDaoImpl.getChannels(nhKey1, TEST_PAGE, TEST_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, channelList.size());
     }
 
     // ------------------------------------------------- COUNTS ---------------------------------------------------------
@@ -215,29 +236,29 @@ public class ChannelDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-	public void delete_channelId_valid() {
-	    // Pre Conditions
+    public void delete_channelId_valid() {
+        // Pre Conditions
         long cKey = testInserter.createChannel(CHANNEL_NAME_1);
 
-	    // Exercise
-	    boolean deleted = channelDaoImpl.deleteChannel(cKey);
+        // Exercise
+        boolean deleted = channelDaoImpl.deleteChannel(cKey);
 
-	    // Validations & Post Conditions
+        // Validations & Post Conditions
         em.flush();
-	    assertTrue(deleted);
-	    assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.channels.name()));
-	}
+        assertTrue(deleted);
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.channels.name()));
+    }
 
     @Test
-	public void delete_channelId_invalid_channelId() {
-	    // Pre Conditions
+    public void delete_channelId_invalid_channelId() {
+        // Pre Conditions
         long cKey = testInserter.createChannel(CHANNEL_NAME_1);
 
-	    // Exercise
-	    boolean deleted = channelDaoImpl.deleteChannel(INVALID_ID);
+        // Exercise
+        boolean deleted = channelDaoImpl.deleteChannel(INVALID_ID);
 
-	    // Validations & Post Conditions
+        // Validations & Post Conditions
         em.flush();
-	    assertFalse(deleted);
-	}
+        assertFalse(deleted);
+    }
 }

@@ -27,7 +27,7 @@ public class TestConfig {
 
     @Value("classpath:hsqlSetUp.sql")
     private Resource hsqldbSql;
-    
+
     @Bean
     public DataSource dataSource() {
         final SimpleDriverDataSource ds = new SimpleDriverDataSource();

@@ -124,7 +124,6 @@ public class ProductDaoImpl implements ProductDao {
 
         nativeQuery.append("ORDER BY p.creationdate DESC");
 
-        System.out.println(nativeQuery);
         Query query = em.createNativeQuery(nativeQuery.toString(), Product.class);
 
         query.setParameter("neighborhoodId", neighborhoodId);
@@ -140,7 +139,6 @@ public class ProductDaoImpl implements ProductDao {
 //            query.setParameter("requestStatus", RequestStatus.ACCEPTED);
 //        }
 
-        System.out.println(nativeQuery.toString());
 
         // No parameters have to be set for the ProductStatus Condition
 

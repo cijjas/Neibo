@@ -3,12 +3,10 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 import ar.edu.itba.paw.enums.Professions;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.enums.WorkerRole;
-import ar.edu.itba.paw.enums.WorkerStatus;
 import ar.edu.itba.paw.models.Entities.Worker;
 import ar.edu.itba.paw.persistence.MainEntitiesDaos.WorkerDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
-import org.hibernate.jdbc.Work;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
@@ -180,11 +181,11 @@ public class WorkerDaoImplTest {
         );
 
         // Validations
-        assertEquals(TWO_ELEMENTS, workerList.size());
+        assertEquals(FOUR_ELEMENTS, workerList.size());
     }
 
     @Test
-    public void get_workerRoleId() {
+    public void get_verifiedWorkerRole() {
         // Pre Conditions
         populateWorkers();
 
@@ -199,7 +200,45 @@ public class WorkerDaoImplTest {
         );
 
         // Validations
-        assertEquals(FOUR_ELEMENTS, workerList.size());
+        assertEquals(THREE_ELEMENTS, workerList.size());
+    }
+
+    @Test
+    public void get_unverifiedWorkerRole() {
+        // Pre Conditions
+        populateWorkers();
+
+        // Exercise
+        List<Worker> workerList = workerDaoImpl.getWorkers(
+                BASE_PAGE,
+                BASE_PAGE_SIZE,
+                Collections.emptyList(),
+                Collections.emptyList(),
+                (long) WorkerRole.UNVERIFIED_WORKER.getId(),
+                EMPTY_FIELD
+        );
+
+        // Validations
+        assertEquals(TWO_ELEMENTS, workerList.size());
+    }
+
+    @Test
+    public void get_rejectedWorkerRole() {
+        // Pre Conditions
+        populateWorkers();
+
+        // Exercise
+        List<Worker> workerList = workerDaoImpl.getWorkers(
+                BASE_PAGE,
+                BASE_PAGE_SIZE,
+                Collections.emptyList(),
+                Collections.emptyList(),
+                (long) WorkerRole.REJECTED.getId(),
+                EMPTY_FIELD
+        );
+
+        // Validations
+        assertEquals(THREE_ELEMENTS, workerList.size());
     }
 
     @Test
@@ -222,11 +261,11 @@ public class WorkerDaoImplTest {
         );
 
         // Validations
-        assertEquals(TWO_ELEMENTS, workerList.size());
+        assertEquals(THREE_ELEMENTS, workerList.size());
     }
 
     @Test
-    public void get_professionIds_workerRole() {
+    public void get_professionIds_verifiedWorkerRole() {
         // Pre Conditions
         populateWorkers();
         List<Long> professionList = new ArrayList<>();
@@ -243,11 +282,53 @@ public class WorkerDaoImplTest {
         );
 
         // Validations
-        assertEquals(THREE_ELEMENTS, workerList.size());
+        assertEquals(TWO_ELEMENTS, workerList.size());
     }
 
     @Test
-    public void get_neighborhoodIds_workerRole() {
+    public void get_professionIds_unverifiedWorkerRole() {
+        // Pre Conditions
+        populateWorkers();
+        List<Long> professionList = new ArrayList<>();
+        professionList.add(pKey2);
+
+        // Exercise
+        List<Worker> workerList = workerDaoImpl.getWorkers(
+                BASE_PAGE,
+                BASE_PAGE_SIZE,
+                professionList,
+                Collections.emptyList(),
+                (long) WorkerRole.UNVERIFIED_WORKER.getId(),
+                EMPTY_FIELD
+        );
+
+        // Validations
+        assertEquals(TWO_ELEMENTS, workerList.size());
+    }
+
+    @Test
+    public void get_professionIds_rejectedWorkerRole() {
+        // Pre Conditions
+        populateWorkers();
+        List<Long> professionList = new ArrayList<>();
+        professionList.add(pKey2);
+
+        // Exercise
+        List<Worker> workerList = workerDaoImpl.getWorkers(
+                BASE_PAGE,
+                BASE_PAGE_SIZE,
+                professionList,
+                Collections.emptyList(),
+                (long) WorkerRole.REJECTED.getId(),
+                EMPTY_FIELD
+        );
+
+        // Validations
+        assertEquals(TWO_ELEMENTS, workerList.size());
+    }
+
+    @Test
+    public void get_neighborhoodIds_verifiedWorkerRole() {
         // Pre Conditions
         populateWorkers();
         List<Long> neighborhoodList = new ArrayList<>();
@@ -268,7 +349,49 @@ public class WorkerDaoImplTest {
     }
 
     @Test
-    public void get_professionIds_neighborhoodIds_workerRole() {
+    public void get_neighborhoodIds_unverifiedWorkerRole() {
+        // Pre Conditions
+        populateWorkers();
+        List<Long> neighborhoodList = new ArrayList<>();
+        neighborhoodList.add(nhKey3);
+
+        // Exercise
+        List<Worker> workerList = workerDaoImpl.getWorkers(
+                BASE_PAGE,
+                BASE_PAGE_SIZE,
+                Collections.emptyList(),
+                neighborhoodList,
+                (long) WorkerRole.UNVERIFIED_WORKER.getId(),
+                EMPTY_FIELD
+        );
+
+        // Validations
+        assertEquals(TWO_ELEMENTS, workerList.size());
+    }
+
+    @Test
+    public void get_neighborhoodIds_rejectedWorkerRole() {
+        // Pre Conditions
+        populateWorkers();
+        List<Long> neighborhoodList = new ArrayList<>();
+        neighborhoodList.add(nhKey2);
+
+        // Exercise
+        List<Worker> workerList = workerDaoImpl.getWorkers(
+                BASE_PAGE,
+                BASE_PAGE_SIZE,
+                Collections.emptyList(),
+                neighborhoodList,
+                (long) WorkerRole.REJECTED.getId(),
+                EMPTY_FIELD
+        );
+
+        // Validations
+        assertEquals(ONE_ELEMENT, workerList.size());
+    }
+
+    @Test
+    public void get_professionIds_neighborhoodIds_verifiedWorkerRole() {
         // Pre Conditions
         populateWorkers();
         List<Long> professionList = new ArrayList<>();
@@ -288,6 +411,52 @@ public class WorkerDaoImplTest {
 
         // Validations
         assertEquals(TWO_ELEMENTS, workerList.size());
+    }
+
+    @Test
+    public void get_professionIds_neighborhoodIds_unverifiedWorkerRole() {
+        // Pre Conditions
+        populateWorkers();
+        List<Long> professionList = new ArrayList<>();
+        professionList.add(pKey2);
+        List<Long> neighborhoodList = new ArrayList<>();
+        neighborhoodList.add(nhKey3);
+
+        // Exercise
+        List<Worker> workerList = workerDaoImpl.getWorkers(
+                BASE_PAGE,
+                BASE_PAGE_SIZE,
+                professionList,
+                neighborhoodList,
+                (long) WorkerRole.UNVERIFIED_WORKER.getId(),
+                EMPTY_FIELD
+        );
+
+        // Validations
+        assertEquals(TWO_ELEMENTS, workerList.size());
+    }
+
+    @Test
+    public void get_professionIds_neighborhoodIds_rejectedWorkerRole() {
+        // Pre Conditions
+        populateWorkers();
+        List<Long> professionList = new ArrayList<>();
+        professionList.add(pKey2);
+        List<Long> neighborhoodList = new ArrayList<>();
+        neighborhoodList.add(nhKey2);
+
+        // Exercise
+        List<Worker> workerList = workerDaoImpl.getWorkers(
+                BASE_PAGE,
+                BASE_PAGE_SIZE,
+                professionList,
+                neighborhoodList,
+                (long) WorkerRole.REJECTED.getId(),
+                EMPTY_FIELD
+        );
+
+        // Validations
+        assertEquals(ONE_ELEMENT, workerList.size());
     }
 
     @Test
@@ -307,8 +476,37 @@ public class WorkerDaoImplTest {
         assertTrue(workerList.isEmpty());
     }
 
-    // ------------------------------------------------- COUNTS ---------------------------------------------------------
+    @Test
+    public void get_pagination() {
+        // Pre Conditions
+        nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1); // Workers Neighborhood
+        nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
+        nhKey3 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_3);
+        nhKey4 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_4);
+        uKey1 = testInserter.createUser(WORKER_MAIL_1, nhKey1);
+        uKey2 = testInserter.createUser(WORKER_MAIL_2, nhKey1);
+        uKey3 = testInserter.createUser(WORKER_MAIL_3, nhKey1);
+        uKey4 = testInserter.createUser(WORKER_MAIL_4, nhKey1);
+        pKey1 = testInserter.createProfession(Professions.PLUMBER.name());
+        pKey2 = testInserter.createProfession(Professions.CARPENTER.name());
+        testInserter.createWorker(uKey1);
+        testInserter.createWorker(uKey2);
+        testInserter.createWorker(uKey3);
 
+        // Exercise
+        List<Worker> workerList = workerDaoImpl.getWorkers(
+                TEST_PAGE,
+                TEST_PAGE_SIZE,
+                Collections.emptyList(),
+                Collections.emptyList(),
+                EMPTY_FIELD,
+                EMPTY_FIELD);
+
+        // Validations
+        assertEquals(ONE_ELEMENT, workerList.size());
+    }
+
+    // ------------------------------------------------- COUNTS ---------------------------------------------------------
 
     @Test
     public void count() {
@@ -316,14 +514,14 @@ public class WorkerDaoImplTest {
         populateWorkers();
 
         // Exercise
-        int countWorkers = workerDaoImpl.countWorkers(
+        int countWorker = workerDaoImpl.countWorkers(
                 Collections.emptyList(),
                 Collections.emptyList(),
                 EMPTY_FIELD,
                 EMPTY_FIELD);
 
         // Validations
-        assertEquals(FOUR_ELEMENTS, countWorkers);
+        assertEquals(FOUR_ELEMENTS, countWorker);
     }
 
     @Test
@@ -334,7 +532,7 @@ public class WorkerDaoImplTest {
         professionList.add(pKey1);
 
         // Exercise
-        int countWorkers = workerDaoImpl.countWorkers(
+        int countWorker = workerDaoImpl.countWorkers(
                 professionList,
                 Collections.emptyList(),
                 EMPTY_FIELD,
@@ -342,7 +540,7 @@ public class WorkerDaoImplTest {
         );
 
         // Validations
-        assertEquals(TWO_ELEMENTS, countWorkers);
+        assertEquals(TWO_ELEMENTS, countWorker);
     }
 
     @Test
@@ -353,7 +551,7 @@ public class WorkerDaoImplTest {
         neighborhoodList.add(nhKey3);
 
         // Exercise
-        int countWorkers = workerDaoImpl.countWorkers(
+        int countWorker = workerDaoImpl.countWorkers(
                 Collections.emptyList(),
                 neighborhoodList,
                 EMPTY_FIELD,
@@ -361,16 +559,16 @@ public class WorkerDaoImplTest {
         );
 
         // Validations
-        assertEquals(TWO_ELEMENTS, countWorkers);
+        assertEquals(FOUR_ELEMENTS, countWorker);
     }
 
     @Test
-    public void count_workerRoleId() {
+    public void count_verifiedWorkerRole() {
         // Pre Conditions
         populateWorkers();
 
         // Exercise
-        int countWorkers = workerDaoImpl.countWorkers(
+        int countWorker = workerDaoImpl.countWorkers(
                 Collections.emptyList(),
                 Collections.emptyList(),
                 (long) WorkerRole.VERIFIED_WORKER.getId(),
@@ -378,7 +576,41 @@ public class WorkerDaoImplTest {
         );
 
         // Validations
-        assertEquals(FOUR_ELEMENTS, countWorkers);
+        assertEquals(THREE_ELEMENTS, countWorker);
+    }
+
+    @Test
+    public void count_unverifiedWorkerRole() {
+        // Pre Conditions
+        populateWorkers();
+
+        // Exercise
+        int countWorker = workerDaoImpl.countWorkers(
+                Collections.emptyList(),
+                Collections.emptyList(),
+                (long) WorkerRole.UNVERIFIED_WORKER.getId(),
+                EMPTY_FIELD
+        );
+
+        // Validations
+        assertEquals(TWO_ELEMENTS, countWorker);
+    }
+
+    @Test
+    public void count_rejectedWorkerRole() {
+        // Pre Conditions
+        populateWorkers();
+
+        // Exercise
+        int countWorker = workerDaoImpl.countWorkers(
+                Collections.emptyList(),
+                Collections.emptyList(),
+                (long) WorkerRole.REJECTED.getId(),
+                EMPTY_FIELD
+        );
+
+        // Validations
+        assertEquals(THREE_ELEMENTS, countWorker);
     }
 
     @Test
@@ -391,7 +623,7 @@ public class WorkerDaoImplTest {
         neighborhoodList.add(nhKey3);
 
         // Exercise
-        int countWorkers = workerDaoImpl.countWorkers(
+        int countWorker = workerDaoImpl.countWorkers(
                 professionList,
                 neighborhoodList,
                 EMPTY_FIELD,
@@ -399,18 +631,18 @@ public class WorkerDaoImplTest {
         );
 
         // Validations
-        assertEquals(TWO_ELEMENTS, countWorkers);
+        assertEquals(THREE_ELEMENTS, countWorker);
     }
 
     @Test
-    public void count_professionIds_workerRole() {
+    public void count_professionIds_verifiedWorkerRole() {
         // Pre Conditions
         populateWorkers();
         List<Long> professionList = new ArrayList<>();
         professionList.add(pKey2);
 
         // Exercise
-        int countWorkers = workerDaoImpl.countWorkers(
+        int countWorker = workerDaoImpl.countWorkers(
                 professionList,
                 Collections.emptyList(),
                 (long) WorkerRole.VERIFIED_WORKER.getId(),
@@ -418,18 +650,56 @@ public class WorkerDaoImplTest {
         );
 
         // Validations
-        assertEquals(THREE_ELEMENTS, countWorkers);
+        assertEquals(TWO_ELEMENTS, countWorker);
     }
 
     @Test
-    public void count_neighborhoodIds_workerRole() {
+    public void count_professionIds_unverifiedWorkerRole() {
+        // Pre Conditions
+        populateWorkers();
+        List<Long> professionList = new ArrayList<>();
+        professionList.add(pKey2);
+
+        // Exercise
+        int countWorker = workerDaoImpl.countWorkers(
+                professionList,
+                Collections.emptyList(),
+                (long) WorkerRole.UNVERIFIED_WORKER.getId(),
+                EMPTY_FIELD
+        );
+
+        // Validations
+        assertEquals(TWO_ELEMENTS, countWorker);
+    }
+
+    @Test
+    public void count_professionIds_rejectedWorkerRole() {
+        // Pre Conditions
+        populateWorkers();
+        List<Long> professionList = new ArrayList<>();
+        professionList.add(pKey2);
+
+        // Exercise
+        int countWorker = workerDaoImpl.countWorkers(
+                professionList,
+                Collections.emptyList(),
+                (long) WorkerRole.REJECTED.getId(),
+                EMPTY_FIELD
+        );
+
+        // Validations
+        assertEquals(TWO_ELEMENTS, countWorker);
+    }
+
+    @Test
+    public void count_neighborhoodIds_verifiedWorkerRole() {
         // Pre Conditions
         populateWorkers();
         List<Long> neighborhoodList = new ArrayList<>();
         neighborhoodList.add(nhKey2);
 
         // Exercise
-        int countWorkers = workerDaoImpl.countWorkers(
+        int countWorker = workerDaoImpl.countWorkers(
                 Collections.emptyList(),
                 neighborhoodList,
                 (long) WorkerRole.VERIFIED_WORKER.getId(),
@@ -437,11 +707,49 @@ public class WorkerDaoImplTest {
         );
 
         // Validations
-        assertEquals(THREE_ELEMENTS, countWorkers);
+        assertEquals(THREE_ELEMENTS, countWorker);
     }
 
     @Test
-    public void count_professionIds_neighborhoodIds_workerRole() {
+    public void count_neighborhoodIds_unverifiedWorkerRole() {
+        // Pre Conditions
+        populateWorkers();
+        List<Long> neighborhoodList = new ArrayList<>();
+        neighborhoodList.add(nhKey3);
+
+        // Exercise
+        int countWorker = workerDaoImpl.countWorkers(
+                Collections.emptyList(),
+                neighborhoodList,
+                (long) WorkerRole.UNVERIFIED_WORKER.getId(),
+                EMPTY_FIELD
+        );
+
+        // Validations
+        assertEquals(TWO_ELEMENTS, countWorker);
+    }
+
+    @Test
+    public void count_neighborhoodIds_rejectedWorkerRole() {
+        // Pre Conditions
+        populateWorkers();
+        List<Long> neighborhoodList = new ArrayList<>();
+        neighborhoodList.add(nhKey2);
+
+        // Exercise
+        int countWorker = workerDaoImpl.countWorkers(
+                Collections.emptyList(),
+                neighborhoodList,
+                (long) WorkerRole.REJECTED.getId(),
+                EMPTY_FIELD
+        );
+
+        // Validations
+        assertEquals(ONE_ELEMENT, countWorker);
+    }
+
+    @Test
+    public void count_professionIds_neighborhoodIds_verifiedWorkerRole() {
         // Pre Conditions
         populateWorkers();
         List<Long> professionList = new ArrayList<>();
@@ -450,7 +758,7 @@ public class WorkerDaoImplTest {
         neighborhoodList.add(nhKey2);
 
         // Exercise
-        int countWorkers = workerDaoImpl.countWorkers(
+        int countWorker = workerDaoImpl.countWorkers(
                 professionList,
                 neighborhoodList,
                 (long) WorkerRole.VERIFIED_WORKER.getId(),
@@ -458,7 +766,49 @@ public class WorkerDaoImplTest {
         );
 
         // Validations
-        assertEquals(TWO_ELEMENTS, countWorkers);
+        assertEquals(TWO_ELEMENTS, countWorker);
+    }
+
+    @Test
+    public void count_professionIds_neighborhoodIds_unverifiedWorkerRole() {
+        // Pre Conditions
+        populateWorkers();
+        List<Long> professionList = new ArrayList<>();
+        professionList.add(pKey2);
+        List<Long> neighborhoodList = new ArrayList<>();
+        neighborhoodList.add(nhKey3);
+
+        // Exercise
+        int countWorker = workerDaoImpl.countWorkers(
+                professionList,
+                neighborhoodList,
+                (long) WorkerRole.UNVERIFIED_WORKER.getId(),
+                EMPTY_FIELD
+        );
+
+        // Validations
+        assertEquals(TWO_ELEMENTS, countWorker);
+    }
+
+    @Test
+    public void count_professionIds_neighborhoodIds_rejectedWorkerRole() {
+        // Pre Conditions
+        populateWorkers();
+        List<Long> professionList = new ArrayList<>();
+        professionList.add(pKey2);
+        List<Long> neighborhoodList = new ArrayList<>();
+        neighborhoodList.add(nhKey2);
+
+        // Exercise
+        int countWorker = workerDaoImpl.countWorkers(
+                professionList,
+                neighborhoodList,
+                (long) WorkerRole.REJECTED.getId(),
+                EMPTY_FIELD
+        );
+
+        // Validations
+        assertEquals(ONE_ELEMENT, countWorker);
     }
 
     @Test
@@ -466,40 +816,14 @@ public class WorkerDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        int countWorkers = workerDaoImpl.countWorkers(
+        int countWorker = workerDaoImpl.countWorkers(
                 Collections.emptyList(),
                 Collections.emptyList(),
                 EMPTY_FIELD,
                 EMPTY_FIELD);
 
         // Validations
-        assertEquals(NO_ELEMENTS, countWorkers);
-    }
-
-    @Test
-    public void testGetWorkersByNeighborhoodAndSize() {
-        // Pre Conditions
-        populateWorkers();
-        List<Long> neighborhoods = Collections.singletonList(nhKey1);
-
-        // Exercise
-        List<Worker> workerList = workerDaoImpl.getWorkers(BASE_PAGE, BASE_PAGE_SIZE, Collections.emptyList(), neighborhoods, (long) WorkerRole.VERIFIED_WORKER.getId(), (long) WorkerStatus.NONE.getId());
-
-        // Validations
-        assertEquals(ONE_ELEMENT, workerList.size());
-    }
-
-    @Test
-    public void testGetWorkersByNeighborhoodAndSizeAndPage() {
-        // Pre Conditions
-        populateWorkers();
-        List<Long> neighborhoods = Collections.singletonList(nhKey1);
-
-        // Exercise
-        List<Worker> workerList = workerDaoImpl.getWorkers(TEST_PAGE, TEST_PAGE_SIZE, Collections.emptyList(), neighborhoods, (long) WorkerRole.VERIFIED_WORKER.getId(), (long) WorkerStatus.NONE.getId());
-
-        // Validations
-        assertEquals(ONE_ELEMENT, workerList.size());
+        assertEquals(NO_ELEMENTS, countWorker);
     }
 
     // ------------------------------------------------ DELETES --------------------------------------------------------
@@ -541,6 +865,9 @@ public class WorkerDaoImplTest {
 	}
 
 */
+
+    // ----------------------------------------------- POPULATION ------------------------------------------------------
+
     private void populateWorkers() {
 
         // Professions, Neighborhoods, Role(VERIFIED, UNVERIFIED, REJECTED)
@@ -575,11 +902,18 @@ public class WorkerDaoImplTest {
         testInserter.createSpecialization(uKey4, pKey2);
 
         testInserter.createAffiliation(uKey1, nhKey2, WorkerRole.VERIFIED_WORKER);
-        testInserter.createAffiliation(uKey1, nhKey3, WorkerRole.UNVERIFIED_WORKER);
         testInserter.createAffiliation(uKey2, nhKey2, WorkerRole.VERIFIED_WORKER);
         testInserter.createAffiliation(uKey3, nhKey2, WorkerRole.VERIFIED_WORKER);
-        testInserter.createAffiliation(uKey3, nhKey4, WorkerRole.REJECTED);
         testInserter.createAffiliation(uKey4, nhKey2, WorkerRole.REJECTED);
-        testInserter.createAffiliation(uKey4, nhKey3, WorkerRole.VERIFIED_WORKER);
+
+        testInserter.createAffiliation(uKey1, nhKey3, WorkerRole.UNVERIFIED_WORKER);
+        testInserter.createAffiliation(uKey2, nhKey3, WorkerRole.VERIFIED_WORKER);
+        testInserter.createAffiliation(uKey3, nhKey3, WorkerRole.VERIFIED_WORKER);
+        testInserter.createAffiliation(uKey4, nhKey3, WorkerRole.UNVERIFIED_WORKER);
+
+        testInserter.createAffiliation(uKey1, nhKey4, WorkerRole.UNVERIFIED_WORKER);
+        testInserter.createAffiliation(uKey2, nhKey4, WorkerRole.REJECTED);
+        testInserter.createAffiliation(uKey3, nhKey4, WorkerRole.REJECTED);
+        testInserter.createAffiliation(uKey4, nhKey4, WorkerRole.REJECTED);
     }
 }

@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-
 import java.util.List;
 
 import static ar.edu.itba.paw.persistence.TestConstants.*;
@@ -34,24 +33,21 @@ public class TagMappingDaoImplTest {
     public static final String TAG_NAME_2 = "Tag Name 2";
     public static final String TAG_NAME_3 = "Tag Name 3";
     public static final String TAG_NAME_4 = "Tag Name 4";
-    @Autowired
-    private DataSource ds;
-    @Autowired
-    private TestInserter testInserter;
-    private JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    private TagMappingDaoImpl tagMappingDaoImpl;
-
-    @PersistenceContext
-    private EntityManager em;
-
     private static long nhKey1;
     private static long nhKey2;
     private static long tKey1;
     private static long tKey2;
     private static long tKey3;
     private static long tKey4;
+    @Autowired
+    private DataSource ds;
+    @Autowired
+    private TestInserter testInserter;
+    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private TagMappingDaoImpl tagMappingDaoImpl;
+    @PersistenceContext
+    private EntityManager em;
 
     @Before
     public void setUp() {
@@ -141,6 +137,27 @@ public class TagMappingDaoImplTest {
 
         // Validations & Post Conditions
         assertTrue(tagMappingsList.isEmpty());
+    }
+
+    // ---------------------------------------------- PAGINATION -------------------------------------------------------
+
+    @Test
+    public void get_pagination() {
+        // Pre Conditions
+        nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
+        tKey1 = testInserter.createTag(TAG_NAME_1);
+        tKey2 = testInserter.createTag(TAG_NAME_2);
+        tKey3 = testInserter.createTag(TAG_NAME_3);
+        testInserter.createTagMapping(nhKey1, tKey1);
+        testInserter.createTagMapping(nhKey1, tKey2);
+        testInserter.createTagMapping(nhKey2, tKey2);
+
+        // Exercise
+        List<TagMapping> tagMappingsList = tagMappingDaoImpl.getTagMappings(EMPTY_FIELD, EMPTY_FIELD, TEST_PAGE, TEST_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, tagMappingsList.size());
     }
 
     // ------------------------------------------------- COUNTS ---------------------------------------------------------
@@ -284,7 +301,9 @@ public class TagMappingDaoImplTest {
         assertFalse(deleted);
     }
 
-    private void populateTagMappings(){
+    // ----------------------------------------------- POPULATION ------------------------------------------------------
+
+    private void populateTagMappings() {
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
         tKey1 = testInserter.createTag(TAG_NAME_1);

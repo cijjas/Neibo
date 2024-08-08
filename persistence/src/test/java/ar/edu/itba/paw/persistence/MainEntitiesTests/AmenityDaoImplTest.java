@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.interfaces.persistence.AmenityDao;
 import ar.edu.itba.paw.models.Entities.Amenity;
+import ar.edu.itba.paw.persistence.MainEntitiesDaos.AmenityDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -33,8 +33,10 @@ public class AmenityDaoImplTest {
 
     private final String AMENITY_NAME_1 = "Amenity Name";
     private final String AMENITY_NAME_2 = "Amenity Name 2";
+    private final String AMENITY_NAME_3 = "Amenity Name 2";
     private final String AMENITY_DESCRIPTION_1 = "Amenity Description";
     private final String AMENITY_DESCRIPTION_2 = "Amenity Description 2";
+    private final String AMENITY_DESCRIPTION_3 = "Amenity Description 2";
 
     @Autowired
     private DataSource ds;
@@ -42,7 +44,7 @@ public class AmenityDaoImplTest {
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private AmenityDao amenityDaoImpl;
+    private AmenityDaoImpl amenityDaoImpl;
 
     @PersistenceContext
     private EntityManager em;
@@ -179,9 +181,27 @@ public class AmenityDaoImplTest {
         assertTrue(amenityList.isEmpty());
     }
 
+
+    // ---------------------------------------------- PAGINATION -------------------------------------------------------
+
+    @Test
+    public void get_pagination() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        testInserter.createAmenity(AMENITY_NAME_1, AMENITY_DESCRIPTION_1, nhKey);
+        testInserter.createAmenity(AMENITY_NAME_2, AMENITY_DESCRIPTION_2, nhKey);
+        testInserter.createAmenity(AMENITY_NAME_3, AMENITY_DESCRIPTION_3, nhKey);
+
+        // Exercise
+        List<Amenity> amenityList = amenityDaoImpl.getAmenities(nhKey, TEST_PAGE, TEST_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, amenityList.size());
+    }
+
     // ------------------------------------------------- COUNTS ---------------------------------------------------------
 
-     @Test
+    @Test
     public void count() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
@@ -204,20 +224,6 @@ public class AmenityDaoImplTest {
 
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countAmenities);
-    }
-
-    @Test
-    public void get_pagination() {
-        // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long aKey1 = testInserter.createAmenity(AMENITY_NAME_1, AMENITY_DESCRIPTION_1, nhKey);
-        long aKey2 = testInserter.createAmenity(AMENITY_NAME_2, AMENITY_DESCRIPTION_2, nhKey);
-
-        // Exercise
-        List<Amenity> amenityList = amenityDaoImpl.getAmenities(nhKey, BASE_PAGE, BASE_PAGE_SIZE);
-
-        // Validations & Post Conditions
-        assertEquals(ONE_ELEMENT, amenityList.size());
     }
 
     // ------------------------------------------------ DELETES --------------------------------------------------------

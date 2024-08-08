@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.interfaces.persistence.DayDao;
 import ar.edu.itba.paw.models.Entities.Day;
+import ar.edu.itba.paw.persistence.MainEntitiesDaos.DayDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -32,16 +32,15 @@ import static org.junit.Assert.*;
 public class DayDaoImplTest {
 
     private final String DAY_NAME = "TestDay";
+    @PersistenceContext
+    EntityManager em;
     @Autowired
     private DataSource ds;
     @Autowired
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private DayDao dayDaoImpl;
-
-    @PersistenceContext
-    EntityManager em;
+    private DayDaoImpl dayDaoImpl;
 
     @Before
     public void setUp() {

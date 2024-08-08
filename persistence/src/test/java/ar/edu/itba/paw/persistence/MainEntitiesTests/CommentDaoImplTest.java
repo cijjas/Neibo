@@ -247,7 +247,7 @@ public class CommentDaoImplTest {
 
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
-    public void get(){
+    public void get() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -263,11 +263,10 @@ public class CommentDaoImplTest {
         List<Comment> commentList = commentDaoImpl.getComments(pKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
-        assertFalse(commentList.isEmpty());
         assertEquals(TWO_ELEMENTS, commentList.size());
     }
 
-    public void get_empty(){
+    public void get_empty() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -280,6 +279,27 @@ public class CommentDaoImplTest {
 
         // Validations & Post Conditions
         assertTrue(commentList.isEmpty());
+    }
+
+    // ---------------------------------------------- PAGINATION -------------------------------------------------------
+
+    public void get_pagination() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey1 = testInserter.createPost(uKey, chKey, iKey);
+        long pKey2 = testInserter.createPost(uKey, chKey, iKey);
+        testInserter.createComment(uKey, pKey2);
+        testInserter.createComment(uKey, pKey1);
+        testInserter.createComment(uKey, pKey1);
+
+        // Exercise
+        List<Comment> commentList = commentDaoImpl.getComments(pKey1, TEST_PAGE, TEST_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, commentList.size());
     }
 
     // ------------------------------------------------- COUNTS --------------------------------------------------------
@@ -320,8 +340,8 @@ public class CommentDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-	public void delete_commentId_valid() {
-	    // Pre Conditions
+    public void delete_commentId_valid() {
+        // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
         long chKey = testInserter.createChannel();
@@ -329,18 +349,18 @@ public class CommentDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, iKey);
         long cKey = testInserter.createComment(uKey, pKey);
 
-	    // Exercise
-	    boolean deleted = commentDaoImpl.deleteComment(cKey);
+        // Exercise
+        boolean deleted = commentDaoImpl.deleteComment(cKey);
 
-	    // Validations & Post Conditions
+        // Validations & Post Conditions
         em.flush();
-	    assertTrue(deleted);
-	    assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.comments.name()));
-	}
+        assertTrue(deleted);
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.comments.name()));
+    }
 
     @Test
-	public void delete_commentId_invalid_commentId() {
-	    // Pre Conditions
+    public void delete_commentId_invalid_commentId() {
+        // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
         long chKey = testInserter.createChannel();
@@ -348,11 +368,11 @@ public class CommentDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, iKey);
         long cKey = testInserter.createComment(uKey, pKey);
 
-	    // Exercise
-	    boolean deleted = commentDaoImpl.deleteComment(INVALID_ID);
+        // Exercise
+        boolean deleted = commentDaoImpl.deleteComment(INVALID_ID);
 
-	    // Validations & Post Conditions
+        // Validations & Post Conditions
         em.flush();
-	    assertFalse(deleted);
-	}
+        assertFalse(deleted);
+    }
 }

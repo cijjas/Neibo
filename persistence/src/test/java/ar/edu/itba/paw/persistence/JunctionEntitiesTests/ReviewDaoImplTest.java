@@ -248,7 +248,7 @@ public class ReviewDaoImplTest {
         assertFalse(optionalReview.isPresent());
     }
 
-        @Test
+    @Test
     public void findLatestReview_workerId_userId_invalid_workerId_userId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
@@ -343,6 +343,30 @@ public class ReviewDaoImplTest {
 
         // Validations & Post Conditions
         assertTrue(reviewList.isEmpty());
+    }
+
+    // ---------------------------------------------- PAGINATION -------------------------------------------------------
+
+    @Test
+    public void get_pagination() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(TestConstants.USER_MAIL_2, nhKey); // Reviewer
+        long uKey3 = testInserter.createUser(TestConstants.USER_MAIL_3, nhKey); // Reviewer
+        long uKey4 = testInserter.createUser(TestConstants.USER_MAIL_4, nhKey); // Reviewer
+        long pKey = testInserter.createProfession();
+        testInserter.createWorker(uKey);
+        testInserter.createSpecialization(uKey, pKey);
+        long rKey1 = testInserter.createReview(uKey, uKey2);
+        long rKey2 = testInserter.createReview(uKey, uKey3);
+        long rKey3 = testInserter.createReview(uKey, uKey4);
+
+        // Exercise
+        List<Review> reviewList = ReviewDaoImpl.getReviews(uKey, TEST_PAGE, TEST_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, reviewList.size());
     }
 
     // ------------------------------------------------- COUNTS --------------------------------------------------------

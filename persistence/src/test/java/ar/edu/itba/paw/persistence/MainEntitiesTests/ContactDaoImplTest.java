@@ -72,84 +72,84 @@ public class ContactDaoImplTest {
 
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
-	@Test
-	public void find_contactId_valid() {
-	    // Pre Conditions
+    @Test
+    public void find_contactId_valid() {
+        // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long cKey = testInserter.createContact(nhKey);
 
-	    // Exercise
-	    Optional<Contact> optionalContact = contactDaoImpl.findContact(cKey);
+        // Exercise
+        Optional<Contact> optionalContact = contactDaoImpl.findContact(cKey);
 
-	    // Validations & Post Conditions
-	    assertTrue(optionalContact.isPresent());
-		assertEquals(cKey, optionalContact.get().getContactId().longValue());
-	}
+        // Validations & Post Conditions
+        assertTrue(optionalContact.isPresent());
+        assertEquals(cKey, optionalContact.get().getContactId().longValue());
+    }
 
     @Test
-	public void find_contactId_invalid_contactId() {
-	    // Pre Conditions
+    public void find_contactId_invalid_contactId() {
+        // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
 
-	    // Exercise
-	    Optional<Contact> optionalContact = contactDaoImpl.findContact(INVALID_ID);
+        // Exercise
+        Optional<Contact> optionalContact = contactDaoImpl.findContact(INVALID_ID);
 
-	    // Validations & Post Conditions
-	    assertFalse(optionalContact.isPresent());
-	}
-
-	@Test
-	public void find_contactId_neighborhoodId_valid() {
-	    // Pre Conditions
-        long nhKey = testInserter.createNeighborhood();
-        long cKey = testInserter.createContact(nhKey);
-
-	    // Exercise
-	    Optional<Contact> optionalContact = contactDaoImpl.findContact(cKey, nhKey);
-
-	    // Validations & Post Conditions
-	    assertTrue(optionalContact.isPresent());
-		assertEquals(cKey, optionalContact.get().getContactId().longValue());
-	}
+        // Validations & Post Conditions
+        assertFalse(optionalContact.isPresent());
+    }
 
     @Test
-	public void find_contactId_neighborhoodId_invalid_contactId() {
-	    // Pre Conditions
+    public void find_contactId_neighborhoodId_valid() {
+        // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long cKey = testInserter.createContact(nhKey);
 
-	    // Exercise
-	    Optional<Contact> optionalContact = contactDaoImpl.findContact(INVALID_ID, nhKey);
+        // Exercise
+        Optional<Contact> optionalContact = contactDaoImpl.findContact(cKey, nhKey);
 
-	    // Validations & Post Conditions
-	    assertFalse(optionalContact.isPresent());
-	}
+        // Validations & Post Conditions
+        assertTrue(optionalContact.isPresent());
+        assertEquals(cKey, optionalContact.get().getContactId().longValue());
+    }
 
     @Test
-	public void find_contactId_neighborhoodId_invalid_neighborhoodId() {
-	    // Pre Conditions
+    public void find_contactId_neighborhoodId_invalid_contactId() {
+        // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long cKey = testInserter.createContact(nhKey);
 
-	    // Exercise
-	    Optional<Contact> optionalContact = contactDaoImpl.findContact(cKey, INVALID_ID);
+        // Exercise
+        Optional<Contact> optionalContact = contactDaoImpl.findContact(INVALID_ID, nhKey);
 
-	    // Validations & Post Conditions
-	    assertFalse(optionalContact.isPresent());
-	}
+        // Validations & Post Conditions
+        assertFalse(optionalContact.isPresent());
+    }
 
     @Test
-	public void find_contactId_neighborhoodId_invalid_contactId_neighborhoodId() {
-	    // Pre Conditions
+    public void find_contactId_neighborhoodId_invalid_neighborhoodId() {
+        // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long cKey = testInserter.createContact(nhKey);
 
-	    // Exercise
-	    Optional<Contact> optionalContact = contactDaoImpl.findContact(INVALID_ID, INVALID_ID);
+        // Exercise
+        Optional<Contact> optionalContact = contactDaoImpl.findContact(cKey, INVALID_ID);
 
-	    // Validations & Post Conditions
-	    assertFalse(optionalContact.isPresent());
-	}
+        // Validations & Post Conditions
+        assertFalse(optionalContact.isPresent());
+    }
+
+    @Test
+    public void find_contactId_neighborhoodId_invalid_contactId_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long cKey = testInserter.createContact(nhKey);
+
+        // Exercise
+        Optional<Contact> optionalContact = contactDaoImpl.findContact(INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalContact.isPresent());
+    }
 
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
@@ -157,7 +157,7 @@ public class ContactDaoImplTest {
     public void get() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        testInserter.createContact(nhKey, CONTACT_NAME, CONTACT_ADDRESS, CONTACT_NUMBER);
+        testInserter.createContact(nhKey);
 
         // Exercise
         List<Contact> contactList = contactDaoImpl.getContacts(nhKey, BASE_PAGE, BASE_PAGE_SIZE);
@@ -178,13 +178,30 @@ public class ContactDaoImplTest {
         assertTrue(contactList.isEmpty());
     }
 
+    // ---------------------------------------------- PAGINATION -------------------------------------------------------
+
+    @Test
+    public void get_pagination() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        testInserter.createContact(nhKey);
+        testInserter.createContact(nhKey);
+        testInserter.createContact(nhKey);
+
+        // Exercise
+        List<Contact> contactList = contactDaoImpl.getContacts(nhKey, TEST_PAGE, TEST_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, contactList.size());
+    }
+
     // ------------------------------------------------- COUNTS --------------------------------------------------------
 
     @Test
     public void count() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
-        testInserter.createContact(nhKey, CONTACT_NAME, CONTACT_ADDRESS, CONTACT_NUMBER);
+        testInserter.createContact(nhKey);
 
         // Exercise
         int countContacts = contactDaoImpl.countContacts(nhKey);

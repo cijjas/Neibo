@@ -220,6 +220,27 @@ public class AffiliationDaoImplTest {
         assertTrue(affiliationList.isEmpty());
     }
 
+    // ---------------------------------------------- PAGINATION -------------------------------------------------------
+
+    @Test
+    public void get_pagination() {
+        // Pre Conditions
+        long nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        long nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
+        long nhKey3 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_3);
+        long uKey = testInserter.createUser(nhKey1);
+        testInserter.createWorker(uKey);
+        testInserter.createAffiliation(uKey, nhKey1);
+        testInserter.createAffiliation(uKey, nhKey2);
+        testInserter.createAffiliation(uKey, nhKey3);
+
+        // Exercise
+        List<Affiliation> affiliationList = affiliationDaoImpl.getAffiliations(EMPTY_FIELD, EMPTY_FIELD, TEST_PAGE, TEST_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, affiliationList.size());
+    }
+
     // ------------------------------------------------- COUNTS ---------------------------------------------------------
 
     @Test
@@ -288,7 +309,7 @@ public class AffiliationDaoImplTest {
         testInserter.createAffiliation(uKey2, nhKey);
 
         // Exercise
-        int countAffiliations= affiliationDaoImpl.countAffiliations(uKey, nhKey);
+        int countAffiliations = affiliationDaoImpl.countAffiliations(uKey, nhKey);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countAffiliations);

@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.interfaces.persistence.TimeDao;
 import ar.edu.itba.paw.models.Entities.Time;
+import ar.edu.itba.paw.persistence.MainEntitiesDaos.TimeDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -40,7 +40,7 @@ public class TimeDaoImplTest {
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private TimeDao timeDaoImpl;
+    private TimeDaoImpl timeDaoImpl;
 
     @PersistenceContext
     private EntityManager em;

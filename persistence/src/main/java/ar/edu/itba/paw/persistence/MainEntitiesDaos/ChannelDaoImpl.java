@@ -87,11 +87,11 @@ public class ChannelDaoImpl implements ChannelDao {
     public int countChannels(final long neighborhoodId) {
         LOGGER.debug("Counting Channels from Neighborhood {}", neighborhoodId);
 
-        TypedQuery<Integer> query = em.createQuery(
-                "SELECT COUNT(c) FROM Channel c JOIN c.neighborhoods n WHERE n.neighborhoodId = :neighborhoodId", Integer.class);
+        TypedQuery<Long> query = em.createQuery(
+                "SELECT COUNT(c) FROM Channel c JOIN c.neighborhoods n WHERE n.neighborhoodId = :neighborhoodId", Long.class);
         query.setParameter("neighborhoodId", neighborhoodId);
 
-        return query.getSingleResult();
+        return query.getSingleResult().intValue();
     }
 
     // -------------------------------------------- CHANNELS DELETE ----------------------------------------------------

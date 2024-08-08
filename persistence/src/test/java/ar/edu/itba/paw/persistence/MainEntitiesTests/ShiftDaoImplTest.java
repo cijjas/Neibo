@@ -22,7 +22,8 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
-import static ar.edu.itba.paw.persistence.TestConstants.*;
+import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
+import static ar.edu.itba.paw.persistence.TestConstants.ONE_ELEMENT;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -41,6 +42,7 @@ public class ShiftDaoImplTest {
 
     @PersistenceContext
     private EntityManager em;
+
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -105,7 +107,7 @@ public class ShiftDaoImplTest {
         long aKey1 = testInserter.createAmenity(nhKey);
         long dKey = testInserter.createDay();
         long tKey = testInserter.createTime();
-        long sKey = testInserter.createShift(dKey,tKey);
+        long sKey = testInserter.createShift(dKey, tKey);
         testInserter.createAvailability(aKey1, sKey);
 
         // Exercise
@@ -122,7 +124,7 @@ public class ShiftDaoImplTest {
         long aKey1 = testInserter.createAmenity(nhKey);
         long dKey = testInserter.createDay();
         long tKey = testInserter.createTime();
-        long sKey = testInserter.createShift(dKey,tKey);
+        long sKey = testInserter.createShift(dKey, tKey);
 
         // Exercise
         List<Shift> shiftList = shiftDaoImpl.getShifts(aKey1);

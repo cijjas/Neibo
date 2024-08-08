@@ -2,8 +2,8 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.exceptions.InsertionException;
-import ar.edu.itba.paw.models.Entities.*;
 import ar.edu.itba.paw.models.Entities.Department;
+import ar.edu.itba.paw.models.Entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockMultipartFile;
@@ -149,7 +149,7 @@ public class TestInserter {
         Resource resource = new Resource.Builder()
                 .title(title)
                 .description(description)
-                .image(em.find(Image.class,imageId))
+                .image(em.find(Image.class, imageId))
                 .neighborhood(em.find(Neighborhood.class, neighborhoodId))
                 .build();
         em.persist(resource);
@@ -204,7 +204,7 @@ public class TestInserter {
     }
 
     public long createTime(Time timeInterval) {
-        ar.edu.itba.paw.models.Entities.Time time =  new ar.edu.itba.paw.models.Entities.Time.Builder()
+        ar.edu.itba.paw.models.Entities.Time time = new ar.edu.itba.paw.models.Entities.Time.Builder()
                 .timeInterval(timeInterval)
                 .build();
         em.persist(time);
@@ -299,7 +299,7 @@ public class TestInserter {
     public long createProduct(String name, String description, Double price, boolean used,
                               long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
                               long sellerId,
-                              long departmentId, long units){
+                              long departmentId, long units) {
         Product product = new Product.Builder()
                 .name(name)
                 .description(description)
@@ -317,7 +317,7 @@ public class TestInserter {
         return product.getProductId();
     }
 
-    public long createDepartment(ar.edu.itba.paw.enums.Department departmentType){
+    public long createDepartment(ar.edu.itba.paw.enums.Department departmentType) {
         final Department department = new Department.Builder()
                 .department(departmentType)
                 .build();
@@ -326,7 +326,7 @@ public class TestInserter {
         return department.getDepartmentId();
     }
 
-    public long createInquiry(String message, String reply, long productId, long userId){
+    public long createInquiry(String message, String reply, long productId, long userId) {
         Inquiry inquiry = new Inquiry.Builder()
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
@@ -337,7 +337,7 @@ public class TestInserter {
         return inquiry.getInquiryId();
     }
 
-    public long createRequest(long productId, long userId, String message, RequestStatus requestStatus){
+    public long createRequest(long productId, long userId, String message, RequestStatus requestStatus) {
         Request request = new Request.Builder()
                 .product(em.find(Product.class, productId))
                 .user(em.find(User.class, userId))
@@ -349,7 +349,7 @@ public class TestInserter {
         return request.getRequestId();
     }
 
-    public void createTagMapping(long neighborhoodId, long tagId){
+    public void createTagMapping(long neighborhoodId, long tagId) {
         TagMapping tagMapping = new TagMapping(em.find(Neighborhood.class, neighborhoodId), em.find(Tag.class, tagId));
         em.persist(tagMapping);
         em.flush();
@@ -503,7 +503,7 @@ public class TestInserter {
     }
 
     public long createProduct(long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
-                              long sellerId, long departmentId){
+                              long sellerId, long departmentId) {
         String name = "Iphone";
         String description = "Super Iphone";
         double price = 23432;
@@ -513,32 +513,37 @@ public class TestInserter {
     }
 
     public long createProduct(String name, long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,
-                              long sellerId, long departmentId, Long buyerId){
+                              long sellerId, long departmentId, Long buyerId) {
         String description = "Super Iphone";
         double price = 23432;
         boolean used = true;
         long units = 1L;
         long pKey = createProduct(name, description, price, used, primaryPictureId, secondaryPictureId, tertiaryPictureId, sellerId, departmentId, units);
-        if (buyerId != null){
+        if (buyerId != null) {
             createRequest(pKey, buyerId, "Gimme that", RequestStatus.ACCEPTED);
             em.find(Product.class, pKey).setRemainingUnits(0L);
         }
         return pKey;
     }
 
-    public long createDepartment(){
+    public long createDepartment() {
         return createDepartment(ar.edu.itba.paw.enums.Department.ARTS_CRAFTS);
     }
 
-    public long createInquiry(long productId, long userId){
+    public long createInquiry(long productId, long userId) {
         String message = "Hohohoho que caro esta todo";
         String reply = "Asi es la vida";
         return createInquiry(message, reply, productId, userId);
     }
 
-    public long createRequest(long productId, long userId){
+    public long createRequest(long productId, long userId) {
         String message = "Hello";
         return createRequest(productId, userId, message, RequestStatus.REQUESTED);
+    }
+
+    public long createRequest(long productId, long userId, RequestStatus rq) {
+        String message = "Hello";
+        return createRequest(productId, userId, message, rq);
     }
 
     public void createAffiliation(long workerId, long neighborhoodId) {

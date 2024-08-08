@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.persistence.JunctionEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.interfaces.persistence.BookingDao;
 import ar.edu.itba.paw.models.Entities.Booking;
+import ar.edu.itba.paw.persistence.JunctionDaos.BookingDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -32,6 +32,12 @@ import static org.junit.Assert.*;
 @Rollback
 public class BookingDaoImplTest {
 
+    private static long nhKey;
+    private static long uKey1;
+    private static long uKey2;
+    private static long uKey3;
+    private static long aKey1;
+    private static long aKey2;
     private final Date BOOKING_DATE_1 = Date.valueOf("2024-12-12");
     private final Date BOOKING_DATE_2 = Date.valueOf("2024-12-11");
     private final Date BOOKING_DATE_3 = Date.valueOf("2024-12-10");
@@ -42,16 +48,9 @@ public class BookingDaoImplTest {
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private BookingDao bookingDaoImpl;
+    private BookingDaoImpl bookingDaoImpl;
     @PersistenceContext
     private EntityManager em;
-
-    private static long nhKey;
-    private static long uKey1;
-    private static long uKey2;
-    private static long uKey3;
-    private static long aKey1;
-    private static long aKey2;
 
     @Before
     public void setUp() {
@@ -72,7 +71,7 @@ public class BookingDaoImplTest {
         long avKey = testInserter.createAvailability(aKey, sKey);
 
         // Exercise
-        Booking booking= bookingDaoImpl.createBooking(uKey, avKey, BOOKING_DATE_1);
+        Booking booking = bookingDaoImpl.createBooking(uKey, avKey, BOOKING_DATE_1);
 
         // Validations & Post Conditions
         em.flush();
@@ -137,7 +136,7 @@ public class BookingDaoImplTest {
         assertEquals(THREE_ELEMENTS, bookingList.size());
     }
 
-        @Test
+    @Test
     public void get_userId() {
         // Pre Conditions
         populateBookings();
@@ -149,7 +148,7 @@ public class BookingDaoImplTest {
         assertEquals(TWO_ELEMENTS, bookingList.size());
     }
 
-            @Test
+    @Test
     public void get_amenityId() {
         // Pre Conditions
         populateBookings();
@@ -184,6 +183,33 @@ public class BookingDaoImplTest {
         assertTrue(bookingList.isEmpty());
     }
 
+    // ---------------------------------------------- PAGINATION -------------------------------------------------------
+
+    @Test
+    public void get_pagination() {
+        // Pre Conditions
+        nhKey = testInserter.createNeighborhood();
+        uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        uKey3 = testInserter.createUser(USER_MAIL_3, nhKey);
+        aKey1 = testInserter.createAmenity(nhKey);
+        aKey2 = testInserter.createAmenity(nhKey);
+        long dKey = testInserter.createDay();
+        long tKey = testInserter.createTime();
+        long sKey = testInserter.createShift(dKey, tKey);
+        long avKey1 = testInserter.createAvailability(aKey1, sKey);
+        testInserter.createAvailability(aKey2, sKey);
+        testInserter.createBooking(uKey1, avKey1, BOOKING_DATE_1);
+        testInserter.createBooking(uKey1, avKey1, BOOKING_DATE_2);
+        testInserter.createBooking(uKey1, avKey1, BOOKING_DATE_3);
+
+        // Exercise
+        List<Booking> bookingList = bookingDaoImpl.getBookings(EMPTY_FIELD, EMPTY_FIELD, TEST_PAGE, TEST_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, bookingList.size());
+    }
+
     // ------------------------------------------------- COUNTS ---------------------------------------------------------
 
     @Test
@@ -198,7 +224,7 @@ public class BookingDaoImplTest {
         assertEquals(THREE_ELEMENTS, countBookings);
     }
 
-        @Test
+    @Test
     public void count_userId() {
         // Pre Conditions
         populateBookings();
@@ -210,7 +236,7 @@ public class BookingDaoImplTest {
         assertEquals(TWO_ELEMENTS, countBookings);
     }
 
-            @Test
+    @Test
     public void count_amenityId() {
         // Pre Conditions
         populateBookings();
@@ -290,7 +316,7 @@ public class BookingDaoImplTest {
 
     // ----------------------------------------------- POPULATION ------------------------------------------------------
 
-    private void populateBookings(){
+    private void populateBookings() {
         nhKey = testInserter.createNeighborhood();
         uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);

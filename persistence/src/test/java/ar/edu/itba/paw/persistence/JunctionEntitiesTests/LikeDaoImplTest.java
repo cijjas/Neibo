@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-
 import java.util.List;
 
 import static ar.edu.itba.paw.persistence.TestConstants.*;
@@ -31,6 +30,11 @@ import static org.junit.Assert.*;
 @Rollback
 public class LikeDaoImplTest {
 
+    private static long nhKey;
+    private static long uKey1;
+    private static long uKey2;
+    private static long pKey1;
+    private static long pKey2;
     @Autowired
     private DataSource ds;
     @Autowired
@@ -41,11 +45,6 @@ public class LikeDaoImplTest {
     @PersistenceContext
     private EntityManager em;
 
-    private static long nhKey;
-    private static long uKey1;
-    private static long uKey2;
-    private static long pKey1;
-    private static long pKey2;
     @Before
     public void setUp() {
         jdbcTemplate = new JdbcTemplate(ds);
@@ -76,7 +75,7 @@ public class LikeDaoImplTest {
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test
-    public void get(){
+    public void get() {
         // Pre Conditions
         populateLikes();
 
@@ -88,7 +87,7 @@ public class LikeDaoImplTest {
     }
 
     @Test
-    public void get_neighborhoodId_userId(){
+    public void get_neighborhoodId_userId() {
         // Pre Conditions
         populateLikes();
 
@@ -100,7 +99,7 @@ public class LikeDaoImplTest {
     }
 
     @Test
-    public void get_neighborhoodId_postId(){
+    public void get_neighborhoodId_postId() {
         // Pre Conditions
         populateLikes();
 
@@ -112,7 +111,7 @@ public class LikeDaoImplTest {
     }
 
     @Test
-    public void get_neighborhoodId_userId_postId(){
+    public void get_neighborhoodId_userId_postId() {
         // Pre Conditions
         populateLikes();
 
@@ -124,7 +123,7 @@ public class LikeDaoImplTest {
     }
 
     @Test
-    public void get_empty(){
+    public void get_empty() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
@@ -141,10 +140,24 @@ public class LikeDaoImplTest {
         assertTrue(likeList.isEmpty());
     }
 
+    // ---------------------------------------------- PAGINATION -------------------------------------------------------
+
+    @Test
+    public void get_pagination() {
+        // Pre Conditions
+        populateLikes();
+
+        // Exercise
+        List<Like> likeList = likeDaoImpl.getLikes(EMPTY_FIELD, EMPTY_FIELD, nhKey, TEST_PAGE, TEST_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, likeList.size());
+    }
+
     // ------------------------------------------------- COUNTS ---------------------------------------------------------
 
     @Test
-    public void count(){
+    public void count() {
         // Pre Conditions
         populateLikes();
 
@@ -156,7 +169,7 @@ public class LikeDaoImplTest {
     }
 
     @Test
-    public void count_neighborhoodId_userId(){
+    public void count_neighborhoodId_userId() {
         // Pre Conditions
         populateLikes();
 
@@ -168,7 +181,7 @@ public class LikeDaoImplTest {
     }
 
     @Test
-    public void count_neighborhoodId_postId(){
+    public void count_neighborhoodId_postId() {
         // Pre Conditions
         populateLikes();
 
@@ -180,7 +193,7 @@ public class LikeDaoImplTest {
     }
 
     @Test
-    public void count_neighborhoodId_userId_postId(){
+    public void count_neighborhoodId_userId_postId() {
         // Pre Conditions
         populateLikes();
 
@@ -192,7 +205,7 @@ public class LikeDaoImplTest {
     }
 
     @Test
-    public void count_empty(){
+    public void count_empty() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
@@ -286,7 +299,7 @@ public class LikeDaoImplTest {
 
     // ----------------------------------------------- POPULATION ------------------------------------------------------
 
-    private void populateLikes(){
+    private void populateLikes() {
         nhKey = testInserter.createNeighborhood();
         uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
         uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);

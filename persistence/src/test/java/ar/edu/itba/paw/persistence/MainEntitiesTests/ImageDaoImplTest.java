@@ -1,8 +1,8 @@
 package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.interfaces.persistence.ImageDao;
 import ar.edu.itba.paw.models.Entities.Image;
+import ar.edu.itba.paw.persistence.MainEntitiesDaos.ImageDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -41,7 +41,7 @@ public class ImageDaoImplTest {
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private ImageDao imageDaoImpl;
+    private ImageDaoImpl imageDaoImpl;
 
     @PersistenceContext
     private EntityManager em;
@@ -99,28 +99,28 @@ public class ImageDaoImplTest {
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-	public void delete_imageId_valid() {
-	    // Pre Conditions
+    public void delete_imageId_valid() {
+        // Pre Conditions
         long iKey = testInserter.createImage();
 
-	    // Exercise
-	    boolean deleted = imageDaoImpl.deleteImage(iKey);
+        // Exercise
+        boolean deleted = imageDaoImpl.deleteImage(iKey);
 
-	    // Validations & Post Conditions
-		em.flush();
-	    assertTrue(deleted);
-	    assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.images.name()));
-	}
+        // Validations & Post Conditions
+        em.flush();
+        assertTrue(deleted);
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.images.name()));
+    }
 
     @Test
-	public void delete_imageId_invalid_imageId() {
-	    // Pre Conditions
+    public void delete_imageId_invalid_imageId() {
+        // Pre Conditions
 
-	    // Exercise
-	    boolean deleted = imageDaoImpl.deleteImage(INVALID_ID);
+        // Exercise
+        boolean deleted = imageDaoImpl.deleteImage(INVALID_ID);
 
-	    // Validations & Post Conditions
-		em.flush();
-	    assertFalse(deleted);
-	}
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
 }

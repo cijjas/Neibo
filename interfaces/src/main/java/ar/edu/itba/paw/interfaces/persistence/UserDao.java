@@ -24,7 +24,7 @@ public interface UserDao {
 
     List<User> getUsers(Long userRoleId, long neighborhoodId, int page, int size);
 
-    int countTotalUsers(Long userRoleId, long neighborhoodId);
+    int countUsers(Long userRoleId, long neighborhoodId);
 
     List<User> getEventUsers(long eventId);
 

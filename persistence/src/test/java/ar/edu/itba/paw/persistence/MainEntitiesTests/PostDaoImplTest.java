@@ -1,9 +1,8 @@
 package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.interfaces.persistence.PostDao;
 import ar.edu.itba.paw.models.Entities.Post;
-import ar.edu.itba.paw.persistence.MainEntitiesDaos.UserDaoImpl;
+import ar.edu.itba.paw.persistence.MainEntitiesDaos.PostDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -57,7 +56,7 @@ public class PostDaoImplTest {
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private PostDao postDaoImpl;
+    private PostDaoImpl postDaoImpl;
     private long nhKey1;
     private long nhKey2;
     private long tKey1;
@@ -71,8 +70,6 @@ public class PostDaoImplTest {
 
     @PersistenceContext
     private EntityManager em;
-    @Autowired
-    private UserDaoImpl userDaoImpl;
 
     @Before
     public void setUp() {
@@ -320,10 +317,26 @@ public class PostDaoImplTest {
         assertTrue(postList.isEmpty());
     }
 
+    // ---------------------------------------------- PAGINATION -------------------------------------------------------
+
+    @Test
+    public void get_pagination() {
+        // Pre Conditions
+        populatePosts();
+        List<Long> TAG_LIST = new ArrayList<>();
+        TAG_LIST.add(tKey2);
+
+        // Exercise
+        List<Post> postList = postDaoImpl.getPosts(chKey2, TEST_PAGE, TEST_PAGE_SIZE, TAG_LIST, nhKey2, EMPTY_FIELD, EMPTY_FIELD);
+
+        // Validations
+        assertEquals(ONE_ELEMENT, postList.size());
+    }
+
     // ------------------------------------------------- COUNTS --------------------------------------------------------
 
     // HSQL does not accept queries with SELECT COUNT(DISTINCT p.*) org.hsqldb.HsqlException: unexpected token: )
-        @Test
+    @Test
     public void count() {
         // Pre Conditions
         populatePosts();
@@ -361,7 +374,6 @@ public class PostDaoImplTest {
         assertEquals(TWO_ELEMENTS, countPosts);
     }
 
-
     @Test
     public void count_userId() {
         // Pre Conditions
@@ -388,7 +400,6 @@ public class PostDaoImplTest {
         assertEquals(TWO_ELEMENTS, countPosts);
     }
 
-
     @Test
     public void count_channelId_userId() {
         // Pre Conditions
@@ -400,7 +411,6 @@ public class PostDaoImplTest {
         // Validations
         assertEquals(TWO_ELEMENTS, countPosts);
     }
-
 
     @Test
     public void count_userId_tagList() {
@@ -441,20 +451,6 @@ public class PostDaoImplTest {
         assertEquals(NO_ELEMENTS, countPosts);
     }
 
-    @Test
-    public void get_pagination() {
-        // Pre Conditions
-        populatePosts();
-        List<Long> TAG_LIST = new ArrayList<>();
-        TAG_LIST.add(tKey2);
-
-        // Exercise
-        List<Post> postList = postDaoImpl.getPosts(chKey2, TEST_PAGE, TEST_PAGE_SIZE, TAG_LIST, nhKey2, EMPTY_FIELD, EMPTY_FIELD);
-
-        // Validations
-        assertEquals(ONE_ELEMENT, postList.size());
-    }
-
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
@@ -492,7 +488,7 @@ public class PostDaoImplTest {
         assertFalse(deleted);
     }
 
-    // --------------------------------------------------- HELPERS -----------------------------------------------------
+    // ----------------------------------------------- POPULATION ------------------------------------------------------
 
     private void populatePosts() {
         // [U1, C1, {}]

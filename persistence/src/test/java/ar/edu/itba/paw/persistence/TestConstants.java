@@ -2,18 +2,21 @@ package ar.edu.itba.paw.persistence;
 
 public class TestConstants {
     public static final int BASE_PAGE = 1;
-    public static final int BASE_PAGE_SIZE = 10;
+    public static final int BASE_PAGE_SIZE = 20;
     public static final int TEST_PAGE = 2;
     public static final int TEST_PAGE_SIZE = 1;
 
     public static final int INVALID_ID = -1;
-    public static final long INVALID_LONG_ID  = -1L;
+    public static final long INVALID_LONG_ID = -1L;
     public static final String INVALID_STRING_ID = "INVALID";
 
     public static final String USER_MAIL_1 = "usermail1@test.com";
     public static final String USER_MAIL_2 = "usermail2@test.com";
     public static final String USER_MAIL_3 = "usermail3@test.com";
     public static final String USER_MAIL_4 = "usermail4@test.com";
+    public static final String USER_MAIL_5 = "usermail5@test.com";
+    public static final String USER_MAIL_6 = "usermail6@test.com";
+    public static final String USER_MAIL_7 = "usermail7@test.com";
     public static final String WORKER_MAIL_1 = "workermail1@test.com";
     public static final String WORKER_MAIL_2 = "workermail2@test.com";
     public static final String WORKER_MAIL_3 = "workermail3@test.com";
@@ -33,6 +36,13 @@ public class TestConstants {
     public static final int FIVE_ELEMENTS = 5;
     public static final int SIX_ELEMENTS = 6;
     public static final int SEVEN_ELEMENTS = 7;
+    public static final int EIGHT_ELEMENTS = 8;
+    public static final int NINE_ELEMENTS = 9;
+    public static final int TEN_ELEMENTS = 10;
+    public static final int ELEVEN_ELEMENTS = 11;
+    public static final int TWELVE_ELEMENTS = 12;
+    public static final int THIRTEEN_ELEMENTS = 13;
+    public static final int NINETEEN_ELEMENTS = 19;
 
     public static final Long EMPTY_FIELD = null;
 

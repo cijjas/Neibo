@@ -249,6 +249,30 @@ public class AttendanceDaoImplTest {
         assertTrue(attendanceList.isEmpty());
     }
 
+
+    // ---------------------------------------------- PAGINATION -------------------------------------------------------
+
+    @Test
+    public void get_pagination() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey1 = testInserter.createUser(USER_MAIL_1, nhKey);
+        long uKey2 = testInserter.createUser(USER_MAIL_2, nhKey);
+        long uKey3 = testInserter.createUser(USER_MAIL_3, nhKey);
+        long tKey1 = testInserter.createTime();
+        long tKey2 = testInserter.createTime();
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2);
+        testInserter.createAttendance(uKey1, eKey1);
+        testInserter.createAttendance(uKey2, eKey1);
+        testInserter.createAttendance(uKey3, eKey1);
+
+        // Exercise
+        List<Attendance> attendanceList = attendanceDaoImpl.getAttendance(eKey1, TEST_PAGE, TEST_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, attendanceList.size());
+    }
+
     // ------------------------------------------------- COUNTS ---------------------------------------------------------
 
     @Test
@@ -266,7 +290,7 @@ public class AttendanceDaoImplTest {
         testInserter.createAttendance(uKey2, eKey1);
 
         // Exercise
-       int countAttendance = attendanceDaoImpl.countAttendance(eKey1);
+        int countAttendance = attendanceDaoImpl.countAttendance(eKey1);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countAttendance);
@@ -286,6 +310,7 @@ public class AttendanceDaoImplTest {
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countAttendance);
     }
+
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test

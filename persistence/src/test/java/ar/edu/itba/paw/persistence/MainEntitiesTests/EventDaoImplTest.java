@@ -33,16 +33,14 @@ import static org.junit.Assert.*;
 @Rollback
 public class EventDaoImplTest {
 
+    public static final String START_DATE = "2024-3-10";
+    public static final Date END_DATE = Date.valueOf("2024-3-24");
+    public static final String NO_DATE = null;
     private static final String EVENT_NAME = "Sample Event";
     private static final String EVENT_DESCRIPTION = "Sample Description";
     private static final Date EVENT_DATE = Date.valueOf("2024-3-12");
     private static final Time EVENT_START_TIME = Time.valueOf("22:00:00");
     private static final Time EVENT_END_TIME = Time.valueOf("23:00:00");
-
-    public static final String START_DATE = "2024-3-10";
-    public static final Date END_DATE = Date.valueOf("2024-3-24");
-    public static final String NO_DATE = null;
-
     @Autowired
     private DataSource ds;
     @Autowired
@@ -179,7 +177,7 @@ public class EventDaoImplTest {
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test
-    public void getEventsOnDateRange_eventRange_neighborhoodId(){
+    public void get() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime(EVENT_START_TIME);
@@ -196,7 +194,7 @@ public class EventDaoImplTest {
     }
 
     @Test
-    public void getEventsOnDateRange_neighborhoodId(){
+    public void get_empty() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long tKey1 = testInserter.createTime(EVENT_START_TIME);
@@ -210,6 +208,61 @@ public class EventDaoImplTest {
 
         // Validations & Post Conditions
         assertTrue(eventList.isEmpty());
+    }
+
+    // ---------------------------------------------- PAGINATION -------------------------------------------------------
+
+    @Test
+    public void get_pagination() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long tKey1 = testInserter.createTime(EVENT_START_TIME);
+        long tKey2 = testInserter.createTime(EVENT_END_TIME);
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
+        long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
+
+        // Exercise
+        List<Event> eventList = eventDaoImpl.getEvents(START_DATE, nhKey, TEST_PAGE, TEST_PAGE_SIZE);
+
+        // Validations & Post Conditions
+        assertEquals(ONE_ELEMENT, eventList.size());
+    }
+
+    // ------------------------------------------------- COUNTS ---------------------------------------------------------
+
+    @Test
+    public void count() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long tKey1 = testInserter.createTime(EVENT_START_TIME);
+        long tKey2 = testInserter.createTime(EVENT_END_TIME);
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
+        long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
+
+        // Exercise
+        int countEvent = eventDaoImpl.countEvents(START_DATE, nhKey);
+
+        // Validations & Post Conditions
+        assertEquals(THREE_ELEMENTS, countEvent);
+    }
+
+    @Test
+    public void count_empty() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long tKey1 = testInserter.createTime(EVENT_START_TIME);
+        long tKey2 = testInserter.createTime(EVENT_END_TIME);
+        long eKey1 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
+        long eKey2 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
+        long eKey3 = testInserter.createEvent(nhKey, tKey1, tKey2, EVENT_DATE);
+
+        // Exercise
+        int countEvents = eventDaoImpl.countEvents(NO_DATE, nhKey);
+
+        // Validations & Post Conditions
+        assertEquals(NO_ELEMENTS, countEvents);
     }
 
     // ------------------------------------------------ DELETES --------------------------------------------------------

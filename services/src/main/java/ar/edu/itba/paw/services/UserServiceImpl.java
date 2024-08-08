@@ -141,7 +141,7 @@ public class UserServiceImpl implements UserService {
         ValidationUtils.checkNeighborhoodIdInUsers(neighborhoodId);
         ValidationUtils.checkSize(size);
 
-        return PaginationUtils.calculatePages(userDao.countTotalUsers(userRoleId, neighborhoodId), size);
+        return PaginationUtils.calculatePages(userDao.countUsers(userRoleId, neighborhoodId), size);
     }
 
     // -----------------------------------------------------------------------------------------------------------------

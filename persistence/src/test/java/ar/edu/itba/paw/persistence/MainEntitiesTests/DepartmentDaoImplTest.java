@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-
 import java.util.Optional;
 
 import static ar.edu.itba.paw.persistence.TestConstants.INVALID_ID;
@@ -66,27 +65,27 @@ public class DepartmentDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-	public void find_departmentId_valid() {
-	    // Pre Conditions
+    public void find_departmentId_valid() {
+        // Pre Conditions
         long dKey = testInserter.createDepartment();
 
-	    // Exercise
-	    Optional<Department> optionalDepartment = departmentDaoImpl.findDepartment(dKey);
+        // Exercise
+        Optional<Department> optionalDepartment = departmentDaoImpl.findDepartment(dKey);
 
-	    // Validations & Post Conditions
-	    assertTrue(optionalDepartment.isPresent());
-		assertEquals(dKey, optionalDepartment.get().getDepartmentId().longValue());
-	}
+        // Validations & Post Conditions
+        assertTrue(optionalDepartment.isPresent());
+        assertEquals(dKey, optionalDepartment.get().getDepartmentId().longValue());
+    }
 
     @Test
-	public void find_departmentId_invalid_departmentId() {
-	    // Pre Conditions
+    public void find_departmentId_invalid_departmentId() {
+        // Pre Conditions
         long dKey = testInserter.createDepartment();
 
-	    // Exercise
-	    Optional<Department> optionalDepartment = departmentDaoImpl.findDepartment(INVALID_ID);
+        // Exercise
+        Optional<Department> optionalDepartment = departmentDaoImpl.findDepartment(INVALID_ID);
 
-	    // Validations & Post Conditions
-	    assertFalse(optionalDepartment.isPresent());
-	}
+        // Validations & Post Conditions
+        assertFalse(optionalDepartment.isPresent());
+    }
 }

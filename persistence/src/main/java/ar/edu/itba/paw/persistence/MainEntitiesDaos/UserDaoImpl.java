@@ -127,7 +127,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public int countTotalUsers(Long userRoleId, long neighborhoodId) {
+    public int countUsers(Long userRoleId, long neighborhoodId) {
         LOGGER.debug("Selecting Users Count that have Role {} and from Neighborhood {}", userRoleId, neighborhoodId);
 
         StringBuilder jpqlConditions = new StringBuilder("SELECT COUNT(u) FROM User u WHERE 1 = 1");

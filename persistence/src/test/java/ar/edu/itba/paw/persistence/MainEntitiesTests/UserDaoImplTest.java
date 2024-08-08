@@ -3,8 +3,8 @@ package ar.edu.itba.paw.persistence.MainEntitiesTests;
 import ar.edu.itba.paw.enums.Language;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.enums.UserRole;
-import ar.edu.itba.paw.interfaces.persistence.UserDao;
 import ar.edu.itba.paw.models.Entities.User;
+import ar.edu.itba.paw.persistence.MainEntitiesDaos.UserDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -48,7 +48,7 @@ public class UserDaoImplTest {
     private TestInserter testInserter;
     private JdbcTemplate jdbcTemplate;
     @Autowired
-    private UserDao userDaoImpl;
+    private UserDaoImpl userDaoImpl;
     private long nhKey1;
     private long nhKey2;
     private long uKey1;
@@ -201,7 +201,7 @@ public class UserDaoImplTest {
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
     @Test
-    public void testGetEventsByUser() {
+    public void getEventUsers() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
@@ -218,7 +218,7 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void testGetNoEventsByUser() {
+    public void getEventsUsers_empty() {
         // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
@@ -234,7 +234,7 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void testGetUsersByNeighborhood() {
+    public void get() {
         // Pre Conditions
         populateUsers();
 
@@ -242,11 +242,11 @@ public class UserDaoImplTest {
         List<User> userList = userDaoImpl.getUsers(EMPTY_FIELD, nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
-        assertEquals(TWO_ELEMENTS, userList.size());
+        assertEquals(SIX_ELEMENTS, userList.size());
     }
 
     @Test
-    public void testGetUsersByNeighborhoodAndRole() {
+    public void get_userRoleNeighbor() {
         // Pre Conditions
         populateUsers();
 
@@ -254,63 +254,154 @@ public class UserDaoImplTest {
         List<User> userList = userDaoImpl.getUsers((long) UserRole.NEIGHBOR.getId(), nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
-        assertEquals(TWO_ELEMENTS, userList.size());
+        assertEquals(THREE_ELEMENTS, userList.size());
     }
 
     @Test
-    public void testGetUsersByNeighborhoodAndSize() {
+    public void get_userRoleUnverified() {
         // Pre Conditions
         populateUsers();
 
         // Exercise
-        List<User> userList = userDaoImpl.getUsers((long) UserRole.NEIGHBOR.getId(), nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
+        List<User> userList = userDaoImpl.getUsers((long) UserRole.UNVERIFIED_NEIGHBOR.getId(), nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations
+        assertEquals(TWO_ELEMENTS, userList.size());
+    }
+
+    @Test
+    public void get_userRoleAdministrator() {
+        // Pre Conditions
+        populateUsers();
+
+        // Exercise
+        List<User> userList = userDaoImpl.getUsers((long) UserRole.ADMINISTRATOR.getId(), nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations
         assertEquals(ONE_ELEMENT, userList.size());
     }
 
     @Test
-    public void testGetUsersByNeighborhoodAndSizeAndPage() {
+    public void get_empty() {
+        // Pre Conditions
+
+        // Exercise
+        List<User> userList = userDaoImpl.getUsers(EMPTY_FIELD, nhKey1, BASE_PAGE, BASE_PAGE_SIZE);
+
+        // Validations
+        assertEquals(NO_ELEMENTS, userList.size());
+    }
+
+    // ---------------------------------------------- PAGINATION -------------------------------------------------------
+
+    @Test
+    public void get_pagination() {
+        // Pre Conditions
+        nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
+        uKey4 = testInserter.createUser(USER_MAIL_2, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
+        uKey4 = testInserter.createUser(USER_MAIL_3, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
+
+        // Exercise
+        List<User> userList = userDaoImpl.getUsers(EMPTY_FIELD, nhKey1, TEST_PAGE, TEST_PAGE_SIZE);
+
+        // Validations
+        assertEquals(ONE_ELEMENT, userList.size());
+    }
+
+    // ------------------------------------------------- COUNTS ---------------------------------------------------------
+
+    @Test
+    public void count() {
         // Pre Conditions
         populateUsers();
 
         // Exercise
-        List<User> userList = userDaoImpl.getUsers((long) UserRole.NEIGHBOR.getId(), nhKey1, TEST_PAGE, TEST_PAGE_SIZE);
+        int countUser = userDaoImpl.countUsers(EMPTY_FIELD, nhKey1);
 
         // Validations
-        assertEquals(ONE_ELEMENT, userList.size()); // Adjust based on the expected number of retrieved posts
+        assertEquals(SIX_ELEMENTS, countUser);
+    }
+
+    @Test
+    public void count_userRoleNeighbor() {
+        // Pre Conditions
+        populateUsers();
+
+        // Exercise
+        int countUser = userDaoImpl.countUsers((long) UserRole.NEIGHBOR.getId(), nhKey1);
+
+        // Validations
+        assertEquals(THREE_ELEMENTS, countUser);
+    }
+
+    @Test
+    public void count_userRoleUnverified() {
+        // Pre Conditions
+        populateUsers();
+
+        // Exercise
+        int countUser = userDaoImpl.countUsers((long) UserRole.UNVERIFIED_NEIGHBOR.getId(), nhKey1);
+
+        // Validations
+        assertEquals(TWO_ELEMENTS, countUser);
+    }
+
+    @Test
+    public void count_userRoleAdministrator() {
+        // Pre Conditions
+        populateUsers();
+
+        // Exercise
+        int countUser = userDaoImpl.countUsers((long) UserRole.ADMINISTRATOR.getId(), nhKey1);
+
+        // Validations
+        assertEquals(ONE_ELEMENT, countUser);
+    }
+
+    @Test
+    public void count_empty() {
+        // Pre Conditions
+
+        // Exercise
+        int countUser = userDaoImpl.countUsers(EMPTY_FIELD, nhKey1);
+
+        // Validations
+        assertEquals(NO_ELEMENTS, countUser);
     }
 
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
     @Test
-	public void delete_valid() {
-	    // Pre Conditions
+    public void delete_valid() {
+        // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
 
-	    // Exercise
-	    boolean deleted = userDaoImpl.deleteUser(uKey1);
+        // Exercise
+        boolean deleted = userDaoImpl.deleteUser(uKey1);
 
-	    // Validations & Post Conditions
-		em.flush();
-	    assertTrue(deleted);
-	    assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users.name()));
-	}
+        // Validations & Post Conditions
+        em.flush();
+        assertTrue(deleted);
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.users.name()));
+    }
 
-	@Test
-	public void delete_invalid_userId() {
-	    // Pre Conditions
+    @Test
+    public void delete_invalid_userId() {
+        // Pre Conditions
         nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
         uKey1 = testInserter.createUser(USER_MAIL_1, nhKey1);
 
-	    // Exercise
-	    boolean deleted = userDaoImpl.deleteUser(INVALID_ID);
+        // Exercise
+        boolean deleted = userDaoImpl.deleteUser(INVALID_ID);
 
-	    // Validations & Post Conditions
-		em.flush();
-	    assertFalse(deleted);
-	}
+        // Validations & Post Conditions
+        em.flush();
+        assertFalse(deleted);
+    }
+
+    // ----------------------------------------------- POPULATION ------------------------------------------------------
 
     private void populateUsers() {
         // Pre Conditions
@@ -318,8 +409,11 @@ public class UserDaoImplTest {
         nhKey2 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_2);
 
         uKey1 = testInserter.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
-        uKey2 = testInserter.createUser(USER_MAIL_2, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
-        uKey3 = testInserter.createUser(USER_MAIL_3, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey2, USER_LANGUAGE, USER_DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
-        uKey4 = testInserter.createUser(USER_MAIL_4, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey2, USER_LANGUAGE, USER_DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
+        uKey4 = testInserter.createUser(USER_MAIL_2, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
+        uKey4 = testInserter.createUser(USER_MAIL_3, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
+        uKey3 = testInserter.createUser(USER_MAIL_4, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
+        uKey4 = testInserter.createUser(USER_MAIL_5, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.UNVERIFIED_NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
+        uKey4 = testInserter.createUser(USER_MAIL_6, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, UserRole.ADMINISTRATOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
+        uKey4 = testInserter.createUser(USER_MAIL_7, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey2, USER_LANGUAGE, USER_DARK_MODE, UserRole.NEIGHBOR, USER_IDENTIFICATION_NUMBER, USER_CREATION_DATE);
     }
 }
