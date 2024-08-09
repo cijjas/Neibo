@@ -13,6 +13,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -87,7 +90,8 @@ public class EventDaoImpl implements EventDao {
 
         // Set the parameters
         if (date != null) {
-            query.setParameter("date", date);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            query.setParameter("date", Date.from(LocalDate.parse(date, formatter).atStartOfDay(ZoneId.systemDefault()).toInstant()));
         }
 
         query.setParameter("neighborhoodId", neighborhoodId);
@@ -95,7 +99,9 @@ public class EventDaoImpl implements EventDao {
         query.setMaxResults(size);
 
         // Get the list of event IDs
+        System.out.println("before execution");
         List<Long> eventIds = query.getResultList();
+        System.out.println("after execution");
 
         if (!eventIds.isEmpty()) {
             // Build the JPQL query for fetching events
@@ -122,7 +128,8 @@ public class EventDaoImpl implements EventDao {
         TypedQuery<Long> query = em.createQuery(jpqlBuilder.toString(), Long.class);
 
         if (date != null) {
-            query.setParameter("date", date);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            query.setParameter("date", Date.from(LocalDate.parse(date, formatter).atStartOfDay(ZoneId.systemDefault()).toInstant()));
         }
 
         query.setParameter("neighborhoodId", neighborhoodId);

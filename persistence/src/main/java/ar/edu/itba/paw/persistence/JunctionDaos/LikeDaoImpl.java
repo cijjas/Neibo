@@ -85,7 +85,11 @@ public class LikeDaoImpl implements LikeDao {
         LOGGER.debug("Selecting Likes Count by Criteria");
 
         TypedQuery<Long> query = null;
-        if (userId != null) {
+        if(userId != null && postId != null) {
+            query = em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.user.userId = :userId AND l.post.postId = :postId", Long.class)
+                    .setParameter("userId", userId)
+                    .setParameter("postId", postId);
+        } else if (userId != null) {
             query = em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.user.userId = :userId", Long.class)
                     .setParameter("userId", userId);
         } else if (postId != null) {
