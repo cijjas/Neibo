@@ -218,12 +218,13 @@ public class TestInserter {
         em.flush();
     }
 
-    public long createReview(long workerId, long userId, float rating, String reviewString) {
+    public long createReview(long workerId, long userId, float rating, String reviewString, Date date) {
         Review review = new Review.Builder()
                 .user(em.find(User.class, userId))
                 .worker(em.find(Worker.class, workerId))
                 .rating(rating)
                 .review(reviewString)
+                .date(date)
                 .build();
         em.persist(review);
         em.flush();
@@ -473,7 +474,7 @@ public class TestInserter {
     public long createReview(long workerId, long userId) {
         float rating = 2.34234F;
         String review = "Really Great Job";
-        return createReview(workerId, userId, rating, review);
+        return createReview(workerId, userId, rating, review, new java.sql.Date(System.currentTimeMillis()));
     }
 
     public long createWorker(long workerId) {

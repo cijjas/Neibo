@@ -75,10 +75,10 @@ public class ProductDaoImplTest {
         long iKey3 = testInserter.createImage();
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(USER_MAIL_1, nhKey);
-        long dKey = Department.ELECTRONICS.getId();
+        long dKey = testInserter.createDepartment(Department.ELECTRONICS);
 
         // Exercise
-        Product product = productDaoImpl.createProduct(uKey, PRODUCT_NAME_1, PRODUCT_DESCRIPTION, PRODUCT_PRICE, PRODUCT_USED, iKey1, iKey2, iKey3, dKey, PRODUCT_UNITS);
+        Product product = productDaoImpl.createProduct(uKey, PRODUCT_NAME_1, PRODUCT_DESCRIPTION, PRODUCT_PRICE, PRODUCT_USED, dKey, iKey1, iKey2, iKey3, PRODUCT_UNITS);
 
         // Validations & Post Conditions
         em.flush();

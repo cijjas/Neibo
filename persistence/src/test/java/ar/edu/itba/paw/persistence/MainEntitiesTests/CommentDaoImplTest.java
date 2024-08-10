@@ -107,7 +107,6 @@ public class CommentDaoImplTest {
         assertFalse(optionalComment.isPresent());
     }
 
-
     @Test
     public void find_commentId_postId_neighborhoodId_invalid_postId() {
         // Pre Conditions
@@ -247,6 +246,7 @@ public class CommentDaoImplTest {
 
     // -------------------------------------------------- GETS ---------------------------------------------------------
 
+    @Test
     public void get() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
@@ -266,6 +266,7 @@ public class CommentDaoImplTest {
         assertEquals(TWO_ELEMENTS, commentList.size());
     }
 
+    @Test
     public void get_empty() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
@@ -283,6 +284,7 @@ public class CommentDaoImplTest {
 
     // ---------------------------------------------- PAGINATION -------------------------------------------------------
 
+    @Test
     public void get_pagination() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();

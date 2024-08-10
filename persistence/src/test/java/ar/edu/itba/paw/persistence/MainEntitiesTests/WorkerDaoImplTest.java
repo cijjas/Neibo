@@ -4,6 +4,7 @@ import ar.edu.itba.paw.enums.Professions;
 import ar.edu.itba.paw.enums.Table;
 import ar.edu.itba.paw.enums.WorkerRole;
 import ar.edu.itba.paw.models.Entities.Worker;
+import ar.edu.itba.paw.persistence.MainEntitiesDaos.UserDaoImpl;
 import ar.edu.itba.paw.persistence.MainEntitiesDaos.WorkerDaoImpl;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
@@ -60,6 +61,8 @@ public class WorkerDaoImplTest {
     private long uKey4;
     private long pKey1;
     private long pKey2;
+    @Autowired
+    private UserDaoImpl userDaoImpl;
 
     @Before
     public void setUp() {
@@ -828,27 +831,31 @@ public class WorkerDaoImplTest {
 
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
-/*
-    @Test
-	public void testWorkerDelete() {
+/*    @Test
+	public void delete_valid() {
 	    // Pre Conditions
+        assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_info.name()));
+
         long pKey = testInserter.createProfession();
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(WORKER_MAIL_1, nhKey);
         testInserter.createWorker(uKey);
         testInserter.createSpecialization(uKey, pKey);
 
+        assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_info.name()));
+
 	    // Exercise
-	    boolean deleted = workerDao.deleteWorker(uKey);
+        boolean deleted = workerDaoImpl.deleteWorker(uKey);
+        // boolean deleted = userDaoImpl.deleteUser(uKey);
 
 	    // Validations & Post Conditions
 		em.flush();
 	    assertTrue(deleted);
-	    assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_info.name()));
+	    assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_info.name()));
 	}
 
 	@Test
-	public void testInvalidWorkerDelete() {
+	public void delete_invalid_workerId() {
 	    // Pre Conditions
         long pKey = testInserter.createProfession();
         long nhKey = testInserter.createNeighborhood();
@@ -857,14 +864,13 @@ public class WorkerDaoImplTest {
         testInserter.createSpecialization(uKey, pKey);
 
 	    // Exercise
-	    boolean deleted = workerDao.deleteWorker(INVALID_ID);
+	    boolean deleted = workerDaoImpl.deleteWorker(INVALID_ID);
 
 	    // Validations & Post Conditions
 		em.flush();
 	    assertFalse(deleted);
-	}
+	}*/
 
-*/
 
     // ----------------------------------------------- POPULATION ------------------------------------------------------
 

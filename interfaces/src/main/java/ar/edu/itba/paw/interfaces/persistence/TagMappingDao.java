@@ -12,7 +12,7 @@ public interface TagMappingDao {
 
     // ---------------------------------------------- TAG MAPPING SELECT ------------------------------------------------------
 
-    Optional<TagMapping> findTagMapping(Long tagId, Long neighborhoodId);
+    Optional<TagMapping> findTagMapping(long tagId, long neighborhoodId);
 
     List<TagMapping> getTagMappings(Long tagId, Long neighborhoodId, int page, int size);
 

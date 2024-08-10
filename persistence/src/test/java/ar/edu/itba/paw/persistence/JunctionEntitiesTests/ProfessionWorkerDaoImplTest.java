@@ -22,9 +22,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
-import static ar.edu.itba.paw.persistence.TestConstants.EMPTY_FIELD;
-import static ar.edu.itba.paw.persistence.TestConstants.ONE_ELEMENT;
+import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -71,6 +71,74 @@ public class ProfessionWorkerDaoImplTest {
         assertEquals(pKey, specialization.getProfession().getProfessionId().longValue());
         assertEquals(pKey, specialization.getProfession().getProfessionId().longValue());
         assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_professions.name()));
+    }
+
+    // -------------------------------------------------- FINDS --------------------------------------------------------
+
+    @Test
+    public void find_workerId_neighborhoodId_valid() {
+        // Pre Conditions
+        long pKey = testInserter.createProfession();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createSpecialization(uKey, pKey);
+
+        // Exercise
+        Optional<Specialization> optionalSpecialization = professionWorkerDaoImpl.findSpecialization(uKey, pKey);
+
+        // Validations & Post Conditions
+        assertTrue(optionalSpecialization.isPresent());
+        assertEquals(uKey, optionalSpecialization.get().getWorker().getWorkerId().longValue());
+        assertEquals(pKey, optionalSpecialization.get().getProfession().getProfessionId().longValue());
+    }
+
+    @Test
+    public void find_workerId_neighborhoodId_invalid_workerId() {
+        // Pre Conditions
+        long pKey = testInserter.createProfession();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createSpecialization(uKey, pKey);
+
+        // Exercise
+        Optional<Specialization> optionalSpecialization = professionWorkerDaoImpl.findSpecialization(INVALID_ID, pKey);
+
+        // Validations & Post Conditions
+        assertFalse(optionalSpecialization.isPresent());
+    }
+
+    @Test
+    public void find_workerId_neighborhoodId_invalid_professionId() {
+        // Pre Conditions
+        long pKey = testInserter.createProfession();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createSpecialization(uKey, pKey);
+
+        // Exercise
+        Optional<Specialization> optionalSpecialization = professionWorkerDaoImpl.findSpecialization(uKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalSpecialization.isPresent());
+    }
+
+    @Test
+    public void find_workerId_neighborhoodId_invalid_workerId_professionId() {
+        // Pre Conditions
+        long pKey = testInserter.createProfession();
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        testInserter.createWorker(uKey);
+        testInserter.createSpecialization(uKey, pKey);
+
+        // Exercise
+        Optional<Specialization> optionalSpecialization = professionWorkerDaoImpl.findSpecialization(INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalSpecialization.isPresent());
     }
 
     // -------------------------------------------------- GETS ---------------------------------------------------------

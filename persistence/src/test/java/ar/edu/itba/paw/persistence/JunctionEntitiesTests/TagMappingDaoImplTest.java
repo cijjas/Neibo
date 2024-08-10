@@ -20,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 import static ar.edu.itba.paw.persistence.TestConstants.*;
 import static org.junit.Assert.*;
@@ -71,6 +72,66 @@ public class TagMappingDaoImplTest {
         assertEquals(tKey, tagMapping.getTag().getTagId().longValue());
         assertEquals(nhKey, tagMapping.getNeighborhood().getNeighborhoodId().longValue());
         assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.neighborhoods_tags.name()));
+    }
+
+    // -------------------------------------------------- FINDS --------------------------------------------------------
+
+	@Test
+	public void find_tagId_neighborhoodId_valid() {
+	    // Pre Conditions
+        nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        tKey1 = testInserter.createTag(TAG_NAME_1);
+        testInserter.createTagMapping(nhKey1, tKey1);
+
+	    // Exercise
+	    Optional<TagMapping> optionalTagMapping = tagMappingDaoImpl.findTagMapping(tKey1, nhKey1);
+
+	    // Validations & Post Conditions
+	    assertTrue(optionalTagMapping.isPresent());
+		assertEquals(tKey1, optionalTagMapping.get().getTag().getTagId().longValue());
+        assertEquals(nhKey1, optionalTagMapping.get().getNeighborhood().getNeighborhoodId().longValue());
+	}
+
+    @Test
+    public void find_tagId_neighborhoodId_invalid_tagId() {
+        // Pre Conditions
+        nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        tKey1 = testInserter.createTag(TAG_NAME_1);
+        testInserter.createTagMapping(nhKey1, tKey1);
+
+        // Exercise
+        Optional<TagMapping> optionalTagMapping = tagMappingDaoImpl.findTagMapping(INVALID_ID, nhKey1);
+
+        // Validations & Post Conditions
+        assertFalse(optionalTagMapping.isPresent());
+    }
+
+    @Test
+    public void find_tagId_neighborhoodId_invalid_neighborhoodId() {
+        // Pre Conditions
+        nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        tKey1 = testInserter.createTag(TAG_NAME_1);
+        testInserter.createTagMapping(nhKey1, tKey1);
+
+        // Exercise
+        Optional<TagMapping> optionalTagMapping = tagMappingDaoImpl.findTagMapping(tKey1, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalTagMapping.isPresent());
+    }
+
+    @Test
+    public void find_tagId_neighborhoodId_invalid_tagId_neighborhoodId() {
+        // Pre Conditions
+        nhKey1 = testInserter.createNeighborhood(NEIGHBORHOOD_NAME_1);
+        tKey1 = testInserter.createTag(TAG_NAME_1);
+        testInserter.createTagMapping(nhKey1, tKey1);
+
+        // Exercise
+        Optional<TagMapping> optionalTagMapping = tagMappingDaoImpl.findTagMapping(INVALID_ID, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalTagMapping.isPresent());
     }
 
     // -------------------------------------------------- GETS ---------------------------------------------------------

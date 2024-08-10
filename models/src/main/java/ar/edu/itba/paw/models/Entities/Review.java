@@ -29,6 +29,7 @@ public class Review {
     private String review;
 
     @Column(name = "date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
     Review() {
@@ -40,7 +41,7 @@ public class Review {
         this.user = builder.user;
         this.rating = builder.rating;
         this.review = builder.review;
-        this.date = new java.sql.Date(System.currentTimeMillis());
+        this.date = builder.date;
     }
 
     public void setReviewId(Long reviewId) {
@@ -95,10 +96,6 @@ public class Review {
     public String toString() {
         return "Review{" +
                 "reviewId=" + reviewId +
-                "worker=" + worker +
-                ", user=" + user +
-                ", rating=" + rating +
-                ", review='" + review + '\'' +
                 ", date=" + date +
                 '}';
     }
