@@ -99,6 +99,10 @@ public class RequestServiceImpl implements RequestService {
     public List<Request> getRequests(String userURN, String productURN, String typeURN, String statusURN, int page, int size, long neighborhoodId) {
         LOGGER.info("Getting Requests for Product {} made by User {} from Neighborhood {}", productURN, userURN, neighborhoodId);
 
+        // DAO function can only handle both or neither
+        if ((typeURN == null && userURN != null) || (typeURN != null && userURN == null))
+            throw new IllegalArgumentException("Either both user and type have to be specified or none of them");
+
         Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
         Long productId = ValidationUtils.checkURNAndExtractProductId(productURN);
         Long transactionTypeId = ValidationUtils.checkURNAndExtractTransactionTypeId(typeURN);

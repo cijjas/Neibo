@@ -20,5 +20,4 @@ public class UserURNAuthorizationValidator implements ConstraintValidator<UserUR
             return true;
         return URNValidator.validateURN(userURN, "users") && accessControlHelper.canModify(userURN);
     }
-
 }

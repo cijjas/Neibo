@@ -37,7 +37,7 @@ public class PostDaoImpl implements PostDao {
                     "LEFT JOIN posts_users_likes pul on p.postid = pul.postId ";
 
     private final String COUNT_POSTS_JOIN_USERS_CHANNELS_TAGS_COMMENTS_LIKES =
-            "SELECT COUNT(DISTINCT p.postid, p.title, p.description, p.postdate, p.userid, p.channelid, p.postpictureid) " +
+            "SELECT COUNT(DISTINCT p.postid) " +
                     "FROM posts p  " +
                     "INNER JOIN users u ON p.userid = u.userid  " +
                     "INNER JOIN channels c ON p.channelid = c.channelid  " +

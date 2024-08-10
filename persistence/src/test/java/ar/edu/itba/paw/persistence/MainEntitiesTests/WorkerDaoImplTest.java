@@ -831,7 +831,7 @@ public class WorkerDaoImplTest {
 
     // ------------------------------------------------ DELETES --------------------------------------------------------
 
-/*    @Test
+    @Test
 	public void delete_valid() {
 	    // Pre Conditions
         assertEquals(NO_ELEMENTS, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_info.name()));
@@ -843,11 +843,27 @@ public class WorkerDaoImplTest {
         testInserter.createSpecialization(uKey, pKey);
 
         assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.workers_info.name()));
-
+        // Exercise
+        List<Worker> workerList = workerDaoImpl.getWorkers(
+                BASE_PAGE,
+                BASE_PAGE_SIZE,
+                Collections.emptyList(),
+                Collections.emptyList(),
+                EMPTY_FIELD,
+                EMPTY_FIELD);
+        System.out.println(workerList);
 	    // Exercise
         boolean deleted = workerDaoImpl.deleteWorker(uKey);
         // boolean deleted = userDaoImpl.deleteUser(uKey);
 
+        workerList = workerDaoImpl.getWorkers(
+                BASE_PAGE,
+                BASE_PAGE_SIZE,
+                Collections.emptyList(),
+                Collections.emptyList(),
+                EMPTY_FIELD,
+                EMPTY_FIELD);
+        System.out.println(workerList);
 	    // Validations & Post Conditions
 		em.flush();
 	    assertTrue(deleted);
@@ -869,7 +885,7 @@ public class WorkerDaoImplTest {
 	    // Validations & Post Conditions
 		em.flush();
 	    assertFalse(deleted);
-	}*/
+	}
 
 
     // ----------------------------------------------- POPULATION ------------------------------------------------------

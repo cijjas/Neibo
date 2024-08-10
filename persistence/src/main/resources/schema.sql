@@ -607,6 +607,31 @@ INSERT INTO channels (channelid, channel)
 VALUES (4, 'Workers')
 ON CONFLICT DO NOTHING;
 
+INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
+VALUES (1, 1) ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
+VALUES (1, 2) ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
+VALUES (1, 3) ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
+VALUES (1, 4) ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
+VALUES (2, 1) ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
+VALUES (2, 2) ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
+VALUES (2, 3) ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
+VALUES (2, 4) ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
+VALUES (3, 1) ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
+VALUES (3, 2) ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
+VALUES (3, 3) ON CONFLICT DO NOTHING;
+INSERT INTO neighborhoods_channels(neighborhoodid, channelid)
+VALUES (3, 4) ON CONFLICT DO NOTHING;
+
 -- Inserting Departments if not exists
 INSERT INTO departments (departmentid, department)
 VALUES (1, 'ELECTRONICS')

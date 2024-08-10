@@ -171,6 +171,20 @@ public class AccessControlHelper {
         return workerId == getRequestingUserId(authentication);
     }
 
+    // --------------------------------------------- PROFESSION --------------------------------------------------------
+
+    // Workers, Neighbors and Administrators can access /neighborhoods using Query Params
+    public boolean hasAccessProfessionsQP(String worker) {
+        LOGGER.info("Verifying Query Params Accessibility");
+
+        if (worker == null)
+            return true;
+
+        Authentication authentication = getAuthentication();
+
+        return !isAnonymous(authentication) && !isUnverifiedOrRejected(authentication);
+    }
+
     // ------------------------------------------------- LIKES ---------------------------------------------------------
 
     // A User can modify the things he creates
@@ -291,6 +305,19 @@ public class AccessControlHelper {
         return p.getSeller().getUserId() == getRequestingUserId(authentication);
     }
 
+    // Only the owner of the product and the Administrator can delete the product
+    public Boolean canUpdateProduct(long productId){
+        LOGGER.info("Verifying Product Update Accessibility");
+        Authentication authentication = getAuthentication();
+
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
+            return true;
+
+        Product p = ps.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+
+        return p.getSeller().getUserId() == getRequestingUserId(authentication);
+    }
+
     // ------------------------------------------------ POSTS ----------------------------------------------------------
 
     // Only the creator of the post and the Administrator can delete the post
@@ -321,9 +348,8 @@ public class AccessControlHelper {
         return i.getUser().getUserId() == getRequestingUserId(authentication);
     }
 
-
     // The seller of the product cant create an Inquiry for it
-    public Boolean canCreateInquiry(long productId, String userURN){
+    public Boolean canCreateInquiry(long productId){
         LOGGER.info("Verifying Inquiry Creation Accessibility");
         Authentication authentication = getAuthentication();
 
@@ -332,7 +358,7 @@ public class AccessControlHelper {
 
         Product p = ps.findProduct(productId).orElseThrow(NotFoundException::new);
 
-        return p.getSeller().getUserId() != extractTwoURNIds(userURN).getSecondId();
+        return p.getSeller().getUserId() != getRequestingUserId(authentication);
     }
 
     // The seller of the product can answer Inquiries for that Product

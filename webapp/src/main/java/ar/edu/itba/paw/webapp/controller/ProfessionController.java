@@ -7,6 +7,7 @@ import ar.edu.itba.paw.webapp.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -42,7 +43,7 @@ public class ProfessionController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    // falta un preauthorize aca para que no usen el query param
+    @PreAuthorize("@accessControlHelper.hasAccessProfessionsQP(#worker)")
     public Response listProfessions(
             @QueryParam("forWorker") final String worker
     ) {

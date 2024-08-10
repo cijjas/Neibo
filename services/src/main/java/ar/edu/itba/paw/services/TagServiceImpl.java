@@ -34,16 +34,16 @@ public class TagServiceImpl implements TagService {
         this.neighborhoodDao = neighborhoodDao;
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    //  -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public Tag createTag(long neighborhoodId, String name) {
         LOGGER.info("Creating Tag {} in Neighborhood {}", name, neighborhoodId);
 
-        //find tag by name, if it doesn't exist create it
+        // find tag by name, if it doesn't exist create it
         Tag tag = tagDao.findTag(name).orElseGet(() -> tagDao.createTag(name));
 
-        if(!tagMappingDao.findTagMapping(tag.getTagId(), neighborhoodId).isPresent())
+        if (!tagMappingDao.findTagMapping(tag.getTagId(), neighborhoodId).isPresent())
             tagMappingDao.createTagMappingDao(tag.getTagId(), neighborhoodId);
 
         return tag;
@@ -55,7 +55,7 @@ public class TagServiceImpl implements TagService {
 
         ValidationUtils.checkPostId(postId);
 
-        //cycle array of URI's extracting the id of each tag
+        // cycle array of URI's extracting the id of each tag
         for (String tagURI : tagURIs) {
             Long tagId = ValidationUtils.checkURNAndExtractTagId(tagURI);
             tagDao.findTag(tagId, neighborhoodId).orElseThrow(() -> new NotFoundException("Tag Not Found"));
@@ -63,7 +63,7 @@ public class TagServiceImpl implements TagService {
         }
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    //  -----------------------------------------------------------------------------------------------------------------
 
     @Override
     @Transactional(readOnly = true)
@@ -88,7 +88,7 @@ public class TagServiceImpl implements TagService {
         return tagDao.getTags(postId, neighborhoodId, page, size);
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    //  -----------------------------------------------------------------------------------------------------------------
 
     @Override
     public int calculateTagPages(String postURN, long neighborhoodId, int size) {
@@ -103,7 +103,7 @@ public class TagServiceImpl implements TagService {
         return PaginationUtils.calculatePages(tagDao.countTags(postId, neighborhoodId), size);
     }
 
-    // ---------------------------------------------------
+    //  ---------------------------------------------------
 
     @Override
     public boolean deleteTag(long neighborhoodId, long tagId) {
@@ -115,8 +115,8 @@ public class TagServiceImpl implements TagService {
         tagDao.findTag(tagId, neighborhoodId).orElseThrow(NotFoundException::new);
         tagMappingDao.deleteTagMapping(tagId, neighborhoodId);
 
-        //if the channel was only being used by this neighborhood, it gets deleted
-        if(tagMappingDao.countTagMappings(tagId, null) == 0) {
+        // if the channel was only being used by this neighborhood, it gets deleted
+        if (tagMappingDao.countTagMappings(tagId, null) == 0) {
             return tagDao.deleteTag(tagId);
         }
 
