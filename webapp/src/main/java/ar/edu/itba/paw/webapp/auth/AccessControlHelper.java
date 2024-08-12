@@ -173,6 +173,20 @@ public class AccessControlHelper {
 
     // ------------------------------------------------- LIKES ---------------------------------------------------------
 
+    public Boolean canGetLikes(String post, String user) {
+        LOGGER.info("Verifying Get Likes Accessibility");
+        Authentication authentication = getAuthentication();
+
+        // if post and user are null, will get ALL likes (only superadmin allowed)
+        if (post == null && user == null)
+            return isSuperAdministrator(authentication);
+
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
+            return true;
+
+        return getRequestingUserId(authentication) == extractTwoURNIds(user).getSecondId();
+    }
+
     // A User can modify the things he creates
     public Boolean canDeleteLike(String userURN) {
         LOGGER.info("Verifying Accessibility for the User's entities");

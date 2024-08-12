@@ -4,7 +4,7 @@ import ar.edu.itba.paw.exceptions.NotFoundException;
 
 import java.util.Arrays;
 
-public enum BaseChannel {
+public enum Channel {
     ANNOUNCEMENTS,
     COMPLAINTS,
     FEED,
@@ -20,7 +20,7 @@ public enum BaseChannel {
         return name.substring(0, 1).toUpperCase() + name.substring(1);
     }
 
-    public static BaseChannel fromId(long id) {
+    public static Channel fromId(long id) {
         if(id <= 0)
             throw new IllegalArgumentException("Invalid value (" + id + ") for the Base Channel ID. Please use a positive integer greater than 0.");
         return Arrays.stream(values())
@@ -29,7 +29,7 @@ public enum BaseChannel {
                 .orElseThrow(()-> new NotFoundException("Base Channel Not Found"));
     }
 
-    public static BaseChannel nullableFromId(long id) {
+    public static Channel nullableFromId(long id) {
         return Arrays.stream(values())
                 .filter(bc -> bc.getId() == id)
                 .findFirst().orElse(null);

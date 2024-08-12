@@ -10,13 +10,13 @@ public interface LikeService {
 
     // -----------------------------------------------------------------------------------------------------------------
 
-    List<Like> getLikes(long neighborhoodId, String postURN, String userURN, int page, int size);
+    List<Like> getLikes(String postURN, String userURN, int page, int size);
 
     // ---------------------------------------------------
 
-    int countLikes(long neighborhoodId, String postURN, String userURN);
+    int countLikes(String postURN, String userURN);
 
-    int calculateLikePages(long neighborhoodId, String postURN, String userURN, int size);
+    int calculateLikePages(String postURN, String userURN, int size);
 
     // -----------------------------------------------------------------------------------------------------------------
 

@@ -141,6 +141,15 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         UserRole.SUPER_ADMINISTRATOR.name()
                 )
 
+                .antMatchers(
+                        "/likes",
+                        "/likes/*"
+                ).hasAnyRole(
+                        UserRole.NEIGHBOR.name(),
+                        UserRole.ADMINISTRATOR.name(),
+                        UserRole.SUPER_ADMINISTRATOR.name()
+                )
+
                 // EVERYTHING WITHIN A NEIGHBORHOOD CAN BE ACCESSED BY USERS BELONGING TO THAT NEIGHBORHOOD OR THE SUPER ADMINISTRATOR
                 // ALSO THE WORKERS NEIGHBORHOOD CAN BE ACCESSED BY EVERYONE
 
@@ -159,7 +168,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/neighborhoods/*/products/**",
                         "/neighborhoods/*/requests/**",
                         "/neighborhoods/*/tags/**",
-                        "/neighborhoods/*/likes/**",
                         "/neighborhoods/*/channels/**",
                         "/neighborhoods/*/amenities/**",
                         "/neighborhoods/*/bookings/**",

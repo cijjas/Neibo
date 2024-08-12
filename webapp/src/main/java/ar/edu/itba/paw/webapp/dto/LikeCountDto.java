@@ -8,7 +8,7 @@ public class LikeCountDto {
     private int likeCount;
     private Links _links;
 
-    public static LikeCountDto fromLikeCount(int likeCount, String postURN, String userURN, long neighborhoodId, UriInfo uriInfo) {
+    public static LikeCountDto fromLikeCount(int likeCount, String postURN, String userURN, UriInfo uriInfo) {
         final LikeCountDto dto = new LikeCountDto();
 
         dto.likeCount = likeCount;
@@ -16,8 +16,6 @@ public class LikeCountDto {
         Links links = new Links();
 
         UriBuilder uriBuilder = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(neighborhoodId))
                 .path("likes")
                 .path("count");
 

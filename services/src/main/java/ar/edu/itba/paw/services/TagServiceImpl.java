@@ -24,14 +24,12 @@ public class TagServiceImpl implements TagService {
     private final TagDao tagDao;
     private final CategorizationDao categorizationDao;
     private final TagMappingDao tagMappingDao;
-    private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public TagServiceImpl(TagDao tagDao, CategorizationDao categorizationDao, TagMappingDao tagMappingDao, NeighborhoodDao neighborhoodDao) {
+    public TagServiceImpl(TagDao tagDao, CategorizationDao categorizationDao, TagMappingDao tagMappingDao) {
         this.tagDao = tagDao;
         this.categorizationDao = categorizationDao;
         this.tagMappingDao = tagMappingDao;
-        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -50,16 +48,17 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void categorizePost(long postId, List<String> tagURIs, long neighborhoodId) {
-        LOGGER.info("Associating Tags {} with Post {}", tagURIs, postId);
+    public void categorizePost(long postId, List<String> tagURNs, long neighborhoodId) {
+        LOGGER.info("Associating Tags {} with Post {}", tagURNs, postId);
 
         ValidationUtils.checkPostId(postId);
 
-        //cycle array of URI's extracting the id of each tag
-        for (String tagURI : tagURIs) {
+        // Cycle array of URI's extracting the id of each tag
+        for (String tagURI : tagURNs) {
             Long tagId = ValidationUtils.checkURNAndExtractTagId(tagURI);
             tagDao.findTag(tagId, neighborhoodId).orElseThrow(() -> new NotFoundException("Tag Not Found"));
-            categorizationDao.createCategorization(tagId, postId);
+            // If categorization doesn't exist, create it
+            categorizationDao.findCategorization(tagId, postId).orElseGet(() -> categorizationDao.createCategorization(tagId, postId));
         }
     }
 
@@ -114,6 +113,9 @@ public class TagServiceImpl implements TagService {
 
         tagDao.findTag(tagId, neighborhoodId).orElseThrow(NotFoundException::new);
         tagMappingDao.deleteTagMapping(tagId, neighborhoodId);
+
+        // Will delete all categorizations associated with the tag
+        categorizationDao.deleteCategorization(tagId, null);
 
         //if the channel was only being used by this neighborhood, it gets deleted
         if(tagMappingDao.countTagMappings(tagId, null) == 0) {

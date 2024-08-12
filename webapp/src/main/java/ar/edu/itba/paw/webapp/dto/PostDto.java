@@ -60,8 +60,6 @@ public class PostDto {
                 .queryParam("post", self)
                 .build());
         links.setLikes(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(post.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("likes")
                 .queryParam("onPost", self)
                 .build());

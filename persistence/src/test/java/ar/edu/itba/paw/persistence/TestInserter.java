@@ -2,6 +2,7 @@ package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.enums.*;
 import ar.edu.itba.paw.exceptions.InsertionException;
+import ar.edu.itba.paw.models.Entities.Channel;
 import ar.edu.itba.paw.models.Entities.Department;
 import ar.edu.itba.paw.models.Entities.*;
 import org.springframework.beans.factory.annotation.Autowired;

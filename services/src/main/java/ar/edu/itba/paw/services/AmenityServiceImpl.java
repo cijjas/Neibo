@@ -57,6 +57,8 @@ public class AmenityServiceImpl implements AmenityService {
             shift.ifPresent(value -> availabilityDao.createAvailability(amenity.getAmenityId(), value.getShiftId()));
         }
 
+        emailService.sendBatchNewAmenityMail(neighborhoodId, name, description);
+
         int page = 1;
         int size = 500; // Will fetch and send emails to 500 users at a time
         List<User> users;
@@ -136,7 +138,9 @@ public class AmenityServiceImpl implements AmenityService {
                 long shiftId = ValidationUtils.extractURNId(shiftURN);
                 ValidationUtils.checkShiftId(shiftId);
                 Optional<Shift> shift = shiftDao.findShift(shiftId);
-                shift.ifPresent(value -> availabilityDao.createAvailability(amenityId, value.getShiftId()));
+                if(shift.isPresent()) {
+                    availabilityDao.findAvailability(amenityId, shiftId).orElseGet(() -> availabilityDao.createAvailability(amenityId, shiftId));
+                }
             }
         }
         return amenity;

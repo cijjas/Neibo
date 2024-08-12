@@ -70,20 +70,7 @@ public class EventServiceImpl implements EventService {
         Long[] times = stringToTime(startTime, endTime);
         Event createdEvent = eventDao.createEvent(name, description, parsedSqlDate, times[0], times[1], neighborhoodId);
 
-        int page = 1;
-        int size = 500; // Will fetch and send emails to 500 users at a time
-        List<User> users;
-        do {
-            // Fetch users in batches
-            users = userDao.getUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId, page, size);
-
-            // Send email with the current batch of users
-            if (!users.isEmpty()) {
-                emailService.sendEventMail(createdEvent, "event.custom.message2", users);
-            }
-
-            page++;
-        } while (users.size() == size); // Continue fetching next page if the current page is full
+        emailService.sendBatchEventMail(createdEvent, "event.custom.message2", neighborhoodId);
 
         return createdEvent;
     }

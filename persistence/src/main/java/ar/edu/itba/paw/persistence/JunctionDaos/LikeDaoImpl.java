@@ -36,7 +36,7 @@ public class LikeDaoImpl implements LikeDao {
     // -------------------------------------------------- LIKES SELECT -------------------------------------------------
 
     @Override
-    public List<Like> getLikes(Long postId, Long userId, long neighborhoodId, int page, int size) {
+    public List<Like> getLikes(Long postId, Long userId, int page, int size) {
         LOGGER.debug("Selecting Likes by Criteria");
 
         // Create a TypedQuery for LikeKey based on the provided criteria
@@ -57,8 +57,7 @@ public class LikeDaoImpl implements LikeDao {
                     .setParameter("postId", postId);
         } else {
             // No specific condition provided, get all likes within a neighborhood
-            query = em.createQuery("SELECT l.id FROM Like l WHERE l.user.neighborhood.neighborhoodId = :neighborhoodId ORDER BY l.likeDate", LikeKey.class)
-                    .setParameter("neighborhoodId", neighborhoodId);
+            query = em.createQuery("SELECT l.id FROM Like l ORDER BY l.likeDate", LikeKey.class);
         }
 
         // Set pagination parameters
@@ -81,7 +80,7 @@ public class LikeDaoImpl implements LikeDao {
     }
 
     @Override
-    public int countLikes(Long postId, Long userId, long neighborhoodId) {
+    public int countLikes(Long postId, Long userId) {
         LOGGER.debug("Selecting Likes Count by Criteria");
 
         TypedQuery<Long> query = null;
@@ -96,8 +95,7 @@ public class LikeDaoImpl implements LikeDao {
             query = em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.post.postId = :postId", Long.class)
                     .setParameter("postId", postId);
         } else {
-            query = em.createQuery("SELECT COUNT(l) FROM Like l WHERE l.user.neighborhood.neighborhoodId = :neighborhoodId", Long.class)
-                    .setParameter("neighborhoodId", neighborhoodId);
+            query = em.createQuery("SELECT COUNT(l) FROM Like l", Long.class);
         }
         Long count = query.getSingleResult();
         return count != null ? count.intValue() : 0;

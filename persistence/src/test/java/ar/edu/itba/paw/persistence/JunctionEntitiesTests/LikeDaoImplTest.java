@@ -80,7 +80,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        List<Like> likeList = likeDaoImpl.getLikes(EMPTY_FIELD, EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(EMPTY_FIELD, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, likeList.size());
@@ -92,7 +92,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        List<Like> likeList = likeDaoImpl.getLikes(EMPTY_FIELD, uKey1, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(EMPTY_FIELD, uKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, likeList.size());
@@ -104,7 +104,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        List<Like> likeList = likeDaoImpl.getLikes(pKey1, EMPTY_FIELD, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(pKey1, EMPTY_FIELD, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, likeList.size());
@@ -116,7 +116,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        List<Like> likeList = likeDaoImpl.getLikes(pKey1, uKey1, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(pKey1, uKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, likeList.size());
@@ -134,7 +134,7 @@ public class LikeDaoImplTest {
         long pKey2 = testInserter.createPost(uKey2, chKey, iKey);
 
         // Exercise
-        List<Like> likeList = likeDaoImpl.getLikes(pKey1, uKey1, nhKey, BASE_PAGE, BASE_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(pKey1, uKey1, BASE_PAGE, BASE_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertTrue(likeList.isEmpty());
@@ -148,7 +148,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        List<Like> likeList = likeDaoImpl.getLikes(EMPTY_FIELD, EMPTY_FIELD, nhKey, TEST_PAGE, TEST_PAGE_SIZE);
+        List<Like> likeList = likeDaoImpl.getLikes(EMPTY_FIELD, EMPTY_FIELD, TEST_PAGE, TEST_PAGE_SIZE);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, likeList.size());
@@ -162,7 +162,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        int countLikes = likeDaoImpl.countLikes(EMPTY_FIELD, EMPTY_FIELD, nhKey);
+        int countLikes = likeDaoImpl.countLikes(EMPTY_FIELD, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(THREE_ELEMENTS, countLikes);
@@ -174,7 +174,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        int countLikes = likeDaoImpl.countLikes(EMPTY_FIELD, uKey1, nhKey);
+        int countLikes = likeDaoImpl.countLikes(EMPTY_FIELD, uKey1);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countLikes);
@@ -186,7 +186,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        int countLikes = likeDaoImpl.countLikes(pKey1, EMPTY_FIELD, nhKey);
+        int countLikes = likeDaoImpl.countLikes(pKey1, EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, countLikes);
@@ -198,7 +198,7 @@ public class LikeDaoImplTest {
         populateLikes();
 
         // Exercise
-        int countLikes = likeDaoImpl.countLikes(pKey1, uKey1, nhKey);
+        int countLikes = likeDaoImpl.countLikes(pKey1, uKey1);
 
         // Validations & Post Conditions
         assertEquals(ONE_ELEMENT, countLikes);
@@ -216,7 +216,7 @@ public class LikeDaoImplTest {
         long pKey2 = testInserter.createPost(uKey2, chKey, iKey);
 
         // Exercise
-        int countLikes = likeDaoImpl.countLikes(pKey1, uKey1, nhKey);
+        int countLikes = likeDaoImpl.countLikes(pKey1, uKey1);
 
         // Validations & Post Conditions
         assertEquals(NO_ELEMENTS, countLikes);

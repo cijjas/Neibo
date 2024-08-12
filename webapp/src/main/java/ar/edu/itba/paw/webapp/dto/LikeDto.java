@@ -17,8 +17,6 @@ public class LikeDto {
 
         Links links = new Links();
         links.setSelf(uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("likes")
                 .queryParam("likedBy", uriInfo.getBaseUriBuilder()
                         .path("neighborhoods")

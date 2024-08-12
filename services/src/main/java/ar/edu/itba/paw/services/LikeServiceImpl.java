@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.exceptions.NotFoundException;
 import ar.edu.itba.paw.interfaces.persistence.LikeDao;
-import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.services.LikeService;
 import ar.edu.itba.paw.models.Entities.Like;
 import ar.edu.itba.paw.models.TwoIds;
@@ -20,12 +18,10 @@ public class LikeServiceImpl implements LikeService {
     private static final Logger LOGGER = LoggerFactory.getLogger(LikeServiceImpl.class);
 
     private final LikeDao likeDao;
-    private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public LikeServiceImpl(final LikeDao likeDao, final NeighborhoodDao neighborhoodDao) {
+    public LikeServiceImpl(final LikeDao likeDao) {
         this.likeDao = likeDao;
-        this.neighborhoodDao = neighborhoodDao;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -48,47 +44,40 @@ public class LikeServiceImpl implements LikeService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
-    public List<Like> getLikes(long neighborhoodId, String postURN, String userURN, int page, int size) {
-        LOGGER.info("Getting Likes for Post {} by User {} from Neighborhood {}", postURN, userURN, neighborhoodId);
+    public List<Like> getLikes(String postURN, String userURN, int page, int size) {
+        LOGGER.info("Getting Likes for Post {} by User {}", postURN, userURN);
 
         Long postId = ValidationUtils.checkURNAndExtractPostId(postURN);
         Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
 
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkPageAndSize(page, size);
 
-        neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
-
-        return likeDao.getLikes(postId, userId, neighborhoodId, page, size);
+        return likeDao.getLikes(postId, userId, page, size);
     }
 
     // ---------------------------------------------------
 
     @Override
-    public int countLikes(long neighborhoodId, String postURN, String userURN) {
-        LOGGER.info("Counting Likes for Post {} by User {} from Neighborhood {}", userURN, postURN, neighborhoodId);
+    public int countLikes(String postURN, String userURN) {
+        LOGGER.info("Counting Likes for Post {} by User {}", userURN, postURN);
 
 
         Long postId = ValidationUtils.checkURNAndExtractPostId(postURN);
         Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
 
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
-
-        return likeDao.countLikes(postId, userId, neighborhoodId);
+        return likeDao.countLikes(postId, userId);
     }
 
     @Override
-    public int calculateLikePages(long neighborhoodId, String postURN, String userURN, int size) {
-        LOGGER.info("Calculating Like Pages for Post {} by User {} from Neighborhood {}", userURN, postURN, neighborhoodId);
-
+    public int calculateLikePages(String postURN, String userURN, int size) {
+        LOGGER.info("Calculating Like Pages for Post {} by User {}", userURN, postURN);
 
         Long postId = ValidationUtils.checkURNAndExtractPostId(postURN);
         Long userId = ValidationUtils.checkURNAndExtractUserId(userURN);
 
-        ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkSize(size);
 
-        return PaginationUtils.calculatePages(likeDao.countLikes(postId, userId, neighborhoodId), size);
+        return PaginationUtils.calculatePages(likeDao.countLikes(postId, userId), size);
     }
 
 
