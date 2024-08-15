@@ -1,4 +1,5 @@
-import { HttpClient, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
+import { LoggedInService } from './loggedIn.service'
 import { Event, EventDto, EventForm } from '../models/event'
 import { NeighborhoodDto } from '../models/neighborhood'
 import { UserDto } from '../models/user'
@@ -10,21 +11,30 @@ import { map, mergeMap } from 'rxjs/operators'
 @Injectable({providedIn: 'root'})
 export class EventService {
     private apiServerUrl = environment.apiBaseUrl
+    private headers: HttpHeaders
 
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private loggedInService: LoggedInService,
+    ) { 
+        this.headers = new HttpHeaders({
+            'Authorization': this.loggedInService.getAuthToken()
+        })
+    }
 
-    public getEvent(eventId : number, neighborhoodId : number): Observable<Event> {
-        const eventDto$ = this.http.get<EventDto>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/events/${eventId}`);
+
+    public getEvent(event : string): Observable<Event> {
+        const eventDto$ = this.http.get<EventDto>(event, { headers: this.headers });
 
         return eventDto$.pipe(
             mergeMap((eventDto: EventDto) => {
                 return forkJoin([
-                    this.http.get<NeighborhoodDto>(eventDto.neighborhood),
-                    this.http.get<UserDto[]>(eventDto.attendees)
+                    this.http.get<NeighborhoodDto>(eventDto._links.neighborhood),
+                    this.http.get<UserDto[]>(eventDto._links.attendees)
                 ]).pipe(
                     map(([neighborhood, attendees]) => {
                         return {
-                            eventId: eventDto.eventId,
+
                             name: eventDto.name,
                             description: eventDto.description,
                             date: eventDto.date,
@@ -32,7 +42,7 @@ export class EventService {
                             startTime: eventDto.startTime,
                             endTime: eventDto.endTime,
                             attendees: attendees,
-                            self: eventDto.self
+                            self: eventDto._links.self
                         } as Event;
                     })
                 );
@@ -40,19 +50,22 @@ export class EventService {
         );
     }
 
-    public getEventsByDate(neighborhoodId : number, date : Date): Observable<Event[]> {
-        const params = new HttpParams().set('date', date.toString())
+    public getEventsByDate(neighborhood : string, date : Date, page : number, size : number ): Observable<Event[]> {
+        let params = new HttpParams();
 
-        return this.http.get<EventDto[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/events`, { params }).pipe(
+        if(date) params = params.set('forDate', date.toString())
+        if(page) params = params.set('page', page.toString())
+        if(size) params = params.set('size', size.toString())
+
+        return this.http.get<EventDto[]>(`${neighborhood}/events`, { params, headers: this.headers }).pipe(
             mergeMap((eventsDto: EventDto[]) => {
                 const eventObservables = eventsDto.map(eventDto =>
                     forkJoin([
-                        this.http.get<NeighborhoodDto>(eventDto.neighborhood),
-                        this.http.get<UserDto[]>(eventDto.attendees)
+                        this.http.get<NeighborhoodDto>(eventDto._links.neighborhood),
+                        this.http.get<UserDto[]>(eventDto._links.attendees)
                     ]).pipe(
                         map(([neighborhood, attendees]) => {
                             return {
-                                eventId: eventDto.eventId,
                                 name: eventDto.name,
                                 description: eventDto.description,
                                 date: eventDto.date,
@@ -60,7 +73,7 @@ export class EventService {
                                 startTime: eventDto.startTime,
                                 endTime: eventDto.endTime,
                                 attendees: attendees,
-                                self: eventDto.self
+                                self: eventDto._links.self
                             } as Event;
                         })
                     )
@@ -71,15 +84,15 @@ export class EventService {
         );
     }
 
-    public addEvent(event: EventForm, neighborhoodId : number): Observable<EventForm> {
-        return this.http.post<EventForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/events`, event)
+    public addEvent(event: EventForm, neighborhood: string): Observable<EventForm> {
+        return this.http.post<EventForm>(`${neighborhood}/events`, event, { headers: this.headers })
     }
 
-    public updateEvent(event: EventForm, neighborhoodId : number): Observable<EventForm> {
-        return this.http.patch<EventForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/events/${event.eventId}`, event)
+    public updateEvent(eventForm: EventForm, event: string): Observable<EventForm> {
+        return this.http.patch<EventForm>(event, eventForm, { headers: this.headers })
     }
 
-    public deleteEvent(eventId: number, neighborhoodId : number): Observable<void> {
-        return this.http.delete<void>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/events/${eventId}`)
+    public deleteEvent(event: string): Observable<void> {
+        return this.http.delete<void>(event, { headers: this.headers })
     }
 }

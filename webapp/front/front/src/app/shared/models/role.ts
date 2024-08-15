@@ -1,7 +1,11 @@
-export enum Role {
-    ADMINISTRATOR = 'ADMINISTRATOR',
-    NEIGHBOR = 'NEIGHBOR',
-    UNVERIFIED_NEIGHBOR = 'UNVERIFIED_NEIGHBOR',
-    WORKER = 'WORKER',
-    REJECTED = 'REJECTED'
+import { Links } from "./links"
+
+export interface Role {
+    role: string
+    self: string
+}
+
+export interface RoleDto {
+    role: string
+    _links: Links
 }

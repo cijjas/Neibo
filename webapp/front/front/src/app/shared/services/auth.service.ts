@@ -23,7 +23,7 @@ export class AuthService {
     // Construct Basic Authorization header
     const authHeaderValue = 'Basic ' + btoa(`${mail}:${password}`);
     const headers = new HttpHeaders({
-      'Authorization': authHeaderValue
+      Authorization: authHeaderValue
     });
 
     // Depending on the rememberMe value, we will use localStorage or sessionStorage
@@ -31,7 +31,7 @@ export class AuthService {
     localStorage.setItem(this.rememberMeKey, JSON.stringify(rememberMe));
 
     // Make a request to any protected endpoint to simulate user authentication
-    return this.http.get<any>(`${this.apiServerUrl}/`, { headers: headers })
+    return this.http.get<any>(`${this.apiServerUrl}/`, { headers: headers, observe: 'response' })
       .pipe(
         map(
           (response) => {
@@ -39,10 +39,14 @@ export class AuthService {
             if (response.headers.has('Authorization')) {
               const authToken = response.headers.get('Authorization');
               // Save the auth token in the storage
-              storage.setItem(this.authTokenKey, authToken);
-              this.loggedInService.setAuthToken(authToken);
+              storage.setItem(this.authTokenKey, authHeaderValue);
+              this.loggedInService.setAuthToken(authHeaderValue);
+              this.loggedInService.setBearerAuthToken(authToken)
               // Look for user with the auth token already in interceptor and urn in the header
-              this.http.get<UserDto>(`${response.headers.get('X-User-URN')}`)
+              const rawUrn = response.headers.get('X-User-URN');
+              // Extract the URN part (everything before the semicolon, potentially removing angle brackets)
+              const urn = rawUrn.slice(1, rawUrn.indexOf('>')).trim();
+              this.http.get<UserDto>(`${this.apiServerUrl}${urn}`)  // Use the extracted urn
                 .subscribe({
                   next: (userDto) => {
                     this.loggedInService.setLoggedUserInformation(userDto);

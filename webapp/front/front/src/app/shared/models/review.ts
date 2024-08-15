@@ -1,8 +1,8 @@
 import { WorkerDto } from "./worker"
 import { UserDto } from "./user"
+import { Links } from "./links"
 
 export interface Review {
-    reviewId: number
     rating: number
     review: string
     date: Date
@@ -12,13 +12,10 @@ export interface Review {
 }
 
 export interface ReviewDto {
-    reviewId: number
     rating: number
     review: string
     date: Date
-    worker: string
-    user: string
-    self: string
+    _links: Links
 }
 
 export interface ReviewForm {
@@ -26,4 +23,4 @@ export interface ReviewForm {
     rating: number
     review: string
     self: string
-  }  
+  }

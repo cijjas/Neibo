@@ -1,38 +1,30 @@
 import { UserDto } from "./user"
-import { Channel } from "./channel"
+import { BaseChannelDto } from "./baseChannel"
 import { ImageDto } from "./image"
 import { TagDto } from "./tag"
-import { LikeDto } from "./like"
 import { CommentDto } from "./comment"
+import { Links } from "./links"
+import { LikeDto } from "./like"
 
 export interface Post {
-    postId: number 
-    title: string 
-    description: string 
-    date: Date 
-    user: UserDto  
-    channel: Channel    
-    postPicture: ImageDto   
-    comments: CommentDto[]  
-    tags: TagDto[]  
-    likes: LikeDto[]    
-    subscribers: UserDto[]  
-    self: string        
-}
-
-export interface PostDto {
-    postId: number
     title: string
     description: string
     date: Date
-    user: string
-    channel: string
-    postPicture: string
-    comments: string
-    tags: string
-    likes: string
-    subscribers: string
+    user: UserDto
+    channel: BaseChannelDto
+    postPicture: ImageDto
+    comments: CommentDto[]
+    tags: TagDto[]
+    likes: LikeDto[]
+    subscribers: UserDto[]
     self: string
+}
+
+export interface PostDto {
+    title: string
+    description: string
+    date: Date
+    _links: Links
 }
 
 

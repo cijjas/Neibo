@@ -1,7 +1,11 @@
-export enum Profession {
-    PLUMBER = 'PLUMBER',
-    ELECTRICIAN = 'ELECTRICIAN',
-    POOL_MAINTENANCE = 'POOL_MAINTENANCE',
-    GARDENER = 'GARDENER',
-    CARPENTER = 'CARPENTER'
+import { Links } from "./links"
+
+export interface Profession {
+    profession: string
+    self: string
+}
+
+export interface ProfessionDto {
+    profession: string
+    _links: Links
 }

@@ -1,4 +1,5 @@
-import { HttpClient, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
+import { LoggedInService } from './loggedIn.service'
 import { Review, ReviewDto, ReviewForm } from '../models/review'
 import { WorkerDto } from "../models/worker"
 import { UserDto } from "../models/user"
@@ -10,27 +11,34 @@ import { map, mergeMap } from 'rxjs/operators'
 @Injectable({providedIn: 'root'})
 export class ReviewService {
     private apiServerUrl = environment.apiBaseUrl
+    private headers: HttpHeaders
 
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private loggedInService: LoggedInService,
+    ) { 
+        this.headers = new HttpHeaders({
+            'Authorization': this.loggedInService.getAuthToken()
+        })
+    }
 
-    public getReview(workerId: number, reviewId: number): Observable<Review> {
-        const reviewDto$ = this.http.get<ReviewDto>(`${this.apiServerUrl}/workers/${workerId}/reviews/${reviewId}`);
+    public getReview(review: string): Observable<Review> {
+        const reviewDto$ = this.http.get<ReviewDto>(review, { headers: this.headers });
 
         return reviewDto$.pipe(
             mergeMap((reviewDto: ReviewDto) => {
                 return forkJoin([
-                    this.http.get<WorkerDto>(reviewDto.worker),
-                    this.http.get<UserDto>(reviewDto.user)
+                    this.http.get<WorkerDto>(reviewDto._links.worker),
+                    this.http.get<UserDto>(reviewDto._links.user)
                 ]).pipe(
                     map(([worker, user]) => {
                         return {
-                            reviewId: reviewDto.reviewId,
                             rating: reviewDto.rating,
                             review: reviewDto.review,
                             date: reviewDto.date,
                             worker: worker,
                             user: user,
-                            self: reviewDto.self
+                            self: reviewDto._links.self
                         } as Review;
                     })
                 );
@@ -38,25 +46,27 @@ export class ReviewService {
         );
     }
 
-    public getReviews(workerId: number, page: number, size: number): Observable<Review[]> {
-        const params = new HttpParams().set('page', page.toString()).set('size', size.toString())
+    public getReviews(worker: string, page: number, size: number): Observable<Review[]> {
+        let params = new HttpParams()
+        
+        if(page) params = params.set('page', page.toString())
+        if(size) params = params.set('size', size.toString())
 
-        return this.http.get<ReviewDto[]>(`${this.apiServerUrl}/workers/${workerId}/reviews`, { params }).pipe(
+        return this.http.get<ReviewDto[]>(`${worker}/reviews`, { params, headers: this.headers }).pipe(
             mergeMap((reviewsDto: ReviewDto[]) => {
                 const reviewObservables = reviewsDto.map(reviewDto =>
                     forkJoin([
-                        this.http.get<WorkerDto>(reviewDto.worker),
-                        this.http.get<UserDto>(reviewDto.user)
+                        this.http.get<WorkerDto>(reviewDto._links.worker),
+                        this.http.get<UserDto>(reviewDto._links.user)
                     ]).pipe(
                         map(([worker, user]) => {
                             return {
-                                reviewId: reviewDto.reviewId,
                                 rating: reviewDto.rating,
                                 review: reviewDto.review,
                                 date: reviewDto.date,
                                 worker: worker,
                                 user: user,
-                                self: reviewDto.self
+                                self: reviewDto._links.self
                             } as Review;
                         })
                     )
@@ -67,8 +77,8 @@ export class ReviewService {
         );
     }
 
-    public addReview(workerId: number, review: ReviewForm): Observable<ReviewForm> {
-        return this.http.post<ReviewForm>(`${this.apiServerUrl}/workers/${workerId}/reviews`, review)
+    public addReview(worker: string, review: ReviewForm): Observable<ReviewForm> {
+        return this.http.post<ReviewForm>(`${worker}/reviews`, review, { headers: this.headers })
     }
 
 }

@@ -5,49 +5,42 @@ import { PostDto } from "./post"
 import { BookingDto } from "./booking"
 import { ProductDto } from "./product"
 import { EventDto } from "./event"
+import { Links } from "./links"
+import { RoleDto } from "./role"
 
 export interface User {
-    userId: number
     mail: string
     name: string
     surname: string
-    password: string
+    //password: string
     neighborhood: NeighborhoodDto
     darkMode: boolean
     phoneNumber: string
     profilePicture: ImageDto
     identification: number
+    creationDate: Date
     comments: CommentDto[]
     posts: PostDto[]
     bookings: BookingDto[]
-    subscribedPosts: PostDto[]
+    //subscribedPosts: PostDto[]
     likedPosts: PostDto[]
     purchases: ProductDto[]
     sales: ProductDto[]
-    eventsSubscribed: EventDto[]
+    //eventsSubscribed: EventDto[]
+    userRole: RoleDto
     self: string
 }
 
 export interface UserDto {
-    userId: number
     mail: string
     name: string
     surname: string
-    password: string
-    neighborhood: string
+    //password: string
     darkMode: boolean
     phoneNumber: string
-    profilePicture: string
     identification: number
-    comments: string
-    posts: string
-    bookings: string
-    subscribedPosts: string
-    likedPosts: string
-    purchases: string
-    sales: string
-    eventsSubscribed: string
-    self: string
+    creationDate: Date
+    _links: Links
 }
 
 export interface UserForm {
@@ -63,6 +56,5 @@ export interface UserForm {
     userRoleId: number
     darkMode: boolean
     profilePicture: string
-    self: string
 }
 

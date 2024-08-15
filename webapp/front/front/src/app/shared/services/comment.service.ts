@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { Comment, CommentDto, CommentForm } from '../models/comment'
 import { UserDto } from '../models/user'
 import { PostDto } from '../models/post'
@@ -6,31 +6,39 @@ import { Observable, forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../../../environments/environment'
 import { map, mergeMap } from 'rxjs/operators'
+import { LoggedInService } from './loggedIn.service'
 
 @Injectable({providedIn: 'root'})
 export class CommentService {
     private apiServerUrl = environment.apiBaseUrl
+    private headers: HttpHeaders
 
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private loggedInService: LoggedInService
+    ) { 
+        this.headers = new HttpHeaders({
+            'Authorization': this.loggedInService.getAuthToken()
+          })
+    }
 
-    public getComments(neighborhoodId : number, postId : number, page : number, size : number): Observable<Comment[]> {
+    public getComments(post: string, page : number, size : number): Observable<Comment[]> {
         const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
 
-        return this.http.get<CommentDto[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/posts/${postId}/comments`, { params }).pipe(
+        return this.http.get<CommentDto[]>(`${post}/comments`, { params, headers: this.headers }).pipe(
             mergeMap((commentsDto: CommentDto[]) => {
                 const commentObservables = commentsDto.map(commentDto =>
                     forkJoin([
-                        this.http.get<UserDto>(commentDto.user),
-                        this.http.get<PostDto>(commentDto.post)
+                        this.http.get<UserDto>(commentDto._links.user),
+                        this.http.get<PostDto>(commentDto._links.post)
                     ]).pipe(
                         map(([user, post]) => {
                             return {
-                                commentId: commentDto.commentId,
                                 comment: commentDto.comment,
                                 date: commentDto.date,
                                 user: user,
                                 post: post,
-                                self: commentDto.self
+                                self: commentDto._links.self
                             } as Comment;
                         })
                     )
@@ -41,8 +49,8 @@ export class CommentService {
         );
     }
 
-    public addComment(comment: CommentForm, neighborhoodId : number, postId : number): Observable<CommentForm> {
-        return this.http.post<CommentForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/posts/${postId}/comments`, comment)
+    public addComment(comment: CommentForm, post: string): Observable<CommentForm> {
+        return this.http.post<CommentForm>(`${post}/comments`, comment, { headers: this.headers })
     }
 
 }

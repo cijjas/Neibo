@@ -1,8 +1,8 @@
 import { UserDto } from "./user"
 import { ProductDto } from "./product"
+import { Links } from "./links"
 
 export interface Purchase {
-    purchaseId: number
     units: number
     purchaseDate: Date
     product: ProductDto
@@ -11,10 +11,7 @@ export interface Purchase {
 }
 
 export interface PurchaseDto {
-    purchaseId: number
     units: number
     purchaseDate: Date
-    product: string
-    user: string
-    self: string
+    _links: Links
 }

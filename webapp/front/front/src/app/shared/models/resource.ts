@@ -1,8 +1,8 @@
 import { ImageDto } from "./image"
+import { Links } from "./links"
 import { NeighborhoodDto } from "./neighborhood"
 
 export interface Resource {
-    resourceId: number
     title: string
     description: string
     image: ImageDto
@@ -11,12 +11,9 @@ export interface Resource {
 }
 
 export interface ResourceDto {
-    resourceId: number
     title: string
     description: string
-    image: string
-    neighborhood: string
-    self: string
+    _links: Links
 }
 
 export interface ResourceForm {

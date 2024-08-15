@@ -1,18 +1,17 @@
 import { UserDto } from "./user"
 import { PostDto } from "./post"
+import { Links } from "./links"
 
 export interface Like {
-    likeId: number
+    likeDate: Date
     post: PostDto
     user: UserDto
     self: string
 }
 
 export interface LikeDto {
-    likeId: number
-    post: string
-    user: string
-    self: string
+    likeDate: Date
+    _links: Links
 }
 
 export interface LikeForm {
