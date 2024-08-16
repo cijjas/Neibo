@@ -1,12 +1,11 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.enums.Channel;
 import ar.edu.itba.paw.exceptions.NotFoundException;
+import ar.edu.itba.paw.interfaces.persistence.CategorizationDao;
 import ar.edu.itba.paw.interfaces.persistence.NeighborhoodDao;
 import ar.edu.itba.paw.interfaces.persistence.PostDao;
-import ar.edu.itba.paw.interfaces.services.ChannelService;
-import ar.edu.itba.paw.interfaces.services.ImageService;
-import ar.edu.itba.paw.interfaces.services.PostService;
-import ar.edu.itba.paw.interfaces.services.TagService;
+import ar.edu.itba.paw.interfaces.services.*;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Post;
 import org.slf4j.Logger;
@@ -26,17 +25,21 @@ public class PostServiceImpl implements PostService {
 
     private final PostDao postDao;
     private final NeighborhoodDao neighborhoodDao;
+    private final CategorizationDao categorizationDao;
     private final TagService tagService;
     private final ImageService imageService;
     private final ChannelService channelService;
+    private final EmailService emailService;
 
     @Autowired
-    public PostServiceImpl(final PostDao postDao, TagService tagService, ImageService imageService, NeighborhoodDao neighborhoodDao, ChannelService channelService) {
+    public PostServiceImpl(final PostDao postDao, CategorizationDao categorizationDao, TagService tagService, ImageService imageService, NeighborhoodDao neighborhoodDao, ChannelService channelService, EmailService emailService) {
+        this.categorizationDao = categorizationDao;
         this.imageService = imageService;
         this.tagService = tagService;
         this.postDao = postDao;
         this.neighborhoodDao = neighborhoodDao;
         this.channelService = channelService;
+        this.emailService = emailService;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -61,6 +64,10 @@ public class PostServiceImpl implements PostService {
         Post p = postDao.createPost(title, description, userId, channelId, i == null ? 0 : i.getImageId());
         if (tagURNs != null && !tagURNs.isEmpty())
             tagService.categorizePost(p.getPostId(), tagURNs, neighborhoodId);
+
+        if(channelId == Channel.ANNOUNCEMENTS.getId())
+            emailService.sendBatchAnnouncementMail(p, neighborhoodId);
+
         return p;
     }
 
@@ -139,6 +146,9 @@ public class PostServiceImpl implements PostService {
         ValidationUtils.checkPostId(postId);
 
         findPost(postId).orElseThrow(NotFoundException::new);
+
+        // Delete categorizations associated with the Post
+        categorizationDao.deleteCategorization(null, postId);
 
         return postDao.deletePost(postId);
     }

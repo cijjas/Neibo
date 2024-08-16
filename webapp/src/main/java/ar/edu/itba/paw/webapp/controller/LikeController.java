@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  *   - No, it can be tempting but the whole creation plus filtering plus potentially showing liked posts or people that liked the post ruins the idea
  */
 
-@Path("neighborhoods/{neighborhoodId}/likes")
+@Path("likes")
 @Component
 public class LikeController extends GlobalControllerAdvice{
     private static final Logger LOGGER = LoggerFactory.getLogger(LikeController.class);
@@ -46,21 +46,19 @@ public class LikeController extends GlobalControllerAdvice{
 
     private EntityTag entityLevelETag = ETagUtility.generateETag();
 
-    @PathParam("neighborhoodId")
-    private Long neighborhoodId;
-
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
+    @PreAuthorize("@accessControlHelper.canGetLikes(#post, #user)")
     public Response listLikes(
             @QueryParam("onPost") final String post,
             @QueryParam("likedBy") final String user,
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size
     ) {
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
+        LOGGER.info("GET request arrived at '/likes'");
 
         // Content
-        final List<Like> likes = ls.getLikes(neighborhoodId, post, user, page, size);
+        final List<Like> likes = ls.getLikes(post, user, page, size);
         String likesHashCode;
 
         // This is required to keep a consistent hash code across creates and this endpoint used as a find
@@ -87,8 +85,8 @@ public class LikeController extends GlobalControllerAdvice{
 
         // Pagination Links
         Link[] links = ControllerUtils.createPaginationLinks(
-                uriInfo.getBaseUri().toString() + "neighborhood/" + neighborhoodId + "likes",
-                ls.calculateLikePages(neighborhoodId, post, user, size),
+                uriInfo.getBaseUri().toString() + "likes",
+                ls.calculateLikePages(post, user, size),
                 page,
                 size);
 
@@ -106,7 +104,7 @@ public class LikeController extends GlobalControllerAdvice{
             @QueryParam("onPost") final String post,
             @QueryParam("likedBy") final String user
     ){
-        LOGGER.info("GET request arrived at '/neighborhoods/{}/likes/count'", neighborhoodId);
+        LOGGER.info("GET request arrived at '/likes/count'");
 
         // Cache Control
         CacheControl cacheControl = new CacheControl();
@@ -115,8 +113,8 @@ public class LikeController extends GlobalControllerAdvice{
             return builder.cacheControl(cacheControl).build();
 
         // Content
-        int count = ls.countLikes(neighborhoodId, post, user);
-        LikeCountDto dto = LikeCountDto.fromLikeCount(count, post, user, neighborhoodId,  uriInfo);
+        int count = ls.countLikes(post, user);
+        LikeCountDto dto = LikeCountDto.fromLikeCount(count, post, user,  uriInfo);
 
         return Response.ok(new GenericEntity<LikeCountDto>(dto) {})
                 .cacheControl(cacheControl)
@@ -129,7 +127,7 @@ public class LikeController extends GlobalControllerAdvice{
     public Response createLike(
             @Valid @NotNull LikeForm form
     ) {
-        LOGGER.info("POST request arrived at '/neighborhoods/{}/likes'", neighborhoodId);
+        LOGGER.info("POST request arrived at '/likes'");
 
         // Creation & HashCode Generation
         final Like like = ls.createLike(form.getPost(), form.getUser());
@@ -137,8 +135,6 @@ public class LikeController extends GlobalControllerAdvice{
 
         // Resource URN
         final URI uri = uriInfo.getBaseUriBuilder()
-                .path("neighborhoods")
-                .path(String.valueOf(like.getUser().getNeighborhood().getNeighborhoodId()))
                 .path("likes")
                 .queryParam("likedBy", uriInfo.getBaseUriBuilder()
                         .path("neighborhoods")
@@ -166,7 +162,7 @@ public class LikeController extends GlobalControllerAdvice{
             @QueryParam("likedBy") final String user,
             @QueryParam("onPost") final String post
     ) {
-        LOGGER.info("DELETE request arrived at '/neighborhoods/{}/likes/'", neighborhoodId);
+        LOGGER.info("DELETE request arrived at '/likes'");
 
         if(ls.deleteLike(post, user)) {
             return Response.noContent()

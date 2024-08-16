@@ -6,6 +6,7 @@ import ar.edu.itba.paw.models.Entities.Event;
 import ar.edu.itba.paw.models.Entities.Post;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.models.Entities.User;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.List;
 
@@ -14,6 +15,13 @@ public interface EmailService {
     void sendNewUserMail(long neighborhoodId, String userName, UserRole role);
 
     void sendEventMail(Event event, String customMessage, List<User> receivers);
+
+    @Async
+    void sendBatchAnnouncementMail(Post post, long neighborhoodId);
+
+    void sendBatchEventMail(Event event, String customMessage, long neighborhoodId);
+
+    void sendBatchNewAmenityMail(long neighborhoodId, String amenityName, String amenityDescription);
 
     void sendWeeklyEventNotifications();
 

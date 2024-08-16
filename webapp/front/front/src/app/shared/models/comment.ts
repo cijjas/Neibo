@@ -1,8 +1,8 @@
+import { Links } from "./links"
 import { PostDto } from "./post"
 import { UserDto } from "./user"
 
 export interface Comment {
-    commentId: number
     comment: string
     date: Date
     user: UserDto
@@ -11,12 +11,9 @@ export interface Comment {
 }
 
 export interface CommentDto {
-    commentId: number
     comment: string
     date: Date
-    user: string
-    post: string
-    self: string
+    _links: Links
 }
 
 export interface CommentForm {

@@ -1,20 +1,17 @@
 import { UserDto } from "./user"
-import { AvailabilityDto } from "./availability"
+import { Links } from "./links"
+import { ShiftDto } from "./shift"
 
 export interface Booking {
-    bookingId: number
     bookingDate: Date
     user: UserDto
-    amenityAvailability: AvailabilityDto
+    shift: ShiftDto
     self: string
 }
 
 export interface BookingDto {
-    bookingId: number
     bookingDate: Date
-    user: string
-    amenityAvailability: string
-    self: string
+    _links: Links
 }
 
 export interface BookingForm {

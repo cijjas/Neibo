@@ -26,11 +26,15 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Consumer;
 
 @EnableScheduling
 @Component
 public class EmailServiceImpl implements EmailService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
+    private static final int DEFAULT_PAGE = 1;
+    private static final int DEFAULT_SIZE = 500;
+    private static final String BASE_URL = "http://pawserver.it.itba.edu.ar/paw-2023b-02/";
     private final UserDao userDao;
     private final NeighborhoodDao neighborhoodDao;
     private final EventDao eventDao;
@@ -107,11 +111,17 @@ public class EmailServiceImpl implements EmailService {
             variables.put("name", admin.getName());
             variables.put("joinerName", userName);
             variables.put("neighborhood", neighborhood.getName());
-            variables.put("urlpath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/admin/unverified");
+            variables.put("urlpath", BASE_URL + "admin/unverified");
 
             sendMessageUsingThymeleafTemplate(admin.getMail(), "subject.new.user", "newNeighbor-template_en.html", variables, admin.getLanguage());
         }
 
+    }
+
+    @Override
+    @Async
+    public void sendBatchEventMail(Event event, String customMessage, long neighborhoodId) {
+        sendBatchEmails(neighborhoodId, (users) -> sendEventMail(event, customMessage, users));
     }
 
     @Override
@@ -122,7 +132,7 @@ public class EmailServiceImpl implements EmailService {
             Map<String, Object> variables = new HashMap<>();
             variables.put("name", user.getName());
             variables.put("message", emailMessageSource.getMessage(customMessage, null, isEnglish? Locale.US : new Locale("es", "AR")));
-            variables.put("eventPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/events/" + event.getEventId());
+            variables.put("eventPath", BASE_URL + "events/" + event.getEventId());
             StringBuilder message = new StringBuilder("\n");
             message.append(event.getName())
                     .append("\n")
@@ -218,7 +228,7 @@ public class EmailServiceImpl implements EmailService {
 
                 variables.put("events", message.toString());
                 variables.put("name", user.getName());
-                variables.put("eventsPath", "pawserver.it.itba.edu.ar/paw-2023b-02/calendar");
+                variables.put("eventsPath", BASE_URL + "calendar");
 
                 sendMessageUsingThymeleafTemplate(to, "subject.upcoming.events", "events-template_en.html", variables, user.getLanguage());
 
@@ -299,7 +309,7 @@ public class EmailServiceImpl implements EmailService {
                 }
 
                 variables.put("name", user.getName());
-                variables.put("eventsPath", "pawserver.it.itba.edu.ar/paw-2023b-02/calendar");
+                variables.put("eventsPath", BASE_URL + "calendar");
                 variables.put("events", message.toString());
 
                 sendMessageUsingThymeleafTemplate(user.getMail(), "subject.tomorrows.events", "events-template_en.html", variables, user.getLanguage());
@@ -309,15 +319,27 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Async
+    public void sendBatchNewAmenityMail(long neighborhoodId, String amenityName, String amenityDescription) {
+        sendBatchEmails(neighborhoodId, (users) -> sendNewAmenityMail(neighborhoodId, amenityName, amenityDescription, users));
+    }
+
+    @Override
+    @Async
     public void sendNewAmenityMail(long neighborhoodId, String amenityName, String amenityDescription, List<User> receivers) {
         for(User user : receivers) {
             Map<String, Object> variables = new HashMap<>();
             variables.put("name", user.getName());
-            variables.put("amenityPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/events/reservations");
+            variables.put("amenityPath", BASE_URL + "events/reservations");
             variables.put("amenityName", amenityName);
             variables.put("amenityDescription", amenityDescription);
             sendMessageUsingThymeleafTemplate(user.getMail(), "subject.new.amenity", "new-amenity-template_en.html", variables, user.getLanguage());
         }
+    }
+
+    @Override
+    @Async
+    public void sendBatchAnnouncementMail(Post post, long neighborhoodId) {
+        sendBatchEmails(neighborhoodId, (users) -> sendAnnouncementMail(post, users));
     }
 
     @Override
@@ -327,7 +349,7 @@ public class EmailServiceImpl implements EmailService {
             Map<String, Object> vars = new HashMap<>();
             vars.put("name", n.getName());
             vars.put("postTitle", post.getTitle());
-            vars.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
+            vars.put("postPath", BASE_URL + "posts/" + post.getPostId());
             sendMessageUsingThymeleafTemplate(n.getMail(), "subject.new.announcement", "announcement-template_en.html", vars, n.getLanguage());
         }
     }
@@ -339,14 +361,14 @@ public class EmailServiceImpl implements EmailService {
         Map<String, Object> variables = new HashMap<>();
         variables.put("name", user.getName());
         variables.put("postTitle", post.getTitle());
-        variables.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
+        variables.put("postPath", BASE_URL + "posts/" + post.getPostId());
         sendMessageUsingThymeleafTemplate(user.getMail(), "subject.new.comment", "comment-template_en.html", variables, user.getLanguage());
 
         for (User n : receivers) {
             Map<String, Object> vars = new HashMap<>();
             vars.put("name", n.getName());
             vars.put("postTitle", post.getTitle());
-            vars.put("postPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/posts/" + post.getPostId());
+            vars.put("postPath", BASE_URL + "posts/" + post.getPostId());
             sendMessageUsingThymeleafTemplate(n.getMail(), "subject.new.comment", "comment-template_en.html", vars, n.getLanguage());
         }
     }
@@ -358,7 +380,7 @@ public class EmailServiceImpl implements EmailService {
         variables.put("name", receiver.getName());
         variables.put("productName", product.getName());
         variables.put("message", message);
-        variables.put("productPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/marketplace/" + product.getProductId());
+        variables.put("productPath", BASE_URL + "marketplace/" + product.getProductId());
         String customMessage = reply? "inquiry.replied" : "inquiry.new";
         String replyOrMessage = reply? "inquiry.the.reply" : "inquiry.the.message";
         Locale locale = receiver.getLanguage() == Language.ENGLISH? Locale.US : new Locale("es", "AR");
@@ -379,7 +401,7 @@ public class EmailServiceImpl implements EmailService {
         variables.put("senderName", sender.getName());
         variables.put("senderSurname", sender.getSurname());
         variables.put("message", message);
-        variables.put("productPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/marketplace/" + product.getProductId());
+        variables.put("productPath", BASE_URL + "marketplace/" + product.getProductId());
         sendMessageUsingThymeleafTemplate(receiver.getMail(), "subject.new.request", "request-template_en.html", variables, receiver.getLanguage());
     }
 
@@ -389,7 +411,23 @@ public class EmailServiceImpl implements EmailService {
         Map<String, Object> vars = new HashMap<>();
         vars.put("name", user.getName());
         vars.put("neighborhood", neighborhoodName);
-        vars.put("loginPath", "http://pawserver.it.itba.edu.ar/paw-2023b-02/");
+        vars.put("loginPath", BASE_URL);
         sendMessageUsingThymeleafTemplate(user.getMail(), "subject.verification", "verification-template_en.html", vars, user.getLanguage());
+    }
+
+    private void sendBatchEmails(long neighborhoodId, Consumer<List<User>> emailSender) {
+        List<User> users;
+        int page = DEFAULT_PAGE;
+        int size = DEFAULT_SIZE;
+        do {
+            // Fetch users in batches
+            users = userDao.getUsers((long) UserRole.NEIGHBOR.getId(), neighborhoodId, page, size);
+
+            // Send email with the current batch of users
+            if (!users.isEmpty()) {
+                emailSender.accept(users);
+            }
+            page++;
+        } while (users.size() == size); // Continue fetching next page if the current page is full
     }
 }

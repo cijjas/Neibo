@@ -1,4 +1,5 @@
-import { HttpClient, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
+import { LoggedInService } from './loggedIn.service'
 import { User, UserDto, UserForm } from '../models/user'
 import { NeighborhoodDto } from "../models/neighborhood"
 import { ImageDto } from "../models/image"
@@ -11,51 +12,61 @@ import { Observable, forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../../../environments/environment'
 import { map, mergeMap } from 'rxjs/operators'
+import { Role, RoleDto } from '../models/role'
 
 @Injectable({providedIn: 'root'})
 export class UserService {
     private apiServerUrl = environment.apiBaseUrl
+    private headers: HttpHeaders
 
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private loggedInService: LoggedInService,
+    ) { 
+        this.headers = new HttpHeaders({
+            'Authorization': this.loggedInService.getAuthToken()
+        })
+    }
 
-    public getUser(neighborhoodId: number, userId: number): Observable<User> {
-        const userDto$ = this.http.get<UserDto>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users/${userId}`);
+    public getUser(user: string): Observable<User> {
+        const userDto$ = this.http.get<UserDto>(user, { headers: this.headers });
         return userDto$.pipe(
             mergeMap((userDto: UserDto) => {
                 return forkJoin([
-                    this.http.get<NeighborhoodDto>(userDto.neighborhood),
-                    this.http.get<ImageDto>(userDto.profilePicture),
-                    this.http.get<CommentDto[]>(userDto.comments),
-                    this.http.get<PostDto[]>(userDto.posts),
-                    this.http.get<BookingDto[]>(userDto.bookings),
-                    this.http.get<PostDto[]>(userDto.subscribedPosts),
-                    this.http.get<PostDto[]>(userDto.likedPosts),
-                    this.http.get<ProductDto[]>(userDto.purchases),
-                    this.http.get<ProductDto[]>(userDto.sales),
-                    this.http.get<EventDto[]>(userDto.eventsSubscribed)
+                    this.http.get<NeighborhoodDto>(userDto._links.neighborhood),
+                        this.http.get<ImageDto>(userDto._links.profilePicture),
+                        this.http.get<CommentDto[]>(userDto._links.comments),
+                        this.http.get<PostDto[]>(userDto._links.posts),
+                        this.http.get<BookingDto[]>(userDto._links.bookings),
+                        //this.http.get<PostDto[]>(userDto._links.subscribedPosts),
+                        this.http.get<PostDto[]>(userDto._links.likedPosts),
+                        this.http.get<ProductDto[]>(userDto._links.purchases),
+                        this.http.get<ProductDto[]>(userDto._links.sales),
+                        //this.http.get<EventDto[]>(userDto._links.eventsSubscribed)
+                        this.http.get<RoleDto>(userDto._links.userRole)
                 ]).pipe(
-                    map(([neighborhood, profilePicture, comments, posts, bookings, subscribedPosts, likedPosts,
-                            purchases, sales, eventsSubscribed]) => {
+                    map(([neighborhood, profilePicture, comments, posts, bookings, likedPosts,
+                            purchases, sales, userRole]) => {
                         return {
-                            userId: userDto.userId,
                             mail: userDto.mail,
                             name: userDto.name,
                             surname: userDto.surname,
-                            password: userDto.password,
                             neighborhood: neighborhood,
                             darkMode: userDto.darkMode,
                             phoneNumber: userDto.phoneNumber,
                             profilePicture: profilePicture,
                             identification: userDto.identification,
+                            creationDate: userDto.creationDate,
                             comments: comments,
                             posts: posts,
                             bookings: bookings,
-                            subscribedPosts: subscribedPosts,
+                            //subscribedPosts: subscribedPosts,
                             likedPosts: likedPosts,
                             purchases: purchases,
                             sales: sales,
-                            eventsSubscribed: eventsSubscribed,
-                            self: userDto.self
+                            //eventsSubscribed: eventsSubscribed,
+                            userRole: userRole,
+                            self: userDto._links.self
                         } as User;
                     })
                 );
@@ -64,46 +75,51 @@ export class UserService {
 
     }
 
-    public getUsers(neighborhoodId: number, userRole: string, page: number, size: number): Observable<User[]> {
-        const params = new HttpParams().set('userRole', userRole).set('page', page.toString()).set('size', size.toString())
+    public getUsers(neighborhood: string, userRole: string, page: number, size: number): Observable<User[]> {
+        let params = new HttpParams()
+        
+        if(userRole) params = params.set('withRole', userRole)
+        if(page) params = params.set('page', page.toString())
+        if(size) params = params.set('size', size.toString())
 
-        return this.http.get<UserDto[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users`, { params }).pipe(
+        return this.http.get<UserDto[]>(`${neighborhood}/users`, { params, headers: this.headers }).pipe(
             mergeMap((usersDto: UserDto[]) => {
                 const userObservables = usersDto.map(userDto =>
                     forkJoin([
-                        this.http.get<NeighborhoodDto>(userDto.neighborhood),
-                        this.http.get<ImageDto>(userDto.profilePicture),
-                        this.http.get<CommentDto[]>(userDto.comments),
-                        this.http.get<PostDto[]>(userDto.posts),
-                        this.http.get<BookingDto[]>(userDto.bookings),
-                        this.http.get<PostDto[]>(userDto.subscribedPosts),
-                        this.http.get<PostDto[]>(userDto.likedPosts),
-                        this.http.get<ProductDto[]>(userDto.purchases),
-                        this.http.get<ProductDto[]>(userDto.sales),
-                        this.http.get<EventDto[]>(userDto.eventsSubscribed)
+                        this.http.get<NeighborhoodDto>(userDto._links.neighborhood),
+                        this.http.get<ImageDto>(userDto._links.profilePicture),
+                        this.http.get<CommentDto[]>(userDto._links.comments),
+                        this.http.get<PostDto[]>(userDto._links.posts),
+                        this.http.get<BookingDto[]>(userDto._links.bookings),
+                        //this.http.get<PostDto[]>(userDto._links.subscribedPosts),
+                        this.http.get<PostDto[]>(userDto._links.likedPosts),
+                        this.http.get<ProductDto[]>(userDto._links.purchases),
+                        this.http.get<ProductDto[]>(userDto._links.sales),
+                        //this.http.get<EventDto[]>(userDto._links.eventsSubscribed)
+                        this.http.get<RoleDto>(userDto._links.userRole)
                     ]).pipe(
-                        map(([neighborhood, profilePicture, comments, posts, bookings, subscribedPosts, likedPosts,
-                            purchases, sales, eventsSubscribed]) => {
+                        map(([neighborhood, profilePicture, comments, posts, bookings, likedPosts,
+                            purchases, sales, userRole]) => {
                         return {
-                            userId: userDto.userId,
                             mail: userDto.mail,
                             name: userDto.name,
                             surname: userDto.surname,
-                            password: userDto.password,
                             neighborhood: neighborhood,
                             darkMode: userDto.darkMode,
                             phoneNumber: userDto.phoneNumber,
                             profilePicture: profilePicture,
                             identification: userDto.identification,
+                            creationDate: userDto.creationDate,
                             comments: comments,
                             posts: posts,
                             bookings: bookings,
-                            subscribedPosts: subscribedPosts,
+                            //subscribedPosts: subscribedPosts,
                             likedPosts: likedPosts,
                             purchases: purchases,
                             sales: sales,
-                            eventsSubscribed: eventsSubscribed,
-                            self: userDto.self
+                            //eventsSubscribed: eventsSubscribed,
+                            userRole: userRole,
+                            self: userDto._links.self
                         } as User;
                     })
                     )
@@ -114,12 +130,12 @@ export class UserService {
         );
     }
 
-    public addUser(neighborhoodId: number, user: UserForm): Observable<UserForm> {
-        return this.http.post<UserForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users`, user)
+    public addUser(neighborhood: number, user: UserForm): Observable<UserForm> {
+        return this.http.post<UserForm>(`${neighborhood}/users`, user, { headers: this.headers })
     }
 
-    public updateUser(neighborhoodId: number, user: UserForm): Observable<UserForm> {
-        return this.http.patch<UserForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/users/${user.userId}`, user)
+    public updateUser(user: string, userForm: UserForm): Observable<UserForm> {
+        return this.http.patch<UserForm>(user, userForm, { headers: this.headers })
     }
 
 }

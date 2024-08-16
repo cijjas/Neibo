@@ -1,11 +1,13 @@
-export enum Channel {
-  ANNOUNCEMENTS = 'Announcments',
-  COMPLAINTS = 'Complaints',
-  FEED = 'Feed',
+import { Links } from "./links"
+import { PostDto } from "./post"
+
+export interface Channel {
+    channel: string
+    posts: PostDto[]
+    self: string
 }
 
 export interface ChannelDto {
-  channelId: number,
-  channel: Channel,
-  self: string
+    channel: string
+    _links: Links
 }

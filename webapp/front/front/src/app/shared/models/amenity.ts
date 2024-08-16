@@ -1,22 +1,19 @@
 import { NeighborhoodDto } from './neighborhood'
-import { AvailabilityDto } from './availability'
+import { Links } from './links'
+import { ShiftDto } from './shift'
 
 export interface Amenity {
-    amenityId: number
     name: string
     description: string
     neighborhood: NeighborhoodDto;
-    availability: AvailabilityDto[]
+    shifts: ShiftDto[]
     self: string
 }
 
 export interface AmenityDto {
-    amenityId: number
     name: string
     description: string
-    neighborhood: string
-    availability: string
-    self: string
+    _links: Links
 }
 
 export interface AmenityForm {

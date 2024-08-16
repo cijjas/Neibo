@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Optional;
 
 @Repository
 public class CategorizationDaoImpl implements CategorizationDao {
@@ -18,7 +19,7 @@ public class CategorizationDaoImpl implements CategorizationDao {
     @PersistenceContext
     private EntityManager em;
 
-    // ---------------------------------------------- TAGS INSERT ------------------------------------------------------
+    // ---------------------------------------------- CATEGORIZATION INSERT ------------------------------------------------------
 
     @Override
     public Categorization createCategorization(final long tagId, final long postId) {
@@ -27,5 +28,40 @@ public class CategorizationDaoImpl implements CategorizationDao {
         Categorization categorization = new Categorization(em.find(Post.class, postId), em.find(Tag.class, tagId));
         em.persist(categorization);
         return categorization;
+    }
+
+    // ---------------------------------------------- CATEGORIZATION INSERT ------------------------------------------------------
+
+    @Override
+    public Optional<Categorization> findCategorization(final long tagId, final long postId) {
+        LOGGER.debug("Selecting Category for Post {} and Tag {}", postId, tagId);
+
+        return em.createQuery("SELECT c FROM Categorization c WHERE c.post.postId = :postId AND c.tag.tagId = :tagId", Categorization.class)
+                .setParameter("postId", postId)
+                .setParameter("tagId", tagId)
+                .getResultList().stream().findFirst();
+    }
+
+    // ---------------------------------------------- CATEGORIZATION DELETE ------------------------------------------------------
+
+    @Override
+    public boolean deleteCategorization(Long tagId, Long postId) {
+        LOGGER.debug("Deleting Category for Post {} and Tag {}", postId, tagId);
+
+        if(postId != null && tagId != null) {
+            return em.createQuery("DELETE FROM Categorization c WHERE c.post.postId = :postId AND c.tag.tagId = :tagId")
+                    .setParameter("postId", postId)
+                    .setParameter("tagId", tagId)
+                    .executeUpdate() > 0;
+        } else if(tagId != null) {
+            return em.createQuery("DELETE FROM Categorization c WHERE c.tag.tagId = :tagId")
+                    .setParameter("tagId", tagId)
+                    .executeUpdate() > 0;
+        } else if (postId != null) {
+            return em.createQuery("DELETE FROM Categorization c WHERE c.post.postId = :postId")
+                    .setParameter("postId", postId)
+                    .executeUpdate() > 0;
+        }
+        return false; // If both are null, return false
     }
 }
