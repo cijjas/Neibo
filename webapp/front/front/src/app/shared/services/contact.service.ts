@@ -1,30 +1,38 @@
-import { HttpClient, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http'
 import { Contact, ContactDto, ContactForm } from '../models/contact'
 import { NeighborhoodDto } from '../models/neighborhood'
 import { Observable, forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../../../environments/environment'
 import { map, mergeMap } from 'rxjs/operators'
+import { LoggedInService } from './loggedIn.service'
 
 @Injectable({providedIn: 'root'})
 export class ContactService {
     private apiServerUrl = environment.apiBaseUrl
+    private headers: HttpHeaders
 
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private loggedInService: LoggedInService
+    ) { 
+        this.headers = new HttpHeaders({
+            'Authorization': this.loggedInService.getAuthToken()
+        })
+    }
 
-    public getContacts(neighborhoodId : number): Observable<Contact[]> {
-        return this.http.get<ContactDto[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/contacts`).pipe(
+    public getContacts(neighborhood : number): Observable<Contact[]> {
+        return this.http.get<ContactDto[]>(`${neighborhood}/contacts`, { headers: this.headers }).pipe(
             mergeMap((contactsDto: ContactDto[]) => {
                 const contactObservables = contactsDto.map(contactDto =>
-                    this.http.get<NeighborhoodDto>(contactDto.neighborhood).pipe(
+                    this.http.get<NeighborhoodDto>(contactDto._links.neighborhood).pipe(
                         map((neighborhood) => {
                             return {
-                                contactId: contactDto.contactId,
                                 contactName: contactDto.contactName,
                                 contactAddress: contactDto.contactAddress,
                                 contactPhone: contactDto.contactPhone,
                                 neighborhood: neighborhood,
-                                self: contactDto.self
+                                self: contactDto._links.self
                             } as Contact;
                         })
                     )
@@ -35,15 +43,15 @@ export class ContactService {
         );
     }
 
-    public addContact(contact: ContactForm, neighborhoodId : number): Observable<ContactForm> {
-        return this.http.post<ContactForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/contacts`, contact)
+    public addContact(contactForm: ContactForm, neighborhood: string): Observable<ContactForm> {
+        return this.http.post<ContactForm>(`${neighborhood}/contacts`, contactForm, { headers: this.headers})
     }
 
-    public updateContact(contact: ContactForm, neighborhoodId : number): Observable<ContactForm> {
-        return this.http.patch<ContactForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/contacts/${contact.contactId}`, contact)
+    public updateContact(contactForm: ContactForm, contact: string): Observable<ContactForm> {
+        return this.http.patch<ContactForm>(`${contact}`, contactForm, { headers: this.headers })
     }
 
-    public deleteContact(contactId: number, neighborhoodId : number): Observable<void> {
-        return this.http.delete<void>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/contacts/${contactId}`)
+    public deleteContact(contact: string): Observable<void> {
+        return this.http.delete<void>(contact, { headers: this.headers })
     }
 }

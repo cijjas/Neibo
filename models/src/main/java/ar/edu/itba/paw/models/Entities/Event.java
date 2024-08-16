@@ -156,7 +156,6 @@ public class Event {
                 ", date=" + date +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
-                ", neighborhood=" + neighborhood +
                 '}';
     }
 

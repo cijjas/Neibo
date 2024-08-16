@@ -32,6 +32,7 @@ public class ReviewDaoImpl implements ReviewDao {
                 .worker(em.find(Worker.class, workerId))
                 .rating(rating)
                 .review(reviewString)
+                .date(new java.sql.Date(System.currentTimeMillis()))
                 .build();
         em.persist(review);
         return review;

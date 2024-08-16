@@ -115,14 +115,14 @@ public class WorkerDaoImpl implements WorkerDao {
             queryStringBuilder.append("AND (SELECT AVG(rating) FROM reviews r WHERE r.workerid = w.userid) > 4 ");
         }
 
-        if (workerRoleId != null) {
+        if (workerRoleId != null ) {
             queryStringBuilder.append("AND wn.role = :workerRole ");
         }
 
         if (professionIds != null && !professionIds.isEmpty()) {
             queryStringBuilder.append("AND EXISTS (SELECT 1 FROM workers_professions wp, professions p ");
             queryStringBuilder.append("WHERE w.userid = wp.workerid AND wp.professionid = p.professionid ");
-            queryStringBuilder.append("AND p.profession IN :professions) ");
+            queryStringBuilder.append("AND p.professionid IN :professions) ");
         }
 
         if (neighborhoodIds != null && !neighborhoodIds.isEmpty()) {
@@ -134,7 +134,7 @@ public class WorkerDaoImpl implements WorkerDao {
 
         // Set parameters
         if (workerRoleId != null) {
-            countQuery.setParameter("workerRole", WorkerRole.fromId(workerRoleId));
+            countQuery.setParameter("workerRole", WorkerRole.fromId(workerRoleId).name());
         }
 
         if (professionIds != null && !professionIds.isEmpty()) {
@@ -144,15 +144,15 @@ public class WorkerDaoImpl implements WorkerDao {
         if (neighborhoodIds != null && !neighborhoodIds.isEmpty()) {
             countQuery.setParameter("neighborhoodIds", neighborhoodIds);
         }
-
-        return ((Number) countQuery.getSingleResult()).intValue();
+        Object result = countQuery.getSingleResult();
+        return Integer.parseInt(result.toString());
     }
 
     // ---------------------------------------------- WORKERS DELETE ---------------------------------------------------
 
     @Override
     public boolean deleteWorker(long workerId) {
-        LOGGER.debug("Deleting Worker with workerId {}", workerId);
+        LOGGER.debug("Deleting Worker with Id {}", workerId);
         Worker worker = em.find(Worker.class, workerId);
         if (worker != null) {
             em.remove(worker);

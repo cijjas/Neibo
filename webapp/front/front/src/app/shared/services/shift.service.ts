@@ -1,4 +1,5 @@
-import { HttpClient, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
+import { LoggedInService } from './loggedIn.service'
 import { Shift, ShiftDto } from '../models/shift'
 import { AmenityDto } from "../models/amenity"
 import { Day } from "../models/day"
@@ -10,27 +11,31 @@ import { map, mergeMap } from 'rxjs/operators'
 @Injectable({providedIn: 'root'})
 export class ShiftService {
     private apiServerUrl = environment.apiBaseUrl
+    private headers: HttpHeaders
 
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private loggedInService: LoggedInService,
+    ) { 
+        this.headers = new HttpHeaders({
+            'Authorization': this.loggedInService.getAuthToken()
+        })
+    }
 
-    public getShift(shiftId: number): Observable<Shift> {
-        const shiftDto$ = this.http.get<ShiftDto>(`${this.apiServerUrl}/shift/${shiftId}`);
+    public getShift(shift: string): Observable<Shift> {
+        const shiftDto$ = this.http.get<ShiftDto>(shift, { headers: this.headers });
 
         return shiftDto$.pipe(
             mergeMap((shiftDto: ShiftDto) => {
                 return forkJoin([
-                    this.http.get<AmenityDto[]>(shiftDto.amenities),
+                    //this.http.get<AmenityDto[]>(shiftDto._links.amenities),
                     this.http.get<Day>(shiftDto.day)
                 ]).pipe(
-                    map(([amenities, day]) => {
+                    map(([day]) => {
                         return {
-                            shiftId: shiftDto.shiftId,
-                            amenities: amenities,
                             day: day,
                             startTime: shiftDto.startTime,
-                            endTime: shiftDto.endTime,
-                            taken: shiftDto.taken,
-                            self: shiftDto.self
+                            self: shiftDto._links.self
                         } as Shift;
                     })
                 );
@@ -39,22 +44,18 @@ export class ShiftService {
     }
 
     public getShifts(): Observable<Shift[]> {
-        return this.http.get<ShiftDto[]>(`${this.apiServerUrl}/shifts`).pipe(
+        return this.http.get<ShiftDto[]>(`${this.apiServerUrl}/shifts`, { headers: this.headers }).pipe(
             mergeMap((shiftsDto: ShiftDto[]) => {
                 const shiftObservables = shiftsDto.map(shiftDto =>
                     forkJoin([
-                        this.http.get<AmenityDto[]>(shiftDto.amenities),
+                        //this.http.get<AmenityDto[]>(shiftDto.amenities),
                         this.http.get<Day>(shiftDto.day)
                     ]).pipe(
-                        map(([amenities, day]) => {
+                        map(([day]) => {
                             return {
-                                shiftId: shiftDto.shiftId,
-                                amenities: amenities,
                                 day: day,
                                 startTime: shiftDto.startTime,
-                                endTime: shiftDto.endTime,
-                                taken: shiftDto.taken,
-                                self: shiftDto.self
+                                self: shiftDto._links.self
                             } as Shift;
                         })
                     )

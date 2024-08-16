@@ -3,6 +3,7 @@ package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 import ar.edu.itba.paw.enums.ProductStatus;
 import ar.edu.itba.paw.enums.RequestStatus;
 import ar.edu.itba.paw.interfaces.persistence.ProductDao;
+import ar.edu.itba.paw.models.Entities.Department;
 import ar.edu.itba.paw.models.Entities.Image;
 import ar.edu.itba.paw.models.Entities.Product;
 import ar.edu.itba.paw.models.Entities.User;
@@ -28,6 +29,8 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public Product createProduct(long userId, String name, String description, double price, boolean used, long departmentId, Long primaryPictureId, Long secondaryPictureId, Long tertiaryPictureId, Long units) {
         LOGGER.debug("Inserting Product {}", name);
+
+        Department d = em.find(ar.edu.itba.paw.models.Entities.Department.class, departmentId);
 
         Product product = new Product.Builder()
                 .name(name)
@@ -216,7 +219,6 @@ public class ProductDaoImpl implements ProductDao {
         // No parameters have to be set for the ProductStatus Condition
 
         Object countResult = query.getSingleResult();
-
         return Integer.parseInt(countResult.toString());
     }
 

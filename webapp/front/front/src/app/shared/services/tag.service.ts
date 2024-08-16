@@ -1,4 +1,5 @@
-import { HttpClient, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
+import { LoggedInService } from './loggedIn.service'
 import { Tag, TagDto } from '../models/tag'
 import { PostDto } from '../models/post'
 import { Observable, forkJoin } from 'rxjs'
@@ -9,22 +10,33 @@ import { map, mergeMap } from 'rxjs/operators'
 @Injectable({providedIn: 'root'})
 export class TagService {
     private apiServerUrl = environment.apiBaseUrl
+    private headers: HttpHeaders
 
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private loggedInService: LoggedInService,
+    ) { 
+        this.headers = new HttpHeaders({
+            'Authorization': this.loggedInService.getAuthToken()
+        })
+    }
 
-    public getTags(neighborhoodId: number, postId: number, page: number, size: number): Observable<Tag[]> {
-        const params = new HttpParams().set('postId', postId.toString()).set('page', page.toString()).set('size', size.toString())
+    public getTags(neighborhood: string, post: string, page: number, size: number): Observable<Tag[]> {
+        let params = new HttpParams()
+        
+        if(post) params = params.set('postId', post)
+        if(page) params = params.set('page', page.toString())
+        if(size) params = params.set('size', size.toString())
 
-        return this.http.get<TagDto[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/tags`, { params }).pipe(
+        return this.http.get<TagDto[]>(`${neighborhood}/tags`, { params, headers: this.headers }).pipe(
             mergeMap((tagsDto: TagDto[]) => {
                 const tagObservables = tagsDto.map(tagDto =>
-                    this.http.get<PostDto[]>(tagDto.posts).pipe(
+                    this.http.get<PostDto[]>(tagDto._links.posts).pipe(
                         map((posts) => {
                             return {
-                                tagId: tagDto.tagId,
                                 tag: tagDto.tag,
                                 posts: posts,
-                                self: tagDto.self
+                                self: tagDto._links.self
                             } as Tag;
                         })
                     )

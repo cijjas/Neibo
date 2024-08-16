@@ -1,40 +1,35 @@
 import { UserDto } from "./user"
 import { InquiryDto } from "./inquiry"
-import { Department } from "./department"
+import { DepartmentDto } from "./department"
 import { RequestDto } from "./request"
+import { Links } from "./links"
+import { ImageDto } from "./image"
 
 export interface Product {
-    productId: number
     name: string
     description: string
     price: number
     used: boolean
     remainingUnits: number
-    primaryPicture: string
-    secondaryPicture: string
-    tertiaryPicture: string
+    creationDate: Date
+    primaryPicture: ImageDto
+    secondaryPicture: ImageDto
+    tertiaryPicture: ImageDto
     seller: UserDto
-    department: Department
+    department: DepartmentDto
     inquiries: InquiryDto[]
     requests: RequestDto[]
     self: string;
 }
 
 export interface ProductDto {
-    productId: number
     name: string
     description: string
     price: number
     used: boolean
     remainingUnits: number
-    primaryPicture: string
-    secondaryPicture: string
-    tertiaryPicture: string
-    seller: string
-    department: string
-    inquiries: string
-    requests: string
-    self: string
+    creationDate: Date
+    _links: Links
 }
 
 export interface ProductForm {

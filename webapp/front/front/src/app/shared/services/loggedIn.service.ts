@@ -1,19 +1,20 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { UserDto } from "../models/user";
-import {map} from "rxjs/operators";
+import { map } from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root'
 })
 export class LoggedInService {
-    private loggedUserDtoSubject: BehaviorSubject<UserDto | null> = new BehaviorSubject<UserDto | null>(null);
+    private loggedUserDtoSubject: BehaviorSubject<UserDto | null>;
     private authToken: string;
+    private bearerAuthToken: string;
 
     // Initial state
     private loggedUser: {
-        userId: number;
-        neighborhoodId: number;
+        user: string;
+        neighborhood: string;
         mail: string;
         surname: string;
         name: string;
@@ -21,69 +22,59 @@ export class LoggedInService {
     } = null;
 
     constructor() {
+        // Initialize loggedUserDtoSubject with data from localStorage
+        const storedUser = localStorage.getItem('loggedUserDto');
+        const userDto = storedUser ? JSON.parse(storedUser) : null;
+        this.loggedUserDtoSubject = new BehaviorSubject<UserDto | null>(userDto);
+
         // Subscribe to changes and update the loggedUser property
         this.loggedUserDtoSubject.subscribe(userDto => {
             if (userDto) {
                 this.loggedUser = {
-                    userId: this.getUserIdFromUserDto(userDto),
-                    neighborhoodId: this.getNeighborhoodIdFromUserDto(userDto),
+                    user: this.getUserURNFromUserDto(userDto),
+                    neighborhood: this.getNeighborhoodURNFromUserDto(userDto),
                     mail: userDto.mail,
                     name: userDto.name,
                     surname: userDto.surname,
                     darkMode: userDto.darkMode,
                 };
-                console.log('Logged user:', this.loggedUser);
+                // Store the user data in localStorage
+                localStorage.setItem('loggedUserDto', JSON.stringify(userDto));
+            } else {
+                localStorage.removeItem('loggedUserDto');
             }
         });
+
+        // Initialize authToken from localStorage
+        this.authToken = localStorage.getItem('authToken');
     }
 
-    private getNeighborhoodIdFromUserDto(userDto: UserDto): number {
-        const regex = /\/neighborhoods\/(\d+)$/;
-        const match = userDto.neighborhood.match(regex);
-        return match ? parseInt(match[1], 10) : null;
+    private getNeighborhoodURNFromUserDto(userDto: UserDto): string {
+        return userDto._links.neighborhood
     }
 
-    private getUserIdFromUserDto(userDto: UserDto): number {
-        const regex = /\/users\/(\d+)$/;
-        const match = userDto.self.match(regex);
-        return match ? parseInt(match[1], 10) : null;
+    private getUserURNFromUserDto(userDto: UserDto): string {
+        return userDto._links.self
     }
 
     public setLoggedUserInformation(userDto: UserDto) {
         this.loggedUserDtoSubject.next(userDto);
     }
 
-    public getLoggedUser(): Observable<{
-        userId: number;
-        neighborhoodId: number;
-        mail: string;
-        surname: string;
-        name: string;
-        darkMode: boolean;
-    }> {
+    public getLoggedUser(): Observable<UserDto> {
+        return this.loggedUserDtoSubject.asObservable()
+    }
+
+    public getLoggedUserURN(): Observable<string> {
         return this.loggedUserDtoSubject.asObservable().pipe(
-            map(userDto => {
-                if (userDto) {
-                    return {
-                        userId: this.getUserIdFromUserDto(userDto),
-                        neighborhoodId: this.getNeighborhoodIdFromUserDto(userDto),
-                        mail: userDto.mail,
-                        name: userDto.name,
-                        surname: userDto.surname,
-                        darkMode: userDto.darkMode,
-                    };
-                }
-                return null;
-            })
+            map(userDto => userDto ? this.getUserURNFromUserDto(userDto) : null)
         );
     }
 
-    public getLoggedUserId(): Observable<number> {
-        return this.getLoggedUser().pipe(map(user => user ? user.userId : null));
-    }
-
-    public getLoggedUserNeighborhoodId(): Observable<number> {
-        return this.getLoggedUser().pipe(map(user => user ? user.neighborhoodId : null));
+    public getLoggedUserNeighborhoodURN(): Observable<string> {
+        return this.loggedUserDtoSubject.asObservable().pipe(
+            map(userDto => userDto ? this.getNeighborhoodURNFromUserDto(userDto) : null)
+        );
     }
 
     public getLoggedUserDto(): Observable<UserDto | null> {
@@ -92,15 +83,27 @@ export class LoggedInService {
 
     public setAuthToken(authToken: string) {
         this.authToken = authToken;
+        localStorage.setItem('authToken', authToken);
     }
 
     public getAuthToken(): string {
         return this.authToken;
     }
 
+    public setBearerAuthToken(bearerAuthToken: string) {
+        this.bearerAuthToken = bearerAuthToken;
+        localStorage.setItem('bearerAuthToken', bearerAuthToken);
+    }
+
+    public getBearerAuthToken(): string {
+        return this.bearerAuthToken;
+    }
+
     public clear() {
         this.loggedUserDtoSubject.next(null);
         this.authToken = null;
         this.loggedUser = null;
+        localStorage.removeItem('loggedUserDto');
+        localStorage.removeItem('authToken');
     }
 }

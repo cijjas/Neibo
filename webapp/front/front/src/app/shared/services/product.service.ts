@@ -1,47 +1,60 @@
-import { HttpClient, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
+import { LoggedInService } from './loggedIn.service'
 import { Product, ProductDto, ProductForm } from '../models/product'
 import { UserDto } from "../models/user"
 import { InquiryDto } from "../models/inquiry"
-import { Department } from "../models/department"
+import { DepartmentDto } from "../models/department"
 import { RequestDto } from "../models/request"
 import { Observable, forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../../../environments/environment'
 import { map, mergeMap } from 'rxjs/operators'
+import { ImageDto } from '../models/image'
 
 @Injectable({providedIn: 'root'})
 export class ProductService {
     private apiServerUrl = environment.apiBaseUrl
+    private headers: HttpHeaders
 
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private loggedInService: LoggedInService,
+    ) { 
+        this.headers = new HttpHeaders({
+            'Authorization': this.loggedInService.getAuthToken()
+        })
+    }
 
-    public getProduct(neighborhoodId: number, productId: number): Observable<Product> {
-        const productDto$ = this.http.get<ProductDto>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/products/${productId}`);
+    public getProduct(product: string): Observable<Product> {
+        const productDto$ = this.http.get<ProductDto>(product, { headers: this.headers });
 
         return productDto$.pipe(
             mergeMap((productDto: ProductDto) => {
                 return forkJoin([
-                    this.http.get<UserDto>(productDto.seller),
-                    this.http.get<Department>(productDto.department),
-                    this.http.get<InquiryDto[]>(productDto.inquiries),
-                    this.http.get<RequestDto[]>(productDto.requests)
+                    this.http.get<UserDto>(productDto._links.seller),
+                    this.http.get<DepartmentDto>(productDto._links.department),
+                    this.http.get<InquiryDto[]>(productDto._links.inquiries),
+                    this.http.get<RequestDto[]>(productDto._links.requests),
+                    this.http.get<ImageDto>(productDto._links.primaryPicture),
+                    this.http.get<ImageDto>(productDto._links.secondaryPicture),
+                    this.http.get<ImageDto>(productDto._links.tertiaryPicture)
                 ]).pipe(
-                    map(([seller, department, inquiries, requests]) => {
+                    map(([seller, department, inquiries, requests, primaryPicture, secondaryPicture, tertiaryPicture]) => {
                         return {
-                            productId: productDto.productId,
                             name: productDto.name,
                             description: productDto.description,
                             price: productDto.price,
                             used: productDto.used,
                             remainingUnits: productDto.remainingUnits,
-                            primaryPicture: productDto.primaryPicture,
-                            secondaryPicture: productDto.secondaryPicture,
-                            tertiaryPicture: productDto.tertiaryPicture,
+                            creationDate: productDto.creationDate,
+                            primaryPicture: primaryPicture,
+                            secondaryPicture: secondaryPicture,
+                            tertiaryPicture: tertiaryPicture,
                             seller: seller,
                             department: department,
                             inquiries: inquiries,
                             requests: requests,
-                            self: productDto.self
+                            self: productDto._links.self
                         } as Product;
                     })
                 );
@@ -49,34 +62,43 @@ export class ProductService {
         );
     }
 
-    public getProducts(neighborhoodId: number, department: string, userId: number, productStatus: string, page: number, size: number): Observable<Product[]> {
-        const params = new HttpParams().set('department', department).set('userId', userId.toString()).set('productStatus', productStatus).set('page', page.toString()).set('size', size.toString());
+    public getProducts(neighborhood: string, department: string, user: string, productStatus: string, page: number, size: number): Observable<Product[]> {
+        let params = new HttpParams()
+        
+        if(department) params = params.set('inDeparment', department)
+        if(user) params = params.set('listedBy', user)
+        if(productStatus) params = params.set('withStatus', productStatus)
+        if(page) params = params.set('page', page.toString())
+        if(size) params = params.set('size', size.toString());
 
-        return this.http.get<ProductDto[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/products`, { params }).pipe(
+        return this.http.get<ProductDto[]>(`${neighborhood}/products`, { params, headers: this.headers }).pipe(
             mergeMap((productsDto: ProductDto[]) => {
                 const productObservables = productsDto.map(productDto =>
                     forkJoin([
-                        this.http.get<UserDto>(productDto.seller),
-                        this.http.get<Department>(productDto.department),
-                        this.http.get<InquiryDto[]>(productDto.inquiries),
-                        this.http.get<RequestDto[]>(productDto.requests)
+                        this.http.get<UserDto>(productDto._links.seller),
+                        this.http.get<DepartmentDto>(productDto._links.department),
+                        this.http.get<InquiryDto[]>(productDto._links.inquiries),
+                        this.http.get<RequestDto[]>(productDto._links.requests),
+                        this.http.get<ImageDto>(productDto._links.primaryPicture),
+                        this.http.get<ImageDto>(productDto._links.secondaryPicture),
+                        this.http.get<ImageDto>(productDto._links.tertiaryPicture)
                     ]).pipe(
-                        map(([seller, department, inquiries, requests]) => {
+                        map(([seller, department, inquiries, requests, primaryPicture, secondaryPicture, tertiaryPicture]) => {
                             return {
-                                productId: productDto.productId,
                                 name: productDto.name,
                                 description: productDto.description,
                                 price: productDto.price,
                                 used: productDto.used,
                                 remainingUnits: productDto.remainingUnits,
-                                primaryPicture: productDto.primaryPicture,
-                                secondaryPicture: productDto.secondaryPicture,
-                                tertiaryPicture: productDto.tertiaryPicture,
+                                creationDate: productDto.creationDate,
+                                primaryPicture: primaryPicture,
+                                secondaryPicture: secondaryPicture,
+                                tertiaryPicture: tertiaryPicture,
                                 seller: seller,
                                 department: department,
                                 inquiries: inquiries,
                                 requests: requests,
-                                self: productDto.self
+                                self: productDto._links.self
                             } as Product;
                         })
                     )
@@ -87,16 +109,16 @@ export class ProductService {
         );
     }
 
-    public addProduct(neighborhoodId: number, product: ProductForm): Observable<ProductForm> {
-        return this.http.post<ProductForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/products`, product)
+    public addProduct(neighborhood: string, product: ProductForm): Observable<ProductForm> {
+        return this.http.post<ProductForm>(`${neighborhood}/products`, product, { headers: this.headers })
     }
 
-    public updateProduct(neighborhoodId: number, product: ProductForm): Observable<ProductForm> {
-        return this.http.patch<ProductForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/products/${product.productId}`, product)
+    public updateProduct(product: string, productForm: ProductForm): Observable<ProductForm> {
+        return this.http.patch<ProductForm>(product, productForm, { headers: this.headers })
     }
 
-    public deleteProduct(neighborhoodId: number, productId: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/products/${productId}`)
+    public deleteProduct(product: string): Observable<void> {
+        return this.http.delete<void>(product, { headers: this.headers })
     }
 
 }

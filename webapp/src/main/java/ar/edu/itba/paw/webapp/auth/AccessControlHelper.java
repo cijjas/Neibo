@@ -37,10 +37,17 @@ public class AccessControlHelper {
 
     @Autowired
     private BookingService bs;
+/*
+* what am i to do
+* hacer que no se repitan las restricciones del neighborhood member para los metodos que estan anidados dentro /neighborhoods
+* ordenar comentarios
+* */
 
     // ------------------------------------------ GENERIC RESTRICTIONS -------------------------------------------------
 
-    // All requests that correspond to a certain Neighborhood have to be done from a User from that same Neighborhood
+    // All requests to a entities nested inside a neighborhood have to be made by users from that neighborhood
+    // * Path '/neighborhoods/*/users/*' does not enforce this method due to more complicated authentication structure
+    // ** Workers neighborhoods ('/neighborhoods/0') can be accessed by the users from other neighborhoods
     public boolean isNeighborhoodMember(HttpServletRequest request) {
         LOGGER.info("Neighborhood Belonging Bind");
 
@@ -75,8 +82,10 @@ public class AccessControlHelper {
         return false;
     }
 
-    // A User can modify the things he creates
-    public Boolean canModify(String userURN) {
+    // Verifies that the user URN received matches the authenticated user
+    // Commonly used by forms that require an author
+    // Neighbors can only reference themselves whilst administrators and super administrators can reference all users
+    public Boolean isAuthenticatedUser(String userURN) {
         LOGGER.info("Verifying Accessibility for the User's entities");
         Authentication authentication = getAuthentication();
 
@@ -90,7 +99,7 @@ public class AccessControlHelper {
 
     // --------------------------------------------- NEIGHBORHOODS -----------------------------------------------------
 
-    // Workers, Neighbors and Administrators can access /neighborhoods using Query Params
+    // Usage of worker Query Param in /neighborhoods is restricted to not anonymous users
     public boolean hasAccessNeighborhoodQP(Long workerId) {
         LOGGER.info("Verifying Query Params Accessibility");
 
@@ -102,9 +111,10 @@ public class AccessControlHelper {
         return !isAnonymous(authentication);
     }
 
+
     // -------------------------------------------------- USERS --------------------------------------------------------
 
-    // Neighbors and Administrators can access the whole user list and the workers user list
+    // Neighbors and Administrators their corresponding user list and the workers neighborhood list
     public boolean hasAccessToUserList(long neighborhoodId) {
         LOGGER.info("Verifying User List Accessibility");
 
@@ -120,12 +130,13 @@ public class AccessControlHelper {
         return neighborhoodId == 0 || neighborhoodId == getRequestingUserNeighborhoodId(authentication);
     }
 
-    // Neighbors and Administrators can access the user details of others
-    public boolean hasAccessToUserDetail(long neighborhoodId, long userId) {
+    // Anonymous users cant access user find
+    // Rejected and Unverified users can access their user find
+    // Neighbors and Administrators can access the find for all the users in their neighborhood
+    public boolean hasAccessToUserFind(long neighborhoodId, long userId) {
         LOGGER.info("Verifying Detail User Accessibility");
 
         Authentication authentication = getAuthentication();
-
 
         if (isAnonymous(authentication))
             return false;
@@ -136,7 +147,6 @@ public class AccessControlHelper {
 
         if (isUnverifiedOrRejected(authentication))
             return getRequestingUserId(authentication) == userId;
-
 
         return neighborhoodId == 0 || neighborhoodId == getRequestingUser(authentication).getNeighborhoodId();
     }
@@ -161,6 +171,7 @@ public class AccessControlHelper {
 
     // ----------------------------------------------- WORKERS ---------------------------------------------------------
 
+    // The Workers can update their profile as well as the Super Administrator
     public Boolean canUpdateWorker(long workerId){
         LOGGER.info("Verifying Worker Update Accessibility");
         Authentication authentication = getAuthentication();
@@ -170,6 +181,25 @@ public class AccessControlHelper {
 
         return workerId == getRequestingUserId(authentication);
     }
+
+    // --------------------------------------------- PROFESSION --------------------------------------------------------
+
+    // Workers, Neighbors and Administrators can access /neighborhoods using Query Params
+    public boolean hasAccessProfessionsQP(String worker) {
+        LOGGER.info("Verifying Query Params Accessibility");
+
+        if (worker == null)
+            return true;
+
+        Authentication authentication = getAuthentication();
+
+        return !isAnonymous(authentication) && !isUnverifiedOrRejected(authentication);
+    }
+
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // --------------------------------------- POST NEIGHBORHOOD MEMBER METHOD -----------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
 
     // ------------------------------------------------- LIKES ---------------------------------------------------------
 
@@ -305,6 +335,19 @@ public class AccessControlHelper {
         return p.getSeller().getUserId() == getRequestingUserId(authentication);
     }
 
+    // Only the owner of the product and the Administrator can delete the product
+    public Boolean canUpdateProduct(long productId){
+        LOGGER.info("Verifying Product Update Accessibility");
+        Authentication authentication = getAuthentication();
+
+        if (isAdministrator(authentication) || isSuperAdministrator(authentication))
+            return true;
+
+        Product p = ps.findProduct(productId).orElseThrow(()-> new NotFoundException("Product Not Found"));
+
+        return p.getSeller().getUserId() == getRequestingUserId(authentication);
+    }
+
     // ------------------------------------------------ POSTS ----------------------------------------------------------
 
     // Only the creator of the post and the Administrator can delete the post
@@ -335,9 +378,8 @@ public class AccessControlHelper {
         return i.getUser().getUserId() == getRequestingUserId(authentication);
     }
 
-
     // The seller of the product cant create an Inquiry for it
-    public Boolean canCreateInquiry(long productId, String userURN){
+    public Boolean canCreateInquiry(long productId){
         LOGGER.info("Verifying Inquiry Creation Accessibility");
         Authentication authentication = getAuthentication();
 
@@ -346,7 +388,7 @@ public class AccessControlHelper {
 
         Product p = ps.findProduct(productId).orElseThrow(NotFoundException::new);
 
-        return p.getSeller().getUserId() != extractTwoURNIds(userURN).getSecondId();
+        return p.getSeller().getUserId() != getRequestingUserId(authentication);
     }
 
     // The seller of the product can answer Inquiries for that Product
@@ -441,7 +483,7 @@ public class AccessControlHelper {
     }
 
 
-    // -------------------------------------------------------------------------------
+    // ------------------------------------------------ HELPERS --------------------------------------------------------
 
     private Authentication getAuthentication(){
         return SecurityContextHolder.getContext().getAuthentication();

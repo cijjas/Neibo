@@ -23,8 +23,8 @@
                         <span i18n>Posted by </span>
                     <!--TODO plaeholder sacar? ,o hacerlo bine?-->
                       <img
-                        *ngIf="post.user.profilePicture; else defaultImage"
-                        [src]="post.user.profilePicture"
+                        *ngIf="post.user._links.profilePicture; else defaultImage"
+                        [src]="post.user._links.profilePicture"
                         class="small-profile-picture placeholder mb-1"
                         alt="poster profile picture img"
                       />
@@ -77,7 +77,7 @@
                     id="post-like-button"
                     class="post-like-button"
                     [ngClass]="{'liked': isLikedByUser}"
-                    (click)="toggleLike()"
+
                   >
                     <span class="mr-1" id="like-count">{{ likeCount }}</span>
                     <i class="fa-solid fa-thumbs-up"></i>
@@ -278,7 +278,7 @@
                   </div>
                   <div class="comment-body placeholder-glow w-100">
                     <p class="mt-2 w-100 c-light-text normal placeholder col-6"
-                       id="comment-{{comment.commentId}}">
+                       id="{{comment.self}}">
                       {{comment.comment}}
                     </p>
                     <!--<script>

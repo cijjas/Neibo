@@ -42,8 +42,8 @@
         <div class="form-input align-items-start " style="gap:5px; width: 200px">
           <span class="font-weight-normal c-light-text ml-2">Neighborhood</span>
           <select  class="cool-select">
-            <select formControlName="neighborhoodId" class="cool-select">
-              <option *ngFor="let neib of neighborhoodsList" [value]="neib.neighborhoodId">
+            <select formControlName="neighborhoodUrn" class="cool-select">
+              <option *ngFor="let neib of neighborhoodsList" [value]="neib._links.self">
                 {{ neib.name }}
               </option>
             </select>

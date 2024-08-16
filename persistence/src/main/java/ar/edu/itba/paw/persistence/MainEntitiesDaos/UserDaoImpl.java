@@ -159,7 +159,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public boolean deleteUser(long userId) {
-        LOGGER.debug("Deleting Tag with tagId {}", userId);
+        LOGGER.debug("Deleting User with Id {}", userId);
         User user = em.find(User.class, userId);
         if (user != null) {
             em.remove(user);

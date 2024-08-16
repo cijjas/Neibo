@@ -52,7 +52,7 @@ public class TestConfig {
 
         final Properties properties = new Properties();
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");
+        properties.setProperty("hibernate.hbm2ddl.auto", "none");
 
         factoryBean.setJpaProperties(properties);
         return factoryBean;

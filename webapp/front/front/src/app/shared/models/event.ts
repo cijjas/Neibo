@@ -1,8 +1,8 @@
 import { UserDto } from "./user"
 import { NeighborhoodDto } from "./neighborhood"
+import { Links } from "./links"
 
 export interface Event {
-    eventId: number
     name: string
     description: string
     date: Date
@@ -14,15 +14,12 @@ export interface Event {
 }
 
 export interface EventDto {
-    eventId: number
     name: string
     description: string
     date: Date
-    neighborhood: string
     startTime: string
     endTime: string
-    attendees: string
-    self: string
+    _links: Links
 }
 
 export interface EventForm {

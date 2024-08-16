@@ -4,7 +4,7 @@ import { Post } from '../../shared/models/post';
 import { PostService } from '../../shared/services/post.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PostStatus } from '../../shared/models/postStatus';
-import { Channel } from '../../shared/models/channel';
+import { BaseChannel } from '../../shared/models/baseChannel';
 import {StorageService} from "../../shared/services/storage.service";
 import {UserDto} from "../../shared/models/user";
 import {LoggedInService} from "../../shared/services/loggedIn.service";
@@ -29,20 +29,19 @@ export class FeedComponent implements OnInit {
     // Subscribe to query parameters
     combineLatest([
       this.route.queryParams,
-      this.loggedInService.getLoggedUserId(),
-      this.loggedInService.getLoggedUserNeighborhoodId(),
+      this.loggedInService.getLoggedUserURN(),
+      this.loggedInService.getLoggedUserNeighborhoodURN(),
     ]).pipe(
-        switchMap(([queryParams, userId, neighborhoodId]) => {
+        switchMap(([queryParams, user, neighborhood]) => {
           // Check if values are available
-          if (userId !== null && neighborhoodId !== null) {
-            const channel = queryParams['channel'] || 'Feed';
+          if (user !== null && neighborhood !== null) {
+            const channel = queryParams['channel'];
             const tags = queryParams['tag'] ? [].concat(queryParams['tag']) : [];
-            const postStatus = queryParams['postStatus'] || 'none';
+            const postStatus = queryParams['postStatus'];
             const page = queryParams['page'] || 1;
             const size = queryParams['size'] || 10;
 
-            console.log("calling with", neighborhoodId, channel, tags, postStatus, userId, page, size);
-            this.getPosts(neighborhoodId, channel, tags, postStatus, userId, page, size);
+            this.getPosts(neighborhood, channel, tags, postStatus, user, page, size);
             return of(null); // You can emit any value here since you've already handled the logic
           } else {
             // Handle the case when userId or neighborhoodId is not available
@@ -56,8 +55,8 @@ export class FeedComponent implements OnInit {
   }
 
 
-  private getPosts(neighborhoodId: number, channel: Channel, tags: string[], postStatus: PostStatus, userId: number, page: number, size: number): void {
-    this.postService.getPosts(neighborhoodId, channel, tags, postStatus, userId, page, size)
+  private getPosts(neighborhood: string, channel: string, tags: string[], postStatus: string, user: string, page: number, size: number): void {
+    this.postService.getPosts(neighborhood, channel, tags, postStatus, user, page, size)
       .subscribe({
         next: (posts: Post[]) => {
           this.postList = posts;

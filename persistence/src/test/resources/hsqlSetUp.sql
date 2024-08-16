@@ -1,56 +1,28 @@
 SET DATABASE SQL SYNTAX PGS TRUE;
 
--- S1
--- core
-drop table if exists neighborhoods CASCADE;
-drop table if exists channels CASCADE;
-drop table if exists tags CASCADE;
-drop table if exists posts CASCADE;
-drop table if exists comments CASCADE;
-drop table if exists posts_tags CASCADE;
-drop table if exists users CASCADE; -- used to be neighbors
--- used to be posts_neighbors
-
--- S2
--- amenities
-drop table if exists amenities CASCADE;
-drop table if exists reservations CASCADE;
-drop table if exists hours CASCADE;
--- events
-drop table if exists events CASCADE;
--- miscellaneous
-drop table if exists images CASCADE;
-drop table if exists contacts cascade;
-drop table if exists resources cascade;
--- channel uniqueness
-drop table if exists neighborhoods_channels cascade;
-
--- S3
--- events attendance
-drop table if exists events_users cascade;
--- refactor amenities
-drop table if exists amenities_hours cascade;
--- post likes
-drop table if exists posts_users_likes cascade;
--- amenity refactor
-drop table if exists times cascade;
-drop table if exists days cascade;
-drop table if exists shifts cascade;
-drop table if exists users_availability cascade;
-drop table if exists amenities_shifts_availability cascade;
-
--- workers
-drop table if exists workers_info cascade;
-drop table if exists workers_professions cascade;
-drop table if exists professions cascade;
-drop table if exists workers_neighborhoods cascade;
-drop table if exists reviews cascade;
-
-drop table if exists products cascade;
-drop table if exists products_users_inquiries cascade;
-drop table if exists products_users_requests cascade;
-drop table if exists departments cascade;
-
+create sequence if not exists amenities_shifts_availability_amenityavailabilityid_seq;
+create sequence if not exists amenities_amenityid_seq;
+create sequence if not exists channels_channelid_seq;
+create sequence if not exists comments_commentid_seq;
+create sequence if not exists contacts_contactid_seq;
+create sequence if not exists days_dayid_seq;
+create sequence if not exists departments_departmentid_seq;
+create sequence if not exists events_eventid_seq;
+create sequence if not exists images_imageid_seq;
+create sequence if not exists neighborhoods_neighborhoodid_seq;
+create sequence if not exists posts_postid_seq;
+create sequence if not exists products_productid_seq;
+create sequence if not exists products_users_inquiries_inquiryid_seq;
+create sequence if not exists products_users_purchases_purchaseid_seq;
+create sequence if not exists products_users_requests_requestid_seq;
+create sequence if not exists professions_professionid_seq;
+create sequence if not exists reviews_reviewid_seq;
+create sequence if not exists resources_resourceid_seq;
+create sequence if not exists shifts_shiftid_seq;
+create sequence if not exists tags_tagid_seq;
+create sequence if not exists times_timeid_seq;
+create sequence if not exists users_availability_bookingid_seq;
+create sequence if not exists users_userid_seq;
 
 CREATE TABLE IF NOT EXISTS neighborhoods
 (
@@ -169,13 +141,12 @@ create table contacts
 -- Create a table to store additional information for workers
 CREATE TABLE IF NOT EXISTS workers_info
 (
-    workerId            INT,
+    workerId            INTEGER IDENTITY PRIMARY KEY,
     phoneNumber         VARCHAR(64)  NOT NULL,
     businessName        VARCHAR(128),
     address             VARCHAR(128) NOT NULL,
     backgroundPictureId INT,
     bio                 VARCHAR(255),
-        PRIMARY KEY (workerId),
     FOREIGN KEY (workerId) REFERENCES users (userId) ON DELETE CASCADE
 );
 
@@ -333,6 +304,14 @@ CREATE TABLE products_users_requests (
      status VARCHAR(30),
     FOREIGN KEY (productId) REFERENCES products(productId) ON DELETE CASCADE,
     FOREIGN KEY (userId) REFERENCES users(userId) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS neighborhoods_tags (
+      neighborhoodid INTEGER NOT NULL,
+      tagid INTEGER NOT NULL,
+      PRIMARY KEY (neighborhoodid, tagid),
+      FOREIGN KEY (neighborhoodid) REFERENCES neighborhoods (neighborhoodid) ON DELETE CASCADE,
+      FOREIGN KEY (tagid) REFERENCES tags (tagid) ON DELETE CASCADE
 );
 
 

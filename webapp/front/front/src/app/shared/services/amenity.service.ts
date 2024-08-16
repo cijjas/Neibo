@@ -1,35 +1,43 @@
-import { HttpClient, HttpParams } from '@angular/common/http'
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http'
+import { LoggedInService } from './loggedIn.service'
 import { Amenity, AmenityDto, AmenityForm } from '../models/amenity'
 import { NeighborhoodDto } from '../models/neighborhood'
-import { AvailabilityDto } from '../models/availability'
 import { Observable, forkJoin } from 'rxjs'
 import { Injectable } from '@angular/core'
 import { environment } from '../../../environments/environment'
 import { map, mergeMap } from 'rxjs/operators'
+import { ShiftDto } from '../models/shift'
 
 @Injectable({providedIn: 'root'})
 export class AmenityService {
     private apiServerUrl = environment.apiBaseUrl
+    private headers: HttpHeaders
 
-    constructor(private http: HttpClient) { }
+    constructor(
+        private http: HttpClient,
+        private loggedInService: LoggedInService,
+    ) { 
+        this.headers = new HttpHeaders({
+            'Authorization': this.loggedInService.getAuthToken()
+        })
+    }
 
-    public getAmenity(amenityId: number, neighborhoodId: number): Observable<Amenity> {
-        const amenityDto$ = this.http.get<AmenityDto>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities/${amenityId}`);
+    public getAmenity(amenity: string): Observable<Amenity> {
+        const amenityDto$ = this.http.get<AmenityDto>(amenity, { headers: this.headers });
 
         return amenityDto$.pipe(
             mergeMap((amenityDto: AmenityDto) => {
                 return forkJoin([
-                    this.http.get<NeighborhoodDto>(amenityDto.neighborhood),
-                    this.http.get<AvailabilityDto[]>(amenityDto.availability)
+                    this.http.get<NeighborhoodDto>(amenityDto._links.neighborhood),
+                    this.http.get<ShiftDto[]>(amenityDto._links.shifts)
                 ]).pipe(
-                    map(([neighborhood, availabilities]) => {
+                    map(([neighborhood, shifts]) => {
                         return {
-                            amenityId: amenityDto.amenityId,
                             name: amenityDto.name,
                             description: amenityDto.description,
                             neighborhood: neighborhood,
-                            availability: availabilities,
-                            self: amenityDto.self
+                            shifts: shifts,
+                            self: amenityDto._links.self
                         } as Amenity;
                     })
                 );
@@ -37,24 +45,25 @@ export class AmenityService {
         );
     }
 
-    public getAmenities(neighborhoodId: number, page: number, size: number): Observable<Amenity[]> {
-        const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+    public getAmenities(neighborhood: string, page: number, size: number): Observable<Amenity[]> {
+        let params = new HttpParams()
+        if(page) params = params.set('page', page.toString())
+        if(size) params = params.set('size', size.toString())
 
-        return this.http.get<AmenityDto[]>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities`, { params }).pipe(
+        return this.http.get<AmenityDto[]>(`${neighborhood}/amenities`, { params, headers: this.headers }).pipe(
             mergeMap((amenitiesDto: AmenityDto[]) => {
                 const amenityObservables = amenitiesDto.map(amenityDto =>
                     forkJoin([
-                        this.http.get<NeighborhoodDto>(amenityDto.neighborhood),
-                        //this.http.get<AvailabilityDto[]>(amenityDto.availability)
+                        this.http.get<NeighborhoodDto>(amenityDto._links.neighborhood),
+                        this.http.get<ShiftDto[]>(amenityDto._links.shifts)
                     ]).pipe(
-                        map(([neighborhood, /*availabilities*/]) => {
+                        map(([neighborhood, shifts]) => {
                             return {
-                                amenityId: amenityDto.amenityId,
                                 name: amenityDto.name,
                                 description: amenityDto.description,
                                 neighborhood: neighborhood,
-                                //availability: availabilities,
-                                self: amenityDto.self
+                                shifts: shifts,
+                                self: amenityDto._links.self
                             } as Amenity;
                         })
                     )
@@ -65,15 +74,15 @@ export class AmenityService {
         );
     }
 
-    public addAmenity(amenity: AmenityForm, neighborhoodId : number): Observable<AmenityForm> {
-        return this.http.post<AmenityForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities`, amenity)
+    public addAmenity(amenity: AmenityForm, neighborhood : string): Observable<AmenityForm> {
+        return this.http.post<AmenityForm>(`${neighborhood}/amenities`, amenity, { headers: this.headers })
     }
 
-    public updateAmenity(amenity: AmenityForm, neighborhoodId : number): Observable<AmenityForm> {
-        return this.http.patch<AmenityForm>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities/${amenity.amenityId}`, amenity)
+    public updateAmenity(amenityForm: AmenityForm, amenity : string): Observable<AmenityForm> {
+        return this.http.patch<AmenityForm>(amenity, amenityForm, { headers: this.headers })
     }
 
-    public deleteAmenity(amenityId: number, neighborhoodId : number): Observable<void> {
-        return this.http.delete<void>(`${this.apiServerUrl}/neighborhoods/${neighborhoodId}/amenities/${amenityId}`)
+    public deleteAmenity(amenity: string): Observable<void> {
+        return this.http.delete<void>(amenity, { headers: this.headers })
     }
 }

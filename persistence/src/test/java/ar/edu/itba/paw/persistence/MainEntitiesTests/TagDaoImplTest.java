@@ -74,7 +74,7 @@ public class TagDaoImplTest {
     // -------------------------------------------------- FINDS --------------------------------------------------------
 
     @Test
-    public void find_tagId_valid() {
+    public void find_tagName_valid() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -83,6 +83,7 @@ public class TagDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, iKey);
         long tKey = testInserter.createTag(TAG_NAME_1);
         testInserter.createCategorization(tKey, pKey);
+        testInserter.createTagMapping(nhKey, tKey);
 
         // Exercise
         Optional<Tag> optionalTag = tagDaoImpl.findTag(TAG_NAME_1);
@@ -93,7 +94,7 @@ public class TagDaoImplTest {
     }
 
     @Test
-    public void find_tagId_invalid_tagId() {
+    public void find_tagName_invalid_tagId() {
         // Pre Conditions
         long nhKey = testInserter.createNeighborhood();
         long uKey = testInserter.createUser(nhKey);
@@ -102,9 +103,87 @@ public class TagDaoImplTest {
         long pKey = testInserter.createPost(uKey, chKey, iKey);
         long tKey = testInserter.createTag();
         testInserter.createCategorization(tKey, pKey);
+        testInserter.createTagMapping(nhKey, tKey);
 
         // Exercise
         Optional<Tag> optionalTag = tagDaoImpl.findTag(INVALID_STRING_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalTag.isPresent());
+    }
+
+    @Test
+    public void find_tagId_neighborhoodId_valid() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long tKey = testInserter.createTag(TAG_NAME_1);
+        testInserter.createCategorization(tKey, pKey);
+        testInserter.createTagMapping(nhKey, tKey);
+
+        // Exercise
+        Optional<Tag> optionalTag = tagDaoImpl.findTag(tKey, nhKey);
+
+        // Validations & Post Conditions
+        assertTrue(optionalTag.isPresent());
+        assertEquals(tKey, optionalTag.get().getTagId().longValue());
+    }
+
+    @Test
+    public void find_tagId_neighborhoodId_invalid_tagId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long tKey = testInserter.createTag(TAG_NAME_1);
+        testInserter.createCategorization(tKey, pKey);
+        testInserter.createTagMapping(nhKey, tKey);
+
+        // Exercise
+        Optional<Tag> optionalTag = tagDaoImpl.findTag(INVALID_ID, nhKey);
+
+        // Validations & Post Conditions
+        assertFalse(optionalTag.isPresent());
+    }
+
+    @Test
+    public void find_tagId_neighborhoodId_valid_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long tKey = testInserter.createTag(TAG_NAME_1);
+        testInserter.createCategorization(tKey, pKey);
+        testInserter.createTagMapping(nhKey, tKey);
+
+        // Exercise
+        Optional<Tag> optionalTag = tagDaoImpl.findTag(tKey, INVALID_ID);
+
+        // Validations & Post Conditions
+        assertFalse(optionalTag.isPresent());
+    }
+
+    @Test
+    public void find_tagId_neighborhoodId_valid_tagId_neighborhoodId() {
+        // Pre Conditions
+        long nhKey = testInserter.createNeighborhood();
+        long uKey = testInserter.createUser(nhKey);
+        long chKey = testInserter.createChannel();
+        long iKey = testInserter.createImage();
+        long pKey = testInserter.createPost(uKey, chKey, iKey);
+        long tKey = testInserter.createTag(TAG_NAME_1);
+        testInserter.createCategorization(tKey, pKey);
+        testInserter.createTagMapping(nhKey, tKey);
+
+        // Exercise
+        Optional<Tag> optionalTag = tagDaoImpl.findTag(INVALID_ID, INVALID_ID);
 
         // Validations & Post Conditions
         assertFalse(optionalTag.isPresent());

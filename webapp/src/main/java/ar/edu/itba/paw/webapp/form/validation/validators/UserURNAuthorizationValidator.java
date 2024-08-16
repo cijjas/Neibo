@@ -18,7 +18,6 @@ public class UserURNAuthorizationValidator implements ConstraintValidator<UserUR
     public boolean isValid(String userURN, ConstraintValidatorContext constraintValidatorContext) {
         if (userURN == null)
             return true;
-        return URNValidator.validateURN(userURN, "users") && accessControlHelper.canModify(userURN);
+        return URNValidator.validateURN(userURN, "users") && accessControlHelper.isAuthenticatedUser(userURN);
     }
-
 }

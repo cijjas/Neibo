@@ -1,7 +1,7 @@
+import { Links } from "./links"
 import { NeighborhoodDto } from "./neighborhood"
 
 export interface Contact {
-    contactId: number
     contactName: string
     contactAddress: string
     contactPhone: string
@@ -10,12 +10,10 @@ export interface Contact {
 }
 
 export interface ContactDto {
-    contactId: number
     contactName: string
     contactAddress: string
     contactPhone: string
-    neighborhood: string
-    self: string
+    _links: Links
 }
 
 export interface ContactForm {
@@ -25,4 +23,4 @@ export interface ContactForm {
     contactPhone: string
     self: string
   }
-  
+

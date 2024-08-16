@@ -100,7 +100,7 @@ public class UserController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.hasAccessToUserDetail(#neighborhoodId, #id)")
+    @PreAuthorize("@accessControlHelper.hasAccessToUserFind(#neighborhoodId, #id)")
     public Response findUser(
             @PathParam("id") final long id,
             @PathParam("neighborhoodId") final long neighborhoodId

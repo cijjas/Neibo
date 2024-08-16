@@ -142,6 +142,7 @@ public class ProductController extends GlobalControllerAdvice {
     @Path("/{id}")
     @Consumes(value = { MediaType.APPLICATION_JSON, })
     @Produces(value = { MediaType.APPLICATION_JSON, })
+    @PreAuthorize("@accessControlHelper.canUpdateProduct(#id)")
     public Response updateProductPartially(
             @PathParam("id") final long id,
             @Valid @NotNull final UpdateProductForm partialUpdate

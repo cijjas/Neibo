@@ -34,7 +34,7 @@ public class TagMappingDaoImpl implements TagMappingDao {
     // ----------------------------------------------------------------------------------
 
     @Override
-    public Optional<TagMapping> findTagMapping(Long tagId, Long neighborhoodId) {
+    public Optional<TagMapping> findTagMapping(long tagId, long neighborhoodId) {
         LOGGER.debug("Selecting Tag Mapping with Tag {} and Neighborhood {}", tagId, neighborhoodId);
 
         return Optional.ofNullable(em.find(TagMapping.class, new TagMappingKey(neighborhoodId, tagId)));
@@ -88,7 +88,7 @@ public class TagMappingDaoImpl implements TagMappingDao {
         StringBuilder queryBuilder = new StringBuilder("SELECT tm.id FROM TagMapping tm ");
 
         if (tagId != null && neighborhoodId != null) {
-            queryBuilder.append("WHERE tm.tag.tagId = :tagId AND cm.neighborhood.neighborhoodId = :neighborhoodId ");
+            queryBuilder.append("WHERE tm.tag.tagId = :tagId AND tm.neighborhood.neighborhoodId = :neighborhoodId ");
         } else if (tagId != null) {
             queryBuilder.append("WHERE tm.tag.tagId = :tagId ");
         } else if (neighborhoodId != null) {

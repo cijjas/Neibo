@@ -7,10 +7,10 @@
                     <span id="like-button-${param.postID}" class="like-button" data-post-id="${param.postID}">
                         <i class="fa-solid fa-thumbs-up"></i>
                     </span>
-          <span class="like-count c-light-text" id="like-count-${param.postID}"
+          <!-- <span class="like-count c-light-text" id="like-count-${param.postID}"
                 data-like-count="${param.postLikes}">
             {{post.likes.length}}
-                    </span>
+                    </span> -->
 
 
         </div>
@@ -18,7 +18,7 @@
       <div class="col-md-11 pt-3 pb-3 pr-3 col-md-push-11">
         <!--${pageContext.request.contextPath}/posts/<c:out value="${param.postID}" />-->
         <a
-          [routerLink]="['/post', post.postId]"
+          [routerLink]="[post.self]"
           style="text-decoration: none;">
         <div class="post-header">
           <div class="blogpost-author-and-date">

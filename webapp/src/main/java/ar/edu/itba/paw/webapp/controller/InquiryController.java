@@ -122,7 +122,7 @@ public class InquiryController extends GlobalControllerAdvice{
 
     @POST
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.canCreateInquiry(#productId, #form.user)")
+    @PreAuthorize("@accessControlHelper.canCreateInquiry(#productId)")
     public Response createInquiry(
             @Valid @NotNull final InquiryForm form,
             @PathParam("productId") final long productId

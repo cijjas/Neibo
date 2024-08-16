@@ -1,8 +1,8 @@
+import { Links } from "./links"
 import { ProductDto } from "./product"
 import { UserDto } from "./user"
 
 export interface Inquiry {
-    inquiryId: number
     message: string
     reply: string
     inquiryDate: Date
@@ -12,13 +12,10 @@ export interface Inquiry {
 }
 
 export interface InquiryDto {
-    inquiryId: number
     message: string
     reply: string
     inquiryDate: Date
-    product: string
-    user: string
-    self: string
+    _links: Links
 }
 
 export interface InquiryForm {
