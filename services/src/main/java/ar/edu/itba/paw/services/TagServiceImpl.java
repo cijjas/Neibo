@@ -24,14 +24,12 @@ public class TagServiceImpl implements TagService {
     private final TagDao tagDao;
     private final CategorizationDao categorizationDao;
     private final TagMappingDao tagMappingDao;
-    private final NeighborhoodDao neighborhoodDao;
 
     @Autowired
-    public TagServiceImpl(TagDao tagDao, CategorizationDao categorizationDao, TagMappingDao tagMappingDao, NeighborhoodDao neighborhoodDao) {
+    public TagServiceImpl(TagDao tagDao, CategorizationDao categorizationDao, TagMappingDao tagMappingDao) {
         this.tagDao = tagDao;
         this.categorizationDao = categorizationDao;
         this.tagMappingDao = tagMappingDao;
-        this.neighborhoodDao = neighborhoodDao;
     }
 
     //  -----------------------------------------------------------------------------------------------------------------

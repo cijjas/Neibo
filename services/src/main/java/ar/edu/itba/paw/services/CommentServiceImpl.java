@@ -23,16 +23,12 @@ public class CommentServiceImpl implements CommentService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommentServiceImpl.class);
 
     private final CommentDao commentDao;
-    private final EmailService emailService;
     private final PostDao postDao;
-    private final UserService userService;
 
     @Autowired
-    public CommentServiceImpl(final CommentDao commentDao, EmailService emailService, PostDao postDao, UserService userService) {
+    public CommentServiceImpl(final CommentDao commentDao, PostDao postDao) {
         this.commentDao = commentDao;
-        this.emailService = emailService;
         this.postDao = postDao;
-        this.userService = userService;
     }
 
     // -----------------------------------------------------------------------------------------------------------------
