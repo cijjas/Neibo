@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public enum Professions {
+public enum Profession {
     PLUMBER,
     ELECTRICIAN,
     POOL_MAINTENANCE,
@@ -24,7 +24,7 @@ public enum Professions {
                 .collect(Collectors.toList());
     }
 
-    public static Professions fromId(long id) {
+    public static Profession fromId(long id) {
         if(id <= 0)
             throw new IllegalArgumentException("Invalid value (" + id + ") for the Profession ID. Please use a positive integer greater than 0.");
         return Arrays.stream(values())

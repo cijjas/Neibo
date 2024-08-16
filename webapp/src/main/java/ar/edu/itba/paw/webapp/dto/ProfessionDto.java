@@ -1,24 +1,24 @@
 package ar.edu.itba.paw.webapp.dto;
 
-import ar.edu.itba.paw.enums.Professions;
+import ar.edu.itba.paw.models.Entities.Profession;
 
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 public class ProfessionDto {
 
-    private Professions profession;
+    private String profession;
     private Links _links;
 
-    public static ProfessionDto fromProfession(Professions profession, UriInfo uriInfo) {
+    public static ProfessionDto fromProfession(Profession profession, UriInfo uriInfo) {
         final ProfessionDto dto = new ProfessionDto();
 
-        dto.profession = profession;
+        dto.profession = profession.getProfession();
 
         Links links = new Links();
         URI self = uriInfo.getBaseUriBuilder()
                 .path("professions")
-                .path(String.valueOf(profession.getId()))
+                .path(String.valueOf(profession.getProfessionId()))
                 .build();
 
         links.setSelf(self);
@@ -31,11 +31,11 @@ public class ProfessionDto {
     }
 
 
-    public Professions getProfession() {
+    public String getProfession() {
         return profession;
     }
 
-    public void setProfession(Professions profession) {
+    public void setProfession(String profession) {
         this.profession = profession;
     }
 

@@ -1,6 +1,6 @@
 package ar.edu.itba.paw.webapp.form.validation.validators;
 
-import ar.edu.itba.paw.enums.Professions;
+import ar.edu.itba.paw.enums.Profession;
 import ar.edu.itba.paw.webapp.form.validation.constraints.ProfessionsConstraint;
 
 import javax.validation.ConstraintValidator;
@@ -24,7 +24,7 @@ public class ProfessionsSelectorValidator implements ConstraintValidator<Profess
 
         for(Long id : professions) {
             int found = 0;
-            for (Professions profession : Professions.values()) {
+            for (Profession profession : Profession.values()) {
                 if (profession.getId() == id) {
                     found = 1;
                     break;

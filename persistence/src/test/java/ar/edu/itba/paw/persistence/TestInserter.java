@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistence;
 
 import ar.edu.itba.paw.enums.*;
+import ar.edu.itba.paw.enums.Profession;
 import ar.edu.itba.paw.exceptions.InsertionException;
 import ar.edu.itba.paw.models.Entities.Channel;
 import ar.edu.itba.paw.models.Entities.Department;
@@ -246,7 +247,7 @@ public class TestInserter {
 
 
     public void createSpecialization(long workerId, long professionId) {
-        Specialization specialization = new Specialization(em.find(Worker.class, workerId), em.find(Profession.class, professionId));
+        Specialization specialization = new Specialization(em.find(Worker.class, workerId), em.find(ar.edu.itba.paw.models.Entities.Profession.class, professionId));
 
         em.persist(specialization);
         em.flush();
@@ -289,7 +290,7 @@ public class TestInserter {
     }
 
     public long createProfession(String professionType) {
-        final Profession profession = new Profession.Builder()
+        final ar.edu.itba.paw.models.Entities.Profession profession = new ar.edu.itba.paw.models.Entities.Profession.Builder()
                 .profession(professionType)
                 .build();
         em.persist(profession);
@@ -500,7 +501,7 @@ public class TestInserter {
     }
 
     public long createProfession() {
-        return createProfession(Professions.PLUMBER.name());
+        return createProfession(Profession.PLUMBER.name());
     }
 
     public long createProduct(long primaryPictureId, long secondaryPictureId, long tertiaryPictureId,

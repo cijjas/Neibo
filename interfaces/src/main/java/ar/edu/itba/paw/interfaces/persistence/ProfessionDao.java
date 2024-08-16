@@ -1,9 +1,9 @@
 package ar.edu.itba.paw.interfaces.persistence;
 
-import ar.edu.itba.paw.enums.Professions;
 import ar.edu.itba.paw.models.Entities.Profession;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProfessionDao {
 
@@ -14,4 +14,6 @@ public interface ProfessionDao {
     // --------------------------------------------- PROFESSIONS SELECT -------------------------------------------------
 
     List<Profession> getProfessions(Long workerId);
+
+    Optional<Profession> findProfession(long professionId);
 }

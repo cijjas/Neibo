@@ -1,6 +1,5 @@
 package ar.edu.itba.paw.persistence.MainEntitiesDaos;
 
-import ar.edu.itba.paw.enums.Professions;
 import ar.edu.itba.paw.interfaces.persistence.ProfessionDao;
 import ar.edu.itba.paw.models.Entities.Profession;
 import org.slf4j.Logger;
@@ -11,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProfessionDaoImpl implements ProfessionDao {
@@ -50,5 +50,12 @@ public class ProfessionDaoImpl implements ProfessionDao {
         }
 
         return query.getResultList();
+    }
+
+    @Override
+    public Optional<Profession> findProfession(long professionId) {
+        LOGGER.debug("Selecting Profession {}", professionId);
+
+        return Optional.ofNullable(em.find(Profession.class, professionId));
     }
 }

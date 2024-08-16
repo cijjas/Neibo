@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.models.Entities;
 
-import ar.edu.itba.paw.enums.Professions;
-
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;

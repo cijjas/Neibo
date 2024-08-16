@@ -100,8 +100,6 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                         "/shifts/*",
                         "/shift-statuses",
                         "/shift-statuses/*",
-                        "/base-channels",
-                        "/base-channels/*",
                         "/user-roles",
                         "/user-roles/*",
                         "/worker-roles",

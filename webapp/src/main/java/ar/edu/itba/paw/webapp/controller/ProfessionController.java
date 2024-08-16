@@ -1,16 +1,20 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.enums.Professions;
 import ar.edu.itba.paw.interfaces.services.ProfessionService;
 import ar.edu.itba.paw.models.Entities.Profession;
 import ar.edu.itba.paw.webapp.dto.*;
+import ar.edu.itba.paw.webapp.form.NewProfessionForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Component;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,7 +69,7 @@ public class ProfessionController {
                     .build();
 
         List<ProfessionDto> professionDto = professions.stream()
-                .map(p -> ProfessionDto.fromProfession(Professions.valueOf(p.getProfession().toString()), uriInfo)).collect(Collectors.toList());
+                .map(p -> ProfessionDto.fromProfession(p, uriInfo)).collect(Collectors.toList());
 
         return Response.ok(new GenericEntity<List<ProfessionDto>>(professionDto){})
                 .cacheControl(cacheControl)
@@ -82,7 +86,7 @@ public class ProfessionController {
         LOGGER.info("GET request arrived at '/professions/{}'", id);
 
         // Content
-        Professions profession = Professions.fromId(id);
+        Profession profession = ps.findProfession(id).orElseThrow(() -> new NotFoundException("Profession Not Found"));
         String professionHashCode = String.valueOf(profession.hashCode());
 
         // Cache Control
@@ -93,6 +97,30 @@ public class ProfessionController {
             return builder.cacheControl(cacheControl).build();
 
         return Response.ok(ProfessionDto.fromProfession(profession, uriInfo))
+                .cacheControl(cacheControl)
+                .tag(professionHashCode)
+                .build();
+    }
+
+    @POST
+    @Secured({"ROLE_SUPER_ADMINISTRATOR"})
+    @Produces(value = { MediaType.APPLICATION_JSON, })
+    public Response createProfession(
+            @Valid @NotNull NewProfessionForm form
+    ) {
+        LOGGER.info("POST request arrived at '/professions'");
+
+        // Content
+        final Profession profession = ps.createProfession(form.getName());
+        String professionHashCode = String.valueOf(profession.hashCode());
+
+        // Resource URN
+        final URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf(profession.getProfessionId())).build();
+
+        // Cache Control
+        CacheControl cacheControl = new CacheControl();
+
+        return Response.created(uri)
                 .cacheControl(cacheControl)
                 .tag(professionHashCode)
                 .build();

@@ -1,8 +1,7 @@
 package ar.edu.itba.paw.persistence.MainEntitiesTests;
 
-import ar.edu.itba.paw.enums.Professions;
+import ar.edu.itba.paw.enums.Profession;
 import ar.edu.itba.paw.enums.Table;
-import ar.edu.itba.paw.models.Entities.Profession;
 import ar.edu.itba.paw.persistence.TestInserter;
 import ar.edu.itba.paw.persistence.config.TestConfig;
 import org.junit.Before;
@@ -62,12 +61,12 @@ public class ProfessionDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        Profession profession = professionDaoImpl.createProfession(Professions.PLUMBER.name());
+        ar.edu.itba.paw.models.Entities.Profession profession = professionDaoImpl.createProfession(Profession.PLUMBER.name());
 
         // Validations & Post Conditions
         em.flush();
         assertNotNull(profession);
-        assertEquals(Professions.PLUMBER.name(), profession.getProfession());
+        assertEquals(Profession.PLUMBER.name(), profession.getProfession());
         assertEquals(ONE_ELEMENT, JdbcTestUtils.countRowsInTable(jdbcTemplate, Table.professions.name()));
     }
 
@@ -79,7 +78,7 @@ public class ProfessionDaoImplTest {
         populateProfessions();
 
         // Exercise
-        List<Profession> professionList = professionDaoImpl.getProfessions(EMPTY_FIELD);
+        List<ar.edu.itba.paw.models.Entities.Profession> professionList = professionDaoImpl.getProfessions(EMPTY_FIELD);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, professionList.size());
@@ -91,7 +90,7 @@ public class ProfessionDaoImplTest {
         populateProfessions();
 
         // Exercise
-        List<Profession> professionList = professionDaoImpl.getProfessions(uKey1);
+        List<ar.edu.itba.paw.models.Entities.Profession> professionList = professionDaoImpl.getProfessions(uKey1);
 
         // Validations & Post Conditions
         assertEquals(TWO_ELEMENTS, professionList.size());
@@ -102,7 +101,7 @@ public class ProfessionDaoImplTest {
         // Pre Conditions
 
         // Exercise
-        List<Profession> professionList = professionDaoImpl.getProfessions(uKey1);
+        List<ar.edu.itba.paw.models.Entities.Profession> professionList = professionDaoImpl.getProfessions(uKey1);
 
         // Validations & Post Conditions
         assertTrue(professionList.isEmpty());
@@ -119,8 +118,8 @@ public class ProfessionDaoImplTest {
         uKey3 = testInserter.createUser(WORKER_MAIL_3, nhKey1);
         uKey4 = testInserter.createUser(WORKER_MAIL_4, nhKey1);
 
-        pKey1 = testInserter.createProfession(Professions.PLUMBER.name());
-        pKey2 = testInserter.createProfession(Professions.CARPENTER.name());
+        pKey1 = testInserter.createProfession(Profession.PLUMBER.name());
+        pKey2 = testInserter.createProfession(Profession.CARPENTER.name());
 
         testInserter.createWorker(uKey1);
         testInserter.createWorker(uKey2);

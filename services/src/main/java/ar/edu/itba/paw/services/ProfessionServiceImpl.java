@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -26,6 +27,13 @@ public class ProfessionServiceImpl implements ProfessionService {
     // -----------------------------------------------------------------------------------------------------------------
 
     @Override
+    public Profession createProfession(String name) {
+        LOGGER.info("Creating Profession {}", name);
+
+        return professionDao.createProfession(name);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public List<Profession> getProfessions(String workerURN) {
         LOGGER.info("Getting Professions for Worker {}", workerURN);
@@ -33,5 +41,12 @@ public class ProfessionServiceImpl implements ProfessionService {
         Long workerId = ValidationUtils.checkURNAndExtractWorkerId(workerURN);
 
         return professionDao.getProfessions(workerId);
+    }
+
+    @Override
+    public Optional<Profession> findProfession(long professionId) {
+        LOGGER.info("Finding Profession {}", professionId);
+
+        return professionDao.findProfession(professionId);
     }
 }
