@@ -97,10 +97,8 @@ public class EventServiceImpl implements EventService {
         ValidationUtils.checkNeighborhoodId(neighborhoodId);
         ValidationUtils.checkOptionalDateString(date);
         ValidationUtils.checkPageAndSize(page, size);
-        System.out.println("after page n size");
 
         neighborhoodDao.findNeighborhood(neighborhoodId).orElseThrow(NotFoundException::new);
-        System.out.println("after find hood");
 
         return eventDao.getEvents(date, neighborhoodId, page, size);
     }

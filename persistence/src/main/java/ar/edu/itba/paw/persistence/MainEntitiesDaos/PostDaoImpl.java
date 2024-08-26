@@ -113,7 +113,6 @@ public class PostDaoImpl implements PostDao {
 
         appendCommonConditions(query, queryParams, channelId, userId, neighborhoodId, tagIds, postStatusId);
 
-        System.out.println(query);
         Query sqlQuery = em.createNativeQuery(query.toString());
 
         for (int i = 0; i < queryParams.size(); i++) {

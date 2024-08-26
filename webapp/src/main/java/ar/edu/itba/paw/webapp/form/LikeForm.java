@@ -1,19 +1,16 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.webapp.form.validation.constraints.ExistingPostConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.PostURNConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNAuthorizationConstraint;
-import ar.edu.itba.paw.webapp.form.validation.constraints.UserURNConstraint;
+import ar.edu.itba.paw.webapp.form.validation.constraints.*;
 
 import javax.validation.constraints.NotNull;
 
 public class LikeForm {
     @NotNull
-    @PostURNConstraint
+    @PostURNInLikeFormConstraint
     private String post;
 
     @NotNull
-    @UserURNAuthorizationConstraint
+    @UserURNInLikeFormConstraint
     private String user;
 
     public String getPost() {

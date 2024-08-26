@@ -851,7 +851,7 @@ public class WorkerDaoImplTest {
                 Collections.emptyList(),
                 EMPTY_FIELD,
                 EMPTY_FIELD);
-        System.out.println(workerList);
+
 	    // Exercise
         boolean deleted = workerDaoImpl.deleteWorker(uKey);
         // boolean deleted = userDaoImpl.deleteUser(uKey);
@@ -863,7 +863,7 @@ public class WorkerDaoImplTest {
                 Collections.emptyList(),
                 EMPTY_FIELD,
                 EMPTY_FIELD);
-        System.out.println(workerList);
+
 	    // Validations & Post Conditions
 		em.flush();
 	    assertTrue(deleted);

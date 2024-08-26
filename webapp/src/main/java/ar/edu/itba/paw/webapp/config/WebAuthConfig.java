@@ -141,7 +141,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(
                         "/likes",
-                        "/likes/*"
+                        "/likes/**"
                 ).hasAnyRole(
                         UserRole.NEIGHBOR.name(),
                         UserRole.ADMINISTRATOR.name(),
@@ -164,6 +164,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         "/neighborhoods/*/posts/*/comments/**",
                         "/neighborhoods/*/products/**",
+                        "/neighborhoods/*/products/*/inquiries/**",
                         "/neighborhoods/*/requests/**",
                         "/neighborhoods/*/tags/**",
                         "/neighborhoods/*/channels/**",

@@ -73,7 +73,6 @@ public class UserDaoImplTest {
 
         // Exercise
         User user = userDaoImpl.createUser(USER_MAIL_1, USER_PASSWORD, USER_NAME, USER_SURNAME, nhKey1, USER_LANGUAGE, USER_DARK_MODE, USER_ROLE, USER_IDENTIFICATION_NUMBER);
-        System.out.println(user);
 
         // Validations & Post Conditions
         em.flush();

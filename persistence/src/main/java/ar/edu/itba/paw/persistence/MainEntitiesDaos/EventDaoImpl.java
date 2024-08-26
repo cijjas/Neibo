@@ -99,9 +99,7 @@ public class EventDaoImpl implements EventDao {
         query.setMaxResults(size);
 
         // Get the list of event IDs
-        System.out.println("before execution");
         List<Long> eventIds = query.getResultList();
-        System.out.println("after execution");
 
         if (!eventIds.isEmpty()) {
             // Build the JPQL query for fetching events
