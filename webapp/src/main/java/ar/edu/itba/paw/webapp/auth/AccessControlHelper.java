@@ -38,22 +38,18 @@ public class AccessControlHelper {
     @Autowired
     private BookingService bs;
 /*
-* tal vez se puede pasar el hasAccessToUserList a PreAuthorize, porque el create no esta y es el otro endpoint que usa el endpoint sin ID,
-*  y la verificacion que hace el metodo es la misma que haria el neighborhood binding
-*
 * Es medio raro esto de que se verifiquen los creates, eso deberia ir por el lado del formulario, o por lo menos eso hacemos usualmente
 * affiliation, review, inquiry
 *
 * Fix naming convention de estos metodos malparidos, chequear que cuando se tiene una URN se esta verificando todos los parametros
 *
-* Verificar con los tests
-*
 * Revisar si no se puede verificar el uso de query params en la filter chain
 *
-* Donde puedo clavar el true para que el admin pueda hacer todo en el neighborhood
-*
 * Solo autenticacion se verifica aca, la integridad de la informacion se verifica en los formularios
+*
 * Deberia revisar las URLs internas
+*
+ * Verificar con los tests
 * */
 
     // The Super Admin can perform all the actions
@@ -91,7 +87,7 @@ public class AccessControlHelper {
     // Verifies that the User URN received matches the authenticated User
     // Commonly used by forms that require an author
     // Neighbors can only reference themselves whilst Administrators and the Super Admin can reference all Users
-    public Boolean isAuthenticatedUser(String userURN) {
+    public Boolean canReferenceUser(String userURN) {
         LOGGER.info("Verifying Accessibility for the User's entities");
         Authentication authentication = getAuthentication();
 
@@ -106,7 +102,7 @@ public class AccessControlHelper {
     // --------------------------------------------- NEIGHBORHOODS -----------------------------------------------------
 
     // Usage of Worker Query Param in '/neighborhoods' is restricted for anonymous Users
-    public boolean hasAccessNeighborhoodQP(Long workerId) {
+    public boolean canUseWorkerQPInNeighborhoods(Long workerId) {
         LOGGER.info("Verifying Query Params Accessibility");
 
         Authentication authentication = getAuthentication();
@@ -121,7 +117,7 @@ public class AccessControlHelper {
 
     // Usage of List Users is limited to the Neighbors and the Administrators (they can only list for the neighborhood they belong to)
     // * Workers Neighborhood ('/neighborhoods/0') can be accessed by the Users from other Neighborhoods (except Rejected Neighborhood)
-    public boolean hasAccessToUserList(long neighborhoodId) {
+    public boolean canListUsers(long neighborhoodId) {
         LOGGER.info("Verifying User List Accessibility");
 
         Authentication authentication = getAuthentication();
@@ -139,7 +135,7 @@ public class AccessControlHelper {
     // Restricted from Anonymous Users
     // Rejected and Unverified Users can access their User Find
     // Neighbors and Administrators can access the find for all the Users in their Neighborhood
-    public boolean hasAccessToUserFind(long neighborhoodId, long userId) {
+    public boolean canFindUser(long neighborhoodId, long userId) {
         LOGGER.info("Verifying Detail User Accessibility");
 
         Authentication authentication = getAuthentication();
@@ -194,7 +190,7 @@ public class AccessControlHelper {
     // --------------------------------------------- PROFESSION --------------------------------------------------------
 
     // Worker Query Param in '/professions' can only be used by Neighbors, Workers and Administrators
-    public boolean hasAccessProfessionsQP(String worker) {
+    public boolean canUseWorkerQPInProfessions(String worker) {
         LOGGER.info("Verifying Query Params Accessibility");
 
         if (worker == null)
@@ -232,7 +228,7 @@ public class AccessControlHelper {
 
     // Restricted from Anonymous, Unverified and Rejected
     // Neighbors and Administrator can use it when specifying at least one of the Query Params
-    public Boolean canGetLikes(String post, String user) {
+    public Boolean canListLikes(String post, String user) {
         LOGGER.info("Verifying Get Likes Accessibility");
         Authentication authentication = getAuthentication();
 

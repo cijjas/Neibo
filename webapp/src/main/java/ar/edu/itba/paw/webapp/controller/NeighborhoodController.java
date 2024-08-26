@@ -49,7 +49,7 @@ public class NeighborhoodController {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.hasAccessNeighborhoodQP(#workerId)")
+    @PreAuthorize("@accessControlHelper.canUseWorkerQPInNeighborhoods(#workerId)")
     public Response listNeighborhoods(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,

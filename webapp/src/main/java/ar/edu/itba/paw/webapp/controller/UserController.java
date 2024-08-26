@@ -56,7 +56,7 @@ public class UserController {
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON})
-    @PreAuthorize("@accessControlHelper.hasAccessToUserList(#neighborhoodId)")
+    @PreAuthorize("@accessControlHelper.canListUsers(#neighborhoodId)")
     public Response listUsers(
             @QueryParam("page") @DefaultValue("1") final int page,
             @QueryParam("size") @DefaultValue("10") final int size,
@@ -100,7 +100,7 @@ public class UserController {
     @GET
     @Path("/{id}")
     @Produces(value = { MediaType.APPLICATION_JSON, })
-    @PreAuthorize("@accessControlHelper.hasAccessToUserFind(#neighborhoodId, #id)")
+    @PreAuthorize("@accessControlHelper.canFindUser(#neighborhoodId, #id)")
     public Response findUser(
             @PathParam("id") final long id,
             @PathParam("neighborhoodId") final long neighborhoodId

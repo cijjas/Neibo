@@ -48,7 +48,7 @@ public class LikeController extends GlobalControllerAdvice{
 
     @GET
     @Produces(value = { MediaType.APPLICATION_JSON })
-    @PreAuthorize("@accessControlHelper.canGetLikes(#post, #user)")
+    @PreAuthorize("@accessControlHelper.canListLikes(#post, #user)")
     public Response listLikes(
             @QueryParam("onPost") final String post,
             @QueryParam("likedBy") final String user,
